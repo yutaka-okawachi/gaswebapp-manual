@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <!-- レスポンシブ対応 -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>用語から検索</title>
+
+  <style>
+    /********************************************************
+     * 「用語から検索」ページのデザインをCSSで設定
+     ********************************************************/
+
+    /* ---------------------------------------------------------------
+       1) 全体スタイル
+       --------------------------------------------------------------- */
+    * {
+      box-sizing: border-box;
+    }
+
+    /* 全体背景を薄いパステル色に */
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: "Yu Gothic", "Hiragino Kaku Gothic ProN", Meiryo, sans-serif;
+      background: #fffaf7;
+      /* 薄めのピンク～オレンジに近いパステル */
+      line-height: 1.6;
+    }
+
+    .container {
+      width: 90%;
+      max-width: 1000px;
+      margin: 20px auto;
+      padding: 20px;
+      background: #fff;
+      /* 白背景 */
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      min-height: 70vh;
+      border-radius: 10px;
+    }
+
+    /* タイトル (h1) */
+    h1 {
+      font-size: 1.5rem;
+      margin-bottom: 20px;
+      padding: 10px;
+      text-align: center;
+      background-color: #ffdce0;
+      border-bottom: 6px solid #e35d76;
+      border-radius: 6px;
+      font-weight: bold;
+      margin-top: 0;
+    }
+
+    /* セクションタイトル - pastelピーチ */
+    .big-label {
+      font-size: 1.2rem;
+      margin-bottom: 10px;
+      padding: 8px;
+      background-color: #ffe9cc;
+      border-radius: 5px;
+      font-weight: bold;
+    }
+
+    p {
+      margin: 10px 0;
+      font-size: 0.9rem;
+      line-height: 1.5;
+      color: #333;
+    }
+
+    ul {
+      margin: 10px 0;
+      font-size: 0.9rem;
+      line-height: 1.5;
+      color: #333;
+      padding-left: 1.5rem;
+    }
+
+    /* 入力欄 */
+    input[type="text"] {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 10px;
+      margin-bottom: 10px;
+      font-size: 1rem;
+      border: 2px solid #79a9f2;
+      /* 太めの枠線で強調 */
+      border-radius: 10px;
+      background-color: #f4faff;
+    }
+
+    /* ボタン類 */
+    button {
+      margin: 8px 0;
+      padding: 8px 16px;
+      font-size: 1rem;
+      font-weight: bold;
+      background-color: #79a9f2;
+      /* 薄ブルー */
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #5a8ad0;
+    }
+
+    button.clear-btn {
+      margin-top: 10px;
+    }
+
+    button.btn-danger {
+      background-color: #ff8c8c;
+      /* 薄めの赤ピンク */
+      color: #fff;
+    }
+
+    button.btn-danger:hover {
+      background-color: #e26767;
+    }
+
+    /* 新たに追加した「入力をクリア」ボタン */
+    button.clear-input-btn {
+      margin: 8px 0;
+      padding: 8px 16px;
+      font-size: 1rem;
+      font-weight: bold;
+      background-color: #f7c59f;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    button.clear-input-btn:hover {
+      background-color: #e6b58b;
+    }
+
+    /* 検索結果表示枠 */
+    #results {
+      margin-top: 20px;
+      padding: 10px;
+      background: #fff2e0;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      white-space: pre-wrap;
+      min-height: 200px;
+      /* 初期の縦幅を確保 */
+    }
+
+    .loading {
+      font-weight: bold;
+    }
+
+    .result-a {
+      /* ドイツ語表示用のスタイル */
+      font-size: 1em;
+      /* フォントサイズを少し抑え、基準サイズと同じに */
+      font-weight: bold;
+      margin-top: 1em;
+      /* 上の余白を文字サイズ基準に */
+    }
+
+    .result-c {
+      /* 日本語訳表示用のスタイル */
+      font-size: 0.95em;
+      /* 少し小さめに設定 */
+      margin-bottom: 4px;
+      margin-left: 1em;
+      /* 左にインデントを追加 */
+    }
+
+    .result-loc {
+      /* 出典表示用のスタイル */
+      font-size: 0.9em;
+      color: #333;
+      margin-left: 2em;
+      /* 日本語訳よりさらにインデント */
+    }
+
+    /* トップへ戻るボタン */
+    #scrollToTop {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background-color: rgba(173, 216, 230, 0.8);
+      color: black;
+      padding: 8px 12px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 13px;
+      z-index: 1000;
+      display: none;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+
+    #scrollToTop:hover {
+      background-color: rgba(135, 206, 250, 0.9);
+    }
+  </style>
+
+  <script>
+    /*******************************************************************
+     * クライアントサイドスクリプト（用語から検索ページ）
+     * 
+     * - 入力を監視してサーバーの searchEnglishTermsPartially() を呼び出し、
+     *   suggest 用データを取得し datalist を更新
+     * - 最終的に searchByTerm() を呼び出して結果を画面に表示
+     ******************************************************************/
+
+    // debounce(防振)用の関数：一定時間入力が止まるまで検索しないようにする
+    function debounce(func, delay) {
+      let timer;
+      return function (...args) {
+        clearTimeout(timer);
+        timer = setTimeout(() => func.apply(this, args), delay);
+      };
+    }
+
+    let currentSearchId = 0; 
+    // 複数回検索したときに、最新の検索結果だけを適用するためのID
+
+    // DOM構築後に動作をセット
+    window.addEventListener('DOMContentLoaded', () => {
+      const inputField = document.getElementById('termInput');
+      // 入力フィールドに文字を入力するたびにイベント発火
+      inputField.addEventListener('input', onTermInput);
+    });
+
+    // 入力があったら300ms後にサジェスト検索を実行する関数
+    const debouncedOnTermInput = debounce((event) => {
+      const input = event.target.value.trim();
+      if (input.length < 2) {
+        // 2文字未満ならサジェストをクリア
+        document.getElementById('termSuggestions').innerHTML = '';
+        return;
+      }
+
+      // 検索IDを更新
+      currentSearchId++;
+      const thisSearchId = currentSearchId;
+
+      // サーバーの searchEnglishTermsPartially() を呼び出し、結果を datalist に反映
+      google.script.run
+        .withSuccessHandler(function(suggestions) {
+          // 現在の検索IDと一致したときのみ処理
+          if (thisSearchId !== currentSearchId) return;
+          updateDatalist(suggestions);
+        })
+        .searchEnglishTermsPartially(input);
+
+    }, 300);
+
+    // 実際のイベントハンドラ
+    function onTermInput(event) {
+      debouncedOnTermInput(event);
+    }
+
+    // datalist に候補を表示する
+    function updateDatalist(suggestions) {
+      const datalist = document.getElementById('termSuggestions');
+      // 候補を option タグとして生成
+      datalist.innerHTML = suggestions.map(term => `<option value="${term}">`).join('');
+    }
+
+    // 「検索」ボタン押下時
+    function search() {
+      const query = document.getElementById('termInput').value.trim();
+      const resultsDiv = document.getElementById('results');
+
+      // 空文字チェック
+      if (!query) {
+        resultsDiv.innerHTML = '<p class="result-message">検索語句を入力してください。</p>';
+        return;
+      }
+
+      // ローディングメッセージ
+      resultsDiv.innerHTML = '<p class="loading">検索しています・・・</p>';
+
+      currentSearchId++;
+      const thisSearchId = currentSearchId;
+
+      // サーバー searchByTerm() を呼んで結果を受け取る
+      google.script.run
+        .withSuccessHandler(html => {
+          if (thisSearchId === currentSearchId) {
+            resultsDiv.innerHTML = html;
+          } else {
+            console.log('古い検索結果を無視');
+          }
+        })
+        .searchByTerm(query);
+    }
+
+    // 「中止」ボタン押下
+    function cancelSearch() {
+      const resultsDiv = document.getElementById('results');
+      resultsDiv.innerHTML = '<p class="loading">検索を中止しました．</p>';
+      currentSearchId++;
+    }
+
+    // スクロール監視でトップへ戻るボタンを出す
+    window.addEventListener('scroll', () => {
+      const scrollToTop = document.getElementById('scrollToTop');
+      if (window.scrollY > 300) {
+        scrollToTop.style.display = 'block';
+      } else {
+        scrollToTop.style.display = 'none';
+      }
+    });
+
+    function scrollToTop() {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    /**
+     * 入力欄をクリアする
+     */
+    function clearInput() {
+      document.getElementById('termInput').value = '';
+      document.getElementById('termSuggestions').innerHTML = '';
+    }
+  </script>
+</head>
+
+<body>
+  <div class="container">
+    <h1>用語から検索 (Gustav Mahler)</h1>
+    <p>
+      検索は英字入力なので，特殊文字の入力は慣例にしたがう<br>
+    <ul>
+      <li>ä⇒ae　例：Dämpfer⇒Daempfer</li>
+      <li>ü⇒ue　例：zurückhalten⇒zurueckhalten</li>
+      <li>ö⇒oe　例：Flöte⇒Floete</li>
+      <li>ß⇒ss　例：fließend⇒fliessend</li>
+    </ul>
+    </p>
+
+    <!-- 検索入力欄 -->
+    <input type="text" id="termInput" list="termSuggestions" placeholder="検索する用語を入力">
+    <datalist id="termSuggestions"></datalist>
+
+    <!-- ボタン類 -->
+    <div style="text-align: center;">
+      <button type="button" onclick="search()">検索</button>
+      <button type="button" onclick="cancelSearch()" class="btn-danger">中止</button>
+      <button type="button" onclick="clearInput()" class="clear-input-btn">入力をクリア</button>
+    </div>
+
+    <!-- 結果表示枠 -->
+    <div id="results"></div>
+
+    <!-- トップへ戻るボタン -->
+    <div id="scrollToTop" onclick="scrollToTop()">▲ ページのトップへ戻る</div>
+  </div>
+</body>
+
+</html>

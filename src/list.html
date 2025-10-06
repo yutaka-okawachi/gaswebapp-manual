@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <title>マーラー以外の作曲家のドイツ語</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    /* 全ての要素に box-sizing を適用 */
+    * {
+      box-sizing: border-box;
+    }
+
+    /********************************************************
+     * ページ全体のデザイン
+     ********************************************************/
+    body {
+      font-family: 'Bitter', serif;
+      margin: 0;
+      padding: 0;
+      background-color: #fffaf7;
+      line-height: 1.6;
+      overflow-x: hidden;
+      max-width: 100%;
+    }
+
+    /* 固定ヘッダー */
+    #fixedHeader {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      background-color: #fffaf7;
+      border-bottom: 1px solid #ccc;
+    }
+
+    /* タイトル（Arial） */
+    #fixedHeader h1 {
+      font-family: Arial, sans-serif;
+      font-size: 1.2rem;
+      margin: 0;
+      padding: 10px;
+      text-align: center;
+      background-color: #ffdce0;
+      border-bottom: 6px solid #e35d76;
+      font-weight: bold;
+    }
+
+    /* ナビゲーションバー */
+    #navbar {
+      font-family: 'Bitter', serif;
+      /* 'Bitter' に統一 */
+      text-align: center;
+      background-color: #e0ffe0;
+      padding: 8px 10px;
+      border-bottom: 1px solid #ccc;
+    }
+
+    /* ナビゲーションバーのリンクスタイル */
+    #navbar a {
+      margin: 0 5px;
+      text-decoration: none;
+      color: #0066cc;
+      font-weight: bold;
+      font-family: 'Bitter', serif;
+      /* 全てのリンクに 'Bitter' を適用 */
+    }
+
+    #navbar a:hover {
+      text-decoration: underline;
+    }
+
+    /* メインコンテナ */
+    .container {
+      width: 90%;
+      max-width: 1000px;
+      margin: 120px auto 20px;
+      /* 固定ヘッダーの高さを考慮 */
+      padding: 20px;
+      background-color: #fff2e0;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    /********************************************************
+     * 上部の追加テキスト
+     ********************************************************/
+    .top-message {
+      font-size: 0.95rem;
+      margin-bottom: 1em;
+      color: #333;
+      font-family: 'Bitter', serif;
+    }
+
+    /********************************************************
+     * 「略記一覧」表示部分
+     ********************************************************/
+    #abbrListContainer {
+      margin-top: 2em;
+    }
+
+    /* タイトル行 */
+    .abbr-title {
+      font-size: 1.1rem;
+      /* やや大きめのフォント */
+      font-weight: bold;
+      color: #000;
+      /* 黒色 */
+      background-color: #ffe6d1;
+      /* コンテナに似た淡い背景色 */
+      padding: 8px;
+      margin-bottom: 0.5em;
+      border-radius: 5px;
+      /* scroll-margin-top は後述 */
+    }
+
+    /* 通常行 */
+    .abbr-row {
+      display: flex;
+      flex-direction: row;
+      align-items: flex-start;
+      margin-bottom: 0.5em;
+      /* scroll-margin-top は後述 */
+    }
+
+    .abbr-row .abbr-short {
+      flex: 0 0 20%;
+      /* 略記の幅を固定 */
+      white-space: normal;
+      /* 改行を許可 */
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+      /* 【追加】長い単語の折り返し */
+      font-size: 0.85rem;
+    }
+
+    .abbr-row .abbr-long {
+      flex: 1;
+      white-space: normal;
+      /* 【変更】 pre-wrap → normal */
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+      /* 【追加】長い単語の折り返し */
+      margin-left: 1em;
+      font-size: 0.85rem;
+    }
+
+    /* 区切り線 */
+    .section-divider {
+      border: 0;
+      border-top: 2px dashed #999;
+      margin: 2em 0;
+    }
+
+    /* 略記一覧の注釈 */
+    .abbr-annotation {
+      font-family: 'Bitter', serif;
+      font-size: 0.85rem;
+      color: #333;
+      margin-top: 0.5em;
+    }
+
+    /* 「マーラー以外のドイツ語」一覧部分 */
+    .row {
+      display: flex;
+      flex-direction: column;
+      border-bottom: 1px solid #ccc;
+      padding-bottom: 10px;
+      margin-bottom: 10px;
+      word-wrap: break-word;
+      word-break: break-word;
+    }
+
+    .german {
+      font-size: 1.1rem;
+      white-space: pre-wrap;
+      display: block;
+    }
+
+    .translation {
+      font-size: 0.9rem;
+      white-space: pre-wrap;
+      margin-left: 1rem;
+      font-family: 'Bitter', serif;
+    }
+
+    .source {
+      font-size: 0.8rem;
+      color: #555;
+      white-space: normal;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: block;
+      margin-left: 0.5rem;
+    }
+
+    /* ローディングメッセージ */
+    #loadingMessage {
+      text-align: center;
+      font-size: 0.8rem;
+      margin-top: 20px;
+      color: #555;
+    }
+
+    /* ★★★ ここから追加（トップへ戻るボタン） ★★★ */
+    #scrollToTop {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background-color: rgba(173, 216, 230, 0.8);
+      color: black;
+      padding: 8px 12px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 13px;
+      z-index: 1001; /* ヘッダーより手前に表示 */
+      display: none;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+
+    #scrollToTop:hover {
+      background-color: rgba(135, 206, 250, 0.9);
+    }
+    /* ★★★ ここまで追加 ★★★ */
+
+    /* スマホ対応 */
+    @media (max-width: 600px) {
+      body {
+        font-size: 12px;
+      }
+
+      #fixedHeader h1 {
+        font-size: 1.2rem;
+      }
+
+      .german {
+        font-size: 1rem;
+      }
+
+      .translation {
+        font-size: 0.8rem;
+      }
+
+      .abbr-row {
+        display: block;
+        /* フレックスレイアウトを解除 */
+      }
+
+      .abbr-row .abbr-short {
+        display: block;
+        width: 100%;
+        font-weight: bold;
+        /* 目立つように */
+        margin-bottom: 5px;
+        /* 下の説明との間隔 */
+      }
+
+      .abbr-row .abbr-long {
+        display: block;
+        width: 100%;
+      }
+
+      .top-message {
+        font-size: 0.85rem;
+      }
+
+      .abbr-annotation {
+        font-size: 0.85rem;
+      }
+
+      /* スマホ用に scroll-margin-top を調整 */
+      .abbr-title,
+      .abbr-row,
+      .row[id],
+      #abbrListContainer {
+        scroll-margin-top: 80px;
+        /* スマホの固定ヘッダー高さに合わせる */
+      }
+    }
+
+    /* デスクトップ用 scroll-margin-top */
+    .abbr-title,
+    .abbr-row,
+    .row[id],
+    #abbrListContainer {
+      scroll-margin-top: 120px;
+      /* 固定ヘッダーの高さに合わせる */
+    }
+  </style>
+
+  <link href="https://fonts.googleapis.com/css2?family=Bitter&display=swap" rel="stylesheet">
+
+  <script>
+    /* カスタム順用アルファベット配列 */
+    const customOrder = [
+      "A", "Ä", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K",
+      "L", "M", "N", "O", "Ö", "P", "Q", "R", "S", "T", "U", "Ü",
+      "V", "W", "X", "Y", "Z"
+    ];
+
+    function getOrder(letter) {
+      const idx = customOrder.indexOf(letter);
+      return idx === -1 ? 999 : idx;
+    }
+
+    window.addEventListener("DOMContentLoaded", function () {
+      // (1) マーラー以外のドイツ語一覧を取得
+      google.script.run
+        .withSuccessHandler(function (data) {
+          renderList(data);
+        })
+        .withFailureHandler(function (error) {
+          console.error(error);
+          document.getElementById("loadingMessage").textContent =
+            "データの取得に失敗しました。";
+        })
+        .getListData();
+
+      // (2) 略記一覧を取得
+      google.script.run
+        .withSuccessHandler(function (data) {
+          renderAbbrList(data);
+        })
+        .withFailureHandler(function (error) {
+          console.error(error);
+          document.getElementById("abbrListContainer").innerHTML =
+            "<p>略記一覧のデータ取得に失敗しました。</p>";
+        })
+        .getAbbrListData();
+    });
+
+    /**
+     * (1) マーラー以外のドイツ語一覧を描画
+     */
+    function renderList(data) {
+      // 頭文字をカスタム順でソート
+      data.sort((a, b) => {
+        const letterA = (a[0] || "").trim().charAt(0).toUpperCase();
+        const letterB = (b[0] || "").trim().charAt(0).toUpperCase();
+        const orderDiff = getOrder(letterA) - getOrder(letterB);
+        return orderDiff !== 0 ? orderDiff : letterA.localeCompare(letterB);
+      });
+
+      const container = document.getElementById("listContainer");
+      container.innerHTML = "";
+
+      // 上部に指定のテキストを追加
+      const topMessage = document.createElement("div");
+      topMessage.classList.add("top-message");
+      topMessage.textContent = "マーラーの用語検索ページで何とかなりそうなものは基本的に不記載";
+      container.appendChild(topMessage);
+
+      const anchorSet = {};
+      data.forEach(row => {
+        const [german, translation, source] = row;
+
+        const rowDiv = document.createElement("div");
+        rowDiv.classList.add("row");
+
+        // アンカー割り当て (A, Ä, B...Z)
+        if (german && typeof german === "string") {
+          const firstChar = german.trim().charAt(0).toUpperCase();
+          if (customOrder.includes(firstChar) && !anchorSet[firstChar]) {
+            rowDiv.id = "letter-" + firstChar;
+            anchorSet[firstChar] = true;
+          }
+        }
+
+        // ドイツ語
+        const germanWrapper = document.createElement("div");
+        const germanSpan = document.createElement("span");
+        germanSpan.classList.add("german");
+        germanSpan.textContent = german;
+
+        const sourceSpan = document.createElement("span");
+        sourceSpan.classList.add("source");
+        sourceSpan.textContent = source;
+
+        germanWrapper.appendChild(germanSpan);
+        germanWrapper.appendChild(sourceSpan);
+        rowDiv.appendChild(germanWrapper);
+
+        // 日本語
+        const translationDiv = document.createElement("div");
+        translationDiv.classList.add("translation");
+        translationDiv.textContent = translation;
+
+        rowDiv.appendChild(translationDiv);
+        container.appendChild(rowDiv);
+      });
+
+      if (data.length === 0) {
+        container.innerHTML =
+          '<div id="loadingMessage">データが存在しません。</div>';
+      }
+    }
+
+    /**
+     * (2) 略記一覧を描画する
+     * - タイトル行と通常行を区別して表示
+     * - ページ下部に表示
+     */
+    function renderAbbrList(data) {
+      const contentContainer = document.getElementById("abbrContent"); // ★ データ専用エリア
+      contentContainer.innerHTML = ""; // ★ メッセージ部分を消さず、リストのみ更新
+
+      if (data.length === 0) {
+        contentContainer.innerHTML = '<p>（略記一覧のデータが存在しませんでした）</p>';
+        return;
+      }
+
+      data.forEach(row => {
+        const [colA, colB, colC] = row;
+
+        if (colA && !isNaN(parseInt(colA))) {
+          const titleDiv = document.createElement("div");
+          titleDiv.classList.add("abbr-title");
+          titleDiv.textContent = colB;
+          contentContainer.appendChild(titleDiv);
+        } else {
+          const rowDiv = document.createElement("div");
+          rowDiv.classList.add("abbr-row");
+
+          const shortSpan = document.createElement("span");
+          shortSpan.classList.add("abbr-short");
+          shortSpan.textContent = colB;
+
+          const longSpan = document.createElement("span");
+          longSpan.classList.add("abbr-long");
+          longSpan.textContent = colC;
+
+          rowDiv.appendChild(shortSpan);
+          rowDiv.appendChild(longSpan);
+          contentContainer.appendChild(rowDiv);
+        }
+      });
+    }
+
+    // ★★★ ここから追加 ★★★
+    /**
+     * スクロール位置が300pxを超えたら「トップへ戻る」ボタンを表示
+     */
+    window.addEventListener('scroll', () => {
+      const scrollToTopBtn = document.getElementById('scrollToTop');
+      if (window.scrollY > 300) {
+        scrollToTopBtn.style.display = 'block';
+      } else {
+        scrollToTopBtn.style.display = 'none';
+      }
+    });
+
+    /**
+     * 「トップへ戻る」ボタン押下
+     */
+    function scrollToTop() {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+    // ★★★ ここまで追加 ★★★
+  </script>
+</head>
+
+<body>
+  <div id="fixedHeader">
+    <h1>Gustav Mahler 以外のドイツ語</h1>
+    <div id="navbar">
+      <a href="#letter-A">A</a>
+      <a href="#letter-Ä">Ä</a>
+      <a href="#letter-B">B</a>
+      <a href="#letter-C">C</a>
+      <a href="#letter-D">D</a>
+      <a href="#letter-E">E</a>
+      <a href="#letter-F">F</a>
+      <a href="#letter-G">G</a>
+      <a href="#letter-H">H</a>
+      <a href="#letter-I">I</a>
+      <a href="#letter-J">J</a>
+      <a href="#letter-K">K</a>
+      <a href="#letter-L">L</a>
+      <a href="#letter-M">M</a>
+      <a href="#letter-N">N</a>
+      <a href="#letter-O">O</a>
+      <a href="#letter-Ö">Ö</a>
+      <a href="#letter-P">P</a>
+      <a href="#letter-Q">Q</a>
+      <a href="#letter-R">R</a>
+      <a href="#letter-S">S</a>
+      <a href="#letter-T">T</a>
+      <a href="#letter-U">U</a>
+      <a href="#letter-Ü">Ü</a>
+      <a href="#letter-V">V</a>
+      <a href="#letter-W">W</a>
+      <a href="#letter-X">X</a>
+      <a href="#letter-Y">Y</a>
+      <a href="#letter-Z">Z</a>
+      <a href="#abbrListContainer" class="abbr-list-link">略記一覧</a>
+    </div>
+  </div>
+
+  <div class="container">
+    <div id="listContainer">
+      <div class="top-message">Gustav Mahler の用語検索ページで何とかなりそうなものは基本的に不記載</div>
+      <div id="loadingMessage">表示中・・・</div>
+    </div>
+
+    <hr class="section-divider">
+
+    <div id="abbrListContainer">
+      <div class="top-message" id="abbrMessage">(*)は特記すべきドイツ語はなし</div>
+      <div id="abbrContent">
+        <div id="loadingMessage">表示中・・・</div>
+      </div>
+    </div>
+  </div>
+
+  <div id="scrollToTop" onclick="scrollToTop()">▲ ページのトップへ戻る</div>
+  </body>
+
+</html>

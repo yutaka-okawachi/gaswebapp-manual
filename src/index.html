@@ -1,0 +1,921 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <!-- レスポンシブ対応 -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>データ検索</title>
+
+  <style>
+    /********************************************************
+     * ここでは画面のデザインを CSS で整えています。
+     * 
+     * 背景色やボタン、チェックボックスのレイアウトなど。
+     ********************************************************/
+
+    /* ---------------------------------------------------------------
+       1) 全体スタイル
+       --------------------------------------------------------------- */
+    * {
+      box-sizing: border-box;
+    }
+
+    /* 全体背景を淡いパステル系 (ややオレンジ寄り) に */
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: "Yu Gothic", "Hiragino Kaku Gothic ProN", Meiryo, sans-serif;
+      background: #fffaf7;
+      /* 薄めのピンク～オレンジに近いパステル */
+      line-height: 1.5;
+    }
+
+    .container {
+      width: 90%;
+      max-width: 1000px;
+      margin: 20px auto;
+      padding: 20px;
+      background: #fff;
+      /* 背景は白で可読性を確保 */
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      min-height: 70vh;
+      border-radius: 10px;
+    }
+
+    /* タイトル (h1) - 背景色を淡いピンク、アンダーラインを太めローズ系 */
+    h1 {
+      font-size: 1.5rem;
+      margin-bottom: 20px;
+      padding: 10px;
+      text-align: center;
+      background-color: #ffdce0;
+      /* 少し彩度を上げた淡いピンク */
+      border-bottom: 6px solid #e35d76;
+      /* 太め下線 (6px) + 赤寄りローズ系 */
+      border-radius: 6px;
+      /* 角の丸み */
+      font-weight: bold;
+      margin-top: 0;
+    }
+
+    /* セクションタイトル (曲名を選択など) - pastelピーチ */
+    .big-label {
+      font-size: 1.2rem;
+      margin-bottom: 10px;
+      padding: 8px;
+      background-color: #ffe9cc;
+      /* パステルピーチ */
+      border-radius: 5px;
+      font-weight: bold;
+    }
+
+    /* 楽器群タイトル - pastelイエロー */
+    .big-label-instruments {
+      font-size: 1.2rem;
+      margin-bottom: 10px;
+      padding: 8px;
+      background-color: #fff4bd;
+      /* パステルイエロー */
+      border-radius: 5px;
+      font-weight: bold;
+      margin-top: 1rem;
+    }
+
+    /* ---------------------------------------------------------------
+       2) ボタンスタイル
+       --------------------------------------------------------------- */
+    button {
+      margin: 8px 0;
+      padding: 8px 16px;
+      font-size: 1rem;
+      font-weight: bold;
+      background-color: #79a9f2;
+      /* やや淡いブルー */
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    /* hover時はやや濃いブルーに */
+    button:hover {
+      background-color: #5a8ad0;
+    }
+
+    /* クリアボタン */
+    button.clear-btn {
+      margin-top: 10px;
+    }
+
+    /* 中止ボタンは赤系を薄く */
+    button.btn-danger {
+      background-color: #ff8c8c;
+      /* 薄めの赤ピンク */
+      color: #fff;
+    }
+
+    button.btn-danger:hover {
+      background-color: #e26767;
+    }
+
+    /* ---------------------------------------------------------------
+       3) レスポンシブ
+       --------------------------------------------------------------- */
+    @media (max-width: 600px) {
+      button {
+        width: 100%;
+        margin-bottom: 10px;
+      }
+    }
+
+    /* 検索結果表示部分 */
+    #results {
+      margin-top: 20px;
+      white-space: pre-wrap;
+      background-color: #fff2e0;
+      /* 元の背景色 */
+      padding: 10px;
+      border-radius: 5px;
+      min-height: 200px;
+      /* 初期の縦幅を確保 */
+    }
+
+    .loading {
+      font-weight: bold;
+    }
+
+    /* ---------------------------------------------------------------
+       4) フィールドセットなど
+       --------------------------------------------------------------- */
+    fieldset {
+      margin-bottom: 20px;
+      border: 1px solid #ccc;
+      padding: 15px;
+      border-radius: 10px;
+      background-color: #fafafa;
+    }
+
+    fieldset legend {
+      font-weight: bold;
+      margin-bottom: 10px;
+      font-size: 1.2rem;
+    }
+
+    /* 指揮者などの背景はパステル系に微調整 */
+    #works {
+      background-color: #fceef1;
+      /* 薄ピンク */
+    }
+
+    #conductor {
+      background-color: #fcf7df;
+      /* 薄イエロー */
+    }
+
+    #strings {
+      background-color: #e7f5e7;
+      /* 薄グリーン */
+    }
+
+    #woodwinds {
+      background-color: #eaf5fa;
+      /* 薄ブルー */
+    }
+
+    #brass {
+      background-color: #fff9d9;
+      /* 薄イエロー */
+    }
+
+    #percussions {
+      background-color: #fef2e7;
+      /* 薄オレンジ */
+    }
+
+    #vocal {
+      background-color: #fbeaf3;
+      /* 薄パープルピンク */
+    }
+
+    /* ---------------------------------------------------------------
+       5) チェックボックス ラベルなど
+       --------------------------------------------------------------- */
+    /* グリッドレイアウトで複数列に並べる */
+    .checkbox-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 6px 12px;
+      /* row-gap 6px / column-gap 12px */
+    }
+
+    /* 画面幅が狭い場合のレスポンシブ（1列にする） */
+    @media (max-width: 500px) {
+      .checkbox-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* チェックボックスグループのスクロール管理 */
+    .inner-checkbox-group {
+      max-height: 200px;
+      overflow-y: auto;
+      background-color: #f0f0f0;
+      padding: 10px;
+      border-radius: 5px;
+    }
+
+    /* 個々のチェックボックスラベル */
+    .checkbox-grid label {
+      display: block;
+      white-space: normal;
+      /* テキストを必要に応じて折り返す */
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      padding: 6px 10px;
+      font-size: 0.95rem;
+      transition: background-color 0.2s ease;
+    }
+
+    /* チェックされたら背景変化 */
+    .checkbox-grid label.checked {
+      background-color: rgba(200, 200, 200, 0.4);
+    }
+
+    /* ALL用ラベルは元のスタイル */
+    .all-label {
+      display: block;
+      padding: 6px 10px;
+      margin: 2px 0;
+      border: none;
+      border-radius: 4px;
+      background-color: rgba(255, 255, 255, 0.2);
+      transition: background-color 0.2s ease;
+      font-size: 0.95rem;
+      font-weight: bold;
+    }
+
+    .all-label.checked {
+      background-color: rgba(200, 200, 200, 0.4);
+    }
+
+    /* チェックボックス余白 */
+    label input[type="checkbox"] {
+      margin-right: 10px;
+    }
+
+    /* 結果表示 */
+    .result-a {
+      /* ドイツ語表示用のスタイル */
+      font-size: 1em;
+      /* フォントサイズを少し抑え、基準サイズと同じに */
+      font-weight: bold;
+      margin-top: 1em;
+      /* 上の余白を文字サイズ基準に */
+    }
+
+    .result-c {
+      /* 日本語訳表示用のスタイル */
+      font-size: 0.95em;
+      /* 少し小さめに設定 */
+      margin-bottom: 4px;
+      margin-left: 1em;
+      /* 左にインデントを追加 */
+    }
+
+    .result-loc {
+      /* 出典表示用のスタイル */
+      font-size: 0.9em;
+      color: #333;
+      margin-left: 2em;
+      /* 日本語訳よりさらにインデント */
+    }
+
+    /* トップへ戻るボタン */
+    #scrollToTop {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background-color: rgba(173, 216, 230, 0.8);
+      color: black;
+      padding: 8px 12px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 13px;
+      z-index: 1000;
+      display: none;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+
+    #scrollToTop:hover {
+      background-color: rgba(135, 206, 250, 0.9);
+    }
+
+    /* スクロールバーオプション（縦スクロール用） */
+    .inner-checkbox-group::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    .inner-checkbox-group::-webkit-scrollbar-thumb {
+      background-color: rgba(0, 0, 0, 0.2);
+      border-radius: 4px;
+    }
+
+    .inner-checkbox-group::-webkit-scrollbar-track {
+      background-color: #ddd;
+      border-radius: 4px;
+    }
+
+    /* 曲名チェックボックスエリア（2列固定） */
+    .checkbox-grid-songs {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      /* デフォルト: 2列表示 */
+      gap: 6px 12px;
+    }
+
+    /* スマホ環境では1列表示に変更 */
+    @media (max-width: 600px) {
+      .checkbox-grid-songs {
+        grid-template-columns: 1fr;
+        /* スマホ: 1列表示 */
+      }
+    }
+
+    .checkbox-grid-songs label {
+      display: block;
+      white-space: nowrap;
+      /* テキストの折り返しを防ぐ */
+      overflow: hidden;
+      text-overflow: ellipsis;
+      /* 長すぎる場合は省略記号を表示 */
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      padding: 6px 10px;
+      font-size: 0.95rem;
+      transition: background-color 0.2s ease;
+    }
+
+    .checkbox-grid-songs label.checked {
+      background-color: rgba(200, 200, 200, 0.4);
+    }
+  </style>
+
+  <script>
+    /***********************************************************
+     * このページのクライアントサイドスクリプト
+     * 
+     * - チェックボックスの「ALL」制御
+     * - 楽器一括選択/解除
+     * - 検索ボタン押下時にサーバー側 (mahler.js) の searchData() を呼び出し
+     * - 結果を画面に表示
+     ***********************************************************/
+
+    window._allGlobalSelected = false; 
+    // 楽器「すべて選択」ボタンが押されたかどうかを判定するフラグ
+
+    let currentSearchId = 0;
+    // 検索キャンセル時に結果を無視するためのID
+
+    window.addEventListener('DOMContentLoaded', () => {
+      // すべてのチェックボックスの初期状態に応じてラベル背景を付与
+      const allCheckboxes = document.querySelectorAll('input[type="checkbox"]');
+      allCheckboxes.forEach(ch => {
+        if (ch.checked) {
+          ch.parentElement.classList.add('checked');
+        }
+        ch.addEventListener('click', e => {
+          // クリックされた後にセット
+          setTimeout(() => {
+            if (ch.checked) {
+              ch.parentElement.classList.add('checked');
+            } else {
+              ch.parentElement.classList.remove('checked');
+            }
+          }, 0);
+        });
+      });
+
+      // グループで「ALL」がチェックされたら他をOFFにし、外されたら全部外すなどの排他制御
+      const groupIds = ['works', 'strings', 'woodwinds', 'brass', 'percussions', 'vocal'];
+      groupIds.forEach(groupId => {
+        const fieldset = document.getElementById(groupId);
+        if (!fieldset) return;
+
+        const checkboxes = fieldset.querySelectorAll('input[type="checkbox"]');
+        checkboxes.forEach(chk => {
+          chk.addEventListener('click', e => {
+            setTimeout(() => {
+              window._allGlobalSelected = false;
+              if (e.target.value.toLowerCase() === 'all') {
+                // 「ALL」チェックがONになった場合は同じfieldset内の他をOFF
+                if (e.target.checked) {
+                  checkboxes.forEach(other => {
+                    if (other !== e.target) {
+                      other.checked = false;
+                      other.parentElement.classList.remove('checked');
+                    }
+                  });
+                } else {
+                  // 「ALL」チェックが外れた場合は全体クリア
+                  checkboxes.forEach(other => {
+                    other.checked = false;
+                    other.parentElement.classList.remove('checked');
+                  });
+                }
+              } else {
+                // 個別チェックがONになったら「ALL」はOFFに
+                if (e.target.checked) {
+                  const allBox = fieldset.querySelector('input[value="ALL"]');
+                  if (allBox) {
+                    allBox.checked = false;
+                    allBox.parentElement.classList.remove('checked');
+                  }
+                }
+              }
+            }, 0);
+          });
+        });
+      });
+
+      // 各箇所の「ALL」チェックボックスに個別イベント
+      document.getElementById('all-works').addEventListener('click', e => {
+        const allWorksCheckbox = e.target;
+        const workCheckboxes = document.querySelectorAll('#works input[type="checkbox"]:not(#all-works)');
+        if (allWorksCheckbox.checked) {
+          // ONの場合は他をすべてOFFに
+          workCheckboxes.forEach(chk => {
+            chk.checked = false;
+            chk.parentElement.classList.remove('checked');
+          });
+        }
+      });
+
+      document.getElementById('all-strings').addEventListener('click', e => {
+        const allStringsCheckbox = e.target;
+        const stringCheckboxes = document.querySelectorAll('#strings input[type="checkbox"]:not(#all-strings)');
+        if (allStringsCheckbox.checked) {
+          stringCheckboxes.forEach(chk => {
+            chk.checked = false;
+            chk.parentElement.classList.remove('checked');
+          });
+        }
+      });
+
+      document.getElementById('all-woodwinds').addEventListener('click', e => {
+        const allWoodwindsCheckbox = e.target;
+        const woodwindsCheckboxes = document.querySelectorAll('#woodwinds input[type="checkbox"]:not(#all-woodwinds)');
+        if (allWoodwindsCheckbox.checked) {
+          woodwindsCheckboxes.forEach(chk => {
+            chk.checked = false;
+            chk.parentElement.classList.remove('checked');
+          });
+        }
+      });
+
+      document.getElementById('all-brass').addEventListener('click', e => {
+        const allBrassCheckbox = e.target;
+        const brassCheckboxes = document.querySelectorAll('#brass input[type="checkbox"]:not(#all-brass)');
+        if (allBrassCheckbox.checked) {
+          brassCheckboxes.forEach(chk => {
+            chk.checked = false;
+            chk.parentElement.classList.remove('checked');
+          });
+        }
+      });
+
+      document.getElementById('all-percussions').addEventListener('click', e => {
+        const allPercussionsCheckbox = e.target;
+        const percussionsCheckboxes = document.querySelectorAll('#percussions input[type="checkbox"]:not(#all-percussions)');
+        if (allPercussionsCheckbox.checked) {
+          percussionsCheckboxes.forEach(chk => {
+            chk.checked = false;
+            chk.parentElement.classList.remove('checked');
+          });
+        }
+      });
+
+      document.getElementById('all-vocal').addEventListener('click', e => {
+        const allVocalCheckbox = e.target;
+        const vocalCheckboxes = document.querySelectorAll('#vocal input[type="checkbox"]:not(#all-vocal)');
+        if (allVocalCheckbox.checked) {
+          vocalCheckboxes.forEach(chk => {
+            chk.checked = false;
+            chk.parentElement.classList.remove('checked');
+          });
+        }
+      });
+
+      // 「すべての楽器を選択」ボタン
+      document.getElementById('all-instruments').addEventListener('click', e => {
+        selectAllInAllGroups();
+      });
+
+      // 「楽器をクリア」ボタン
+      document.getElementById('clear-instruments').addEventListener('click', e => {
+        deselectAllInAllGroups();
+      });
+    });
+
+    /**
+     * 全楽器群 + 指揮者 = ALL扱い
+     * 一括で全部をチェックONにする
+     */
+    function selectAllInAllGroups() {
+      // 一旦全部外してから
+      deselectAllInAllGroups();
+      const instrumentGroupIds = ['strings', 'woodwinds', 'brass', 'percussions', 'vocal'];
+      instrumentGroupIds.forEach(id => {
+        const fieldset = document.getElementById(id);
+        if (!fieldset) return;
+        const allBox = fieldset.querySelector('input[value="ALL"]');
+        if (allBox) {
+          allBox.checked = true;
+          allBox.parentElement.classList.add('checked');
+        }
+      });
+      // 指揮者チェック
+      const conductorCheckbox = document.querySelector('#conductor input[type="checkbox"]');
+      if (conductorCheckbox) {
+        conductorCheckbox.checked = true;
+        conductorCheckbox.parentElement.classList.add('checked');
+      }
+      window._allGlobalSelected = true;
+    }
+
+    /**
+     * すべての楽器・指揮者のチェックを外す
+     */
+    function deselectAllInAllGroups() {
+      const instrumentGroupIds = ['strings', 'woodwinds', 'brass', 'percussions', 'vocal'];
+      instrumentGroupIds.forEach(id => {
+        const fieldset = document.getElementById(id);
+        if (!fieldset) return;
+        const checkboxes = fieldset.querySelectorAll('input[type="checkbox"]');
+        checkboxes.forEach(chk => {
+          chk.checked = false;
+          chk.parentElement.classList.remove('checked');
+        });
+      });
+      // 指揮者も外す
+      const conductorCheckbox = document.querySelector('#conductor input[type="checkbox"]');
+      if (conductorCheckbox) {
+        conductorCheckbox.checked = false;
+        conductorCheckbox.parentElement.classList.remove('checked');
+      }
+      window._allGlobalSelected = false;
+    }
+
+    /**
+     * 「検索」ボタン押下時に呼ばれる
+     * - ユーザ選択の曲名 / 楽器群 を取得
+     * - サーバー側の searchData() を実行
+     * - 結果を #results に表示
+     */
+    function search() {
+      const resultsDiv = document.getElementById('results');
+      resultsDiv.innerHTML = '';
+
+      // 曲名と楽器の選択状態を取得
+      const works = getSelectedWorks();
+      const instruments = getSelectedInstruments();
+      // ラジオボタン「オーケストラ全体を含める」かどうか
+      const includeOrchestraAll = document.querySelector('input[name="include-orchestra-all"]:checked').value === 'on';
+
+      // 未選択チェック
+      if (works.length === 0) {
+        resultsDiv.innerHTML = '<p class="loading">曲名を選択してください．</p>';
+        return;
+      }
+      if (!includeOrchestraAll && instruments.length === 0) {
+        resultsDiv.innerHTML = '<p class="loading">楽器を選択してください．</p>';
+        return;
+      }
+
+      // 「検索しています…」メッセージを表示
+      resultsDiv.innerHTML = '<p class="loading">検索しています・・・</p>';
+
+      // 検索IDを更新（キャンセル制御用）
+      currentSearchId++;
+      const thisSearchId = currentSearchId;
+
+      // Google Apps Script側の searchData() を呼び出し
+      google.script.run
+        .withSuccessHandler(html => {
+          // もし別の検索がすでに走っていたら無視
+          if (thisSearchId === currentSearchId) {
+            resultsDiv.innerHTML = html;
+          }
+        })
+        .searchData(works, instruments, includeOrchestraAll);
+    }
+
+    /**
+     * 「中止」ボタン押下時
+     * - currentSearchId を更新して、既存の検索結果を無効化
+     */
+    function cancelSearch() {
+      document.getElementById('results').innerHTML = '<p class="loading">検索を中止しました．</p>';
+      currentSearchId++;
+    }
+
+    /**
+     * 楽器の選択状態を取得し、配列で返す
+     */
+    function getSelectedInstruments() {
+      let selected = [];
+      // フィールドセットIDと、それが表す「ALL_xxx」
+      const groupMappings = {
+        'strings': 'ALL_STRINGS',
+        'woodwinds': 'ALL_WOODWINDS',
+        'brass': 'ALL_BRASS',
+        'percussions': 'ALL_PERCUSSIONS',
+        'vocal': 'ALL_VOCAL'
+      };
+
+      // 各フィールドセットごとにチェックボックス状態を確認
+      for (const [groupId, allValue] of Object.entries(groupMappings)) {
+        const fieldset = document.getElementById(groupId);
+        if (!fieldset) continue;
+        const checkboxes = fieldset.querySelectorAll('input[type="checkbox"]');
+
+        let allChecked = false;
+        let normalValues = [];
+        checkboxes.forEach(chk => {
+          if (chk.value.toLowerCase() === 'all') {
+            // ALL チェックボックス
+            if (chk.checked) allChecked = true;
+          } else {
+            // 個別楽器
+            if (chk.checked) normalValues.push(chk.value.toLowerCase());
+          }
+        });
+
+        // もし ALL がONなら、ALL_STRINGS などのキーを selected に追加
+        if (allChecked) {
+          selected.push(allValue);
+        } else {
+          // そうでなければ個別の楽器コードを追加
+          selected.push(...normalValues);
+        }
+      }
+
+      // 指揮者がチェックされていたら追加
+      const conductorCheckbox = document.querySelector('#conductor input[type="checkbox"]');
+      if (conductorCheckbox && conductorCheckbox.checked) {
+        selected.push('dir');
+      }
+
+      // 全部の楽器を一括選択したフラグがONなら 'ALL_GLOBAL' を追加
+      if (window._allGlobalSelected) {
+        selected.push('ALL_GLOBAL');
+      }
+
+      return selected;
+    }
+
+    /**
+     * 曲名の選択状態を取得し、配列で返す
+     */
+    function getSelectedWorks() {
+      const workCheckboxes = document.querySelectorAll('#works input[type="checkbox"]');
+      const selected = Array.from(workCheckboxes)
+        .filter(chk => chk.checked)
+        .map(chk => chk.value.toLowerCase());
+
+      // ALL が含まれていれば ['ALL'] として返す
+      return selected.includes('all') ? ['ALL'] : selected;
+    }
+
+    /**
+     * 曲名をクリア
+     */
+    function clearWorks() {
+      const workCheckboxes = document.querySelectorAll('#works input[type="checkbox"]');
+      workCheckboxes.forEach(chk => {
+        chk.checked = false;
+        chk.parentElement.classList.remove('checked');
+      });
+    }
+
+    /**
+     * スクロール位置が300pxを超えたら「トップへ戻る」ボタンを表示
+     */
+    window.addEventListener('scroll', () => {
+      const scrollToTop = document.getElementById('scrollToTop');
+      if (window.scrollY > 300) {
+        scrollToTop.style.display = 'block';
+      } else {
+        scrollToTop.style.display = 'none';
+      }
+    });
+
+    /**
+     * 「トップへ戻る」ボタン押下
+     */
+    function scrollToTop() {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  </script>
+
+</head>
+
+<body>
+  <div class="container">
+    <h1>曲名と楽器から検索 (Gustav Mahler)</h1>
+
+    <!-- 曲名エリア -->
+    <div class="big-label">
+      曲名を選択
+    </div>
+    <button type="button" onclick="clearWorks()" class="clear-btn">曲名をクリア</button>
+    <fieldset id="works">
+      <legend>曲名</legend>
+      <!-- ALLチェックボックス -->
+      <label class="all-label">
+        <input type="checkbox" id="all-works" value="ALL">ALL
+      </label>
+      <div class="inner-checkbox-group checkbox-grid-songs">
+        <!-- 曲名チェックボックス群 -->
+        <label><input type="checkbox" value="交響曲第1番ニ長調（1884-88）">交響曲第1番ニ長調（1884-88）</label>
+        <label><input type="checkbox" value="交響曲第2番ハ短調（1888-94）">交響曲第2番ハ短調（1888-94）</label>
+        <label><input type="checkbox" value="交響曲第3番ニ短調（1893-96）">交響曲第3番ニ短調（1893-96）</label>
+        <label><input type="checkbox" value="交響曲第4番ト長調（1899-1900）">交響曲第4番ト長調（1899-1900）</label>
+        <label><input type="checkbox" value="交響曲第5番嬰ハ短調（1901-02）">交響曲第5番嬰ハ短調（1901-02）</label>
+        <label><input type="checkbox" value="交響曲第6番イ短調（1903-04）">交響曲第6番イ短調（1903-04）</label>
+        <label><input type="checkbox" value="交響曲第7番ホ短調（1904-05）">交響曲第7番ホ短調（1904-05）</label>
+        <label><input type="checkbox" value="交響曲第8番変ホ長調（1906）">交響曲第8番変ホ長調（1906）</label>
+        <label><input type="checkbox" value="交響曲イ短調『大地の歌』（1908）">交響曲イ短調『大地の歌』（1908）</label>
+        <label><input type="checkbox" value="交響曲第9番ニ長調（1909）">交響曲第9番ニ長調（1909）</label>
+        <label><input type="checkbox" value="交響曲第10番嬰ヘ長調（1910）">交響曲第10番嬰ヘ長調（1910）</label>
+        <label><input type="checkbox" value="交響曲第10番（クック版）">交響曲第10番（クック版）</label>
+        <label><input type="checkbox" value="嘆きの歌（1880）">嘆きの歌（1880）</label>
+        <label><input type="checkbox" value="嘆きの歌（1899）">嘆きの歌（1899）</label>
+        <label><input type="checkbox" value="さすらう若人の歌">さすらう若人の歌</label>
+        <label><input type="checkbox" value="子供の魔法の角笛">子供の魔法の角笛</label>
+        <label><input type="checkbox" value="子供の死の歌">子供の死の歌</label>
+        <label><input type="checkbox" value="リュッケルトの詩による5つの歌">リュッケルトの詩による5つの歌</label>
+        <label><input type="checkbox" value="花の章">花の章</label>
+        <label><input type="checkbox" value="葬礼">葬礼</label>
+      </div>
+    </fieldset>
+
+    <!-- 楽器選択エリア -->
+    <div class="big-label-instruments">
+      楽器を選択
+    </div>
+    <div>
+      <button type="button" id="all-instruments">すべての楽器を選択</button>
+      <button type="button" id="clear-instruments">楽器をクリア</button>
+      <div style="margin-top: 10px;">
+        <!-- オーケストラ全体を含めるかどうかのラジオボタン -->
+        <label style="display: block; margin-bottom: 5px;">
+          <input type="radio" name="include-orchestra-all" value="on" checked>
+          オーケストラ全体への指示を含める
+        </label>
+        <label style="display: block; margin-bottom: 15px;">
+          <input type="radio" name="include-orchestra-all" value="off">
+          含めない
+        </label>
+      </div>
+    </div>
+
+    <!-- 指揮者 -->
+    <fieldset id="conductor">
+      <legend>指揮者</legend>
+      <div class="inner-checkbox-group checkbox-grid">
+        <label>
+          <input type="checkbox" value="dir">Dirigent
+        </label>
+      </div>
+    </fieldset>
+
+    <!-- 弦楽器群 -->
+    <fieldset id="strings">
+      <legend>弦楽器群</legend>
+      <label class="all-label">
+        <input type="checkbox" id="all-strings" value="ALL">ALL
+      </label>
+      <div class="inner-checkbox-group checkbox-grid">
+        <label><input type="checkbox" value="v1">Violine1</label>
+        <label><input type="checkbox" value="v2">Violine2</label>
+        <label><input type="checkbox" value="va">Bratche</label>
+        <label><input type="checkbox" value="vc">Violoncello</label>
+        <label><input type="checkbox" value="kb">Kontrabaß</label>
+        <label><input type="checkbox" value="sv">Solo Violine</label>
+        <label><input type="checkbox" value="sva">Solo Bratche</label>
+        <label><input type="checkbox" value="svc">Solo Violoncello</label>
+        <label><input type="checkbox" value="skb">Solo Kontrabaß</label>
+      </div>
+    </fieldset>
+
+    <!-- 木管楽器群 -->
+    <fieldset id="woodwinds">
+      <legend>木管楽器群</legend>
+      <label class="all-label">
+        <input type="checkbox" id="all-woodwinds" value="ALL">ALL
+      </label>
+      <div class="inner-checkbox-group checkbox-grid">
+        <label><input type="checkbox" value="fl">Flöte</label>
+        <label><input type="checkbox" value="pic">Piccolo</label>
+        <label><input type="checkbox" value="ob">Oboe</label>
+        <label><input type="checkbox" value="eh">Englischhorn</label>
+        <label><input type="checkbox" value="cl">Klarinette</label>
+        <label><input type="checkbox" value="escl">Es-Klarinette</label>
+        <label><input type="checkbox" value="bcl">Bassklarinette</label>
+        <label><input type="checkbox" value="fg">Fagott</label>
+        <label><input type="checkbox" value="cfg">Kontrafagott</label>
+      </div>
+    </fieldset>
+
+    <!-- 金管楽器群 -->
+    <fieldset id="brass">
+      <legend>金管楽器群</legend>
+      <label class="all-label">
+        <input type="checkbox" id="all-brass" value="ALL">ALL
+      </label>
+      <div class="inner-checkbox-group checkbox-grid">
+        <label><input type="checkbox" value="tr">Trompete</label>
+        <label><input type="checkbox" value="pis">Piston</label>
+        <label><input type="checkbox" value="phr">Posthorn</label>
+        <label><input type="checkbox" value="hr">Horn</label>
+        <label><input type="checkbox" value="thr">Tenorhorn</label>
+        <label><input type="checkbox" value="ohr">Obligates Horn</label>
+        <label><input type="checkbox" value="fhr">Flügelhorn</label>
+        <label><input type="checkbox" value="whr">Waldhorn</label>
+        <label><input type="checkbox" value="pos">Posaune</label>
+        <label><input type="checkbox" value="bt">Basstuba</label>
+      </div>
+    </fieldset>
+
+    <!-- 打楽器群 -->
+    <fieldset id="percussions">
+      <legend>打楽器群など</legend>
+      <label class="all-label">
+        <input type="checkbox" id="all-percussions" value="ALL">ALL
+      </label>
+      <div class="inner-checkbox-group checkbox-grid">
+        <label><input type="checkbox" value="pau">Pauken</label>
+        <label><input type="checkbox" value="gtr">Gloße Trommel</label>
+        <label><input type="checkbox" value="ktr">Kleine Trommel</label>
+        <label><input type="checkbox" value="mtr">Militär Trommel</label>
+        <label><input type="checkbox" value="bec">Becken</label>
+        <label><input type="checkbox" value="tam">Tam-tam</label>
+        <label><input type="checkbox" value="tri">Triangel</label>
+        <label><input type="checkbox" value="gls">Glockenspiel</label>
+        <label><input type="checkbox" value="hgl">Herdenglocken</label>
+        <label><input type="checkbox" value="gl">Glocken</label>
+        <label><input type="checkbox" value="ham">Hammer</label>
+        <label><input type="checkbox" value="rt">Rute</label>
+        <label><input type="checkbox" value="cel">Celesta</label>
+        <label><input type="checkbox" value="hp">Harfe</label>
+        <label><input type="checkbox" value="org">Orgel</label>
+        <label><input type="checkbox" value="klv">Klavier</label>
+        <label><input type="checkbox" value="har">Harmonium</label>
+        <label><input type="checkbox" value="git">Gitarre</label>
+        <label><input type="checkbox" value="man">Mandoline</label>
+      </div>
+    </fieldset>
+
+    <!-- 声楽・合唱 -->
+    <fieldset id="vocal">
+      <legend>声楽・合唱</legend>
+      <label class="all-label">
+        <input type="checkbox" id="all-vocal" value="ALL">ALL
+      </label>
+      <div class="inner-checkbox-group checkbox-grid">
+        <label><input type="checkbox" value="sop">Sopran</label>
+        <label><input type="checkbox" value="alt">Alto</label>
+        <label><input type="checkbox" value="ten">Tenor</label>
+        <label><input type="checkbox" value="bar">Bariton</label>
+        <label><input type="checkbox" value="bass">Bass</label>
+        <label><input type="checkbox" value="sop1">Sopran1</label>
+        <label><input type="checkbox" value="sop2">Sopran2</label>
+        <label><input type="checkbox" value="alt1">Alto1</label>
+        <label><input type="checkbox" value="alt2">Alto2</label>
+        <label><input type="checkbox" value="kalt">Knabe(Alto)</label>
+        <label><input type="checkbox" value="chor">Chor</label>
+        <label><input type="checkbox" value="chor1">Chor1</label>
+        <label><input type="checkbox" value="chor2">Chor2</label>
+        <label><input type="checkbox" value="fchor">frauen Chor</label>
+        <label><input type="checkbox" value="kchor">knaben Chor</label>
+        <label><input type="checkbox" value="sti">Stimme</label>
+      </div>
+    </fieldset>
+
+    <!-- 検索ボタン・中止ボタン -->
+    <div style="text-align: center;">
+      <button type="button" onclick="search()">検索</button>
+      <button type="button" onclick="cancelSearch()" class="btn-danger">中止</button>
+    </div>
+
+    <!-- 検索結果表示領域 -->
+    <div id="results"></div>
+  </div>
+
+  <!-- ページのトップへ戻るボタン -->
+  <div id="scrollToTop" onclick="scrollToTop()">▲ ページのトップへ戻る</div>
+</body>
+
+</html>
