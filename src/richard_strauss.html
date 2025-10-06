@@ -184,6 +184,8 @@
 
     .loading,
     .result-message {
+      font-family: Georgia, serif;
+      font-size: 1.0em;
       font-weight: bold;
       text-align: center;
       padding: 20px;
@@ -451,7 +453,7 @@
         setResults('<p class="result-message">場面を選択してください。</p>');
         return;
       }
-      setResults('<p class="loading">検索しています・・・</p>');
+  setResults('<p class="loading">検索中・・・</p>');
       currentSearchId++;
       const thisSearchId = currentSearchId;
       google.script.run
@@ -476,7 +478,7 @@
         setResults('<p class="result-message">ページ番号を入力してください。</p>');
         return;
       }
-      setResults('<p class="loading">検索しています・・・</p>');
+  setResults('<p class="loading">検索中・・・</p>');
       currentSearchId++;
       const thisSearchId = currentSearchId;
       google.script.run

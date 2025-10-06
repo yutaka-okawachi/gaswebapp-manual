@@ -143,7 +143,11 @@
     }
 
     .loading {
-      font-weight: bold;
+  font-family: Georgia, serif;
+  font-size: 1.0em;
+  font-weight: bold;
+  text-align: center;
+  padding: 20px;
     }
 
     /* ---------------------------------------------------------------
@@ -594,7 +598,7 @@
       }
 
       // 「検索しています…」メッセージを表示
-      resultsDiv.innerHTML = '<p class="loading">検索しています・・・</p>';
+  resultsDiv.innerHTML = '<p class="loading">検索中・・・</p>';
 
       // 検索IDを更新（キャンセル制御用）
       currentSearchId++;

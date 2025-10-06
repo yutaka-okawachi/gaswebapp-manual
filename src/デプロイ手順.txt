@@ -1,0 +1,13 @@
+# 1) プロジェクト直下へ
+cd "C:\Users\okawa\gaswebapp-manual"
+
+# 2) ローカル編集を GAS へ反映
+clasp push
+
+# 3) Apps Script の新しいバージョンを作成（※ -- なし！）
+clasp version "update: 検索中・・・を検索中に"
+# 例: 出力 → Created version 566.
+
+# 4) 本番デプロイを新バージョンに更新（あなたの本番IDで）
+clasp deploy -i AKfycbxWl-KLwo8SnOyqQT84gJyrofRQnIp_GBv8Pg0N5athPAoxp9LBuwj0HDTXkFqh0xiGsw -V 566 -d "rollout"
+# ※ 3) で表示された番号に置き換えてください

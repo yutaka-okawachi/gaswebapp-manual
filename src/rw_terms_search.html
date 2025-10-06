@@ -130,6 +130,8 @@
 
     .loading,
     .result-message {
+      font-family: Georgia, serif;
+      font-size: 1.0em;
       font-weight: bold;
       text-align: center;
       padding: 20px;
@@ -223,7 +225,7 @@
         resultsDiv.innerHTML = '<p class="result-message">検索語句を入力してください。</p>';
         return;
       }
-      resultsDiv.innerHTML = '<p class="loading">検索しています・・・</p>';
+  resultsDiv.innerHTML = '<p class="loading">検索中・・・</p>';
       currentSearchId++;
       const thisSearchId = currentSearchId;
 
