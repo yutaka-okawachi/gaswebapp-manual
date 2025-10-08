@@ -357,7 +357,15 @@
 
   <div id="scrollToTop" onclick="scrollToTop()">▲ ページのトップへ戻る</div>
   <script>
-    const sceneOptionsData = <?!= JSON.stringify(sceneOptions || {}) ?>;
+    // GASテンプレートで sceneOptions が展開される場合はそのJSONを使い、
+    // ローカル編集や静的解析時（テンプレート未展開）には空オブジェクトにフォールバックします。
+    const sceneOptionsData = (function(){
+      try {
+        return (typeof sceneOptions !== 'undefined') ? sceneOptions : <?!= JSON.stringify(sceneOptions || {}) ?>;
+      } catch (e) {
+        return {};
+      }
+    })();
 
     let currentSearchId = 0;
     document.addEventListener('DOMContentLoaded', () => {

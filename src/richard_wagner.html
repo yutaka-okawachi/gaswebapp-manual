@@ -350,7 +350,15 @@
 
   <div id="scrollToTop" onclick="scrollToTop()">▲ ページのトップへ戻る</div>
   <script>
-    const sceneOptionsData = <?!= JSON.stringify(sceneOptions || {}) ?>;
+    // GASテンプレートで展開されるJSONをパースして利用します。
+    // テンプレート未展開（ローカル編集など）の場合は空オブジェクトにフォールバックします。
+    const sceneOptionsData = (function(){
+      try {
+        return JSON.parse('<?!= JSON.stringify(sceneOptions || {}) ?>');
+      } catch (e) {
+        return {};
+      }
+    })();
 
     let currentSearchId = 0;
     document.addEventListener('DOMContentLoaded', () => {
