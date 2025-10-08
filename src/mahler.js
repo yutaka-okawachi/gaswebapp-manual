@@ -1,3 +1,18 @@
+/**
+ * RS/RWサジェスト用語リストのキャッシュを強化する関数
+ * 定期的にトリガーで実行推奨
+ */
+function updateDeTermsCache_RS() {
+  const allData = getRichardStraussData();
+  const deTerms = [...new Set(allData.map(row => row.de).filter(de => de))];
+  CacheService.getScriptCache().put('rs_de_terms_cache', JSON.stringify(deTerms), 3600);
+}
+
+function updateDeTermsCache_RW() {
+  const allData = getRichardWagnerData();
+  const deTerms = [...new Set(allData.map(row => row.de).filter(de => de))];
+  CacheService.getScriptCache().put('rw_de_terms_cache', JSON.stringify(deTerms), 3600);
+}
 /***************************************
  * mahler.js
  * * Google Apps Script 上で動作するサーバーサイドのスクリプト。
@@ -889,14 +904,13 @@ function getRichardStraussDeTerms() {
 }
 
 function searchRSTermsPartially(input) {
-  if (!input || typeof input !== 'string' || input.trim().length < 2) {
-    return [];
-  }
+  if (!input || typeof input !== 'string' || input.trim().length < 2) return [];
   const normalizedInput = normalizeString(input);
-  const allTerms = getRichardStraussDeTerms();
-
-  const results = allTerms.filter(term => normalizeString(term).includes(normalizedInput));
-  return results.slice(0, 20);
+  const cache = CacheService.getScriptCache();
+  const cached = cache.get('rs_de_terms_cache');
+  if (!cached) return [];
+  const allTerms = JSON.parse(cached);
+  return allTerms.filter(term => normalizeString(term).includes(normalizedInput)).slice(0, 20);
 }
 
 function searchRSTerms(query) {
@@ -994,14 +1008,13 @@ function getRichardWagnerDeTerms() {
 }
 
 function searchRWTermsPartially(input) {
-  if (!input || typeof input !== 'string' || input.trim().length < 2) {
-    return [];
-  }
+  if (!input || typeof input !== 'string' || input.trim().length < 2) return [];
   const normalizedInput = normalizeString(input);
-  const allTerms = getRichardWagnerDeTerms();
-
-  const results = allTerms.filter(term => normalizeString(term).includes(normalizedInput));
-  return results.slice(0, 20);
+  const cache = CacheService.getScriptCache();
+  const cached = cache.get('rw_de_terms_cache');
+  if (!cached) return [];
+  const allTerms = JSON.parse(cached);
+  return allTerms.filter(term => normalizeString(term).includes(normalizedInput)).slice(0, 20);
 }
 
 function searchRWTerms(query) {

@@ -115,6 +115,5 @@ cd "C:\Users\okawa\gaswebapp-manual"
 
 - 本番URLは固定
 - バージョン番号を都度メモ
-- GitHubでも履歴管理
 - GoogleサイトURLは最初の1回だけ設定
 - clasp / Node.js は定期更新
