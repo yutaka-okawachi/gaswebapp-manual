@@ -310,26 +310,10 @@
       currentSearchId++;
     }
 
-    // スクロール監視でトップへ戻るボタンを出す
-    window.addEventListener('scroll', () => {
-      const scrollToTop = document.getElementById('scrollToTop');
-      if (window.scrollY > 300) {
-        scrollToTop.style.display = 'block';
-      } else {
-        scrollToTop.style.display = 'none';
-      }
-    });
-
-    function scrollToTop() {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-
-    /**
-     * 入力欄をクリアする
-     */
     function clearInput() {
       document.getElementById('termInput').value = '';
       document.getElementById('termSuggestions').innerHTML = '';
+      document.getElementById('results').innerHTML = '';
     }
   </script>
 </head>
@@ -364,6 +348,7 @@
     <!-- トップへ戻るボタン -->
     <div id="scrollToTop" onclick="scrollToTop()">▲ ページのトップへ戻る</div>
   </div>
+  <?!= include('common_scripts.html') ?>
 </body>
 
 </html>

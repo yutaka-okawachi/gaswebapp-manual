@@ -5,290 +5,42 @@
   <meta charset="UTF-8">
   <title>マーラー以外の作曲家のドイツ語</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <?!= include('common_styles.html') ?>
   <style>
-    /* 全ての要素に box-sizing を適用 */
-    * {
-      box-sizing: border-box;
-    }
-
-    /********************************************************
-     * ページ全体のデザイン
-     ********************************************************/
-    body {
-      font-family: 'Bitter', serif;
-      margin: 0;
-      padding: 0;
-      background-color: #fffaf7;
-      line-height: 1.6;
-      overflow-x: hidden;
-      max-width: 100%;
-    }
-
-    /* 固定ヘッダー */
-    #fixedHeader {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      z-index: 1000;
-      background-color: #fffaf7;
-      border-bottom: 1px solid #ccc;
-    }
-
-    /* タイトル（Arial） */
-    #fixedHeader h1 {
-      font-family: Arial, sans-serif;
-      font-size: 1.2rem;
-      margin: 0;
-      padding: 10px;
-      text-align: center;
-      background-color: #ffdce0;
-      border-bottom: 6px solid #e35d76;
-      font-weight: bold;
-    }
-
-    /* ナビゲーションバー */
-    #navbar {
-      font-family: 'Bitter', serif;
-      /* 'Bitter' に統一 */
-      text-align: center;
-      background-color: #e0ffe0;
-      padding: 8px 10px;
-      border-bottom: 1px solid #ccc;
-    }
-
-    /* ナビゲーションバーのリンクスタイル */
-    #navbar a {
-      margin: 0 5px;
-      text-decoration: none;
-      color: #0066cc;
-      font-weight: bold;
-      font-family: 'Bitter', serif;
-      /* 全てのリンクに 'Bitter' を適用 */
-    }
-
-    #navbar a:hover {
-      text-decoration: underline;
-    }
-
-    /* メインコンテナ */
-    .container {
-      width: 90%;
-      max-width: 1000px;
-      margin: 120px auto 20px;
-      /* 固定ヘッダーの高さを考慮 */
-      padding: 20px;
-      background-color: #fff2e0;
-      border-radius: 10px;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    }
-
-    /********************************************************
-     * 上部の追加テキスト
-     ********************************************************/
-    .top-message {
-      font-size: 0.95rem;
-      margin-bottom: 1em;
-      color: #333;
-      font-family: 'Bitter', serif;
-    }
-
-    /********************************************************
-     * 「略記一覧」表示部分
-     ********************************************************/
-    #abbrListContainer {
-      margin-top: 2em;
-    }
-
-    /* タイトル行 */
-    .abbr-title {
-      font-size: 1.1rem;
-      /* やや大きめのフォント */
-      font-weight: bold;
-      color: #000;
-      /* 黒色 */
-      background-color: #ffe6d1;
-      /* コンテナに似た淡い背景色 */
-      padding: 8px;
-      margin-bottom: 0.5em;
-      border-radius: 5px;
-      /* scroll-margin-top は後述 */
-    }
-
-    /* 通常行 */
-    .abbr-row {
-      display: flex;
-      flex-direction: row;
-      align-items: flex-start;
-      margin-bottom: 0.5em;
-      /* scroll-margin-top は後述 */
-    }
-
-    .abbr-row .abbr-short {
-      flex: 0 0 20%;
-      /* 略記の幅を固定 */
-      white-space: normal;
-      /* 改行を許可 */
-      word-wrap: break-word;
-      overflow-wrap: break-word;
-      /* 【追加】長い単語の折り返し */
-      font-size: 0.85rem;
-    }
-
-    .abbr-row .abbr-long {
-      flex: 1;
-      white-space: normal;
-      /* 【変更】 pre-wrap → normal */
-      word-wrap: break-word;
-      overflow-wrap: break-word;
-      /* 【追加】長い単語の折り返し */
-      margin-left: 1em;
-      font-size: 0.85rem;
-    }
-
-    /* 区切り線 */
-    .section-divider {
-      border: 0;
-      border-top: 2px dashed #999;
-      margin: 2em 0;
-    }
-
-    /* 略記一覧の注釈 */
-    .abbr-annotation {
-      font-family: 'Bitter', serif;
-      font-size: 0.85rem;
-      color: #333;
-      margin-top: 0.5em;
-    }
-
-    /* 「マーラー以外のドイツ語」一覧部分 */
-    .row {
-      display: flex;
-      flex-direction: column;
-      border-bottom: 1px solid #ccc;
-      padding-bottom: 10px;
-      margin-bottom: 10px;
-      word-wrap: break-word;
-      word-break: break-word;
-    }
-
-    .german {
-      font-size: 1.1rem;
-      white-space: pre-wrap;
-      display: block;
-    }
-
-    .translation {
-      font-size: 0.9rem;
-      white-space: pre-wrap;
-      margin-left: 1rem;
-      font-family: 'Bitter', serif;
-    }
-
-    .source {
-      font-size: 0.8rem;
-      color: #555;
-      white-space: normal;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      display: block;
-      margin-left: 0.5rem;
-    }
-
-    /* ローディングメッセージ */
-    #loadingMessage {
-  font-family: Georgia, serif;
-  font-size: 1.0em;
-  font-weight: bold;
-  text-align: center;
-  padding: 20px;
-  color: #555;
-    }
-
-    /* ★★★ ここから追加（トップへ戻るボタン） ★★★ */
-    #scrollToTop {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      background-color: rgba(173, 216, 230, 0.8);
-      color: black;
-      padding: 8px 12px;
-      border-radius: 5px;
-      cursor: pointer;
-      font-size: 13px;
-      z-index: 1001; /* ヘッダーより手前に表示 */
-      display: none;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-    }
-
-    #scrollToTop:hover {
-      background-color: rgba(135, 206, 250, 0.9);
-    }
-    /* ★★★ ここまで追加 ★★★ */
-
-    /* スマホ対応 */
+    /* list.html固有のスタイル */
+    body { font-family: 'Bitter', serif; overflow-x: hidden; max-width: 100%; }
+    #fixedHeader { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; background-color: var(--primary-bg); border-bottom: 1px solid #ccc; }
+    #fixedHeader h1 { font-family: Arial, sans-serif; font-size: 1.2rem; margin: 0; }
+    #navbar { font-family: 'Bitter', serif; text-align: center; background-color: #e0ffe0; padding: 8px 10px; border-bottom: 1px solid #ccc; }
+    #navbar a { margin: 0 5px; text-decoration: none; color: #0066cc; font-weight: bold; font-family: 'Bitter', serif; }
+    #navbar a:hover { text-decoration: underline; }
+    .container { margin: 120px auto 20px; background-color: var(--results-bg); }
+    .top-message { font-size: 0.95rem; margin-bottom: 1em; color: var(--text-color); font-family: 'Bitter', serif; }
+    #abbrListContainer { margin-top: 2em; }
+    .abbr-title { font-size: 1.1rem; font-weight: bold; color: #000; background-color: #ffe6d1; padding: 8px; margin-bottom: 0.5em; border-radius: 5px; }
+    .abbr-row { display: flex; flex-direction: row; align-items: flex-start; margin-bottom: 0.5em; }
+    .abbr-row .abbr-short { flex: 0 0 20%; white-space: normal; word-wrap: break-word; overflow-wrap: break-word; font-size: 0.85rem; }
+    .abbr-row .abbr-long { flex: 1; white-space: normal; word-wrap: break-word; overflow-wrap: break-word; margin-left: 1em; font-size: 0.85rem; }
+    .section-divider { border: 0; border-top: 2px dashed #999; margin: 2em 0; }
+    .abbr-annotation { font-family: 'Bitter', serif; font-size: 0.85rem; color: var(--text-color); margin-top: 0.5em; }
+    .row { display: flex; flex-direction: column; border-bottom: 1px solid #ccc; padding-bottom: 10px; margin-bottom: 10px; word-wrap: break-word; word-break: break-word; }
+    .german { font-size: 1.1rem; white-space: pre-wrap; display: block; }
+    .translation { font-size: 0.9rem; white-space: pre-wrap; margin-left: 1rem; font-family: 'Bitter', serif; }
+    .source { font-size: 0.8rem; color: #555; white-space: normal; overflow: hidden; text-overflow: ellipsis; display: block; margin-left: 0.5rem; }
+    #loadingMessage { color: #555; }
+    #scrollToTop { bottom: 20px; top: auto; z-index: 1001; } /* 位置を下に */
     @media (max-width: 600px) {
-      body {
-        font-size: 12px;
-      }
-
-      #fixedHeader h1 {
-        font-size: 1.2rem;
-      }
-
-      .german {
-        font-size: 1rem;
-      }
-
-      .translation {
-        font-size: 0.8rem;
-      }
-
-      .abbr-row {
-        display: block;
-        /* フレックスレイアウトを解除 */
-      }
-
-      .abbr-row .abbr-short {
-        display: block;
-        width: 100%;
-        font-weight: bold;
-        /* 目立つように */
-        margin-bottom: 5px;
-        /* 下の説明との間隔 */
-      }
-
-      .abbr-row .abbr-long {
-        display: block;
-        width: 100%;
-      }
-
-      .top-message {
-        font-size: 0.85rem;
-      }
-
-      .abbr-annotation {
-        font-size: 0.85rem;
-      }
-
-      /* スマホ用に scroll-margin-top を調整 */
-      .abbr-title,
-      .abbr-row,
-      .row[id],
-      #abbrListContainer {
-        scroll-margin-top: 80px;
-        /* スマホの固定ヘッダー高さに合わせる */
-      }
+      body { font-size: 12px; }
+      #fixedHeader h1 { font-size: 1.2rem; }
+      .german { font-size: 1rem; }
+      .translation { font-size: 0.8rem; }
+      .abbr-row { display: block; }
+      .abbr-row .abbr-short { display: block; width: 100%; font-weight: bold; margin-bottom: 5px; }
+      .abbr-row .abbr-long { display: block; width: 100%; }
+      .top-message, .abbr-annotation { font-size: 0.85rem; }
+      .abbr-title, .abbr-row, .row[id], #abbrListContainer { scroll-margin-top: 80px; }
     }
-
-    /* デスクトップ用 scroll-margin-top */
-    .abbr-title,
-    .abbr-row,
-    .row[id],
-    #abbrListContainer {
-      scroll-margin-top: 120px;
-      /* 固定ヘッダーの高さに合わせる */
-    }
+    .abbr-title, .abbr-row, .row[id], #abbrListContainer { scroll-margin-top: 120px; }
   </style>
 
   <link href="https://fonts.googleapis.com/css2?family=Bitter&display=swap" rel="stylesheet">
@@ -439,26 +191,6 @@
       });
     }
 
-    // ★★★ ここから追加 ★★★
-    /**
-     * スクロール位置が300pxを超えたら「トップへ戻る」ボタンを表示
-     */
-    window.addEventListener('scroll', () => {
-      const scrollToTopBtn = document.getElementById('scrollToTop');
-      if (window.scrollY > 300) {
-        scrollToTopBtn.style.display = 'block';
-      } else {
-        scrollToTopBtn.style.display = 'none';
-      }
-    });
-
-    /**
-     * 「トップへ戻る」ボタン押下
-     */
-    function scrollToTop() {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-    // ★★★ ここまで追加 ★★★
   </script>
 </head>
 
@@ -516,6 +248,7 @@
   </div>
 
   <div id="scrollToTop" onclick="scrollToTop()">▲ ページのトップへ戻る</div>
+  <?!= include('common_scripts.html') ?>
   </body>
 
 </html>

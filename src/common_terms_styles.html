@@ -1,0 +1,140 @@
+<style>
+:root {
+  --primary-bg: #fffaf7;
+  --container-bg: #fff;
+  --title-bg: #ffdce0;
+  --title-border: #e35d76;
+  --results-bg: #fff2e0;
+  --button-bg: #79a9f2;
+  --button-hover-bg: #5a8ad0;
+  --danger-button-bg: #ff8c8c;
+  --danger-button-hover-bg: #e26767;
+  --clear-button-bg: #f7c59f;
+  --clear-button-hover-bg: #e6b58b;
+  --input-border: #79a9f2;
+  --input-bg: #f4faff;
+  --text-color: #333;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: "Yu Gothic", "Hiragino Kaku Gothic ProN", Meiryo, sans-serif;
+  background: var(--primary-bg);
+  line-height: 1.6;
+}
+
+.container {
+  width: 90%;
+  max-width: 1000px;
+  margin: 20px auto;
+  padding: 20px;
+  background: var(--container-bg);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  min-height: 70vh;
+  border-radius: 10px;
+}
+
+h1 {
+  font-size: 1.5rem;
+  margin-bottom: 20px;
+  padding: 10px;
+  text-align: center;
+  background-color: var(--title-bg);
+  border-bottom: 6px solid var(--title-border);
+  border-radius: 6px;
+  font-weight: bold;
+  margin-top: 0;
+}
+
+p, ul {
+  margin: 10px 0;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: var(--text-color);
+}
+
+ul { padding-left: 1.5rem; }
+
+input[type="text"] {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 10px;
+  margin-bottom: 10px;
+  font-size: 1rem;
+  border: 2px solid var(--input-border);
+  border-radius: 10px;
+  background-color: var(--input-bg);
+}
+
+button {
+  margin: 8px 5px;
+  padding: 8px 16px;
+  font-size: 1rem;
+  font-weight: bold;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+button.btn-search { background-color: var(--button-bg); }
+button.btn-search:hover { background-color: var(--button-hover-bg); }
+button.btn-danger { background-color: var(--danger-button-bg); }
+button.btn-danger:hover { background-color: var(--danger-button-hover-bg); }
+button.clear-input-btn { background-color: var(--clear-button-bg); }
+button.clear-input-btn:hover { background-color: var(--clear-button-hover-bg); }
+
+#results {
+  margin-top: 20px;
+  padding: 10px;
+  background: var(--results-bg);
+  border-radius: 5px;
+  min-height: 200px;
+  white-space: normal; /* 余計な改行を折り畳む */
+  line-height: 1.5;    /* 行間は共通で統一 */
+}
+
+/* 検索結果の見出しと行アイテム（両ページ共通の出力HTMLに対応） */
+.result-a {
+  font-size: 1.1em;
+  font-weight: bold;
+  margin-top: 1em;
+}
+
+.result-c {
+  font-size: 0.95em;
+  margin-left: 1em;
+}
+
+#results > .result-a:first-child { margin-top: 0; }
+
+.loading, .result-message {
+  font-family: Georgia, serif;
+  font-size: 1.0em;
+  font-weight: bold;
+  text-align: center;
+  padding: 20px;
+}
+
+/* トップへ戻るボタン */
+#scrollToTop {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background-color: rgba(173, 216, 230, 0.8);
+  color: black;
+  padding: 8px 12px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 13px;
+  z-index: 1000;
+  display: none;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+#scrollToTop:hover { background-color: rgba(135, 206, 250, 0.9); }
+</style>

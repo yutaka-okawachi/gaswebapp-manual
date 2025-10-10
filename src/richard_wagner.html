@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
 <head>
   <meta charset="UTF-8">
@@ -23,271 +23,52 @@
       --text-color: #333;
       --placeholder-color: #aaa;
     }
-
-    * {
-      box-sizing: border-box;
-    }
-
-    body {
-      margin: 0;
-      padding: 0;
-      font-family: "Yu Gothic", "Hiragino Kaku Gothic ProN", Meiryo, sans-serif;
-      background: var(--primary-bg);
-      line-height: 1.6;
-    }
-
-    .container {
-      width: 90%;
-      max-width: 1000px;
-      margin: 20px auto;
-      padding: 20px;
-      background: var(--container-bg);
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-      min-height: 70vh;
-      border-radius: 10px;
-    }
-
-    h1 {
-      font-size: 1.5rem;
-      margin-bottom: 20px;
-      padding: 10px;
-      text-align: center;
-      background-color: var(--title-bg);
-      border-bottom: 6px solid var(--title-border);
-      border-radius: 6px;
-      font-weight: bold;
-      margin-top: 0;
-    }
-
-    .big-label {
-      font-size: 1.2rem;
-      margin: 20px 0 10px;
-      padding: 8px;
-      background-color: var(--section-label-bg);
-      border-radius: 5px;
-      font-weight: bold;
-    }
-
-    fieldset {
-      margin-bottom: 20px;
-      border: 1px solid #ccc;
-      padding: 15px;
-      border-radius: 10px;
-      background-color: #fafafa;
-    }
-
-    legend {
-      display: none;
-    }
-    
-    .radio-group {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 10px 20px;
-    }
-    
-    #opera-selection {
-      display: block;
-    }
-
-    .radio-group label {
-      display: block;
-      margin-bottom: 8px;
-    }
-    
-    .checkbox-group {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-      gap: 5px 15px;
-    }
-
-    .checkbox-group hr {
-        grid-column: 1 / -1;
-        width: 100%;
-        border: 0;
-        border-top: 1px solid #ccc;
-        margin: 5px 0;
-    }
-    
-    .checkbox-group label {
-      display: block;
-      margin-bottom: 5px;
-    }
-
-    input[type="radio"],
-    input[type="checkbox"] {
-      margin-right: 8px;
-    }
-
-    .accordion-content {
-      display: none;
-      margin-top: 10px;
-    }
-
-    input[type="text"] {
-      width: 100%;
-      box-sizing: border-box;
-      padding: 10px;
-      margin-bottom: 10px;
-      font-size: 1rem;
-      border: 2px solid var(--input-border);
-      border-radius: 10px;
-      background-color: var(--input-bg);
-    }
-
-    input::placeholder {
-      color: var(--placeholder-color);
-      opacity: 1;
-    }
-
-    .button-container {
-      text-align: center;
-      margin-top: 20px;
-    }
-
-    button {
-      margin: 8px 5px;
-      padding: 8px 16px;
-      font-size: 1rem;
-      font-weight: bold;
-      color: #fff;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      transition: background-color 0.3s ease;
-    }
-
-    button.btn-search {
-      background-color: var(--button-bg);
-    }
-    button.btn-search:hover {
-      background-color: var(--button-hover-bg);
-    }
-
-    button.btn-danger {
-      background-color: var(--danger-button-bg);
-    }
-    button.btn-danger:hover {
-      background-color: var(--danger-button-hover-bg);
-    }
-
-    button.btn-clear {
-      background-color: var(--clear-button-bg);
-    }
-    button.btn-clear:hover {
-      background-color: var(--clear-button-hover-bg);
-    }
-
-    .loading,
-    .result-message {
-      font-family: Georgia, serif;
-      font-size: 1.0em;
-      font-weight: bold;
-      text-align: center;
-      padding: 20px;
-    }
-
-    #results {
-      margin-top: 10px;
-      background-color: #fff2e0;
-      padding: 10px;
-      border-radius: 5px;
-      min-height: 150px;
-      line-height: 1.5;
-    }
-
-    #results > div:first-child {
-      margin-bottom: 15px;
-    }
-
-    .scene-title {
-      font-size: 1.2em;
-      font-weight: bold;
-      padding-bottom: 4px;
-      border-bottom: 2px solid #ccc;
-      margin-top: 1.2em;
-      margin-bottom: 10px;
-    }
-
-    #results > .scene-title:first-of-type {
-      margin-top: 0;
-    }
-
-    .result-entry {
-      display: flex;
-      align-items: baseline;
-      margin-bottom: 0.6em;
-      font-size: 0.96em;
-    }
-
-    .result-page {
-      flex: 0 0 4em;
-      font-weight: normal;
-      color: #555;
-      white-space: nowrap;
-      font-size: 0.9em;
-    }
-
-    .result-content {
-      flex: 1;
-    }
-
-    .result-de {
-      font-weight: bold;
-      font-size: 1em;
-      display: block;
-    }
-
-    .result-ja-loc {
-      display: block;
-      font-size: 0.94em;
-      font-weight: normal;
-      margin-top: 2px;
-    }
-
-    .result-ja-loc span:last-child {
-      margin-left: 0.5em;
-      font-size: 0.9em;
-      color: #444;
-    }
-
-    .score-info {
-      padding: 12px;
-      margin-bottom: 20px;
-      background-color: #eaf5fa; 
-      border: 1px solid #b3d9ff;
-      border-left: 5px solid #79a9f2; 
-      border-radius: 5px;
-      font-size: 0.95em;
-      color: #333;
-    }
-    
-    /* ▼▼▼ ここから「トップへ戻る」ボタンのスタイルを追加 ▼▼▼ */
-    #scrollToTop {
-      position: fixed;
-      top: 20px;
-      right: 20px;
-      background-color: rgba(173, 216, 230, 0.8);
-      color: black;
-      padding: 8px 12px;
-      border-radius: 5px;
-      cursor: pointer;
-      font-size: 13px;
-      z-index: 1000;
-      display: none;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-    }
-
-    #scrollToTop:hover {
-      background-color: rgba(135, 206, 250, 0.9);
-    }
-    /* ▲▲▲ ここまでスタイルを追加 ▲▲▲ */
+    * { box-sizing: border-box; }
+    body { margin: 0; padding: 0; font-family: "Yu Gothic", "Hiragino Kaku Gothic ProN", Meiryo, sans-serif; background: var(--primary-bg); line-height: 1.6; }
+    .container { width: 90%; max-width: 1000px; margin: 20px auto; padding: 20px; background: var(--container-bg); box-shadow: 0 2px 8px rgba(0,0,0,0.1); min-height: 70vh; border-radius: 10px; }
+    h1 { font-size: 1.5rem; margin-bottom: 20px; padding: 10px; text-align: center; background-color: var(--title-bg); border-bottom: 6px solid var(--title-border); border-radius: 6px; font-weight: bold; margin-top: 0; }
+    .big-label { font-size: 1.2rem; margin: 20px 0 10px; padding: 8px; background-color: var(--section-label-bg); border-radius: 5px; font-weight: bold; }
+    fieldset { margin-bottom: 20px; border: 1px solid #ccc; padding: 15px; border-radius: 10px; background-color: #fafafa; }
+    legend { display: none; }
+    .radio-group { display: flex; flex-wrap: wrap; gap: 10px 20px; }
+    #opera-selection { display: block; }
+    .radio-group label { display: block; margin-bottom: 8px; }
+    .checkbox-group { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 5px 15px; }
+    .checkbox-group hr { grid-column: 1 / -1; width: 100%; border: 0; border-top: 1px solid #ccc; margin: 5px 0; }
+    .checkbox-group label { display: block; margin-bottom: 5px; }
+    input[type="radio"], input[type="checkbox"] { margin-right: 8px; }
+    .accordion-content { display: none; margin-top: 10px; }
+    input[type="text"] { width: 100%; box-sizing: border-box; padding: 10px; margin-bottom: 10px; font-size: 1rem; border: 2px solid var(--input-border); border-radius: 10px; background-color: var(--input-bg); }
+    input::placeholder { color: var(--placeholder-color); opacity: 1; }
+    .button-container { text-align: center; margin-top: 20px; }
+    button { margin: 8px 5px; padding: 8px 16px; font-size: 1rem; font-weight: bold; color: #fff; border: none; border-radius: 4px; cursor: pointer; transition: background-color 0.3s ease; }
+    button.btn-search { background-color: var(--button-bg); }
+    button.btn-search:hover { background-color: var(--button-hover-bg); }
+    button.btn-danger { background-color: var(--danger-button-bg); }
+    button.btn-danger:hover { background-color: var(--danger-button-hover-bg); }
+    button.btn-clear { background-color: var(--clear-button-bg); }
+    button.btn-clear:hover { background-color: var(--clear-button-hover-bg); }
+    .loading, .result-message { font-family: Georgia, serif; font-size: 1.0em; font-weight: bold; text-align: center; padding: 20px; }
+    #results { margin-top: 10px; background-color: #fff2e0; padding: 10px; border-radius: 5px; min-height: 150px; line-height: 1.5; }
+    #results > div:first-child { margin-bottom: 15px; }
+    .scene-title { font-size: 1.2em; font-weight: bold; padding-bottom: 4px; border-bottom: 2px solid #ccc; margin-top: 1.2em; margin-bottom: 10px; }
+    #results > .scene-title:first-of-type { margin-top: 0; }
+    .result-entry { display: flex; align-items: baseline; margin-bottom: 0.6em; font-size: 0.96em; }
+    .result-page { flex: 0 0 4em; font-weight: normal; color: #555; white-space: nowrap; font-size: 0.9em; }
+    .result-content { flex: 1; }
+    .result-de { font-weight: bold; font-size: 1em; display: block; }
+    .result-ja-loc { display: block; font-size: 0.94em; font-weight: normal; margin-top: 2px; }
+    .result-ja-loc span:last-child { margin-left: 0.5em; font-size: 0.9em; color: #444; }
+    .score-info { padding: 12px; margin-bottom: 20px; background-color: #eaf5fa; border: 1px solid #b3d9ff; border-left: 5px solid #79a9f2; border-radius: 5px; font-size: 0.95em; color: #333; }
+    #scrollToTop { position: fixed; top: 20px; right: 20px; background-color: rgba(173,216,230,0.8); color: black; padding: 8px 12px; border-radius: 5px; cursor: pointer; font-size: 13px; z-index: 1000; display: none; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+    #scrollToTop:hover { background-color: rgba(135,206,250,0.9); }
   </style>
 </head>
 <body>
   <div class="container">
     <h1>曲名から検索 (Richard Wagner)</h1>
     <p>オーケストラに対する指示で Gustav Mahler の用語検索ページで何とかなりそうなものは基本的に不記載</p>
+
     <div class="big-label">曲を選択</div>
     <fieldset>
       <legend>オペラ</legend>
@@ -335,8 +116,8 @@
     <div id="page-selection-container" class="accordion-content">
       <fieldset>
         <legend>ページ番号</legend>
-        <p style="font-size: 0.9em; color: #555;">ページ番号を半角で入力してください．(例: 3,14,15-92)</p>
-        <input type="text" id="page-input" placeholder="例: 3,14,15-92">
+        <p style="font-size: 0.9em; color: #555;">ページ番号を半角で入力（例 3,14,15-92）</p>
+        <input type="text" id="page-input" placeholder="例 3,14,15-92">
       </fieldset>
       <div class="button-container">
         <button type="button" onclick="searchByPage()" class="btn-search">検索</button>
@@ -349,186 +130,7 @@
   </div>
 
   <div id="scrollToTop" onclick="scrollToTop()">▲ ページのトップへ戻る</div>
-  <script>
-    // GASテンプレートで展開されるJSONをパースして利用します。
-    // テンプレート未展開（ローカル編集など）の場合は空オブジェクトにフォールバックします。
-    const sceneOptionsData = (function(){
-      try {
-        return JSON.parse('<?!= JSON.stringify(sceneOptions || {}) ?>');
-      } catch (e) {
-        return {};
-      }
-    })();
-
-    let currentSearchId = 0;
-    document.addEventListener('DOMContentLoaded', () => {
-      document.querySelectorAll('input[name="opera"]').forEach(radio => {
-        radio.addEventListener('change', handleOperaSelection);
-      });
-      document.querySelectorAll('input[name="search-type"]').forEach(radio => {
-        radio.addEventListener('change', handleSearchTypeSelection);
-      });
-    });
-
-    function handleOperaSelection(event) {
-      const operaValue = event.target.value;
-      document.getElementById('search-method-container').style.display = 'block';
-      resetSearchType();
-      buildSceneCheckboxes(operaValue);
-    }
-
-    function buildSceneCheckboxes(opera) {
-      const wrapper = document.getElementById('scene-options-wrapper');
-      wrapper.innerHTML = '';
-      
-      const options = sceneOptionsData[opera];
-      
-      if (!options || options.length === 0) {
-        wrapper.innerHTML = '<p>この曲の場面データは登録されていません。</p>';
-        return;
-      }
-      
-      const checkboxGroup = document.createElement('div');
-      checkboxGroup.className = 'checkbox-group';
-      
-      let allCheckboxHTML = `<label><input type="checkbox" name="${opera}-scene" value="all"> すべて</label>`;
-      checkboxGroup.innerHTML += allCheckboxHTML;
-      if(options.length > 1) {
-          checkboxGroup.innerHTML += '<hr>';
-      }
-
-      options.forEach(opt => {
-        const checkboxHTML = `<label><input type="checkbox" name="${opera}-scene" value="${opt.value}"> ${opt.text}</label>`;
-        checkboxGroup.innerHTML += checkboxHTML;
-      });
-      
-      wrapper.appendChild(checkboxGroup);
-      
-      const sceneCheckboxes = wrapper.querySelectorAll(`input[name="${opera}-scene"]`);
-      if (sceneCheckboxes.length > 1) {
-        const allCheckbox = wrapper.querySelector(`input[name="${opera}-scene"][value="all"]`);
-        sceneCheckboxes.forEach(cb => {
-          cb.addEventListener('change', () => {
-            if (cb.value === 'all' && cb.checked) {
-              sceneCheckboxes.forEach(other => {
-                if (other.value !== 'all') other.checked = false;
-              });
-            } else if (cb.value !== 'all' && cb.checked) {
-              if (allCheckbox) allCheckbox.checked = false;
-            }
-          });
-        });
-      }
-    }
-
-    function handleSearchTypeSelection(event) {
-      document.getElementById('scene-selection-container').style.display = event.target.value === 'scene' ? 'block' : 'none';
-      document.getElementById('page-selection-container').style.display = event.target.value === 'page' ? 'block' : 'none';
-    }
-
-    function resetSearchType() {
-      document.querySelectorAll('input[name="search-type"]').forEach(radio => radio.checked = false);
-      document.getElementById('scene-selection-container').style.display = 'none';
-      document.getElementById('page-selection-container').style.display = 'none';
-      setResults('');
-    }
-
-    function searchByScene() {
-      const selectedOpera = document.querySelector('input[name="opera"]:checked');
-      if (!selectedOpera) {
-        setResults('<p class="result-message">曲を選択してください。</p>');
-        return;
-      }
-      const operaValue = selectedOpera.value;
-      const sceneCheckboxes = document.querySelectorAll(`input[name="${operaValue}-scene"]:checked`);
-      const selectedScenes = Array.from(sceneCheckboxes).map(cb => cb.value);
-      if (selectedScenes.length === 0) {
-        setResults('<p class="result-message">場面を選択してください。</p>');
-        return;
-      }
-  setResults('<p class="loading">検索中・・・</p>');
-      currentSearchId++;
-      const thisSearchId = currentSearchId;
-      google.script.run
-        .withSuccessHandler(html => {
-          if (thisSearchId === currentSearchId) setResults(html);
-        })
-        .withFailureHandler(err => {
-          if (thisSearchId === currentSearchId) setResults(`<p class="result-message">検索に失敗しました: ${err.message}</p>`);
-        })
-        .searchRichardWagnerByScene(operaValue, selectedScenes);
-    }
-
-    function searchByPage() {
-      const selectedOpera = document.querySelector('input[name="opera"]:checked');
-      if (!selectedOpera) {
-        setResults('<p class="result-message">曲を選択してください。</p>');
-        return;
-      }
-      const operaValue = selectedOpera.value;
-      const pageInput = document.getElementById('page-input').value.trim();
-      if (!pageInput) {
-        setResults('<p class="result-message">ページ番号を入力してください。</p>');
-        return;
-      }
-  setResults('<p class="loading">検索中・・・</p>');
-      currentSearchId++;
-      const thisSearchId = currentSearchId;
-      google.script.run
-        .withSuccessHandler(html => {
-          if (thisSearchId === currentSearchId) setResults(html);
-        })
-        .withFailureHandler(err => {
-          if (thisSearchId === currentSearchId) setResults(`<p class="result-message">検索に失敗しました: ${err.message}</p>`);
-        })
-        .searchRichardWagnerByPage(operaValue, pageInput);
-    }
-
-    function cancelSearch() {
-      currentSearchId++;
-      setResults('<p class="loading">検索を中止しました．</p>');
-    }
-    
-    function clearScenes() {
-      const selectedOpera = document.querySelector('input[name="opera"]:checked');
-      if (!selectedOpera) return;
-      const operaValue = selectedOpera.value;
-      const sceneCheckboxes = document.querySelectorAll(`input[name="${operaValue}-scene"]`);
-      sceneCheckboxes.forEach(cb => {
-        cb.checked = false;
-      });
-      setResults('');
-    }
-
-    function clearPageInput() {
-      document.getElementById('page-input').value = '';
-      setResults('');
-    }
-
-    function setResults(html) {
-      document.getElementById('results').innerHTML = html;
-    }
-
-    // ▼▼▼ ここから「トップへ戻る」ボタン関連のスクリプトを追加 ▼▼▼
-    /**
-     * スクロール位置に応じて「トップへ戻る」ボタンの表示/非表示を切り替える
-     */
-    window.addEventListener('scroll', () => {
-      const scrollToTopBtn = document.getElementById('scrollToTop');
-      if (window.scrollY > 300) {
-        scrollToTopBtn.style.display = 'block';
-      } else {
-        scrollToTopBtn.style.display = 'none';
-      }
-    });
-
-    /**
-     * 「トップへ戻る」ボタンがクリックされたときにページの先頭へスクロールする
-     */
-    function scrollToTop() {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-    // ▲▲▲ ここまでスクリプトを追加 ▲▲▲
-  </script>
+  <?!= include('common_scripts.html') ?>
+  <?!= include('richard_wagner_script.html') ?>
 </body>
 </html>

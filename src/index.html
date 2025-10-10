@@ -7,363 +7,40 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>データ検索</title>
 
+  <?!= include('common_styles.html') ?>
   <style>
-    /********************************************************
-     * ここでは画面のデザインを CSS で整えています。
-     * 
-     * 背景色やボタン、チェックボックスのレイアウトなど。
-     ********************************************************/
-
-    /* ---------------------------------------------------------------
-       1) 全体スタイル
-       --------------------------------------------------------------- */
-    * {
-      box-sizing: border-box;
-    }
-
-    /* 全体背景を淡いパステル系 (ややオレンジ寄り) に */
-    body {
-      margin: 0;
-      padding: 0;
-      font-family: "Yu Gothic", "Hiragino Kaku Gothic ProN", Meiryo, sans-serif;
-      background: #fffaf7;
-      /* 薄めのピンク～オレンジに近いパステル */
-      line-height: 1.5;
-    }
-
-    .container {
-      width: 90%;
-      max-width: 1000px;
-      margin: 20px auto;
-      padding: 20px;
-      background: #fff;
-      /* 背景は白で可読性を確保 */
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-      min-height: 70vh;
-      border-radius: 10px;
-    }
-
-    /* タイトル (h1) - 背景色を淡いピンク、アンダーラインを太めローズ系 */
-    h1 {
-      font-size: 1.5rem;
-      margin-bottom: 20px;
-      padding: 10px;
-      text-align: center;
-      background-color: #ffdce0;
-      /* 少し彩度を上げた淡いピンク */
-      border-bottom: 6px solid #e35d76;
-      /* 太め下線 (6px) + 赤寄りローズ系 */
-      border-radius: 6px;
-      /* 角の丸み */
-      font-weight: bold;
-      margin-top: 0;
-    }
-
-    /* セクションタイトル (曲名を選択など) - pastelピーチ */
-    .big-label {
-      font-size: 1.2rem;
-      margin-bottom: 10px;
-      padding: 8px;
-      background-color: #ffe9cc;
-      /* パステルピーチ */
-      border-radius: 5px;
-      font-weight: bold;
-    }
-
-    /* 楽器群タイトル - pastelイエロー */
-    .big-label-instruments {
-      font-size: 1.2rem;
-      margin-bottom: 10px;
-      padding: 8px;
-      background-color: #fff4bd;
-      /* パステルイエロー */
-      border-radius: 5px;
-      font-weight: bold;
-      margin-top: 1rem;
-    }
-
-    /* ---------------------------------------------------------------
-       2) ボタンスタイル
-       --------------------------------------------------------------- */
-    button {
-      margin: 8px 0;
-      padding: 8px 16px;
-      font-size: 1rem;
-      font-weight: bold;
-      background-color: #79a9f2;
-      /* やや淡いブルー */
-      color: #fff;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      transition: background-color 0.3s ease;
-    }
-
-    /* hover時はやや濃いブルーに */
-    button:hover {
-      background-color: #5a8ad0;
-    }
-
-    /* クリアボタン */
-    button.clear-btn {
-      margin-top: 10px;
-    }
-
-    /* 中止ボタンは赤系を薄く */
-    button.btn-danger {
-      background-color: #ff8c8c;
-      /* 薄めの赤ピンク */
-      color: #fff;
-    }
-
-    button.btn-danger:hover {
-      background-color: #e26767;
-    }
-
-    /* ---------------------------------------------------------------
-       3) レスポンシブ
-       --------------------------------------------------------------- */
-    @media (max-width: 600px) {
-      button {
-        width: 100%;
-        margin-bottom: 10px;
-      }
-    }
-
-    /* 検索結果表示部分 */
-    #results {
-      margin-top: 20px;
-      white-space: pre-wrap;
-      background-color: #fff2e0;
-      /* 元の背景色 */
-      padding: 10px;
-      border-radius: 5px;
-      min-height: 200px;
-      /* 初期の縦幅を確保 */
-    }
-
-    .loading {
-  font-family: Georgia, serif;
-  font-size: 1.0em;
-  font-weight: bold;
-  text-align: center;
-  padding: 20px;
-    }
-
-    /* ---------------------------------------------------------------
-       4) フィールドセットなど
-       --------------------------------------------------------------- */
-    fieldset {
-      margin-bottom: 20px;
-      border: 1px solid #ccc;
-      padding: 15px;
-      border-radius: 10px;
-      background-color: #fafafa;
-    }
-
-    fieldset legend {
-      font-weight: bold;
-      margin-bottom: 10px;
-      font-size: 1.2rem;
-    }
-
-    /* 指揮者などの背景はパステル系に微調整 */
-    #works {
-      background-color: #fceef1;
-      /* 薄ピンク */
-    }
-
-    #conductor {
-      background-color: #fcf7df;
-      /* 薄イエロー */
-    }
-
-    #strings {
-      background-color: #e7f5e7;
-      /* 薄グリーン */
-    }
-
-    #woodwinds {
-      background-color: #eaf5fa;
-      /* 薄ブルー */
-    }
-
-    #brass {
-      background-color: #fff9d9;
-      /* 薄イエロー */
-    }
-
-    #percussions {
-      background-color: #fef2e7;
-      /* 薄オレンジ */
-    }
-
-    #vocal {
-      background-color: #fbeaf3;
-      /* 薄パープルピンク */
-    }
-
-    /* ---------------------------------------------------------------
-       5) チェックボックス ラベルなど
-       --------------------------------------------------------------- */
-    /* グリッドレイアウトで複数列に並べる */
-    .checkbox-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-      gap: 6px 12px;
-      /* row-gap 6px / column-gap 12px */
-    }
-
-    /* 画面幅が狭い場合のレスポンシブ（1列にする） */
-    @media (max-width: 500px) {
-      .checkbox-grid {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    /* チェックボックスグループのスクロール管理 */
-    .inner-checkbox-group {
-      max-height: 200px;
-      overflow-y: auto;
-      background-color: #f0f0f0;
-      padding: 10px;
-      border-radius: 5px;
-    }
-
-    /* 個々のチェックボックスラベル */
-    .checkbox-grid label {
-      display: block;
-      white-space: normal;
-      /* テキストを必要に応じて折り返す */
-      border: 1px solid #ccc;
-      border-radius: 4px;
-      padding: 6px 10px;
-      font-size: 0.95rem;
-      transition: background-color 0.2s ease;
-    }
-
-    /* チェックされたら背景変化 */
-    .checkbox-grid label.checked {
-      background-color: rgba(200, 200, 200, 0.4);
-    }
-
-    /* ALL用ラベルは元のスタイル */
-    .all-label {
-      display: block;
-      padding: 6px 10px;
-      margin: 2px 0;
-      border: none;
-      border-radius: 4px;
-      background-color: rgba(255, 255, 255, 0.2);
-      transition: background-color 0.2s ease;
-      font-size: 0.95rem;
-      font-weight: bold;
-    }
-
-    .all-label.checked {
-      background-color: rgba(200, 200, 200, 0.4);
-    }
-
-    /* チェックボックス余白 */
-    label input[type="checkbox"] {
-      margin-right: 10px;
-    }
-
-    /* 結果表示 */
-    .result-a {
-      /* ドイツ語表示用のスタイル */
-      font-size: 1em;
-      /* フォントサイズを少し抑え、基準サイズと同じに */
-      font-weight: bold;
-      margin-top: 1em;
-      /* 上の余白を文字サイズ基準に */
-    }
-
-    .result-c {
-      /* 日本語訳表示用のスタイル */
-      font-size: 0.95em;
-      /* 少し小さめに設定 */
-      margin-bottom: 4px;
-      margin-left: 1em;
-      /* 左にインデントを追加 */
-    }
-
-    .result-loc {
-      /* 出典表示用のスタイル */
-      font-size: 0.9em;
-      color: #333;
-      margin-left: 2em;
-      /* 日本語訳よりさらにインデント */
-    }
-
-    /* トップへ戻るボタン */
-    #scrollToTop {
-      position: fixed;
-      top: 20px;
-      right: 20px;
-      background-color: rgba(173, 216, 230, 0.8);
-      color: black;
-      padding: 8px 12px;
-      border-radius: 5px;
-      cursor: pointer;
-      font-size: 13px;
-      z-index: 1000;
-      display: none;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-    }
-
-    #scrollToTop:hover {
-      background-color: rgba(135, 206, 250, 0.9);
-    }
-
-    /* スクロールバーオプション（縦スクロール用） */
-    .inner-checkbox-group::-webkit-scrollbar {
-      width: 8px;
-    }
-
-    .inner-checkbox-group::-webkit-scrollbar-thumb {
-      background-color: rgba(0, 0, 0, 0.2);
-      border-radius: 4px;
-    }
-
-    .inner-checkbox-group::-webkit-scrollbar-track {
-      background-color: #ddd;
-      border-radius: 4px;
-    }
-
-    /* 曲名チェックボックスエリア（2列固定） */
-    .checkbox-grid-songs {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      /* デフォルト: 2列表示 */
-      gap: 6px 12px;
-    }
-
-    /* スマホ環境では1列表示に変更 */
-    @media (max-width: 600px) {
-      .checkbox-grid-songs {
-        grid-template-columns: 1fr;
-        /* スマホ: 1列表示 */
-      }
-    }
-
-    .checkbox-grid-songs label {
-      display: block;
-      white-space: nowrap;
-      /* テキストの折り返しを防ぐ */
-      overflow: hidden;
-      text-overflow: ellipsis;
-      /* 長すぎる場合は省略記号を表示 */
-      border: 1px solid #ccc;
-      border-radius: 4px;
-      padding: 6px 10px;
-      font-size: 0.95rem;
-      transition: background-color 0.2s ease;
-    }
-
-    .checkbox-grid-songs label.checked {
-      background-color: rgba(200, 200, 200, 0.4);
-    }
+    /* index.html固有のスタイル */
+    .big-label { font-size: 1.2rem; margin-bottom: 10px; padding: 8px; background-color: #ffe9cc; border-radius: 5px; font-weight: bold; }
+    .big-label-instruments { font-size: 1.2rem; margin-bottom: 10px; padding: 8px; background-color: #fff4bd; border-radius: 5px; font-weight: bold; margin-top: 1rem; }
+    button.clear-btn { margin-top: 10px; }
+    @media (max-width: 600px) { button { width: 100%; margin-bottom: 10px; } }
+    #results { min-height: 200px; }
+    fieldset legend { font-weight: bold; margin-bottom: 10px; font-size: 1.2rem; }
+    #works { background-color: #fceef1; }
+    #conductor { background-color: #fcf7df; }
+    #strings { background-color: #e7f5e7; }
+    #woodwinds { background-color: #eaf5fa; }
+    #brass { background-color: #fff9d9; }
+    #percussions { background-color: #fef2e7; }
+    #vocal { background-color: #fbeaf3; }
+    .checkbox-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 6px 12px; }
+    @media (max-width: 500px) { .checkbox-grid { grid-template-columns: 1fr; } }
+    .inner-checkbox-group { max-height: 200px; overflow-y: auto; background-color: #f0f0f0; padding: 10px; border-radius: 5px; }
+    .checkbox-grid label { display: block; white-space: normal; border: 1px solid #ccc; border-radius: 4px; padding: 6px 10px; font-size: 0.95rem; transition: background-color 0.2s ease; }
+    .checkbox-grid label.checked { background-color: rgba(200, 200, 200, 0.4); }
+    .all-label { display: block; padding: 6px 10px; margin: 2px 0; border: none; border-radius: 4px; background-color: rgba(255, 255, 255, 0.2); transition: background-color 0.2s ease; font-size: 0.95rem; font-weight: bold; }
+    .all-label.checked { background-color: rgba(200, 200, 200, 0.4); }
+    label input[type="checkbox"] { margin-right: 10px; }
+    .result-a { font-size: 1em; font-weight: bold; margin-top: 1em; }
+    .result-c { font-size: 0.95em; margin-bottom: 4px; margin-left: 1em; }
+    .result-loc { font-size: 0.9em; color: #333; margin-left: 2em; }
+    .inner-checkbox-group::-webkit-scrollbar { width: 8px; }
+    .inner-checkbox-group::-webkit-scrollbar-thumb { background-color: rgba(0, 0, 0, 0.2); border-radius: 4px; }
+    .inner-checkbox-group::-webkit-scrollbar-track { background-color: #ddd; border-radius: 4px; }
+    .checkbox-grid-songs { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 12px; }
+    @media (max-width: 600px) { .checkbox-grid-songs { grid-template-columns: 1fr; } }
+    .checkbox-grid-songs label { display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; border: 1px solid #ccc; border-radius: 4px; padding: 6px 10px; font-size: 0.95rem; transition: background-color 0.2s ease; }
+    .checkbox-grid-songs label.checked { background-color: rgba(200, 200, 200, 0.4); }
   </style>
 
   <script>
@@ -703,24 +380,6 @@
       });
     }
 
-    /**
-     * スクロール位置が300pxを超えたら「トップへ戻る」ボタンを表示
-     */
-    window.addEventListener('scroll', () => {
-      const scrollToTop = document.getElementById('scrollToTop');
-      if (window.scrollY > 300) {
-        scrollToTop.style.display = 'block';
-      } else {
-        scrollToTop.style.display = 'none';
-      }
-    });
-
-    /**
-     * 「トップへ戻る」ボタン押下
-     */
-    function scrollToTop() {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
   </script>
 
 </head>
@@ -920,6 +579,7 @@
 
   <!-- ページのトップへ戻るボタン -->
   <div id="scrollToTop" onclick="scrollToTop()">▲ ページのトップへ戻る</div>
+  <?!= include('common_scripts.html') ?>
 </body>
 
 </html>

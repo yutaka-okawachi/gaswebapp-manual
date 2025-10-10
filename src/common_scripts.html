@@ -1,0 +1,70 @@
+<script>
+// Client-only helpers and UI glue. Guard against server (Apps Script) context.
+(function() {
+  if (typeof window === 'undefined' || typeof document === 'undefined') {
+    // Define no-op globals so server-side references do not throw
+    this.scrollToTop = function() {};
+    this.setResults = function() {};
+    return;
+  }
+
+  // Show/hide the "back to top" button
+  window.addEventListener('scroll', () => {
+    const scrollToTopBtn = document.getElementById('scrollToTop');
+    if (!scrollToTopBtn) return;
+    scrollToTopBtn.style.display = (window.scrollY > 300) ? 'block' : 'none';
+  });
+
+  // Expose global helpers
+  function scrollToTop() {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+  window.scrollToTop = scrollToTop;
+
+  function setResults(html) {
+    const resultsDiv = document.getElementById('results');
+    if (resultsDiv) resultsDiv.innerHTML = html;
+  }
+  window.setResults = setResults;
+
+  // Fix garbled static texts for Wagner/Strauss pages
+  document.addEventListener('DOMContentLoaded', () => {
+    const isComposerPage = /Richard Wagner|Richard Strauss/.test(document.title);
+    if (!isComposerPage) return;
+
+    const firstP = document.querySelector('.container > p');
+    if (firstP) firstP.textContent = 'オーケストラ関連の用語は Gustav Mahler の用語検索ページも参照してください。';
+
+    const bigLabels = document.querySelectorAll('.big-label');
+    if (bigLabels && bigLabels[0]) bigLabels[0].textContent = '曲を選択';
+
+    const smc = document.getElementById('search-method-container');
+    if (smc) {
+      const bl = smc.querySelector('.big-label');
+      if (bl) bl.textContent = '検索方法を選択';
+      const legend = smc.querySelector('legend');
+      if (legend) legend.textContent = '方法';
+      const labels = smc.querySelectorAll('label');
+      labels.forEach(label => {
+        const input = label.querySelector('input[type="radio"]');
+        if (!input) return;
+        if (input.value === 'scene') label.lastChild.textContent = ' 場面から選択';
+        if (input.value === 'page') label.lastChild.textContent = ' ページから選択';
+      });
+    }
+
+    const psc = document.getElementById('page-selection-container');
+    if (psc) {
+      const legend2 = psc.querySelector('legend');
+      if (legend2) legend2.textContent = 'ページ番号';
+      const note = psc.querySelector('p');
+      if (note) note.textContent = 'ページ番号を半角で入力（例 3,14,15-92）';
+      const input = document.getElementById('page-input');
+      if (input) input.setAttribute('placeholder', '例 3,14,15-92');
+    }
+
+    const topBtn = document.getElementById('scrollToTop');
+    if (topBtn) topBtn.textContent = '▲ ページのトップへ戻る';
+  });
+})();
+</script>
