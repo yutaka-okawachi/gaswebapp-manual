@@ -1,4 +1,4 @@
-﻿﻿<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
 
 <head>
@@ -10,8 +10,25 @@
   <?!= include('common_styles.html') ?>
   <style>
     /* index.html固有のスタイル */
-    .big-label { font-size: 1.2rem; margin-bottom: 10px; padding: 8px; background-color: #ffe9cc; border-radius: 5px; font-weight: bold; }
-    .big-label-instruments { font-size: 1.2rem; margin-bottom: 10px; padding: 8px; background-color: #fff4bd; border-radius: 5px; font-weight: bold; margin-top: 1rem; }
+    .big-label {
+      font-size: 1.2rem;
+      margin-bottom: 10px;
+      padding: 8px;
+      background-color: #ffe9cc;
+      border-radius: 5px;
+      font-weight: bold;
+    }
+
+    .big-label-instruments {
+      font-size: 1.2rem;
+      margin-bottom: 10px;
+      padding: 8px;
+      background-color: #fff4bd;
+      border-radius: 5px;
+      font-weight: bold;
+      margin-top: 1rem;
+    }
+
     /* --- ボタンのスタイルを追加 --- */
     button {
       padding: 8px 16px;
@@ -23,49 +40,199 @@
       cursor: pointer;
       transition: background-color 0.3s ease, opacity 0.3s ease;
     }
-    .btn-action { background-color: #79a9f2; }
-    .btn-action:hover { background-color: #5a8ad0; }
-    .btn-danger { background-color: #ff8c8c; }
-    .btn-danger:hover { background-color: #e26767; }
-    .btn-clear { background-color: #f7b267; }
-    .btn-clear:hover { background-color: #f49d4e; }
+
+    .btn-action {
+      background-color: #79a9f2;
+    }
+
+    .btn-action:hover {
+      background-color: #5a8ad0;
+    }
+
+    .btn-danger {
+      background-color: #ff8c8c;
+    }
+
+    .btn-danger:hover {
+      background-color: #e26767;
+    }
+
+    .btn-clear {
+      background-color: #f7b267;
+    }
+
+    .btn-clear:hover {
+      background-color: #f49d4e;
+    }
+
     /* --- ここまで --- */
-    @media (max-width: 600px) { button { width: 100%; margin-bottom: 10px; } }
-    #results { min-height: 200px; }
+    @media (max-width: 600px) {
+      button {
+        width: 100%;
+        margin-bottom: 10px;
+      }
+    }
+
+    #results {
+      min-height: 200px;
+    }
+
     /* fieldsetのタイトル（legend）のスタイル */
     fieldset legend {
-      display: block; /* 非表示設定を解除 */
+      display: block;
+      /* 非表示設定を解除 */
       font-size: 1.1rem;
       font-weight: bold;
-      padding: 0 10px; /* 左右に余白を追加 */
-      margin-left: 10px; /* 左寄せ */
+      padding: 0 10px;
+      /* 左右に余白を追加 */
+      margin-left: 10px;
+      /* 左寄せ */
       color: var(--text-color);
     }
-    #works { background-color: #fceef1; }
-    #conductor { background-color: #fcf7df; }
-    #strings { background-color: #e7f5e7; }
-    #woodwinds { background-color: #eaf5fa; }
-    #brass { background-color: #fff9d9; }
-    #percussions { background-color: #fef2e7; }
-    #vocal { background-color: #fbeaf3; }
-    .checkbox-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 6px 12px; }
-    @media (max-width: 500px) { .checkbox-grid { grid-template-columns: 1fr; } }
-    .inner-checkbox-group { max-height: 200px; overflow-y: auto; background-color: #f0f0f0; padding: 10px; border-radius: 5px; font-family: Georgia, serif; }
-    .checkbox-grid label { display: block; white-space: normal; border: 1px solid #ccc; border-radius: 4px; padding: 6px 10px; font-size: 0.95rem; transition: background-color 0.2s ease; font-family: Georgia, serif; }
-    .checkbox-grid label.checked { background-color: rgba(200, 200, 200, 0.4); }
-    .all-label { display: block; padding: 6px 10px; margin: 2px 0; border: none; border-radius: 4px; background-color: rgba(255, 255, 255, 0.2); transition: background-color 0.2s ease; font-size: 0.95rem; font-weight: bold; }
-    .all-label.checked { background-color: rgba(200, 200, 200, 0.4); }
-    label input[type="checkbox"] { margin-right: 10px; }
-    .result-a { font-size: 1em; font-weight: bold; margin-top: 1em; }
-    .result-c { font-size: 0.95em; margin-bottom: 4px; margin-left: 1em; }
-    .result-loc { font-size: 0.9em; color: #333; margin-left: 2em; }
-    .inner-checkbox-group::-webkit-scrollbar { width: 8px; }
-    .inner-checkbox-group::-webkit-scrollbar-thumb { background-color: rgba(0, 0, 0, 0.2); border-radius: 4px; }
-    .inner-checkbox-group::-webkit-scrollbar-track { background-color: #ddd; border-radius: 4px; }
-    .checkbox-grid-songs { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 12px; }
-    @media (max-width: 600px) { .checkbox-grid-songs { grid-template-columns: 1fr; } }
-    .checkbox-grid-songs label { display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; border: 1px solid #ccc; border-radius: 4px; padding: 6px 10px; font-size: 0.95rem; transition: background-color 0.2s ease; }
-    .checkbox-grid-songs label.checked { background-color: rgba(200, 200, 200, 0.4); }
+
+    #works {
+      background-color: #fceef1;
+    }
+
+    #conductor {
+      background-color: #fcf7df;
+    }
+
+    #strings {
+      background-color: #e7f5e7;
+    }
+
+    #woodwinds {
+      background-color: #eaf5fa;
+    }
+
+    #brass {
+      background-color: #fff9d9;
+    }
+
+    #percussions {
+      background-color: #fef2e7;
+    }
+
+    #vocal {
+      background-color: #fbeaf3;
+    }
+
+    .checkbox-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 6px 12px;
+    }
+
+    @media (max-width: 500px) {
+      .checkbox-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .inner-checkbox-group {
+      max-height: 200px;
+      overflow-y: auto;
+      background-color: #f0f0f0;
+      padding: 10px;
+      border-radius: 5px;
+      font-family: Georgia, serif;
+    }
+
+    .checkbox-grid label {
+      display: block;
+      white-space: normal;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      padding: 6px 10px;
+      font-size: 0.95rem;
+      transition: background-color 0.2s ease;
+      font-family: Georgia, serif;
+    }
+
+    .checkbox-grid label.checked {
+      background-color: rgba(200, 200, 200, 0.4);
+    }
+
+    .all-label {
+      display: block;
+      padding: 6px 10px;
+      margin: 2px 0;
+      border: none;
+      border-radius: 4px;
+      background-color: rgba(255, 255, 255, 0.2);
+      transition: background-color 0.2s ease;
+      font-size: 0.95rem;
+      font-weight: bold;
+    }
+
+    .all-label.checked {
+      background-color: rgba(200, 200, 200, 0.4);
+    }
+
+    label input[type="checkbox"] {
+      margin-right: 10px;
+    }
+
+    .result-a {
+      font-size: 1em;
+      font-weight: bold;
+      margin-top: 1em;
+    }
+
+    .result-c {
+      font-size: 0.95em;
+      margin-bottom: 4px;
+      margin-left: 1em;
+    }
+
+    .result-loc {
+      font-size: 0.9em;
+      color: #333;
+      margin-left: 2em;
+    }
+
+    .inner-checkbox-group::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    .inner-checkbox-group::-webkit-scrollbar-thumb {
+      background-color: rgba(0, 0, 0, 0.2);
+      border-radius: 4px;
+    }
+
+    .inner-checkbox-group::-webkit-scrollbar-track {
+      background-color: #ddd;
+      border-radius: 4px;
+    }
+
+    .checkbox-grid-songs {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px 12px;
+    }
+
+    @media (max-width: 600px) {
+      .checkbox-grid-songs {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .checkbox-grid-songs label {
+      display: block;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      padding: 6px 10px;
+      font-size: 0.95rem;
+      transition: background-color 0.2s ease;
+    }
+
+    .checkbox-grid-songs label.checked {
+      background-color: rgba(200, 200, 200, 0.4);
+    }
   </style>
 
   <script>
@@ -78,7 +245,7 @@
      * - 結果を画面に表示
      ***********************************************************/
 
-    window._allGlobalSelected = false; 
+    window._allGlobalSelected = false;
     // 楽器「すべて選択」ボタンが押されたかどうかを判定するフラグ
 
     let currentSearchId = 0;

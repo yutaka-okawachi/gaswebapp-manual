@@ -26,7 +26,7 @@
       };
     }
 
-    let currentSearchId = 0; 
+    let currentSearchId = 0;
     // 複数回検索したときに、最新の検索結果だけを適用するためのID
 
     // DOM構築後に動作をセット
@@ -51,7 +51,7 @@
 
       // サーバーの searchEnglishTermsPartially() を呼び出し、結果を datalist に反映
       google.script.run
-        .withSuccessHandler(function(suggestions) {
+        .withSuccessHandler(function (suggestions) {
           // 現在の検索IDと一致したときのみ処理
           if (thisSearchId !== currentSearchId) return;
           updateDatalist(suggestions);
@@ -84,7 +84,7 @@
       }
 
       // ローディングメッセージ
-  resultsDiv.innerHTML = '<p class="loading">検索中・・・</p>';
+      resultsDiv.innerHTML = '<p class="loading">検索中・・・</p>';
 
       currentSearchId++;
       const thisSearchId = currentSearchId;

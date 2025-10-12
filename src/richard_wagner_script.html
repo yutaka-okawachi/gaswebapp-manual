@@ -134,7 +134,7 @@
       .withFailureHandler(err => {
         if (thisSearchId === currentSearchId) setResults(`<p class="result-message">検索に失敗しました: ${err.message}</p>`);
       })
-      [funcName](operaValue, selectedScenes);
+    [funcName](operaValue, selectedScenes);
   }
 
   // ページ番号で検索
@@ -163,7 +163,7 @@
       .withFailureHandler(err => {
         if (thisSearchId === currentSearchId) setResults(`<p class="result-message">検索に失敗しました: ${err.message}</p>`);
       })
-      [funcName](operaValue, pageInput);
+    [funcName](operaValue, pageInput);
   }
 
   function cancelSearch() {
