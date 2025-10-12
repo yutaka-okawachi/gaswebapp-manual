@@ -1,4 +1,9 @@
 <script>
+/*
+ * common_scripts.html
+ * 全ページで共通して使用されるクライアントサイドJavaScript。
+ * 主に「トップへ戻る」ボタンの制御など、UIの基本的な動作を定義します。
+ */
 // Client-only helpers and UI glue. Guard against server (Apps Script) context.
 (function() {
   if (typeof window === 'undefined' || typeof document === 'undefined') {

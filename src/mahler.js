@@ -1,12 +1,3 @@
-/**
- * RWサジェスト用語リストのキャッシュを強化する関数
- * 定期的にトリガーで実行推奨
- */
-function updateDeTermsCache_RW() {
-  const allData = getRichardWagnerData();
-  const deTerms = [...new Set(allData.map(row => row.de).filter(de => de))];
-  CacheService.getScriptCache().put('rw_de_terms_cache', JSON.stringify(deTerms), 3600);
-}
 /***************************************
  * mahler.js
  * * Google Apps Script 上で動作するサーバーサイドのスクリプト。
@@ -59,24 +50,14 @@ function include(filename) {
  * メインの doGet
  */
 function doGet(e) {
+  // URLパラメータから表示するページ名を取得。なければ 'index' に。
   const page = (e && e.parameter && e.parameter.page) ? e.parameter.page : 'index';
-  let name;
-  switch (page) {
-    case 'richard_strauss':
-    case 'richard_wagner':
-    case 'terms_search':
-    case 'rs_terms_search':
-    case 'rw_terms_search':
-    case 'list':
-    case 'notes':
-      name = page;
-      break;
-    default:
-      name = 'index';
-  }
+  // 有効なページ名かをチェックし、無効な場合は 'index' にフォールバック
+  const validPages = ['index', 'richard_strauss', 'richard_wagner', 'terms_search', 'rs_terms_search', 'rw_terms_search', 'list', 'notes'];
+  const name = validPages.includes(page) ? page : 'index';
+
   const template = HtmlService.createTemplateFromFile(name);
 
-  // ★★★ 変更点 ★★★
   // すべてのテンプレートで include 関数を使えるようにする
   template.include = include;
   return template.evaluate().setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
