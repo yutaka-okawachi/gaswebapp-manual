@@ -1,13 +1,3 @@
-/**
- * RSサジェスト用語リストのキャッシュを強化する関数
- * 定期的にトリガーで実行推奨
- */
-function updateDeTermsCache_RS() {
-  const allData = getRichardStraussData();
-  const deTerms = [...new Set(allData.map(row => row.de).filter(de => de))];
-  CacheService.getScriptCache().put('rs_de_terms_cache', JSON.stringify(deTerms), 3600);
-}
-
 /***********************************************************
  * R. Strauss 検索関連
  ***********************************************************/

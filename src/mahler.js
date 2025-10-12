@@ -395,10 +395,10 @@ function searchRWTerms(query) {
     const sceneMap = getSceneMap('RW幕構成');
     const operaDisplayNames = {
         'feen': 'Die Feen', 'liebes': 'Das Liebesverbot', 'rienzi': 'Rienzi',
-        'holländer': 'Der fliegende Holländer', 'tann_dresden': 'Tannhäuser (Dresden)',
+        'hollaender': 'Der fliegende Holländer', 'tann_dresden': 'Tannhäuser (Dresden)',
         'tann_paris': 'Tannhäuser (Paris)', 'lohengrin': 'Lohengrin',
-        'rheingold': 'Das Rheingold', 'walküre': 'Die Walküre', 'siegfried': 'Siegfried',
-        'götter': 'Götterdämmerung', 'tristan': 'Tristan und Isolde',
+        'rheingold': 'Das Rheingold', 'walkuere': 'Die Walküre', 'siegfried': 'Siegfried',
+        'goetter': 'Götterdämmerung', 'tristan': 'Tristan und Isolde',
         'meister': 'Die Meistersinger von Nürnberg', 'parsifal': 'Parsifal'
     };
     const normalizedQuery = normalizeString(query);
@@ -429,13 +429,13 @@ function searchRWTerms(query) {
       groupedByDe[de].forEach(row => {
         const ja = escapeHtml(row.ja || '');
 
-        const operKey = normalizeString(row.oper || '');
+        const normalizedOperKey = normalizeString(row.oper || '');
         const aufzug = (row.aufzug || '0').toString().trim().toLowerCase();
         const szene = (row.szene || '0').toString().trim().toLowerCase();
         const page = escapeHtml(row.page || '');
 
-        const operaDisplayName = operaDisplayNames[operKey] || escapeHtml(row.oper);
-        const sceneMapKey = `${operKey}-${aufzug}-${szene}`;
+        const operaDisplayName = operaDisplayNames[normalizedOperKey] || escapeHtml(row.oper);
+        const sceneMapKey = `${normalizedOperKey}-${aufzug}-${szene}`;
         const sceneName = escapeHtml(sceneMap[sceneMapKey] || `場面(${aufzug}-${szene})`);
 
         const pageDisplay = page ? `p.${page}` : '';
@@ -551,8 +551,279 @@ function formatGenericResults(data, sceneMap) {
 }
 
 /***********************************************************
+ * 定数マッピング (Mahler)
+ ***********************************************************/
+const aMapping = {
+  "all": "ALL", "交響曲第1番ニ長調（1884-88）": "1", "交響曲第2番ハ短調（1888-94）": "2",
+  "交響曲第3番ニ短調（1893-96）": "3", "交響曲第4番ト長調（1899-1900）": "4", "交響曲第5番嬰ハ短調（1901-02）": "5",
+  "交響曲第6番イ短調（1903-04）": "6", "交響曲第7番ホ短調（1904-05）": "7", "交響曲第8番変ホ長調（1906）": "8",
+  "交響曲イ短調『大地の歌』（1908）": "a", "交響曲第9番ニ長調（1909）": "9", "交響曲第10番嬰ヘ長調（1910）": "101",
+  "交響曲第10番（クック版）": "102", "嘆きの歌（1880）": "b1", "嘆きの歌（1899）": "b2",
+  "さすらう若人の歌": "c", "子供の魔法の角笛": "d", "子供の死の歌": "e",
+  "リュッケルトの詩による5つの歌": "f", "花の章": "g", "葬礼": "h"
+};
+
+const aReverseMap = Object.entries(aMapping).reduce((acc, [key, value]) => {
+  acc[value.toLowerCase()] = key;
+  return acc;
+}, {});
+
+const dMapping = {
+  "all": "ALLE", "dir": "Dirigent", "v1": "Violine1", "v2": "Violine2", "va": "Bratche", "vc": "Violoncello",
+  "kb": "Kontrabaß", "sv": "Solo Violine", "sva": "Solo Bratche", "svc": "Solo Violoncello", "skb": "Solo Kontrabaß",
+  "fl": "Flöte", "pic": "Piccolo", "ob": "Oboe", "eh": "Englischhorn", "cl": "Klarinette", "escl": "Es-Klarinette",
+  "bcl": "Bassklarinette", "fg": "Fagott", "cfg": "Kontrafagott", "tr": "Trompete", "pis": "Piston",
+  "phr": "Posthorn", "hr": "Horn", "thr": "Tenorhorn", "ohr": "Obligates Horn", "fhr": "Flügelhorn",
+  "whr": "Waldhorn", "pos": "Posaune", "bt": "Basstuba", "pau": "Pauken", "gtr": "Gloße Trommel",
+  "ktr": "Kleine Trommel", "mtr": "Militär Trommel", "bec": "Becken", "tam": "Tam-tam", "tri": "Triangel",
+  "gls": "Glockenspiel", "hgl": "Herdenglocken", "gl": "Glocken", "ham": "Hammer", "rt": "Rute",
+  "cel": "Celesta", "hp": "Harfe", "org": "Orgel", "klv": "Klavier", "har": "Harmonium", "git": "Gitarre",
+  "man": "Mandoline", "sop": "Sopran", "alt": "Alto", "ten": "Tenor", "bar": "Bariton", "bass": "Bass",
+  "sop1": "Sopran1", "sop2": "Sopran2", "alt1": "Alto1", "alt2": "Alto2", "kalt": "Knabe(Alto)",
+  "chor": "Chor", "chor1": "Chor1", "chor2": "Chor2", "fchor": "frauen Chor", "kchor": "knaben Chor",
+  "sti": "Stimme"
+};
+
+const dReverseMap = { ...dMapping };
+
+/***********************************************************
  * (以下、既存の Mahler 関連コード)
  ***********************************************************/
+
+/**
+ * Mahlerのデータを取得する。
+ * パフォーマンス向上のため、チャンキング対応のキャッシュ機構を導入。
+ * @returns {Array<Object>} Mahlerのデータ配列
+ */
+function getMahlerData() {
+  const cacheKey = 'mahler_data_v1';
+  const cached = getChunkedCache(cacheKey);
+  if (cached) {
+    return cached;
+  }
+
+  Logger.log('Mahlerデータをスプレッドシートから取得します。');
+  const sheet = SpreadsheetApp.openById(SPREADSHEET_ID).getSheetByName('sheet4');
+  if (!sheet) throw new Error('シート「sheet4」が見つかりません。');
+
+  const data = sheet.getDataRange().getValues();
+  if (!data || data.length === 0) return [];
+
+  setChunkedCache(cacheKey, data, 21600); // 6時間キャッシュ
+  return data;
+}
+
+/**
+ * 曲名と楽器から検索する (Mahler)
+ * @param {Array<string>} choice1Arr - 選択された曲名の配列
+ * @param {Array<string>} choice2Arr - 選択された楽器の配列
+ * @param {boolean} includeOrchestraAll - オーケストラ全体への指示を含めるか
+ * @returns {string} 検索結果のHTML
+ */
+function searchData(choice1Arr, choice2Arr, includeOrchestraAll) {
+  const data = getMahlerData();
+  if (!data || data.length === 0) {
+    return 'データが存在しません。';
+  }
+
+  const groupAllMap = {
+    "all_strings": ["v1", "v2", "va", "vc", "kb", "sv", "sva", "svc", "skb"],
+    "all_woodwinds": ["fl", "pic", "ob", "eh", "cl", "escl", "bcl", "fg", "cfg"],
+    "all_brass": ["tr", "pis", "phr", "hr", "thr", "ohr", "fhr", "whr", "pos", "bt"],
+    "all_percussions": ["pau", "gtr", "ktr", "mtr", "bec", "tam", "tri", "gls", "hgl", "gl", "ham", "rt", "cel", "hp", "org", "klv", "har", "git", "man"],
+    "all_vocal": ["sop", "alt", "ten", "bar", "bass", "sop1", "sop2", "alt1", "alt2", "kalt", "chor", "chor1", "chor2", "fchor", "kchor", "sti"]
+  };
+
+  let finalInstruments = new Set();
+
+  if (choice2Arr.includes('ALL_GLOBAL')) {
+    Object.keys(dMapping).forEach(code => {
+      if (code !== 'all') finalInstruments.add(code);
+    });
+    finalInstruments.add('all');
+  } else {
+    choice2Arr.forEach(val => {
+      const lowerVal = val.toLowerCase();
+      if (groupAllMap[lowerVal]) {
+        groupAllMap[lowerVal].forEach(code => finalInstruments.add(code));
+      } else if (dMapping[lowerVal]) {
+        finalInstruments.add(lowerVal);
+      }
+    });
+  }
+
+  if (includeOrchestraAll) {
+    finalInstruments.add('all');
+  }
+
+  let resultHTML = '';
+  let totalMatches = 0;
+  data.forEach(row => {
+    const deData = row[0];
+    const jaData = row[2];
+    const dataCol = row[3];
+
+    if (!dataCol || typeof dataCol !== 'string') return;
+
+    const segments = dataCol.split('&').map(s => s.trim()).filter(s => s);
+    if (segments.length === 0) return;
+
+    let matchedLocList = [];
+    let segmentCount = 0;
+
+    segments.forEach(seg => {
+      const [prefix, a, b, c, d] = seg.split('-');
+      if (!a || !b || !c || !d) return;
+
+      let aMatch = choice1Arr.includes('ALL') || choice1Arr.some(choice => aMapping[choice.toLowerCase()] === a);
+
+      const dArr = d.split(',').map(x => x.trim());
+      let dMatch = dArr.some(origCode => {
+        const codeLower = origCode.toLowerCase();
+        if (includeOrchestraAll) {
+          return finalInstruments.has(codeLower) || codeLower === 'all';
+        } else {
+          return finalInstruments.has(codeLower) && codeLower !== 'all';
+        }
+      });
+
+      if (aMatch && dMatch) {
+        totalMatches++;
+        segmentCount++;
+
+        const aLabel = aReverseMap[a.toLowerCase()] || `不明(${a})`;
+        const movementText = formatMovementNumber(a, b);
+        const measureText = `第${c}小節`;
+        const mappedInstruments = dArr.map(code => dReverseMap[code] || code).join(', ');
+        const locText = `${aLabel} ${movementText}：${measureText}（${mappedInstruments}）`;
+        matchedLocList.push(locText);
+      }
+    });
+
+    if (matchedLocList.length > 0) {
+      resultHTML += `<div class="result-a">${escapeHtml(deData)}</div>`;
+      resultHTML += `<div class="result-c">${escapeHtml(jaData)}</div>`;
+      matchedLocList.forEach(loc => {
+        resultHTML += `<div class="result-loc">${escapeHtml(loc)}</div>`;
+      });
+      resultHTML += `<div class="result-loc">(${segmentCount}件)</div>`;
+    }
+  });
+
+  const emailSubject = '曲名と楽器等からの検索が実行されました';
+  const selectedWorks = choice1Arr.includes('ALL') ? 'ALL' : choice1Arr.join(', ');
+  const selectedInstruments = choice2Arr.includes('ALL_GLOBAL') ? 'ALL_GLOBAL' : choice2Arr.join(', ');
+  const emailBody = `曲名と楽器等からの検索が実行されました。\n\n選択された曲名:\n${selectedWorks}\n\n選択された楽器:\n${selectedInstruments}\n\nオーケストラ全体を含める:\n${includeOrchestraAll ? 'はい' : 'いいえ'}\n\n検索日時: ${new Date().toLocaleString()}`.trim();
+  sendSearchNotification(emailSubject, emailBody);
+
+  return totalMatches === 0 ? '<p class="result-message">該当するデータがありません。</p>' : `<div>${totalMatches}件ありました。</div>${resultHTML}`;
+}
+
+/***********************************************************
+ * Mahler 用語検索関連
+ ***********************************************************/
+
+function getAllTerms() {
+  const cache = CacheService.getScriptCache();
+  const cacheKey = 'all_terms';
+  const cachedTerms = cache.get(cacheKey);
+  if (cachedTerms) {
+    return JSON.parse(cachedTerms);
+  }
+  const sheetName = 'sheet4';
+  const sheet = SpreadsheetApp.openById(SPREADSHEET_ID).getSheetByName(sheetName);
+  const data = sheet.getRange('B:B').getValues();
+  const terms = data.flat().filter(term => term);
+  cache.put(cacheKey, JSON.stringify(terms), 3600);
+  return terms;
+}
+
+function searchEnglishTermsPartially(input) {
+  const cache = CacheService.getScriptCache();
+  const cacheKey = `search_${input.toLowerCase()}`;
+  const cachedData = cache.get(cacheKey);
+  if (cachedData) {
+    return JSON.parse(cachedData);
+  }
+  const allTerms = getAllTerms();
+  const results = allTerms.filter(term => term.toLowerCase().includes(input.toLowerCase()));
+  cache.put(cacheKey, JSON.stringify(results), 300);
+  return results;
+}
+
+function searchByTerm(query) {
+  const ss = SpreadsheetApp.openById(SPREADSHEET_ID);
+  const sheet = ss.getSheetByName('sheet4');
+  const data = sheet.getDataRange().getValues();
+  if (!query) {
+    return '<p class="result-message">検索語句を入力してください。</p>';
+  }
+  if (!data || data.length === 0) {
+    return '<p class="result-message">スプレッドシートにデータが存在しません。</p>';
+  }
+
+  const results = data.filter(row =>
+    row[1] && String(row[1]).toLowerCase().includes(query.toLowerCase())
+  );
+  if (results.length === 0) {
+    return '<p class="result-message">該当するデータが見つかりませんでした。</p>';
+  }
+
+  let resultHTML = '';
+  results.forEach(row => {
+    const german = row[0] || '';
+    const japanese = row[2] || '';
+    const dataCol = row[3] || '';
+
+    if (!dataCol || typeof dataCol !== 'string') return;
+
+    const segments = dataCol.split('&').map(s => s.trim()).filter(s => s);
+    let segmentCount = 0;
+    let detailsHTML = '';
+
+    segments.forEach(segment => {
+      const [prefix, a, b, c, d] = segment.split('-');
+      if (!a || !b || !c || !d) return;
+
+      segmentCount++;
+      const workName = aReverseMap[a.toLowerCase()] || `不明(${a})`;
+      const movement = formatMovementNumber(a, b);
+      const measure = `第${c}小節`;
+      const instrCodes = d.split(',').map(instr => instr.trim());
+      const instruments = instrCodes.map(code => dReverseMap[code] || code).join(', ');
+      detailsHTML += `<div class="result-loc">${workName} ${movement}：${measure}（${instruments}）</div>`;
+    });
+
+    resultHTML += `<div class="result-a">${escapeHtml(german)}</div>`;
+    resultHTML += `<div class="result-c">${escapeHtml(japanese)}</div>`;
+    resultHTML += detailsHTML;
+    resultHTML += `<div class="result-loc">(${segmentCount}件)</div>`;
+  });
+
+  const emailSubject = '用語検索が実行されました';
+  const emailBody = `用語検索が実行されました。\n\n検索された用語:\n${query}\n\n検索日時: ${new Date().toLocaleString()}`.trim();
+  sendSearchNotification(emailSubject, emailBody);
+
+  return resultHTML;
+}
+
+function formatMovementNumber(a, b) {
+  const specialMapping = {
+    c: { c1: "Wenn mein Schatz Hochzeit macht", c2: "Ging heut' morgen über's Feld", c3: "Ich hab' ein glühend Messer", c4: "Die zwei blauen Augen von meinem Schatz" },
+    d: { d01: "Der Schildwache Nachlied", d02: "Verlorne Müh'!", d03: "Trost im Unglück", d04: "Das himmlische Leben", d05: "Wer hat dies Liedel erdacht?", d06: "Das irdische Leben", d07: "Urlicht", d08: "Des Antonius von Padua Fischpredigt", d09: "Rheinlegendchen", d10: "Lob des hohen Verstands", d11: "Lied des Verfolgten im Turm", d12: "Wo die schönen Trompeten blasen", d13: "Revelge", d14: "Der Tamboursg'sell" },
+    e: { e1: "Nun will die Sonn' so hell aufgeh'n", e2: "Nun seh' ich wohl, warum so dunkle Flammen", e3: "Wenn dein Mütterlein", e4: "Oft denk' ich, sie sind nur ausgegangen", e5: "In diesem Wetter, in diesem Braus" },
+    f: { f1: "Blicke mir nicht in die Lieder!", f2: "Ich atmet' einen linden Duft", f3: "Ich bin der Welt abhanden gekommen", f4: "Um Mitternacht", f5: "Liebst du um Schönheit" }
+  };
+
+  if (specialMapping[a.toLowerCase()] && specialMapping[a.toLowerCase()][b.toLowerCase()]) {
+    return specialMapping[a.toLowerCase()][b.toLowerCase()];
+  }
+  if (b.toLowerCase() === 't1') return '第1部';
+  if (b.toLowerCase() === 't2') return '第2部';
+  if (b.toLowerCase() === 't3') return '第3部';
+  if (['a', 'g', 'h'].includes(b.toLowerCase())) return '';
+  return `第${b}楽章`;
+}
 
 /**
  * HTML特殊文字をエスケープする

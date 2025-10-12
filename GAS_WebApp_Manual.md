@@ -78,24 +78,30 @@ clasp deploy -i AKfycbxWl-KLwo8SnOyqQT84gJyrofRQnIp_GBv8Pg0N5athPAoxp9LBuwj0HDTX
 
 ## ⚡ 6. 自動デプロイスクリプト（任意）
 
-`deploy.ps1`
+`deploy.ps1` を使うと、`push` → `version`作成 → `deploy` を一括で実行できます。バージョン番号は自動で取得されます。
 
 ```powershell
+# deploy.ps1
 param(
-  [Parameter(Mandatory=$true)][int]$v,
-  [string]$d = "rollout"
+  [string]$d = "New version" # 説明文は任意
 )
 $ID = "AKfycbxWl-KLwo8SnOyqQT84gJyrofRQnIp_GBv8Pg0N5athPAoxp9LBuwj0HDTXkFqh0xiGsw"
 
 clasp push
-clasp version $d
-clasp deploy -i $ID -V $v -d $d
+$versionOutput = clasp version $d
+if ($versionOutput -match "Created version (\d+)") {
+  $versionNumber = $Matches[1]
+  Write-Host "Successfully created version: $versionNumber"
+  clasp deploy -i $ID -V $versionNumber -d $d
+} else {
+  Write-Error "Failed to create or parse version number from output: $versionOutput"
+}
 ```
 
 実行例：
 ```powershell
 cd "C:\Users\okawa\gaswebapp-manual"
-.\deploy.ps1 -v 567 -d "fix: layout behavior"
+.\deploy.ps1 -d "fix: layout behavior"
 ```
 
 ---

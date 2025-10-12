@@ -33,7 +33,7 @@
     if (!isComposerPage) return;
 
     const firstP = document.querySelector('.container > p');
-    if (firstP) firstP.textContent = 'オーケストラ関連の用語は Gustav Mahler の用語検索ページも参照してください。';
+    if (firstP) firstP.textContent = 'オーケストラに対する指示で GM の検索ページで何とかなりそうなものは基本的に不記載';
 
     const bigLabels = document.querySelectorAll('.big-label');
     if (bigLabels && bigLabels[0]) bigLabels[0].textContent = '曲を選択';
@@ -58,7 +58,7 @@
       const legend2 = psc.querySelector('legend');
       if (legend2) legend2.textContent = 'ページ番号';
       const note = psc.querySelector('p');
-      if (note) note.textContent = 'ページ番号を半角で入力（例 3,14,15-92）';
+      if (note) note.textContent = 'ページ番号を半角で入力';
       const input = document.getElementById('page-input');
       if (input) input.setAttribute('placeholder', '例 3,14,15-92');
     }
