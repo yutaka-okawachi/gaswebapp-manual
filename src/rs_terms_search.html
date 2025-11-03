@@ -11,21 +11,36 @@
       let timer; return function (...args) { clearTimeout(timer); timer = setTimeout(() => func.apply(this, args), delay); };
     }
     let currentSearchId = 0;
+    let allTerms = []; // 全用語リストを保持する配列
+
     window.addEventListener('DOMContentLoaded', () => {
       const inputField = document.getElementById('termInput');
       inputField.addEventListener('input', debouncedOnTermInput);
+
+      // ページ読み込み時に全用語リストを取得
+      google.script.run
+        .withSuccessHandler(terms => {
+          allTerms = terms; // サーバーで前処理済みのデータをそのまま保持
+          console.log(`${allTerms.length}件のRS用語を準備完了。`);
+        })
+        .getRSTermsForClient();
     });
+
     const debouncedOnTermInput = debounce((event) => {
       const input = event.target.value.trim();
+      const normalizedInput = normalizeString(input);
       if (input.length < 2) { document.getElementById('termSuggestions').innerHTML = ''; return; }
-      currentSearchId++; const thisSearchId = currentSearchId;
-      google.script.run.withSuccessHandler(function (suggestions) {
-        if (thisSearchId === currentSearchId) { updateDatalist(suggestions); }
-      }).searchRSTermsPartially(input);
+      // クライアントサイドで検索
+      // 正規化済みのリストに対して高速に検索
+      const suggestions = allTerms
+        .filter(item => item.normalized.startsWith(normalizedInput))
+        .map(item => item.original) // 結果は元の用語を表示
+        .slice(0, 20);
+      updateDatalist(suggestions);
     }, 300);
     function updateDatalist(suggestions) {
       const datalist = document.getElementById('termSuggestions');
-      datalist.innerHTML = suggestions.map(term => `<option value="${term}">`).join('');
+      datalist.innerHTML = suggestions.map(term => `<option value="${term}"></option>`).join('');
     }
     function search() {
       const query = document.getElementById('termInput').value.trim();
@@ -36,6 +51,11 @@
       google.script.run.withSuccessHandler(html => {
         if (thisSearchId === currentSearchId) { resultsDiv.innerHTML = html; }
       }).searchRSTerms(query);
+    }
+    // 正規化関数（クライアントサイドでも必要）
+    function normalizeString(str) {
+      if (typeof str !== 'string') return '';
+      return str.toLowerCase().replace(/ä/g, 'ae').replace(/ö/g, 'oe').replace(/ü/g, 'ue').replace(/ß/g, 'ss').trim();
     }
     function cancelSearch() { document.getElementById('results').innerHTML = '<p class="loading">検索を中止しました</p>'; currentSearchId++; }
     function clearInput() { document.getElementById('termInput').value = ''; document.getElementById('termSuggestions').innerHTML = ''; document.getElementById('results').innerHTML = ''; }

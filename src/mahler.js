@@ -226,12 +226,12 @@ function getRichardWagnerData() {
 
   const lastRow = sheet.getLastRow();
   if (lastRow < 2) return [];
-  const range = sheet.getRange(1, 1, lastRow, 7);
+  const range = sheet.getRange(1, 1, lastRow, 8); // 列数を8に変更
   const data = range.getValues();
 
   const header = data.shift();
   const headerMap = header.reduce((obj, col, i) => { if (col) { obj[col.toString().trim().toLowerCase()] = i; } return obj; }, {});
-  const requiredHeaders = ['oper', 'aufzug', 'szene', 'page', 'whom', 'de', 'ja'];
+  const requiredHeaders = ['oper', 'aufzug', 'szene', 'page', 'whom', 'de', 'ja', 'de_normalized']; // de_normalized を追加
   for (const h of requiredHeaders) { if (headerMap[h] === undefined) { throw new Error(`シート「RW」に必要なヘッダー「${h}」がありません。`); } }
   const jsonData = data.map(row => { let obj = {}; for (const key in headerMap) { obj[key] = row[headerMap[key]]; } return obj; });
 
@@ -351,19 +351,33 @@ function getRichardWagnerDeTerms() {
   }
 
   const allData = getRichardWagnerData();
-  const deTerms = [...new Set(allData.map(row => row.de).filter(de => de))];
-  cache.put(cacheKey, JSON.stringify(deTerms), 3600);
-  return deTerms;
+  // original(元の用語)とnormalized(正規化済み用語)のペアを作成
+  const terms = allData
+    .map(row => ({ original: row.de, normalized: row.de_normalized }))
+    .filter(item => item.original && item.normalized);
+
+  const uniqueTerms = Array.from(new Map(terms.map(item => [item.original, item])).values());
+  cache.put(cacheKey, JSON.stringify(uniqueTerms), 3600);
+  return uniqueTerms;
+}
+
+/**
+ * [クライアントサイド検索用] R.Wagnerの全用語リストを返す
+ * @returns {Array<string>}
+ */
+function getRWTermsForClient() {
+  return getRichardWagnerDeTerms();
 }
 
 function searchRWTermsPartially(input) {
   if (!input || typeof input !== 'string' || input.trim().length < 2) return [];
   const normalizedInput = normalizeString(input);
+  // キャッシュから全用語リストを取得
   const cache = CacheService.getScriptCache();
   const cached = cache.get('rw_de_terms_cache');
   if (!cached) return [];
   const allTerms = JSON.parse(cached);
-  return allTerms.filter(term => normalizeString(term).includes(normalizedInput)).slice(0, 20);
+  return allTerms.filter(item => item.normalized.startsWith(normalizedInput)).map(item => item.original).slice(0, 20);
 }
 
 function searchRWTerms(query) {
@@ -719,6 +733,14 @@ function getAllTerms() {
   return terms;
 }
 
+/**
+ * [クライアントサイド検索用] Mahlerの全用語リストを返す
+ * @returns {Array<string>}
+ */
+function getGMTermsForClient() {
+  return getAllTerms();
+}
+
 function searchEnglishTermsPartially(input) {
   const cache = CacheService.getScriptCache();
   const cacheKey = `search_${input.toLowerCase()}`;
@@ -727,7 +749,7 @@ function searchEnglishTermsPartially(input) {
     return JSON.parse(cachedData);
   }
   const allTerms = getAllTerms();
-  const results = allTerms.filter(term => term.toLowerCase().includes(input.toLowerCase()));
+  const results = allTerms.filter(term => term.toLowerCase().startsWith(input.toLowerCase()));
   cache.put(cacheKey, JSON.stringify(results), 300);
   return results;
 }

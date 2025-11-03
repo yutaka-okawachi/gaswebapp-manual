@@ -27,43 +27,41 @@
     }
 
     let currentSearchId = 0;
-    // 複数回検索したときに、最新の検索結果だけを適用するためのID
+    let allTerms = []; // 全用語リストを保持する配列
 
     // DOM構築後に動作をセット
     window.addEventListener('DOMContentLoaded', () => {
       const inputField = document.getElementById('termInput');
       // 入力フィールドに文字を入力するたびにイベント発火
-      inputField.addEventListener('input', onTermInput);
+      inputField.addEventListener('input', debouncedOnTermInput);
+
+      // ページ読み込み時に全用語リストを取得
+      google.script.run
+        .withSuccessHandler(terms => {
+          allTerms = terms.map(t => t.toLowerCase()); // 検索用に小文字化しておく
+          console.log(`${allTerms.length}件のGM用語を読み込みました。`);
+        })
+        .getGMTermsForClient();
     });
 
     // 入力があったら300ms後にサジェスト検索を実行する関数
     const debouncedOnTermInput = debounce((event) => {
       const input = event.target.value.trim();
+      const lowerInput = input.toLowerCase();
       if (input.length < 2) {
         // 2文字未満ならサジェストをクリア
         document.getElementById('termSuggestions').innerHTML = '';
         return;
       }
 
-      // 検索IDを更新
-      currentSearchId++;
-      const thisSearchId = currentSearchId;
+      // クライアントサイドで検索
+      const suggestions = allTerms
+        .filter(term => term.startsWith(lowerInput))
+        .slice(0, 20); // 候補は20件に絞る
 
-      // サーバーの searchEnglishTermsPartially() を呼び出し、結果を datalist に反映
-      google.script.run
-        .withSuccessHandler(function (suggestions) {
-          // 現在の検索IDと一致したときのみ処理
-          if (thisSearchId !== currentSearchId) return;
-          updateDatalist(suggestions);
-        })
-        .searchEnglishTermsPartially(input);
+      updateDatalist(suggestions);
 
     }, 300);
-
-    // 実際のイベントハンドラ
-    function onTermInput(event) {
-      debouncedOnTermInput(event);
-    }
 
     // datalist に候補を表示する
     function updateDatalist(suggestions) {
@@ -135,7 +133,7 @@
 
     <!-- ボタン類 -->
     <div style="text-align: center;">
-      <button type="button" onclick="search()">検索</button>
+      <button type="button" onclick="search()" class="btn-search">検索</button>
       <button type="button" onclick="cancelSearch()" class="btn-danger">中止</button>
       <button type="button" onclick="clearInput()" class="clear-input-btn">入力をクリア</button>
     </div>

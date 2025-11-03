@@ -5,6 +5,10 @@ param(
 
 $ID = "AKfycbxWl-KLwo8SnOyqQT84gJyrofRQnIp_GBv8Pg0N5athPAoxp9LBuwj0HDTXkFqh0xiGsw"
 
+# スクリプトがどこから実行されても正しく動作するように、
+# claspが管理するソースコードのルートディレクトリに移動する
+Push-Location "c:\Users\okawa\gaswebapp-manual\src"
+
 # 1. ローカルの変更をGASにプッシュ
 clasp push
 
@@ -20,3 +24,6 @@ if ($versionOutput -match "Created version (\d+)") {
 } else {
   Write-Error "Failed to create or parse version number from output: $versionOutput"
 }
+
+# 元のディレクトリに戻る
+Pop-Location
