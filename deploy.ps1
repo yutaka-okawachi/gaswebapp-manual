@@ -11,7 +11,7 @@ param(
 # 環境ごとのデプロイIDを定義
 $deploymentIds = @{
   "production" = "AKfycbxWl-KLwo8SnOyqQT84gJyrofRQnIp_GBv8Pg0N5athPAoxp9LBuwj0HDTXkFqh0xiGsw"
-  "staging"    = "ここに先ほど取得したテスト用デプロイIDを貼り付け"
+  "staging"    = "AKfycbwgYpxpOQ3kez3T_5AAB6b4eFGy2yhjqcc0r84o4NjVVfq8B54RXLRikVo0rgwhtW-eyQ"
 }
 $ID = $deploymentIds[$env]
 

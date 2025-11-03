@@ -18,29 +18,25 @@
       inputField.addEventListener('input', debouncedOnTermInput);
 
       // ページ読み込み時に全用語リストを取得
-      google.script.run
-        .withSuccessHandler(terms => {
-          allTerms = terms; // サーバーで前処理済みのデータをそのまま保持
-          console.log(`${allTerms.length}件のRW用語を準備完了。`);
-        })
-        .getRWTermsForClient();
+      // ★★★ 全件取得をやめて、サーバーサイド検索に切り替える
+      console.log('RW用語検索の準備ができました。');
     });
 
     const debouncedOnTermInput = debounce((event) => {
       const input = event.target.value.trim();
-      const normalizedInput = normalizeString(input);
       if (input.length < 2) { document.getElementById('termSuggestions').innerHTML = ''; return; }
-      // クライアントサイドで検索
-      // 正規化済みのリストに対して高速に検索
-      const suggestions = allTerms
-        .filter(item => item.normalized.startsWith(normalizedInput))
-        .map(item => item.original) // 結果は元の用語を表示
-        .slice(0, 20);
-      updateDatalist(suggestions);
+
+      // ★★★ サーバーサイドでサジェストを検索する方式に変更 ★★★
+      google.script.run
+        .withSuccessHandler(suggestions => {
+          updateDatalist(suggestions);
+        })
+        .searchRWTermsPartially(input); // サーバー側の関数を呼び出す
     }, 300);
     function updateDatalist(suggestions) {
       const datalist = document.getElementById('termSuggestions');
-      datalist.innerHTML = suggestions.map(term => `<option value="${term}"></option>`).join('');
+      // ★★★ searchRWTermsPartially は文字列の配列を返すので、それに合わせる ★★★
+      datalist.innerHTML = (suggestions || []).map(term => `<option value="${term}"></option>`).join('');
     }
     function search() {
       const query = document.getElementById('termInput').value.trim();
