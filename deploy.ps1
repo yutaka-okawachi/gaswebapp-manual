@@ -1,9 +1,19 @@
 param(
-  # -d で説明文を受け取る。指定がなければ "New version" を使う
+  # デプロイ環境を指定（'staging' または 'production'）
+  [Parameter(Mandatory = $true)]
+  [ValidateSet('staging', 'production')]
+  [string]$env,
+
+  # コミットメッセージやバージョン説明文
   [string]$d = "New version"
 )
 
-$ID = "AKfycbxWl-KLwo8SnOyqQT84gJyrofRQnIp_GBv8Pg0N5athPAoxp9LBuwj0HDTXkFqh0xiGsw"
+# 環境ごとのデプロイIDを定義
+$deploymentIds = @{
+  "production" = "AKfycbxWl-KLwo8SnOyqQT84gJyrofRQnIp_GBv8Pg0N5athPAoxp9LBuwj0HDTXkFqh0xiGsw"
+  "staging"    = "ここに先ほど取得したテスト用デプロイIDを貼り付け"
+}
+$ID = $deploymentIds[$env]
 
 # スクリプトがどこから実行されても正しく動作するように、
 # claspが管理するソースコードのルートディレクトリに移動する
@@ -19,7 +29,7 @@ $versionOutput = clasp version $d
 if ($versionOutput -match "Created version (\d+)") {
   $versionNumber = $Matches[1]
   Write-Host "Successfully created version: $versionNumber"
-  # 4. 抽出したバージョン番号を使ってデプロイ
+  # 4. 抽出したバージョン番号を使って、指定された環境にデプロイ
   clasp deploy -i $ID -V $versionNumber -d $d
 } else {
   Write-Error "Failed to create or parse version number from output: $versionOutput"
