@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 
 <head>
@@ -29,52 +29,9 @@
       margin-top: 1rem;
     }
 
-    /* --- ボタンのスタイルを追加 --- */
-    button {
-      padding: 8px 16px;
-      font-size: 1rem;
-      font-weight: bold;
-      color: #fff;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      transition: background-color 0.3s ease, opacity 0.3s ease;
-    }
-
-    .btn-action {
-      background-color: #79a9f2;
-    }
-
-    .btn-action:hover {
-      background-color: #5a8ad0;
-    }
-
-    .btn-danger {
-      background-color: #ff8c8c;
-    }
-
-    .btn-danger:hover {
-      background-color: #e26767;
-    }
-
-    .btn-clear {
-      background-color: #f7b267;
-    }
-
-    .btn-clear:hover {
-      background-color: #f49d4e;
-    }
-
-    /* --- ここまで --- */
-    @media (max-width: 600px) {
-      button {
-        width: 100%;
-        margin-bottom: 10px;
-      }
-    }
-
     #results {
       min-height: 200px;
+      margin-bottom: 100px; /* フローティングバーとの重なりを回避 */
     }
 
     /* fieldsetのタイトル（legend）のスタイル */
@@ -89,6 +46,40 @@
       /* 左寄せ */
       color: var(--text-color);
     }
+
+    /* --- アコーディオンのスタイル --- */
+    .instrument-group {
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      margin-bottom: 15px;
+      background-color: #fafafa;
+    }
+    .instrument-group summary {
+      font-size: 1.1rem;
+      font-weight: bold;
+      padding: 12px 15px;
+      cursor: pointer;
+      outline: none;
+      list-style: none; /* マーカーを消す */
+    }
+    .instrument-group summary::-webkit-details-marker {
+      display: none; /* マーカーを消す (Chrome/Safari) */
+    }
+    .instrument-group summary::before {
+      content: '▶';
+      margin-right: 10px;
+      font-size: 0.8em;
+      transition: transform 0.2s;
+    }
+    .instrument-group[open] > summary::before {
+      transform: rotate(90deg);
+    }
+    .instrument-group fieldset {
+      border: none;
+      margin-top: 0;
+      padding-top: 0;
+    }
+    /* --- ここまで --- */
 
     #works {
       background-color: #fceef1;
@@ -233,6 +224,89 @@
     .checkbox-grid-songs label.checked {
       background-color: rgba(200, 200, 200, 0.4);
     }
+
+    /* --- フローティング検索バー --- */
+    #floating-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background-color: rgba(255, 255, 255, 0.98);
+      padding: 10px 15px;
+      box-shadow: 0 -2px 8px rgba(0,0,0,0.15);
+      display: flex;
+      flex-wrap: nowrap;
+      align-items: stretch;
+      gap: 12px;
+      z-index: 1000;
+      font-weight: normal;
+      color: #333;
+      max-height: 25vh;
+      min-height: 120px;
+      overflow: hidden;
+    }
+    #floating-bar .button-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      align-items: stretch;
+      flex: 0 0 auto;
+    }
+    #floating-bar button {
+      font-weight: normal;
+    }
+    #floating-bar .button-group button {
+      min-width: 110px;
+    }
+    #selection-summary {
+      flex: 1 1 auto;
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      word-break: break-word;
+      font-family: Georgia, serif;
+      font-size: 0.85em;
+      text-align: left;
+      align-items: flex-start;
+      overflow-y: auto;
+    }
+    #selection-summary .summary-block {
+      width: 100%;
+    }
+    #selection-summary .summary-title {
+      font-weight: normal;
+      text-align: left;
+    }
+    #selection-summary .summary-value {
+      margin-top: 4px;
+      text-align: left;
+      line-height: 1.5;
+    }
+    @media (max-width: 600px) {
+      #floating-bar {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+        max-height: 25vh;
+      }
+      #selection-summary {
+        width: 100%;
+        max-height: 18vh;
+      }
+      #floating-bar .button-group {
+        order: -1;
+        width: 100%;
+        flex-direction: row;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+      #floating-bar .button-group button {
+        flex: 1 1 48%;
+        min-width: 140px;
+      }
+    }
   </style>
 
   <script>
@@ -244,6 +318,30 @@
      * - 検索ボタン押下時にサーバー側 (mahler.js) の searchData() を呼び出し
      * - 結果を画面に表示
      ***********************************************************/
+    // mahler.js から dMapping をコピー
+    const dMapping = {
+      "all": "ALLE", "dir": "Dirigent", "v1": "Violine1", "v2": "Violine2", "va": "Bratche", "vc": "Violoncello",
+      "kb": "Kontrabaß", "sv": "Solo Violine", "sva": "Solo Bratche", "svc": "Solo Violoncello", "skb": "Solo Kontrabaß",
+      "fl": "Flöte", "pic": "Piccolo", "ob": "Oboe", "eh": "Englischhorn", "cl": "Klarinette", "escl": "Es-Klarinette",
+      "bcl": "Bassklarinette", "fg": "Fagott", "cfg": "Kontrafagott", "tr": "Trompete", "pis": "Piston",
+      "phr": "Posthorn", "hr": "Horn", "thr": "Tenorhorn", "ohr": "Obligates Horn", "fhr": "Flügelhorn",
+      "whr": "Waldhorn", "pos": "Posaune", "bt": "Basstuba", "pau": "Pauken", "gtr": "Gloße Trommel",
+      "ktr": "Kleine Trommel", "mtr": "Militär Trommel", "bec": "Becken", "tam": "Tam-tam", "tri": "Triangel",
+      "gls": "Glockenspiel", "hgl": "Herdenglocken", "gl": "Glocken", "ham": "Hammer", "rt": "Rute",
+      "cel": "Celesta", "hp": "Harfe", "org": "Orgel", "klv": "Klavier", "har": "Harmonium", "git": "Gitarre",
+      "man": "Mandoline", "sop": "Sopran", "alt": "Alto", "ten": "Tenor", "bar": "Bariton", "bass": "Bass",
+      "sop1": "Sopran1", "sop2": "Sopran2", "alt1": "Alto1", "alt2": "Alto2", "kalt": "Knabe(Alto)",
+      "chor": "Chor", "chor1": "Chor1", "chor2": "Chor2", "fchor": "frauen Chor", "kchor": "knaben Chor", "sti": "Stimme"
+    };
+
+    // 楽器群のALL選択時の表示名マッピング
+    const groupAllDisplayMap = {
+      'ALL_STRINGS': '弦楽器群',
+      'ALL_WOODWINDS': '木管楽器群',
+      'ALL_BRASS': '金管楽器群',
+      'ALL_PERCUSSIONS': '打楽器群など',
+      'ALL_VOCAL': '声楽・合唱'
+    };
 
     window._allGlobalSelected = false;
     // 楽器「すべて選択」ボタンが押されたかどうかを判定するフラグ
@@ -266,6 +364,7 @@
             } else {
               ch.parentElement.classList.remove('checked');
             }
+            updateSelectionSummary(); // サマリーを更新
           }, 0);
         });
       });
@@ -307,6 +406,7 @@
                   }
                 }
               }
+              updateSelectionSummary(); // サマリーを更新
             }, 0);
           });
         });
@@ -322,6 +422,7 @@
             chk.checked = false;
             chk.parentElement.classList.remove('checked');
           });
+          updateSelectionSummary();
         }
       });
 
@@ -333,6 +434,7 @@
             chk.checked = false;
             chk.parentElement.classList.remove('checked');
           });
+          updateSelectionSummary();
         }
       });
 
@@ -344,6 +446,7 @@
             chk.checked = false;
             chk.parentElement.classList.remove('checked');
           });
+          updateSelectionSummary();
         }
       });
 
@@ -355,6 +458,7 @@
             chk.checked = false;
             chk.parentElement.classList.remove('checked');
           });
+          updateSelectionSummary();
         }
       });
 
@@ -366,6 +470,7 @@
             chk.checked = false;
             chk.parentElement.classList.remove('checked');
           });
+          updateSelectionSummary();
         }
       });
 
@@ -377,6 +482,7 @@
             chk.checked = false;
             chk.parentElement.classList.remove('checked');
           });
+          updateSelectionSummary();
         }
       });
 
@@ -389,6 +495,9 @@
       document.getElementById('clear-instruments').addEventListener('click', e => {
         deselectAllInAllGroups();
       });
+
+      updateSelectionSummary(); // 初期表示
+      adjustFloatingBarSpacing();
     });
 
     /**
@@ -415,6 +524,7 @@
         conductorCheckbox.parentElement.classList.add('checked');
       }
       window._allGlobalSelected = true;
+      updateSelectionSummary();
     }
 
     /**
@@ -438,6 +548,7 @@
         conductorCheckbox.parentElement.classList.remove('checked');
       }
       window._allGlobalSelected = false;
+      updateSelectionSummary();
     }
 
     /**
@@ -447,31 +558,34 @@
      * - 結果を #results に表示
      */
     function search() {
-      const searchButton = document.getElementById('search-button');
+      const searchButton = document.querySelector('#floating-bar .btn-action');
       const resultsDiv = document.getElementById('results');
-      resultsDiv.innerHTML = '';
+      const loadingHtml = '<p class=\"loading\">検索中・・・</p>';
+      resultsDiv.innerHTML = loadingHtml;
+      focusResultsPanel({ instant: true });
 
       // 曲名と楽器の選択状態を取得
       const works = getSelectedWorks();
       const instruments = getSelectedInstruments();
       // ラジオボタン「オーケストラ全体を含める」かどうか
-      const includeOrchestraAll = document.querySelector('input[name="include-orchestra-all"]:checked').value === 'on';
+      const includeOrchestraAll = document.querySelector('input[name=\"include-orchestra-all\"]:checked').value === 'on';
 
       // 未選択チェック
       if (works.length === 0) {
-        resultsDiv.innerHTML = '<p class="loading">曲名を選択してください．</p>';
+        resultsDiv.innerHTML = '<p class=\"loading\">曲名を選択してください。</p>';
+        searchButton.disabled = false;
+        focusResultsPanel({ instant: true });
         return;
       }
       if (!includeOrchestraAll && instruments.length === 0) {
-        resultsDiv.innerHTML = '<p class="loading">楽器を選択してください．</p>';
+        resultsDiv.innerHTML = '<p class=\"loading\">楽器を選択してください。</p>';
+        searchButton.disabled = false;
+        focusResultsPanel({ instant: true });
         return;
       }
 
-      // 「検索しています…」メッセージを表示
-      resultsDiv.innerHTML = '<p class="loading">検索中・・・</p>';
       // 検索ボタンを無効化し、色を薄くする
       searchButton.disabled = true;
-      searchButton.style.opacity = '0.5';
 
       // 検索IDを更新（キャンセル制御用）
       currentSearchId++;
@@ -483,9 +597,9 @@
           // もし別の検索がすでに走っていたら無視
           if (thisSearchId === currentSearchId) {
             resultsDiv.innerHTML = html;
+            focusResultsPanel({ instant: true });
             // 検索完了後、ボタンを有効に戻す
             searchButton.disabled = false;
-            searchButton.style.opacity = '1';
           }
         })
         .searchData(works, instruments, includeOrchestraAll);
@@ -496,12 +610,15 @@
      * - currentSearchId を更新して、既存の検索結果を無効化
      */
     function cancelSearch() {
-      const searchButton = document.getElementById('search-button');
-      document.getElementById('results').innerHTML = '<p class="loading">検索を中止しました．</p>';
+      const searchButton = document.querySelector('#floating-bar .btn-action');
+      const resultsDiv = document.getElementById('results');
+      if (resultsDiv) {
+        resultsDiv.innerHTML = '<p class="loading">検索を中止しました。</p>';
+        focusResultsPanel({ instant: true });
+      }
       currentSearchId++;
       // 中止した場合もボタンを有効に戻す
       searchButton.disabled = false;
-      searchButton.style.opacity = '1';
     }
 
     /**
@@ -581,8 +698,75 @@
         chk.checked = false;
         chk.parentElement.classList.remove('checked');
       });
+      updateSelectionSummary();
     }
 
+    /**
+     * 選択状況のサマリーを更新する
+     */
+    function updateSelectionSummary() {
+      const summaryDiv = document.getElementById('selection-summary');
+      if (!summaryDiv) return;
+
+      const selectedWorks = getSelectedWorks();
+      const selectedInstruments = getSelectedInstruments();
+
+      const workLabelMap = {};
+      document.querySelectorAll('#works input[type="checkbox"]').forEach(chk => {
+        const key = chk.value.toLowerCase();
+        const labelText = chk.parentElement ? chk.parentElement.textContent.trim() : chk.value;
+        workLabelMap[key] = labelText;
+      });
+
+      let workValue = 'なし';
+      if (selectedWorks.length > 0) {
+        if (selectedWorks[0] === 'ALL') {
+          workValue = 'すべて';
+        } else {
+          const workNames = selectedWorks.map(code => workLabelMap[code] || code);
+          if (workNames.length > 0) {
+            workValue = workNames.join('<br>');
+          }
+        }
+      }
+
+      let instrumentValue = 'なし';
+      if (selectedInstruments.length > 0) {
+        if (selectedInstruments.includes('ALL_GLOBAL')) {
+          instrumentValue = 'すべて';
+        } else {
+          const instrumentNames = selectedInstruments
+            .map(code => groupAllDisplayMap[code] || dMapping[code.toLowerCase()] || code)
+            .filter(name => name && name !== 'ALL_GLOBAL');
+          if (instrumentNames.length > 0) {
+            instrumentValue = instrumentNames.join('<br>');
+          }
+        }
+      }
+
+      summaryDiv.innerHTML =
+        '<div class="summary-block">' +
+          '<div class="summary-title">選択した曲：</div>' +
+          '<div class="summary-value">' + workValue + '</div>' +
+        '</div>' +
+        '<div class="summary-block">' +
+          '<div class="summary-title">選択した楽器：</div>' +
+          '<div class="summary-value">' + instrumentValue + '</div>' +
+        '</div>';
+
+      adjustFloatingBarSpacing();
+    }
+
+function adjustFloatingBarSpacing() {
+      const floatingBar = document.getElementById('floating-bar');
+      const container = document.querySelector('.container');
+      if (!floatingBar || !container) return;
+
+      const barHeight = floatingBar.offsetHeight;
+      container.style.paddingBottom = (barHeight + 40) + 'px';
+    }
+
+    window.addEventListener('resize', adjustFloatingBarSpacing);
   </script>
 
 </head>
@@ -595,7 +779,9 @@
     <div class="big-label">
       曲名を選択
     </div>
-    <button type="button" onclick="clearWorks()" class="btn-clear">曲名をクリア</button>
+    <div style="margin-bottom: 15px;">
+      <button type="button" onclick="clearWorks()" class="btn-clear">曲名をクリア</button>
+    </div>
     <fieldset id="works">
       <legend>曲名</legend>
       <!-- ALLチェックボックス -->
@@ -631,7 +817,7 @@
     <div class="big-label-instruments">
       楽器を選択
     </div>
-    <div>
+    <div style="margin-bottom: 15px;">
       <button type="button" id="all-instruments" class="btn-action">すべての楽器を選択</button>
       <button type="button" id="clear-instruments" class="btn-clear">楽器をクリア</button>
       <div style="margin-top: 10px;">
@@ -648,136 +834,139 @@
     </div>
 
     <!-- 指揮者 -->
-    <fieldset id="conductor">
-      <legend>指揮者</legend>
-      <div class="inner-checkbox-group checkbox-grid">
-        <label>
-          <input type="checkbox" value="dir">Dirigent
-        </label>
-      </div>
-    </fieldset>
+    <details class="instrument-group">
+      <summary>指揮者</summary>
+      <fieldset id="conductor">
+        <div class="inner-checkbox-group checkbox-grid">
+          <label><input type="checkbox" value="dir">Dirigent</label>
+        </div>
+      </fieldset>
+    </details>
 
     <!-- 弦楽器群 -->
-    <fieldset id="strings">
-      <legend>弦楽器群</legend>
-      <label class="all-label">
-        <input type="checkbox" id="all-strings" value="ALL">ALL
-      </label>
-      <div class="inner-checkbox-group checkbox-grid">
-        <label><input type="checkbox" value="v1">Violine1</label>
-        <label><input type="checkbox" value="v2">Violine2</label>
-        <label><input type="checkbox" value="va">Bratche</label>
-        <label><input type="checkbox" value="vc">Violoncello</label>
-        <label><input type="checkbox" value="kb">Kontrabaß</label>
-        <label><input type="checkbox" value="sv">Solo Violine</label>
-        <label><input type="checkbox" value="sva">Solo Bratche</label>
-        <label><input type="checkbox" value="svc">Solo Violoncello</label>
-        <label><input type="checkbox" value="skb">Solo Kontrabaß</label>
-      </div>
-    </fieldset>
+    <details class="instrument-group">
+      <summary>弦楽器群</summary>
+      <fieldset id="strings">
+        <label class="all-label"><input type="checkbox" id="all-strings" value="ALL">ALL</label>
+        <div class="inner-checkbox-group checkbox-grid">
+          <label><input type="checkbox" value="v1">Violine1</label>
+          <label><input type="checkbox" value="v2">Violine2</label>
+          <label><input type="checkbox" value="va">Bratche</label>
+          <label><input type="checkbox" value="vc">Violoncello</label>
+          <label><input type="checkbox" value="kb">Kontrabaß</label>
+          <label><input type="checkbox" value="sv">Solo Violine</label>
+          <label><input type="checkbox" value="sva">Solo Bratche</label>
+          <label><input type="checkbox" value="svc">Solo Violoncello</label>
+          <label><input type="checkbox" value="skb">Solo Kontrabaß</label>
+        </div>
+      </fieldset>
+    </details>
 
     <!-- 木管楽器群 -->
-    <fieldset id="woodwinds">
-      <legend>木管楽器群</legend>
-      <label class="all-label">
-        <input type="checkbox" id="all-woodwinds" value="ALL">ALL
-      </label>
-      <div class="inner-checkbox-group checkbox-grid">
-        <label><input type="checkbox" value="fl">Flöte</label>
-        <label><input type="checkbox" value="pic">Piccolo</label>
-        <label><input type="checkbox" value="ob">Oboe</label>
-        <label><input type="checkbox" value="eh">Englischhorn</label>
-        <label><input type="checkbox" value="cl">Klarinette</label>
-        <label><input type="checkbox" value="escl">Es-Klarinette</label>
-        <label><input type="checkbox" value="bcl">Bassklarinette</label>
-        <label><input type="checkbox" value="fg">Fagott</label>
-        <label><input type="checkbox" value="cfg">Kontrafagott</label>
-      </div>
-    </fieldset>
+    <details class="instrument-group">
+      <summary>木管楽器群</summary>
+      <fieldset id="woodwinds">
+        <label class="all-label"><input type="checkbox" id="all-woodwinds" value="ALL">ALL</label>
+        <div class="inner-checkbox-group checkbox-grid">
+          <label><input type="checkbox" value="fl">Flöte</label>
+          <label><input type="checkbox" value="pic">Piccolo</label>
+          <label><input type="checkbox" value="ob">Oboe</label>
+          <label><input type="checkbox" value="eh">Englischhorn</label>
+          <label><input type="checkbox" value="cl">Klarinette</label>
+          <label><input type="checkbox" value="escl">Es-Klarinette</label>
+          <label><input type="checkbox" value="bcl">Bassklarinette</label>
+          <label><input type="checkbox" value="fg">Fagott</label>
+          <label><input type="checkbox" value="cfg">Kontrafagott</label>
+        </div>
+      </fieldset>
+    </details>
 
     <!-- 金管楽器群 -->
-    <fieldset id="brass">
-      <legend>金管楽器群</legend>
-      <label class="all-label">
-        <input type="checkbox" id="all-brass" value="ALL">ALL
-      </label>
-      <div class="inner-checkbox-group checkbox-grid">
-        <label><input type="checkbox" value="tr">Trompete</label>
-        <label><input type="checkbox" value="pis">Piston</label>
-        <label><input type="checkbox" value="phr">Posthorn</label>
-        <label><input type="checkbox" value="hr">Horn</label>
-        <label><input type="checkbox" value="thr">Tenorhorn</label>
-        <label><input type="checkbox" value="ohr">Obligates Horn</label>
-        <label><input type="checkbox" value="fhr">Flügelhorn</label>
-        <label><input type="checkbox" value="whr">Waldhorn</label>
-        <label><input type="checkbox" value="pos">Posaune</label>
-        <label><input type="checkbox" value="bt">Basstuba</label>
-      </div>
-    </fieldset>
+    <details class="instrument-group">
+      <summary>金管楽器群</summary>
+      <fieldset id="brass">
+        <label class="all-label"><input type="checkbox" id="all-brass" value="ALL">ALL</label>
+        <div class="inner-checkbox-group checkbox-grid">
+          <label><input type="checkbox" value="tr">Trompete</label>
+          <label><input type="checkbox" value="pis">Piston</label>
+          <label><input type="checkbox" value="phr">Posthorn</label>
+          <label><input type="checkbox" value="hr">Horn</label>
+          <label><input type="checkbox" value="thr">Tenorhorn</label>
+          <label><input type="checkbox" value="ohr">Obligates Horn</label>
+          <label><input type="checkbox" value="fhr">Flügelhorn</label>
+          <label><input type="checkbox" value="whr">Waldhorn</label>
+          <label><input type="checkbox" value="pos">Posaune</label>
+          <label><input type="checkbox" value="bt">Basstuba</label>
+        </div>
+      </fieldset>
+    </details>
 
     <!-- 打楽器群 -->
-    <fieldset id="percussions">
-      <legend>打楽器群など</legend>
-      <label class="all-label">
-        <input type="checkbox" id="all-percussions" value="ALL">ALL
-      </label>
-      <div class="inner-checkbox-group checkbox-grid">
-        <label><input type="checkbox" value="pau">Pauken</label>
-        <label><input type="checkbox" value="gtr">Gloße Trommel</label>
-        <label><input type="checkbox" value="ktr">Kleine Trommel</label>
-        <label><input type="checkbox" value="mtr">Militär Trommel</label>
-        <label><input type="checkbox" value="bec">Becken</label>
-        <label><input type="checkbox" value="tam">Tam-tam</label>
-        <label><input type="checkbox" value="tri">Triangel</label>
-        <label><input type="checkbox" value="gls">Glockenspiel</label>
-        <label><input type="checkbox" value="hgl">Herdenglocken</label>
-        <label><input type="checkbox" value="gl">Glocken</label>
-        <label><input type="checkbox" value="ham">Hammer</label>
-        <label><input type="checkbox" value="rt">Rute</label>
-        <label><input type="checkbox" value="cel">Celesta</label>
-        <label><input type="checkbox" value="hp">Harfe</label>
-        <label><input type="checkbox" value="org">Orgel</label>
-        <label><input type="checkbox" value="klv">Klavier</label>
-        <label><input type="checkbox" value="har">Harmonium</label>
-        <label><input type="checkbox" value="git">Gitarre</label>
-        <label><input type="checkbox" value="man">Mandoline</label>
-      </div>
-    </fieldset>
+    <details class="instrument-group">
+      <summary>打楽器群など</summary>
+      <fieldset id="percussions">
+        <label class="all-label"><input type="checkbox" id="all-percussions" value="ALL">ALL</label>
+        <div class="inner-checkbox-group checkbox-grid">
+          <label><input type="checkbox" value="pau">Pauken</label>
+          <label><input type="checkbox" value="gtr">Gloße Trommel</label>
+          <label><input type="checkbox" value="ktr">Kleine Trommel</label>
+          <label><input type="checkbox" value="mtr">Militär Trommel</label>
+          <label><input type="checkbox" value="bec">Becken</label>
+          <label><input type="checkbox" value="tam">Tam-tam</label>
+          <label><input type="checkbox" value="tri">Triangel</label>
+          <label><input type="checkbox" value="gls">Glockenspiel</label>
+          <label><input type="checkbox" value="hgl">Herdenglocken</label>
+          <label><input type="checkbox" value="gl">Glocken</label>
+          <label><input type="checkbox" value="ham">Hammer</label>
+          <label><input type="checkbox" value="rt">Rute</label>
+          <label><input type="checkbox" value="cel">Celesta</label>
+          <label><input type="checkbox" value="hp">Harfe</label>
+          <label><input type="checkbox" value="org">Orgel</label>
+          <label><input type="checkbox" value="klv">Klavier</label>
+          <label><input type="checkbox" value="har">Harmonium</label>
+          <label><input type="checkbox" value="git">Gitarre</label>
+          <label><input type="checkbox" value="man">Mandoline</label>
+        </div>
+      </fieldset>
+    </details>
 
     <!-- 声楽・合唱 -->
-    <fieldset id="vocal">
-      <legend>声楽・合唱</legend>
-      <label class="all-label">
-        <input type="checkbox" id="all-vocal" value="ALL">ALL
-      </label>
-      <div class="inner-checkbox-group checkbox-grid">
-        <label><input type="checkbox" value="sop">Sopran</label>
-        <label><input type="checkbox" value="alt">Alto</label>
-        <label><input type="checkbox" value="ten">Tenor</label>
-        <label><input type="checkbox" value="bar">Bariton</label>
-        <label><input type="checkbox" value="bass">Bass</label>
-        <label><input type="checkbox" value="sop1">Sopran1</label>
-        <label><input type="checkbox" value="sop2">Sopran2</label>
-        <label><input type="checkbox" value="alt1">Alto1</label>
-        <label><input type="checkbox" value="alt2">Alto2</label>
-        <label><input type="checkbox" value="kalt">Knabe(Alto)</label>
-        <label><input type="checkbox" value="chor">Chor</label>
-        <label><input type="checkbox" value="chor1">Chor1</label>
-        <label><input type="checkbox" value="chor2">Chor2</label>
-        <label><input type="checkbox" value="fchor">frauen Chor</label>
-        <label><input type="checkbox" value="kchor">knaben Chor</label>
-        <label><input type="checkbox" value="sti">Stimme</label>
-      </div>
-    </fieldset>
-
-    <!-- 検索ボタン・中止ボタン -->
-    <div style="text-align: center;">
-      <button type="button" id="search-button" onclick="search()" class="btn-action">検索</button>
-      <button type="button" onclick="cancelSearch()" class="btn-danger">中止</button>
-    </div>
+    <details class="instrument-group">
+      <summary>声楽・合唱</summary>
+      <fieldset id="vocal">
+        <label class="all-label"><input type="checkbox" id="all-vocal" value="ALL">ALL</label>
+        <div class="inner-checkbox-group checkbox-grid">
+          <label><input type="checkbox" value="sop">Sopran</label>
+          <label><input type="checkbox" value="alt">Alto</label>
+          <label><input type="checkbox" value="ten">Tenor</label>
+          <label><input type="checkbox" value="bar">Bariton</label>
+          <label><input type="checkbox" value="bass">Bass</label>
+          <label><input type="checkbox" value="sop1">Sopran1</label>
+          <label><input type="checkbox" value="sop2">Sopran2</label>
+          <label><input type="checkbox" value="alt1">Alto1</label>
+          <label><input type="checkbox" value="alt2">Alto2</label>
+          <label><input type="checkbox" value="kalt">Knabe(Alto)</label>
+          <label><input type="checkbox" value="chor">Chor</label>
+          <label><input type="checkbox" value="chor1">Chor1</label>
+          <label><input type="checkbox" value="chor2">Chor2</label>
+          <label><input type="checkbox" value="fchor">frauen Chor</label>
+          <label><input type="checkbox" value="kchor">knaben Chor</label>
+          <label><input type="checkbox" value="sti">Stimme</label>
+        </div>
+      </fieldset>
+    </details>
 
     <!-- 検索結果表示領域 -->
     <div id="results"></div>
+  </div>
+
+  <!-- フローティング検索バー -->
+  <div id="floating-bar">
+    <div id="selection-summary"></div>
+    <div class="button-group">
+      <button type="button" onclick="search()" class="btn-action">検索</button>
+      <button type="button" onclick="cancelSearch()" class="btn-danger">中止</button>
+    </div>
   </div>
 
   <!-- ページのトップへ戻るボタン -->

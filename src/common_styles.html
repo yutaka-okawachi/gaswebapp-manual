@@ -10,8 +10,8 @@
   --title-border: #e35d76;
   --section-label-bg: #ffe9cc;
   --results-bg: #fff2e0;
-  --button-bg: #79a9f2;
-  --button-hover-bg: #5a8ad0;
+  --button-bg: #4a86e8; /* より濃い青 */
+  --button-hover-bg: #3572d6; /* さらに濃い青 */
   --danger-button-bg: #ff8c8c;
   --danger-button-hover-bg: #e26767;
   --clear-button-bg: #f7b267;
@@ -176,11 +176,13 @@ button {
   transition: background-color 0.3s ease;
 }
 
-button.btn-search {
+button.btn-search,
+button.btn-action {
   background-color: var(--button-bg);
 }
 
-button.btn-search:hover {
+button.btn-search:hover,
+button.btn-action:hover {
   background-color: var(--button-hover-bg);
 }
 
@@ -198,6 +200,12 @@ button.btn-clear {
 
 button.btn-clear:hover {
   background-color: var(--clear-button-hover-bg);
+}
+
+/* ボタンが無効化されたときのスタイル */
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 button.clear-input-btn {
@@ -225,6 +233,8 @@ button.clear-input-btn:hover {
   min-height: 150px;
   line-height: 1.5;
   white-space: normal;
+  font-family: Georgia, serif;
+  font-size: 0.92em;
 }
 
 #results>div:first-child {
@@ -248,7 +258,7 @@ button.clear-input-btn:hover {
   display: flex;
   align-items: baseline;
   margin-bottom: 0.6em;
-  font-size: 0.96em;
+  font-size: 0.92em;
 }
 
 .result-page {
@@ -256,7 +266,7 @@ button.clear-input-btn:hover {
   font-weight: normal;
   color: #555;
   white-space: nowrap;
-  font-size: 0.9em;
+  font-size: 0.85em;
 }
 
 .result-content {
@@ -265,20 +275,20 @@ button.clear-input-btn:hover {
 
 .result-de {
   font-weight: bold;
-  font-size: 1em;
+  font-size: 0.98em;
   display: block;
 }
 
 .result-ja-loc {
   display: block;
-  font-size: 0.94em;
+  font-size: 0.88em;
   font-weight: normal;
   margin-top: 2px;
 }
 
 .result-ja-loc span:last-child {
   margin-left: 0.5em;
-  font-size: 0.9em;
+  font-size: 0.84em;
   color: #444;
 }
 

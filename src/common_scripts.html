@@ -26,9 +26,21 @@
   }
   window.scrollToTop = scrollToTop;
 
+  function focusResultsPanel(options) {
+    const resultsDiv = document.getElementById('results');
+    if (!resultsDiv) return;
+
+    const topOffset = Math.max((resultsDiv.getBoundingClientRect().top + window.scrollY) - 20, 0);
+    const behavior = options && options.instant ? 'auto' : 'smooth';
+    window.scrollTo({ top: topOffset, behavior });
+  }
+  window.focusResultsPanel = focusResultsPanel;
+
   function setResults(html) {
     const resultsDiv = document.getElementById('results');
-    if (resultsDiv) resultsDiv.innerHTML = html;
+    if (!resultsDiv) return;
+    resultsDiv.innerHTML = html;
+    focusResultsPanel({ instant: true });
   }
   window.setResults = setResults;
 

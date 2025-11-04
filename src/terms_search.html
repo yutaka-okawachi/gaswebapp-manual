@@ -74,15 +74,16 @@
     function search() {
       const query = document.getElementById('termInput').value.trim();
       const resultsDiv = document.getElementById('results');
+      const loadingHtml = '<p class=\"loading\">検索中・・・</p>';
+      resultsDiv.innerHTML = loadingHtml;
+      focusResultsPanel({ instant: true });
 
       // 空文字チェック
       if (!query) {
-        resultsDiv.innerHTML = '<p class="result-message">検索語句を入力してください。</p>';
+        resultsDiv.innerHTML = '<p class=\"result-message\">検索語句を入力してください。</p>';
+        focusResultsPanel({ instant: true });
         return;
       }
-
-      // ローディングメッセージ
-      resultsDiv.innerHTML = '<p class="loading">検索中・・・</p>';
 
       currentSearchId++;
       const thisSearchId = currentSearchId;
@@ -92,6 +93,7 @@
         .withSuccessHandler(html => {
           if (thisSearchId === currentSearchId) {
             resultsDiv.innerHTML = html;
+            focusResultsPanel({ instant: true });
           } else {
             console.log('古い検索結果を無視');
           }

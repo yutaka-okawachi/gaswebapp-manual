@@ -41,14 +41,24 @@
     function search() {
       const query = document.getElementById('termInput').value.trim();
       const resultsDiv = document.getElementById('results');
-      if (!query) { resultsDiv.innerHTML = '<p class="result-message">用語を入力してください</p>'; return; }
-      resultsDiv.innerHTML = '<p class="loading">検索中・・・</p>';
+      const loadingHtml = '<p class=\"loading\">検索中・・・</p>';
+      resultsDiv.innerHTML = loadingHtml;
+      focusResultsPanel({ instant: true });
+      if (!query) {
+        resultsDiv.innerHTML = '<p class=\"result-message\">用語を入力してください</p>';
+        focusResultsPanel({ instant: true });
+        return;
+      }
       currentSearchId++; const thisSearchId = currentSearchId;
       google.script.run.withSuccessHandler(html => {
-        if (thisSearchId === currentSearchId) { resultsDiv.innerHTML = html; }
+        if (thisSearchId === currentSearchId) {
+          resultsDiv.innerHTML = html;
+          focusResultsPanel({ instant: true });
+        }
       }).searchRWTerms(query);
     }
-    // 正規化関数（クライアントサイドでも必要）
+
+    // 正規化関数 — クライアントサイドでも共通利用
     function normalizeString(str) {
       if (typeof str !== 'string') return '';
       return str.toLowerCase().replace(/ä/g, 'ae').replace(/ö/g, 'oe').replace(/ü/g, 'ue').replace(/ß/g, 'ss').trim();
