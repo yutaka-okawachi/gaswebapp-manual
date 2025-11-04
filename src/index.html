@@ -285,26 +285,26 @@
     }
     @media (max-width: 600px) {
       #floating-bar {
-        flex-direction: column;
+        flex-direction: row;
         align-items: stretch;
-        gap: 12px;
-        max-height: 25vh;
+        gap: 10px;
+        max-height: 30vh;
       }
       #selection-summary {
-        width: 100%;
-        max-height: 18vh;
+        width: auto;
+        max-height: 26vh;
       }
       #floating-bar .button-group {
-        order: -1;
-        width: 100%;
-        flex-direction: row;
-        justify-content: center;
-        flex-wrap: wrap;
+        order: 0;
+        flex-direction: column;
+        justify-content: flex-start;
+        flex-wrap: nowrap;
         gap: 8px;
+        width: auto;
       }
       #floating-bar .button-group button {
-        flex: 1 1 48%;
-        min-width: 140px;
+        flex: 0 0 auto;
+        min-width: 120px;
       }
     }
   </style>
