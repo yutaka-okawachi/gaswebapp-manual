@@ -8,7 +8,7 @@
  * - 検索結果メール通知
  *
  * 使われるスプレッドシートのシート構成：
- * - 「sheet4」：マーラーのドイツ語→英語→日本語などが入っている
+ * - 「GM」：マーラーのドイツ語・正規化済み表記・日本語訳・データ列を保持
  * - 「マーラー以外のドイツ語」
  * - 「訳出についての覚書」
  * - 「RS」：R.Straussのデータ
@@ -267,9 +267,16 @@ function searchRichardWagnerByScene(operaName, scenes) {
 
     const resultsHtml = formatGenericResults(filteredData, sceneMap);
 
+    // Felix Mottlの指示に関する注釈を追加するオペラのリスト
+    const mottlOperas = ['tann_dresden', 'tann_paris', 'walkuere', 'tristan', 'parsifal'];
+
     let finalHtml = '';
     if (scoreInfo) {
       finalHtml += `<div class="score-info">楽譜情報: ${escapeHtml(scoreInfo)}</div>`;
+    }
+    // 対象オペラの場合、注釈を追加
+    if (mottlOperas.includes(normalizedOperaName)) {
+      finalHtml += `<div class="mottl-info" style="font-weight: bold; font-size: 0.9em;">Felix Mottl による指示も含む</div>`;
     }
     finalHtml += resultsHtml;
 
@@ -314,9 +321,16 @@ function searchRichardWagnerByPage(operaName, pageInput) {
 
     const resultsHtml = formatGenericResults(filteredData, sceneMap);
 
+    // Felix Mottlの指示に関する注釈を追加するオペラのリスト
+    const mottlOperas = ['tann_dresden', 'tann_paris', 'walkuere', 'tristan', 'parsifal'];
+
     let finalHtml = '';
     if (scoreInfo) {
       finalHtml += `<div class="score-info">楽譜情報: ${escapeHtml(scoreInfo)}</div>`;
+    }
+    // 対象オペラの場合、注釈を追加
+    if (mottlOperas.includes(normalizedOperaName)) {
+      finalHtml += `<div class="mottl-info" style="font-weight: bold; font-size: 0.9em;">Felix Mottl による指示も含む</div>`;
     }
     finalHtml += resultsHtml;
 
@@ -591,21 +605,22 @@ const dReverseMap = { ...dMapping };
  * @returns {Array<Object>} Mahlerのデータ配列
  */
 function getMahlerData() {
-  const cacheKey = 'mahler_data_v1';
+  const cacheKey = 'mahler_data_v2';
   const cached = getChunkedCache(cacheKey);
   if (cached) {
     return cached;
   }
 
   Logger.log('Mahlerデータをスプレッドシートから取得します。');
-  const sheet = SpreadsheetApp.openById(SPREADSHEET_ID).getSheetByName('sheet4');
-  if (!sheet) throw new Error('シート「sheet4」が見つかりません。');
+  const sheet = SpreadsheetApp.openById(SPREADSHEET_ID).getSheetByName('GM');
+  if (!sheet) throw new Error('シート「GM」が見つかりません。');
 
   const data = sheet.getDataRange().getValues();
-  if (!data || data.length === 0) return [];
+  if (!data || data.length <= 1) return [];
 
-  setChunkedCache(cacheKey, data, 21600); // 6時間キャッシュ
-  return data;
+  const rows = data.slice(1); // 1行目はヘッダ（de, de_normalized, ja, data）
+  setChunkedCache(cacheKey, rows, 21600); // 6時間キャッシュ
+  return rows;
 }
 
 /**
@@ -720,15 +735,18 @@ function searchData(choice1Arr, choice2Arr, includeOrchestraAll) {
 
 function getAllTerms() {
   const cache = CacheService.getScriptCache();
-  const cacheKey = 'all_terms';
+  const cacheKey = 'all_terms_v2';
   const cachedTerms = cache.get(cacheKey);
   if (cachedTerms) {
     return JSON.parse(cachedTerms);
   }
-  const sheetName = 'sheet4';
+  const sheetName = 'GM';
   const sheet = SpreadsheetApp.openById(SPREADSHEET_ID).getSheetByName(sheetName);
+  if (!sheet) {
+    return [];
+  }
   const data = sheet.getRange('B:B').getValues();
-  const terms = data.flat().filter(term => term);
+  const terms = data.slice(1).map(row => row[0]).filter(term => term);
   cache.put(cacheKey, JSON.stringify(terms), 3600);
   return terms;
 }
@@ -756,16 +774,20 @@ function searchEnglishTermsPartially(input) {
 
 function searchByTerm(query) {
   const ss = SpreadsheetApp.openById(SPREADSHEET_ID);
-  const sheet = ss.getSheetByName('sheet4');
+  const sheet = ss.getSheetByName('GM');
+  if (!sheet) {
+    return '<p class="result-message">シートが見つかりません。</p>';
+  }
   const data = sheet.getDataRange().getValues();
   if (!query) {
     return '<p class="result-message">検索語句を入力してください。</p>';
   }
-  if (!data || data.length === 0) {
+  if (!data || data.length <= 1) {
     return '<p class="result-message">スプレッドシートにデータが存在しません。</p>';
   }
 
-  const results = data.filter(row =>
+  const rows = data.slice(1);
+  const results = rows.filter(row =>
     row[1] && String(row[1]).toLowerCase().includes(query.toLowerCase())
   );
   if (results.length === 0) {
