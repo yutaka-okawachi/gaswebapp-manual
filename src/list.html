@@ -61,7 +61,7 @@
   .translation { font-size: 0.88em; white-space: pre-wrap; margin-left: 1rem; font-family: 'Lora', serif; }
     .source { font-size: 0.8rem; color: #555; white-space: normal; overflow: hidden; text-overflow: ellipsis; display: block; margin-left: 0.5rem; }
     #loadingMessage { color: #555; }
-    #scrollToTop { bottom: 20px; top: auto; z-index: 1001; } /* 位置を下に */
+  #scrollToTop { right: 20px; bottom: calc(20px + env(safe-area-inset-bottom, 0px)); z-index: 9999; } /* 位置を下に (safe-area 対応) */
     @media (max-width: 600px) {
       body { font-size: 12px; }
       #fixedHeader h1 { font-size: 1.2rem; }

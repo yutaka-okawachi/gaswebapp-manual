@@ -13,11 +13,29 @@
     return;
   }
 
-  // Show/hide the "back to top" button
-  window.addEventListener('scroll', () => {
+  // Show/hide the "back to top" button — use class toggles and run on load/resize/scroll
+  function updateScrollToTopVisibility() {
     const scrollToTopBtn = document.getElementById('scrollToTop');
     if (!scrollToTopBtn) return;
-    scrollToTopBtn.style.display = (window.scrollY > 300) ? 'block' : 'none';
+    // show when scrolled down a bit
+    if (window.scrollY > 300) {
+      scrollToTopBtn.classList.add('show');
+      scrollToTopBtn.classList.remove('hidden');
+    } else {
+      scrollToTopBtn.classList.remove('show');
+      scrollToTopBtn.classList.add('hidden');
+    }
+  }
+
+  window.addEventListener('scroll', updateScrollToTopVisibility, { passive: true });
+  window.addEventListener('resize', () => setTimeout(updateScrollToTopVisibility, 120));
+  window.addEventListener('orientationchange', () => setTimeout(updateScrollToTopVisibility, 160));
+
+  // ensure initial state after load (some mobile browsers change viewport after load)
+  window.addEventListener('load', () => {
+    updateScrollToTopVisibility();
+    // second check shortly after to account for browser UI show/hide
+    setTimeout(updateScrollToTopVisibility, 300);
   });
 
   // Expose global helpers
