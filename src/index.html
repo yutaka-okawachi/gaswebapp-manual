@@ -9,6 +9,12 @@
 
   <?!= include('common_styles.html') ?>
   <style>
+    :root {
+      --safe-area-bottom: env(safe-area-inset-bottom, 0px);
+      --floating-bar-offset: 16px;
+    }
+
+
     /* index.html固有のスタイル */
     .big-label {
       font-size: 1.2rem;
@@ -228,11 +234,11 @@
     /* --- フローティング検索バー --- */
     #floating-bar {
       position: fixed;
-      bottom: 0;
+      bottom: calc(var(--safe-area-bottom) + var(--floating-bar-offset));
       left: 0;
       width: 100%;
       background-color: rgba(255, 255, 255, 0.98);
-      padding: 10px 15px;
+      padding: 10px 15px calc(10px + var(--safe-area-bottom)) 15px;
       box-shadow: 0 -2px 8px rgba(0,0,0,0.15);
       display: flex;
       flex-wrap: nowrap;
@@ -241,7 +247,7 @@
       z-index: 1000;
       font-weight: normal;
       color: #333;
-      max-height: 25vh;
+      max-height: 24vh;
       min-height: 120px;
       overflow: hidden;
     }
@@ -288,11 +294,11 @@
         flex-direction: row;
         align-items: stretch;
         gap: 10px;
-        max-height: 30vh;
+        max-height: 28vh;
       }
       #selection-summary {
         width: auto;
-        max-height: 26vh;
+        max-height: 22vh;
       }
       #floating-bar .button-group {
         order: 0;
@@ -497,7 +503,7 @@
       });
 
       updateSelectionSummary(); // 初期表示
-      adjustFloatingBarSpacing();
+      updateFloatingBarOffset();
     });
 
     /**
@@ -523,6 +529,8 @@
         conductorCheckbox.checked = true;
         conductorCheckbox.parentElement.classList.add('checked');
       }
+      // 開いていることが分かるように、全instrument-groupアコーディオンを開く
+      document.querySelectorAll('.instrument-group').forEach(d => { d.open = true; });
       window._allGlobalSelected = true;
       updateSelectionSummary();
     }
@@ -547,6 +555,8 @@
         conductorCheckbox.checked = false;
         conductorCheckbox.parentElement.classList.remove('checked');
       }
+      // すべての instrument-group アコーディオンを閉じる
+      document.querySelectorAll('.instrument-group').forEach(d => { d.open = false; });
       window._allGlobalSelected = false;
       updateSelectionSummary();
     }
@@ -698,6 +708,9 @@
         chk.checked = false;
         chk.parentElement.classList.remove('checked');
       });
+      // 曲名のアコーディオン（works-group）を閉じる
+      const worksDetails = document.getElementById('works-group');
+      if (worksDetails) worksDetails.open = false;
       updateSelectionSummary();
     }
 
@@ -757,16 +770,32 @@
       adjustFloatingBarSpacing();
     }
 
-function adjustFloatingBarSpacing() {
+    function adjustFloatingBarSpacing() {
       const floatingBar = document.getElementById('floating-bar');
       const container = document.querySelector('.container');
       if (!floatingBar || !container) return;
 
       const barHeight = floatingBar.offsetHeight;
-      container.style.paddingBottom = (barHeight + 40) + 'px';
+      const safeArea = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--safe-area-bottom')) || 0;
+      const offset = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--floating-bar-offset')) || 0;
+      container.style.paddingBottom = (barHeight + 40 + safeArea + offset) + 'px';
     }
 
-    window.addEventListener('resize', adjustFloatingBarSpacing);
+    function updateFloatingBarOffset() {
+      let offset = 16;
+      if (window.visualViewport) {
+        const diff = window.innerHeight - window.visualViewport.height;
+        if (diff > 0) offset += diff;
+      }
+      document.documentElement.style.setProperty('--floating-bar-offset', `${offset}px`);
+      adjustFloatingBarSpacing();
+    }
+
+    window.addEventListener('resize', updateFloatingBarOffset);
+    if (window.visualViewport) {
+      window.visualViewport.addEventListener('resize', updateFloatingBarOffset);
+      window.visualViewport.addEventListener('scroll', updateFloatingBarOffset);
+    }
   </script>
 
 </head>
@@ -782,15 +811,17 @@ function adjustFloatingBarSpacing() {
     <div style="margin-bottom: 15px;">
       <button type="button" onclick="clearWorks()" class="btn-clear">曲名をクリア</button>
     </div>
-    <fieldset id="works">
-      <legend>曲名</legend>
-      <!-- ALLチェックボックス -->
-      <label class="all-label">
-        <input type="checkbox" id="all-works" value="ALL">ALL
-      </label>
-      <div class="inner-checkbox-group checkbox-grid-songs">
-        <!-- 曲名チェックボックス群 -->
-        <label><input type="checkbox" value="交響曲第1番ニ長調（1884-88）">交響曲第1番ニ長調（1884-88）</label>
+    <!-- 曲名をアコーディオン化: instrument-group の挙動に合わせる -->
+    <details class="instrument-group" id="works-group">
+      <summary>曲名</summary>
+      <fieldset id="works">
+        <!-- ALLチェックボックス -->
+        <label class="all-label">
+          <input type="checkbox" id="all-works" value="ALL">ALL
+        </label>
+        <div class="inner-checkbox-group checkbox-grid-songs">
+          <!-- 曲名チェックボックス群 -->
+          <label><input type="checkbox" value="交響曲第1番ニ長調（1884-88）">交響曲第1番ニ長調（1884-88）</label>
         <label><input type="checkbox" value="交響曲第2番ハ短調（1888-94）">交響曲第2番ハ短調（1888-94）</label>
         <label><input type="checkbox" value="交響曲第3番ニ短調（1893-96）">交響曲第3番ニ短調（1893-96）</label>
         <label><input type="checkbox" value="交響曲第4番ト長調（1899-1900）">交響曲第4番ト長調（1899-1900）</label>
