@@ -10,8 +10,8 @@
   --title-bg: #ffdce0;
   --title-border: #e35d76;
   --results-bg: #fff2e0;
-  --button-bg: #79a9f2;
-  --button-hover-bg: #5a8ad0;
+  --button-bg: #1a73e8;
+  --button-hover-bg: #1557b0;
   --danger-button-bg: #ff8c8c;
   --danger-button-hover-bg: #e26767;
   --clear-button-bg: #f7c59f;
@@ -84,54 +84,49 @@ input[type="text"]:focus {
   box-shadow: 0 0 0 2px var(--input-border), inset 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
+/* Use the same button visual language as common_styles */
 button {
-  margin: 8px 5px;
-  padding: 6px 14px;
-  font-size: 0.95rem;
-  font-weight: bold;
+  margin: 6px 4px;
+  padding: 6px 12px;
+  font-size: 0.9rem;
+  font-weight: 500;
   color: #fff;
   border: none;
-  border-radius: 4px;
+  border-radius: 6px;
   cursor: pointer;
   transition: all 0.2s ease;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-  position: relative;
-  top: 0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.08);
+  background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.1), rgba(0, 0, 0, 0.1));
 }
 
 button:hover {
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15), 0 2px 4px rgba(0, 0, 0, 0.12);
   transform: translateY(-1px);
+  filter: brightness(1.05);
 }
 
 button:active {
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
   transform: translateY(1px);
+  filter: brightness(0.95);
+  background-image: linear-gradient(to top, rgba(255, 255, 255, 0.1), rgba(0, 0, 0, 0.1));
 }
 
-button.btn-search { 
-  background: linear-gradient(180deg, #89b3f3 0%, #79a9f2 100%);
-}
+button.btn-search,
+button.btn-action { background-color: var(--button-bg); border: 1px solid rgba(255,255,255,0.1); }
+button.btn-search:hover,
+button.btn-action:hover { background-color: var(--button-hover-bg); }
+button.btn-search:active,
+button.btn-action:active { background-color: var(--button-hover-bg); }
 
-button.btn-search:hover { 
-  background: linear-gradient(180deg, #79a9f2 0%, #5a8ad0 100%);
-}
+button.btn-danger { background-color: var(--danger-button-bg); border: 1px solid rgba(220,53,69,0.2); }
+button.btn-danger:hover { background-color: var(--danger-button-hover-bg); }
 
-button.btn-danger { 
-  background: linear-gradient(180deg, #ff9c9c 0%, #ff8c8c 100%);
-}
+button.btn-clear { background-color: var(--clear-button-bg); border: 1px solid rgba(108,117,125,0.2); }
+button.btn-clear:hover { background-color: var(--clear-button-hover-bg); }
 
-button.btn-danger:hover { 
-  background: linear-gradient(180deg, #ff8c8c 0%, #e26767 100%);
-}
-
-button.clear-input-btn { 
-  background: linear-gradient(180deg, #f8d1af 0%, #f7c59f 100%);
-}
-
-button.clear-input-btn:hover { 
-  background: linear-gradient(180deg, #f7c59f 0%, #e6b58b 100%);
-}
+button.clear-input-btn { background-color: var(--clear-button-bg); }
+button.clear-input-btn:hover { background-color: var(--clear-button-hover-bg); }
 
 #results {
   margin-top: 20px;
@@ -197,7 +192,7 @@ button.clear-input-btn:hover {
 #scrollToTop {
   position: fixed;
   right: 20px;
-  bottom: calc(20px + env(safe-area-inset-bottom, 0px));
+  top: calc(20px + env(safe-area-inset-top, 0px));
   background-color: rgba(26, 115, 232, 0.95);
   color: white;
   padding: 8px 12px;
@@ -213,7 +208,7 @@ button.clear-input-btn:hover {
 }
 
 #scrollToTop.show { display: block; opacity: 1; transform: translateY(0); }
-#scrollToTop.hidden { opacity: 0; transform: translateY(8px); pointer-events: none; }
+#scrollToTop.hidden { opacity: 0; transform: translateY(-8px); pointer-events: none; }
 
 #scrollToTop:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(0,0,0,0.28); }
 #scrollToTop:active { transform: translateY(1px); box-shadow: 0 2px 6px rgba(0,0,0,0.2); }

@@ -101,5 +101,37 @@
     const topBtn = document.getElementById('scrollToTop');
     if (topBtn) topBtn.textContent = '▲ ページのトップへ戻る';
   });
+
+  // Create an alphabet floating bar for pages that have #navbar (notes/list)
+  document.addEventListener('DOMContentLoaded', () => {
+    try {
+      const nav = document.getElementById('navbar');
+      if (!nav) return;
+      // Do not interfere with pages that already have a floating search bar
+      if (document.getElementById('floating-bar')) return;
+      if (document.getElementById('alpha-floating-bar')) return;
+
+      const alphaBar = document.createElement('div');
+      alphaBar.id = 'alpha-floating-bar';
+      // copy only link nodes to avoid other elements
+      alphaBar.innerHTML = Array.from(nav.querySelectorAll('a')).map(a => a.outerHTML).join(' ');
+      document.body.appendChild(alphaBar);
+
+      function adjustAlphaBarSpacing() {
+        const bar = document.getElementById('alpha-floating-bar');
+        const container = document.querySelector('.container');
+        if (!bar || !container) return;
+        const barHeight = bar.offsetHeight || 56;
+        container.style.paddingBottom = (barHeight + 24) + 'px';
+      }
+
+      window.addEventListener('resize', adjustAlphaBarSpacing);
+      window.addEventListener('orientationchange', () => setTimeout(adjustAlphaBarSpacing, 120));
+      setTimeout(adjustAlphaBarSpacing, 50);
+      setTimeout(adjustAlphaBarSpacing, 300);
+    } catch (e) {
+      console.error('alpha-floating-bar init failed', e);
+    }
+  });
 })();
 </script>

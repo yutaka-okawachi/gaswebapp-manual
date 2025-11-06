@@ -41,7 +41,7 @@
   .german { font-family: 'Lora', serif; font-weight: bold; font-size: 1.05em; white-space: pre-wrap; display: block; }
   .translation { font-family: 'Lora', serif; font-size: 0.88em; white-space: pre-wrap; margin-left: 1rem; }
     #loadingMessage { color: #555; }
-  #scrollToTop { right: 20px; bottom: calc(20px + env(safe-area-inset-bottom, 0px)); z-index: 9999; } /* 位置を下に (safe-area 対応) */
+  #scrollToTop { right: 20px; top: calc(20px + env(safe-area-inset-top, 0px)); z-index: 9999; } /* 位置を上に (safe-area 対応) */
     @media (max-width: 600px) {
       body { font-size: 12px; }
       #fixedHeader h1 { font-size: 1.2rem; }
