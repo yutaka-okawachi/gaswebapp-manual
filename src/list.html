@@ -7,25 +7,25 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <?!= include('common_styles.html') ?>
   <style>
-    /* list.html固有のスタイル */
-    body { font-family: 'Bitter', serif; overflow-x: hidden; max-width: 100%; }
+  /* list.html固有のスタイル */
+  body { font-family: 'Lora', serif; overflow-x: hidden; max-width: 100%; }
     #fixedHeader { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; background-color: var(--primary-bg); border-bottom: 1px solid #ccc; }
     #fixedHeader h1 { font-family: Arial, sans-serif; font-size: 1.2rem; margin: 0; }
-    #navbar { font-family: 'Bitter', serif; text-align: center; background-color: #e0ffe0; padding: 8px 10px; border-bottom: 1px solid #ccc; }
-    #navbar a { margin: 0 5px; text-decoration: none; color: #0066cc; font-weight: bold; font-family: 'Bitter', serif; }
+  #navbar { font-family: 'Lora', serif; text-align: center; background-color: #e0ffe0; padding: 8px 10px; border-bottom: 1px solid #ccc; }
+  #navbar a { margin: 0 5px; text-decoration: none; color: #0066cc; font-weight: bold; font-family: 'Lora', serif; }
     #navbar a:hover { text-decoration: underline; }
     .container { margin: 120px auto 20px; background-color: var(--results-bg); }
-    .top-message { font-size: 0.95rem; margin-bottom: 1em; color: var(--text-color); font-family: 'Bitter', serif; }
+  .top-message { font-size: 0.95rem; margin-bottom: 1em; color: var(--text-color); font-family: 'Lora', serif; }
     #abbrListContainer { margin-top: 2em; }
     .abbr-title { font-size: 1.1rem; font-weight: bold; color: #000; background-color: #ffe6d1; padding: 8px; margin-bottom: 0.5em; border-radius: 5px; }
     .abbr-row { display: flex; flex-direction: row; align-items: flex-start; margin-bottom: 0.5em; }
     .abbr-row .abbr-short { flex: 0 0 20%; white-space: normal; word-wrap: break-word; overflow-wrap: break-word; font-size: 0.85rem; }
     .abbr-row .abbr-long { flex: 1; white-space: normal; word-wrap: break-word; overflow-wrap: break-word; margin-left: 1em; font-size: 0.85rem; }
     .section-divider { border: 0; border-top: 2px dashed #999; margin: 2em 0; }
-    .abbr-annotation { font-family: 'Bitter', serif; font-size: 0.85rem; color: var(--text-color); margin-top: 0.5em; }
+  .abbr-annotation { font-family: 'Lora', serif; font-size: 0.85rem; color: var(--text-color); margin-top: 0.5em; }
     .row { display: flex; flex-direction: column; border-bottom: 1px solid #ccc; padding-bottom: 10px; margin-bottom: 10px; word-wrap: break-word; word-break: break-word; }
     .german { font-size: 1.1rem; white-space: pre-wrap; display: block; }
-    .translation { font-size: 0.9rem; white-space: pre-wrap; margin-left: 1rem; font-family: 'Bitter', serif; }
+  .translation { font-size: 0.9rem; white-space: pre-wrap; margin-left: 1rem; font-family: 'Lora', serif; }
     .source { font-size: 0.8rem; color: #555; white-space: normal; overflow: hidden; text-overflow: ellipsis; display: block; margin-left: 0.5rem; }
     #loadingMessage { color: #555; }
     #scrollToTop { bottom: 20px; top: auto; z-index: 1001; } /* 位置を下に */
@@ -43,7 +43,7 @@
     .abbr-title, .abbr-row, .row[id], #abbrListContainer { scroll-margin-top: 120px; }
   </style>
 
-  <link href="https://fonts.googleapis.com/css2?family=Bitter&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;700&display=swap" rel="stylesheet">
 
   <script>
     /* カスタム順用アルファベット配列 */
