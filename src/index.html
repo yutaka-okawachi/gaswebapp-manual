@@ -17,22 +17,25 @@
 
     /* index.html固有のスタイル */
     .big-label {
-      font-size: 1.2rem;
-      margin-bottom: 10px;
-      padding: 8px;
-      background-color: #ffe9cc;
-      border-radius: 5px;
-      font-weight: bold;
+      font-size: 1.2em;
+      margin-bottom: 15px;
+      padding: 10px;
+      border-left: 4px solid var(--button-bg);
+      background: linear-gradient(to right, #f8f9fa, #ffffff);
+      border-radius: 0 4px 4px 0;
+      font-weight: 600;
+      color: #1f2328;
     }
 
     .big-label-instruments {
-      font-size: 1.2rem;
-      margin-bottom: 10px;
-      padding: 8px;
-      background-color: #fff4bd;
-      border-radius: 5px;
-      font-weight: bold;
-      margin-top: 1rem;
+      font-size: 1.2em;
+      margin: 1.5em 0 15px;
+      padding: 10px;
+      border-left: 4px solid var(--button-bg);
+      background: linear-gradient(to right, #f8f9fa, #ffffff);
+      border-radius: 0 4px 4px 0;
+      font-weight: 600;
+      color: #1f2328;
     }
 
     #results {
@@ -55,35 +58,48 @@
 
     /* --- アコーディオンのスタイル --- */
     .instrument-group {
-      border: 1px solid #ccc;
-      border-radius: 10px;
-      margin-bottom: 15px;
+      border: 1px solid #e0e0e0;
+      border-radius: 6px;
+      margin-bottom: 12px;
       background-color: #fafafa;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.05);
     }
     .instrument-group summary {
-      font-size: 1.1rem;
-      font-weight: bold;
-      padding: 12px 15px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      padding: 8px 12px;
       cursor: pointer;
       outline: none;
-      list-style: none; /* マーカーを消す */
+      list-style: none;
+      background: linear-gradient(to bottom, #ffffff, #f8f9fa);
+      border-radius: 6px;
+      transition: all 0.2s ease;
     }
     .instrument-group summary::-webkit-details-marker {
-      display: none; /* マーカーを消す (Chrome/Safari) */
+      display: none;
     }
     .instrument-group summary::before {
       content: '▶';
-      margin-right: 10px;
-      font-size: 0.8em;
-      transition: transform 0.2s;
+      margin-right: 8px;
+      font-size: 0.75em;
+      color: #666;
+      transition: transform 0.2s ease;
+    }
+    .instrument-group[open] > summary {
+      background: #e8f0fe;
+      border-bottom: 1px solid #d2e3fc;
+      border-radius: 6px 6px 0 0;
     }
     .instrument-group[open] > summary::before {
       transform: rotate(90deg);
+      color: var(--button-bg);
     }
     .instrument-group fieldset {
       border: none;
-      margin-top: 0;
-      padding-top: 0;
+      margin: 0;
+      padding: 8px 12px;
+      background: #fff;
+      border-radius: 0 0 6px 6px;
     }
     /* --- ここまで --- */
 
@@ -139,32 +155,48 @@
     .checkbox-grid label {
       display: block;
       white-space: normal;
-      border: 1px solid #ccc;
+      border: 1px solid #e0e0e0;
       border-radius: 4px;
-      padding: 6px 10px;
-      font-size: 0.95rem;
-      transition: background-color 0.2s ease;
+      padding: 5px 8px;
+      font-size: 0.9rem;
+      transition: all 0.2s ease;
       font-family: Georgia, serif;
+      background: #fff;
+    }
+
+    .checkbox-grid label:hover {
+      background-color: #f8f9fa;
+      border-color: #d0d7de;
     }
 
     .checkbox-grid label.checked {
-      background-color: rgba(200, 200, 200, 0.4);
+      background-color: #e8f0fe;
+      border-color: #d2e3fc;
+      color: var(--button-bg);
     }
 
     .all-label {
       display: block;
-      padding: 6px 10px;
-      margin: 2px 0;
-      border: none;
+      padding: 5px 8px;
+      margin: 2px 0 8px;
+      border: 1px solid #e0e0e0;
       border-radius: 4px;
-      background-color: rgba(255, 255, 255, 0.2);
-      transition: background-color 0.2s ease;
-      font-size: 0.95rem;
-      font-weight: bold;
+      background-color: #fff;
+      transition: all 0.2s ease;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #1f2328;
+    }
+
+    .all-label:hover {
+      background-color: #f8f9fa;
+      border-color: #d0d7de;
     }
 
     .all-label.checked {
-      background-color: rgba(200, 200, 200, 0.4);
+      background-color: #e8f0fe;
+      border-color: #d2e3fc;
+      color: var(--button-bg);
     }
 
     label input[type="checkbox"] {
