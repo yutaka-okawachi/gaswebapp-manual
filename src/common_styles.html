@@ -396,31 +396,27 @@ button.clear-input-btn:hover {
 
 #scrollToTop {
   position: fixed;
-  bottom: 20px;
   right: 20px;
-  background-color: rgba(26, 115, 232, 0.9);
+  bottom: calc(20px + env(safe-area-inset-bottom, 0px));
+  background-color: rgba(26, 115, 232, 0.95);
   color: white;
   padding: 8px 16px;
   border-radius: 6px;
   cursor: pointer;
   font-size: 0.85em;
   font-weight: 500;
-  z-index: 1000;
+  z-index: 9999;
   display: none;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  transition: all 0.2s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  transition: transform 0.18s ease, opacity 0.18s ease;
+  touch-action: manipulation;
 }
 
-#scrollToTop:hover {
-  background-color: rgba(21, 87, 176, 0.95);
-  transform: translateY(-1px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-}
+/* helper classes: JS may toggle display or add the .show class */
+#scrollToTop.show { display: block; opacity: 1; transform: translateY(0); }
+#scrollToTop.hidden { opacity: 0; transform: translateY(8px); pointer-events: none; }
 
-#scrollToTop:active {
-  transform: translateY(1px);
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
-  background-color: rgba(23, 78, 166, 0.95);
-}
+#scrollToTop:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(0,0,0,0.28); }
+#scrollToTop:active { transform: translateY(1px); box-shadow: 0 2px 6px rgba(0,0,0,0.2); }
 </style>
