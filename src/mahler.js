@@ -450,7 +450,11 @@ function searchRWTerms(query) {
         const pageDisplay = page ? `p.${page}` : '';
         const sitedata = `${operaDisplayName} ${sceneName} ${pageDisplay}`.trim();
 
-        html += `<div class="result-c">${ja} 【${sitedata}】</div>`;
+        // 日本語訳と出典を別要素に分離して表示（出典は result-loc としてインデント）
+        html += `<div class="result-c">${ja}</div>`;
+        if (sitedata) {
+          html += `<div class="result-loc">【${sitedata}】</div>`;
+        }
       });
     }
 

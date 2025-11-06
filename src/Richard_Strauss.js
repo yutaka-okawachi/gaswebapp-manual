@@ -236,7 +236,10 @@ function searchRSTerms(query) {
         const pageDisplay = page ? `p.${page}` : '';
         const sitedata = `${operaDisplayName} ${sceneName} ${pageDisplay}`.trim();
 
-        html += `<div class="result-c">${ja} 【${sitedata}】</div>`;
+        html += `<div class="result-c">${ja}</div>`;
+        if (sitedata) {
+          html += `<div class="result-loc">【${sitedata}】</div>`;
+        }
       });
     }
 

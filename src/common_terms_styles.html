@@ -134,8 +134,18 @@ button.clear-input-btn:hover { background-color: var(--clear-button-hover-bg); }
   }
 
 #results .result-c {
-  font-size: 0.88em;
+  /* 日本語訳は index.html の見た目に合わせる（やや大きめ） */
+  font-size: 0.95em;
   font-weight: normal;
+  font-family: 'Lora', serif;
+  margin-left: 1em;
+}
+
+/* 出典や件数は日本語訳より小さめにして、開始位置は index.html と同様に左を寄せる */
+#results .result-loc {
+  font-size: 0.9em;
+  color: #333;
+  margin-left: 2em;
   font-family: 'Lora', serif;
 }
 
