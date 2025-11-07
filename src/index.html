@@ -388,6 +388,11 @@
     // 検索キャンセル時に結果を無視するためのID
 
     window.addEventListener('DOMContentLoaded', () => {
+      // 「すべての曲を選択」ボタン
+      document.getElementById('all-works-button').addEventListener('click', e => {
+        selectAllWorks();
+      });
+
       // すべてのチェックボックスの初期状態に応じてラベル背景を付与
       const allCheckboxes = document.querySelectorAll('input[type="checkbox"]');
       allCheckboxes.forEach(ch => {
@@ -561,8 +566,8 @@
         conductorCheckbox.checked = true;
         conductorCheckbox.parentElement.classList.add('checked');
       }
-      // 開いていることが分かるように、全instrument-groupアコーディオンを開く
-      document.querySelectorAll('.instrument-group').forEach(d => { d.open = true; });
+      // 開いていることが分かるように、楽器のinstrument-groupアコーディオンを開く
+      document.querySelectorAll('.instrument-group:not(#works-group)').forEach(d => { d.open = true; });
       window._allGlobalSelected = true;
       updateSelectionSummary();
     }
@@ -587,8 +592,8 @@
         conductorCheckbox.checked = false;
         conductorCheckbox.parentElement.classList.remove('checked');
       }
-      // すべての instrument-group アコーディオンを閉じる
-      document.querySelectorAll('.instrument-group').forEach(d => { d.open = false; });
+      // 楽器の instrument-group アコーディオンを閉じる
+      document.querySelectorAll('.instrument-group:not(#works-group)').forEach(d => { d.open = false; });
       window._allGlobalSelected = false;
       updateSelectionSummary();
     }
@@ -732,6 +737,31 @@
     }
 
     /**
+     * 曲名をすべて選択
+     */
+    function selectAllWorks() {
+      // 曲名のアコーディオンを開く
+      const worksDetails = document.getElementById('works-group');
+      if (worksDetails) worksDetails.open = true;
+
+      // 「ALL」チェックボックスをONにする
+      const allWorksCheckbox = document.getElementById('all-works');
+      if (allWorksCheckbox) {
+        allWorksCheckbox.checked = true;
+        allWorksCheckbox.parentElement.classList.add('checked');
+      }
+
+      // 他の曲名チェックボックスをOFFにする
+      const workCheckboxes = document.querySelectorAll('#works input[type="checkbox"]:not(#all-works)');
+      workCheckboxes.forEach(chk => {
+        chk.checked = false;
+        chk.parentElement.classList.remove('checked');
+      });
+
+      updateSelectionSummary();
+    }
+
+    /**
      * 曲名をクリア
      */
     function clearWorks() {
@@ -823,6 +853,8 @@
       adjustFloatingBarSpacing();
     }
 
+
+
     window.addEventListener('resize', updateFloatingBarOffset);
     if (window.visualViewport) {
       window.visualViewport.addEventListener('resize', updateFloatingBarOffset);
@@ -841,6 +873,7 @@
       曲名を選択
     </div>
     <div style="margin-bottom: 15px;">
+      <button type="button" id="all-works-button" class="btn-action">すべての曲を選択</button>
       <button type="button" onclick="clearWorks()" class="btn-clear">曲名をクリア</button>
     </div>
     <!-- 曲名をアコーディオン化: instrument-group の挙動に合わせる -->
