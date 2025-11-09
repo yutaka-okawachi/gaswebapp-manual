@@ -144,21 +144,19 @@ function searchRichardStraussByPage(operaName, pageInput) {
  ***********************************************************/
 
 function getRichardStraussDeTerms() {
-  const cache = CacheService.getScriptCache();
-  const cacheKey = 'rs_de_terms_cache';
-  const cached = cache.get(cacheKey);
+  const cacheKey = 'rs_de_terms_cache_v2';
+  const cached = getChunkedCache(cacheKey);
   if (cached) {
-    return JSON.parse(cached);
+    return cached;
   }
 
   const allData = getRichardStraussData();
-  // original(元の用語)とnormalized(正規化済み用語)のペアを作成
   const terms = allData
     .map(row => ({ original: row.de, normalized: row.de_normalized }))
     .filter(item => item.original && item.normalized);
 
   const uniqueTerms = Array.from(new Map(terms.map(item => [item.original, item])).values());
-  cache.put(cacheKey, JSON.stringify(uniqueTerms), 3600);
+  setChunkedCache(cacheKey, uniqueTerms, 21600);
   return uniqueTerms;
 }
 
@@ -167,18 +165,20 @@ function getRichardStraussDeTerms() {
  * @returns {Array<string>}
  */
 function getRSTermsForClient() {
-  return getRichardStraussDeTerms();
+  return getRichardStraussDeTerms().map(item => ({
+    original: item.original || '',
+    normalized: item.normalized || normalizeString(item.original || '')
+  }));
 }
 
 function searchRSTermsPartially(input) {
   if (!input || typeof input !== 'string' || input.trim().length < 2) return [];
   const normalizedInput = normalizeString(input);
-  // キャッシュから全用語リストを取得
-  const cache = CacheService.getScriptCache();
-  const cached = cache.get('rs_de_terms_cache');
-  if (!cached) return [];
-  const allTerms = JSON.parse(cached);
-  return allTerms.filter(item => item.normalized.startsWith(normalizedInput)).map(item => item.original).slice(0, 20);
+  const allTerms = getRichardStraussDeTerms();
+  return allTerms
+    .filter(item => item.normalized.startsWith(normalizedInput))
+    .map(item => item.original)
+    .slice(0, 20);
 }
 
 function searchRSTerms(query) {

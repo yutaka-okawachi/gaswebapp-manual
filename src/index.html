@@ -11,7 +11,6 @@
   <style>
     :root {
       --safe-area-bottom: env(safe-area-inset-bottom, 0px);
-      --floating-bar-offset: 16px;
     }
 
 
@@ -266,11 +265,11 @@
     /* --- フローティング検索バー --- */
     #floating-bar {
       position: fixed;
-      bottom: calc(var(--safe-area-bottom) + var(--floating-bar-offset));
+      bottom: calc(var(--safe-area-bottom) + 32px);
       left: 0;
       width: 100%;
       background-color: rgba(255, 255, 255, 0.98);
-      padding: 10px 15px calc(10px + var(--safe-area-bottom)) 15px;
+      padding: 10px 15px;
       box-shadow: 0 -2px 8px rgba(0,0,0,0.15);
       display: flex;
       flex-wrap: nowrap;
@@ -540,7 +539,6 @@
       });
 
       updateSelectionSummary(); // 初期表示
-      updateFloatingBarOffset();
     });
 
     /**

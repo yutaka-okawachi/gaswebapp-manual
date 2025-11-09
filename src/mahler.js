@@ -357,21 +357,19 @@ function searchRichardWagnerByPage(operaName, pageInput) {
  ***********************************************************/
 
 function getRichardWagnerDeTerms() {
-  const cache = CacheService.getScriptCache();
-  const cacheKey = 'rw_de_terms_cache';
-  const cached = cache.get(cacheKey);
+  const cacheKey = 'rw_de_terms_cache_v2';
+  const cached = getChunkedCache(cacheKey);
   if (cached) {
-    return JSON.parse(cached);
+    return cached;
   }
 
   const allData = getRichardWagnerData();
-  // original(元の用語)とnormalized(正規化済み用語)のペアを作成
   const terms = allData
     .map(row => ({ original: row.de, normalized: row.de_normalized }))
     .filter(item => item.original && item.normalized);
 
   const uniqueTerms = Array.from(new Map(terms.map(item => [item.original, item])).values());
-  cache.put(cacheKey, JSON.stringify(uniqueTerms), 3600);
+  setChunkedCache(cacheKey, uniqueTerms, 21600);
   return uniqueTerms;
 }
 
@@ -380,18 +378,20 @@ function getRichardWagnerDeTerms() {
  * @returns {Array<string>}
  */
 function getRWTermsForClient() {
-  return getRichardWagnerDeTerms();
+  return getRichardWagnerDeTerms().map(item => ({
+    original: item.original || '',
+    normalized: item.normalized || normalizeString(item.original || '')
+  }));
 }
 
 function searchRWTermsPartially(input) {
   if (!input || typeof input !== 'string' || input.trim().length < 2) return [];
   const normalizedInput = normalizeString(input);
-  // キャッシュから全用語リストを取得
-  const cache = CacheService.getScriptCache();
-  const cached = cache.get('rw_de_terms_cache');
-  if (!cached) return [];
-  const allTerms = JSON.parse(cached);
-  return allTerms.filter(item => item.normalized.startsWith(normalizedInput)).map(item => item.original).slice(0, 20);
+  const allTerms = getRichardWagnerDeTerms();
+  return allTerms
+    .filter(item => item.normalized.startsWith(normalizedInput))
+    .map(item => item.original)
+    .slice(0, 20);
 }
 
 function searchRWTerms(query) {
@@ -757,10 +757,15 @@ function getAllTerms() {
 
 /**
  * [クライアントサイド検索用] Mahlerの全用語リストを返す
- * @returns {Array<string>}
+ * @returns {Array<{original: string, normalized: string}>}
  */
 function getGMTermsForClient() {
-  return getAllTerms();
+  return getAllTerms()
+    .filter(term => typeof term === 'string' && term.trim())
+    .map(term => ({
+      original: term,
+      normalized: normalizeString(term)
+    }));
 }
 
 function searchEnglishTermsPartially(input) {

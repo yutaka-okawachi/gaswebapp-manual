@@ -11,32 +11,51 @@
       let timer; return function (...args) { clearTimeout(timer); timer = setTimeout(() => func.apply(this, args), delay); };
     }
     let currentSearchId = 0;
-    let allTerms = []; // 全用語リストを保持する配列
+    let termEntries = []; // { original, normalized } の配列
 
     window.addEventListener('DOMContentLoaded', () => {
       const inputField = document.getElementById('termInput');
       inputField.addEventListener('input', debouncedOnTermInput);
 
-      // ページ読み込み時に全用語リストを取得
-      // ★★★ 全件取得をやめて、サーバーサイド検索に切り替える
-      console.log('RW用語検索の準備ができました。');
+      // ページ読み込み時に全用語リストを取得し、以降はクライアント側でサジェスト
+      google.script.run
+        .withSuccessHandler(terms => {
+          termEntries = (Array.isArray(terms) ? terms : [])
+            .map(term => normalizeTermEntry(term))
+            .filter(Boolean);
+          console.log(`${termEntries.length}件のRW用語を読み込みました。`);
+        })
+        .withFailureHandler(err => {
+          console.error('RW用語の取得に失敗しました:', err);
+          termEntries = [];
+        })
+        .getRWTermsForClient();
     });
 
     const debouncedOnTermInput = debounce((event) => {
       const input = event.target.value.trim();
       if (input.length < 2) { document.getElementById('termSuggestions').innerHTML = ''; return; }
 
-      // ★★★ サーバーサイドでサジェストを検索する方式に変更 ★★★
-      google.script.run
-        .withSuccessHandler(suggestions => {
-          updateDatalist(suggestions);
-        })
-        .searchRWTermsPartially(input); // サーバー側の関数を呼び出す
+      const normalizedInput = normalizeString(input);
+      const suggestions = [];
+      for (const entry of termEntries) {
+        if (entry.normalized.startsWith(normalizedInput)) {
+          suggestions.push(entry);
+          if (suggestions.length >= 20) break;
+        }
+      }
+
+      updateDatalist(suggestions);
     }, 300);
     function updateDatalist(suggestions) {
       const datalist = document.getElementById('termSuggestions');
-      // ★★★ searchRWTermsPartially は文字列の配列を返すので、それに合わせる ★★★
-      datalist.innerHTML = (suggestions || []).map(term => `<option value="${term}"></option>`).join('');
+      datalist.innerHTML = '';
+      (suggestions || []).forEach(entry => {
+        const option = document.createElement('option');
+        option.value = entry.normalized;
+        option.label = entry.original;
+        datalist.appendChild(option);
+      });
     }
     function search() {
       const query = document.getElementById('termInput').value.trim();
@@ -58,11 +77,34 @@
       }).searchRWTerms(query);
     }
 
+    function normalizeTermEntry(term) {
+      if (typeof term === 'string') {
+        const trimmed = term.trim();
+        return trimmed ? { original: trimmed, normalized: normalizeString(trimmed) } : null;
+      }
+      if (term && typeof term === 'object') {
+        const original = typeof term.original === 'string' ? term.original.trim() : '';
+        if (!original) return null;
+        const normalized = typeof term.normalized === 'string'
+          ? term.normalized.trim().toLowerCase()
+          : '';
+        return { original, normalized: normalized || normalizeString(original) };
+      }
+      return null;
+    }
+
     // 正規化関数 — クライアントサイドでも共通利用
     function normalizeString(str) {
       if (typeof str !== 'string') return '';
-      return str.toLowerCase().replace(/ä/g, 'ae').replace(/ö/g, 'oe').replace(/ü/g, 'ue').replace(/ß/g, 'ss').trim();
+      return str
+        .toLowerCase()
+        .replace(/ä/g, 'ae')
+        .replace(/ö/g, 'oe')
+        .replace(/ü/g, 'ue')
+        .replace(/\u00df/g, 'ss')
+        .trim();
     }
+
     function cancelSearch() { document.getElementById('results').innerHTML = '<p class="loading">検索を中止しました</p>'; currentSearchId++; }
     function clearInput() { document.getElementById('termInput').value = ''; document.getElementById('termSuggestions').innerHTML = ''; document.getElementById('results').innerHTML = ''; }
   </script>
@@ -96,3 +138,4 @@
 </body>
 
 </html>
+

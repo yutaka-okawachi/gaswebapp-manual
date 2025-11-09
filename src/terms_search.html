@@ -27,7 +27,7 @@
     }
 
     let currentSearchId = 0;
-    let allTerms = []; // 全用語リストを保持する配列
+    let termEntries = []; // { original, normalized } の配列を保持
 
     // DOM構築後に動作をセット
     window.addEventListener('DOMContentLoaded', () => {
@@ -38,8 +38,14 @@
       // ページ読み込み時に全用語リストを取得
       google.script.run
         .withSuccessHandler(terms => {
-          allTerms = terms.map(t => t.toLowerCase()); // 検索用に小文字化しておく
-          console.log(`${allTerms.length}件のGM用語を読み込みました。`);
+          termEntries = (Array.isArray(terms) ? terms : [])
+            .map(term => normalizeTermEntry(term))
+            .filter(Boolean);
+          console.log(`${termEntries.length}件のGM用語を読み込みました。`);
+        })
+        .withFailureHandler(err => {
+          console.error('GM用語の取得に失敗しました:', err);
+          termEntries = [];
         })
         .getGMTermsForClient();
     });
@@ -47,17 +53,20 @@
     // 入力があったら300ms後にサジェスト検索を実行する関数
     const debouncedOnTermInput = debounce((event) => {
       const input = event.target.value.trim();
-      const lowerInput = input.toLowerCase();
       if (input.length < 2) {
         // 2文字未満ならサジェストをクリア
         document.getElementById('termSuggestions').innerHTML = '';
         return;
       }
 
-      // クライアントサイドで検索
-      const suggestions = allTerms
-        .filter(term => term.startsWith(lowerInput))
-        .slice(0, 20); // 候補は20件に絞る
+      const normalizedInput = normalizeString(input);
+      const suggestions = [];
+      for (const entry of termEntries) {
+        if (entry.normalized.startsWith(normalizedInput)) {
+          suggestions.push(entry);
+          if (suggestions.length >= 20) break;
+        }
+      }
 
       updateDatalist(suggestions);
 
@@ -66,8 +75,13 @@
     // datalist に候補を表示する
     function updateDatalist(suggestions) {
       const datalist = document.getElementById('termSuggestions');
-      // 候補を option タグとして生成
-      datalist.innerHTML = suggestions.map(term => `<option value="${term}">`).join('');
+      datalist.innerHTML = '';
+      suggestions.forEach(entry => {
+        const option = document.createElement('option');
+        option.value = entry.normalized; // 入力欄は英字のまま
+        option.label = entry.original;   // ユーザーには de 列の文字列を表示
+        datalist.appendChild(option);
+      });
     }
 
     // 「検索」ボタン押下時
@@ -112,6 +126,33 @@
       document.getElementById('termInput').value = '';
       document.getElementById('termSuggestions').innerHTML = '';
       document.getElementById('results').innerHTML = '';
+    }
+
+    function normalizeTermEntry(term) {
+      if (typeof term === 'string') {
+        const trimmed = term.trim();
+        return trimmed ? { original: trimmed, normalized: normalizeString(trimmed) } : null;
+      }
+      if (term && typeof term === 'object') {
+        const original = typeof term.original === 'string' ? term.original.trim() : '';
+        if (!original) return null;
+        const normalized = typeof term.normalized === 'string'
+          ? term.normalized.trim().toLowerCase()
+          : '';
+        return { original, normalized: normalized || normalizeString(original) };
+      }
+      return null;
+    }
+
+    function normalizeString(str) {
+      if (typeof str !== 'string') return '';
+      return str
+        .toLowerCase()
+        .replace(/ä/g, 'ae')
+        .replace(/ö/g, 'oe')
+        .replace(/ü/g, 'ue')
+        .replace(/\u00df/g, 'ss')
+        .trim();
     }
   </script>
 </head>
