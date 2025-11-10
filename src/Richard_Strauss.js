@@ -223,6 +223,7 @@ function searchRSTerms(query) {
       html += `<div class="result-a">${escapeHtml(de)}</div>`;
       groupedByDe[de].forEach(row => {
         const ja = escapeHtml(row.ja || '');
+        const whom = escapeHtml(row.whom || '');
 
         const operKey = normalizeString(row.oper || '');
         const aufzug = (row.aufzug || '0').toString().trim().toLowerCase();
@@ -234,7 +235,10 @@ function searchRSTerms(query) {
         const sceneName = escapeHtml(sceneMap[sceneMapKey] || `場面(${aufzug}-${szene})`);
 
         const pageDisplay = page ? `p.${page}` : '';
-        const sitedata = `${operaDisplayName} ${sceneName} ${pageDisplay}`.trim();
+        let sitedata = `${operaDisplayName} ${sceneName} ${pageDisplay}`.trim();
+        if (whom) {
+          sitedata = sitedata ? `${sitedata}：${whom}` : `：${whom}`;
+        }
 
         html += `<div class="result-c">${ja}</div>`;
         if (sitedata) {

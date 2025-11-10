@@ -437,6 +437,7 @@ function searchRWTerms(query) {
       html += `<div class="result-a">${escapeHtml(de)}</div>`;
       groupedByDe[de].forEach(row => {
         const ja = escapeHtml(row.ja || '');
+        const whom = escapeHtml(row.whom || '');
 
         const normalizedOperKey = normalizeString(row.oper || '');
         const aufzug = (row.aufzug || '0').toString().trim().toLowerCase();
@@ -448,7 +449,10 @@ function searchRWTerms(query) {
         const sceneName = escapeHtml(sceneMap[sceneMapKey] || `場面(${aufzug}-${szene})`);
 
         const pageDisplay = page ? `p.${page}` : '';
-        const sitedata = `${operaDisplayName} ${sceneName} ${pageDisplay}`.trim();
+        let sitedata = `${operaDisplayName} ${sceneName} ${pageDisplay}`.trim();
+        if (whom) {
+          sitedata = sitedata ? `${sitedata}：${whom}` : `：${whom}`;
+        }
 
         // 日本語訳と出典を別要素に分離して表示（出典は result-loc としてインデント）
         html += `<div class="result-c">${ja}</div>`;
