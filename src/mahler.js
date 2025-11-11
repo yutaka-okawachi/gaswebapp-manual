@@ -434,9 +434,9 @@ function searchRWTerms(query) {
 
     const sortedDeKeys = Object.keys(groupedByDe).sort((a, b) => a.localeCompare(b, 'de'));
     for (const de of sortedDeKeys) {
-      html += `<div class="result-a">${escapeHtml(de)}</div>`;
+      html += `<div class="result-a">${escapeHtmlWithBreaks(de)}</div>`;
       groupedByDe[de].forEach(row => {
-        const ja = escapeHtml(row.ja || '');
+        const ja = escapeHtmlWithBreaks(row.ja || '');
         const whom = escapeHtml(row.whom || '');
 
         const normalizedOperKey = normalizeString(row.oper || '');
@@ -542,8 +542,8 @@ function formatGenericResults(data, sceneMap) {
     }
 
     // 各データをHTMLエスケープ処理する
-    const de = escapeHtml(row.de || '');
-    const ja = escapeHtml(row.ja || '');
+    const de = escapeHtmlWithBreaks(row.de || '');
+    const ja = escapeHtmlWithBreaks(row.ja || '');
     const whom = escapeHtml(row.whom || '');
     const pageValue = row.page ? String(row.page).trim() : '';
     const pageDisplay = pageValue ? `p.${escapeHtml(pageValue)}` : '';
@@ -719,8 +719,8 @@ function searchData(choice1Arr, choice2Arr, includeOrchestraAll) {
     });
 
     if (matchedLocList.length > 0) {
-      resultHTML += `<div class="result-a">${escapeHtml(deData)}</div>`;
-      resultHTML += `<div class="result-c">${escapeHtml(jaData)}</div>`;
+      resultHTML += `<div class="result-a">${escapeHtmlWithBreaks(deData)}</div>`;
+      resultHTML += `<div class="result-c">${escapeHtmlWithBreaks(jaData)}</div>`;
       matchedLocList.forEach(loc => {
         resultHTML += `<div class="result-loc">${escapeHtml(loc)}</div>`;
       });
@@ -832,8 +832,8 @@ function searchByTerm(query) {
       detailsHTML += `<div class="result-loc">${workName} ${movement}：${measure}（${instruments}）</div>`;
     });
 
-    resultHTML += `<div class="result-a">${escapeHtml(german)}</div>`;
-    resultHTML += `<div class="result-c">${escapeHtml(japanese)}</div>`;
+    resultHTML += `<div class="result-a">${escapeHtmlWithBreaks(german)}</div>`;
+    resultHTML += `<div class="result-c">${escapeHtmlWithBreaks(japanese)}</div>`;
     resultHTML += detailsHTML;
     resultHTML += `<div class="result-loc">(${segmentCount}件)</div>`;
   });
@@ -874,6 +874,15 @@ function escapeHtml(str) {
     .replace(/>/g, '&gt;')
     .replace(/"/g, '&quot;')
     .replace(/'/g, '&#039;');
+}
+
+/**
+ * HTMLエスケープ済み文字列の改行を <br> に置き換えて保持する
+ * @param {string} str
+ * @returns {string}
+ */
+function escapeHtmlWithBreaks(str) {
+  return escapeHtml(str).replace(/(?:\r\n|\r|\n)/g, '<br>');
 }
 
 /**

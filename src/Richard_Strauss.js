@@ -12,6 +12,12 @@
  * パフォーマンス向上のため、チャンキング対応のキャッシュ機構を導入。
  * @returns {Array<Object>} R. Straussのデータ配列
  */
+if (typeof escapeHtmlWithBreaks === 'undefined') {
+  function escapeHtmlWithBreaks(str) {
+    return escapeHtml(str).replace(/(?:\r\n|\r|\n)/g, '<br>');
+  }
+}
+
 function getRichardStraussData() {
   const cacheKey = 'richard_strauss_data_v2'; // キーのバージョンを更新
 
@@ -220,9 +226,9 @@ function searchRSTerms(query) {
 
     const sortedDeKeys = Object.keys(groupedByDe).sort((a, b) => a.localeCompare(b, 'de'));
     for (const de of sortedDeKeys) {
-      html += `<div class="result-a">${escapeHtml(de)}</div>`;
+      html += `<div class="result-a">${escapeHtmlWithBreaks(de)}</div>`;
       groupedByDe[de].forEach(row => {
-        const ja = escapeHtml(row.ja || '');
+        const ja = escapeHtmlWithBreaks(row.ja || '');
         const whom = escapeHtml(row.whom || '');
 
         const operKey = normalizeString(row.oper || '');
