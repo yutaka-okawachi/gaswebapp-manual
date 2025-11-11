@@ -60,15 +60,11 @@
       }
 
       const normalizedInput = normalizeString(input);
-      const suggestions = [];
-      for (const entry of termEntries) {
-        if (entry.normalized.startsWith(normalizedInput)) {
-          suggestions.push(entry);
-          if (suggestions.length >= 20) break;
-        }
-      }
+      const matches = termEntries
+        .filter(entry => entry.normalized.includes(normalizedInput))
+        .sort((a, b) => a.normalized.localeCompare(b.normalized));
 
-      updateDatalist(suggestions);
+      updateDatalist(matches);
 
     }, 300);
 
@@ -80,6 +76,7 @@
         const option = document.createElement('option');
         option.value = entry.normalized; // 入力欄は英字のまま
         option.label = entry.original;   // ユーザーには de 列の文字列を表示
+        option.textContent = entry.original;
         datalist.appendChild(option);
       });
     }

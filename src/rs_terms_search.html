@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
 
 <head>
@@ -37,15 +37,11 @@
       if (input.length < 2) { document.getElementById('termSuggestions').innerHTML = ''; return; }
 
       const normalizedInput = normalizeString(input);
-      const suggestions = [];
-      for (const entry of termEntries) {
-        if (entry.normalized.startsWith(normalizedInput)) {
-          suggestions.push(entry);
-          if (suggestions.length >= 20) break;
-        }
-      }
+      const matches = termEntries
+        .filter(entry => entry.normalized.includes(normalizedInput))
+        .sort((a, b) => a.normalized.localeCompare(b.normalized));
 
-      updateDatalist(suggestions);
+      updateDatalist(matches);
     }, 300);
 
     function updateDatalist(suggestions) {
@@ -54,7 +50,6 @@
       (suggestions || []).forEach(entry => {
         const option = document.createElement('option');
         option.value = entry.normalized;
-        option.label = entry.original;
         datalist.appendChild(option);
       });
     }
@@ -140,4 +135,5 @@
 </body>
 
 </html>
+
 
