@@ -2,6 +2,8 @@
  * list.html と notes.html で使用されるサーバーサイド関数
  */
 
+const SPREADSHEET_ID = '1aw2Z5gllpLX15P-FEy3QxAHQ7EqyQNIicYdNi_5rkUU';
+
 /**
  * 「略記一覧」シートからデータを取得する
  * @returns {Array<Array<string>>} 略記一覧のデータ
