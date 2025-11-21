@@ -7,7 +7,7 @@
  * @returns {Array<Array<string>>} 略記一覧のデータ
  */
 function getAbbrListData() {
-  const ss = SpreadsheetApp.openById(SPREADSHEET_ID);
+  const ss = SpreadsheetApp.openById('1aw2Z5gllpLX15P-FEy3QxAHQ7EqyQNIicYdNi_5rkUU');
   const sheetName = '略記一覧';
   const sheet = ss.getSheetByName(sheetName);
   if (!sheet) throw new Error(`シート「${sheetName}」が見つかりません。`);
@@ -22,7 +22,7 @@ function getAbbrListData() {
  * @returns {Array<Array<string>>} データ配列
  */
 function getListData() {
-  const ss = SpreadsheetApp.openById(SPREADSHEET_ID);
+  const ss = SpreadsheetApp.openById('1aw2Z5gllpLX15P-FEy3QxAHQ7EqyQNIicYdNi_5rkUU');
   const sheetName = 'マーラー以外のドイツ語';
   const sheet = ss.getSheetByName(sheetName);
   if (!sheet) throw new Error("指定されたシートが存在しません: " + sheetName);
@@ -39,7 +39,7 @@ function getListData() {
  * @returns {Array<Array<string>>} データ配列
  */
 function getDicData() {
-  const ss = SpreadsheetApp.openById(SPREADSHEET_ID);
+  const ss = SpreadsheetApp.openById('1aw2Z5gllpLX15P-FEy3QxAHQ7EqyQNIicYdNi_5rkUU');
   const sheetName = 'Notes';
   const sheet = ss.getSheetByName(sheetName);
   if (!sheet) throw new Error(`シート「${sheetName}」が見つかりません。`);
@@ -54,7 +54,7 @@ function getDicData() {
  * @returns {Array<Array<string>>} データ配列
  */
 function getNotesData() {
-  const ss = SpreadsheetApp.openById(SPREADSHEET_ID);
+  const ss = SpreadsheetApp.openById('1aw2Z5gllpLX15P-FEy3QxAHQ7EqyQNIicYdNi_5rkUU');
   const sheet = ss.getSheetByName('訳出についての覚書');
   if (!sheet) throw new Error('指定されたシートが存在しません。');
   const lastRow = sheet.getLastRow();
