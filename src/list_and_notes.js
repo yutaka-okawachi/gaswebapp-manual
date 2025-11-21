@@ -33,6 +33,22 @@ function getListData() {
   return data.filter(row => row[0] !== null && row[0].toString().trim() !== "");
 }
 
+
+/**
+ * 「Notes」シートからデータを取得します
+ * @returns {Array<Array<string>>} データ配列
+ */
+function getDicData() {
+  const ss = SpreadsheetApp.openById(SPREADSHEET_ID);
+  const sheetName = 'Notes';
+  const sheet = ss.getSheetByName(sheetName);
+  if (!sheet) throw new Error(`シート「${sheetName}」が見つかりません。`);
+  const lastRow = sheet.getLastRow();
+  if (lastRow < 2) return [];
+  const dataRange = sheet.getRange(2, 1, lastRow - 1, 3);
+  const data = dataRange.getValues();
+  return data.filter(row => row[0] !== null && row[0].toString().trim() !== "");
+}
 /**
  * 「訳出についての覚書」シートからデータを取得する
  * @returns {Array<Array<string>>} データ配列

@@ -53,7 +53,7 @@ function doGet(e) {
   // URLパラメータから表示するページ名を取得。なければ 'index' に。
   const page = (e && e.parameter && e.parameter.page) ? e.parameter.page : 'index';
   // 有効なページ名かをチェックし、無効な場合は 'index' にフォールバック
-  const validPages = ['index', 'richard_strauss', 'richard_wagner', 'terms_search', 'rs_terms_search', 'rw_terms_search', 'list', 'notes'];
+  const validPages = ['index', 'richard_strauss', 'richard_wagner', 'terms_search', 'rs_terms_search', 'rw_terms_search', 'list', 'dic', 'notes'];
   const name = validPages.includes(page) ? page : 'index';
 
   const template = HtmlService.createTemplateFromFile(name);
@@ -952,3 +952,4 @@ function getChunkedCache(key) {
   const jsonString = keys.map(k => chunks[k]).join('');
   return JSON.parse(jsonString);
 }
+

@@ -58,14 +58,52 @@
      ******************************************************************/
 
     // カスタムソート用の配列（A->Ä->B->C...）
-    const customOrder = ["A", "Ä", "B", "C", "D", "E", "F", "G", "H", "I", "J",
-                         "K", "L", "M", "N", "O", "Ö", "P", "Q", "R", "S", "T",
-                         "U", "Ü", "V", "W", "X", "Y", "Z"];
+    const customOrder = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J",
+                         "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T",
+                         "U", "V", "W", "X", "Y", "Z"];
 
     // 文字の優先順序を返す
     function getOrder(letter) {
       const idx = customOrder.indexOf(letter);
       return idx === -1 ? 999 : idx;
+    }
+
+
+    function normalizeGermanForSort(text) {
+      if (typeof text !== "string") {
+        return "";
+      }
+      const trimmed = text.trim();
+      if (!trimmed) {
+        return "";
+      }
+      const normalized = typeof trimmed.normalize === "function"
+        ? trimmed.normalize("NFD")
+        : trimmed;
+      return normalized.replace(/[\u0300-\u036f]/g, "").replace(/ß/gi, "ss");
+    }
+
+    function getSortLetter(text) {
+      return normalizeGermanForSort(text).charAt(0).toUpperCase();
+    }
+
+    function compareGermanStrings(a, b) {
+      const letterA = getSortLetter(a);
+      const letterB = getSortLetter(b);
+      const orderDiff = getOrder(letterA) - getOrder(letterB);
+      if (orderDiff !== 0) {
+        return orderDiff;
+      }
+
+      const textA = (a || "").toString().trim();
+      const textB = (b || "").toString().trim();
+      if (typeof textA.localeCompare === "function") {
+        return textA.localeCompare(textB, "de", { sensitivity: "base" });
+      }
+      if (textA === textB) {
+        return 0;
+      }
+      return textA > textB ? 1 : -1;
     }
 
     // ページ読み込み時にサーバーの getNotesData() を呼び出す
@@ -99,13 +137,7 @@
     // 取得した data ( [ [ドイツ語, 日本語], ... ] ) を表示
     function renderNotes(data) {
       // カスタム順でソート
-      data.sort((a, b) => {
-        const letterA = (a[0] || "").trim().charAt(0).toUpperCase();
-        const letterB = (b[0] || "").trim().charAt(0).toUpperCase();
-        const orderDiff = getOrder(letterA) - getOrder(letterB);
-        // 同ランクの場合は localeCompare
-        return orderDiff !== 0 ? orderDiff : letterA.localeCompare(letterB);
-      });
+      data.sort((a, b) => compareGermanStrings(a[0], b[0]));
 
       const container = document.getElementById("notesContainer");
       container.innerHTML = "";
@@ -122,10 +154,10 @@
 
         // アンカー設定: 先頭文字が customOrder にあれば初出時に id を付与
         if (german && typeof german === "string") {
-          const firstChar = german.trim().charAt(0).toUpperCase();
-          if (!anchorSet[firstChar] && customOrder.includes(firstChar)) {
-            rowDiv.id = "letter-" + firstChar;
-            anchorSet[firstChar] = true;
+          const anchorLetter = getSortLetter(german);
+          if (anchorLetter && customOrder.includes(anchorLetter) && !anchorSet[anchorLetter]) {
+            rowDiv.id = "letter-" + anchorLetter;
+            anchorSet[anchorLetter] = true;
           }
         }
 
@@ -173,7 +205,6 @@
   <div id="alpha-floating-bar">
     <a href="#top" class="abbr-list-link">Top</a>
     <a href="#letter-A">A</a>
-    <a href="#letter-Ä">Ä</a>
     <a href="#letter-B">B</a>
     <a href="#letter-C">C</a>
     <a href="#letter-D">D</a>
@@ -188,14 +219,12 @@
     <a href="#letter-M">M</a>
     <a href="#letter-N">N</a>
     <a href="#letter-O">O</a>
-    <a href="#letter-Ö">Ö</a>
     <a href="#letter-P">P</a>
     <a href="#letter-Q">Q</a>
     <a href="#letter-R">R</a>
     <a href="#letter-S">S</a>
     <a href="#letter-T">T</a>
     <a href="#letter-U">U</a>
-    <a href="#letter-Ü">Ü</a>
     <a href="#letter-V">V</a>
     <a href="#letter-W">W</a>
     <a href="#letter-X">X</a>
