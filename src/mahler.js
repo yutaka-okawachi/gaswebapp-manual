@@ -20,7 +20,7 @@
  * SPREADSHEET_ID は該当スプレッドシートの ID を設定。
  ***************************************/
 
-const SPREADSHEET_ID = '1aw2Z5gllpLX15P-FEy3QxAHQ7EqyQNIicYdNi_5rkUU';
+// SPREADSHEET_ID is defined in _config.js
 
 /**
  * 文字列を正規化する関数
@@ -403,12 +403,12 @@ function searchRWTerms(query) {
     const allData = getRichardWagnerData();
     const sceneMap = getSceneMap('RW幕構成');
     const operaDisplayNames = {
-        'feen': 'Die Feen', 'liebes': 'Das Liebesverbot', 'rienzi': 'Rienzi',
-        'hollaender': 'Der fliegende Holländer', 'tann_dresden': 'Tannhäuser (Dresden)',
-        'tann_paris': 'Tannhäuser (Paris)', 'lohengrin': 'Lohengrin',
-        'rheingold': 'Das Rheingold', 'walkuere': 'Die Walküre', 'siegfried': 'Siegfried',
-        'goetter': 'Götterdämmerung', 'tristan': 'Tristan und Isolde',
-        'meister': 'Die Meistersinger von Nürnberg', 'parsifal': 'Parsifal'
+      'feen': 'Die Feen', 'liebes': 'Das Liebesverbot', 'rienzi': 'Rienzi',
+      'hollaender': 'Der fliegende Holländer', 'tann_dresden': 'Tannhäuser (Dresden)',
+      'tann_paris': 'Tannhäuser (Paris)', 'lohengrin': 'Lohengrin',
+      'rheingold': 'Das Rheingold', 'walkuere': 'Die Walküre', 'siegfried': 'Siegfried',
+      'goetter': 'Götterdämmerung', 'tristan': 'Tristan und Isolde',
+      'meister': 'Die Meistersinger von Nürnberg', 'parsifal': 'Parsifal'
     };
     const normalizedQuery = normalizeString(query);
 
