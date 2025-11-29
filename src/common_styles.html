@@ -439,39 +439,240 @@
     box-shadow: 0 6px 16px rgba(0, 0, 0, 0.28);
   }
 
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15),
+  0 2px 4px rgba(0, 0, 0, 0.12);
+  transform: translateY(-1px);
+  filter: brightness(1.05);
+  }
+
+  button:active {
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+    transform: translateY(1px);
+    filter: brightness(0.95);
+    background-image: linear-gradient(to top, rgba(255, 255, 255, 0.1), rgba(0, 0, 0, 0.1));
+  }
+
+  button.btn-search,
+  button.btn-action {
+    background-color: var(--button-bg);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  button.btn-search:hover,
+  button.btn-action:hover {
+    background-color: var(--button-hover-bg);
+  }
+
+  button.btn-search:active,
+  button.btn-action:active {
+    background-color: var(--button-active-bg);
+  }
+
+  button.btn-danger {
+    background-color: var(--danger-button-bg);
+    border: 1px solid rgba(220, 53, 69, 0.2);
+  }
+
+  button.btn-danger:hover {
+    background-color: var(--danger-button-hover-bg);
+  }
+
+  button.btn-clear {
+    background-color: var(--clear-button-bg);
+    border: 1px solid rgba(108, 117, 125, 0.2);
+  }
+
+  button.btn-clear:hover {
+    background-color: var(--clear-button-hover-bg);
+  }
+
+  /* ボタンが無効化されたときのスタイル */
+  button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    box-shadow: none !important;
+    transform: none !important;
+    filter: grayscale(20%) !important;
+    background-image: none !important;
+  }
+
+  button.clear-input-btn {
+    background-color: var(--clear-input-btn-bg);
+  }
+
+  button.clear-input-btn:hover {
+    background-color: var(--clear-input-btn-hover-bg);
+  }
+
+  .loading,
+  .result-message {
+    font-family: 'Lora', serif;
+    font-size: 1.0em;
+    font-weight: bold;
+    text-align: center;
+    padding: 20px;
+  }
+
+  #results {
+    margin-top: 20px;
+    background-color: var(--results-bg);
+    padding: 10px;
+    border-radius: 5px;
+    min-height: 150px;
+    line-height: 1.5;
+    white-space: normal;
+    font-family: 'Lora', serif;
+    font-size: 0.92em;
+  }
+
+  #results>div:first-child {
+    margin-bottom: 15px;
+  }
+
+  .scene-title {
+    font-size: 1.2em;
+    font-weight: bold;
+    padding-bottom: 4px;
+    border-bottom: 2px solid #ccc;
+    margin-top: 1.2em;
+    margin-bottom: 10px;
+  }
+
+  .result-entry {
+    display: flex;
+    align-items: baseline;
+    margin-bottom: 0.6em;
+    font-size: 0.92em;
+  }
+
+  .result-page {
+    flex: 0 0 4em;
+    font-weight: normal;
+    color: #555;
+    white-space: nowrap;
+    font-size: 0.85em;
+  }
+
+  .result-content {
+    flex: 1;
+  }
+
+  .result-de {
+    font-weight: bold;
+    font-size: 1.2em;
+    line-height: 1.45;
+    display: block;
+    font-family: 'Lora', serif;
+  }
+
+  .result-ja-loc {
+    display: block;
+    font-size: 1.0em;
+    font-weight: normal;
+    margin-top: 2px;
+    font-family: 'Lora', serif;
+  }
+
+  .result-ja-loc span:last-child {
+    margin-left: 0.5em;
+    font-size: 0.84em;
+    color: #444;
+  }
+
+  /* 出典・件数の表示（index.html に合わせる） */
+  .result-loc {
+    font-size: 0.9em;
+    color: #333;
+    margin-left: 2em;
+    font-family: 'Lora', serif;
+  }
+
+  .score-info {
+    padding: 12px;
+    margin-bottom: 20px;
+    background-color: #eaf5fa;
+    border: 1px solid #b3d9ff;
+    border-left: 5px solid #79a9f2;
+    border-radius: 5px;
+    font-size: 0.95em;
+    color: #333;
+  }
+
+  #scrollToTop {
+    position: fixed;
+    right: 20px;
+    top: calc(20px + env(safe-area-inset-top, 0px));
+    background-color: rgba(26, 115, 232, 0.95);
+    color: white;
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.85em;
+    font-weight: 500;
+    z-index: 9999;
+    display: none;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    transition: transform 0.18s ease, opacity 0.18s ease;
+    touch-action: manipulation;
+  }
+
+  /* helper classes: JS may toggle display or add the .show class */
+  #scrollToTop.show {
+    display: block;
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  #scrollToTop.hidden {
+    opacity: 0;
+    transform: translateY(-8px);
+    pointer-events: none;
+  }
+
+  #scrollToTop:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.28);
+  }
+
   #scrollToTop:active {
     transform: translateY(1px);
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
   }
 
-  /* Alphabet floating bar (for list/notes pages) */
+  /* Alphabet floating bar (moved to top inside sticky message) */
   #alpha-floating-bar {
-    position: fixed;
-    left: 0;
-    right: 0;
-    bottom: calc(env(safe-area-inset-bottom, 0px) + 8px);
-    /* lift slightly so phone UI won't cover it */
-    z-index: 9998;
+    position: static;
     display: flex;
-    gap: 8px;
-    /* Add padding that respects the safe area */
-    padding: 12px 12px calc(12px + env(safe-area-inset-bottom, 0px));
-    background: rgba(248, 249, 250, 0.95);
-    /* Slightly less transparent */
-    box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.15);
+    gap: 6px;
+    margin-top: 10px;
+    padding: 4px 0;
+    background: transparent;
+    box-shadow: none;
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
-    /* Ensure it has a minimum height */
-    min-height: 50px;
-    border-radius: 6px;
-    background: rgba(240, 240, 240, 0.9);
+    min-height: auto;
+    align-items: center;
+    width: 100%;
+  }
+
+  /* スマホでの位置調整メディアクエリは不要になったため削除 */
+
+  #alpha-floating-bar a {
+    display: inline-block;
+    white-space: nowrap;
+    padding: 4px 8px;
+    border-radius: 4px;
+    background: #fff;
+    border: 1px solid #ddd;
     color: var(--button-bg);
     text-decoration: none;
     font-weight: 600;
-    margin-right: 6px;
+    font-size: 0.9em;
   }
 
   #alpha-floating-bar a:active {
-    transform: translateY(0);
+    background-color: #f0f0f0;
+    transform: translateY(1px);
   }
 </style>
