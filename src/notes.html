@@ -226,6 +226,24 @@
 
       data.forEach(row => {
         // row: [ドイツ語, 日本語]
+        const [german, translation] = row;
+
+        const rowDiv = document.createElement("div");
+        rowDiv.classList.add("row");
+
+        // アンカー設定: 先頭文字が customOrder にあれば初出時に id を付与
+        if (german && typeof german === "string") {
+          const anchorLetter = getSortLetter(german);
+          if (anchorLetter && customOrder.includes(anchorLetter) && !anchorSet[anchorLetter]) {
+            rowDiv.id = "letter-" + anchorLetter;
+            anchorSet[anchorLetter] = true;
+          }
+        }
+
+        // ドイツ語表示
+        const germanDiv = document.createElement("div");
+        germanDiv.classList.add("german");
+        germanDiv.textContent = german;
 
         // 日本語表示
         const translationDiv = document.createElement("div");
@@ -291,7 +309,6 @@
     <a href="#letter-X">X</a>
     <a href="#letter-Y">Y</a>
     <a href="#letter-Z">Z</a>
-    <a href="#letter-other" style="font-size: 0.85em; padding: 6px 6px;">数字・記号</a>
   </div>
 
   <div id="scrollToTop" onclick="scrollToTop()">▲ ページのトップへ戻る</div>
