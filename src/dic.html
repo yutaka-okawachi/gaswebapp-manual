@@ -220,6 +220,19 @@
         font-size: 1.2em;
       }
 
+      .translation {
+        font-size: 1em;
+      }
+
+      .sticky-top-message {
+        top: calc(60px + env(safe-area-inset-top, 0px));
+        padding: 0.5rem 0.75rem;
+      }
+
+      .abbr-row {
+        display: block;
+      }
+
       .abbr-row .abbr-short {
         display: block;
         width: 100%;
@@ -444,255 +457,61 @@
     <div id="navbar">
       <!-- alphabet links removed; floating bar at bottom replaces them -->
     </div>
-    .abbr-row,
-    .row[id] {
-    scroll-margin-top: 150px;
-    }
+  </div>
 
-    #abbrListContainer {
-    scroll-margin-top: 230px;
-    }
-    </style>
+  <div id="top"></div>
 
-    <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;700&display=swap" rel="stylesheet">
+  <div class="container">
+    <div class="top-message sticky-top-message" id="listStickyNotice">
+      略記一覧は<a href="#abbrListContainer">こちら</a>
+    </div>
+    <div id="listContainer">
+      <div id="loadingMessage">表示中・・・</div>
+    </div>
 
-    <script>
-      /* カスタム順用アルファベット配列 */
-      const customOrder = [
-        "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K",
-        "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U",
-        "V", "W", "X", "Y", "Z"
-      ];
+    <hr class="section-divider">
 
-      function getOrder(letter) {
-        const idx = customOrder.indexOf(letter);
-        return idx === -1 ? 999 : idx;
-      }
-
-
-      function normalizeGermanForSort(text) {
-        if (typeof text !== "string") {
-          return "";
-        }
-        const trimmed = text.trim();
-        if (!trimmed) {
-          return "";
-        }
-        const normalized = typeof trimmed.normalize === "function"
-          ? trimmed.normalize("NFD")
-          : trimmed;
-        return normalized.replace(/[\u0300-\u036f]/g, "").replace(/ß/gi, "ss");
-      }
-
-      function getSortLetter(text) {
-        return normalizeGermanForSort(text).charAt(0).toUpperCase();
-      }
-
-      function compareGermanStrings(a, b) {
-        const letterA = getSortLetter(a);
-        const letterB = getSortLetter(b);
-        const orderDiff = getOrder(letterA) - getOrder(letterB);
-        if (orderDiff !== 0) {
-          return orderDiff;
-        }
-
-        const textA = (a || "").toString().trim();
-        const textB = (b || "").toString().trim();
-        if (typeof textA.localeCompare === "function") {
-          return textA.localeCompare(textB, "de", { sensitivity: "base" });
-        }
-        if (textA === textB) {
-          return 0;
-        }
-        return textA > textB ? 1 : -1;
-      }
-
-      window.addEventListener("DOMContentLoaded", function () {
-        // (1) マーラー以外のドイツ語一覧を取得
-        google.script.run
-          .withSuccessHandler(function (data) {
-            renderList(data);
-          })
-          .withFailureHandler(function (error) {
-            console.error(error);
-            document.getElementById("loadingMessage").textContent =
-              "データの取得に失敗しました。";
-          })
-          .getDicData();
-
-        // (2) 略記一覧を取得
-        google.script.run
-          .withSuccessHandler(function (data) {
-            renderAbbrList(data);
-          })
-          .withFailureHandler(function (error) {
-            console.error(error);
-            document.getElementById("abbrListContainer").innerHTML =
-              "<p>略記一覧のデータ取得に失敗しました。</p>";
-          })
-          .getAbbrListData();
-      });
-
-      /**
-       * (1) マーラー以外のドイツ語一覧を描画
-       */
-      function renderList(data) {
-        // 頭文字をカスタム順でソート
-        data.sort((a, b) => compareGermanStrings(a[0], b[0]));
-
-        const container = document.getElementById("listContainer");
-        container.innerHTML = "";
-
-
-        const anchorSet = {};
-        data.forEach(row => {
-          const [german, translation, source] = row;
-
-          const rowDiv = document.createElement("div");
-          rowDiv.classList.add("row");
-
-          // アンカー割り当て (A, Ä, B...Z)
-          if (german && typeof german === "string") {
-            const anchorLetter = getSortLetter(german);
-            if (anchorLetter && customOrder.includes(anchorLetter) && !anchorSet[anchorLetter]) {
-              rowDiv.id = "letter-" + anchorLetter;
-              anchorSet[anchorLetter] = true;
-            }
-          }
-
-          // ドイツ語
-          const germanWrapper = document.createElement("div");
-          const germanSpan = document.createElement("span");
-          germanSpan.classList.add("german");
-          germanSpan.textContent = german;
-
-          const sourceSpan = document.createElement("span");
-          sourceSpan.classList.add("source");
-          sourceSpan.textContent = source;
-
-          germanWrapper.appendChild(germanSpan);
-          germanWrapper.appendChild(sourceSpan);
-          rowDiv.appendChild(germanWrapper);
-
-          // 日本語
-          const translationDiv = document.createElement("div");
-          translationDiv.classList.add("translation");
-          translationDiv.textContent = translation;
-
-          rowDiv.appendChild(translationDiv);
-          container.appendChild(rowDiv);
-        });
-
-        if (data.length === 0) {
-          container.innerHTML =
-            '<div id="loadingMessage">データが存在しません。</div>';
-        }
-      }
-
-      /**
-       * (2) 略記一覧を描画する
-       * - タイトル行と通常行を区別して表示
-       * - ページ下部に表示
-       */
-      function renderAbbrList(data) {
-        const contentContainer = document.getElementById("abbrContent"); // ★ データ専用エリア
-        contentContainer.innerHTML = ""; // ★ メッセージ部分を消さず、リストのみ更新
-
-        if (data.length === 0) {
-          contentContainer.innerHTML = '<p>（略記一覧のデータが存在しませんでした）</p>';
-          return;
-        }
-
-        data.forEach(row => {
-          const [colA, colB, colC] = row;
-
-          if (colA && !isNaN(parseInt(colA))) {
-            const titleDiv = document.createElement("div");
-            titleDiv.classList.add("abbr-title");
-            titleDiv.textContent = colB;
-            contentContainer.appendChild(titleDiv);
-          } else {
-            const rowDiv = document.createElement("div");
-            rowDiv.classList.add("abbr-row");
-
-            const shortSpan = document.createElement("span");
-            shortSpan.classList.add("abbr-short");
-            shortSpan.textContent = colB;
-
-            const longSpan = document.createElement("span");
-            longSpan.classList.add("abbr-long");
-            longSpan.textContent = colC;
-
-            rowDiv.appendChild(shortSpan);
-            rowDiv.appendChild(longSpan);
-            contentContainer.appendChild(rowDiv);
-          }
-        });
-      }
-
-    </script>
-    </head>
-
-    <body>
-      <div id="fixedHeader">
-        <h1>用語集</h1>
-        <div id="navbar">
-          <!-- alphabet links removed; floating bar at bottom replaces them -->
-        </div>
+    <div id="abbrListContainer">
+      <div class="top-message" id="abbrMessage">(*)は特記すべきドイツ語はなし</div>
+      <div id="abbrContent">
+        <div id="loadingMessage">表示中・・・</div>
       </div>
+    </div>
+  </div>
 
-      <div id="top"></div>
+  <!-- アルファベットのフローティングバー（下部） -->
+  <div id="alpha-floating-bar">
+    <a href="#top">Top</a>
+    <a href="#letter-A">A</a>
+    <a href="#letter-B">B</a>
+    <a href="#letter-C">C</a>
+    <a href="#letter-D">D</a>
+    <a href="#letter-E">E</a>
+    <a href="#letter-F">F</a>
+    <a href="#letter-G">G</a>
+    <a href="#letter-H">H</a>
+    <a href="#letter-I">I</a>
+    <a href="#letter-J">J</a>
+    <a href="#letter-K">K</a>
+    <a href="#letter-L">L</a>
+    <a href="#letter-M">M</a>
+    <a href="#letter-N">N</a>
+    <a href="#letter-O">O</a>
+    <a href="#letter-P">P</a>
+    <a href="#letter-Q">Q</a>
+    <a href="#letter-R">R</a>
+    <a href="#letter-S">S</a>
+    <a href="#letter-T">T</a>
+    <a href="#letter-U">U</a>
+    <a href="#letter-V">V</a>
+    <a href="#letter-W">W</a>
+    <a href="#letter-X">X</a>
+    <a href="#letter-Y">Y</a>
+    <a href="#letter-Z">Z</a>
+  </div>
 
-      <div class="container">
-        <div class="top-message sticky-top-message" id="listStickyNotice">
-          略記一覧は<a href="#abbrListContainer">こちら</a>
-          <!-- アルファベットのフローティングバー（上部固定内に移動） -->
-          <div id="alpha-floating-bar">
-            <a href="#top">Top</a>
-            <a href="#letter-A">A</a>
-            <a href="#letter-B">B</a>
-            <a href="#letter-C">C</a>
-            <a href="#letter-D">D</a>
-            <a href="#letter-E">E</a>
-            <a href="#letter-F">F</a>
-            <a href="#letter-G">G</a>
-            <a href="#letter-H">H</a>
-            <a href="#letter-I">I</a>
-            <a href="#letter-J">J</a>
-            <a href="#letter-K">K</a>
-            <a href="#letter-L">L</a>
-            <a href="#letter-M">M</a>
-            <a href="#letter-N">N</a>
-            <a href="#letter-O">O</a>
-            <a href="#letter-P">P</a>
-            <a href="#letter-Q">Q</a>
-            <a href="#letter-R">R</a>
-            <a href="#letter-S">S</a>
-            <a href="#letter-T">T</a>
-            <a href="#letter-U">U</a>
-            <a href="#letter-V">V</a>
-            <a href="#letter-W">W</a>
-            <a href="#letter-X">X</a>
-            <a href="#letter-Y">Y</a>
-            <a href="#letter-Z">Z</a>
-          </div>
-        </div>
-        <div id="listContainer">
-          <div id="loadingMessage">表示中・・・</div>
-        </div>
-
-        <hr class="section-divider">
-
-        <div id="abbrListContainer">
-          <div class="top-message" id="abbrMessage">(*)は特記すべきドイツ語はなし</div>
-          <div id="abbrContent">
-            <div id="loadingMessage">表示中・・・</div>
-          </div>
-        </div>
-      </div>
-
-      <div id="scrollToTop" onclick="scrollToTop()">▲ ページのトップへ戻る</div>
-      <?!= include('common_scripts.html') ?>
-    </body>
+  <div id="scrollToTop" onclick="scrollToTop()">▲ ページのトップへ戻る</div>
+  <?!= include('common_scripts.html') ?>
+</body>
 
 </html>
