@@ -351,24 +351,6 @@
 
       const anchorSet = {};
       data.forEach(row => {
-        const [german, translation, source] = row;
-
-        const rowDiv = document.createElement("div");
-        rowDiv.classList.add("row");
-
-        // アンカー割り当て (A, Ä, B...Z)
-        if (german && typeof german === "string") {
-          const anchorLetter = getSortLetter(german);
-          if (anchorLetter && customOrder.includes(anchorLetter) && !anchorSet[anchorLetter]) {
-            rowDiv.id = "letter-" + anchorLetter;
-            anchorSet[anchorLetter] = true;
-          }
-        }
-
-        // ドイツ語
-        const germanWrapper = document.createElement("div");
-        const germanSpan = document.createElement("span");
-        germanSpan.classList.add("german");
         germanSpan.textContent = german;
 
         const sourceSpan = document.createElement("span");
