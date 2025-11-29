@@ -123,138 +123,12 @@
     // Create an alphabet floating bar for pages that have #navbar (notes/list)
     document.addEventListener('DOMContentLoaded', () => {
       try {
-        <script>
-  /*
-          * common_scripts.html
-          * 全ページで共通して使用されるクライアントサイドJavaScript。
-          * 主に「トップへ戻る」ボタンの制御など、UIの基本的な動作を定義します。
-          */
-          // Client-only helpers and UI glue. Guard against server (Apps Script) context.
-          (function () {
-    if (typeof window === 'undefined' || typeof document === 'undefined') {
-            // Define no-op globals so server-side references do not throw
-            this.scrollToTop = function () { };
-          this.setResults = function () { };
-          return;
-    }
-
-    // Show/hide the "back to top" button using IntersectionObserver for better performance
-    // This avoids running logic on every scroll event, which causes freezing on heavy pages.
-    document.addEventListener('DOMContentLoaded', () => {
-      const scrollToTopBtn = document.getElementById('scrollToTop');
-          if (!scrollToTopBtn) return;
-
-          // Create a sentinel element to detect when we scroll past the top area (300px)
-          const sentinel = document.createElement('div');
-          sentinel.id = 'scroll-sentinel';
-          Object.assign(sentinel.style, {
-            position: 'absolute',
-          top: '0',
-          left: '0',
-          height: '300px',
-          width: '1px',
-          pointerEvents: 'none',
-          visibility: 'hidden',
-          zIndex: '-1'
-      });
-          // Ensure body exists (script is usually at end of body, but just in case)
-          if (document.body) {
-            document.body.prepend(sentinel);
-      } else {
-            // Fallback if body is not yet parsed (unlikely given script placement)
-            document.documentElement.appendChild(sentinel);
-      }
-
-      const observer = new IntersectionObserver((entries) => {
-        // If sentinel is intersecting, we are near the top -> hide button
-        // If not intersecting, we are scrolled down -> show button
-        const entry = entries[0];
-          if (entry.isIntersecting) {
-            scrollToTopBtn.classList.remove('show');
-          scrollToTopBtn.classList.add('hidden');
-        } else {
-            scrollToTopBtn.classList.add('show');
-          scrollToTopBtn.classList.remove('hidden');
-        }
-      });
-
-          observer.observe(sentinel);
-    });
-
-          // Expose global helpers
-          function scrollToTop() {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-          window.scrollToTop = scrollToTop;
-
-          function focusResultsPanel(options) {
-      const resultsDiv = document.getElementById('results');
-          if (!resultsDiv) return;
-
-          const topOffset = Math.max((resultsDiv.getBoundingClientRect().top + window.scrollY) - 20, 0);
-          const behavior = options && options.instant ? 'auto' : 'smooth';
-          window.scrollTo({top: topOffset, behavior });
-    }
-          window.focusResultsPanel = focusResultsPanel;
-
-          function setResults(html) {
-      const resultsDiv = document.getElementById('results');
-          if (!resultsDiv) return;
-          resultsDiv.innerHTML = html;
-          focusResultsPanel({instant: true });
-    }
-          window.setResults = setResults;
-
-    // Fix garbled static texts for Wagner/Strauss pages
-    document.addEventListener('DOMContentLoaded', () => {
-      const isComposerPage = /Richard Wagner|Richard Strauss/.test(document.title);
-          if (!isComposerPage) return;
-
-      const firstP = document.querySelector('.container > p');
-          if (firstP) firstP.textContent = 'オーケストラに対する指示で GM の検索ページで何とかなりそうなものは基本的に不記載';
-
-          const bigLabels = document.querySelectorAll('.big-label');
-          if (bigLabels && bigLabels[0]) bigLabels[0].textContent = '曲を選択';
-
-          const smc = document.getElementById('search-method-container');
-          if (smc) {
-        const bl = smc.querySelector('.big-label');
-          if (bl) bl.textContent = '検索方法を選択';
-          const legend = smc.querySelector('legend');
-          if (legend) legend.textContent = '方法';
-          const labels = smc.querySelectorAll('label');
-        labels.forEach(label => {
-          const input = label.querySelector('input[type="radio"]');
-          if (!input) return;
-          if (input.value === 'scene') label.lastChild.textContent = ' 場面から選択';
-          if (input.value === 'page') label.lastChild.textContent = ' ページから選択';
-        });
-      }
-
-          const psc = document.getElementById('page-selection-container');
-          if (psc) {
-        const legend2 = psc.querySelector('legend');
-          if (legend2) legend2.textContent = 'ページ番号';
-          const note = psc.querySelector('p');
-          if (note) note.textContent = 'ページ番号を半角で入力';
-          const input = document.getElementById('page-input');
-          if (input) input.setAttribute('placeholder', '例 3,14,15-92');
-      }
-
-          const topBtn = document.getElementById('scrollToTop');
-          if (topBtn) topBtn.textContent = '▲ ページのトップへ戻る';
-    });
-
-    // Create an alphabet floating bar for pages that have #navbar (notes/list)
-    document.addEventListener('DOMContentLoaded', () => {
-      try {
         const nav = document.getElementById('navbar');
-          if (!nav) return;
-          // Do not interfere with pages that already have a floating search bar
-          if (document.getElementById('floating-bar')) return;
-          // If alpha-floating-bar already exists in DOM (we may have added it server-side),
-          // still run spacing adjustment.
-          if (!document.getElementById('alpha-floating-bar')) {
+        if (!nav) return;
+        // Do not interfere with pages that already have a floating search bar
+        if (document.getElementById('floating-bar')) return;
+
+        if (!document.getElementById('alpha-floating-bar')) {
           const alphaBar = document.createElement('div');
           alphaBar.id = 'alpha-floating-bar';
           // copy only link nodes to avoid other elements
@@ -267,15 +141,13 @@
           } else {
             // なければ .container の先頭に追加
             const container = document.querySelector('.container');
-          if (container) {
-            container.insertBefore(alphaBar, container.firstChild);
+            if (container) {
+              container.insertBefore(alphaBar, container.firstChild);
             }
           }
         }
-
-        // 以前の adjustAlphaBarSpacing (下部余白調整) は不要になったため削除
       } catch (e) {
-            console.error('alpha-floating-bar init failed', e);
+        console.error('alpha-floating-bar init failed', e);
       }
     });
   })();
