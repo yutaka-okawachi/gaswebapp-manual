@@ -463,22 +463,6 @@
     -webkit-overflow-scrolling: touch;
     /* Ensure it has a minimum height */
     min-height: 50px;
-    align-items: center;
-    /* Vertically center the links */
-  }
-
-  @media (max-width: 640px) {
-    #alpha-floating-bar {
-      /* 72pxは浮きすぎなので、20px程度に調整。safe-areaがあるため隠れることはない */
-      bottom: calc(env(safe-area-inset-bottom, 0px) + 20px);
-      padding-bottom: 12px;
-    }
-  }
-
-  #alpha-floating-bar a {
-    display: inline-block;
-    white-space: nowrap;
-    padding: 6px 10px;
     border-radius: 6px;
     background: rgba(240, 240, 240, 0.9);
     color: var(--button-bg);
