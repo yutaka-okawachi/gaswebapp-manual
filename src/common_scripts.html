@@ -13,12 +13,29 @@
       return;
     }
 
+    // Helper: Throttle function to limit event firing frequency
+    function throttle(func, limit) {
+      let inThrottle;
+      return function () {
+        const args = arguments;
+        const context = this;
+        if (!inThrottle) {
+          func.apply(context, args);
+          inThrottle = true;
+          setTimeout(() => inThrottle = false, limit);
+        }
+      }
+    }
+
     // Show/hide the "back to top" button — use class toggles and run on load/resize/scroll
     // Throttled to avoid freezing on heavy pages
     let isScrolling = false;
     function updateScrollToTopVisibility() {
       const scrollToTopBtn = document.getElementById('scrollToTop');
-      if (!scrollToTopBtn) return;
+      if (!scrollToTopBtn) {
+        isScrolling = false; // ensure flag is reset even if btn missing
+        return;
+      }
       // show when scrolled down a bit
       if (window.scrollY > 300) {
         scrollToTopBtn.classList.add('show');
@@ -38,7 +55,10 @@
     }
 
     window.addEventListener('scroll', onScrollThrottled, { passive: true });
-    window.addEventListener('resize', () => setTimeout(updateScrollToTopVisibility, 120));
+
+    // Throttled resize handler for scroll-to-top visibility
+    const throttledUpdateVisibility = throttle(updateScrollToTopVisibility, 200);
+    window.addEventListener('resize', throttledUpdateVisibility);
     window.addEventListener('orientationchange', () => setTimeout(updateScrollToTopVisibility, 160));
 
     // ensure initial state after load (some mobile browsers change viewport after load)
@@ -139,8 +159,11 @@
           container.style.paddingBottom = (barHeight + 24) + 'px';
         }
 
-        window.addEventListener('resize', adjustAlphaBarSpacing);
+        // Throttled resize handler for alpha bar spacing
+        const throttledAdjustSpacing = throttle(adjustAlphaBarSpacing, 200);
+        window.addEventListener('resize', throttledAdjustSpacing);
         window.addEventListener('orientationchange', () => setTimeout(adjustAlphaBarSpacing, 120));
+
         // Run adjustment on load and shortly after to handle mobile viewport changes
         setTimeout(adjustAlphaBarSpacing, 50);
         setTimeout(adjustAlphaBarSpacing, 300);
