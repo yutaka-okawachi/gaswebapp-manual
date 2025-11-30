@@ -39,7 +39,8 @@
 
     #results {
       min-height: 200px;
-      margin-bottom: 100px; /* フローティングバーとの重なりを回避 */
+      margin-bottom: 100px;
+      /* フローティングバーとの重なりを回避 */
     }
 
     /* fieldsetのタイトル（legend）のスタイル */
@@ -61,8 +62,9 @@
       border-radius: 6px;
       margin-bottom: 12px;
       background-color: #fafafa;
-      box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
     }
+
     .instrument-group summary {
       font-size: 0.95rem;
       font-weight: 600;
@@ -74,9 +76,11 @@
       border-radius: 6px;
       transition: all 0.2s ease;
     }
+
     .instrument-group summary::-webkit-details-marker {
       display: none;
     }
+
     .instrument-group summary::before {
       content: '▶';
       margin-right: 8px;
@@ -84,15 +88,18 @@
       color: #666;
       transition: transform 0.2s ease;
     }
-    .instrument-group[open] > summary {
+
+    .instrument-group[open]>summary {
       background: #e8f0fe;
       border-bottom: 1px solid #d2e3fc;
       border-radius: 6px 6px 0 0;
     }
-    .instrument-group[open] > summary::before {
+
+    .instrument-group[open]>summary::before {
       transform: rotate(90deg);
       color: var(--button-bg);
     }
+
     .instrument-group fieldset {
       border: none;
       margin: 0;
@@ -100,6 +107,7 @@
       background: #fff;
       border-radius: 0 0 6px 6px;
     }
+
     /* --- ここまで --- */
 
     #works {
@@ -270,7 +278,7 @@
       width: 100%;
       background-color: rgba(255, 255, 255, 0.98);
       padding: 10px 15px;
-      box-shadow: 0 -2px 8px rgba(0,0,0,0.15);
+      box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.15);
       display: flex;
       flex-wrap: nowrap;
       align-items: stretch;
@@ -282,6 +290,7 @@
       min-height: 120px;
       overflow: hidden;
     }
+
     #floating-bar .button-group {
       display: flex;
       flex-direction: column;
@@ -289,12 +298,15 @@
       align-items: stretch;
       flex: 0 0 auto;
     }
+
     #floating-bar button {
       font-weight: normal;
     }
+
     #floating-bar .button-group button {
       min-width: 110px;
     }
+
     #selection-summary {
       flex: 1 1 auto;
       padding: 10px;
@@ -308,18 +320,22 @@
       align-items: flex-start;
       overflow-y: auto;
     }
+
     #selection-summary .summary-block {
       width: 100%;
     }
+
     #selection-summary .summary-title {
       font-weight: normal;
       text-align: left;
     }
+
     #selection-summary .summary-value {
       margin-top: 4px;
       text-align: left;
       line-height: 1.5;
     }
+
     @media (max-width: 600px) {
       #floating-bar {
         flex-direction: row;
@@ -327,10 +343,12 @@
         gap: 10px;
         max-height: 28vh;
       }
+
       #selection-summary {
         width: auto;
         max-height: 22vh;
       }
+
       #floating-bar .button-group {
         order: 0;
         flex-direction: column;
@@ -339,6 +357,7 @@
         gap: 8px;
         width: auto;
       }
+
       #floating-bar .button-group button {
         flex: 0 0 auto;
         min-width: 120px;
@@ -819,12 +838,12 @@
 
       summaryDiv.innerHTML =
         '<div class="summary-block">' +
-          '<div class="summary-title">選択した曲：</div>' +
-          '<div class="summary-value">' + workValue + '</div>' +
+        '<div class="summary-title">選択した曲：</div>' +
+        '<div class="summary-value">' + workValue + '</div>' +
         '</div>' +
         '<div class="summary-block">' +
-          '<div class="summary-title">選択した楽器：</div>' +
-          '<div class="summary-value">' + instrumentValue + '</div>' +
+        '<div class="summary-title">選択した楽器：</div>' +
+        '<div class="summary-value">' + instrumentValue + '</div>' +
         '</div>';
 
       adjustFloatingBarSpacing();
@@ -865,7 +884,8 @@
 <body>
   <div class="container">
     <h1>曲名と楽器から検索 (GM)</h1>
-
+    <p><b>用語集は<a href="https://sites.google.com/site/brucknermahleryinleyongyu/%E7%94%A8%E8%AA%9E%E9%9B%86"
+          target="_blank">こちら</a></b></p>
     <!-- 曲名エリア -->
     <div class="big-label">
       曲名を選択
@@ -885,30 +905,30 @@
         <div class="inner-checkbox-group checkbox-grid-songs">
           <!-- 曲名チェックボックス群 -->
           <label><input type="checkbox" value="交響曲第1番ニ長調（1884-88）">交響曲第1番ニ長調（1884-88）</label>
-        <label><input type="checkbox" value="交響曲第2番ハ短調（1888-94）">交響曲第2番ハ短調（1888-94）</label>
-        <label><input type="checkbox" value="交響曲第3番ニ短調（1893-96）">交響曲第3番ニ短調（1893-96）</label>
-        <label><input type="checkbox" value="交響曲第4番ト長調（1899-1900）">交響曲第4番ト長調（1899-1900）</label>
-        <label><input type="checkbox" value="交響曲第5番嬰ハ短調（1901-02）">交響曲第5番嬰ハ短調（1901-02）</label>
-        <label><input type="checkbox" value="交響曲第6番イ短調（1903-04）">交響曲第6番イ短調（1903-04）</label>
-        <label><input type="checkbox" value="交響曲第7番ホ短調（1904-05）">交響曲第7番ホ短調（1904-05）</label>
-        <label><input type="checkbox" value="交響曲第8番変ホ長調（1906）">交響曲第8番変ホ長調（1906）</label>
-        <label><input type="checkbox" value="交響曲イ短調『大地の歌』（1908）">交響曲イ短調『大地の歌』（1908）</label>
-        <label><input type="checkbox" value="交響曲第9番ニ長調（1909）">交響曲第9番ニ長調（1909）</label>
-        <label><input type="checkbox" value="交響曲第10番嬰ヘ長調（1910）">交響曲第10番嬰ヘ長調（1910）</label>
-        <label><input type="checkbox" value="交響曲第10番（クック版）">交響曲第10番（クック版）</label>
-        <label><input type="checkbox" value="嘆きの歌（1880）">嘆きの歌（1880）</label>
-        <label><input type="checkbox" value="嘆きの歌（1899）">嘆きの歌（1899）</label>
-        <label><input type="checkbox" value="さすらう若人の歌">さすらう若人の歌</label>
-        <label><input type="checkbox" value="子供の魔法の角笛">子供の魔法の角笛</label>
-        <label><input type="checkbox" value="子供の死の歌">子供の死の歌</label>
-        <label><input type="checkbox" value="リュッケルトの詩による5つの歌">リュッケルトの詩による5つの歌</label>
-        <label><input type="checkbox" value="花の章">花の章</label>
-        <label><input type="checkbox" value="葬礼">葬礼</label>
-      </div>
-  </fieldset>
-  </details>
+          <label><input type="checkbox" value="交響曲第2番ハ短調（1888-94）">交響曲第2番ハ短調（1888-94）</label>
+          <label><input type="checkbox" value="交響曲第3番ニ短調（1893-96）">交響曲第3番ニ短調（1893-96）</label>
+          <label><input type="checkbox" value="交響曲第4番ト長調（1899-1900）">交響曲第4番ト長調（1899-1900）</label>
+          <label><input type="checkbox" value="交響曲第5番嬰ハ短調（1901-02）">交響曲第5番嬰ハ短調（1901-02）</label>
+          <label><input type="checkbox" value="交響曲第6番イ短調（1903-04）">交響曲第6番イ短調（1903-04）</label>
+          <label><input type="checkbox" value="交響曲第7番ホ短調（1904-05）">交響曲第7番ホ短調（1904-05）</label>
+          <label><input type="checkbox" value="交響曲第8番変ホ長調（1906）">交響曲第8番変ホ長調（1906）</label>
+          <label><input type="checkbox" value="交響曲イ短調『大地の歌』（1908）">交響曲イ短調『大地の歌』（1908）</label>
+          <label><input type="checkbox" value="交響曲第9番ニ長調（1909）">交響曲第9番ニ長調（1909）</label>
+          <label><input type="checkbox" value="交響曲第10番嬰ヘ長調（1910）">交響曲第10番嬰ヘ長調（1910）</label>
+          <label><input type="checkbox" value="交響曲第10番（クック版）">交響曲第10番（クック版）</label>
+          <label><input type="checkbox" value="嘆きの歌（1880）">嘆きの歌（1880）</label>
+          <label><input type="checkbox" value="嘆きの歌（1899）">嘆きの歌（1899）</label>
+          <label><input type="checkbox" value="さすらう若人の歌">さすらう若人の歌</label>
+          <label><input type="checkbox" value="子供の魔法の角笛">子供の魔法の角笛</label>
+          <label><input type="checkbox" value="子供の死の歌">子供の死の歌</label>
+          <label><input type="checkbox" value="リュッケルトの詩による5つの歌">リュッケルトの詩による5つの歌</label>
+          <label><input type="checkbox" value="花の章">花の章</label>
+          <label><input type="checkbox" value="葬礼">葬礼</label>
+        </div>
+      </fieldset>
+    </details>
 
-  <!-- 楽器選択エリア -->
+    <!-- 楽器選択エリア -->
     <div class="big-label-instruments">
       楽器を選択
     </div>
@@ -972,7 +992,7 @@
           <label><input type="checkbox" value="bcl">Bassklarinette</label>
           <label><input type="checkbox" value="fg">Fagott</label>
       </fieldset>
-      </details>
+    </details>
 
     <!-- 金管楽器群 -->
     <details class="instrument-group">
