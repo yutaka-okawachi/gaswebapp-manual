@@ -53,7 +53,7 @@ async function showPage(pageName) {
     footer.style.fontSize = '0.8em';
     footer.style.color = '#888';
     footer.style.marginTop = '20px';
-    footer.textContent = 'App Version: 20251201-5 (Debug Mode)';
+    footer.textContent = 'App Version: 20251201-6 (Debug Mode - Fix Applied)';
     contentArea.appendChild(footer);
 
     // DEBUG PANEL
