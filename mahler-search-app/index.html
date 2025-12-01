@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mahler & Strauss 検索</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+    <div class="container">
+        <h1>Mahler & Strauss 用語検索</h1>
+
+        <div class="button-container">
+            <button onclick="showPage('mahler')" class="btn-action">Mahler 検索</button>
+            <button onclick="showPage('richard_strauss')" class="btn-action">R. Strauss 検索</button>
+            <button onclick="showPage('richard_wagner')" class="btn-action">R. Wagner 検索</button>
+            <button onclick="showPage('dic')" class="btn-action">用語集</button>
+            <button onclick="showPage('notes')" class="btn-action">訳出についての覚書</button>
+        </div>
+
+        <hr>
+
+        <div id="content-area">
+            <!-- Content will be loaded here dynamically -->
+            <p style="text-align: center;">上のボタンから検索したい対象を選択してください。</p>
+        </div>
+    </div>
+
+    <div id="scrollToTop" onclick="scrollToTop()">▲ ページのトップへ戻る</div>
+
+    <script src="js/app.js?v=20251201-4"></script>
+</body>
+
+</html>
