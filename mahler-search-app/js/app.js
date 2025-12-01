@@ -1,4 +1,5 @@
 // app.js
+console.log('app.js: Script execution started');
 
 // Global state to hold loaded data
 const appData = {
@@ -15,6 +16,12 @@ const appData = {
 async function showPage(pageName) {
     const contentArea = document.getElementById('content-area');
     contentArea.innerHTML = '<div class="loading">読み込み中...</div>';
+
+    // DEBUG PANEL
+    const debugDiv = document.createElement('div');
+    debugDiv.id = 'debug-panel';
+
+    console.log('app.js: showPage called');
 
     try {
         // Load data if not loaded
