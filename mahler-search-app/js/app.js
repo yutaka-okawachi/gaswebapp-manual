@@ -53,8 +53,20 @@ async function showPage(pageName) {
     footer.style.fontSize = '0.8em';
     footer.style.color = '#888';
     footer.style.marginTop = '20px';
-    footer.textContent = 'App Version: 20251201-4';
+    footer.textContent = 'App Version: 20251201-5 (Debug Mode)';
     contentArea.appendChild(footer);
+
+    // DEBUG PANEL
+    const debugDiv = document.createElement('div');
+    debugDiv.id = 'debug-panel';
+    debugDiv.style.border = '1px solid red';
+    debugDiv.style.padding = '10px';
+    debugDiv.style.marginTop = '20px';
+    debugDiv.style.fontSize = '12px';
+    debugDiv.style.fontFamily = 'monospace';
+    debugDiv.style.whiteSpace = 'pre-wrap';
+    debugDiv.style.backgroundColor = '#fff0f0';
+    contentArea.appendChild(debugDiv);
 }
 
 async function loadData(key) {
@@ -493,8 +505,16 @@ function searchMahlerData(choice1Arr, choice2Arr, includeOrchestraAll) {
         finalInstruments.add('all');
     }
 
+    // DEBUG LOGGING
+    const debugInfo = [];
+    debugInfo.push(`Data Loaded: ${data.length} rows`);
+    debugInfo.push(`Search Inputs: Works=[${choice1Arr.join(', ')}], Instruments=[${choice2Arr.join(', ')}], OrchestraAll=${includeOrchestraAll}`);
+    debugInfo.push(`Final Instruments Count: ${finalInstruments.size}`);
+    debugInfo.push(`Sample Instruments: ${Array.from(finalInstruments).slice(0, 10).join(', ')}...`);
+
     let resultHTML = '';
     let totalMatches = 0;
+    let workMatchCount = 0;
 
     data.forEach(row => {
         // row structure: {de, de_normalized, ja, data}
@@ -522,6 +542,7 @@ function searchMahlerData(choice1Arr, choice2Arr, includeOrchestraAll) {
 
             // Check Work (a)
             let aMatch = choice1Arr.includes('ALL') || choice1Arr.some(choice => choice === a);
+            if (aMatch) workMatchCount++;
 
             // Check Instruments (d)
             const dArr = d.split(',').map(x => x.trim());
@@ -558,6 +579,14 @@ function searchMahlerData(choice1Arr, choice2Arr, includeOrchestraAll) {
         }
     });
 
+    debugInfo.push(`Rows with Work Match: ${workMatchCount}`);
+    debugInfo.push(`Total Matches Found: ${totalMatches}`);
+
+    const debugPanel = document.getElementById('debug-panel');
+    if (debugPanel) {
+        debugPanel.textContent = debugInfo.join('\n');
+    }
+
     return totalMatches === 0 ? '<div class="result-message">該当するデータがありません。</div>' : `<div>${totalMatches}件ありました。</div>${resultHTML}`;
 }
 
@@ -590,10 +619,6 @@ function escapeHtml(str) {
             "'": '&#039;'
         }[m];
     });
-}
-
-function escapeHtmlWithBreaks(str) {
-    return escapeHtml(str).replace(/(?:\r\n|\r|\n)/g, '<br>');
 }
 
 function cancelSearch() {
