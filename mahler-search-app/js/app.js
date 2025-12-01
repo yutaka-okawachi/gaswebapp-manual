@@ -47,18 +47,6 @@ async function showPage(pageName) {
         contentArea.innerHTML = `<div class="result-message">エラーが発生しました: ${error.message}</div>`;
     }
 
-    // Version Indicator
-    const footer = document.createElement('div');
-    footer.style.textAlign = 'center';
-    footer.style.fontSize = '0.8em';
-    footer.style.color = '#888';
-    footer.style.marginTop = '20px';
-    footer.textContent = 'App Version: 20251201-7 (Debug Mode - Logic Fix)';
-    contentArea.appendChild(footer);
-
-    // DEBUG PANEL
-    const debugDiv = document.createElement('div');
-    debugDiv.id = 'debug-panel';
     debugDiv.style.border = '1px solid red';
     debugDiv.style.padding = '10px';
     debugDiv.style.marginTop = '20px';
@@ -504,6 +492,12 @@ function searchMahlerData(choice1Arr, choice2Arr, includeOrchestraAll) {
     if (includeOrchestraAll) {
         finalInstruments.add('all');
     }
+
+    // Map the incoming Japanese work titles (choice1Arr) to the short IDs expected by the data (aMapping)
+    const mappedChoice1Arr = choice1Arr.map(val => {
+        if (val === 'ALL') return 'ALL';
+        return aMapping[val] || val; // Return the mapped ID, or the original value if no map found
+    });
 
     // DEBUG LOGGING
     const debugInfo = [];

@@ -7,7 +7,499 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>データ検索</title>
 
-  <?!= include('common_styles.html') ?>
+  <style>
+  @import url('https://fonts.googleapis.com/css2?family=Lora:wght@400;500;600;700&display=swap');
+
+  /*
+ * common_styles.html
+ * 全ページで共通して使用される基本的なスタイルシート。
+ */
+  :root {
+    --primary-bg: #fffaf7;
+    --container-bg: #fff;
+    --title-bg: #ffdce0;
+    --title-border: #e35d76;
+    --section-label-bg: #ffe9cc;
+    --results-bg: #fff2e0;
+    --button-bg: #1a73e8;
+    --button-hover-bg: #1557b0;
+    --button-active-bg: #174ea6;
+    --danger-button-bg: #dc3545;
+    --danger-button-hover-bg: #c82333;
+    --clear-button-bg: #6c757d;
+    --clear-button-hover-bg: #5a6268;
+    --clear-input-btn-bg: #e9ecef;
+    --clear-input-btn-hover-bg: #dde2e6;
+    --input-border: #79a9f2;
+    --input-bg: #f4faff;
+    --text-color: #333;
+    --placeholder-color: #aaa;
+    --section-title-color: #1a73e8;
+    --focus-ring-color: #1a73e8;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    margin: 0;
+    padding: 0;
+    font-family: "Yu Gothic", "Hiragino Kaku Gothic ProN", Meiryo, sans-serif;
+    background: var(--primary-bg);
+    line-height: 1.6;
+  }
+
+  .container {
+    width: 90%;
+    max-width: 1000px;
+    margin: 20px auto;
+    padding: 20px;
+    background: var(--container-bg);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    min-height: 70vh;
+    border-radius: 10px;
+  }
+
+  h1 {
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+    padding: 10px;
+    text-align: center;
+    background-color: var(--title-bg);
+    border-bottom: 6px solid var(--title-border);
+    border-radius: 6px;
+    font-weight: bold;
+  }
+
+  @media (max-width: 600px) {
+    h1 {
+      font-size: 1.2rem;
+    }
+  }
+
+  /* セクションタイトルの強調 */
+  .section-title {
+    font-size: 1.2em;
+    font-weight: 600;
+    padding: 0.5em;
+    margin: 1.5em 0 1em;
+    border-left: 4px solid var(--section-title-color);
+    background: #f8f9fa;
+    border-radius: 0 4px 4px 0;
+  }
+
+  .big-label {
+    font-size: 1.2rem;
+    margin: 1.5rem 0;
+    padding: 8px;
+    background-color: var(--section-label-bg);
+    border-radius: 5px;
+    font-weight: bold;
+  }
+
+  p,
+  ul {
+    margin: 10px 0;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    color: var(--text-color);
+  }
+
+  ul {
+    .result-de {
+      font-weight: bold;
+      font-size: 1.2em;
+      line-height: 1.45;
+      display: block;
+      font-family: 'Lora', serif;
+    }
+
+    border: 1px solid #ccc;
+    padding: 15px;
+    border-radius: 10px;
+    background-color: #fafafa;
+  }
+
+  fieldset {
+    border: none;
+    padding: 15px;
+    border-radius: 10px;
+    background-color: #f8fafd;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
+    margin-bottom: 15px;
+  }
+
+  legend {
+    display: none;
+  }
+
+  .radio-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 20px;
+  }
+
+  /* 曲名リストを縦並びにするためのスタイル */
+  .radio-group#opera-selection {
+    display: block;
+  }
+
+  .radio-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-family: Georgia, serif;
+    font-size: 0.95rem;
+    /* フォントサイズを少し小さく調整 */
+  }
+
+  .checkbox-group {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 5px 15px;
+    font-family: Georgia, serif;
+    font-size: 0.95rem;
+  }
+
+  .checkbox-group hr {
+    grid-column: 1 / -1;
+    width: 100%;
+    border: 0;
+    border-top: 1px solid #ccc;
+    margin: 5px 0;
+  }
+
+  .checkbox-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-family: inherit;
+  }
+
+  input[type="radio"],
+  input[type="checkbox"] {
+    margin-right: 8px;
+    transform: scale(0.9);
+  }
+
+  input[type="checkbox"]:checked+label,
+  input[type="radio"]:checked+label {
+    color: var(--button-bg);
+    font-weight: 500;
+  }
+
+  /* アコーディオンスタイル */
+  details.instrument-group {
+    margin: 0.5em 0;
+    border-radius: 4px;
+  }
+
+  details.instrument-group summary {
+    padding: 0.4em 0.6em;
+    font-size: 0.9em;
+    cursor: pointer;
+    background: #f8f9fa;
+    border: 1px solid #eee;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+  }
+
+  details.instrument-group summary:hover {
+    background: #f0f2f5;
+  }
+
+  details.instrument-group[open] summary {
+    background: #e8f0fe;
+    border-color: #d2e3fc;
+  }
+
+  .accordion-content {
+    display: none;
+    margin-top: 10px;
+  }
+
+  input[type="text"] {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 10px;
+    margin-bottom: 10px;
+    font-size: 1rem;
+    border: 2px solid var(--input-border);
+    border-radius: 10px;
+    background-color: var(--input-bg);
+  }
+
+  input::placeholder {
+    color: var(--placeholder-color);
+    opacity: 1;
+  }
+
+  .button-container {
+    text-align: center;
+    margin-top: 20px;
+  }
+
+  button {
+    margin: 6px 4px;
+    padding: 6px 12px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.08);
+    background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.1), rgba(0, 0, 0, 0.1));
+  }
+
+  button:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15), 0 2px 4px rgba(0, 0, 0, 0.12);
+    transform: translateY(-1px);
+    filter: brightness(1.05);
+  }
+
+  button:active {
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+    transform: translateY(1px);
+    filter: brightness(0.95);
+    background-image: linear-gradient(to top, rgba(255, 255, 255, 0.1), rgba(0, 0, 0, 0.1));
+  }
+
+  button.btn-search,
+  button.btn-action {
+    background-color: var(--button-bg);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  button.btn-search:hover,
+  button.btn-action:hover {
+    background-color: var(--button-hover-bg);
+  }
+
+  button.btn-search:active,
+  button.btn-action:active {
+    background-color: var(--button-active-bg);
+  }
+
+  button.btn-danger {
+    background-color: var(--danger-button-bg);
+    border: 1px solid rgba(220, 53, 69, 0.2);
+  }
+
+  button.btn-danger:hover {
+    background-color: var(--danger-button-hover-bg);
+  }
+
+  button.btn-clear {
+    background-color: var(--clear-button-bg);
+    border: 1px solid rgba(108, 117, 125, 0.2);
+  }
+
+  button.btn-clear:hover {
+    background-color: var(--clear-button-hover-bg);
+  }
+
+  /* ボタンが無効化されたときのスタイル */
+  button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    box-shadow: none !important;
+    transform: none !important;
+    filter: grayscale(20%) !important;
+    background-image: none !important;
+  }
+
+  button.clear-input-btn {
+    background-color: var(--clear-input-btn-bg);
+  }
+
+  button.clear-input-btn:hover {
+    background-color: var(--clear-input-btn-hover-bg);
+  }
+
+  .loading,
+  .result-message {
+    font-family: 'Lora', serif;
+    font-size: 1.0em;
+    font-weight: bold;
+    text-align: center;
+    padding: 20px;
+  }
+
+  #results {
+    margin-top: 20px;
+    background-color: var(--results-bg);
+    padding: 10px;
+    border-radius: 5px;
+    min-height: 150px;
+    line-height: 1.5;
+    white-space: normal;
+    font-family: 'Lora', serif;
+    font-size: 0.92em;
+  }
+
+  #results>div:first-child {
+    margin-bottom: 15px;
+  }
+
+  .scene-title {
+    font-size: 1.2em;
+    font-weight: bold;
+    padding-bottom: 4px;
+    border-bottom: 2px solid #ccc;
+    margin-top: 1.2em;
+    margin-bottom: 10px;
+  }
+
+  .result-entry {
+    display: flex;
+    align-items: baseline;
+    margin-bottom: 0.6em;
+    font-size: 0.92em;
+  }
+
+  .result-page {
+    flex: 0 0 4em;
+    font-weight: normal;
+    color: #555;
+    white-space: nowrap;
+    font-size: 0.85em;
+  }
+
+  .result-content {
+    flex: 1;
+  }
+
+  .result-de {
+    font-weight: bold;
+    font-size: 1.2em;
+    line-height: 1.45;
+    display: block;
+    font-family: 'Lora', serif;
+  }
+
+  .result-ja-loc {
+    display: block;
+    font-size: 1.0em;
+    font-weight: normal;
+    margin-top: 2px;
+    font-family: 'Lora', serif;
+  }
+
+  .result-ja-loc span:last-child {
+    margin-left: 0.5em;
+    font-size: 0.84em;
+    color: #444;
+  }
+
+  /* 出典・件数の表示（index.html に合わせる） */
+  .result-loc {
+    font-size: 0.9em;
+    color: #333;
+    margin-left: 2em;
+    font-family: 'Lora', serif;
+  }
+
+  .score-info {
+    padding: 12px;
+    margin-bottom: 20px;
+    background-color: #eaf5fa;
+    border: 1px solid #b3d9ff;
+    border-left: 5px solid #79a9f2;
+    border-radius: 5px;
+    font-size: 0.95em;
+    color: #333;
+  }
+
+  #scrollToTop {
+    position: fixed;
+    right: 20px;
+    top: calc(20px + env(safe-area-inset-top, 0px));
+    background-color: rgba(26, 115, 232, 0.95);
+    color: white;
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.85em;
+    font-weight: 500;
+    z-index: 9999;
+    display: none;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    transition: transform 0.18s ease, opacity 0.18s ease;
+    touch-action: manipulation;
+  }
+
+  /* helper classes: JS may toggle display or add the .show class */
+  #scrollToTop.show {
+    display: block;
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  #scrollToTop.hidden {
+    opacity: 0;
+    transform: translateY(-8px);
+    pointer-events: none;
+  }
+
+  #scrollToTop:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.28);
+  }
+
+  #scrollToTop:active {
+    transform: translateY(1px);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  }
+
+  /* Alphabet floating bar (for list/notes pages) */
+  #alpha-floating-bar {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: calc(env(safe-area-inset-bottom, 0px) + 8px);
+    /* lift slightly so phone UI won't cover it */
+    z-index: 9998;
+    display: flex;
+    gap: 8px;
+    /* Add padding that respects the safe area */
+    padding: 12px 12px calc(12px + env(safe-area-inset-bottom, 0px));
+    background: rgba(248, 249, 250, 0.95);
+    /* Slightly less transparent */
+    box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.15);
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    /* Ensure it has a minimum height */
+    min-height: 50px;
+    align-items: center;
+    /* Vertically center the links */
+  }
+
+  @media (max-width: 640px) {
+    #alpha-floating-bar {
+      bottom: calc(env(safe-area-inset-bottom, 0px) + 72px);
+      /* keep above mobile browser toolbars */
+      padding-bottom: 12px;
+    }
+  }
+
+  #alpha-floating-bar a {
+    display: inline-block;
+    white-space: nowrap;
+    padding: 6px 10px;
+    border-radius: 6px;
+    background: rgba(240, 240, 240, 0.9);
+    color: var(--button-bg);
+    text-decoration: none;
+    font-weight: 600;
+    margin-right: 6px;
+  }
+
+  #alpha-floating-bar a:active {
+    transform: translateY(0);
+  }
+</style>
   <style>
     :root {
       --safe-area-bottom: env(safe-area-inset-bottom, 0px);
@@ -889,203 +1381,6 @@
     <!-- 曲名エリア -->
     <div class="big-label">
       曲名を選択
-      'brass': 'ALL_BRASS',
-      'percussions': 'ALL_PERCUSSIONS',
-      'vocal': 'ALL_VOCAL'
-      };
-
-      // 各フィールドセットごとにチェックボックス状態を確認
-      for (const [groupId, allValue] of Object.entries(groupMappings)) {
-      const fieldset = document.getElementById(groupId);
-      if (!fieldset) continue;
-      const checkboxes = fieldset.querySelectorAll('input[type="checkbox"]');
-
-      let allChecked = false;
-      let normalValues = [];
-      checkboxes.forEach(chk => {
-      if (chk.value.toLowerCase() === 'all') {
-      // ALL チェックボックス
-      if (chk.checked) allChecked = true;
-      } else {
-      // 個別楽器
-      if (chk.checked) normalValues.push(chk.value.toLowerCase());
-      }
-      });
-
-      // もし ALL がONなら、ALL_STRINGS などのキーを selected に追加
-      if (allChecked) {
-      selected.push(allValue);
-      } else {
-      // そうでなければ個別の楽器コードを追加
-      selected.push(...normalValues);
-      }
-      }
-
-      // 指揮者がチェックされていたら追加
-      const conductorCheckbox = document.querySelector('#conductor input[type="checkbox"]');
-      if (conductorCheckbox && conductorCheckbox.checked) {
-      selected.push('dir');
-      }
-
-      // 全部の楽器を一括選択したフラグがONなら 'ALL_GLOBAL' を追加
-      if (window._allGlobalSelected) {
-      selected.push('ALL_GLOBAL');
-      }
-
-      return selected;
-      }
-
-      /**
-      * 曲名の選択状態を取得し、配列で返す
-      */
-      function getSelectedWorks() {
-      const workCheckboxes = document.querySelectorAll('#works input[type="checkbox"]');
-      const selected = Array.from(workCheckboxes)
-      .filter(chk => chk.checked)
-      .map(chk => chk.value.toLowerCase());
-
-      // ALL が含まれていれば ['ALL'] として返す
-      return selected.includes('all') ? ['ALL'] : selected;
-      }
-
-      /**
-      * 曲名をすべて選択
-      */
-      function selectAllWorks() {
-      // 曲名のアコーディオンを開く
-      const worksDetails = document.getElementById('works-group');
-      if (worksDetails) worksDetails.open = true;
-
-      // 「ALL」チェックボックスをONにする
-      const allWorksCheckbox = document.getElementById('all-works');
-      if (allWorksCheckbox) {
-      allWorksCheckbox.checked = true;
-      allWorksCheckbox.parentElement.classList.add('checked');
-      }
-
-      // 他の曲名チェックボックスをOFFにする
-      const workCheckboxes = document.querySelectorAll('#works input[type="checkbox"]:not(#all-works)');
-      workCheckboxes.forEach(chk => {
-      chk.checked = false;
-      chk.parentElement.classList.remove('checked');
-      });
-
-      updateSelectionSummary();
-      }
-
-      /**
-      * 曲名をクリア
-      */
-      function clearWorks() {
-      const workCheckboxes = document.querySelectorAll('#works input[type="checkbox"]');
-      workCheckboxes.forEach(chk => {
-      chk.checked = false;
-      chk.parentElement.classList.remove('checked');
-      });
-      // 曲名のアコーディオン（works-group）を閉じる
-      const worksDetails = document.getElementById('works-group');
-      if (worksDetails) worksDetails.open = false;
-      updateSelectionSummary();
-      }
-
-      /**
-      * 選択状況のサマリーを更新する
-      */
-      function updateSelectionSummary() {
-      const summaryDiv = document.getElementById('selection-summary');
-      if (!summaryDiv) return;
-
-      const selectedWorks = getSelectedWorks();
-      const selectedInstruments = getSelectedInstruments();
-
-      const workLabelMap = {};
-      document.querySelectorAll('#works input[type="checkbox"]').forEach(chk => {
-      const key = chk.value.toLowerCase();
-      const labelText = chk.parentElement ? chk.parentElement.textContent.trim() : chk.value;
-      workLabelMap[key] = labelText;
-      });
-
-      let workValue = 'なし';
-      if (selectedWorks.length > 0) {
-      if (selectedWorks[0] === 'ALL') {
-      workValue = 'すべて';
-      } else {
-      const workNames = selectedWorks.map(code => workLabelMap[code] || code);
-      if (workNames.length > 0) {
-      workValue = workNames.join('<br>');
-      }
-      }
-      }
-
-      let instrumentValue = 'なし';
-      if (selectedInstruments.length > 0) {
-      if (selectedInstruments.includes('ALL_GLOBAL')) {
-      instrumentValue = 'すべて';
-      } else {
-      const instrumentNames = selectedInstruments
-      .map(code => groupAllDisplayMap[code] || dMapping[code.toLowerCase()] || code)
-      .filter(name => name && name !== 'ALL_GLOBAL');
-      if (instrumentNames.length > 0) {
-      instrumentValue = instrumentNames.join('<br>');
-      }
-      }
-      }
-
-      summaryDiv.innerHTML =
-      '<div class="summary-block">' +
-        '<div class="summary-title">選択した曲：</div>' +
-        '<div class="summary-value">' + workValue + '</div>' +
-        '</div>' +
-      '<div class="summary-block">' +
-        '<div class="summary-title">選択した楽器：</div>' +
-        '<div class="summary-value">' + instrumentValue + '</div>' +
-        '</div>';
-
-      adjustFloatingBarSpacing();
-      }
-
-      function adjustFloatingBarSpacing() {
-      const floatingBar = document.getElementById('floating-bar');
-      const container = document.querySelector('.container');
-      if (!floatingBar || !container) return;
-
-      const barHeight = floatingBar.offsetHeight;
-      const safeArea = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--safe-area-bottom')) ||
-      0;
-      const offset = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--floating-bar-offset')) ||
-      0;
-      container.style.paddingBottom = (barHeight + 40 + safeArea + offset) + 'px';
-      }
-
-      function updateFloatingBarOffset() {
-      let offset = 16;
-      if (window.visualViewport) {
-      const diff = window.innerHeight - window.visualViewport.height;
-      if (diff > 0) offset += diff;
-      }
-      document.documentElement.style.setProperty('--floating-bar-offset', `${offset}px`);
-      adjustFloatingBarSpacing();
-      }
-
-
-
-      window.addEventListener('resize', updateFloatingBarOffset);
-      if (window.visualViewport) {
-      window.visualViewport.addEventListener('resize', updateFloatingBarOffset);
-      window.visualViewport.addEventListener('scroll', updateFloatingBarOffset);
-      }
-      </script>
-
-      </head>
-
-      <body>
-        <div class="container">
-          <h1>曲名と楽器から検索 (GM)</h1>
-          <p><b>用語集は<a href="https://sites.google.com/site/brucknermahleryinleyongyu/%E7%94%A8%E8%AA%9E%E9%9B%86"
-                target="_blank">こちら</a></b></p>
-          <!-- 曲名エリア -->
-          <div class="big-label">
-            曲名を選択
           </div>
           <div style="margin-bottom: 15px;">
             <button type="button" id="all-works-button" class="btn-action">すべての曲を選択</button>
@@ -1282,7 +1577,181 @@
 
         <!-- ページのトップへ戻るボタン -->
         <div id="scrollToTop" onclick="scrollToTop()">▲ ページのトップへ戻る</div>
-        <?!= include('common_scripts.html') ?>
+        <script>
+  /*
+   * common_scripts.html
+   * 全ページで共通して使用されるクライアントサイドJavaScript。
+   * 主に「トップへ戻る」ボタンの制御など、UIの基本的な動作を定義します。
+   */
+  // Client-only helpers and UI glue. Guard against server (Apps Script) context.
+  (function () {
+    if (typeof window === 'undefined' || typeof document === 'undefined') {
+      // Define no-op globals so server-side references do not throw
+      this.scrollToTop = function () { };
+      this.setResults = function () { };
+      return;
+    }
+
+    // Helper: Throttle function to limit event firing frequency
+    function throttle(func, limit) {
+      let inThrottle;
+      return function () {
+        const args = arguments;
+        const context = this;
+        if (!inThrottle) {
+          func.apply(context, args);
+          inThrottle = true;
+          setTimeout(() => inThrottle = false, limit);
+        }
+      }
+    }
+
+    // Show/hide the "back to top" button — use class toggles and run on load/resize/scroll
+    // Throttled to avoid freezing on heavy pages
+    let isScrolling = false;
+    function updateScrollToTopVisibility() {
+      const scrollToTopBtn = document.getElementById('scrollToTop');
+      if (!scrollToTopBtn) {
+        isScrolling = false; // ensure flag is reset even if btn missing
+        return;
+      }
+      // show when scrolled down a bit
+      if (window.scrollY > 300) {
+        scrollToTopBtn.classList.add('show');
+        scrollToTopBtn.classList.remove('hidden');
+      } else {
+        scrollToTopBtn.classList.remove('show');
+        scrollToTopBtn.classList.add('hidden');
+      }
+      isScrolling = false;
+    }
+
+    function onScrollThrottled() {
+      if (!isScrolling) {
+        window.requestAnimationFrame(updateScrollToTopVisibility);
+        isScrolling = true;
+      }
+    }
+
+    window.addEventListener('scroll', onScrollThrottled, { passive: true });
+
+    // Throttled resize handler for scroll-to-top visibility
+    const throttledUpdateVisibility = throttle(updateScrollToTopVisibility, 200);
+    window.addEventListener('resize', throttledUpdateVisibility);
+    window.addEventListener('orientationchange', () => setTimeout(updateScrollToTopVisibility, 160));
+
+    // ensure initial state after load (some mobile browsers change viewport after load)
+    window.addEventListener('load', () => {
+      updateScrollToTopVisibility();
+      // second check shortly after to account for browser UI show/hide
+      setTimeout(updateScrollToTopVisibility, 300);
+    });
+
+    // Expose global helpers
+    function scrollToTop() {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+    window.scrollToTop = scrollToTop;
+
+    function focusResultsPanel(options) {
+      const resultsDiv = document.getElementById('results');
+      if (!resultsDiv) return;
+
+      const topOffset = Math.max((resultsDiv.getBoundingClientRect().top + window.scrollY) - 20, 0);
+      const behavior = options && options.instant ? 'auto' : 'smooth';
+      window.scrollTo({ top: topOffset, behavior });
+    }
+    window.focusResultsPanel = focusResultsPanel;
+
+    function setResults(html) {
+      const resultsDiv = document.getElementById('results');
+      if (!resultsDiv) return;
+      resultsDiv.innerHTML = html;
+      focusResultsPanel({ instant: true });
+    }
+    window.setResults = setResults;
+
+    // Fix garbled static texts for Wagner/Strauss pages
+    document.addEventListener('DOMContentLoaded', () => {
+      const isComposerPage = /Richard Wagner|Richard Strauss/.test(document.title);
+      if (!isComposerPage) return;
+
+      const firstP = document.querySelector('.container > p');
+      if (firstP) firstP.textContent = 'オーケストラに対する指示で GM の検索ページで何とかなりそうなものは基本的に不記載';
+
+      const bigLabels = document.querySelectorAll('.big-label');
+      if (bigLabels && bigLabels[0]) bigLabels[0].textContent = '曲を選択';
+
+      const smc = document.getElementById('search-method-container');
+      if (smc) {
+        const bl = smc.querySelector('.big-label');
+        if (bl) bl.textContent = '検索方法を選択';
+        const legend = smc.querySelector('legend');
+        if (legend) legend.textContent = '方法';
+        const labels = smc.querySelectorAll('label');
+        labels.forEach(label => {
+          const input = label.querySelector('input[type="radio"]');
+          if (!input) return;
+          if (input.value === 'scene') label.lastChild.textContent = ' 場面から選択';
+          if (input.value === 'page') label.lastChild.textContent = ' ページから選択';
+        });
+      }
+
+      const psc = document.getElementById('page-selection-container');
+      if (psc) {
+        const legend2 = psc.querySelector('legend');
+        if (legend2) legend2.textContent = 'ページ番号';
+        const note = psc.querySelector('p');
+        if (note) note.textContent = 'ページ番号を半角で入力';
+        const input = document.getElementById('page-input');
+        if (input) input.setAttribute('placeholder', '例 3,14,15-92');
+      }
+
+      const topBtn = document.getElementById('scrollToTop');
+      if (topBtn) topBtn.textContent = '▲ ページのトップへ戻る';
+    });
+
+    // Create an alphabet floating bar for pages that have #navbar (notes/list)
+    document.addEventListener('DOMContentLoaded', () => {
+      try {
+        const nav = document.getElementById('navbar');
+        if (!nav) return;
+        // Do not interfere with pages that already have a floating search bar
+        if (document.getElementById('floating-bar')) return;
+        // If alpha-floating-bar already exists in DOM (we may have added it server-side),
+        // still run spacing adjustment.
+        if (!document.getElementById('alpha-floating-bar')) {
+          const alphaBar = document.createElement('div');
+          alphaBar.id = 'alpha-floating-bar';
+          // copy only link nodes to avoid other elements
+          alphaBar.innerHTML = Array.from(nav.querySelectorAll('a')).map(a => a.outerHTML).join(' ');
+          document.body.appendChild(alphaBar);
+        }
+
+        function adjustAlphaBarSpacing() {
+          const bar = document.getElementById('alpha-floating-bar');
+          const container = document.querySelector('.container');
+          if (!bar || !container) return;
+          // ensure bar is visible
+          bar.style.display = 'flex';
+          const barHeight = bar.offsetHeight || 56;
+          container.style.paddingBottom = (barHeight + 24) + 'px';
+        }
+
+        // Throttled resize handler for alpha bar spacing
+        const throttledAdjustSpacing = throttle(adjustAlphaBarSpacing, 200);
+        window.addEventListener('resize', throttledAdjustSpacing);
+        window.addEventListener('orientationchange', () => setTimeout(adjustAlphaBarSpacing, 120));
+
+        // Run adjustment on load and shortly after to handle mobile viewport changes
+        setTimeout(adjustAlphaBarSpacing, 50);
+        setTimeout(adjustAlphaBarSpacing, 300);
+      } catch (e) {
+        console.error('alpha-floating-bar init failed', e);
+      }
+    });
+  })();
+</script>
       </body>
 
 </html>
