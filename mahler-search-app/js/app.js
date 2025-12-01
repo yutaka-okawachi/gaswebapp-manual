@@ -53,7 +53,7 @@ async function showPage(pageName) {
     footer.style.fontSize = '0.8em';
     footer.style.color = '#888';
     footer.style.marginTop = '20px';
-    footer.textContent = 'App Version: 20251201-6 (Debug Mode - Fix Applied)';
+    footer.textContent = 'App Version: 20251201-7 (Debug Mode - Logic Fix)';
     contentArea.appendChild(footer);
 
     // DEBUG PANEL
@@ -541,7 +541,8 @@ function searchMahlerData(choice1Arr, choice2Arr, includeOrchestraAll) {
             if (!a || !b || !c || !d) return;
 
             // Check Work (a)
-            let aMatch = choice1Arr.includes('ALL') || choice1Arr.some(choice => choice === a);
+            // Use mappedChoice1Arr instead of choice1Arr
+            let aMatch = mappedChoice1Arr.includes('ALL') || mappedChoice1Arr.some(choice => choice === a);
             if (aMatch) workMatchCount++;
 
             // Check Instruments (d)
