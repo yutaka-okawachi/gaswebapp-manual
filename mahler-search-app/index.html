@@ -8,105 +8,368 @@
   <title>データ検索</title>
 
   <style>
-  @import url('https://fonts.googleapis.com/css2?family=Lora:wght@400;500;600;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Lora:wght@400;500;600;700&display=swap');
 
-  /*
+    /*
  * common_styles.html
  * 全ページで共通して使用される基本的なスタイルシート。
  */
-  :root {
-    --primary-bg: #fffaf7;
-    --container-bg: #fff;
-    --title-bg: #ffdce0;
-    --title-border: #e35d76;
-    --section-label-bg: #ffe9cc;
-    --results-bg: #fff2e0;
-    --button-bg: #1a73e8;
-    --button-hover-bg: #1557b0;
-    --button-active-bg: #174ea6;
-    --danger-button-bg: #dc3545;
-    --danger-button-hover-bg: #c82333;
-    --clear-button-bg: #6c757d;
-    --clear-button-hover-bg: #5a6268;
-    --clear-input-btn-bg: #e9ecef;
-    --clear-input-btn-hover-bg: #dde2e6;
-    --input-border: #79a9f2;
-    --input-bg: #f4faff;
-    --text-color: #333;
-    --placeholder-color: #aaa;
-    --section-title-color: #1a73e8;
-    --focus-ring-color: #1a73e8;
-  }
-
-  * {
-    box-sizing: border-box;
-  }
-
-  body {
-    margin: 0;
-    padding: 0;
-    font-family: "Yu Gothic", "Hiragino Kaku Gothic ProN", Meiryo, sans-serif;
-    background: var(--primary-bg);
-    line-height: 1.6;
-  }
-
-  .container {
-    width: 90%;
-    max-width: 1000px;
-    margin: 20px auto;
-    padding: 20px;
-    background: var(--container-bg);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    min-height: 70vh;
-    border-radius: 10px;
-  }
-
-  h1 {
-    font-size: 1.5rem;
-    margin-bottom: 20px;
-    padding: 10px;
-    text-align: center;
-    background-color: var(--title-bg);
-    border-bottom: 6px solid var(--title-border);
-    border-radius: 6px;
-    font-weight: bold;
-  }
-
-  @media (max-width: 600px) {
-    h1 {
-      font-size: 1.2rem;
+    :root {
+      --primary-bg: #fffaf7;
+      --container-bg: #fff;
+      --title-bg: #ffdce0;
+      --title-border: #e35d76;
+      --section-label-bg: #ffe9cc;
+      --results-bg: #fff2e0;
+      --button-bg: #1a73e8;
+      --button-hover-bg: #1557b0;
+      --button-active-bg: #174ea6;
+      --danger-button-bg: #dc3545;
+      --danger-button-hover-bg: #c82333;
+      --clear-button-bg: #6c757d;
+      --clear-button-hover-bg: #5a6268;
+      --clear-input-btn-bg: #e9ecef;
+      --clear-input-btn-hover-bg: #dde2e6;
+      --input-border: #79a9f2;
+      --input-bg: #f4faff;
+      --text-color: #333;
+      --placeholder-color: #aaa;
+      --section-title-color: #1a73e8;
+      --focus-ring-color: #1a73e8;
     }
-  }
 
-  /* セクションタイトルの強調 */
-  .section-title {
-    font-size: 1.2em;
-    font-weight: 600;
-    padding: 0.5em;
-    margin: 1.5em 0 1em;
-    border-left: 4px solid var(--section-title-color);
-    background: #f8f9fa;
-    border-radius: 0 4px 4px 0;
-  }
+    * {
+      box-sizing: border-box;
+    }
 
-  .big-label {
-    font-size: 1.2rem;
-    margin: 1.5rem 0;
-    padding: 8px;
-    background-color: var(--section-label-bg);
-    border-radius: 5px;
-    font-weight: bold;
-  }
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: "Yu Gothic", "Hiragino Kaku Gothic ProN", Meiryo, sans-serif;
+      background: var(--primary-bg);
+      line-height: 1.6;
+    }
 
-  p,
-  ul {
-    margin: 10px 0;
-    font-size: 0.9rem;
-    line-height: 1.5;
-    color: var(--text-color);
-  }
+    .container {
+      width: 90%;
+      max-width: 1000px;
+      margin: 20px auto;
+      padding: 20px;
+      background: var(--container-bg);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      min-height: 70vh;
+      border-radius: 10px;
+    }
 
-  ul {
+    h1 {
+      font-size: 1.5rem;
+      margin-bottom: 20px;
+      padding: 10px;
+      text-align: center;
+      background-color: var(--title-bg);
+      border-bottom: 6px solid var(--title-border);
+      border-radius: 6px;
+      font-weight: bold;
+    }
+
+    @media (max-width: 600px) {
+      h1 {
+        font-size: 1.2rem;
+      }
+    }
+
+    /* セクションタイトルの強調 */
+    .section-title {
+      font-size: 1.2em;
+      font-weight: 600;
+      padding: 0.5em;
+      margin: 1.5em 0 1em;
+      border-left: 4px solid var(--section-title-color);
+      background: #f8f9fa;
+      border-radius: 0 4px 4px 0;
+    }
+
+    .big-label {
+      font-size: 1.2rem;
+      margin: 1.5rem 0;
+      padding: 8px;
+      background-color: var(--section-label-bg);
+      border-radius: 5px;
+      font-weight: bold;
+    }
+
+    p,
+    ul {
+      margin: 10px 0;
+      font-size: 0.9rem;
+      line-height: 1.5;
+      color: var(--text-color);
+    }
+
+    ul {
+      .result-de {
+        font-weight: bold;
+        font-size: 1.2em;
+        line-height: 1.45;
+        display: block;
+        font-family: 'Lora', serif;
+      }
+
+      border: 1px solid #ccc;
+      padding: 15px;
+      border-radius: 10px;
+      background-color: #fafafa;
+    }
+
+    fieldset {
+      border: none;
+      padding: 15px;
+      border-radius: 10px;
+      background-color: #f8fafd;
+      box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
+      margin-bottom: 15px;
+    }
+
+    legend {
+      display: none;
+    }
+
+    .radio-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px 20px;
+    }
+
+    /* 曲名リストを縦並びにするためのスタイル */
+    .radio-group#opera-selection {
+      display: block;
+    }
+
+    .radio-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-family: Georgia, serif;
+      font-size: 0.95rem;
+      /* フォントサイズを少し小さく調整 */
+    }
+
+    .checkbox-group {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 5px 15px;
+      font-family: Georgia, serif;
+      font-size: 0.95rem;
+    }
+
+    .checkbox-group hr {
+      grid-column: 1 / -1;
+      width: 100%;
+      border: 0;
+      border-top: 1px solid #ccc;
+      margin: 5px 0;
+    }
+
+    .checkbox-group label {
+      display: block;
+      margin-bottom: 5px;
+      font-family: inherit;
+    }
+
+    input[type="radio"],
+    input[type="checkbox"] {
+      margin-right: 8px;
+      transform: scale(0.9);
+    }
+
+    input[type="checkbox"]:checked+label,
+    input[type="radio"]:checked+label {
+      color: var(--button-bg);
+      font-weight: 500;
+    }
+
+    /* アコーディオンスタイル */
+    details.instrument-group {
+      margin: 0.5em 0;
+      border-radius: 4px;
+    }
+
+    details.instrument-group summary {
+      padding: 0.4em 0.6em;
+      font-size: 0.9em;
+      cursor: pointer;
+      background: #f8f9fa;
+      border: 1px solid #eee;
+      border-radius: 4px;
+      transition: all 0.2s ease;
+    }
+
+    details.instrument-group summary:hover {
+      background: #f0f2f5;
+    }
+
+    details.instrument-group[open] summary {
+      background: #e8f0fe;
+      border-color: #d2e3fc;
+    }
+
+    .accordion-content {
+      display: none;
+      margin-top: 10px;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 10px;
+      margin-bottom: 10px;
+      font-size: 1rem;
+      border: 2px solid var(--input-border);
+      border-radius: 10px;
+      background-color: var(--input-bg);
+    }
+
+    input::placeholder {
+      color: var(--placeholder-color);
+      opacity: 1;
+    }
+
+    .button-container {
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    button {
+      margin: 6px 4px;
+      padding: 6px 12px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.08);
+      background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.1), rgba(0, 0, 0, 0.1));
+    }
+
+    button:hover {
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15), 0 2px 4px rgba(0, 0, 0, 0.12);
+      transform: translateY(-1px);
+      filter: brightness(1.05);
+    }
+
+    button:active {
+      box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+      transform: translateY(1px);
+      filter: brightness(0.95);
+      background-image: linear-gradient(to top, rgba(255, 255, 255, 0.1), rgba(0, 0, 0, 0.1));
+    }
+
+    button.btn-search,
+    button.btn-action {
+      background-color: var(--button-bg);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    button.btn-search:hover,
+    button.btn-action:hover {
+      background-color: var(--button-hover-bg);
+    }
+
+    button.btn-search:active,
+    button.btn-action:active {
+      background-color: var(--button-active-bg);
+    }
+
+    button.btn-danger {
+      background-color: var(--danger-button-bg);
+      border: 1px solid rgba(220, 53, 69, 0.2);
+    }
+
+    button.btn-danger:hover {
+      background-color: var(--danger-button-hover-bg);
+    }
+
+    button.btn-clear {
+      background-color: var(--clear-button-bg);
+      border: 1px solid rgba(108, 117, 125, 0.2);
+    }
+
+    button.btn-clear:hover {
+      background-color: var(--clear-button-hover-bg);
+    }
+
+    /* ボタンが無効化されたときのスタイル */
+    button:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      box-shadow: none !important;
+      transform: none !important;
+      filter: grayscale(20%) !important;
+      background-image: none !important;
+    }
+
+    button.clear-input-btn {
+      background-color: var(--clear-input-btn-bg);
+    }
+
+    button.clear-input-btn:hover {
+      background-color: var(--clear-input-btn-hover-bg);
+    }
+
+    .loading,
+    .result-message {
+      font-family: 'Lora', serif;
+      font-size: 1.0em;
+      font-weight: bold;
+      text-align: center;
+      padding: 20px;
+    }
+
+    #results {
+      margin-top: 20px;
+      background-color: var(--results-bg);
+      padding: 10px;
+      border-radius: 5px;
+      min-height: 150px;
+      line-height: 1.5;
+      white-space: normal;
+      font-family: 'Lora', serif;
+      font-size: 0.92em;
+    }
+
+    #results>div:first-child {
+      margin-bottom: 15px;
+    }
+
+    .scene-title {
+      font-size: 1.2em;
+      font-weight: bold;
+      padding-bottom: 4px;
+      border-bottom: 2px solid #ccc;
+      margin-top: 1.2em;
+      margin-bottom: 10px;
+    }
+
+    .result-entry {
+      display: flex;
+      align-items: baseline;
+      margin-bottom: 0.6em;
+      font-size: 0.92em;
+    }
+
+    .result-page {
+      flex: 0 0 4em;
+      font-weight: normal;
+      color: #555;
+      white-space: nowrap;
+      font-size: 0.85em;
+    }
+
+    .result-content {
+      flex: 1;
+    }
+
     .result-de {
       font-weight: bold;
       font-size: 1.2em;
@@ -115,391 +378,128 @@
       font-family: 'Lora', serif;
     }
 
-    border: 1px solid #ccc;
-    padding: 15px;
-    border-radius: 10px;
-    background-color: #fafafa;
-  }
-
-  fieldset {
-    border: none;
-    padding: 15px;
-    border-radius: 10px;
-    background-color: #f8fafd;
-    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
-    margin-bottom: 15px;
-  }
-
-  legend {
-    display: none;
-  }
-
-  .radio-group {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px 20px;
-  }
-
-  /* 曲名リストを縦並びにするためのスタイル */
-  .radio-group#opera-selection {
-    display: block;
-  }
-
-  .radio-group label {
-    display: block;
-    margin-bottom: 8px;
-    font-family: Georgia, serif;
-    font-size: 0.95rem;
-    /* フォントサイズを少し小さく調整 */
-  }
-
-  .checkbox-group {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 5px 15px;
-    font-family: Georgia, serif;
-    font-size: 0.95rem;
-  }
-
-  .checkbox-group hr {
-    grid-column: 1 / -1;
-    width: 100%;
-    border: 0;
-    border-top: 1px solid #ccc;
-    margin: 5px 0;
-  }
-
-  .checkbox-group label {
-    display: block;
-    margin-bottom: 5px;
-    font-family: inherit;
-  }
-
-  input[type="radio"],
-  input[type="checkbox"] {
-    margin-right: 8px;
-    transform: scale(0.9);
-  }
-
-  input[type="checkbox"]:checked+label,
-  input[type="radio"]:checked+label {
-    color: var(--button-bg);
-    font-weight: 500;
-  }
-
-  /* アコーディオンスタイル */
-  details.instrument-group {
-    margin: 0.5em 0;
-    border-radius: 4px;
-  }
-
-  details.instrument-group summary {
-    padding: 0.4em 0.6em;
-    font-size: 0.9em;
-    cursor: pointer;
-    background: #f8f9fa;
-    border: 1px solid #eee;
-    border-radius: 4px;
-    transition: all 0.2s ease;
-  }
-
-  details.instrument-group summary:hover {
-    background: #f0f2f5;
-  }
-
-  details.instrument-group[open] summary {
-    background: #e8f0fe;
-    border-color: #d2e3fc;
-  }
-
-  .accordion-content {
-    display: none;
-    margin-top: 10px;
-  }
-
-  input[type="text"] {
-    width: 100%;
-    box-sizing: border-box;
-    padding: 10px;
-    margin-bottom: 10px;
-    font-size: 1rem;
-    border: 2px solid var(--input-border);
-    border-radius: 10px;
-    background-color: var(--input-bg);
-  }
-
-  input::placeholder {
-    color: var(--placeholder-color);
-    opacity: 1;
-  }
-
-  .button-container {
-    text-align: center;
-    margin-top: 20px;
-  }
-
-  button {
-    margin: 6px 4px;
-    padding: 6px 12px;
-    font-size: 0.9rem;
-    font-weight: 500;
-    color: #fff;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.08);
-    background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.1), rgba(0, 0, 0, 0.1));
-  }
-
-  button:hover {
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15), 0 2px 4px rgba(0, 0, 0, 0.12);
-    transform: translateY(-1px);
-    filter: brightness(1.05);
-  }
-
-  button:active {
-    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
-    transform: translateY(1px);
-    filter: brightness(0.95);
-    background-image: linear-gradient(to top, rgba(255, 255, 255, 0.1), rgba(0, 0, 0, 0.1));
-  }
-
-  button.btn-search,
-  button.btn-action {
-    background-color: var(--button-bg);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-  }
-
-  button.btn-search:hover,
-  button.btn-action:hover {
-    background-color: var(--button-hover-bg);
-  }
-
-  button.btn-search:active,
-  button.btn-action:active {
-    background-color: var(--button-active-bg);
-  }
-
-  button.btn-danger {
-    background-color: var(--danger-button-bg);
-    border: 1px solid rgba(220, 53, 69, 0.2);
-  }
-
-  button.btn-danger:hover {
-    background-color: var(--danger-button-hover-bg);
-  }
-
-  button.btn-clear {
-    background-color: var(--clear-button-bg);
-    border: 1px solid rgba(108, 117, 125, 0.2);
-  }
-
-  button.btn-clear:hover {
-    background-color: var(--clear-button-hover-bg);
-  }
-
-  /* ボタンが無効化されたときのスタイル */
-  button:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-    box-shadow: none !important;
-    transform: none !important;
-    filter: grayscale(20%) !important;
-    background-image: none !important;
-  }
-
-  button.clear-input-btn {
-    background-color: var(--clear-input-btn-bg);
-  }
-
-  button.clear-input-btn:hover {
-    background-color: var(--clear-input-btn-hover-bg);
-  }
-
-  .loading,
-  .result-message {
-    font-family: 'Lora', serif;
-    font-size: 1.0em;
-    font-weight: bold;
-    text-align: center;
-    padding: 20px;
-  }
-
-  #results {
-    margin-top: 20px;
-    background-color: var(--results-bg);
-    padding: 10px;
-    border-radius: 5px;
-    min-height: 150px;
-    line-height: 1.5;
-    white-space: normal;
-    font-family: 'Lora', serif;
-    font-size: 0.92em;
-  }
-
-  #results>div:first-child {
-    margin-bottom: 15px;
-  }
-
-  .scene-title {
-    font-size: 1.2em;
-    font-weight: bold;
-    padding-bottom: 4px;
-    border-bottom: 2px solid #ccc;
-    margin-top: 1.2em;
-    margin-bottom: 10px;
-  }
-
-  .result-entry {
-    display: flex;
-    align-items: baseline;
-    margin-bottom: 0.6em;
-    font-size: 0.92em;
-  }
-
-  .result-page {
-    flex: 0 0 4em;
-    font-weight: normal;
-    color: #555;
-    white-space: nowrap;
-    font-size: 0.85em;
-  }
-
-  .result-content {
-    flex: 1;
-  }
-
-  .result-de {
-    font-weight: bold;
-    font-size: 1.2em;
-    line-height: 1.45;
-    display: block;
-    font-family: 'Lora', serif;
-  }
-
-  .result-ja-loc {
-    display: block;
-    font-size: 1.0em;
-    font-weight: normal;
-    margin-top: 2px;
-    font-family: 'Lora', serif;
-  }
-
-  .result-ja-loc span:last-child {
-    margin-left: 0.5em;
-    font-size: 0.84em;
-    color: #444;
-  }
-
-  /* 出典・件数の表示（index.html に合わせる） */
-  .result-loc {
-    font-size: 0.9em;
-    color: #333;
-    margin-left: 2em;
-    font-family: 'Lora', serif;
-  }
-
-  .score-info {
-    padding: 12px;
-    margin-bottom: 20px;
-    background-color: #eaf5fa;
-    border: 1px solid #b3d9ff;
-    border-left: 5px solid #79a9f2;
-    border-radius: 5px;
-    font-size: 0.95em;
-    color: #333;
-  }
-
-  #scrollToTop {
-    position: fixed;
-    right: 20px;
-    top: calc(20px + env(safe-area-inset-top, 0px));
-    background-color: rgba(26, 115, 232, 0.95);
-    color: white;
-    padding: 8px 16px;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 0.85em;
-    font-weight: 500;
-    z-index: 9999;
-    display: none;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
-    border: 1px solid rgba(255, 255, 255, 0.12);
-    transition: transform 0.18s ease, opacity 0.18s ease;
-    touch-action: manipulation;
-  }
-
-  /* helper classes: JS may toggle display or add the .show class */
-  #scrollToTop.show {
-    display: block;
-    opacity: 1;
-    transform: translateY(0);
-  }
-
-  #scrollToTop.hidden {
-    opacity: 0;
-    transform: translateY(-8px);
-    pointer-events: none;
-  }
-
-  #scrollToTop:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.28);
-  }
-
-  #scrollToTop:active {
-    transform: translateY(1px);
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
-  }
-
-  /* Alphabet floating bar (for list/notes pages) */
-  #alpha-floating-bar {
-    position: fixed;
-    left: 0;
-    right: 0;
-    bottom: calc(env(safe-area-inset-bottom, 0px) + 8px);
-    /* lift slightly so phone UI won't cover it */
-    z-index: 9998;
-    display: flex;
-    gap: 8px;
-    /* Add padding that respects the safe area */
-    padding: 12px 12px calc(12px + env(safe-area-inset-bottom, 0px));
-    background: rgba(248, 249, 250, 0.95);
-    /* Slightly less transparent */
-    box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.15);
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    /* Ensure it has a minimum height */
-    min-height: 50px;
-    align-items: center;
-    /* Vertically center the links */
-  }
-
-  @media (max-width: 640px) {
-    #alpha-floating-bar {
-      bottom: calc(env(safe-area-inset-bottom, 0px) + 72px);
-      /* keep above mobile browser toolbars */
-      padding-bottom: 12px;
+    .result-ja-loc {
+      display: block;
+      font-size: 1.0em;
+      font-weight: normal;
+      margin-top: 2px;
+      font-family: 'Lora', serif;
     }
-  }
 
-  #alpha-floating-bar a {
-    display: inline-block;
-    white-space: nowrap;
-    padding: 6px 10px;
-    border-radius: 6px;
-    background: rgba(240, 240, 240, 0.9);
-    color: var(--button-bg);
-    text-decoration: none;
-    font-weight: 600;
-    margin-right: 6px;
-  }
+    .result-ja-loc span:last-child {
+      margin-left: 0.5em;
+      font-size: 0.84em;
+      color: #444;
+    }
 
-  #alpha-floating-bar a:active {
-    transform: translateY(0);
-  }
-</style>
+    /* 出典・件数の表示（index.html に合わせる） */
+    .result-loc {
+      font-size: 0.9em;
+      color: #333;
+      margin-left: 2em;
+      font-family: 'Lora', serif;
+    }
+
+    .score-info {
+      padding: 12px;
+      margin-bottom: 20px;
+      background-color: #eaf5fa;
+      border: 1px solid #b3d9ff;
+      border-left: 5px solid #79a9f2;
+      border-radius: 5px;
+      font-size: 0.95em;
+      color: #333;
+    }
+
+    #scrollToTop {
+      position: fixed;
+      right: 20px;
+      top: calc(20px + env(safe-area-inset-top, 0px));
+      background-color: rgba(26, 115, 232, 0.95);
+      color: white;
+      padding: 8px 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.85em;
+      font-weight: 500;
+      z-index: 9999;
+      display: none;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      transition: transform 0.18s ease, opacity 0.18s ease;
+      touch-action: manipulation;
+    }
+
+    /* helper classes: JS may toggle display or add the .show class */
+    #scrollToTop.show {
+      display: block;
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    #scrollToTop.hidden {
+      opacity: 0;
+      transform: translateY(-8px);
+      pointer-events: none;
+    }
+
+    #scrollToTop:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.28);
+    }
+
+    #scrollToTop:active {
+      transform: translateY(1px);
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Alphabet floating bar (for list/notes pages) */
+    #alpha-floating-bar {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: calc(env(safe-area-inset-bottom, 0px) + 8px);
+      /* lift slightly so phone UI won't cover it */
+      z-index: 9998;
+      display: flex;
+      gap: 8px;
+      /* Add padding that respects the safe area */
+      padding: 12px 12px calc(12px + env(safe-area-inset-bottom, 0px));
+      background: rgba(248, 249, 250, 0.95);
+      /* Slightly less transparent */
+      box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.15);
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      /* Ensure it has a minimum height */
+      min-height: 50px;
+      align-items: center;
+      /* Vertically center the links */
+    }
+
+    @media (max-width: 640px) {
+      #alpha-floating-bar {
+        bottom: calc(env(safe-area-inset-bottom, 0px) + 72px);
+        /* keep above mobile browser toolbars */
+        padding-bottom: 12px;
+      }
+    }
+
+    #alpha-floating-bar a {
+      display: inline-block;
+      white-space: nowrap;
+      padding: 6px 10px;
+      border-radius: 6px;
+      background: rgba(240, 240, 240, 0.9);
+      color: var(--button-bg);
+      text-decoration: none;
+      font-weight: 600;
+      margin-right: 6px;
+    }
+
+    #alpha-floating-bar a:active {
+      transform: translateY(0);
+    }
+  </style>
   <style>
     :root {
       --safe-area-bottom: env(safe-area-inset-bottom, 0px);
@@ -1142,23 +1142,27 @@
 
       // 検索ボタンを無効化し、色を薄くする
       searchButton.disabled = true;
-
       // 検索IDを更新（キャンセル制御用）
       currentSearchId++;
       const thisSearchId = currentSearchId;
 
-      // Google Apps Script側の searchData() を呼び出し
-      google.script.run
-        .withSuccessHandler(html => {
-          // もし別の検索がすでに走っていたら無視
+      // Local static app: Call searchMahlerData directly
+      setTimeout(() => {
+        try {
+          const html = searchMahlerData(works, instruments, includeOrchestraAll);
           if (thisSearchId === currentSearchId) {
             resultsDiv.innerHTML = html;
             focusResultsPanel({ instant: true });
-            // 検索完了後、ボタンを有効に戻す
             searchButton.disabled = false;
           }
-        })
-        .searchData(works, instruments, includeOrchestraAll);
+        } catch (e) {
+          console.error(e);
+          if (thisSearchId === currentSearchId) {
+            resultsDiv.innerHTML = `<p class="result-message">エラーが発生しました: ${e.message}</p>`;
+            searchButton.disabled = false;
+          }
+        }
+      }, 10);
     }
 
     /**
@@ -1381,377 +1385,378 @@
     <!-- 曲名エリア -->
     <div class="big-label">
       曲名を選択
-          </div>
-          <div style="margin-bottom: 15px;">
-            <button type="button" id="all-works-button" class="btn-action">すべての曲を選択</button>
-            <button type="button" onclick="clearWorks()" class="btn-clear">曲名をクリア</button>
-          </div>
-          <!-- 曲名をアコーディオン化: instrument-group の挙動に合わせる -->
-          <details class="instrument-group" id="works-group">
-            <summary>曲名</summary>
-            <fieldset id="works">
-              <!-- ALLチェックボックス -->
-              <label class="all-label">
-                <input type="checkbox" id="all-works" value="ALL">ALL
-              </label>
-              <div class="inner-checkbox-group checkbox-grid-songs">
-                <!-- 曲名チェックボックス群 -->
-                <label><input type="checkbox" value="交響曲第1番ニ長調（1884-88）">交響曲第1番ニ長調（1884-88）</label>
-                <label><input type="checkbox" value="交響曲第2番ハ短調（1888-94）">交響曲第2番ハ短調（1888-94）</label>
-                <label><input type="checkbox" value="交響曲第3番ニ短調（1893-96）">交響曲第3番ニ短調（1893-96）</label>
-                <label><input type="checkbox" value="交響曲第4番ト長調（1899-1900）">交響曲第4番ト長調（1899-1900）</label>
-                <label><input type="checkbox" value="交響曲第5番嬰ハ短調（1901-02）">交響曲第5番嬰ハ短調（1901-02）</label>
-                <label><input type="checkbox" value="交響曲第6番イ短調（1903-04）">交響曲第6番イ短調（1903-04）</label>
-                <label><input type="checkbox" value="交響曲第7番ホ短調（1904-05）">交響曲第7番ホ短調（1904-05）</label>
-                <label><input type="checkbox" value="交響曲第8番変ホ長調（1906）">交響曲第8番変ホ長調（1906）</label>
-                <label><input type="checkbox" value="交響曲イ短調『大地の歌』（1908）">交響曲イ短調『大地の歌』（1908）</label>
-                <label><input type="checkbox" value="交響曲第9番ニ長調（1909）">交響曲第9番ニ長調（1909）</label>
-                <label><input type="checkbox" value="交響曲第10番嬰ヘ長調（1910）">交響曲第10番嬰ヘ長調（1910）</label>
-                <label><input type="checkbox" value="交響曲第10番（クック版）">交響曲第10番（クック版）</label>
-                <label><input type="checkbox" value="嘆きの歌（1880）">嘆きの歌（1880）</label>
-                <label><input type="checkbox" value="嘆きの歌（1899）">嘆きの歌（1899）</label>
-                <label><input type="checkbox" value="さすらう若人の歌">さすらう若人の歌</label>
-                <label><input type="checkbox" value="子供の魔法の角笛">子供の魔法の角笛</label>
-                <label><input type="checkbox" value="子供の死の歌">子供の死の歌</label>
-                <label><input type="checkbox" value="リュッケルトの詩による5つの歌">リュッケルトの詩による5つの歌</label>
-                <label><input type="checkbox" value="花の章">花の章</label>
-                <label><input type="checkbox" value="葬礼">葬礼</label>
-              </div>
-            </fieldset>
-          </details>
-
-          <!-- 楽器選択エリア -->
-          <div class="big-label-instruments">
-            楽器を選択
-          </div>
-          <div style="margin-bottom: 15px;">
-            <button type="button" id="all-instruments" class="btn-action">すべての楽器を選択</button>
-            <button type="button" id="clear-instruments" class="btn-clear">楽器をクリア</button>
-            <div style="margin-top: 10px;">
-              <!-- オーケストラ全体を含めるかどうかのラジオボタン -->
-              <label style="display: block; margin-bottom: 5px;">
-                <input type="radio" name="include-orchestra-all" value="on" checked>
-                オーケストラ全体への指示を含める
-              </label>
-              <label style="display: block; margin-bottom: 15px;">
-                <input type="radio" name="include-orchestra-all" value="off">
-                含めない
-              </label>
-            </div>
-          </div>
-
-          <!-- 指揮者 -->
-          <details class="instrument-group">
-            <summary>指揮者</summary>
-            <fieldset id="conductor">
-              <div class="inner-checkbox-group checkbox-grid">
-                <label><input type="checkbox" value="dir">Dirigent</label>
-              </div>
-            </fieldset>
-          </details>
-
-          <!-- 弦楽器群 -->
-          <details class="instrument-group">
-            <summary>弦楽器群</summary>
-            <fieldset id="strings">
-              <label class="all-label"><input type="checkbox" id="all-strings" value="ALL">ALL</label>
-              <div class="inner-checkbox-group checkbox-grid">
-                <label><input type="checkbox" value="v1">Violine1</label>
-                <label><input type="checkbox" value="v2">Violine2</label>
-                <label><input type="checkbox" value="va">Bratche</label>
-                <label><input type="checkbox" value="vc">Violoncello</label>
-                <label><input type="checkbox" value="kb">Kontrabaß</label>
-                <label><input type="checkbox" value="sv">Solo Violine</label>
-                <label><input type="checkbox" value="sva">Solo Bratche</label>
-                <label><input type="checkbox" value="svc">Solo Violoncello</label>
-                <label><input type="checkbox" value="skb">Solo Kontrabaß</label>
-              </div>
-            </fieldset>
-          </details>
-
-          <!-- 木管楽器群 -->
-          <details class="instrument-group">
-            <summary>木管楽器群</summary>
-            <fieldset id="woodwinds">
-              <label class="all-label"><input type="checkbox" id="all-woodwinds" value="ALL">ALL</label>
-              <div class="inner-checkbox-group checkbox-grid">
-                <label><input type="checkbox" value="fl">Flöte</label>
-                <label><input type="checkbox" value="pic">Piccolo</label>
-                <label><input type="checkbox" value="ob">Oboe</label>
-                <label><input type="checkbox" value="eh">Englischhorn</label>
-                <label><input type="checkbox" value="cl">Klarinette</label>
-                <label><input type="checkbox" value="escl">Es-Klarinette</label>
-                <label><input type="checkbox" value="bcl">Bassklarinette</label>
-                <label><input type="checkbox" value="fg">Fagott</label>
-              </div>
-            </fieldset>
-          </details>
-
-          <!-- 金管楽器群 -->
-          <details class="instrument-group">
-            <summary>金管楽器群</summary>
-            <fieldset id="brass">
-              <label class="all-label"><input type="checkbox" id="all-brass" value="ALL">ALL</label>
-              <div class="inner-checkbox-group checkbox-grid">
-                <label><input type="checkbox" value="tr">Trompete</label>
-                <label><input type="checkbox" value="pis">Piston</label>
-                <label><input type="checkbox" value="phr">Posthorn</label>
-                <label><input type="checkbox" value="hr">Horn</label>
-                <label><input type="checkbox" value="thr">Tenorhorn</label>
-                <label><input type="checkbox" value="ohr">Obligates Horn</label>
-                <label><input type="checkbox" value="fhr">Flügelhorn</label>
-                <label><input type="checkbox" value="whr">Waldhorn</label>
-                <label><input type="checkbox" value="pos">Posaune</label>
-                <label><input type="checkbox" value="bt">Basstuba</label>
-              </div>
-            </fieldset>
-          </details>
-
-          <!-- 打楽器群 -->
-          <details class="instrument-group">
-            <summary>打楽器群など</summary>
-            <fieldset id="percussions">
-              <label class="all-label"><input type="checkbox" id="all-percussions" value="ALL">ALL</label>
-              <div class="inner-checkbox-group checkbox-grid">
-                <label><input type="checkbox" value="pau">Pauken</label>
-                <label><input type="checkbox" value="gtr">Gloße Trommel</label>
-                <label><input type="checkbox" value="ktr">Kleine Trommel</label>
-                <label><input type="checkbox" value="mtr">Militär Trommel</label>
-                <label><input type="checkbox" value="bec">Becken</label>
-                <label><input type="checkbox" value="tam">Tam-tam</label>
-                <label><input type="checkbox" value="tri">Triangel</label>
-                <label><input type="checkbox" value="gls">Glockenspiel</label>
-                <label><input type="checkbox" value="hgl">Herdenglocken</label>
-                <label><input type="checkbox" value="gl">Glocken</label>
-                <label><input type="checkbox" value="ham">Hammer</label>
-                <label><input type="checkbox" value="rt">Rute</label>
-                <label><input type="checkbox" value="cel">Celesta</label>
-                <label><input type="checkbox" value="hp">Harfe</label>
-                <label><input type="checkbox" value="org">Orgel</label>
-                <label><input type="checkbox" value="klv">Klavier</label>
-                <label><input type="checkbox" value="har">Harmonium</label>
-                <label><input type="checkbox" value="git">Gitarre</label>
-                <label><input type="checkbox" value="man">Mandoline</label>
-              </div>
-            </fieldset>
-          </details>
-
-          <!-- 声楽・合唱 -->
-          <details class="instrument-group">
-            <summary>声楽・合唱</summary>
-            <fieldset id="vocal">
-              <label class="all-label"><input type="checkbox" id="all-vocal" value="ALL">ALL</label>
-              <div class="inner-checkbox-group checkbox-grid">
-                <label><input type="checkbox" value="sop">Sopran</label>
-                <label><input type="checkbox" value="alt">Alto</label>
-                <label><input type="checkbox" value="ten">Tenor</label>
-                <label><input type="checkbox" value="bar">Bariton</label>
-                <label><input type="checkbox" value="bass">Bass</label>
-                <label><input type="checkbox" value="sop1">Sopran1</label>
-                <label><input type="checkbox" value="sop2">Sopran2</label>
-                <label><input type="checkbox" value="alt1">Alto1</label>
-                <label><input type="checkbox" value="alt2">Alto2</label>
-                <label><input type="checkbox" value="kalt">Knabe(Alto)</label>
-                <label><input type="checkbox" value="chor">Chor</label>
-                <label><input type="checkbox" value="chor1">Chor1</label>
-                <label><input type="checkbox" value="chor2">Chor2</label>
-                <label><input type="checkbox" value="fchor">frauen Chor</label>
-                <label><input type="checkbox" value="kchor">knaben Chor</label>
-                <label><input type="checkbox" value="sti">Stimme</label>
-              </div>
-            </fieldset>
-          </details>
-
-          <!-- 検索結果表示領域 -->
-          <div id="results"></div>
+    </div>
+    <div style="margin-bottom: 15px;">
+      <button type="button" id="all-works-button" class="btn-action">すべての曲を選択</button>
+      <button type="button" onclick="clearWorks()" class="btn-clear">曲名をクリア</button>
+    </div>
+    <!-- 曲名をアコーディオン化: instrument-group の挙動に合わせる -->
+    <details class="instrument-group" id="works-group">
+      <summary>曲名</summary>
+      <fieldset id="works">
+        <!-- ALLチェックボックス -->
+        <label class="all-label">
+          <input type="checkbox" id="all-works" value="ALL">ALL
+        </label>
+        <div class="inner-checkbox-group checkbox-grid-songs">
+          <!-- 曲名チェックボックス群 -->
+          <label><input type="checkbox" value="交響曲第1番ニ長調（1884-88）">交響曲第1番ニ長調（1884-88）</label>
+          <label><input type="checkbox" value="交響曲第2番ハ短調（1888-94）">交響曲第2番ハ短調（1888-94）</label>
+          <label><input type="checkbox" value="交響曲第3番ニ短調（1893-96）">交響曲第3番ニ短調（1893-96）</label>
+          <label><input type="checkbox" value="交響曲第4番ト長調（1899-1900）">交響曲第4番ト長調（1899-1900）</label>
+          <label><input type="checkbox" value="交響曲第5番嬰ハ短調（1901-02）">交響曲第5番嬰ハ短調（1901-02）</label>
+          <label><input type="checkbox" value="交響曲第6番イ短調（1903-04）">交響曲第6番イ短調（1903-04）</label>
+          <label><input type="checkbox" value="交響曲第7番ホ短調（1904-05）">交響曲第7番ホ短調（1904-05）</label>
+          <label><input type="checkbox" value="交響曲第8番変ホ長調（1906）">交響曲第8番変ホ長調（1906）</label>
+          <label><input type="checkbox" value="交響曲イ短調『大地の歌』（1908）">交響曲イ短調『大地の歌』（1908）</label>
+          <label><input type="checkbox" value="交響曲第9番ニ長調（1909）">交響曲第9番ニ長調（1909）</label>
+          <label><input type="checkbox" value="交響曲第10番嬰ヘ長調（1910）">交響曲第10番嬰ヘ長調（1910）</label>
+          <label><input type="checkbox" value="交響曲第10番（クック版）">交響曲第10番（クック版）</label>
+          <label><input type="checkbox" value="嘆きの歌（1880）">嘆きの歌（1880）</label>
+          <label><input type="checkbox" value="嘆きの歌（1899）">嘆きの歌（1899）</label>
+          <label><input type="checkbox" value="さすらう若人の歌">さすらう若人の歌</label>
+          <label><input type="checkbox" value="子供の魔法の角笛">子供の魔法の角笛</label>
+          <label><input type="checkbox" value="子供の死の歌">子供の死の歌</label>
+          <label><input type="checkbox" value="リュッケルトの詩による5つの歌">リュッケルトの詩による5つの歌</label>
+          <label><input type="checkbox" value="花の章">花の章</label>
+          <label><input type="checkbox" value="葬礼">葬礼</label>
         </div>
+      </fieldset>
+    </details>
 
-        <!-- フローティング検索バー -->
-        <div id="floating-bar">
-          <div id="selection-summary"></div>
-          <div class="button-group">
-            <button type="button" onclick="search()" class="btn-action">検索</button>
-            <button type="button" onclick="cancelSearch()" class="btn-danger">中止</button>
-          </div>
+    <!-- 楽器選択エリア -->
+    <div class="big-label-instruments">
+      楽器を選択
+    </div>
+    <div style="margin-bottom: 15px;">
+      <button type="button" id="all-instruments" class="btn-action">すべての楽器を選択</button>
+      <button type="button" id="clear-instruments" class="btn-clear">楽器をクリア</button>
+      <div style="margin-top: 10px;">
+        <!-- オーケストラ全体を含めるかどうかのラジオボタン -->
+        <label style="display: block; margin-bottom: 5px;">
+          <input type="radio" name="include-orchestra-all" value="on" checked>
+          オーケストラ全体への指示を含める
+        </label>
+        <label style="display: block; margin-bottom: 15px;">
+          <input type="radio" name="include-orchestra-all" value="off">
+          含めない
+        </label>
+      </div>
+    </div>
+
+    <!-- 指揮者 -->
+    <details class="instrument-group">
+      <summary>指揮者</summary>
+      <fieldset id="conductor">
+        <div class="inner-checkbox-group checkbox-grid">
+          <label><input type="checkbox" value="dir">Dirigent</label>
         </div>
+      </fieldset>
+    </details>
 
-        <!-- ページのトップへ戻るボタン -->
-        <div id="scrollToTop" onclick="scrollToTop()">▲ ページのトップへ戻る</div>
-        <script>
-  /*
-   * common_scripts.html
-   * 全ページで共通して使用されるクライアントサイドJavaScript。
-   * 主に「トップへ戻る」ボタンの制御など、UIの基本的な動作を定義します。
-   */
-  // Client-only helpers and UI glue. Guard against server (Apps Script) context.
-  (function () {
-    if (typeof window === 'undefined' || typeof document === 'undefined') {
-      // Define no-op globals so server-side references do not throw
-      this.scrollToTop = function () { };
-      this.setResults = function () { };
-      return;
-    }
+    <!-- 弦楽器群 -->
+    <details class="instrument-group">
+      <summary>弦楽器群</summary>
+      <fieldset id="strings">
+        <label class="all-label"><input type="checkbox" id="all-strings" value="ALL">ALL</label>
+        <div class="inner-checkbox-group checkbox-grid">
+          <label><input type="checkbox" value="v1">Violine1</label>
+          <label><input type="checkbox" value="v2">Violine2</label>
+          <label><input type="checkbox" value="va">Bratche</label>
+          <label><input type="checkbox" value="vc">Violoncello</label>
+          <label><input type="checkbox" value="kb">Kontrabaß</label>
+          <label><input type="checkbox" value="sv">Solo Violine</label>
+          <label><input type="checkbox" value="sva">Solo Bratche</label>
+          <label><input type="checkbox" value="svc">Solo Violoncello</label>
+          <label><input type="checkbox" value="skb">Solo Kontrabaß</label>
+        </div>
+      </fieldset>
+    </details>
 
-    // Helper: Throttle function to limit event firing frequency
-    function throttle(func, limit) {
-      let inThrottle;
-      return function () {
-        const args = arguments;
-        const context = this;
-        if (!inThrottle) {
-          func.apply(context, args);
-          inThrottle = true;
-          setTimeout(() => inThrottle = false, limit);
-        }
-      }
-    }
+    <!-- 木管楽器群 -->
+    <details class="instrument-group">
+      <summary>木管楽器群</summary>
+      <fieldset id="woodwinds">
+        <label class="all-label"><input type="checkbox" id="all-woodwinds" value="ALL">ALL</label>
+        <div class="inner-checkbox-group checkbox-grid">
+          <label><input type="checkbox" value="fl">Flöte</label>
+          <label><input type="checkbox" value="pic">Piccolo</label>
+          <label><input type="checkbox" value="ob">Oboe</label>
+          <label><input type="checkbox" value="eh">Englischhorn</label>
+          <label><input type="checkbox" value="cl">Klarinette</label>
+          <label><input type="checkbox" value="escl">Es-Klarinette</label>
+          <label><input type="checkbox" value="bcl">Bassklarinette</label>
+          <label><input type="checkbox" value="fg">Fagott</label>
+        </div>
+      </fieldset>
+    </details>
 
-    // Show/hide the "back to top" button — use class toggles and run on load/resize/scroll
-    // Throttled to avoid freezing on heavy pages
-    let isScrolling = false;
-    function updateScrollToTopVisibility() {
-      const scrollToTopBtn = document.getElementById('scrollToTop');
-      if (!scrollToTopBtn) {
-        isScrolling = false; // ensure flag is reset even if btn missing
+    <!-- 金管楽器群 -->
+    <details class="instrument-group">
+      <summary>金管楽器群</summary>
+      <fieldset id="brass">
+        <label class="all-label"><input type="checkbox" id="all-brass" value="ALL">ALL</label>
+        <div class="inner-checkbox-group checkbox-grid">
+          <label><input type="checkbox" value="tr">Trompete</label>
+          <label><input type="checkbox" value="pis">Piston</label>
+          <label><input type="checkbox" value="phr">Posthorn</label>
+          <label><input type="checkbox" value="hr">Horn</label>
+          <label><input type="checkbox" value="thr">Tenorhorn</label>
+          <label><input type="checkbox" value="ohr">Obligates Horn</label>
+          <label><input type="checkbox" value="fhr">Flügelhorn</label>
+          <label><input type="checkbox" value="whr">Waldhorn</label>
+          <label><input type="checkbox" value="pos">Posaune</label>
+          <label><input type="checkbox" value="bt">Basstuba</label>
+        </div>
+      </fieldset>
+    </details>
+
+    <!-- 打楽器群 -->
+    <details class="instrument-group">
+      <summary>打楽器群など</summary>
+      <fieldset id="percussions">
+        <label class="all-label"><input type="checkbox" id="all-percussions" value="ALL">ALL</label>
+        <div class="inner-checkbox-group checkbox-grid">
+          <label><input type="checkbox" value="pau">Pauken</label>
+          <label><input type="checkbox" value="gtr">Gloße Trommel</label>
+          <label><input type="checkbox" value="ktr">Kleine Trommel</label>
+          <label><input type="checkbox" value="mtr">Militär Trommel</label>
+          <label><input type="checkbox" value="bec">Becken</label>
+          <label><input type="checkbox" value="tam">Tam-tam</label>
+          <label><input type="checkbox" value="tri">Triangel</label>
+          <label><input type="checkbox" value="gls">Glockenspiel</label>
+          <label><input type="checkbox" value="hgl">Herdenglocken</label>
+          <label><input type="checkbox" value="gl">Glocken</label>
+          <label><input type="checkbox" value="ham">Hammer</label>
+          <label><input type="checkbox" value="rt">Rute</label>
+          <label><input type="checkbox" value="cel">Celesta</label>
+          <label><input type="checkbox" value="hp">Harfe</label>
+          <label><input type="checkbox" value="org">Orgel</label>
+          <label><input type="checkbox" value="klv">Klavier</label>
+          <label><input type="checkbox" value="har">Harmonium</label>
+          <label><input type="checkbox" value="git">Gitarre</label>
+          <label><input type="checkbox" value="man">Mandoline</label>
+        </div>
+      </fieldset>
+    </details>
+
+    <!-- 声楽・合唱 -->
+    <details class="instrument-group">
+      <summary>声楽・合唱</summary>
+      <fieldset id="vocal">
+        <label class="all-label"><input type="checkbox" id="all-vocal" value="ALL">ALL</label>
+        <div class="inner-checkbox-group checkbox-grid">
+          <label><input type="checkbox" value="sop">Sopran</label>
+          <label><input type="checkbox" value="alt">Alto</label>
+          <label><input type="checkbox" value="ten">Tenor</label>
+          <label><input type="checkbox" value="bar">Bariton</label>
+          <label><input type="checkbox" value="bass">Bass</label>
+          <label><input type="checkbox" value="sop1">Sopran1</label>
+          <label><input type="checkbox" value="sop2">Sopran2</label>
+          <label><input type="checkbox" value="alt1">Alto1</label>
+          <label><input type="checkbox" value="alt2">Alto2</label>
+          <label><input type="checkbox" value="kalt">Knabe(Alto)</label>
+          <label><input type="checkbox" value="chor">Chor</label>
+          <label><input type="checkbox" value="chor1">Chor1</label>
+          <label><input type="checkbox" value="chor2">Chor2</label>
+          <label><input type="checkbox" value="fchor">frauen Chor</label>
+          <label><input type="checkbox" value="kchor">knaben Chor</label>
+          <label><input type="checkbox" value="sti">Stimme</label>
+        </div>
+      </fieldset>
+    </details>
+
+    <!-- 検索結果表示領域 -->
+    <div id="results"></div>
+  </div>
+
+  <!-- フローティング検索バー -->
+  <div id="floating-bar">
+    <div id="selection-summary"></div>
+    <div class="button-group">
+      <button type="button" onclick="search()" class="btn-action">検索</button>
+      <button type="button" onclick="cancelSearch()" class="btn-danger">中止</button>
+    </div>
+  </div>
+
+  <!-- ページのトップへ戻るボタン -->
+  <div id="scrollToTop" onclick="scrollToTop()">▲ ページのトップへ戻る</div>
+  <script>
+    /*
+     * common_scripts.html
+     * 全ページで共通して使用されるクライアントサイドJavaScript。
+     * 主に「トップへ戻る」ボタンの制御など、UIの基本的な動作を定義します。
+     */
+    // Client-only helpers and UI glue. Guard against server (Apps Script) context.
+    (function () {
+      if (typeof window === 'undefined' || typeof document === 'undefined') {
+        // Define no-op globals so server-side references do not throw
+        this.scrollToTop = function () { };
+        this.setResults = function () { };
         return;
       }
-      // show when scrolled down a bit
-      if (window.scrollY > 300) {
-        scrollToTopBtn.classList.add('show');
-        scrollToTopBtn.classList.remove('hidden');
-      } else {
-        scrollToTopBtn.classList.remove('show');
-        scrollToTopBtn.classList.add('hidden');
-      }
-      isScrolling = false;
-    }
 
-    function onScrollThrottled() {
-      if (!isScrolling) {
-        window.requestAnimationFrame(updateScrollToTopVisibility);
-        isScrolling = true;
-      }
-    }
-
-    window.addEventListener('scroll', onScrollThrottled, { passive: true });
-
-    // Throttled resize handler for scroll-to-top visibility
-    const throttledUpdateVisibility = throttle(updateScrollToTopVisibility, 200);
-    window.addEventListener('resize', throttledUpdateVisibility);
-    window.addEventListener('orientationchange', () => setTimeout(updateScrollToTopVisibility, 160));
-
-    // ensure initial state after load (some mobile browsers change viewport after load)
-    window.addEventListener('load', () => {
-      updateScrollToTopVisibility();
-      // second check shortly after to account for browser UI show/hide
-      setTimeout(updateScrollToTopVisibility, 300);
-    });
-
-    // Expose global helpers
-    function scrollToTop() {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-    window.scrollToTop = scrollToTop;
-
-    function focusResultsPanel(options) {
-      const resultsDiv = document.getElementById('results');
-      if (!resultsDiv) return;
-
-      const topOffset = Math.max((resultsDiv.getBoundingClientRect().top + window.scrollY) - 20, 0);
-      const behavior = options && options.instant ? 'auto' : 'smooth';
-      window.scrollTo({ top: topOffset, behavior });
-    }
-    window.focusResultsPanel = focusResultsPanel;
-
-    function setResults(html) {
-      const resultsDiv = document.getElementById('results');
-      if (!resultsDiv) return;
-      resultsDiv.innerHTML = html;
-      focusResultsPanel({ instant: true });
-    }
-    window.setResults = setResults;
-
-    // Fix garbled static texts for Wagner/Strauss pages
-    document.addEventListener('DOMContentLoaded', () => {
-      const isComposerPage = /Richard Wagner|Richard Strauss/.test(document.title);
-      if (!isComposerPage) return;
-
-      const firstP = document.querySelector('.container > p');
-      if (firstP) firstP.textContent = 'オーケストラに対する指示で GM の検索ページで何とかなりそうなものは基本的に不記載';
-
-      const bigLabels = document.querySelectorAll('.big-label');
-      if (bigLabels && bigLabels[0]) bigLabels[0].textContent = '曲を選択';
-
-      const smc = document.getElementById('search-method-container');
-      if (smc) {
-        const bl = smc.querySelector('.big-label');
-        if (bl) bl.textContent = '検索方法を選択';
-        const legend = smc.querySelector('legend');
-        if (legend) legend.textContent = '方法';
-        const labels = smc.querySelectorAll('label');
-        labels.forEach(label => {
-          const input = label.querySelector('input[type="radio"]');
-          if (!input) return;
-          if (input.value === 'scene') label.lastChild.textContent = ' 場面から選択';
-          if (input.value === 'page') label.lastChild.textContent = ' ページから選択';
-        });
+      // Helper: Throttle function to limit event firing frequency
+      function throttle(func, limit) {
+        let inThrottle;
+        return function () {
+          const args = arguments;
+          const context = this;
+          if (!inThrottle) {
+            func.apply(context, args);
+            inThrottle = true;
+            setTimeout(() => inThrottle = false, limit);
+          }
+        }
       }
 
-      const psc = document.getElementById('page-selection-container');
-      if (psc) {
-        const legend2 = psc.querySelector('legend');
-        if (legend2) legend2.textContent = 'ページ番号';
-        const note = psc.querySelector('p');
-        if (note) note.textContent = 'ページ番号を半角で入力';
-        const input = document.getElementById('page-input');
-        if (input) input.setAttribute('placeholder', '例 3,14,15-92');
+      // Show/hide the "back to top" button — use class toggles and run on load/resize/scroll
+      // Throttled to avoid freezing on heavy pages
+      let isScrolling = false;
+      function updateScrollToTopVisibility() {
+        const scrollToTopBtn = document.getElementById('scrollToTop');
+        if (!scrollToTopBtn) {
+          isScrolling = false; // ensure flag is reset even if btn missing
+          return;
+        }
+        // show when scrolled down a bit
+        if (window.scrollY > 300) {
+          scrollToTopBtn.classList.add('show');
+          scrollToTopBtn.classList.remove('hidden');
+        } else {
+          scrollToTopBtn.classList.remove('show');
+          scrollToTopBtn.classList.add('hidden');
+        }
+        isScrolling = false;
       }
 
-      const topBtn = document.getElementById('scrollToTop');
-      if (topBtn) topBtn.textContent = '▲ ページのトップへ戻る';
-    });
+      function onScrollThrottled() {
+        if (!isScrolling) {
+          window.requestAnimationFrame(updateScrollToTopVisibility);
+          isScrolling = true;
+        }
+      }
 
-    // Create an alphabet floating bar for pages that have #navbar (notes/list)
-    document.addEventListener('DOMContentLoaded', () => {
-      try {
-        const nav = document.getElementById('navbar');
-        if (!nav) return;
-        // Do not interfere with pages that already have a floating search bar
-        if (document.getElementById('floating-bar')) return;
-        // If alpha-floating-bar already exists in DOM (we may have added it server-side),
-        // still run spacing adjustment.
-        if (!document.getElementById('alpha-floating-bar')) {
-          const alphaBar = document.createElement('div');
-          alphaBar.id = 'alpha-floating-bar';
-          // copy only link nodes to avoid other elements
-          alphaBar.innerHTML = Array.from(nav.querySelectorAll('a')).map(a => a.outerHTML).join(' ');
-          document.body.appendChild(alphaBar);
+      window.addEventListener('scroll', onScrollThrottled, { passive: true });
+
+      // Throttled resize handler for scroll-to-top visibility
+      const throttledUpdateVisibility = throttle(updateScrollToTopVisibility, 200);
+      window.addEventListener('resize', throttledUpdateVisibility);
+      window.addEventListener('orientationchange', () => setTimeout(updateScrollToTopVisibility, 160));
+
+      // ensure initial state after load (some mobile browsers change viewport after load)
+      window.addEventListener('load', () => {
+        updateScrollToTopVisibility();
+        // second check shortly after to account for browser UI show/hide
+        setTimeout(updateScrollToTopVisibility, 300);
+      });
+
+      // Expose global helpers
+      function scrollToTop() {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+      window.scrollToTop = scrollToTop;
+
+      function focusResultsPanel(options) {
+        const resultsDiv = document.getElementById('results');
+        if (!resultsDiv) return;
+
+        const topOffset = Math.max((resultsDiv.getBoundingClientRect().top + window.scrollY) - 20, 0);
+        const behavior = options && options.instant ? 'auto' : 'smooth';
+        window.scrollTo({ top: topOffset, behavior });
+      }
+      window.focusResultsPanel = focusResultsPanel;
+
+      function setResults(html) {
+        const resultsDiv = document.getElementById('results');
+        if (!resultsDiv) return;
+        resultsDiv.innerHTML = html;
+        focusResultsPanel({ instant: true });
+      }
+      window.setResults = setResults;
+
+      // Fix garbled static texts for Wagner/Strauss pages
+      document.addEventListener('DOMContentLoaded', () => {
+        const isComposerPage = /Richard Wagner|Richard Strauss/.test(document.title);
+        if (!isComposerPage) return;
+
+        const firstP = document.querySelector('.container > p');
+        if (firstP) firstP.textContent = 'オーケストラに対する指示で GM の検索ページで何とかなりそうなものは基本的に不記載';
+
+        const bigLabels = document.querySelectorAll('.big-label');
+        if (bigLabels && bigLabels[0]) bigLabels[0].textContent = '曲を選択';
+
+        const smc = document.getElementById('search-method-container');
+        if (smc) {
+          const bl = smc.querySelector('.big-label');
+          if (bl) bl.textContent = '検索方法を選択';
+          const legend = smc.querySelector('legend');
+          if (legend) legend.textContent = '方法';
+          const labels = smc.querySelectorAll('label');
+          labels.forEach(label => {
+            const input = label.querySelector('input[type="radio"]');
+            if (!input) return;
+            if (input.value === 'scene') label.lastChild.textContent = ' 場面から選択';
+            if (input.value === 'page') label.lastChild.textContent = ' ページから選択';
+          });
         }
 
-        function adjustAlphaBarSpacing() {
-          const bar = document.getElementById('alpha-floating-bar');
-          const container = document.querySelector('.container');
-          if (!bar || !container) return;
-          // ensure bar is visible
-          bar.style.display = 'flex';
-          const barHeight = bar.offsetHeight || 56;
-          container.style.paddingBottom = (barHeight + 24) + 'px';
+        const psc = document.getElementById('page-selection-container');
+        if (psc) {
+          const legend2 = psc.querySelector('legend');
+          if (legend2) legend2.textContent = 'ページ番号';
+          const note = psc.querySelector('p');
+          if (note) note.textContent = 'ページ番号を半角で入力';
+          const input = document.getElementById('page-input');
+          if (input) input.setAttribute('placeholder', '例 3,14,15-92');
         }
 
-        // Throttled resize handler for alpha bar spacing
-        const throttledAdjustSpacing = throttle(adjustAlphaBarSpacing, 200);
-        window.addEventListener('resize', throttledAdjustSpacing);
-        window.addEventListener('orientationchange', () => setTimeout(adjustAlphaBarSpacing, 120));
+        const topBtn = document.getElementById('scrollToTop');
+        if (topBtn) topBtn.textContent = '▲ ページのトップへ戻る';
+      });
 
-        // Run adjustment on load and shortly after to handle mobile viewport changes
-        setTimeout(adjustAlphaBarSpacing, 50);
-        setTimeout(adjustAlphaBarSpacing, 300);
-      } catch (e) {
-        console.error('alpha-floating-bar init failed', e);
-      }
-    });
-  })();
-</script>
-      </body>
+      // Create an alphabet floating bar for pages that have #navbar (notes/list)
+      document.addEventListener('DOMContentLoaded', () => {
+        try {
+          const nav = document.getElementById('navbar');
+          if (!nav) return;
+          // Do not interfere with pages that already have a floating search bar
+          if (document.getElementById('floating-bar')) return;
+          // If alpha-floating-bar already exists in DOM (we may have added it server-side),
+          // still run spacing adjustment.
+          if (!document.getElementById('alpha-floating-bar')) {
+            const alphaBar = document.createElement('div');
+            alphaBar.id = 'alpha-floating-bar';
+            // copy only link nodes to avoid other elements
+            alphaBar.innerHTML = Array.from(nav.querySelectorAll('a')).map(a => a.outerHTML).join(' ');
+            document.body.appendChild(alphaBar);
+          }
+
+          function adjustAlphaBarSpacing() {
+            const bar = document.getElementById('alpha-floating-bar');
+            const container = document.querySelector('.container');
+            if (!bar || !container) return;
+            // ensure bar is visible
+            bar.style.display = 'flex';
+            const barHeight = bar.offsetHeight || 56;
+            container.style.paddingBottom = (barHeight + 24) + 'px';
+          }
+
+          // Throttled resize handler for alpha bar spacing
+          const throttledAdjustSpacing = throttle(adjustAlphaBarSpacing, 200);
+          window.addEventListener('resize', throttledAdjustSpacing);
+          window.addEventListener('orientationchange', () => setTimeout(adjustAlphaBarSpacing, 120));
+
+          // Run adjustment on load and shortly after to handle mobile viewport changes
+          setTimeout(adjustAlphaBarSpacing, 50);
+          setTimeout(adjustAlphaBarSpacing, 300);
+        } catch (e) {
+          console.error('alpha-floating-bar init failed', e);
+        }
+      });
+    })();
+  </script>
+<script src="js/app.js"></script>
+</body>
 
 </html>
