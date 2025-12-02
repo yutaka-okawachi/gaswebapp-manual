@@ -1,8 +1,8 @@
 // app.js
 console.log('app.js: Script execution started');
 
-// Global state to hold loaded data
-const appData = {
+// Global state to hold loaded data (guarded to avoid shadowing inline window.appData)
+window.appData = window.appData || {
     mahler: null,
     richard_strauss: null,
     richard_wagner: null,
@@ -25,7 +25,7 @@ async function showPage(pageName) {
 
     try {
         // Load data if not loaded
-        if (!appData[pageName] && pageName !== 'index') {
+        if (!window.appData[pageName] && pageName !== 'index') {
             await loadData(pageName);
         }
 
@@ -70,35 +70,41 @@ async function loadData(key) {
         'mahler': 'mahler.json',
         'richard_strauss': 'richard_strauss.json',
         'richard_wagner': 'richard_wagner.json',
-        'dic': ['dic_notes.json', 'abbr_list.json'], // dic page needs both
-        'notes': 'dic_notes.json' // notes page uses dic_notes
+        'rs_scenes': 'rs_scenes.json',
+        'rw_scenes': 'rw_scenes.json',
+        'dic': ['dic_notes.json', 'abbr_list.json'],
+        'notes': 'notes.json'
     };
 
-    // console.log(`loadData called for key: ${key}`);
-
-    // Handle special cases
+    // Handle special cases and aliases
     if (key === 'dic') {
-        if (!appData.dic_notes) appData.dic_notes = await fetchJson('data/dic_notes.json');
-        if (!appData.abbr_list) appData.abbr_list = await fetchJson('data/abbr_list.json');
+        if (!window.appData.dic_notes) window.appData.dic_notes = await fetchJson('data/dic_notes.json');
+        if (!window.appData.abbr_list) window.appData.abbr_list = await fetchJson('data/abbr_list.json');
         return;
     }
-    if (key === 'notes') {
-        if (!appData.dic_notes) appData.dic_notes = await fetchJson('data/dic_notes.json');
+
+    if (key === 'rw_terms_search' || key === 'rs_terms_search') {
+        if (!window.appData.dic_notes) window.appData.dic_notes = await fetchJson('data/dic_notes.json');
+        return;
+    }
+
+    if (key === 'terms_search') {
+        if (!window.appData.mahler) window.appData.mahler = await fetchJson('data/mahler.json');
         return;
     }
 
     // Standard case
     const filename = fileMap[key];
     if (filename) {
-        appData[key] = await fetchJson(`data/${filename}`);
+        window.appData[key] = await fetchJson(`data/${filename}`);
     }
 
     // Load scene data for operas
-    if (key === 'richard_strauss' && !appData.rs_scenes) {
-        appData.rs_scenes = await fetchJson('data/rs_scenes.json');
+    if (key === 'richard_strauss' && !window.appData.rs_scenes) {
+        window.appData.rs_scenes = await fetchJson('data/rs_scenes.json');
     }
-    if (key === 'richard_wagner' && !appData.rw_scenes) {
-        appData.rw_scenes = await fetchJson('data/rw_scenes.json');
+    if (key === 'richard_wagner' && !window.appData.rw_scenes) {
+        window.appData.rw_scenes = await fetchJson('data/rw_scenes.json');
     }
 }
 
@@ -114,519 +120,10 @@ async function fetchJson(path) {
     return data;
 }
 
-// --- Render Functions (Placeholders for now) ---
-
-// --- Mappings (from mahler.js) ---
-const aMapping = {
-    "all": "ALL", "交響曲第1番ニ長調（1884-88）": "1", "交響曲第2番ハ短調（1888-94）": "2",
-    "交響曲第3番ニ短調（1893-96）": "3", "交響曲第4番ト長調（1899-1900）": "4", "交響曲第5番嬰ハ短調（1901-02）": "5",
-    "交響曲第6番イ短調（1903-04）": "6", "交響曲第7番ホ短調（1904-05）": "7", "交響曲第8番変ホ長調（1906）": "8",
-    "交響曲イ短調『大地の歌』（1908）": "a", "交響曲第9番ニ長調（1909）": "9", "交響曲第10番嬰ヘ長調（1910）": "101",
-    "交響曲第10番（クック版）": "102", "嘆きの歌（1880）": "b1", "嘆きの歌（1899）": "b2",
-    "さすらう若人の歌": "c", "子供の魔法の角笛": "d", "子供の死の歌": "e",
-    "リュッケルトの詩による5つの歌": "f", "花の章": "g", "葬礼": "h"
-};
-
-const aReverseMap = Object.entries(aMapping).reduce((acc, [key, value]) => {
-    acc[value.toLowerCase()] = key;
-    return acc;
-}, {});
-
-const dMapping = {
-    "all": "ALLE", "dir": "Dirigent", "v1": "Violine1", "v2": "Violine2", "va": "Bratche", "vc": "Violoncello",
-    "kb": "Kontrabaß", "sv": "Solo Violine", "sva": "Solo Bratche", "svc": "Solo Violoncello", "skb": "Solo Kontrabaß",
-    "fl": "Flöte", "pic": "Piccolo", "ob": "Oboe", "eh": "Englischhorn", "cl": "Klarinette", "escl": "Es-Klarinette",
-    "bcl": "Bassklarinette", "fg": "Fagott", "cfg": "Kontrafagott", "tr": "Trompete", "pis": "Piston",
-    "phr": "Posthorn", "hr": "Horn", "thr": "Tenorhorn", "ohr": "Obligates Horn", "fhr": "Flügelhorn",
-    "whr": "Waldhorn", "pos": "Posaune", "bt": "Basstuba", "pau": "Pauken", "gtr": "Gloße Trommel",
-    "ktr": "Kleine Trommel", "mtr": "Militär Trommel", "bec": "Becken", "tam": "Tam-tam", "tri": "Triangel",
-    "gls": "Glockenspiel", "hgl": "Herdenglocken", "gl": "Glocken", "ham": "Hammer", "rt": "Rute",
-    "cel": "Celesta", "hp": "Harfe", "org": "Orgel", "klv": "Klavier", "har": "Harmonium", "git": "Gitarre",
-    "man": "Mandoline", "sop": "Sopran", "alt": "Alto", "ten": "Tenor", "bar": "Bariton", "bass": "Bass",
-    "sop1": "Sopran1", "sop2": "Sopran2", "alt1": "Alto1", "alt2": "Alto2", "kalt": "Knabe(Alto)",
-    "chor": "Chor", "chor1": "Chor1", "chor2": "Chor2", "fchor": "frauen Chor", "kchor": "knaben Chor",
-    "sti": "Stimme"
-};
-
-const dReverseMap = { ...dMapping };
-
-const groupAllMap = {
-    "all_strings": ["v1", "v2", "va", "vc", "kb", "sv", "sva", "svc", "skb"],
-    "all_woodwinds": ["fl", "pic", "ob", "eh", "cl", "escl", "bcl", "fg", "cfg"],
-    "all_brass": ["tr", "pis", "phr", "hr", "thr", "ohr", "fhr", "whr", "pos", "bt"],
-    "all_percussions": ["pau", "gtr", "ktr", "mtr", "bec", "tam", "tri", "gls", "hgl", "gl", "ham", "rt", "cel", "hp", "org", "klv", "har", "git", "man"],
-    "all_vocal": ["sop", "alt", "ten", "bar", "bass", "sop1", "sop2", "alt1", "alt2", "kalt", "chor", "chor1", "chor2", "fchor", "kchor", "sti"]
-};
-
 // --- Render Functions ---
-
-function renderMahlerSearch(container) {
-    container.innerHTML = `
-        <div id="mahler-search-container">
-            <div class="big-label">曲名を選択</div>
-            <details id="works-group" class="instrument-group" open>
-                <summary>曲名リスト</summary>
-                <fieldset id="works">
-                    <label class="all-label"><input type="checkbox" id="all-works" value="ALL"> すべての曲を選択</label>
-                    <div class="checkbox-grid-songs">
-                        ${generateCheckboxOptions(aMapping, 'works')}
-                    </div>
-                </fieldset>
-            </details>
-
-            <div class="big-label-instruments">楽器を選択</div>
-            
-            <div style="margin-bottom: 15px;">
-                <button id="all-instruments" class="btn-action">すべての楽器を選択</button>
-                <button id="clear-instruments" class="btn-clear">楽器をクリア</button>
-            </div>
-
-            <details id="conductor-group" class="instrument-group">
-                <summary>指揮者</summary>
-                <fieldset id="conductor">
-                    <div class="checkbox-grid">
-                        <label><input type="checkbox" value="dir"> Dirigent (指揮者)</label>
-                    </div>
-                </fieldset>
-            </details>
-
-            <details id="strings-group" class="instrument-group">
-                <summary>弦楽器</summary>
-                <fieldset id="strings">
-                    <label class="all-label"><input type="checkbox" value="ALL"> 弦楽器すべて</label>
-                    <div class="checkbox-grid">
-                        ${generateInstrumentCheckboxes(groupAllMap.all_strings)}
-                    </div>
-                </fieldset>
-            </details>
-
-            <details id="woodwinds-group" class="instrument-group">
-                <summary>木管楽器</summary>
-                <fieldset id="woodwinds">
-                    <label class="all-label"><input type="checkbox" value="ALL"> 木管楽器すべて</label>
-                    <div class="checkbox-grid">
-                        ${generateInstrumentCheckboxes(groupAllMap.all_woodwinds)}
-                    </div>
-                </fieldset>
-            </details>
-
-            <details id="brass-group" class="instrument-group">
-                <summary>金管楽器</summary>
-                <fieldset id="brass">
-                    <label class="all-label"><input type="checkbox" value="ALL"> 金管楽器すべて</label>
-                    <div class="checkbox-grid">
-                        ${generateInstrumentCheckboxes(groupAllMap.all_brass)}
-                    </div>
-                </fieldset>
-            </details>
-
-            <details id="percussions-group" class="instrument-group">
-                <summary>打楽器・その他</summary>
-                <fieldset id="percussions">
-                    <label class="all-label"><input type="checkbox" value="ALL"> 打楽器すべて</label>
-                    <div class="checkbox-grid">
-                        ${generateInstrumentCheckboxes(groupAllMap.all_percussions)}
-                    </div>
-                </fieldset>
-            </details>
-
-            <details id="vocal-group" class="instrument-group">
-                <summary>声楽・合唱</summary>
-                <fieldset id="vocal">
-                    <label class="all-label"><input type="checkbox" value="ALL"> 声楽すべて</label>
-                    <div class="checkbox-grid">
-                        ${generateInstrumentCheckboxes(groupAllMap.all_vocal)}
-                    </div>
-                </fieldset>
-            </details>
-
-            <div style="margin: 20px 0; padding: 10px; background: #fff3e0; border-radius: 5px;">
-                <label style="font-weight: bold;">
-                    <input type="radio" name="include-orchestra-all" value="off" checked> 選択した楽器のみ検索
-                </label>
-                <br>
-                <label style="font-weight: bold;">
-                    <input type="radio" name="include-orchestra-all" value="on"> オーケストラ全体への指示も含める
-                </label>
-            </div>
-
-            <div id="floating-bar">
-                <div class="button-group">
-                    <button onclick="executeMahlerSearch()" class="btn-action">検索</button>
-                    <button onclick="cancelSearch()" class="btn-clear">中止</button>
-                </div>
-                <div id="selection-summary">
-                    <div class="summary-block">
-                        <div class="summary-title">【選択中の曲】</div>
-                        <div class="summary-value" id="summary-works">なし</div>
-                    </div>
-                    <div class="summary-block">
-                        <div class="summary-title">【選択中の楽器】</div>
-                        <div class="summary-value" id="summary-instruments">なし</div>
-                    </div>
-                </div>
-            </div>
-
-            <div id="results"></div>
-        </div>
-    `;
-
-    attachMahlerEventHandlers();
-    updateSelectionSummary();
-}
-
-function generateCheckboxOptions(mapping, type) {
-    let html = '';
-    for (const [key, value] of Object.entries(mapping)) {
-        if (key === 'all') continue;
-        html += `<label><input type="checkbox" value="${key}"> ${key}</label>`;
-    }
-    return html;
-}
-
-function generateInstrumentCheckboxes(codes) {
-    return codes.map(code => {
-        const name = dMapping[code] || code;
-        return `<label><input type="checkbox" value="${code}"> ${name}</label>`;
-    }).join('');
-}
-
-function attachMahlerEventHandlers() {
-    // Similar to index.html logic
-
-    // Works ALL
-    document.getElementById('all-works').addEventListener('change', (e) => {
-        const checked = e.target.checked;
-        document.querySelectorAll('#works input[type="checkbox"]:not(#all-works)').forEach(cb => {
-            cb.checked = false;
-            updateCheckboxStyle(cb);
-        });
-        updateCheckboxStyle(e.target);
-        updateSelectionSummary();
-    });
-
-    // Works Individual
-    document.querySelectorAll('#works input[type="checkbox"]:not(#all-works)').forEach(cb => {
-        cb.addEventListener('change', (e) => {
-            if (e.target.checked) {
-                const allCb = document.getElementById('all-works');
-                allCb.checked = false;
-                updateCheckboxStyle(allCb);
-            }
-            updateCheckboxStyle(e.target);
-            updateSelectionSummary();
-        });
-    });
-
-    // Instrument Groups ALL
-    ['strings', 'woodwinds', 'brass', 'percussions', 'vocal'].forEach(group => {
-        const allCb = document.querySelector(`#${group} input[value="ALL"]`);
-        if (!allCb) return;
-
-        allCb.addEventListener('change', (e) => {
-            const checked = e.target.checked;
-            document.querySelectorAll(`#${group} input[type="checkbox"]:not([value="ALL"])`).forEach(cb => {
-                cb.checked = false;
-                updateCheckboxStyle(cb);
-            });
-            updateCheckboxStyle(e.target);
-            updateSelectionSummary();
-        });
-
-        document.querySelectorAll(`#${group} input[type="checkbox"]:not([value="ALL"])`).forEach(cb => {
-            cb.addEventListener('change', (e) => {
-                if (e.target.checked) {
-                    allCb.checked = false;
-                    updateCheckboxStyle(allCb);
-                }
-                updateCheckboxStyle(e.target);
-                updateSelectionSummary();
-            });
-        });
-    });
-
-    // Conductor
-    const condCb = document.querySelector('#conductor input[type="checkbox"]');
-    if (condCb) {
-        condCb.addEventListener('change', (e) => {
-            updateCheckboxStyle(e.target);
-            updateSelectionSummary();
-        });
-    }
-
-    // All Instruments Button
-    document.getElementById('all-instruments').addEventListener('click', () => {
-        ['strings', 'woodwinds', 'brass', 'percussions', 'vocal'].forEach(group => {
-            const allCb = document.querySelector(`#${group} input[value="ALL"]`);
-            if (allCb) {
-                allCb.checked = true;
-                // Trigger change event manually or just update styles
-                allCb.dispatchEvent(new Event('change'));
-            }
-            document.getElementById(`${group}-group`).open = true;
-        });
-        const condCb = document.querySelector('#conductor input[type="checkbox"]');
-        if (condCb) {
-            condCb.checked = true;
-            updateCheckboxStyle(condCb);
-        }
-    });
-
-    // Clear Instruments Button
-    document.getElementById('clear-instruments').addEventListener('click', () => {
-        ['strings', 'woodwinds', 'brass', 'percussions', 'vocal'].forEach(group => {
-            document.querySelectorAll(`#${group} input[type="checkbox"]`).forEach(cb => {
-                cb.checked = false;
-                updateCheckboxStyle(cb);
-            });
-            document.getElementById(`${group}-group`).open = false;
-        });
-        const condCb = document.querySelector('#conductor input[type="checkbox"]');
-        if (condCb) {
-            condCb.checked = false;
-            updateCheckboxStyle(condCb);
-        }
-        updateSelectionSummary();
-    });
-}
-
-function updateCheckboxStyle(checkbox) {
-    if (checkbox.checked) {
-        checkbox.parentElement.classList.add('checked');
-    } else {
-        checkbox.parentElement.classList.remove('checked');
-    }
-}
-
-function updateSelectionSummary() {
-    const works = getSelectedWorks();
-    const instruments = getSelectedInstruments();
-
-    document.getElementById('summary-works').textContent = works.length ? works.join(', ') : 'なし';
-    document.getElementById('summary-instruments').textContent = instruments.length ? instruments.join(', ') : 'なし';
-}
-
-function getSelectedWorks() {
-    const allWorks = document.getElementById('all-works');
-    if (allWorks && allWorks.checked) return ['ALL'];
-
-    return Array.from(document.querySelectorAll('#works input[type="checkbox"]:checked'))
-        .map(cb => cb.value);
-}
-
-function getSelectedInstruments() {
-    let selected = [];
-    let allGlobal = true;
-
-    const groups = ['strings', 'woodwinds', 'brass', 'percussions', 'vocal'];
-    const groupMap = {
-        'strings': 'ALL_STRINGS',
-        'woodwinds': 'ALL_WOODWINDS',
-        'brass': 'ALL_BRASS',
-        'percussions': 'ALL_PERCUSSIONS',
-        'vocal': 'ALL_VOCAL'
-    };
-
-    groups.forEach(group => {
-        const allCb = document.querySelector(`#${group} input[value="ALL"]`);
-        if (allCb && allCb.checked) {
-            selected.push(groupMap[group]);
-        } else {
-            allGlobal = false;
-            const checked = Array.from(document.querySelectorAll(`#${group} input[type="checkbox"]:checked`))
-                .map(cb => cb.value);
-            selected.push(...checked);
-        }
-    });
-
-    const condCb = document.querySelector('#conductor input[type="checkbox"]');
-    if (condCb && condCb.checked) {
-        selected.push('dir');
-    } else {
-        allGlobal = false;
-    }
-
-    if (allGlobal) return ['ALL_GLOBAL'];
-    return selected;
-}
-
-function executeMahlerSearch() {
-    const works = getSelectedWorks();
-    const instruments = getSelectedInstruments();
-    const includeOrchestraAll = document.querySelector('input[name="include-orchestra-all"]:checked').value === 'on';
-
-    const resultsDiv = document.getElementById('results');
-    resultsDiv.innerHTML = '<div class="loading">検索中...</div>';
-
-    if (works.length === 0) {
-        resultsDiv.innerHTML = '<div class="result-message">曲名を選択してください。</div>';
-        return;
-    }
-    if (instruments.length === 0 && !includeOrchestraAll) {
-        resultsDiv.innerHTML = '<div class="result-message">楽器を選択してください。</div>';
-        return;
-    }
-
-    // Perform search
-    setTimeout(() => { // Allow UI to update
-        const html = searchMahlerData(works, instruments, includeOrchestraAll);
-        resultsDiv.innerHTML = html;
-    }, 10);
-}
-
-function searchMahlerData(choice1Arr, choice2Arr, includeOrchestraAll) {
-    const data = appData.mahler;
-    if (!data || data.length === 0) return '<div class="result-message">データが存在しません。</div>';
-
-    let finalInstruments = new Set();
-
-    if (choice2Arr.includes('ALL_GLOBAL')) {
-        Object.keys(dMapping).forEach(code => {
-            if (code !== 'all') finalInstruments.add(code);
-        });
-        finalInstruments.add('all');
-    } else {
-        choice2Arr.forEach(val => {
-            const lowerVal = val.toLowerCase();
-            if (groupAllMap[lowerVal]) {
-                groupAllMap[lowerVal].forEach(code => finalInstruments.add(code));
-            } else if (dMapping[lowerVal]) {
-                finalInstruments.add(lowerVal);
-            }
-        });
-    }
-
-    if (includeOrchestraAll) {
-        finalInstruments.add('all');
-    }
-
-    // Map the incoming Japanese work titles (choice1Arr) to the short IDs expected by the data (aMapping)
-    const mappedChoice1Arr = choice1Arr.map(val => {
-        if (val === 'ALL') return 'ALL';
-        return aMapping[val] || val; // Return the mapped ID, or the original value if no map found
-    });
-
-    // DEBUG LOGGING
-    const debugInfo = [];
-    debugInfo.push(`Data Loaded: ${data.length} rows`);
-    debugInfo.push(`Search Inputs: Works=[${choice1Arr.join(', ')}], Instruments=[${choice2Arr.join(', ')}], OrchestraAll=${includeOrchestraAll}`);
-    debugInfo.push(`Final Instruments Count: ${finalInstruments.size}`);
-    debugInfo.push(`Sample Instruments: ${Array.from(finalInstruments).slice(0, 10).join(', ')}...`);
-
-    let resultHTML = '';
-    let totalMatches = 0;
-    let workMatchCount = 0;
-
-    data.forEach(row => {
-        // row structure: {de, de_normalized, ja, data}
-        const deData = row.de;
-        const jaData = row.ja;
-        const dataCol = row.data;
-
-        if (!dataCol || typeof dataCol !== 'string') return;
-
-        const segments = dataCol.split('&').map(s => s.trim()).filter(s => s);
-        if (segments.length === 0) return;
-
-        let matchedLocList = [];
-        let segmentCount = 0;
-
-        segments.forEach(seg => {
-            const parts = seg.split('-');
-            if (parts.length < 5) return;
-            const a = parts[1];
-            const b = parts[2];
-            const c = parts[3];
-            const d = parts[4];
-
-            if (!a || !b || !c || !d) return;
-
-            // Check Work (a)
-            // Use mappedChoice1Arr instead of choice1Arr
-            let aMatch = mappedChoice1Arr.includes('ALL') || mappedChoice1Arr.some(choice => choice === a);
-            if (aMatch) workMatchCount++;
-
-            // Check Instruments (d)
-            const dArr = d.split(',').map(x => x.trim());
-            let dMatch = dArr.some(origCode => {
-                const codeLower = origCode.toLowerCase();
-                if (includeOrchestraAll) {
-                    return finalInstruments.has(codeLower) || codeLower === 'all';
-                } else {
-                    return finalInstruments.has(codeLower) && codeLower !== 'all';
-                }
-            });
-
-            if (aMatch && dMatch) {
-                totalMatches++;
-                segmentCount++;
-
-                const aLabel = aReverseMap[a.toLowerCase()] || `不明(${a})`;
-                const movementText = formatMovementNumber(a, b);
-                const measureText = `第${c}小節`;
-                const mappedInstruments = dArr.map(code => dReverseMap[code] || code).join(', ');
-                const locText = `${aLabel} ${movementText}：${measureText}（${mappedInstruments}）`;
-                matchedLocList.push(locText);
-            }
-        });
-
-        if (matchedLocList.length > 0) {
-            resultHTML += `<div class="result-a">${escapeHtmlWithBreaks(deData)}</div>`;
-            resultHTML += `<div class="result-c">${escapeHtmlWithBreaks(jaData)}</div>`;
-            matchedLocList.forEach(loc => {
-                resultHTML += `<div class="result-loc">${escapeHtml(loc)}</div>`;
-            });
-            resultHTML += `<div class="result-loc">(${segmentCount}件)</div>`;
-            resultHTML += `<hr style="border-top: 1px dashed #ccc; margin: 10px 0;">`;
-        }
-    });
-
-    debugInfo.push(`Rows with Work Match: ${workMatchCount}`);
-    debugInfo.push(`Total Matches Found: ${totalMatches}`);
-
-    const debugPanel = document.getElementById('debug-panel');
-    if (debugPanel) {
-        debugPanel.textContent = debugInfo.join('\n');
-    }
-
-    return totalMatches === 0 ? '<div class="result-message">該当するデータがありません。</div>' : `<div>${totalMatches}件ありました。</div>${resultHTML}`;
-}
-
-function formatMovementNumber(a, b) {
-    const specialMapping = {
-        c: { c1: "Wenn mein Schatz Hochzeit macht", c2: "Ging heut' morgen über's Feld", c3: "Ich hab' ein glühend Messer", c4: "Die zwei blauen Augen von meinem Schatz" },
-        d: { d01: "Der Schildwache Nachlied", d02: "Verlorne Müh'!", d03: "Trost im Unglück", d04: "Das himmlische Leben", d05: "Wer hat dies Liedel erdacht?", d06: "Das irdische Leben", d07: "Urlicht", d08: "Des Antonius von Padua Fischpredigt", d09: "Rheinlegendchen", d10: "Lob des hohen Verstands", d11: "Lied des Verfolgten im Turm", d12: "Wo die schönen Trompeten blasen", d13: "Revelge", d14: "Der Tamboursg'sell" },
-        e: { e1: "Nun will die Sonn' so hell aufgeh'n", e2: "Nun seh' ich wohl, warum so dunkle Flammen", e3: "Wenn dein Mütterlein", e4: "Oft denk' ich, sie sind nur ausgegangen", e5: "In diesem Wetter, in diesem Braus" },
-        f: { f1: "Blicke mir nicht in die Lieder!", f2: "Ich atmet' einen linden Duft", f3: "Ich bin der Welt abhanden gekommen", f4: "Um Mitternacht", f5: "Liebst du um Schönheit" }
-    };
-
-    if (specialMapping[a.toLowerCase()] && specialMapping[a.toLowerCase()][b.toLowerCase()]) {
-        return specialMapping[a.toLowerCase()][b.toLowerCase()];
-    }
-    if (b.toLowerCase() === 't1') return '第1部';
-    if (b.toLowerCase() === 't2') return '第2部';
-    if (b.toLowerCase() === 't3') return '第3部';
-    if (['a', 'g', 'h'].includes(b.toLowerCase())) return '';
-    return `第${b}楽章`;
-}
-
-function escapeHtml(str) {
-    if (!str) return '';
-    return str.replace(/[&<>"']/g, function (m) {
-        return {
-            '&': '&amp;',
-            '<': '&lt;',
-            '>': '&gt;',
-            '"': '&quot;',
-            "'": '&#039;'
-        }[m];
-    });
-}
-
-function cancelSearch() {
-    const resultsDiv = document.getElementById('results');
-    resultsDiv.innerHTML = '<div class="result-message">検索を中止しました。</div>';
-}
+// NOTE: All Mahler-related functions and mappings are defined in index.html inline script.
+// DO NOT duplicate them here to avoid function overriding issues when app.js is loaded after index.html.
+// The guarded window.* mappings and render functions are authoritative from index.html.
 
 function renderRichardStraussSearch(container) {
     container.innerHTML = `
@@ -730,8 +227,8 @@ function handleOperaSelection(event) {
     const sceneOptionsWrapper = document.getElementById('scene-options-wrapper');
     sceneOptionsWrapper.innerHTML = '<div class="loading">場面データを読み込み中...</div>';
 
-    // Get scenes from appData.rs_scenes
-    const scenesData = appData.rs_scenes || [];
+    // Get scenes from window.appData.rs_scenes
+    const scenesData = window.appData.rs_scenes || [];
     const filteredScenes = scenesData.filter(s => normalizeString(s.Oper) === normalizeString(operaValue));
 
     if (filteredScenes.length === 0) {
@@ -820,7 +317,7 @@ function searchRichardStraussByScene() {
     document.getElementById('results').innerHTML = '<div class="loading">検索中...</div>';
 
     setTimeout(() => {
-        const data = appData.richard_strauss;
+        const data = window.appData.richard_strauss;
         if (!data) {
             document.getElementById('results').innerHTML = '<div class="result-message">データが読み込まれていません。</div>';
             return;
@@ -859,7 +356,7 @@ function searchRichardStraussByPage() {
     document.getElementById('results').innerHTML = '<div class="loading">検索中...</div>';
 
     setTimeout(() => {
-        const data = appData.richard_strauss;
+        const data = window.appData.richard_strauss;
         if (!data) {
             document.getElementById('results').innerHTML = '<div class="result-message">データが読み込まれていません。</div>';
             return;
@@ -916,20 +413,82 @@ function parsePageInput(input) {
     return pages;
 }
 
+// Helper functions for HTML escaping
+function escapeHtml(str) {
+    if (!str) return '';
+    return str.replace(/[&<>"']/g, function (match) {
+        const escape = {
+            '&': '&amp;',
+            '<': '&lt;',
+            '>': '&gt;',
+            '"': '&quot;',
+            "'": '&#39;'
+        };
+        return escape[match];
+    });
+}
+
+function escapeHtmlWithBreaks(str) {
+    if (!str) return '';
+    return escapeHtml(str).replace(/\n/g, '<br>');
+}
+
 function formatGenericResults(data) {
     if (data.length === 0) {
         return '<div class="result-message">該当するデータが見つかりませんでした。</div>';
     }
 
-    // Sort by page
+    // Sort by Aufzug, Szene, then page
     data.sort((a, b) => {
+        const aufzugA = Number(a.Aufzug) || 0;
+        const aufzugB = Number(b.Aufzug) || 0;
+        if (aufzugA !== aufzugB) return aufzugA - aufzugB;
+
+        const szeneA = Number(a.Szene) || 0;
+        const szeneB = Number(b.Szene) || 0;
+        if (szeneA !== szeneB) return szeneA - szeneB;
+
         const pageA = Number(a.page) || 0;
         const pageB = Number(b.page) || 0;
         return pageA - pageB;
     });
 
     let html = '';
+
+    // Add score info at the top (once)
+    if (data[0] && data[0].hasOwnProperty('楽譜情報') && data[0]['楽譜情報']) {
+        html += `<div style="background-color: #e3f2fd; padding: 10px; margin-bottom: 15px; border-radius: 5px; font-family: 'Lora', serif;">楽譜情報: ${escapeHtml(data[0]['楽譜情報'])}</div>`;
+    }
+
+    let prevAufzug = null;
+    let prevSzene = null;
+
     data.forEach(row => {
+        const currentAufzug = row.Aufzug;
+        const currentSzene = row.Szene;
+
+        // Add scene title when Aufzug or Szene changes
+        if (currentAufzug !== prevAufzug || currentSzene !== prevSzene) {
+            let sceneTitle = '';
+            
+            // Use explicit Scene Title if available (from JSON export)
+            if (row['場面タイトル']) {
+                sceneTitle = row['場面タイトル'];
+            } else {
+                // Fallback to generating title from Aufzug/Szene
+                const aufzugText = currentAufzug ? `第${currentAufzug}幕` : '';
+                const szeneText = currentSzene ? `第${currentSzene}場` : '';
+                sceneTitle = [aufzugText, szeneText].filter(t => t).join('');
+            }
+            
+            if (sceneTitle) {
+                html += `<h2 style="font-family: 'Lora', serif; font-size: 1.1em; font-weight: bold; margin-top: 20px; margin-bottom: 10px; color: #333;">${sceneTitle}</h2><hr style="border-top: 1px solid #ccc; margin-bottom: 20px;">`;
+            }
+            
+            prevAufzug = currentAufzug;
+            prevSzene = currentSzene;
+        }
+
         const pageDisplay = row.page ? `p.${row.page}` : '';
         const de = escapeHtmlWithBreaks(row.de);
         const ja = escapeHtmlWithBreaks(row.ja);
@@ -946,7 +505,6 @@ function formatGenericResults(data) {
                     </div>
                 </div>
             </div>
-            <hr style="border-top: 1px dashed #ccc; margin: 10px 0;">
         `;
     });
 
@@ -1055,8 +613,8 @@ function handleWagnerOperaSelection(event) {
     const sceneOptionsWrapper = document.getElementById('wagner-scene-options-wrapper');
     sceneOptionsWrapper.innerHTML = '<div class="loading">場面データを読み込み中...</div>';
 
-    // Get scenes from appData.rw_scenes
-    const scenesData = appData.rw_scenes || [];
+    // Get scenes from window.appData.rw_scenes
+    const scenesData = window.appData.rw_scenes || [];
     const filteredScenes = scenesData.filter(s => normalizeString(s.Oper) === normalizeString(operaValue));
     // console.log(`Filtered scenes: ${filteredScenes.length}`);
 
@@ -1147,7 +705,7 @@ function searchRichardWagnerByScene() {
     document.getElementById('results').innerHTML = '<div class="loading">検索中...</div>';
 
     setTimeout(() => {
-        const data = appData.richard_wagner;
+        const data = window.appData.richard_wagner;
         if (!data) {
             document.getElementById('results').innerHTML = '<div class="result-message">データが読み込まれていません。</div>';
             return;
@@ -1188,7 +746,7 @@ function searchRichardWagnerByPage() {
     document.getElementById('results').innerHTML = '<div class="loading">検索中...</div>';
 
     setTimeout(() => {
-        const data = appData.richard_wagner;
+        const data = window.appData.richard_wagner;
         if (!data) {
             document.getElementById('results').innerHTML = '<div class="result-message">データが読み込まれていません。</div>';
             return;
@@ -1241,11 +799,11 @@ function renderDictionary(container) {
     `;
 
     // Render Dictionary List
-    const dicData = appData.dic_notes || [];
+    const dicData = window.appData.dic_notes || [];
     renderDictionaryList(dicData);
 
     // Render Abbreviation List
-    const abbrData = appData.abbr_list || [];
+    const abbrData = window.appData.abbr_list || [];
     renderAbbrList(abbrData);
 }
 
@@ -1262,14 +820,16 @@ function renderNotes(container) {
 
 // --- Dictionary Helper Functions ---
 
-const customOrder = [
+// NOTE: customOrder is defined in index.html and guarded to window.customOrder.
+// Ensure it's available for dictionary functions.
+window.customOrder = window.customOrder || [
     "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K",
     "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U",
     "V", "W", "X", "Y", "Z"
 ];
 
 function getOrder(letter) {
-    const idx = customOrder.indexOf(letter);
+    const idx = window.customOrder.indexOf(letter);
     return idx === -1 ? 999 : idx;
 }
 
@@ -1303,7 +863,7 @@ function compareGermanStrings(a, b) {
 }
 
 function generateAlphabetLinks() {
-    return customOrder.map(letter => `<a href="#letter-${letter}">${letter}</a>`).join('\n');
+    return window.customOrder.map(letter => `<a href="#letter-${letter}">${letter}</a>`).join('\n');
 }
 
 function renderDictionaryList(data) {
@@ -1329,7 +889,7 @@ function renderDictionaryList(data) {
         // Anchor assignment
         if (german && typeof german === "string") {
             const anchorLetter = getSortLetter(german);
-            if (anchorLetter && customOrder.includes(anchorLetter) && !anchorSet[anchorLetter]) {
+            if (anchorLetter && window.customOrder.includes(anchorLetter) && !anchorSet[anchorLetter]) {
                 rowDiv.id = "letter-" + anchorLetter;
                 anchorSet[anchorLetter] = true;
             }
@@ -1409,3 +969,309 @@ window.addEventListener('scroll', () => {
         btn.style.display = 'none';
     }
 });
+
+function focusResultsPanel(options) {
+    const resultsDiv = document.getElementById('results');
+    if (!resultsDiv) return;
+
+    const topOffset = Math.max((resultsDiv.getBoundingClientRect().top + window.scrollY) - 20, 0);
+    const behavior = options && options.instant ? 'auto' : 'smooth';
+    window.scrollTo({ top: topOffset, behavior });
+}
+window.focusResultsPanel = focusResultsPanel;
+
+// --- Local Search Helpers for Terms ---
+
+window.searchTermsLocal = function (query, sourceFilter) {
+    const data = window.appData.dic_notes;
+    if (!data) return '<div class="result-message">データが読み込まれていません。</div>';
+
+    const normalizedQuery = normalizeString(query);
+    const results = [];
+
+    data.forEach(row => {
+        const [german, translation, source] = row;
+
+        // Filter by source
+        // Note: Some terms might have multiple tags e.g. [GM], [RW: Oper]
+        if (sourceFilter) {
+            if (sourceFilter === 'GM' && !source.includes('[GM]')) return;
+            if (sourceFilter === 'RW' && !source.includes('[RW')) return;
+            if (sourceFilter === 'RS' && !source.includes('[RS')) return;
+        }
+
+        // Check match
+        const normGerman = normalizeString(german);
+        if (normGerman.includes(normalizedQuery)) {
+            results.push(row);
+        }
+    });
+
+    if (results.length === 0) {
+        return '<div class="result-message">該当する用語は見つかりませんでした。</div>';
+    }
+
+    // Sort results
+    results.sort((a, b) => compareGermanStrings(a[0], b[0]));
+
+    // Format results
+    let html = '';
+    results.forEach(row => {
+        const [german, translation, source] = row;
+        html += `<div class="row">
+            <div><span class="german">${escapeHtml(german)}</span><span class="source">${escapeHtml(source)}</span></div>
+            <div class="translation">${escapeHtmlWithBreaks(translation)}</div>
+        </div>`;
+    });
+
+    return `<div>${results.length}件見つかりました。</div>${html}`;
+}
+
+window.getTermsListLocal = function (sourceFilter) {
+    const data = window.appData.dic_notes;
+    if (!data) return [];
+
+    const terms = [];
+    data.forEach(row => {
+        const [german, translation, source] = row;
+        if (sourceFilter) {
+            if (sourceFilter === 'GM' && !source.includes('[GM]')) return;
+            if (sourceFilter === 'RW' && !source.includes('[RW')) return;
+            if (sourceFilter === 'RS' && !source.includes('[RS')) return;
+        }
+        terms.push({ original: german, normalized: normalizeString(german) });
+    });
+    return terms;
+}
+
+// --- Mahler Search Logic (Local Fallback) ---
+
+window.aMapping = {
+    "all": "ALL", "交響曲第1番ニ長調（1884-88）": "1", "交響曲第2番ハ短調（1888-94）": "2",
+    "交響曲第3番ニ短調（1893-96）": "3", "交響曲第4番ト長調（1899-1900）": "4", "交響曲第5番嬰ハ短調（1901-02）": "5",
+    "交響曲第6番イ短調（1903-04）": "6", "交響曲第7番ホ短調（1904-05）": "7", "交響曲第8番変ホ長調（1906）": "8",
+    "交響曲イ短調『大地の歌』（1908）": "a", "交響曲第9番ニ長調（1909）": "9", "交響曲第10番嬰ヘ長調（1910）": "101",
+    "交響曲第10番（クック版）": "102", "嘆きの歌（1880）": "b1", "嘆きの歌（1899）": "b2",
+    "さすらう若人の歌": "c", "子供の魔法の角笛": "d", "子供の死の歌": "e",
+    "リュッケルトの詩による5つの歌": "f", "花の章": "g", "葬礼": "h"
+};
+
+window.aReverseMap = Object.entries(window.aMapping).reduce((acc, [key, value]) => {
+    acc[value.toLowerCase()] = key;
+    return acc;
+}, {});
+
+window.dMapping = {
+    "all": "ALLE", "dir": "Dirigent", "v1": "Violine1", "v2": "Violine2", "va": "Bratche", "vc": "Violoncello",
+    "kb": "Kontrabaß", "sv": "Solo Violine", "sva": "Solo Bratche", "svc": "Solo Violoncello", "skb": "Solo Kontrabaß",
+    "fl": "Flöte", "pic": "Piccolo", "ob": "Oboe", "eh": "Englischhorn", "cl": "Klarinette", "escl": "Es-Klarinette",
+    "bcl": "Bassklarinette", "fg": "Fagott", "cfg": "Kontrafagott", "tr": "Trompete", "pis": "Piston",
+    "phr": "Posthorn", "hr": "Horn", "thr": "Tenorhorn", "ohr": "Obligates Horn", "fhr": "Flügelhorn",
+    "whr": "Waldhorn", "pos": "Posaune", "bt": "Basstuba", "pau": "Pauken", "gtr": "Gloße Trommel",
+    "ktr": "Kleine Trommel", "mtr": "Militär Trommel", "bec": "Becken", "tam": "Tam-tam", "tri": "Triangel",
+    "gls": "Glockenspiel", "hgl": "Herdenglocken", "gl": "Glocken", "ham": "Hammer", "rt": "Rute",
+    "cel": "Celesta", "hp": "Harfe", "org": "Orgel", "klv": "Klavier", "har": "Harmonium", "git": "Gitarre",
+    "man": "Mandoline", "sop": "Sopran", "alt": "Alto", "ten": "Tenor", "bar": "Bariton", "bass": "Bass",
+    "sop1": "Sopran1", "sop2": "Sopran2", "alt1": "Alto1", "alt2": "Alto2", "kalt": "Knabe(Alto)",
+    "chor": "Chor", "chor1": "Chor1", "chor2": "Chor2", "fchor": "frauen Chor", "kchor": "knaben Chor",
+    "sti": "Stimme"
+};
+
+window.dReverseMap = { ...window.dMapping };
+
+function formatMovementNumber(a, b) {
+    const specialMapping = {
+        c: { c1: "Wenn mein Schatz Hochzeit macht", c2: "Ging heut' morgen über's Feld", c3: "Ich hab' ein glühend Messer", c4: "Die zwei blauen Augen von meinem Schatz" },
+        d: { d01: "Der Schildwache Nachlied", d02: "Verlorne Müh'!", d03: "Trost im Unglück", d04: "Das himmlische Leben", d05: "Wer hat dies Liedel erdacht?", d06: "Das irdische Leben", d07: "Urlicht", d08: "Des Antonius von Padua Fischpredigt", d09: "Rheinlegendchen", d10: "Lob des hohen Verstands", d11: "Lied des Verfolgten im Turm", d12: "Wo die schönen Trompeten blasen", d13: "Revelge", d14: "Der Tamboursg'sell" },
+        e: { e1: "Nun will die Sonn' so hell aufgeh'n", e2: "Nun seh' ich wohl, warum so dunkle Flammen", e3: "Wenn dein Mütterlein", e4: "Oft denk' ich, sie sind nur ausgegangen", e5: "In diesem Wetter, in diesem Braus" },
+        f: { f1: "Blicke mir nicht in die Lieder!", f2: "Ich atmet' einen linden Duft", f3: "Ich bin der Welt abhanden gekommen", f4: "Um Mitternacht", f5: "Liebst du um Schönheit" }
+    };
+
+    if (specialMapping[a.toLowerCase()] && specialMapping[a.toLowerCase()][b.toLowerCase()]) {
+        return specialMapping[a.toLowerCase()][b.toLowerCase()];
+    }
+    if (b.toLowerCase() === 't1') return '第1部';
+    if (b.toLowerCase() === 't2') return '第2部';
+    if (b.toLowerCase() === 't3') return '第3部';
+    if (['a', 'g', 'h'].includes(b.toLowerCase())) return '';
+    return `第${b}楽章`;
+}
+
+window.searchMahlerDataLocal = function (choice1Arr, choice2Arr, includeOrchestraAll) {
+    const data = window.appData.mahler;
+    if (!data || data.length === 0) {
+        return '<div class="result-message">データが読み込まれていません。</div>';
+    }
+
+    const groupAllMap = {
+        "all_strings": ["v1", "v2", "va", "vc", "kb", "sv", "sva", "svc", "skb"],
+        "all_woodwinds": ["fl", "pic", "ob", "eh", "cl", "escl", "bcl", "fg", "cfg"],
+        "all_brass": ["tr", "pis", "phr", "hr", "thr", "ohr", "fhr", "whr", "pos", "bt"],
+        "all_percussions": ["pau", "gtr", "ktr", "mtr", "bec", "tam", "tri", "gls", "hgl", "gl", "ham", "rt", "cel", "hp", "org", "klv", "har", "git", "man"],
+        "all_vocal": ["sop", "alt", "ten", "bar", "bass", "sop1", "sop2", "alt1", "alt2", "kalt", "chor", "chor1", "chor2", "fchor", "kchor", "sti"]
+    };
+
+    let finalInstruments = new Set();
+
+    if (choice2Arr.includes('ALL_GLOBAL')) {
+        Object.keys(window.dMapping).forEach(code => {
+            if (code !== 'all') finalInstruments.add(code);
+        });
+        finalInstruments.add('all');
+    } else {
+        choice2Arr.forEach(val => {
+            const lowerVal = val.toLowerCase();
+            if (groupAllMap[lowerVal]) {
+                groupAllMap[lowerVal].forEach(code => finalInstruments.add(code));
+            } else if (window.dMapping[lowerVal]) {
+                finalInstruments.add(lowerVal);
+            }
+        });
+    }
+
+    if (includeOrchestraAll) {
+        finalInstruments.add('all');
+    }
+
+    let resultHTML = '';
+    let totalMatches = 0;
+
+    try {
+        data.forEach(row => {
+            const deData = row.de || row[0];
+            const jaData = row.ja || row[2];
+            const dataCol = row.data || row[3];
+
+            if (!dataCol || typeof dataCol !== 'string') return;
+
+            const segments = dataCol.split('&').map(s => s.trim()).filter(s => s);
+            if (segments.length === 0) return;
+
+            let matchedLocList = [];
+            let segmentCount = 0;
+
+            segments.forEach(seg => {
+                const [prefix, a, b, c, d] = seg.split('-');
+                if (!a || !b || !c || !d) return;
+
+                let aMatch = choice1Arr.includes('ALL') || choice1Arr.some(choice => window.aMapping[choice.toLowerCase()] === a);
+
+                const dArr = d.split(',').map(x => x.trim());
+                let dMatch = dArr.some(origCode => {
+                    const codeLower = origCode.toLowerCase();
+                    if (includeOrchestraAll) {
+                        return finalInstruments.has(codeLower) || codeLower === 'all';
+                    } else {
+                        return finalInstruments.has(codeLower) && codeLower !== 'all';
+                    }
+                });
+
+                if (aMatch && dMatch) {
+                    totalMatches++;
+                    segmentCount++;
+
+                    const aLabel = window.aReverseMap[a.toLowerCase()] || `不明(${a})`;
+                    const movementText = formatMovementNumber(a, b);
+                    const measureText = `第${c}小節`;
+                    const mappedInstruments = dArr.map(code => window.dReverseMap[code] || code).join(', ');
+                    const locText = `${aLabel} ${movementText}：${measureText}（${mappedInstruments}）`;
+                    matchedLocList.push(locText);
+                }
+            });
+
+            if (matchedLocList.length > 0) {
+                resultHTML += `<div class="result-a">${escapeHtmlWithBreaks(deData)}</div>`;
+                resultHTML += `<div class="result-c">${escapeHtmlWithBreaks(jaData)}</div>`;
+                matchedLocList.forEach(loc => {
+                    resultHTML += `<div class="result-loc">${escapeHtml(loc)}</div>`;
+                });
+                resultHTML += `<div class="result-loc">(${segmentCount}件)</div>`;
+                resultHTML += '<hr style="border-top: 1px dashed #ccc; margin: 10px 0;">';
+            }
+        });
+    } catch (e) {
+        console.error("Error in searchMahlerDataLocal:", e);
+        return `<div class="result-message">検索中にエラーが発生しました: ${e.message}</div>`;
+    }
+
+    return totalMatches === 0 ? '<div class="result-message">該当するデータが見つかりませんでした。</div>' : `<div>${totalMatches}件ありました。</div>${resultHTML}`;
+};
+
+// --- Mahler Terms Search Logic (Local Fallback) ---
+
+window.getMahlerTermsListLocal = function () {
+    const data = window.appData.mahler;
+    console.log('getMahlerTermsListLocal called. Data:', data ? data.length : 'null');
+    if (!data) return [];
+    if (data.length > 0) {
+        console.log('First row:', data[0]);
+    }
+    const mapped = data.map(row => ({
+        original: row.de || row[0],
+        normalized: row.de_normalized || row[1]
+    })).filter(item => item.original);
+    console.log('Mapped terms:', mapped.length);
+    return mapped;
+};
+
+window.searchMahlerTermsLocal = function (query) {
+    const data = window.appData.mahler;
+    if (!data) return '<div class="result-message">データが読み込まれていません。</div>';
+
+    const normalizedQuery = normalizeString(query);
+    const results = data.filter(row => {
+        const deNormalized = row.de_normalized || row[1];
+        return deNormalized && deNormalized.includes(normalizedQuery);
+    });
+
+    if (results.length === 0) {
+        return '<div class="result-message">該当するデータが見つかりませんでした。</div>';
+    }
+
+    let resultHTML = '';
+    let totalMatches = 0;
+
+    try {
+        results.forEach(row => {
+            const deData = row.de || row[0];
+            const jaData = row.ja || row[2];
+            const dataCol = row.data || row[3];
+
+            if (!dataCol || typeof dataCol !== 'string') return;
+
+            const segments = dataCol.split('&').map(s => s.trim()).filter(s => s);
+            let matchedLocList = [];
+            let segmentCount = 0;
+
+            segments.forEach(seg => {
+                const [prefix, a, b, c, d] = seg.split('-');
+                if (!a || !b || !c || !d) return;
+
+                segmentCount++;
+                const aLabel = window.aReverseMap[a.toLowerCase()] || `不明(${a})`;
+                const movementText = formatMovementNumber(a, b);
+                const measureText = `第${c}小節`;
+                const dArr = d.split(',').map(x => x.trim());
+                const mappedInstruments = dArr.map(code => window.dReverseMap[code] || code).join(', ');
+                const locText = `${aLabel} ${movementText}：${measureText}（${mappedInstruments}）`;
+                matchedLocList.push(locText);
+            });
+
+            if (matchedLocList.length > 0) {
+                totalMatches++;
+                resultHTML += `<div class="result-a">${escapeHtmlWithBreaks(deData)}</div>`;
+                resultHTML += `<div class="result-c">${escapeHtmlWithBreaks(jaData)}</div>`;
+                matchedLocList.forEach(loc => {
+                    resultHTML += `<div class="result-loc">${escapeHtml(loc)}</div>`;
+                });
+                resultHTML += `<div class="result-loc">(${segmentCount}件)</div>`;
+                resultHTML += '<hr style="border-top: 1px dashed #ccc; margin: 10px 0;">';
+            }
+        });
+    } catch (e) {
+        console.error("Error in searchMahlerTermsLocal:", e);
+        return `<div class="result-message">検索中にエラーが発生しました: ${e.message}</div>`;
+    }
+
+    return totalMatches === 0 ? '<div class="result-message">該当するデータが見つかりませんでした。</div>' : `<div>${totalMatches}件ありました。</div>${resultHTML}`;
+};

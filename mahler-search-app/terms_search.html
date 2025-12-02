@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <!-- レスポンシブ対応 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>用語から検索 (GM)</title>
+    <link rel="stylesheet" href="css/common.css">
+    <script src="js/app.js?v=3"></script>
+
+    <script>
+        /*******************************************************************
+         * クライアントサイドスクリプト（用語から検索ページ）
+         * 
+         * - 入力を監視してサーバーの searchEnglishTermsPartially() を呼び出し、
+         *   suggest 用データを取得し datalist を更新
+         * - 最終的に searchByTerm() を呼び出して結果を画面に表示
+         ******************************************************************/
+
+        // debounce(防振)用の関数：一定時間入力が止まるまで検索しないようにする
+        function debounce(func, delay) {
+            let timer;
+            return function (...args) {
+                clearTimeout(timer);
+                timer = setTimeout(() => func.apply(this, args), delay);
+            };
+        }
+
+        let currentSearchId = 0;
+        let termEntries = []; // { original, normalized } の配列を保持
+
+        // Helper to normalize string (Inlined for robustness)
+        function normalizeString(str) {
+            if (!str) return '';
+            return str.toLowerCase()
+                .replace(/ä/g, 'ae')
+                .replace(/ö/g, 'oe')
+                .replace(/ü/g, 'ue')
+                .replace(/ß/g, 'ss')
+                .replace(/[^a-z0-9.]/g, '');
+        }
+
+        // Helper to normalize term entry
+        function normalizeTermEntry(term) {
+            if (!term) return null;
+            if (typeof term === 'string') {
+                return { original: term, normalized: normalizeString(term) };
+            }
+            if (typeof term === 'object' && term.original) {
+                return term;
+            }
+            return null;
+        }
+
+        // Ensure focusResultsPanel exists
+        if (typeof window.focusResultsPanel !== 'function') {
+            window.focusResultsPanel = function(options) {
+                const resultsDiv = document.getElementById('results');
+                if (!resultsDiv) return;
+                const topOffset = Math.max((resultsDiv.getBoundingClientRect().top + window.scrollY) - 20, 0);
+                const behavior = options && options.instant ? 'auto' : 'smooth';
+                window.scrollTo({ top: topOffset, behavior });
+            };
+        }
+
+        // Override/Define getMahlerTermsListLocal to handle object data correctly
+        window.getMahlerTermsListLocal = function () {
+            const data = window.appData.mahler;
+            if (!data) return [];
+            return data.map(row => ({
+                original: row.de || row[0],
+                normalized: row.de_normalized || row[1]
+            })).filter(item => item.original);
+        };
+
+        // Helper functions for HTML escaping
+        function escapeHtml(str) {
+            if (!str) return '';
+            return str.replace(/[&<>"']/g, function (match) {
+                const escape = {
+                    '&': '&amp;',
+                    '<': '&lt;',
+                    '>': '&gt;',
+                    '"': '&quot;',
+                    "'": '&#39;'
+                };
+                return escape[match];
+            });
+        }
+
+        function escapeHtmlWithBreaks(str) {
+            if (!str) return '';
+            return escapeHtml(str).replace(/\n/g, '<br>');
+        }
+
+        // Override/Define searchMahlerTermsLocal to handle object data correctly
+        window.searchMahlerTermsLocal = function (query) {
+            const data = window.appData.mahler;
+            if (!data) return '<div class="result-message">データが読み込まれていません。</div>';
+
+            // Allow periods in search query normalization
+            const normalizedQuery = normalizeString(query);
+            const results = data.filter(row => {
+                const deNormalized = row.de_normalized || row[1];
+                return deNormalized && deNormalized.includes(normalizedQuery);
+            });
+
+            if (results.length === 0) {
+                return '<div class="result-message">該当するデータが見つかりませんでした。</div>';
+            }
+
+            let resultHTML = '';
+
+            try {
+                results.forEach(row => {
+                    const deData = row.de || row[0];
+                    const jaData = row.ja || row[2];
+                    const dataCol = row.data || row[3];
+
+                    if (!dataCol || typeof dataCol !== 'string') return;
+
+                    const segments = dataCol.split('&').map(s => s.trim()).filter(s => s);
+                    let segmentCount = 0;
+                    let detailsHTML = '';
+
+                    segments.forEach(seg => {
+                        const [prefix, a, b, c, d] = seg.split('-');
+                        if (!a || !b || !c || !d) return;
+
+                        segmentCount++;
+                        const aLabel = window.aReverseMap[a.toLowerCase()] || `不明(${a})`;
+                        const movementText = formatMovementNumber(a, b);
+                        const measureText = `第${c}小節`;
+                        
+                        // Parse instruments (d)
+                        const dArr = d.split(',').map(x => x.trim());
+                        const mappedInstruments = dArr.map(code => window.dMapping[code] || code).join(', ');
+                        
+                        // Format location text - use （） instead of 【】
+                        detailsHTML += `<div class="result-loc">${aLabel} ${movementText}：${measureText}（${mappedInstruments}）</div>`;
+                    });
+
+                    // Generate HTML without .result-entry wrapper
+                    resultHTML += `<div class="result-a">${escapeHtmlWithBreaks(deData)}</div>`;
+                    resultHTML += `<div class="result-c">${escapeHtmlWithBreaks(jaData)}</div>`;
+                    resultHTML += detailsHTML;
+                    resultHTML += `<div class="result-loc">(${segmentCount}件)</div>`;
+                });
+            } catch (e) {
+                console.error("Search error:", e);
+                return '<div class="result-message">検索中にエラーが発生しました。</div>';
+            }
+
+            return `<div class="result-message">全部で${results.length}件ありました。</div>${resultHTML}`;
+        };
+
+        // DOM構築後に動作をセット
+        window.addEventListener('DOMContentLoaded', async () => {
+            const inputField = document.getElementById('termInput');
+            // 入力フィールドに文字を入力するたびにイベント発火
+            inputField.addEventListener('input', debouncedOnTermInput);
+
+            // Load data locally first (needed for local search)
+            if (typeof loadData === 'function') {
+                await loadData('terms_search');
+            }
+
+            // ページ読み込み時に全用語リストを取得
+            if (typeof google !== 'undefined' && google.script && google.script.run) {
+                google.script.run
+                    .withSuccessHandler(terms => {
+                        termEntries = (Array.isArray(terms) ? terms : [])
+                            .map(term => normalizeTermEntry(term))
+                            .filter(Boolean);
+                        console.log(`${termEntries.length}件のGM用語を読み込みました。`);
+                    })
+                    .withFailureHandler(err => {
+                        console.error('GM用語の取得に失敗しました:', err);
+                        termEntries = [];
+                    })
+                    .getGMTermsForClient();
+            } else {
+                // Local fallback
+                termEntries = getMahlerTermsListLocal();
+                console.log(`Loaded ${termEntries.length} terms locally.`);
+            }
+        });
+
+        // 入力があったら300ms後にサジェスト検索を実行する関数
+        const debouncedOnTermInput = debounce((event) => {
+            const input = event.target.value.trim();
+            if (input.length < 2) {
+                // 2文字未満ならサジェストをクリア
+                document.getElementById('termSuggestions').innerHTML = '';
+                return;
+            }
+
+            const normalizedInput = normalizeString(input);
+            const matches = termEntries
+                .filter(entry => entry.normalized.includes(normalizedInput))
+                .sort((a, b) => a.normalized.localeCompare(b.normalized));
+
+            updateDatalist(matches);
+
+        }, 300);
+
+        // datalist に候補を表示する
+        function updateDatalist(suggestions) {
+            const datalist = document.getElementById('termSuggestions');
+            datalist.innerHTML = '';
+            suggestions.forEach(entry => {
+                const option = document.createElement('option');
+                option.value = entry.normalized; // 入力欄は英字のまま
+                option.label = entry.original;   // ユーザーには de 列の文字列を表示
+                option.textContent = entry.original;
+                datalist.appendChild(option);
+            });
+        }
+
+        // 「検索」ボタン押下時
+        function search() {
+            const query = document.getElementById('termInput').value.trim();
+            const resultsDiv = document.getElementById('results');
+            const loadingHtml = '<p class="loading">検索中・・・</p>';
+            resultsDiv.innerHTML = loadingHtml;
+            if (typeof focusResultsPanel === 'function') {
+                focusResultsPanel({ instant: true });
+            }
+
+            // 空文字チェック
+            if (!query) {
+                resultsDiv.innerHTML = '<p class="result-message">検索語句を入力してください。</p>';
+                if (typeof focusResultsPanel === 'function') {
+                    focusResultsPanel({ instant: true });
+                }
+                return;
+            }
+
+            currentSearchId++;
+            const thisSearchId = currentSearchId;
+
+            // Execute search (Local)
+            setTimeout(() => {
+                if (thisSearchId !== currentSearchId) return;
+                
+                let html = '';
+                if (typeof searchMahlerTermsLocal === 'function') {
+                    html = searchMahlerTermsLocal(query);
+                } else {
+                    html = '<div class="result-message">検索機能が見つかりません (searchMahlerTermsLocal missing)</div>';
+                }
+                
+                resultsDiv.innerHTML = html;
+                if (typeof focusResultsPanel === 'function') {
+                    focusResultsPanel({ instant: true });
+                }
+            }, 10);
+        }
+
+        function cancelSearch() {
+            currentSearchId++;
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.innerHTML = '<p class="result-message">検索を中止しました。</p>';
+        }
+
+        function clearInput() {
+            document.getElementById('termInput').value = '';
+            document.getElementById('termSuggestions').innerHTML = '';
+            document.getElementById('results').innerHTML = '';
+            document.getElementById('termInput').focus();
+        }
+    </script>
+</head>
+
+<body>
+    <div class="container">
+        <h1>用語から検索 (GM)</h1>
+        <p><b>用語集は<a href="https://sites.google.com/site/brucknermahleryinleyongyu/%E7%94%A8%E8%AA%9E%E9%9B%86"
+                    target="_blank">こちら</a></b></p>
+        <p>
+            検索は英字入力なので，特殊文字の入力は慣例にしたがう<br>
+        <ul>
+            <li>ä⇒ae　例：Dämpfer⇒Daempfer</li>
+            <li>ü⇒ue　例：zurückhalten⇒zurueckhalten</li>
+            <li>ö⇒oe　例：Flöte⇒Floete</li>
+            <li>ß⇒ss　例：fließend⇒fliessend</li>
+        </ul>
+        </p>
+
+        <!-- 検索入力欄 -->
+        <input type="text" id="termInput" list="termSuggestions" placeholder="検索する用語を入力">
+        <datalist id="termSuggestions"></datalist>
+
+        <!-- ボタン類 -->
+        <div style="text-align: center;">
+            <button type="button" onclick="search()" class="btn-search">検索</button>
+            <button type="button" onclick="cancelSearch()" class="btn-danger">中止</button>
+            <button type="button" onclick="clearInput()" class="clear-input-btn">入力をクリア</button>
+        </div>
+
+        <!-- 結果表示枠 -->
+        <div id="results"></div>
+
+        <!-- トップへ戻るボタン -->
+        <div id="scrollToTop" onclick="scrollToTop()">▲ ページのトップへ戻る</div>
+    </div>
+</body>
+
+</html>

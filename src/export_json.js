@@ -1,6 +1,50 @@
 function exportAllDataToJson() {
     const ss = SpreadsheetApp.openById(SPREADSHEET_ID);
 
+    // 0. Score Info (楽譜情報) - Load first for Publisher info
+    const scoreSheet = ss.getSheetByName('楽譜情報');
+    const scoreMap = {}; // Map for Publisher info (Opera -> Publisher)
+    // sceneTitleMap will be populated from Scene Structure sheets
+
+    if (scoreSheet) {
+        const data = scoreSheet.getDataRange().getValues();
+        // Assume Row 1 is header, Data starts from Row 2
+        // Column A: Opera Name
+        // Column E: Publisher
+        data.slice(1).forEach(row => {
+            const opera = String(row[0]).toLowerCase().trim();
+            if (opera) {
+                // Publisher Info (Column E) - Last one wins if multiple
+                scoreMap[opera] = row[4];
+            }
+        });
+    }
+
+    // 0.5 Scene Title Map (from RS幕構成 / RW幕構成)
+    const sceneTitleMap = {}; // Map for Scene Titles (Opera_Act_Scene -> Title)
+    
+    const populateSceneMap = (sheetName) => {
+        const sheet = ss.getSheetByName(sheetName);
+        if (sheet) {
+            const data = sheet.getDataRange().getValues();
+            // Assume Row 1 is header
+            data.slice(1).forEach(row => {
+                const opera = String(row[0]).toLowerCase().trim();
+                const aufzug = row[1];
+                const szene = row[2];
+                const title = row[3]; // Column D: Japanese Title
+
+                if (opera && title) {
+                    const key = `${opera}_${aufzug}_${szene}`.toLowerCase();
+                    sceneTitleMap[key] = title;
+                }
+            });
+        }
+    };
+
+    populateSceneMap('RS幕構成');
+    populateSceneMap('RW幕構成');
+
     // 1. Mahler Data (GM)
     const gmSheet = ss.getSheetByName('GM');
     const gmData = gmSheet.getDataRange().getValues();
@@ -28,6 +72,18 @@ function exportAllDataToJson() {
             rsHeader.forEach((h, i) => {
                 obj[h.toString().trim()] = row[i];
             });
+            
+            const operKey = String(obj['Oper'] || '').toLowerCase().trim();
+            
+            // Add Score Info (Publisher)
+            obj['楽譜情報'] = scoreMap[operKey] || '';
+
+            // Add Scene Title
+            const aufzug = obj['Aufzug'];
+            const szene = obj['Szene'];
+            const sceneKey = `${operKey}_${aufzug}_${szene}`.toLowerCase();
+            obj['場面タイトル'] = sceneTitleMap[sceneKey] || '';
+            
             return obj;
         }).filter(item => Object.values(item).some(val => val !== '')); // Filter out empty rows
     }
@@ -45,11 +101,23 @@ function exportAllDataToJson() {
             rwHeader.forEach((h, i) => {
                 obj[h.toString().trim()] = row[i];
             });
+
+            const operKey = String(obj['Oper'] || '').toLowerCase().trim();
+
+            // Add Score Info (Publisher)
+            obj['楽譜情報'] = scoreMap[operKey] || '';
+
+            // Add Scene Title
+            const aufzug = obj['Aufzug'];
+            const szene = obj['Szene'];
+            const sceneKey = `${operKey}_${aufzug}_${szene}`.toLowerCase();
+            obj['場面タイトル'] = sceneTitleMap[sceneKey] || '';
+
             return obj;
         }).filter(item => Object.values(item).some(val => val !== '')); // Filter out empty rows
     }
 
-    // 4. Scene Maps (RS幕構成, RW幕構成)
+    // 4. Scene Maps (RS幕構成, RW幕構成) - Export raw data as well
     const rsSceneSheet = ss.getSheetByName('RS幕構成');
     let rsScenes = [];
     if (rsSceneSheet) {
