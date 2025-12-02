@@ -1275,3 +1275,120 @@ window.searchMahlerTermsLocal = function (query) {
 
     return totalMatches === 0 ? '<div class="result-message">該当するデータが見つかりませんでした。</div>' : `<div>${totalMatches}件ありました。</div>${resultHTML}`;
 };
+
+// RS Terms Search Local
+window.searchRSTermsLocal = function (query) {
+    return searchGenericTermsLocal(query, 'richard_strauss', 'RS');
+};
+
+// RW Terms Search Local
+window.searchRWTermsLocal = function (query) {
+    return searchGenericTermsLocal(query, 'richard_wagner', 'RW');
+};
+
+// Generic Terms Search Local for RS/RW
+function searchGenericTermsLocal(query, dataKey, type) {
+    const data = window.appData[dataKey];
+    if (!data) return '<div class="result-message">データが読み込まれていません。</div>';
+
+    const normalizedQuery = normalizeString(query);
+    
+    // Filter data
+    const filteredData = data.filter(row => {
+        const de = row.de || '';
+        const deNormalized = row.de_normalized || normalizeString(de);
+        const pageExists = row.page !== null && row.page !== undefined && String(row.page).trim() !== '';
+        return deNormalized.includes(normalizedQuery) && pageExists;
+    });
+
+    if (filteredData.length === 0) {
+        return '<div class="result-message">該当するデータが見つかりませんでした。</div>';
+    }
+
+    // Group by 'de' text
+    const groupedByDe = filteredData.reduce((acc, row) => {
+        const de = row.de || '（ドイツ語なし）';
+        if (!acc[de]) {
+            acc[de] = [];
+        }
+        acc[de].push(row);
+        return acc;
+    }, {});
+
+    let html = `<div class="result-message">全部で${filteredData.length}件ありました。</div>`;
+    
+    const sortedDeKeys = Object.keys(groupedByDe).sort((a, b) => a.localeCompare(b, 'de'));
+    
+    // Opera display names mapping
+    const operaDisplayNames = {
+        'guntram': 'Guntram', 'feuersnot': 'Feuersnot', 'salome': 'Salome',
+        'elektra': 'Elektra', 'rosenkavalier': 'Der Rosenkavalier', 'ariadne': 'Ariadne auf Naxos',
+        'schatten': 'Die Frau ohne Schatten', 'intermezzo': 'Intermezzo', 'helena': 'Die ägyptische Helena',
+        'arabella': 'Arabella', 'schweigsame': 'Die schweigsame Frau', 'tag': 'Friedenstag',
+        'daphne': 'Daphne', 'danae': 'Die Liebe der Danae', 'cap': 'Capriccio',
+        'feen': 'Die Feen', 'liebes': 'Das Liebesverbot', 'rienzi': 'Rienzi',
+        'hollaender': 'Der fliegende Holländer', 'tannhaeuser': 'Tannhäuser', 'lohengrin': 'Lohengrin',
+        'tristan': 'Tristan und Isolde', 'meistersinger': 'Die Meistersinger von Nürnberg',
+        'rheingold': 'Das Rheingold', 'walkuere': 'Die Walküre', 'siegfried': 'Siegfried',
+        'goetterdaemmerung': 'Götterdämmerung', 'parsifal': 'Parsifal'
+    };
+
+    sortedDeKeys.forEach(de => {
+        html += `<div class="result-a">${escapeHtmlWithBreaks(de)}</div>`;
+        
+        groupedByDe[de].forEach(row => {
+            const ja = escapeHtmlWithBreaks(String(row.ja || ''));
+            const whom = escapeHtml(String(row.whom || ''));
+            const operKey = normalizeString(String(row.oper || ''));
+            const aufzug = (row.aufzug || '0').toString().trim().toLowerCase();
+            const szene = (row.szene || '0').toString().trim().toLowerCase();
+            const page = escapeHtml(String(row.page || ''));
+            const operaDisplayName = operaDisplayNames[operKey] || escapeHtml(String(row.oper || ''));
+            
+            // Scene Name Logic
+            let sceneName = row['場面タイトル'] || `場面(${aufzug}-${szene})`;
+
+            const pageDisplay = page ? `p.${page}` : '';
+            let locationText = `${operaDisplayName} ${sceneName} ${pageDisplay}`.trim();
+            if (whom) {
+                locationText = locationText ? `${locationText}：${whom}` : `：${whom}`;
+            }
+
+            html += `<div class="result-c">${ja}</div>`;
+            html += `<div class="result-loc">（${locationText}）</div>`;
+        });
+    });
+
+    return html;
+}
+
+// Get Unique Terms for RS/RW Local
+window.getGenericTermsListLocal = function(dataKey) {
+    const data = window.appData[dataKey];
+    if (!data) return [];
+    
+    // Extract unique 'de' terms
+    const terms = data
+        .map(row => ({ original: row.de, normalized: row.de_normalized || normalizeString(row.de) }))
+        .filter(item => item.original && item.normalized);
+
+    const uniqueTermsMap = new Map();
+    terms.forEach(item => {
+        if (!uniqueTermsMap.has(item.original)) {
+            uniqueTermsMap.set(item.original, item);
+        }
+    });
+    
+    return Array.from(uniqueTermsMap.values());
+};
+
+// Helper to normalize string (Shared)
+function normalizeString(str) {
+    if (!str) return '';
+    return str.toLowerCase()
+        .replace(/ä/g, 'ae')
+        .replace(/ö/g, 'oe')
+        .replace(/ü/g, 'ue')
+        .replace(/ß/g, 'ss')
+        .replace(/[^a-z0-9.]/g, '');
+}
