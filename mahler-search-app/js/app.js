@@ -1351,11 +1351,11 @@ function searchGenericTermsLocal(query, dataKey, type) {
             const pageDisplay = page ? `p.${page}` : '';
             let locationText = `${operaDisplayName} ${sceneName} ${pageDisplay}`.trim();
             if (whom) {
-                locationText = locationText ? `${locationText}：${whom}` : `：${whom}`;
+                locationText = `${locationText} 【${whom}】`;
             }
 
             html += `<div class="result-c">${ja}</div>`;
-            html += `<div class="result-loc">（${locationText}）</div>`;
+            html += `<div class="result-loc">${locationText}</div>`;
         });
     });
 
