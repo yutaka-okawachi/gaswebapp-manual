@@ -1321,16 +1321,18 @@ function searchGenericTermsLocal(query, dataKey, type) {
     
     // Opera display names mapping
     const operaDisplayNames = {
-        'guntram': 'Guntram', 'feuersnot': 'Feuersnot', 'salome': 'Salome',
-        'elektra': 'Elektra', 'rosenkavalier': 'Der Rosenkavalier', 'ariadne': 'Ariadne auf Naxos',
-        'schatten': 'Die Frau ohne Schatten', 'intermezzo': 'Intermezzo', 'helena': 'Die ägyptische Helena',
-        'arabella': 'Arabella', 'schweigsame': 'Die schweigsame Frau', 'tag': 'Friedenstag',
-        'daphne': 'Daphne', 'danae': 'Die Liebe der Danae', 'cap': 'Capriccio',
-        'feen': 'Die Feen', 'liebes': 'Das Liebesverbot', 'rienzi': 'Rienzi',
-        'hollaender': 'Der fliegende Holländer', 'tannhaeuser': 'Tannhäuser', 'lohengrin': 'Lohengrin',
-        'tristan': 'Tristan und Isolde', 'meistersinger': 'Die Meistersinger von Nürnberg',
-        'rheingold': 'Das Rheingold', 'walkuere': 'Die Walküre', 'siegfried': 'Siegfried',
-        'goetterdaemmerung': 'Götterdämmerung', 'parsifal': 'Parsifal'
+        'guntram': 'Guntram Op.25', 'feuersnot': 'Feuersnot Op.50', 'salome': 'Salome Op.54',
+        'elektra': 'Elektra Op.58', 'rosenkavalier': 'Der Rosenkavalier Op.59', 'ariadne': 'Ariadne auf Naxos Op.60',
+        'schatten': 'Die Frau ohne Schatten Op.65', 'intermezzo': 'Intermezzo Op.72', 'helena': 'Die ägyptische Helena Op.75',
+        'arabella': 'Arabella Op.79', 'schweigsame': 'Die schweigsame Frau Op.80', 'tag': 'Friedenstag Op.81',
+        'daphne': 'Daphne Op.82', 'danae': 'Die Liebe der Danae Op.83', 'cap': 'Capriccio Op.85',
+        'feen': 'Die Feen WWV 32', 'liebes': 'Das Liebesverbot WWV 38', 'rienzi': 'Rienzi, der Letzte der Tribunen WWV 49',
+        'hollaender': 'Der fliegende Holländer WWV 63', 'tannhaeuser': 'Tannhäuser WWV 70',
+        'tanndresden': 'Tannhäuser (Dresden) WWV 70', 'tannparis': 'Tannhäuser (Paris) WWV 70',
+        'lohengrin': 'Lohengrin WWV 75',
+        'tristan': 'Tristan und Isolde WWV 90', 'meister': 'Die Meistersinger von Nürnberg WWV 96',
+        'rheingold': 'Das Rheingold WWV 86A', 'walkuere': 'Die Walküre WWV 86B', 'siegfried': 'Siegfried WWV 86C',
+        'goetter': 'Götterdämmerung WWV 86D', 'parsifal': 'Parsifal WWV 111'
     };
 
     sortedDeKeys.forEach(de => {
