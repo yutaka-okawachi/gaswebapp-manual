@@ -14,7 +14,7 @@ function doPost(e) {
                "Time: " + new Date().toString();
                
     MailApp.sendEmail({
-      to: Session.getActiveUser().getEmail(),
+      to: 'pistares@ezweb.ne.jp',
       subject: subject,
       body: body
     });
