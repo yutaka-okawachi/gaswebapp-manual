@@ -660,7 +660,7 @@
       const data = window.appData.mahler;
       if (!data) {
         console.error("Data missing");
-        return '<div class="result-message">データが読み込まれていません。</div>';
+        return [];
       }
       console.log("Data loaded", data.length);
 
@@ -694,7 +694,7 @@
         finalInstruments.add('all');
       }
 
-      let resultHTML = '';
+      const results = [];
       let totalMatches = 0;
 
       for (const row of data) {
@@ -741,20 +741,16 @@
         });
 
         if (matchedLocList.length > 0) {
-          resultHTML += `<div class="result-entry">`;
-          resultHTML += `<div class="result-a">${escapeHtmlWithBreaks(deData)}</div>`;
-          resultHTML += `<div class="result-c">${escapeHtmlWithBreaks(jaData)}</div>`;
-          matchedLocList.forEach(loc => {
-            resultHTML += `<div class="result-loc">${escapeHtml(loc)}</div>`;
+          results.push({
+              de: deData,
+              ja: jaData,
+              locs: matchedLocList,
+              count: segmentCount
           });
-          resultHTML += `<div class="result-loc">(${segmentCount}件)</div>`;
-          // Removed <hr>
-          resultHTML += `</div>`;
         }
       }
 
-      const countHtml = totalMatches === 0 ? '<div class="result-message">該当するデータが見つかりませんでした。</div>' : `<div class="result-message">${totalMatches}件見つかりました．</div>`;
-      return countHtml + resultHTML;
+      return results;
     };
 
     function focusResultsPanel(options) {
@@ -797,8 +793,8 @@
       setTimeout(async () => {
           try {
               if (typeof window.searchMahlerDataLocal === 'function') {
-                  const html = await window.searchMahlerDataLocal(works, instruments, includeOrchestraAll);
-                  resultsDiv.innerHTML = html;
+                  const results = await window.searchMahlerDataLocal(works, instruments, includeOrchestraAll);
+                  renderSearchResults(results);
                   searchButton.disabled = false;
               } else {
                   console.error("window.searchMahlerDataLocal is not a function");
@@ -811,6 +807,77 @@
               searchButton.disabled = false;
           }
       }, 100);
+    }
+
+    // Lazy Loading State for Search Results
+    let currentSearchResults = [];
+    let currentSearchIndex = 0;
+    const SEARCH_BATCH_SIZE = 50;
+    let searchObserver = null;
+
+    function renderSearchResults(results) {
+        const container = document.getElementById('results');
+        container.innerHTML = "";
+
+        if (!results || results.length === 0) {
+            container.innerHTML = '<div class="result-message">該当するデータが見つかりませんでした。</div>';
+            return;
+        }
+
+        container.innerHTML = `<div class="result-message">${results.length}件見つかりました．</div><div id="result-list"></div>`;
+        const listContainer = document.getElementById('result-list');
+
+        currentSearchResults = results;
+        currentSearchIndex = 0;
+
+        if (searchObserver) searchObserver.disconnect();
+        searchObserver = new IntersectionObserver((entries) => {
+            if (entries[0].isIntersecting) {
+                loadMoreSearchResults();
+            }
+        }, { rootMargin: '200px' });
+
+        loadMoreSearchResults();
+    }
+
+    function loadMoreSearchResults() {
+        const listContainer = document.getElementById('result-list');
+        if (!listContainer) return;
+
+        const fragment = document.createDocumentFragment();
+        const end = Math.min(currentSearchIndex + SEARCH_BATCH_SIZE, currentSearchResults.length);
+
+        // Remove sentinel
+        const sentinel = document.getElementById('search-sentinel');
+        if (sentinel) sentinel.remove();
+
+        for (let i = currentSearchIndex; i < end; i++) {
+            const item = currentSearchResults[i];
+            const entryDiv = document.createElement('div');
+            entryDiv.classList.add('result-entry');
+
+            let html = `<div class="result-a">${escapeHtmlWithBreaks(item.de)}</div>`;
+            html += `<div class="result-c">${escapeHtmlWithBreaks(item.ja)}</div>`;
+            item.locs.forEach(loc => {
+                html += `<div class="result-loc">${escapeHtml(loc)}</div>`;
+            });
+            html += `<div class="result-loc">(${item.count}件)</div>`;
+            
+            entryDiv.innerHTML = html;
+            fragment.appendChild(entryDiv);
+        }
+
+        listContainer.appendChild(fragment);
+        currentSearchIndex = end;
+
+        if (currentSearchIndex < currentSearchResults.length) {
+            const newSentinel = document.createElement('div');
+            newSentinel.id = 'search-sentinel';
+            newSentinel.style.height = '20px';
+            newSentinel.textContent = 'Loading more...';
+            listContainer.appendChild(newSentinel);
+            searchObserver.observe(newSentinel);
+        }
     }
 
     function getSelectedInstruments() {

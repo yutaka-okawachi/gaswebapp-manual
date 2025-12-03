@@ -161,6 +161,12 @@
             renderAbbrList(abbrData);
         });
 
+        // Lazy Loader State
+        let currentData = [];
+        let currentIndex = 0;
+        const BATCH_SIZE = 50;
+        let observer = null;
+
         function renderList(data) {
             const container = document.getElementById("listContainer");
             container.innerHTML = "";
@@ -173,17 +179,44 @@
             // Sort
             data.sort((a, b) => compareGermanStrings(a[0], b[0]));
 
-            const anchorSet = {};
-            data.forEach(row => {
+            currentData = data;
+            currentIndex = 0;
+
+            // Setup IntersectionObserver
+            if (observer) observer.disconnect();
+            observer = new IntersectionObserver((entries) => {
+                if (entries[0].isIntersecting) {
+                    loadMoreItems();
+                }
+            }, { rootMargin: '200px' });
+
+            // Initial load
+            loadMoreItems();
+        }
+
+        function loadMoreItems() {
+            const container = document.getElementById("listContainer");
+            const fragment = document.createDocumentFragment();
+            const end = Math.min(currentIndex + BATCH_SIZE, currentData.length);
+            
+            // Remove sentinel if exists
+            const sentinel = document.getElementById('sentinel');
+            if (sentinel) sentinel.remove();
+
+            for (let i = currentIndex; i < end; i++) {
+                const row = currentData[i];
                 const [german, translation, source] = row;
                 const rowDiv = document.createElement("div");
                 rowDiv.classList.add("row");
 
                 if (german && typeof german === "string") {
                     const anchorLetter = getSortLetter(german);
-                    if (anchorLetter && window.customOrder.includes(anchorLetter) && !anchorSet[anchorLetter]) {
+                    // Check if this is the FIRST occurrence of this letter in the WHOLE list
+                    const prevRow = i > 0 ? currentData[i-1] : null;
+                    const prevLetter = prevRow ? getSortLetter(prevRow[0]) : null;
+                    
+                    if (anchorLetter && window.customOrder.includes(anchorLetter) && anchorLetter !== prevLetter) {
                         rowDiv.id = "letter-" + anchorLetter;
-                        anchorSet[anchorLetter] = true;
                     }
                 }
 
@@ -196,8 +229,21 @@
                 translationDiv.innerHTML = escapeHtmlWithBreaks(translation);
                 rowDiv.appendChild(translationDiv);
 
-                container.appendChild(rowDiv);
-            });
+                fragment.appendChild(rowDiv);
+            }
+
+            container.appendChild(fragment);
+            currentIndex = end;
+
+            // Add sentinel if there are more items
+            if (currentIndex < currentData.length) {
+                const newSentinel = document.createElement('div');
+                newSentinel.id = 'sentinel';
+                newSentinel.style.height = '20px';
+                newSentinel.textContent = 'Loading more...';
+                container.appendChild(newSentinel);
+                observer.observe(newSentinel);
+            }
         }
 
         function renderAbbrList(data) {
