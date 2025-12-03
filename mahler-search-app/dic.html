@@ -132,6 +132,140 @@
                 display: block;
             }
 
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>用語集</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/common.css">
+    <script src="js/app.js"></script>
+    <style>
+        /* dic.html specific styles */
+        #fixedHeader {
+            font-family: 'Lora', serif;
+            font-size: 1.2rem;
+            font-weight: bold;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background-color: var(--primary-bg);
+            border-bottom: 1px solid #ccc;
+        }
+
+        #fixedHeader h1 {
+            font-family: 'Lora', serif;
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin: 0;
+            padding: 10px;
+            text-align: center;
+        }
+
+        .container {
+            margin-top: 80px;
+            /* Adjust for fixed header */
+            margin-bottom: 80px;
+        }
+
+        #listContainer {
+            background-color: var(--results-bg);
+            padding: 1.5rem;
+            border-radius: 8px;
+        }
+
+        .sticky-top-message {
+            position: sticky;
+            top: 60px;
+            /* Below fixed header */
+            z-index: 950;
+            background-color: var(--results-bg, #fff);
+            padding: 0.75rem 1rem;
+            border-radius: 6px;
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+            margin-bottom: 1em;
+        }
+
+        .abbr-title {
+            font-size: 0.95rem;
+            font-weight: bold;
+            color: #000;
+            background-color: #ffe6d1;
+            padding: 8px;
+            margin-bottom: 0.5em;
+            border-radius: 5px;
+            font-family: 'Lora', serif;
+        }
+
+        .abbr-row {
+            display: flex;
+            flex-direction: row;
+            align-items: flex-start;
+            margin-bottom: 0.5em;
+        }
+
+        .abbr-short {
+            flex: 0 0 20%;
+            font-weight: bold;
+            font-family: 'Lora', serif;
+        }
+
+        .abbr-long {
+            flex: 1;
+            margin-left: 1em;
+            font-family: 'Lora', serif;
+        }
+
+        .section-divider {
+            border: 0;
+            border-top: 2px dashed #999;
+            margin: 2em 0;
+        }
+
+        #abbrListContainer {
+            background-color: rgba(255, 242, 224, 0.5);
+            padding: 1.5rem;
+            border-radius: 8px;
+            scroll-margin-top: 120px;
+        }
+
+        /* Reuse row/german/translation/source from common.css or define here if specific */
+        .row {
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 10px;
+            margin-bottom: 10px;
+            scroll-margin-top: 120px;
+        }
+
+        .german {
+            font-weight: bold;
+            font-size: 1.1em;
+            display: block;
+            font-family: 'Lora', serif;
+        }
+
+        .translation {
+            margin-left: 1em;
+            font-family: 'Lora', serif;
+            font-size: 0.85em;
+        }
+
+        .source {
+            font-size: 0.8em;
+            color: #555;
+            margin-left: 0.5em;
+            font-family: 'Lora', serif;
+        }
+
+        @media (max-width: 600px) {
+            .abbr-row {
+                display: block;
+            }
+
             .abbr-short {
                 display: block;
                 width: 100%;
@@ -154,126 +288,211 @@
 
             // Render Dictionary
             const dicData = window.appData.dic_notes || [];
-            renderList(dicData);
+            if (typeof renderDictionaryList === 'function') {
+                renderDictionaryList(dicData);
+            }
 
             // Render Abbreviations
             const abbrData = window.appData.abbr_list || [];
-            renderAbbrList(abbrData);
+            if (typeof renderAbbrList === 'function') {
+                renderAbbrList(abbrData);
+            }
         });
+    </script>
+</head>
 
-        // Lazy Loader State
-        let currentData = [];
-        let currentIndex = 0;
-        const BATCH_SIZE = 50;
-        let observer = null;
+<body>
+    <div id="fixedHeader">
+        <h1>用語集</h1>
+    </div>
 
-        function renderList(data) {
-            const container = document.getElementById("listContainer");
-            container.innerHTML = "";
+    <div id="top"></div>
 
-            if (!data || data.length === 0) {
-                container.innerHTML = '<div class="result-message">データが存在しません。</div>';
-                return;
+    <div class="container">
+        <div class="top-message sticky-top-message" id="listStickyNotice">
+            略記一覧は<a href="#abbrListContainer">こちら</a>
+        </div>
+        <div id="listContainer">
+            <div class="loading">表示中・・・</div>
+        </div>
+
+        <hr class="section-divider">
+
+        <div id="abbrListContainer">
+            <div class="top-message" id="abbrMessage">(*)は特記すべきドイツ語はなし</div>
+            <div id="abbrContent">
+                <div class="loading">表示中・・・</div>
+            </div>
+        </div>
+                display: block;
             }
 
-            // Sort
-            data.sort((a, b) => compareGermanStrings(a[0], b[0]));
+<!DOCTYPE html>
+<html>
 
-            currentData = data;
-            currentIndex = 0;
-
-            // Setup IntersectionObserver
-            if (observer) observer.disconnect();
-            observer = new IntersectionObserver((entries) => {
-                if (entries[0].isIntersecting) {
-                    loadMoreItems();
-                }
-            }, { rootMargin: '200px' });
-
-            // Initial load
-            loadMoreItems();
+<head>
+    <meta charset="UTF-8">
+    <title>用語集</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/common.css">
+    <script src="js/app.js"></script>
+    <style>
+        /* dic.html specific styles */
+        #fixedHeader {
+            font-family: 'Lora', serif;
+            font-size: 1.2rem;
+            font-weight: bold;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background-color: var(--primary-bg);
+            border-bottom: 1px solid #ccc;
         }
 
-        function loadMoreItems() {
-            const container = document.getElementById("listContainer");
-            const fragment = document.createDocumentFragment();
-            const end = Math.min(currentIndex + BATCH_SIZE, currentData.length);
-            
-            // Remove sentinel if exists
-            const sentinel = document.getElementById('sentinel');
-            if (sentinel) sentinel.remove();
-
-            for (let i = currentIndex; i < end; i++) {
-                const row = currentData[i];
-                const [german, translation, source] = row;
-                const rowDiv = document.createElement("div");
-                rowDiv.classList.add("row");
-
-                if (german && typeof german === "string") {
-                    const anchorLetter = getSortLetter(german);
-                    // Check if this is the FIRST occurrence of this letter in the WHOLE list
-                    const prevRow = i > 0 ? currentData[i-1] : null;
-                    const prevLetter = prevRow ? getSortLetter(prevRow[0]) : null;
-                    
-                    if (anchorLetter && window.customOrder.includes(anchorLetter) && anchorLetter !== prevLetter) {
-                        rowDiv.id = "letter-" + anchorLetter;
-                    }
-                }
-
-                const germanWrapper = document.createElement("div");
-                germanWrapper.innerHTML = `<span class="german">${escapeHtml(german)}</span><span class="source">${escapeHtml(source)}</span>`;
-                rowDiv.appendChild(germanWrapper);
-
-                const translationDiv = document.createElement("div");
-                translationDiv.classList.add("translation");
-                translationDiv.innerHTML = escapeHtmlWithBreaks(translation);
-                rowDiv.appendChild(translationDiv);
-
-                fragment.appendChild(rowDiv);
-            }
-
-            container.appendChild(fragment);
-            currentIndex = end;
-
-            // Add sentinel if there are more items
-            if (currentIndex < currentData.length) {
-                const newSentinel = document.createElement('div');
-                newSentinel.id = 'sentinel';
-                newSentinel.style.height = '20px';
-                newSentinel.textContent = 'Loading more...';
-                container.appendChild(newSentinel);
-                observer.observe(newSentinel);
-            }
+        #fixedHeader h1 {
+            font-family: 'Lora', serif;
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin: 0;
+            padding: 10px;
+            text-align: center;
         }
 
-        function renderAbbrList(data) {
-            const container = document.getElementById("abbrContent");
-            container.innerHTML = "";
+        .container {
+            margin-top: 80px;
+            /* Adjust for fixed header */
+            margin-bottom: 80px;
+        }
 
-            if (!data || data.length === 0) {
-                container.innerHTML = '<p>（略記一覧のデータが存在しませんでした）</p>';
-                return;
+        #listContainer {
+            background-color: var(--results-bg);
+            padding: 1.5rem;
+            border-radius: 8px;
+        }
+
+        .sticky-top-message {
+            position: sticky;
+            top: 60px;
+            /* Below fixed header */
+            z-index: 950;
+            background-color: var(--results-bg, #fff);
+            padding: 0.75rem 1rem;
+            border-radius: 6px;
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+            margin-bottom: 1em;
+        }
+
+        .abbr-title {
+            font-size: 0.95rem;
+            font-weight: bold;
+            color: #000;
+            background-color: #ffe6d1;
+            padding: 8px;
+            margin-bottom: 0.5em;
+            border-radius: 5px;
+            font-family: 'Lora', serif;
+        }
+
+        .abbr-row {
+            display: flex;
+            flex-direction: row;
+            align-items: flex-start;
+            margin-bottom: 0.5em;
+        }
+
+        .abbr-short {
+            flex: 0 0 20%;
+            font-weight: bold;
+            font-family: 'Lora', serif;
+        }
+
+        .abbr-long {
+            flex: 1;
+            margin-left: 1em;
+            font-family: 'Lora', serif;
+        }
+
+        .section-divider {
+            border: 0;
+            border-top: 2px dashed #999;
+            margin: 2em 0;
+        }
+
+        #abbrListContainer {
+            background-color: rgba(255, 242, 224, 0.5);
+            padding: 1.5rem;
+            border-radius: 8px;
+            scroll-margin-top: 120px;
+        }
+
+        /* Reuse row/german/translation/source from common.css or define here if specific */
+        .row {
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 10px;
+            margin-bottom: 10px;
+            scroll-margin-top: 120px;
+        }
+
+        .german {
+            font-weight: bold;
+            font-size: 1.1em;
+            display: block;
+            font-family: 'Lora', serif;
+        }
+
+        .translation {
+            margin-left: 1em;
+            font-family: 'Lora', serif;
+            font-size: 0.85em;
+        }
+
+        .source {
+            font-size: 0.8em;
+            color: #555;
+            margin-left: 0.5em;
+            font-family: 'Lora', serif;
+        }
+
+        @media (max-width: 600px) {
+            .abbr-row {
+                display: block;
             }
 
-            data.forEach(row => {
-                // Assuming row is [id, short, long] or similar based on src/dic.html logic
-                // src/dic.html: const [colA, colB, colC] = row;
-                // if colA is number -> title
-                const [colA, colB, colC] = row;
+            .abbr-short {
+                display: block;
+                width: 100%;
+                margin-bottom: 5px;
+            }
 
-                if (colA && !isNaN(parseInt(colA))) {
-                    const titleDiv = document.createElement("div");
-                    titleDiv.classList.add("abbr-title");
-                    titleDiv.textContent = colB;
-                    container.appendChild(titleDiv);
-                } else {
-                    const rowDiv = document.createElement("div");
-                    rowDiv.classList.add("abbr-row");
-                    rowDiv.innerHTML = `<span class="abbr-short">${escapeHtml(colB)}</span><span class="abbr-long">${escapeHtml(colC)}</span>`;
-                    container.appendChild(rowDiv);
-                }
-            });
+            .abbr-long {
+                display: block;
+                width: 100%;
+                margin-left: 0;
+            }
         }
+    </style>
+    <script>
+        window.addEventListener('DOMContentLoaded', async () => {
+            // Load data
+            if (typeof loadData === 'function') {
+                await loadData('dic');
+            }
+
+            // Render Dictionary
+            const dicData = window.appData.dic_notes || [];
+            if (typeof renderDictionaryList === 'function') {
+                renderDictionaryList(dicData);
+            }
+
+            // Render Abbreviations
+            const abbrData = window.appData.abbr_list || [];
+            if (typeof renderAbbrList === 'function') {
+                renderAbbrList(abbrData);
+            }
+        });
     </script>
 </head>
 
@@ -308,9 +527,15 @@
         <script>
             // Generate alphabet links
             const letters = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"];
+            const alphaBar = document.getElementById('alpha-floating-bar');
+            const fragment = document.createDocumentFragment();
             letters.forEach(l => {
-                document.write(`<a href="#letter-${l}">${l}</a>`);
+                const a = document.createElement('a');
+                a.href = `#letter-${l}`;
+                a.textContent = l;
+                fragment.appendChild(a);
             });
+            alphaBar.appendChild(fragment);
         </script>
     </div>
 

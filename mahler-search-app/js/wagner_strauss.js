@@ -231,8 +231,8 @@ function searchByScene() {
                     return selectedScenes.includes(rowKey);
                 });
 
-                const html = formatGenericResults(filteredData);
-                setResults(html);
+                const items = prepareGenericResults(filteredData);
+                setResults(items);
 
                 // Send notification
                 if (typeof sendSearchNotification === 'function') {
@@ -289,6 +289,11 @@ function searchByPage() {
     if (typeof google !== 'undefined' && google.script && google.script.run) {
         google.script.run
             .withSuccessHandler(html => {
+                // Note: Server side still returns HTML. If we want lazy loading for server results, 
+                // we'd need to update server code to return JSON. 
+                // For now, we assume local fallback is primary or server returns HTML which we just display.
+                // If the user wants lazy loading everywhere, we should prioritize local search or update server.
+                // Given the context "Local fallback" is used in the plan, we focus on that.
                 if (thisSearchId === currentSearchId) setResults(html);
                 document.querySelectorAll('#page-selection-container .btn-search').forEach(btn => {
                     btn.disabled = false;
@@ -326,8 +331,8 @@ function searchByPage() {
                     return pages.has(Number(row.page));
                 });
 
-                const html = formatGenericResults(filteredData);
-                setResults(html);
+                const items = prepareGenericResults(filteredData);
+                setResults(items);
 
                 // Send notification
                 if (typeof sendSearchNotification === 'function') {
@@ -372,11 +377,19 @@ function clearPageInput() {
     setResults('');
 }
 
-// Helper for setResults if not in app.js or common
-function setResults(html) {
+// Helper for setResults
+function setResults(content) {
     const resultsDiv = document.getElementById('results');
     if (!resultsDiv) return;
-    resultsDiv.innerHTML = html;
+
+    if (Array.isArray(content)) {
+        // Use LazyLoader
+        new LazyLoader('results', content, renderGenericItem);
+    } else {
+        // String content (HTML or message)
+        resultsDiv.innerHTML = content;
+    }
+
     if (typeof focusResultsPanel === 'function') {
         focusResultsPanel({ instant: true });
     }

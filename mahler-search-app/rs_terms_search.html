@@ -115,13 +115,19 @@
                 if (thisSearchId !== currentSearchId) return;
                 
                 try {
-                    let html = '';
                     if (typeof searchRSTermsLocal === 'function') {
-                        html = searchRSTermsLocal(query);
+                        const results = searchRSTermsLocal(query);
+                        if (Array.isArray(results)) {
+                            // Use LazyLoader
+                            resultsDiv.innerHTML = `<div class="result-message">全部で${results.length}件ありました。</div><div id="term-results-list"></div>`;
+                            new LazyLoader('term-results-list', results, renderTermItem);
+                        } else {
+                            // Fallback
+                            resultsDiv.innerHTML = results;
+                        }
                     } else {
-                        html = '<div class="result-message">検索機能が見つかりません (searchRSTermsLocal missing)</div>';
+                        resultsDiv.innerHTML = '<div class="result-message">検索機能が見つかりません (searchRSTermsLocal missing)</div>';
                     }
-                    resultsDiv.innerHTML = html;
                 } catch (e) {
                     console.error(e);
                     resultsDiv.innerHTML = `<div class="result-message" style="color:red;">エラーが発生しました: ${e.message}<br>${e.stack}</div>`;
