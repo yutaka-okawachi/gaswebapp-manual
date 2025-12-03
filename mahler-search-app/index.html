@@ -798,6 +798,11 @@
           try {
               if (typeof window.searchMahlerDataLocal === 'function') {
                   const html = await window.searchMahlerDataLocal(works, instruments, includeOrchestraAll);
+                  resultsDiv.innerHTML = html;
+                  searchButton.disabled = false;
+              } else {
+                  console.error("window.searchMahlerDataLocal is not a function");
+                  resultsDiv.innerHTML = '<div class="result-message">検索機能が見つかりません (searchMahlerDataLocal missing)</div>';
                   searchButton.disabled = false;
               }
           } catch (e) {
