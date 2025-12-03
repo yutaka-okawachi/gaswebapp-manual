@@ -1339,11 +1339,11 @@ function searchGenericTermsLocal(query, dataKey, type) {
         groupedByDe[de].forEach(row => {
             const ja = escapeHtmlWithBreaks(String(row.ja || ''));
             const whom = escapeHtml(String(row.whom || ''));
-            const operKey = normalizeString(String(row.oper || ''));
+            const operKey = normalizeString(String(row.Oper || ''));
             const aufzug = (row.aufzug || '0').toString().trim().toLowerCase();
             const szene = (row.szene || '0').toString().trim().toLowerCase();
             const page = escapeHtml(String(row.page || ''));
-            const operaDisplayName = operaDisplayNames[operKey] || escapeHtml(String(row.oper || ''));
+            const operaDisplayName = operaDisplayNames[operKey] || escapeHtml(String(row.Oper || ''));
             
             // Scene Name Logic
             let sceneName = row['場面タイトル'] || `場面(${aufzug}-${szene})`;
