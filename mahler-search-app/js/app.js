@@ -798,374 +798,15 @@ function searchRichardWagnerByPage() {
         }
 
         const filteredData = data.filter(row => {
-
-// --- Lazy Loader Class ---
-class LazyLoader {
-    constructor(containerId, items, renderItemFn, batchSize = 50) {
-        this.container = document.getElementById(containerId);
-        this.items = items;
-        this.renderItemFn = renderItemFn;
-        this.batchSize = batchSize;
-        this.currentIndex = 0;
-        this.observer = null;
-
-        if (!this.container) {
-            console.error(`LazyLoader: Container #${containerId} not found`);
-            return;
-        }
-
-        this.init();
-    }
-
-    init() {
-        this.container.innerHTML = '';
-        if (!this.items || this.items.length === 0) {
-            this.container.innerHTML = '<div class="result-message">該当するデータが見つかりませんでした。</div>';
-            return;
-        }
-
-        // Add summary if it's not already part of the items (optional, depending on usage)
-        // For now, we assume the caller handles the summary or it's the first item.
-
-        this.currentIndex = 0;
-
-        // Setup IntersectionObserver
-        if (this.observer) this.observer.disconnect();
-        this.observer = new IntersectionObserver((entries) => {
-            if (entries[0].isIntersecting) {
-                this.loadMore();
-            }
-        }, { rootMargin: '200px' });
-
-        this.loadMore();
-    }
-
-    loadMore() {
-        if (!this.container) return;
-
-        const fragment = document.createDocumentFragment();
-        const end = Math.min(this.currentIndex + this.batchSize, this.items.length);
-
-        // Remove sentinel if exists
-        const sentinel = this.container.querySelector('.lazy-sentinel');
-        if (sentinel) sentinel.remove();
-
-        for (let i = this.currentIndex; i < end; i++) {
-            const item = this.items[i];
-            const domElement = this.renderItemFn(item, i, this.items);
-            if (domElement) {
-                fragment.appendChild(domElement);
-            }
-        }
-
-        this.container.appendChild(fragment);
-        this.currentIndex = end;
-
-        // Add sentinel if there are more items
-        if (this.currentIndex < this.items.length) {
-            const newSentinel = document.createElement('div');
-            newSentinel.className = 'lazy-sentinel';
-            newSentinel.style.height = '20px';
-            newSentinel.textContent = 'Loading more...';
-            this.container.appendChild(newSentinel);
-            this.observer.observe(newSentinel);
-        }
-    }
-}
-
-// Make LazyLoader globally available
-window.LazyLoader = LazyLoader;
-
-
-// --- Helper to normalize string (Shared) ---
-function normalizeString(str) {
-    if (!str) return '';
-    return str.toLowerCase()
-        .replace(/ä/g, 'ae')
-        .replace(/ö/g, 'oe')
-        .replace(/ü/g, 'ue')
-        .replace(/ß/g, 'ss')
-        .replace(/[^a-z0-9.]/g, '');
-}
-
-// --- Refactored Search Helpers ---
-
-// Prepares data for Generic Results (RS/RW Search)
-// Returns an array of objects: { type: 'header'|'row', content: ... }
-function prepareGenericResults(data) {
-    if (!data || data.length === 0) {
-        return [];
-    }
-
-    // Sort by Aufzug, Szene, then page
-    data.sort((a, b) => {
-        const aufzugA = Number(a.Aufzug) || 0;
-        const aufzugB = Number(b.Aufzug) || 0;
-        if (aufzugA !== aufzugB) return aufzugA - aufzugB;
-
-        const szeneA = Number(a.Szene) || 0;
-        const szeneB = Number(b.Szene) || 0;
-        if (szeneA !== szeneB) return szeneA - szeneB;
-
-        const pageA = Number(a.page) || 0;
-        const pageB = Number(b.page) || 0;
-        return pageA - pageB;
-    });
-
-    const items = [];
-
-    // Add score info at the top (once)
-    if (data[0] && data[0].hasOwnProperty('楽譜情報') && data[0]['楽譜情報']) {
-        items.push({
-            type: 'score-info',
-            content: data[0]['楽譜情報']
+            if (normalizeString(row.Oper) !== normalizeString(operaValue)) return false;
+            if (row.page === undefined || row.page === null || row.page === '') return false;
+            return pages.has(Number(row.page));
         });
-    }
-    
-    // Add count info
-    items.push({
-        type: 'count-info',
-        count: data.length
-    });
 
-    let prevAufzug = null;
-    let prevSzene = null;
-
-    data.forEach(row => {
-        const currentAufzug = row.Aufzug;
-        const currentSzene = row.Szene;
-
-        // Add scene title when Aufzug or Szene changes
-        if (currentAufzug !== prevAufzug || currentSzene !== prevSzene) {
-            let sceneTitle = '';
-            
-            // Use explicit Scene Title if available (from JSON export)
-            if (row['場面タイトル']) {
-                sceneTitle = row['場面タイトル'];
-            } else {
-                // Fallback to generating title from Aufzug/Szene
-                const aufzugText = currentAufzug ? `第${currentAufzug}幕` : '';
-                const szeneText = currentSzene ? `第${currentSzene}場` : '';
-                sceneTitle = [aufzugText, szeneText].filter(t => t).join('');
-            }
-            
-            if (sceneTitle) {
-                items.push({
-                    type: 'scene-header',
-                    title: sceneTitle
-                });
-            }
-            
-            prevAufzug = currentAufzug;
-            prevSzene = currentSzene;
-        }
-
-        items.push({
-            type: 'data-row',
-            data: row
-        });
-    });
-
-    return items;
+        const html = formatGenericResults(filteredData);
+        document.getElementById('results').innerHTML = html;
+    }, 10);
 }
-
-// Renderer for Generic Results
-function renderGenericItem(item) {
-    if (item.type === 'score-info') {
-        const div = document.createElement('div');
-        div.style.backgroundColor = '#e3f2fd';
-        div.style.padding = '10px';
-        div.style.marginBottom = '15px';
-        div.style.borderRadius = '5px';
-        div.style.fontFamily = "'Lora', serif";
-        div.textContent = `楽譜情報: ${item.content}`;
-        return div;
-    }
-    
-    if (item.type === 'count-info') {
-        const div = document.createElement('div');
-        div.textContent = `${item.count}件見つかりました。`;
-        return div;
-    }
-
-    if (item.type === 'scene-header') {
-        const div = document.createElement('div');
-        div.innerHTML = `<h2 style="font-family: 'Lora', serif; font-size: 1.1em; font-weight: bold; margin-top: 20px; margin-bottom: 10px; color: #333;">${escapeHtml(item.title)}</h2><hr style="border-top: 1px solid #ccc; margin-bottom: 20px;">`;
-        return div;
-    }
-
-    if (item.type === 'data-row') {
-        const row = item.data;
-        const pageDisplay = row.page ? `p.${row.page}` : '';
-        const de = escapeHtmlWithBreaks(row.de);
-        const ja = escapeHtmlWithBreaks(row.ja);
-        const whom = escapeHtml(row.whom);
-
-        const div = document.createElement('div');
-        div.className = 'result-entry';
-        div.innerHTML = `
-            <div class="result-page">${pageDisplay}</div>
-            <div class="result-content">
-                <div class="result-de">${de}</div>
-                <div class="result-ja-loc">
-                    <span>${ja}</span>
-                    <span>【${whom}】</span>
-                </div>
-            </div>
-        `;
-        return div;
-    }
-    return null;
-}
-
-// Prepares data for Terms Search Results (RS/RW)
-function prepareTermsResults(data) {
-    if (!data || data.length === 0) return [];
-
-    // Group by 'de' text
-    const groupedByDe = data.reduce((acc, row) => {
-        const de = row.de || '（ドイツ語なし）';
-        if (!acc[de]) {
-            acc[de] = [];
-        }
-        acc[de].push(row);
-        return acc;
-    }, {});
-
-    const items = [];
-    items.push({ type: 'count-info', count: data.length });
-
-    const sortedDeKeys = Object.keys(groupedByDe).sort((a, b) => a.localeCompare(b, 'de'));
-    
-    const operaDisplayNames = {
-        'guntram': 'Guntram Op.25', 'feuersnot': 'Feuersnot Op.50', 'salome': 'Salome Op.54',
-        'elektra': 'Elektra Op.58', 'rosenkavalier': 'Der Rosenkavalier Op.59', 'ariadne': 'Ariadne auf Naxos Op.60',
-        'schatten': 'Die Frau ohne Schatten Op.65', 'intermezzo': 'Intermezzo Op.72', 'helena': 'Die ägyptische Helena Op.75',
-        'arabella': 'Arabella Op.79', 'schweigsame': 'Die schweigsame Frau Op.80', 'tag': 'Friedenstag Op.81',
-        'daphne': 'Daphne Op.82', 'danae': 'Die Liebe der Danae Op.83', 'cap': 'Capriccio Op.85',
-        'feen': 'Die Feen WWV 32', 'liebes': 'Das Liebesverbot WWV 38', 'rienzi': 'Rienzi, der Letzte der Tribunen WWV 49',
-        'hollaender': 'Der fliegende Holländer WWV 63', 'tannhaeuser': 'Tannhäuser WWV 70',
-        'tanndresden': 'Tannhäuser (Dresden) WWV 70', 'tannparis': 'Tannhäuser (Paris) WWV 70',
-        'lohengrin': 'Lohengrin WWV 75',
-        'tristan': 'Tristan und Isolde WWV 90', 'meister': 'Die Meistersinger von Nürnberg WWV 96',
-        'rheingold': 'Das Rheingold WWV 86A', 'walkuere': 'Die Walküre WWV 86B', 'siegfried': 'Siegfried WWV 86C',
-        'goetter': 'Götterdämmerung WWV 86D', 'parsifal': 'Parsifal WWV 111'
-    };
-
-    sortedDeKeys.forEach(de => {
-        items.push({ type: 'term-header', text: de });
-        
-        groupedByDe[de].forEach(row => {
-            items.push({ 
-                type: 'term-row', 
-                data: row,
-                operaMap: operaDisplayNames 
-            });
-        });
-    });
-
-    return items;
-}
-
-function renderTermItem(item) {
-    if (item.type === 'count-info') {
-        const div = document.createElement('div');
-        div.className = 'result-message';
-        div.textContent = `全部で${item.count}件ありました。`;
-        return div;
-    }
-
-    if (item.type === 'term-header') {
-        const div = document.createElement('div');
-        div.className = 'result-a';
-        div.innerHTML = escapeHtmlWithBreaks(item.text);
-        return div;
-    }
-
-    if (item.type === 'term-row') {
-        const row = item.data;
-        const ja = escapeHtmlWithBreaks(String(row.ja || ''));
-        const whom = escapeHtml(String(row.whom || ''));
-        const operKey = normalizeString(String(row.Oper || ''));
-        const aufzug = (row.aufzug || '0').toString().trim().toLowerCase();
-        const szene = (row.szene || '0').toString().trim().toLowerCase();
-        const page = escapeHtml(String(row.page || ''));
-        const operaDisplayName = item.operaMap[operKey] || escapeHtml(String(row.Oper || ''));
-        
-        let sceneName = row['場面タイトル'] || `場面(${aufzug}-${szene})`;
-        const pageDisplay = page ? `p.${page}` : '';
-        let locationText = `${operaDisplayName} ${sceneName} ${pageDisplay}`.trim();
-        if (whom) {
-            locationText = `${locationText} 【${whom}】`;
-        }
-
-        const div = document.createElement('div');
-        div.innerHTML = `
-            <div class="result-c">${ja}</div>
-            <div class="result-loc">${locationText}</div>
-        `;
-        return div;
-    }
-    return null;
-}
-
-// Make helpers available globally
-window.prepareGenericResults = prepareGenericResults;
-window.renderGenericItem = renderGenericItem;
-window.prepareTermsResults = prepareTermsResults;
-window.renderTermItem = renderTermItem;
-
-// --- Updated Local Search Functions ---
-
-// RS Terms Search Local
-window.searchRSTermsLocal = function (query) {
-    return searchGenericTermsLocal(query, 'richard_strauss', 'RS');
-};
-
-// RW Terms Search Local
-window.searchRWTermsLocal = function (query) {
-    return searchGenericTermsLocal(query, 'richard_wagner', 'RW');
-};
-
-// Generic Terms Search Local for RS/RW - Returns DATA, not HTML
-function searchGenericTermsLocal(query, dataKey, type) {
-    const data = window.appData[dataKey];
-    if (!data) return [];
-
-    const normalizedQuery = normalizeString(query);
-    
-    // Filter data
-    const filteredData = data.filter(row => {
-        const de = row.de || '';
-        const deNormalized = row.de_normalized || normalizeString(de);
-        const pageExists = row.page !== null && row.page !== undefined && String(row.page).trim() !== '';
-        return deNormalized.includes(normalizedQuery) && pageExists;
-    });
-
-    return filteredData;
-}
-
-// Get Unique Terms for RS/RW Local
-window.getGenericTermsListLocal = function(dataKey) {
-    const data = window.appData[dataKey];
-    if (!data) return [];
-    
-    // Extract unique 'de' terms
-    const terms = data
-        .map(row => ({ original: row.de, normalized: row.de_normalized || normalizeString(row.de) }))
-        .filter(item => item.original && item.normalized);
-
-    const uniqueTermsMap = new Map();
-    terms.forEach(item => {
-        if (!uniqueTermsMap.has(item.original)) {
-            uniqueTermsMap.set(item.original, item);
-        }
-    });
-    
-    return Array.from(uniqueTermsMap.values());
-};
-
-// --- Dictionary Rendering (Lazy Loaded) ---
 
 function renderDictionary(container) {
     container.innerHTML = `
@@ -1219,6 +860,8 @@ function renderNotes(container) {
 
 // --- Dictionary Helper Functions ---
 
+// NOTE: customOrder is defined in index.html and guarded to window.customOrder.
+// Ensure it's available for dictionary functions.
 window.customOrder = window.customOrder || [
     "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K",
     "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U",
@@ -1264,31 +907,31 @@ function generateAlphabetLinks() {
 }
 
 function renderDictionaryList(data) {
-    const containerId = "listContainer";
-    const container = document.getElementById(containerId);
+    const container = document.getElementById("listContainer");
     if (!data || data.length === 0) {
-        if (container) container.innerHTML = '<div class="result-message">データが存在しません。</div>';
+        container.innerHTML = '<div class="result-message">データが存在しません。</div>';
         return;
     }
 
     // Sort data
+    // data is array of [german, translation, source]
     data.sort((a, b) => compareGermanStrings(a[0], b[0]));
 
-    // Initialize LazyLoader
-    new LazyLoader(containerId, data, (row, index, allItems) => {
+    container.innerHTML = "";
+    const anchorSet = {};
+
+    data.forEach(row => {
         const [german, translation, source] = row;
+
         const rowDiv = document.createElement("div");
         rowDiv.classList.add("row");
 
         // Anchor assignment
         if (german && typeof german === "string") {
             const anchorLetter = getSortLetter(german);
-            // Check if this is the first occurrence of this letter
-            const prevRow = index > 0 ? allItems[index - 1] : null;
-            const prevLetter = prevRow ? getSortLetter(prevRow[0]) : null;
-
-            if (anchorLetter && window.customOrder.includes(anchorLetter) && anchorLetter !== prevLetter) {
+            if (anchorLetter && window.customOrder.includes(anchorLetter) && !anchorSet[anchorLetter]) {
                 rowDiv.id = "letter-" + anchorLetter;
+                anchorSet[anchorLetter] = true;
             }
         }
 
@@ -1312,28 +955,27 @@ function renderDictionaryList(data) {
         translationDiv.textContent = translation;
 
         rowDiv.appendChild(translationDiv);
-        return rowDiv;
+        container.appendChild(rowDiv);
     });
 }
 
 function renderAbbrList(data) {
-    const containerId = "abbrContent";
-    const container = document.getElementById(containerId);
+    const contentContainer = document.getElementById("abbrContent");
+    contentContainer.innerHTML = "";
 
     if (!data || data.length === 0) {
-        if (container) container.innerHTML = '<p>（略記一覧のデータが存在しませんでした）</p>';
+        contentContainer.innerHTML = '<p>（略記一覧のデータが存在しませんでした）</p>';
         return;
     }
 
-    // Initialize LazyLoader
-    new LazyLoader(containerId, data, (row) => {
+    data.forEach(row => {
         const [colA, colB, colC] = row;
 
         if (colA && !isNaN(parseInt(colA))) {
             const titleDiv = document.createElement("div");
             titleDiv.classList.add("abbr-title");
             titleDiv.textContent = colB;
-            return titleDiv;
+            contentContainer.appendChild(titleDiv);
         } else {
             const rowDiv = document.createElement("div");
             rowDiv.classList.add("abbr-row");
@@ -1348,10 +990,11 @@ function renderAbbrList(data) {
 
             rowDiv.appendChild(shortSpan);
             rowDiv.appendChild(longSpan);
-            return rowDiv;
+            contentContainer.appendChild(rowDiv);
         }
     });
 }
+
 
 // Scroll to top logic
 function scrollToTop() {
@@ -1360,12 +1003,10 @@ function scrollToTop() {
 
 window.addEventListener('scroll', () => {
     const btn = document.getElementById('scrollToTop');
-    if (btn) {
-        if (window.scrollY > 300) {
-            btn.style.display = 'block';
-        } else {
-            btn.style.display = 'none';
-        }
+    if (window.scrollY > 300) {
+        btn.style.display = 'block';
+    } else {
+        btn.style.display = 'none';
     }
 });
 
@@ -1379,11 +1020,11 @@ function focusResultsPanel(options) {
 }
 window.focusResultsPanel = focusResultsPanel;
 
-// --- Local Search Helpers for Terms (Mahler) ---
+// --- Local Search Helpers for Terms ---
 
 window.searchTermsLocal = function (query, sourceFilter) {
     const data = window.appData.dic_notes;
-    if (!data) return [];
+    if (!data) return '<div class="result-message">データが読み込まれていません。</div>';
 
     const normalizedQuery = normalizeString(query);
     const results = [];
@@ -1392,6 +1033,7 @@ window.searchTermsLocal = function (query, sourceFilter) {
         const [german, translation, source] = row;
 
         // Filter by source
+        // Note: Some terms might have multiple tags e.g. [GM], [RW: Oper]
         if (sourceFilter) {
             if (sourceFilter === 'GM' && !source.includes('[GM]')) return;
             if (sourceFilter === 'RW' && !source.includes('[RW')) return;
@@ -1405,10 +1047,24 @@ window.searchTermsLocal = function (query, sourceFilter) {
         }
     });
 
+    if (results.length === 0) {
+        return '<div class="result-message">該当する用語は見つかりませんでした。</div>';
+    }
+
     // Sort results
     results.sort((a, b) => compareGermanStrings(a[0], b[0]));
-    
-    return results;
+
+    // Format results
+    let html = '';
+    results.forEach(row => {
+        const [german, translation, source] = row;
+        html += `<div class="row">
+            <div><span class="german">${escapeHtml(german)}</span><span class="source">${escapeHtml(source)}</span></div>
+            <div class="translation">${escapeHtmlWithBreaks(translation)}</div>
+        </div>`;
+    });
+
+    return `<div>${results.length}件見つかりました。</div>${html}`;
 }
 
 window.getTermsListLocal = function (sourceFilter) {
@@ -1483,7 +1139,9 @@ function formatMovementNumber(a, b) {
 
 window.searchMahlerDataLocal = function (choice1Arr, choice2Arr, includeOrchestraAll) {
     const data = window.appData.mahler;
-    if (!data || data.length === 0) return [];
+    if (!data || data.length === 0) {
+        return '<div class="result-message">データが読み込まれていません。</div>';
+    }
 
     const groupAllMap = {
         "all_strings": ["v1", "v2", "va", "vc", "kb", "sv", "sva", "svc", "skb"],
@@ -1515,7 +1173,7 @@ window.searchMahlerDataLocal = function (choice1Arr, choice2Arr, includeOrchestr
         finalInstruments.add('all');
     }
 
-    let results = [];
+    let resultHTML = '';
     let totalMatches = 0;
 
     try {
@@ -1562,38 +1220,43 @@ window.searchMahlerDataLocal = function (choice1Arr, choice2Arr, includeOrchestr
             });
 
             if (matchedLocList.length > 0) {
-                results.push({
-                    type: 'row',
-                    de: deData,
-                    ja: jaData,
-                    locs: matchedLocList,
-                    count: segmentCount
+                resultHTML += `<div class="result-a">${escapeHtmlWithBreaks(deData)}</div>`;
+                resultHTML += `<div class="result-c">${escapeHtmlWithBreaks(jaData)}</div>`;
+                matchedLocList.forEach(loc => {
+                    resultHTML += `<div class="result-loc">${escapeHtml(loc)}</div>`;
                 });
+                resultHTML += `<div class="result-loc">(${segmentCount}件)</div>`;
+                resultHTML += '<hr style="border-top: 1px dashed #ccc; margin: 10px 0;">';
             }
         });
     } catch (e) {
         console.error("Error in searchMahlerDataLocal:", e);
-        return [];
+        return `<div class="result-message">検索中にエラーが発生しました: ${e.message}</div>`;
     }
 
-    return results;
+    return totalMatches === 0 ? '<div class="result-message">該当するデータが見つかりませんでした。</div>' : `<div>${totalMatches}件ありました。</div>${resultHTML}`;
 };
 
 // --- Mahler Terms Search Logic (Local Fallback) ---
 
 window.getMahlerTermsListLocal = function () {
     const data = window.appData.mahler;
+    console.log('getMahlerTermsListLocal called. Data:', data ? data.length : 'null');
     if (!data) return [];
+    if (data.length > 0) {
+        console.log('First row:', data[0]);
+    }
     const mapped = data.map(row => ({
         original: row.de || row[0],
         normalized: row.de_normalized || row[1]
     })).filter(item => item.original);
+    console.log('Mapped terms:', mapped.length);
     return mapped;
 };
 
 window.searchMahlerTermsLocal = function (query) {
     const data = window.appData.mahler;
-    if (!data) return [];
+    if (!data) return '<div class="result-message">データが読み込まれていません。</div>';
 
     const normalizedQuery = normalizeString(query);
     const results = data.filter(row => {
@@ -1601,9 +1264,12 @@ window.searchMahlerTermsLocal = function (query) {
         return deNormalized && deNormalized.includes(normalizedQuery);
     });
 
-    if (results.length === 0) return [];
+    if (results.length === 0) {
+        return '<div class="result-message">該当するデータが見つかりませんでした。</div>';
+    }
 
-    let formattedResults = [];
+    let resultHTML = '';
+    let totalMatches = 0;
 
     try {
         results.forEach(row => {
@@ -1632,19 +1298,139 @@ window.searchMahlerTermsLocal = function (query) {
             });
 
             if (matchedLocList.length > 0) {
-                formattedResults.push({
-                    type: 'row',
-                    de: deData,
-                    ja: jaData,
-                    locs: matchedLocList,
-                    count: segmentCount
+                totalMatches++;
+                resultHTML += `<div class="result-a">${escapeHtmlWithBreaks(deData)}</div>`;
+                resultHTML += `<div class="result-c">${escapeHtmlWithBreaks(jaData)}</div>`;
+                matchedLocList.forEach(loc => {
+                    resultHTML += `<div class="result-loc">${escapeHtml(loc)}</div>`;
                 });
+                resultHTML += `<div class="result-loc">(${segmentCount}件)</div>`;
+                resultHTML += '<hr style="border-top: 1px dashed #ccc; margin: 10px 0;">';
             }
         });
     } catch (e) {
         console.error("Error in searchMahlerTermsLocal:", e);
-        return [];
+        return `<div class="result-message">検索中にエラーが発生しました: ${e.message}</div>`;
     }
 
-    return formattedResults;
+    return totalMatches === 0 ? '<div class="result-message">該当するデータが見つかりませんでした。</div>' : `<div>${totalMatches}件ありました。</div>${resultHTML}`;
 };
+
+// RS Terms Search Local
+window.searchRSTermsLocal = function (query) {
+    return searchGenericTermsLocal(query, 'richard_strauss', 'RS');
+};
+
+// RW Terms Search Local
+window.searchRWTermsLocal = function (query) {
+    return searchGenericTermsLocal(query, 'richard_wagner', 'RW');
+};
+
+// Generic Terms Search Local for RS/RW
+function searchGenericTermsLocal(query, dataKey, type) {
+    const data = window.appData[dataKey];
+    if (!data) return '<div class="result-message">データが読み込まれていません。</div>';
+
+    const normalizedQuery = normalizeString(query);
+    
+    // Filter data
+    const filteredData = data.filter(row => {
+        const de = row.de || '';
+        const deNormalized = row.de_normalized || normalizeString(de);
+        const pageExists = row.page !== null && row.page !== undefined && String(row.page).trim() !== '';
+        return deNormalized.includes(normalizedQuery) && pageExists;
+    });
+
+    if (filteredData.length === 0) {
+        return '<div class="result-message">該当するデータが見つかりませんでした。</div>';
+    }
+
+    // Group by 'de' text
+    const groupedByDe = filteredData.reduce((acc, row) => {
+        const de = row.de || '（ドイツ語なし）';
+        if (!acc[de]) {
+            acc[de] = [];
+        }
+        acc[de].push(row);
+        return acc;
+    }, {});
+
+    let html = `<div class="result-message">全部で${filteredData.length}件ありました。</div>`;
+    
+    const sortedDeKeys = Object.keys(groupedByDe).sort((a, b) => a.localeCompare(b, 'de'));
+    
+    // Opera display names mapping
+    const operaDisplayNames = {
+        'guntram': 'Guntram Op.25', 'feuersnot': 'Feuersnot Op.50', 'salome': 'Salome Op.54',
+        'elektra': 'Elektra Op.58', 'rosenkavalier': 'Der Rosenkavalier Op.59', 'ariadne': 'Ariadne auf Naxos Op.60',
+        'schatten': 'Die Frau ohne Schatten Op.65', 'intermezzo': 'Intermezzo Op.72', 'helena': 'Die ägyptische Helena Op.75',
+        'arabella': 'Arabella Op.79', 'schweigsame': 'Die schweigsame Frau Op.80', 'tag': 'Friedenstag Op.81',
+        'daphne': 'Daphne Op.82', 'danae': 'Die Liebe der Danae Op.83', 'cap': 'Capriccio Op.85',
+        'feen': 'Die Feen WWV 32', 'liebes': 'Das Liebesverbot WWV 38', 'rienzi': 'Rienzi, der Letzte der Tribunen WWV 49',
+        'hollaender': 'Der fliegende Holländer WWV 63', 'tannhaeuser': 'Tannhäuser WWV 70',
+        'tanndresden': 'Tannhäuser (Dresden) WWV 70', 'tannparis': 'Tannhäuser (Paris) WWV 70',
+        'lohengrin': 'Lohengrin WWV 75',
+        'tristan': 'Tristan und Isolde WWV 90', 'meister': 'Die Meistersinger von Nürnberg WWV 96',
+        'rheingold': 'Das Rheingold WWV 86A', 'walkuere': 'Die Walküre WWV 86B', 'siegfried': 'Siegfried WWV 86C',
+        'goetter': 'Götterdämmerung WWV 86D', 'parsifal': 'Parsifal WWV 111'
+    };
+
+    sortedDeKeys.forEach(de => {
+        html += `<div class="result-a">${escapeHtmlWithBreaks(de)}</div>`;
+        
+        groupedByDe[de].forEach(row => {
+            const ja = escapeHtmlWithBreaks(String(row.ja || ''));
+            const whom = escapeHtml(String(row.whom || ''));
+            const operKey = normalizeString(String(row.Oper || ''));
+            const aufzug = (row.aufzug || '0').toString().trim().toLowerCase();
+            const szene = (row.szene || '0').toString().trim().toLowerCase();
+            const page = escapeHtml(String(row.page || ''));
+            const operaDisplayName = operaDisplayNames[operKey] || escapeHtml(String(row.Oper || ''));
+            
+            // Scene Name Logic
+            let sceneName = row['場面タイトル'] || `場面(${aufzug}-${szene})`;
+
+            const pageDisplay = page ? `p.${page}` : '';
+            let locationText = `${operaDisplayName} ${sceneName} ${pageDisplay}`.trim();
+            if (whom) {
+                locationText = `${locationText} 【${whom}】`;
+            }
+
+            html += `<div class="result-c">${ja}</div>`;
+            html += `<div class="result-loc">${locationText}</div>`;
+        });
+    });
+
+    return html;
+}
+
+// Get Unique Terms for RS/RW Local
+window.getGenericTermsListLocal = function(dataKey) {
+    const data = window.appData[dataKey];
+    if (!data) return [];
+    
+    // Extract unique 'de' terms
+    const terms = data
+        .map(row => ({ original: row.de, normalized: row.de_normalized || normalizeString(row.de) }))
+        .filter(item => item.original && item.normalized);
+
+    const uniqueTermsMap = new Map();
+    terms.forEach(item => {
+        if (!uniqueTermsMap.has(item.original)) {
+            uniqueTermsMap.set(item.original, item);
+        }
+    });
+    
+    return Array.from(uniqueTermsMap.values());
+};
+
+// Helper to normalize string (Shared)
+function normalizeString(str) {
+    if (!str) return '';
+    return str.toLowerCase()
+        .replace(/ä/g, 'ae')
+        .replace(/ö/g, 'oe')
+        .replace(/ü/g, 'ue')
+        .replace(/ß/g, 'ss')
+        .replace(/[^a-z0-9.]/g, '');
+}

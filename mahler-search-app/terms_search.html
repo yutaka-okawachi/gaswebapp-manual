@@ -64,6 +64,97 @@
             };
         }
 
+        // Override/Define getMahlerTermsListLocal to handle object data correctly
+        window.getMahlerTermsListLocal = function () {
+            const data = window.appData.mahler;
+            if (!data) return [];
+            return data.map(row => ({
+                original: row.de || row[0],
+                normalized: row.de_normalized || row[1]
+            })).filter(item => item.original);
+        };
+
+        // Helper functions for HTML escaping
+        function escapeHtml(str) {
+            if (!str) return '';
+            return str.replace(/[&<>"']/g, function (match) {
+                const escape = {
+                    '&': '&amp;',
+                    '<': '&lt;',
+                    '>': '&gt;',
+                    '"': '&quot;',
+                    "'": '&#39;'
+                };
+                return escape[match];
+            });
+        }
+
+        function escapeHtmlWithBreaks(str) {
+            if (!str) return '';
+            return escapeHtml(str).replace(/\n/g, '<br>');
+        }
+
+        // Override/Define searchMahlerTermsLocal to handle object data correctly
+        window.searchMahlerTermsLocal = function (query) {
+            const data = window.appData.mahler;
+            if (!data) return '<div class="result-message">データが読み込まれていません。</div>';
+
+            // Allow periods in search query normalization
+            const normalizedQuery = normalizeString(query);
+            const results = data.filter(row => {
+                const deNormalized = row.de_normalized || row[1];
+                return deNormalized && deNormalized.includes(normalizedQuery);
+            });
+
+            if (results.length === 0) {
+                return '<div class="result-message">該当するデータが見つかりませんでした。</div>';
+            }
+
+            let resultHTML = '';
+
+            try {
+                results.forEach(row => {
+                    const deData = row.de || row[0];
+                    const jaData = row.ja || row[2];
+                    const dataCol = row.data || row[3];
+
+                    if (!dataCol || typeof dataCol !== 'string') return;
+
+                    const segments = dataCol.split('&').map(s => s.trim()).filter(s => s);
+                    let segmentCount = 0;
+                    let detailsHTML = '';
+
+                    segments.forEach(seg => {
+                        const [prefix, a, b, c, d] = seg.split('-');
+                        if (!a || !b || !c || !d) return;
+
+                        segmentCount++;
+                        const aLabel = window.aReverseMap[a.toLowerCase()] || `不明(${a})`;
+                        const movementText = formatMovementNumber(a, b);
+                        const measureText = `第${c}小節`;
+                        
+                        // Parse instruments (d)
+                        const dArr = d.split(',').map(x => x.trim());
+                        const mappedInstruments = dArr.map(code => window.dMapping[code] || code).join(', ');
+                        
+                        // Format location text - use （） instead of 【】
+                        detailsHTML += `<div class="result-loc">${aLabel} ${movementText}：${measureText}【${mappedInstruments}】</div>`;
+                    });
+
+                    // Generate HTML without .result-entry wrapper
+                    resultHTML += `<div class="result-a">${escapeHtmlWithBreaks(deData)}</div>`;
+                    resultHTML += `<div class="result-c">${escapeHtmlWithBreaks(jaData)}</div>`;
+                    resultHTML += detailsHTML;
+                    resultHTML += `<div class="result-loc">(${segmentCount}件)</div>`;
+                });
+            } catch (e) {
+                console.error("Search error:", e);
+                return '<div class="result-message">検索中にエラーが発生しました。</div>';
+            }
+
+            return `<div class="result-message">全部で${results.length}件ありました。</div>${resultHTML}`;
+        };
+
         // DOM構築後に動作をセット
         window.addEventListener('DOMContentLoaded', async () => {
             const inputField = document.getElementById('termInput');
@@ -91,10 +182,8 @@
                     .getGMTermsForClient();
             } else {
                 // Local fallback
-                if (typeof getMahlerTermsListLocal === 'function') {
-                    termEntries = getMahlerTermsListLocal();
-                    console.log(`Loaded ${termEntries.length} terms locally.`);
-                }
+                termEntries = getMahlerTermsListLocal();
+                console.log(`Loaded ${termEntries.length} terms locally.`);
             }
         });
 
@@ -155,20 +244,14 @@
             setTimeout(() => {
                 if (thisSearchId !== currentSearchId) return;
                 
+                let html = '';
                 if (typeof searchMahlerTermsLocal === 'function') {
-                    const results = searchMahlerTermsLocal(query);
-                    if (Array.isArray(results)) {
-                        // Use LazyLoader
-                        resultsDiv.innerHTML = `<div class="result-message">全部で${results.length}件ありました。</div><div id="term-results-list"></div>`;
-                        new LazyLoader('term-results-list', results, renderTermItem);
-                    } else {
-                        // Fallback for string return (legacy)
-                        resultsDiv.innerHTML = results;
-                    }
+                    html = searchMahlerTermsLocal(query);
                 } else {
-                    resultsDiv.innerHTML = '<div class="result-message">検索機能が見つかりません (searchMahlerTermsLocal missing)</div>';
+                    html = '<div class="result-message">検索機能が見つかりません (searchMahlerTermsLocal missing)</div>';
                 }
                 
+                resultsDiv.innerHTML = html;
                 if (typeof focusResultsPanel === 'function') {
                     focusResultsPanel({ instant: true });
                 }
