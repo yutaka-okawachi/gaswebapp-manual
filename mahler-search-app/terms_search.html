@@ -138,7 +138,7 @@
                         const mappedInstruments = dArr.map(code => window.dMapping[code] || code).join(', ');
                         
                         // Format location text - use （） instead of 【】
-                        detailsHTML += `<div class="result-loc">${aLabel} ${movementText}：${measureText}（${mappedInstruments}）</div>`;
+                        detailsHTML += `<div class="result-loc">${aLabel} ${movementText}：${measureText}【${mappedInstruments}】</div>`;
                     });
 
                     // Generate HTML without .result-entry wrapper

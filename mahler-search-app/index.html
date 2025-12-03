@@ -193,7 +193,7 @@
 
     .result-entry {
       display: block; /* Override common.css flex */
-      margin-bottom: 2.5em; /* Increased spacing */
+      margin-bottom: 0.5em; /* Reduced spacing */
     }
 
     .result-a {
@@ -753,7 +753,7 @@
         }
       }
 
-      const countHtml = totalMatches === 0 ? '<div class="result-message">該当するデータが見つかりませんでした。</div>' : `<div class="result-message">${totalMatches}件見つかりました。</div>`;
+      const countHtml = totalMatches === 0 ? '<div class="result-message">該当するデータが見つかりませんでした。</div>' : `<div class="result-message">${totalMatches}件見つかりました．</div>`;
       return countHtml + resultHTML;
     };
 
