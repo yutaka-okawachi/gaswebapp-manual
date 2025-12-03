@@ -255,6 +255,11 @@
                 if (typeof focusResultsPanel === 'function') {
                     focusResultsPanel({ instant: true });
                 }
+
+                // Send notification
+                if (typeof sendSearchNotification === 'function') {
+                    sendSearchNotification(query, 'term', 'terms_search.html');
+                }
             }, 10);
         }
 

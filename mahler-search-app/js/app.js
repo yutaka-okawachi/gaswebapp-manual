@@ -12,6 +12,42 @@ window.appData = window.appData || {
     abbr_list: null
 };
 
+// --- Configuration ---
+// TODO: Replace with your deployed Web App URL
+const GAS_NOTIFICATION_URL = 'https://script.google.com/macros/s/AKfycbxCKxYpnv5-0vZ5vl9pYwtBkRKNRTgiA9_o3LMGsGL5laphawsI071ZF5Sk5WWMJP2h9Q/exec';
+
+/**
+ * Sends a search notification to the Google Apps Script Web App.
+ * @param {string} term - The search term or criteria.
+ * @param {string} type - The type of search (e.g., 'work-instrument', 'scene', 'page', 'term').
+ * @param {string} pageName - The name of the page where the search was performed.
+ */
+async function sendSearchNotification(term, type, pageName) {
+    if (GAS_NOTIFICATION_URL === 'YOUR_GAS_WEB_APP_URL_HERE' || !GAS_NOTIFICATION_URL) {
+        console.warn('GAS_NOTIFICATION_URL is not set. Notification skipped.');
+        return;
+    }
+
+    try {
+        await fetch(GAS_NOTIFICATION_URL, {
+            method: 'POST',
+            mode: 'no-cors',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                term: term,
+                type: type,
+                page: pageName,
+                userAgent: navigator.userAgent
+            })
+        });
+        console.log('Search notification sent');
+    } catch (e) {
+        console.error('Failed to send search notification', e);
+    }
+}
+
 // Page loader
 async function showPage(pageName) {
     const contentArea = document.getElementById('content-area');

@@ -232,6 +232,11 @@ function searchByScene() {
 
                 const html = formatGenericResults(filteredData);
                 setResults(html);
+
+                // Send notification
+                if (typeof sendSearchNotification === 'function') {
+                    sendSearchNotification(selectedScenes.join(', '), 'scene', composer);
+                }
             } catch (e) {
                 console.error('Error in local scene search:', e);
                 setResults(`<p class="result-message">検索中にエラーが発生しました: ${e.message}</p>`);
@@ -316,6 +321,11 @@ function searchByPage() {
 
                 const html = formatGenericResults(filteredData);
                 setResults(html);
+
+                // Send notification
+                if (typeof sendSearchNotification === 'function') {
+                    sendSearchNotification(pageInput, 'page', composer);
+                }
             } catch (e) {
                 console.error('Error in local page search:', e);
                 setResults(`<p class="result-message">検索中にエラーが発生しました: ${e.message}</p>`);

@@ -802,6 +802,12 @@
                       resultsDiv.innerHTML = html;
                       focusResultsPanel({ instant: true });
                       searchButton.disabled = false;
+
+                      // Send notification
+                      if (typeof sendSearchNotification === 'function') {
+                          const term = `Works: ${works.join(', ')}, Instruments: ${instruments.join(', ')}`;
+                          sendSearchNotification(term, 'work-instrument', 'index.html');
+                      }
                   }
               } else {
                   console.error("searchMahlerDataLocal is not defined");
