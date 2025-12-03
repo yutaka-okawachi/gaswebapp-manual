@@ -18,11 +18,10 @@ const GAS_NOTIFICATION_URL = 'https://script.google.com/macros/s/AKfycbxCKxYpnv5
 
 /**
  * Sends a search notification to the Google Apps Script Web App.
- * @param {string} term - The search term or criteria.
- * @param {string} type - The type of search (e.g., 'work-instrument', 'scene', 'page', 'term').
+ * @param {Object} details - The search details { work, scope, term }.
  * @param {string} pageName - The name of the page where the search was performed.
  */
-async function sendSearchNotification(term, type, pageName) {
+async function sendSearchNotification(details, pageName) {
     if (GAS_NOTIFICATION_URL === 'YOUR_GAS_WEB_APP_URL_HERE' || !GAS_NOTIFICATION_URL) {
         console.warn('GAS_NOTIFICATION_URL is not set. Notification skipped.');
         return;
@@ -36,8 +35,9 @@ async function sendSearchNotification(term, type, pageName) {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                term: term,
-                type: type,
+                work: details.work,
+                scope: details.scope,
+                term: details.term,
                 page: pageName,
                 userAgent: navigator.userAgent
             })

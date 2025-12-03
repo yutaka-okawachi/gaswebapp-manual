@@ -1,15 +1,17 @@
 function doPost(e) {
   try {
     var data = JSON.parse(e.postData.contents);
-    var term = data.term;
-    var type = data.type;
-    var page = data.page;
-    var userAgent = data.userAgent;
+    var work = data.work || "N/A";
+    var scope = data.scope || "N/A";
+    var term = data.term || "N/A";
+    var page = data.page || "N/A";
+    var userAgent = data.userAgent || "N/A";
     
-    var subject = "Mahler Search Notification: " + type;
-    var body = "Search Term: " + term + "\n" +
-               "Type: " + type + "\n" +
-               "Page: " + page + "\n" +
+    var subject = "Mahler Search Notification: " + work;
+    var body = "Page: " + page + "\n" +
+               "Work: " + work + "\n" +
+               "Scope: " + scope + "\n" +
+               "Term: " + term + "\n" +
                "User Agent: " + userAgent + "\n" +
                "Time: " + new Date().toString();
                

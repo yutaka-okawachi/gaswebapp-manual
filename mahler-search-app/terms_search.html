@@ -258,7 +258,12 @@
 
                 // Send notification
                 if (typeof sendSearchNotification === 'function') {
-                    sendSearchNotification(query, 'term', 'terms_search.html');
+                    const details = {
+                        work: 'All (GM)',
+                        scope: 'Term',
+                        term: query
+                    };
+                    sendSearchNotification(details, 'terms_search.html');
                 }
             }, 10);
         }

@@ -798,20 +798,6 @@
           try {
               if (typeof window.searchMahlerDataLocal === 'function') {
                   const html = await window.searchMahlerDataLocal(works, instruments, includeOrchestraAll);
-                  if (thisSearchId === currentSearchId) {
-                      resultsDiv.innerHTML = html;
-                      focusResultsPanel({ instant: true });
-                      searchButton.disabled = false;
-
-                      // Send notification
-                      if (typeof sendSearchNotification === 'function') {
-                          const term = `Works: ${works.join(', ')}, Instruments: ${instruments.join(', ')}`;
-                          sendSearchNotification(term, 'work-instrument', 'index.html');
-                      }
-                  }
-              } else {
-                  console.error("searchMahlerDataLocal is not defined");
-                  resultsDiv.innerHTML = '<div class="result-message">検索機能が見つかりません。</div>';
                   searchButton.disabled = false;
               }
           } catch (e) {

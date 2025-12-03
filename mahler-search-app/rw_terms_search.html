@@ -133,7 +133,12 @@
 
                 // Send notification
                 if (typeof sendSearchNotification === 'function') {
-                    sendSearchNotification(query, 'term', 'rw_terms_search.html');
+                    const details = {
+                        work: 'All (RW)',
+                        scope: 'Term',
+                        term: query
+                    };
+                    sendSearchNotification(details, 'rw_terms_search.html');
                 }
             }, 10);
         }

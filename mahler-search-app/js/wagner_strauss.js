@@ -235,7 +235,12 @@ function searchByScene() {
 
                 // Send notification
                 if (typeof sendSearchNotification === 'function') {
-                    sendSearchNotification(selectedScenes.join(', '), 'scene', composer);
+                    const details = {
+                        work: operaValue,
+                        scope: selectedScenes.join(', '),
+                        term: 'Scene Search'
+                    };
+                    sendSearchNotification(details, composer);
                 }
             } catch (e) {
                 console.error('Error in local scene search:', e);
@@ -324,7 +329,12 @@ function searchByPage() {
 
                 // Send notification
                 if (typeof sendSearchNotification === 'function') {
-                    sendSearchNotification(pageInput, 'page', composer);
+                    const details = {
+                        work: operaValue,
+                        scope: 'Page ' + pageInput,
+                        term: 'Page Search'
+                    };
+                    sendSearchNotification(details, composer);
                 }
             } catch (e) {
                 console.error('Error in local page search:', e);
