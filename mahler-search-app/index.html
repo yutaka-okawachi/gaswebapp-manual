@@ -796,6 +796,16 @@
                   const results = await window.searchMahlerDataLocal(works, instruments, includeOrchestraAll);
                   renderSearchResults(results);
                   searchButton.disabled = false;
+
+                  // Send notification
+                  if (typeof sendSearchNotification === 'function') {
+                      const details = {
+                          work: works.join(', '),
+                          scope: instruments.join(', '),
+                          term: 'Mahler Search'
+                      };
+                      sendSearchNotification(details, 'index.html');
+                  }
               } else {
                   console.error("window.searchMahlerDataLocal is not a function");
                   resultsDiv.innerHTML = '<div class="result-message">検索機能が見つかりません (searchMahlerDataLocal missing)</div>';
