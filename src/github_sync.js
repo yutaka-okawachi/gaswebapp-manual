@@ -63,9 +63,12 @@ function getFileSha(path, config) {
 function pushFileToGitHub(path, content, message, config) {
   const url = `https://api.github.com/repos/${config.owner}/${config.repo}/contents/${path}`;
   
-  // JSONを文字列化してBase64エンコード
+  // JSONを文字列化してUTF-8でBase64エンコード
   const jsonString = JSON.stringify(content, null, 2);
-  const base64Content = Utilities.base64Encode(jsonString);
+  
+  // UTF-8として正しくエンコードするためにBlobを使用
+  const blob = Utilities.newBlob(jsonString, 'application/json; charset=utf-8');
+  const base64Content = Utilities.base64Encode(blob.getBytes());
   
   // 既存ファイルのSHAを取得
   const sha = getFileSha(path, config);
