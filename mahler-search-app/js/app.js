@@ -1299,13 +1299,14 @@ window.searchMahlerTermsLocal = function (query) {
 
             if (matchedLocList.length > 0) {
                 totalMatches++;
+                resultHTML += `<div class="search-result-item">`;
                 resultHTML += `<div class="result-a">${escapeHtmlWithBreaks(deData)}</div>`;
                 resultHTML += `<div class="result-c">${escapeHtmlWithBreaks(jaData)}</div>`;
                 matchedLocList.forEach(loc => {
                     resultHTML += `<div class="result-loc">${escapeHtml(loc)}</div>`;
                 });
                 resultHTML += `<div class="result-loc">(${segmentCount}件)</div>`;
-                resultHTML += '<hr style="border-top: 1px dashed #ccc; margin: 10px 0;">';
+                resultHTML += `</div>`;
             }
         });
     } catch (e) {
@@ -1376,6 +1377,7 @@ function searchGenericTermsLocal(query, dataKey, type) {
     };
 
     sortedDeKeys.forEach(de => {
+        html += `<div class="search-result-item">`;
         html += `<div class="result-a">${escapeHtmlWithBreaks(de)}</div>`;
         
         groupedByDe[de].forEach(row => {
@@ -1399,6 +1401,7 @@ function searchGenericTermsLocal(query, dataKey, type) {
             html += `<div class="result-c">${ja}</div>`;
             html += `<div class="result-loc">${locationText}</div>`;
         });
+        html += `</div>`;
     });
 
     return html;

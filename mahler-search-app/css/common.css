@@ -493,3 +493,13 @@ button.clear-input-btn:hover {
     font-size: 0.9em;
     color: #666;
 }
+/* Search Result Item Styling - Similar to dic.html .row */
+.search-result-item {
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+}
+
+.search-result-item:last-child {
+    border-bottom: none;
+}

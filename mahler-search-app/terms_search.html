@@ -141,11 +141,13 @@
                         detailsHTML += `<div class="result-loc">${aLabel} ${movementText}：${measureText}【${mappedInstruments}】</div>`;
                     });
 
-                    // Generate HTML without .result-entry wrapper
+                    // Generate HTML with .search-result-item wrapper
+                    resultHTML += `<div class="search-result-item">`;
                     resultHTML += `<div class="result-a">${escapeHtmlWithBreaks(deData)}</div>`;
                     resultHTML += `<div class="result-c">${escapeHtmlWithBreaks(jaData)}</div>`;
                     resultHTML += detailsHTML;
                     resultHTML += `<div class="result-loc">(${segmentCount}件)</div>`;
+                    resultHTML += `</div>`;
                 });
             } catch (e) {
                 console.error("Search error:", e);
