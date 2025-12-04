@@ -157,7 +157,86 @@
             // Render Abbreviations
             const abbrData = window.appData.abbr_list || [];
             renderAbbrList(abbrData);
+
+            // Handle alphabet link clicks
+            handleHashChange();
         });
+
+        // Handle hash changes (alphabet links)
+        window.addEventListener('hashchange', handleHashChange);
+
+        function handleHashChange() {
+            const hash = window.location.hash;
+            if (!hash || hash === '#top' || hash === '#abbrListContainer') {
+                return; // Let default behavior handle these
+            }
+
+            // Check if it's a letter anchor
+            if (hash.startsWith('#letter-')) {
+                const targetElement = document.getElementById(hash.substring(1));
+                
+                if (!targetElement) {
+                    // Target element doesn't exist yet, load all remaining items
+                    loadAllRemainingItems(() => {
+                        // After loading, scroll to the element
+                        const element = document.getElementById(hash.substring(1));
+                        if (element) {
+                            element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                        }
+                    });
+                } else {
+                    // Element exists, scroll to it
+                    targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            }
+        }
+
+        function loadAllRemainingItems(callback) {
+            const container = document.getElementById("listContainer");
+            const fragment = document.createDocumentFragment();
+            
+            // Remove sentinel if exists
+            const sentinel = document.getElementById('sentinel');
+            if (sentinel) sentinel.remove();
+
+            // Load all remaining items
+            for (let i = currentIndex; i < currentData.length; i++) {
+                const row = currentData[i];
+                const [german, translation, source] = row;
+                const rowDiv = document.createElement("div");
+                rowDiv.classList.add("row");
+
+                if (german && typeof german === "string") {
+                    const anchorLetter = getSortLetter(german);
+                    const prevRow = i > 0 ? currentData[i-1] : null;
+                    const prevLetter = prevRow ? getSortLetter(prevRow[0]) : null;
+                    
+                    if (anchorLetter && window.customOrder.includes(anchorLetter) && anchorLetter !== prevLetter) {
+                        rowDiv.id = "letter-" + anchorLetter;
+                    }
+                }
+
+                const germanWrapper = document.createElement("div");
+                germanWrapper.innerHTML = `<span class="german">${escapeHtml(german)}</span><span class="source">${escapeHtml(source)}</span>`;
+                rowDiv.appendChild(germanWrapper);
+
+                const translationDiv = document.createElement("div");
+                translationDiv.classList.add("translation");
+                translationDiv.innerHTML = escapeHtmlWithBreaks(translation);
+                rowDiv.appendChild(translationDiv);
+
+                fragment.appendChild(rowDiv);
+            }
+
+            container.appendChild(fragment);
+            currentIndex = currentData.length;
+
+            // Disconnect observer as we've loaded everything
+            if (observer) observer.disconnect();
+
+            // Execute callback
+            if (callback) callback();
+        }
 
         // Lazy Loader State
         let currentData = [];
