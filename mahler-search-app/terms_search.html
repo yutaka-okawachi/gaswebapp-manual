@@ -16,7 +16,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>用語から検索 (GM)</title>
     <link rel="stylesheet" href="css/common.css">
-    <script src="js/app.js?v=6"></script>
+    <script src="js/app.js?v=8"></script>
 
     <script>
         /*******************************************************************
@@ -47,7 +47,7 @@
                 .replace(/ö/g, 'oe')
                 .replace(/ü/g, 'ue')
                 .replace(/ß/g, 'ss')
-                .replace(/[^a-z0-9.\s]/g, ''); // スペースを保持
+                .trim();
         }
 
         // Helper to normalize term entry
