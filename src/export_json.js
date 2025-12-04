@@ -160,25 +160,65 @@ function exportAllDataToJson() {
         abbrJson = data.slice(1).map(row => [row[0], row[1], row[2]]);
     }
 
-    // Output to Drive
-    const folder = DriveApp.getRootFolder();
+    // GitHubへ直接プッシュ（Google Drive不要）
+    const files = {
+        'mahler-search-app/data/mahler.json': mahlerJson,
+        'mahler-search-app/data/richard_strauss.json': rsJson,
+        'mahler-search-app/data/richard_wagner.json': rwJson,
+        'mahler-search-app/data/rs_scenes.json': rsScenes,
+        'mahler-search-app/data/rw_scenes.json': rwScenes,
+        'mahler-search-app/data/dic_notes.json': dicNotesJson,
+        'mahler-search-app/data/abbr_list.json': abbrJson
+    };
 
-    folder.createFile('mahler.json', JSON.stringify(mahlerJson));
-    folder.createFile('richard_strauss.json', JSON.stringify(rsJson));
-    folder.createFile('richard_wagner.json', JSON.stringify(rwJson));
-    folder.createFile('rs_scenes.json', JSON.stringify(rsScenes));
-    folder.createFile('rw_scenes.json', JSON.stringify(rwScenes));
+    // 自動生成されたコミットメッセージ
+    const timestamp = new Date().toLocaleString('ja-JP', { timeZone: 'Asia/Tokyo' });
+    const commitMessage = `自動更新: スプレッドシートからデータ同期 [${timestamp}]`;
 
-    // New files
-    folder.createFile('dic_notes.json', JSON.stringify(dicNotesJson));
-    folder.createFile('abbr_list.json', JSON.stringify(abbrJson));
-
-    Logger.log('Files created in Google Drive root folder:');
-    Logger.log('- mahler.json');
-    Logger.log('- richard_strauss.json');
-    Logger.log('- richard_wagner.json');
-    Logger.log('- rs_scenes.json');
-    Logger.log('- rw_scenes.json');
-    Logger.log('- dic_notes.json');
-    Logger.log('- abbr_list.json');
+    Logger.log('=== GitHubへデータをプッシュ中 ===');
+    
+    try {
+        // github_sync.js の pushToGitHub() を呼び出し
+        const result = pushToGitHub(files, commitMessage);
+        
+        Logger.log('=== 完了 ===');
+        Logger.log(`成功: ${result.success.length} ファイル`);
+        Logger.log(`失敗: ${result.failed.length} ファイル`);
+        
+        if (result.success.length > 0) {
+            Logger.log('\n✓ 成功したファイル:');
+            result.success.forEach(path => Logger.log(`  - ${path}`));
+        }
+        
+        if (result.failed.length > 0) {
+            Logger.log('\n✗ 失敗したファイル:');
+            result.failed.forEach(f => Logger.log(`  - ${f.path}: ${f.error}`));
+        }
+        
+        // ユーザーへの通知（オプション）
+        if (result.success.length === result.total) {
+            SpreadsheetApp.getActiveSpreadsheet().toast(
+                `${result.total}個のファイルをGitHubへプッシュしました`,
+                '✓ 完了',
+                5
+            );
+        } else {
+            SpreadsheetApp.getActiveSpreadsheet().toast(
+                `${result.success.length}/${result.total}個のファイルをプッシュしました（${result.failed.length}個失敗）`,
+                '⚠️ 一部失敗',
+                10
+            );
+        }
+        
+        return result;
+        
+    } catch (error) {
+        Logger.log('✗ エラー: ' + error.message);
+        SpreadsheetApp.getActiveSpreadsheet().toast(
+            'エラー: ' + error.message,
+            '✗ 失敗',
+            10
+        );
+        throw error;
+    }
 }
