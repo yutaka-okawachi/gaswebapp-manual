@@ -1,19 +1,35 @@
 function doPost(e) {
   try {
     var data = JSON.parse(e.postData.contents);
-    var work = data.work || "N/A";
-    var scope = data.scope || "N/A";
-    var term = data.term || "N/A";
-    var page = data.page || "N/A";
-    var userAgent = data.userAgent || "N/A";
     
-    var subject = "Mahler Search Notification: " + work;
-    var body = "Page: " + page + "\n" +
-               "Work: " + work + "\n" +
-               "Scope: " + scope + "\n" +
-               "Term: " + term + "\n" +
-               "User Agent: " + userAgent + "\n" +
-               "Time: " + new Date().toString();
+    // Helper function to handle empty values
+    function getValue(val) {
+      return (val && val !== "N/A") ? val : "未指定";
+    }
+
+    var work = getValue(data.work);
+    var scope = getValue(data.scope);
+    var term = getValue(data.term);
+    var page = getValue(data.page);
+    var userAgent = getValue(data.userAgent);
+    
+    var now = new Date();
+    // Use JST for the timestamp
+    var formattedDate = Utilities.formatDate(now, "Asia/Tokyo", "yyyy/MM/dd HH:mm:ss");
+
+    var subject = "【マーラー検索】検索通知: " + work;
+    
+    var body = "マーラー検索アプリで新しい検索がありました。\n\n" +
+               "■ 検索詳細\n" +
+               "--------------------------------------------------\n" +
+               "【日時】 " + formattedDate + "\n" +
+               "【作品】 " + work + "\n" +
+               "【検索語】 " + term + "\n" +
+               "【範囲】 " + scope + "\n" +
+               "【ページ】 " + page + "\n" +
+               "--------------------------------------------------\n\n" +
+               "■ ユーザー環境\n" +
+               userAgent;
                
     MailApp.sendEmail({
       to: 'pistares@ezweb.ne.jp',
