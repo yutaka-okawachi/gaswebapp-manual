@@ -1,1 +1,730 @@
-[{"Oper":"guntram","Aufzug":1,"Szene":"vorspiel","日本語":"第1幕前奏曲","作品名":"Guntram, Op.25 (1888-93, revised 1934–39)"},{"Oper":"guntram","Aufzug":1,"Szene":1,"日本語":"第1幕第1場","作品名":"Guntram, Op.25 (1888-93, revised 1934–39)"},{"Oper":"guntram","Aufzug":1,"Szene":2,"日本語":"第1幕第2場","作品名":"Guntram, Op.25 (1888-93, revised 1934–39)"},{"Oper":"guntram","Aufzug":1,"Szene":3,"日本語":"第1幕第3場","作品名":"Guntram, Op.25 (1888-93, revised 1934–39)"},{"Oper":"guntram","Aufzug":2,"Szene":"vorspiel","日本語":"第2幕前奏曲","作品名":"Guntram, Op.25 (1888-93, revised 1934–39)"},{"Oper":"guntram","Aufzug":2,"Szene":1,"日本語":"第2幕第1場","作品名":"Guntram, Op.25 (1888-93, revised 1934–39)"},{"Oper":"guntram","Aufzug":2,"Szene":2,"日本語":"第2幕第2場","作品名":"Guntram, Op.25 (1888-93, revised 1934–39)"},{"Oper":"guntram","Aufzug":2,"Szene":3,"日本語":"第2幕第3場","作品名":"Guntram, Op.25 (1888-93, revised 1934–39)"},{"Oper":"guntram","Aufzug":3,"Szene":"vorspiel","日本語":"第3幕前奏曲","作品名":"Guntram, Op.25 (1888-93, revised 1934–39)"},{"Oper":"guntram","Aufzug":3,"Szene":1,"日本語":"第3幕第1場","作品名":"Guntram, Op.25 (1888-93, revised 1934–39)"},{"Oper":"guntram","Aufzug":3,"Szene":2,"日本語":"第3幕第2場","作品名":"Guntram, Op.25 (1888-93, revised 1934–39)"},{"Oper":"guntram","Aufzug":3,"Szene":3,"日本語":"第3幕第3場","作品名":"Guntram, Op.25 (1888-93, revised 1934–39)"},{"Oper":"guntram","Aufzug":3,"Szene":4,"日本語":"第3幕第4場","作品名":"Guntram, Op.25 (1888-93, revised 1934–39)"},{"Oper":"feuersnot","Aufzug":"","Szene":"","日本語":"全1幕","作品名":"Feuersnot, Op.50 (1900-01)"},{"Oper":"salome","Aufzug":"","Szene":1,"日本語":"第1場","作品名":"Salome, Op.54 (1903-05)"},{"Oper":"salome","Aufzug":"","Szene":2,"日本語":"第2場","作品名":"Salome, Op.54 (1903-05)"},{"Oper":"salome","Aufzug":"","Szene":3,"日本語":"第3場","作品名":"Salome, Op.54 (1903-05)"},{"Oper":"salome","Aufzug":"","Szene":4,"日本語":"第4場","作品名":"Salome, Op.54 (1903-05)"},{"Oper":"elektra","Aufzug":"","Szene":"","日本語":"全1幕","作品名":"Elektra,  Op.58 (1906-08)"},{"Oper":"rosenkavalier","Aufzug":1,"Szene":"","日本語":"第1幕","作品名":"Der Rosenkavlier, Op.59 (1909-10)"},{"Oper":"rosenkavalier","Aufzug":2,"Szene":"","日本語":"第2幕","作品名":"Der Rosenkavlier, Op.59 (1909-10)"},{"Oper":"rosenkavalier","Aufzug":3,"Szene":"","日本語":"第3幕","作品名":"Der Rosenkavlier, Op.59 (1909-10)"},{"Oper":"ariadne","Aufzug":"","Szene":"Vorspiel","日本語":"プロローグ","作品名":"Ariadne auf Naxos, Op.60 (1912, revised 1916)"},{"Oper":"ariadne","Aufzug":"Oper","Szene":"","日本語":"オペラ","作品名":"Ariadne auf Naxos, Op.60 (1912, revised 1916)"},{"Oper":"schatten","Aufzug":1,"Szene":1,"日本語":"第1幕第1場","作品名":"Die Frau ohne Schatten, Op.65 (1914-17)"},{"Oper":"schatten","Aufzug":1,"Szene":2,"日本語":"第1幕第2場","作品名":"Die Frau ohne Schatten, Op.65 (1914-17)"},{"Oper":"schatten","Aufzug":2,"Szene":1,"日本語":"第2幕第1場","作品名":"Die Frau ohne Schatten, Op.65 (1914-17)"},{"Oper":"schatten","Aufzug":2,"Szene":2,"日本語":"第2幕第2場","作品名":"Die Frau ohne Schatten, Op.65 (1914-17)"},{"Oper":"schatten","Aufzug":2,"Szene":3,"日本語":"第2幕第3場","作品名":"Die Frau ohne Schatten, Op.65 (1914-17)"},{"Oper":"schatten","Aufzug":2,"Szene":4,"日本語":"第2幕第4場","作品名":"Die Frau ohne Schatten, Op.65 (1914-17)"},{"Oper":"schatten","Aufzug":2,"Szene":5,"日本語":"第2幕第5場","作品名":"Die Frau ohne Schatten, Op.65 (1914-17)"},{"Oper":"schatten","Aufzug":3,"Szene":1,"日本語":"第3幕第1場","作品名":"Die Frau ohne Schatten, Op.65 (1914-17)"},{"Oper":"schatten","Aufzug":3,"Szene":2,"日本語":"第3幕第2場","作品名":"Die Frau ohne Schatten, Op.65 (1914-17)"},{"Oper":"schatten","Aufzug":3,"Szene":3,"日本語":"第3幕第3場","作品名":"Die Frau ohne Schatten, Op.65 (1914-17)"},{"Oper":"schatten","Aufzug":3,"Szene":4,"日本語":"第3幕第4場","作品名":"Die Frau ohne Schatten, Op.65 (1914-17)"},{"Oper":"intermezzo","Aufzug":1,"Szene":1,"日本語":"第1幕第1場","作品名":"Intermezzo, Op.72 (1919-23)"},{"Oper":"intermezzo","Aufzug":1,"Szene":2,"日本語":"第1幕第2場","作品名":"Intermezzo, Op.72 (1919-23)"},{"Oper":"intermezzo","Aufzug":1,"Szene":3,"日本語":"第1幕第3場","作品名":"Intermezzo, Op.72 (1919-23)"},{"Oper":"intermezzo","Aufzug":1,"Szene":4,"日本語":"第1幕第4場","作品名":"Intermezzo, Op.72 (1919-23)"},{"Oper":"intermezzo","Aufzug":1,"Szene":5,"日本語":"第1幕第5場","作品名":"Intermezzo, Op.72 (1919-23)"},{"Oper":"intermezzo","Aufzug":1,"Szene":6,"日本語":"第1幕第6場","作品名":"Intermezzo, Op.72 (1919-23)"},{"Oper":"intermezzo","Aufzug":1,"Szene":7,"日本語":"第1幕第7場","作品名":"Intermezzo, Op.72 (1919-23)"},{"Oper":"intermezzo","Aufzug":2,"Szene":1,"日本語":"第2幕第1場","作品名":"Intermezzo, Op.72 (1919-23)"},{"Oper":"intermezzo","Aufzug":2,"Szene":2,"日本語":"第2幕第2場","作品名":"Intermezzo, Op.72 (1919-23)"},{"Oper":"intermezzo","Aufzug":2,"Szene":3,"日本語":"第2幕第3場","作品名":"Intermezzo, Op.72 (1919-23)"},{"Oper":"intermezzo","Aufzug":2,"Szene":4,"日本語":"第2幕第4場","作品名":"Intermezzo, Op.72 (1919-23)"},{"Oper":"intermezzo","Aufzug":2,"Szene":5,"日本語":"第2幕第5場","作品名":"Intermezzo, Op.72 (1919-23)"},{"Oper":"intermezzo","Aufzug":2,"Szene":6,"日本語":"第2幕第6場","作品名":"Intermezzo, Op.72 (1919-23)"},{"Oper":"helena","Aufzug":"einleitung","Szene":"","日本語":"導入部","作品名":"Die ägyptische Helena, Op.75 (1924-27)"},{"Oper":"helena","Aufzug":1,"Szene":1,"日本語":"第1幕第1場","作品名":"Die ägyptische Helena, Op.75 (1924-27)"},{"Oper":"helena","Aufzug":1,"Szene":2,"日本語":"第1幕第2場","作品名":"Die ägyptische Helena, Op.75 (1924-27)"},{"Oper":"helena","Aufzug":1,"Szene":3,"日本語":"第1幕第3場","作品名":"Die ägyptische Helena, Op.75 (1924-27)"},{"Oper":"helena","Aufzug":1,"Szene":4,"日本語":"第1幕第4場","作品名":"Die ägyptische Helena, Op.75 (1924-27)"},{"Oper":"helena","Aufzug":1,"Szene":"finale","日本語":"第1幕フィナーレ","作品名":"Die ägyptische Helena, Op.75 (1924-27)"},{"Oper":"helena","Aufzug":2,"Szene":"","日本語":"第2幕","作品名":"Die ägyptische Helena, Op.75 (1924-27)"},{"Oper":"arabella","Aufzug":1,"Szene":"","日本語":"第1幕","作品名":"Arabella, Op.79 (1930-32)"},{"Oper":"arabella","Aufzug":2,"Szene":"","日本語":"第2幕","作品名":"Arabella, Op.79 (1930-32)"},{"Oper":"arabella","Aufzug":3,"Szene":"","日本語":"第3幕","作品名":"Arabella, Op.79 (1930-32)"},{"Oper":"schweigsame","Aufzug":1,"Szene":1,"日本語":"第1幕第1場","作品名":"Die schweigsame Frau, Op.80 (1932-35)"},{"Oper":"schweigsame","Aufzug":1,"Szene":2,"日本語":"第1幕第2場","作品名":"Die schweigsame Frau, Op.80 (1932-35)"},{"Oper":"schweigsame","Aufzug":1,"Szene":3,"日本語":"第1幕第3場","作品名":"Die schweigsame Frau, Op.80 (1932-35)"},{"Oper":"schweigsame","Aufzug":1,"Szene":4,"日本語":"第1幕第4場","作品名":"Die schweigsame Frau, Op.80 (1932-35)"},{"Oper":"schweigsame","Aufzug":2,"Szene":1,"日本語":"第2幕第1場","作品名":"Die schweigsame Frau, Op.80 (1932-35)"},{"Oper":"schweigsame","Aufzug":2,"Szene":2,"日本語":"第2幕第2場","作品名":"Die schweigsame Frau, Op.80 (1932-35)"},{"Oper":"schweigsame","Aufzug":2,"Szene":3,"日本語":"第2幕第3場","作品名":"Die schweigsame Frau, Op.80 (1932-35)"},{"Oper":"schweigsame","Aufzug":2,"Szene":4,"日本語":"第2幕第4場","作品名":"Die schweigsame Frau, Op.80 (1932-35)"},{"Oper":"schweigsame","Aufzug":2,"Szene":5,"日本語":"第2幕第5場","作品名":"Die schweigsame Frau, Op.80 (1932-35)"},{"Oper":"schweigsame","Aufzug":2,"Szene":6,"日本語":"第2幕第6場","作品名":"Die schweigsame Frau, Op.80 (1932-35)"},{"Oper":"schweigsame","Aufzug":2,"Szene":7,"日本語":"第2幕第7場","作品名":"Die schweigsame Frau, Op.80 (1932-35)"},{"Oper":"schweigsame","Aufzug":2,"Szene":8,"日本語":"第2幕第8場","作品名":"Die schweigsame Frau, Op.80 (1932-35)"},{"Oper":"schweigsame","Aufzug":2,"Szene":9,"日本語":"第2幕第9場","作品名":"Die schweigsame Frau, Op.80 (1932-35)"},{"Oper":"schweigsame","Aufzug":2,"Szene":10,"日本語":"第2幕第10場","作品名":"Die schweigsame Frau, Op.80 (1932-35)"},{"Oper":"schweigsame","Aufzug":2,"Szene":11,"日本語":"第2幕第11場","作品名":"Die schweigsame Frau, Op.80 (1932-35)"},{"Oper":"schweigsame","Aufzug":2,"Szene":12,"日本語":"第2幕第12場","作品名":"Die schweigsame Frau, Op.80 (1932-35)"},{"Oper":"schweigsame","Aufzug":3,"Szene":"einleitung","日本語":"第3幕導入部","作品名":"Die schweigsame Frau, Op.80 (1932-35)"},{"Oper":"schweigsame","Aufzug":3,"Szene":1,"日本語":"第3幕第1場","作品名":"Die schweigsame Frau, Op.80 (1932-35)"},{"Oper":"schweigsame","Aufzug":3,"Szene":2,"日本語":"第3幕第2場","作品名":"Die schweigsame Frau, Op.80 (1932-35)"},{"Oper":"schweigsame","Aufzug":3,"Szene":3,"日本語":"第3幕第3場","作品名":"Die schweigsame Frau, Op.80 (1932-35)"},{"Oper":"schweigsame","Aufzug":3,"Szene":4,"日本語":"第3幕第4場","作品名":"Die schweigsame Frau, Op.80 (1932-35)"},{"Oper":"schweigsame","Aufzug":3,"Szene":5,"日本語":"第3幕第5場","作品名":"Die schweigsame Frau, Op.80 (1932-35)"},{"Oper":"schweigsame","Aufzug":3,"Szene":6,"日本語":"第3幕第6場","作品名":"Die schweigsame Frau, Op.80 (1932-35)"},{"Oper":"schweigsame","Aufzug":3,"Szene":7,"日本語":"第3幕第7場","作品名":"Die schweigsame Frau, Op.80 (1932-35)"},{"Oper":"schweigsame","Aufzug":3,"Szene":8,"日本語":"第3幕第8場","作品名":"Die schweigsame Frau, Op.80 (1932-35)"},{"Oper":"schweigsame","Aufzug":3,"Szene":9,"日本語":"第3幕第9場","作品名":"Die schweigsame Frau, Op.80 (1932-35)"},{"Oper":"schweigsame","Aufzug":3,"Szene":10,"日本語":"第3幕第10場","作品名":"Die schweigsame Frau, Op.80 (1932-35)"},{"Oper":"tag","Aufzug":1,"Szene":"","日本語":"全1幕","作品名":"Friedenstag, Op.81 (1935-36)"},{"Oper":"daphne","Aufzug":1,"Szene":"","日本語":"全1幕","作品名":"Daphne, Op.82 (1936-37)"},{"Oper":"danae","Aufzug":1,"Szene":"","日本語":"第1幕","作品名":"Die Liebe der Danae, Op.83 (1938-40)"},{"Oper":"danae","Aufzug":2,"Szene":"","日本語":"第2幕","作品名":"Die Liebe der Danae, Op.83 (1938-40)"},{"Oper":"danae","Aufzug":3,"Szene":"","日本語":"第3幕","作品名":"Die Liebe der Danae, Op.83 (1938-40)"},{"Oper":"cap","Aufzug":"","Szene":"einleitung","日本語":"導入部","作品名":"Capriccio, Op.85 (1940-41)"},{"Oper":"cap","Aufzug":"","Szene":1,"日本語":"第1場","作品名":"Capriccio, Op.85 (1940-41)"},{"Oper":"cap","Aufzug":"","Szene":2,"日本語":"第2場","作品名":"Capriccio, Op.85 (1940-41)"},{"Oper":"cap","Aufzug":"","Szene":3,"日本語":"第3場","作品名":"Capriccio, Op.85 (1940-41)"},{"Oper":"cap","Aufzug":"","Szene":4,"日本語":"第4場","作品名":"Capriccio, Op.85 (1940-41)"},{"Oper":"cap","Aufzug":"","Szene":5,"日本語":"第5場","作品名":"Capriccio, Op.85 (1940-41)"},{"Oper":"cap","Aufzug":"","Szene":6,"日本語":"第6場","作品名":"Capriccio, Op.85 (1940-41)"},{"Oper":"cap","Aufzug":"","Szene":7,"日本語":"第7場","作品名":"Capriccio, Op.85 (1940-41)"},{"Oper":"cap","Aufzug":"","Szene":8,"日本語":"第8場","作品名":"Capriccio, Op.85 (1940-41)"},{"Oper":"cap","Aufzug":"","Szene":9,"日本語":"第9場","作品名":"Capriccio, Op.85 (1940-41)"},{"Oper":"cap","Aufzug":"","Szene":10,"日本語":"第10場","作品名":"Capriccio, Op.85 (1940-41)"},{"Oper":"cap","Aufzug":"","Szene":11,"日本語":"第11場","作品名":"Capriccio, Op.85 (1940-41)"},{"Oper":"cap","Aufzug":"","Szene":12,"日本語":"第12場","作品名":"Capriccio, Op.85 (1940-41)"},{"Oper":"cap","Aufzug":"","Szene":13,"日本語":"第13場","作品名":"Capriccio, Op.85 (1940-41)"}]
+[
+  {
+    "Oper": "guntram",
+    "Aufzug": 1,
+    "Szene": "vorspiel",
+    "???": "?1????",
+    "???": "Guntram, Op.25 (1888-93, revised 1934?39)"
+  },
+  {
+    "Oper": "guntram",
+    "Aufzug": 1,
+    "Szene": 1,
+    "???": "?1??1?",
+    "???": "Guntram, Op.25 (1888-93, revised 1934?39)"
+  },
+  {
+    "Oper": "guntram",
+    "Aufzug": 1,
+    "Szene": 2,
+    "???": "?1??2?",
+    "???": "Guntram, Op.25 (1888-93, revised 1934?39)"
+  },
+  {
+    "Oper": "guntram",
+    "Aufzug": 1,
+    "Szene": 3,
+    "???": "?1??3?",
+    "???": "Guntram, Op.25 (1888-93, revised 1934?39)"
+  },
+  {
+    "Oper": "guntram",
+    "Aufzug": 2,
+    "Szene": "vorspiel",
+    "???": "?2????",
+    "???": "Guntram, Op.25 (1888-93, revised 1934?39)"
+  },
+  {
+    "Oper": "guntram",
+    "Aufzug": 2,
+    "Szene": 1,
+    "???": "?2??1?",
+    "???": "Guntram, Op.25 (1888-93, revised 1934?39)"
+  },
+  {
+    "Oper": "guntram",
+    "Aufzug": 2,
+    "Szene": 2,
+    "???": "?2??2?",
+    "???": "Guntram, Op.25 (1888-93, revised 1934?39)"
+  },
+  {
+    "Oper": "guntram",
+    "Aufzug": 2,
+    "Szene": 3,
+    "???": "?2??3?",
+    "???": "Guntram, Op.25 (1888-93, revised 1934?39)"
+  },
+  {
+    "Oper": "guntram",
+    "Aufzug": 3,
+    "Szene": "vorspiel",
+    "???": "?3????",
+    "???": "Guntram, Op.25 (1888-93, revised 1934?39)"
+  },
+  {
+    "Oper": "guntram",
+    "Aufzug": 3,
+    "Szene": 1,
+    "???": "?3??1?",
+    "???": "Guntram, Op.25 (1888-93, revised 1934?39)"
+  },
+  {
+    "Oper": "guntram",
+    "Aufzug": 3,
+    "Szene": 2,
+    "???": "?3??2?",
+    "???": "Guntram, Op.25 (1888-93, revised 1934?39)"
+  },
+  {
+    "Oper": "guntram",
+    "Aufzug": 3,
+    "Szene": 3,
+    "???": "?3??3?",
+    "???": "Guntram, Op.25 (1888-93, revised 1934?39)"
+  },
+  {
+    "Oper": "guntram",
+    "Aufzug": 3,
+    "Szene": 4,
+    "???": "?3??4?",
+    "???": "Guntram, Op.25 (1888-93, revised 1934?39)"
+  },
+  {
+    "Oper": "feuersnot",
+    "Aufzug": "",
+    "Szene": "",
+    "???": "?1?",
+    "???": "Feuersnot, Op.50 (1900-01)"
+  },
+  {
+    "Oper": "salome",
+    "Aufzug": "",
+    "Szene": 1,
+    "???": "?1?",
+    "???": "Salome, Op.54 (1903-05)"
+  },
+  {
+    "Oper": "salome",
+    "Aufzug": "",
+    "Szene": 2,
+    "???": "?2?",
+    "???": "Salome, Op.54 (1903-05)"
+  },
+  {
+    "Oper": "salome",
+    "Aufzug": "",
+    "Szene": 3,
+    "???": "?3?",
+    "???": "Salome, Op.54 (1903-05)"
+  },
+  {
+    "Oper": "salome",
+    "Aufzug": "",
+    "Szene": 4,
+    "???": "?4?",
+    "???": "Salome, Op.54 (1903-05)"
+  },
+  {
+    "Oper": "elektra",
+    "Aufzug": "",
+    "Szene": "",
+    "???": "?1?",
+    "???": "Elektra,  Op.58 (1906-08)"
+  },
+  {
+    "Oper": "rosenkavalier",
+    "Aufzug": 1,
+    "Szene": "",
+    "???": "?1?",
+    "???": "Der Rosenkavlier, Op.59 (1909-10)"
+  },
+  {
+    "Oper": "rosenkavalier",
+    "Aufzug": 2,
+    "Szene": "",
+    "???": "?2?",
+    "???": "Der Rosenkavlier, Op.59 (1909-10)"
+  },
+  {
+    "Oper": "rosenkavalier",
+    "Aufzug": 3,
+    "Szene": "",
+    "???": "?3?",
+    "???": "Der Rosenkavlier, Op.59 (1909-10)"
+  },
+  {
+    "Oper": "ariadne",
+    "Aufzug": "",
+    "Szene": "Vorspiel",
+    "???": "?????",
+    "???": "Ariadne auf Naxos, Op.60 (1912, revised 1916)"
+  },
+  {
+    "Oper": "ariadne",
+    "Aufzug": "Oper",
+    "Szene": "",
+    "???": "???",
+    "???": "Ariadne auf Naxos, Op.60 (1912, revised 1916)"
+  },
+  {
+    "Oper": "schatten",
+    "Aufzug": 1,
+    "Szene": 1,
+    "???": "?1??1?",
+    "???": "Die Frau ohne Schatten, Op.65 (1914-17)"
+  },
+  {
+    "Oper": "schatten",
+    "Aufzug": 1,
+    "Szene": 2,
+    "???": "?1??2?",
+    "???": "Die Frau ohne Schatten, Op.65 (1914-17)"
+  },
+  {
+    "Oper": "schatten",
+    "Aufzug": 2,
+    "Szene": 1,
+    "???": "?2??1?",
+    "???": "Die Frau ohne Schatten, Op.65 (1914-17)"
+  },
+  {
+    "Oper": "schatten",
+    "Aufzug": 2,
+    "Szene": 2,
+    "???": "?2??2?",
+    "???": "Die Frau ohne Schatten, Op.65 (1914-17)"
+  },
+  {
+    "Oper": "schatten",
+    "Aufzug": 2,
+    "Szene": 3,
+    "???": "?2??3?",
+    "???": "Die Frau ohne Schatten, Op.65 (1914-17)"
+  },
+  {
+    "Oper": "schatten",
+    "Aufzug": 2,
+    "Szene": 4,
+    "???": "?2??4?",
+    "???": "Die Frau ohne Schatten, Op.65 (1914-17)"
+  },
+  {
+    "Oper": "schatten",
+    "Aufzug": 2,
+    "Szene": 5,
+    "???": "?2??5?",
+    "???": "Die Frau ohne Schatten, Op.65 (1914-17)"
+  },
+  {
+    "Oper": "schatten",
+    "Aufzug": 3,
+    "Szene": 1,
+    "???": "?3??1?",
+    "???": "Die Frau ohne Schatten, Op.65 (1914-17)"
+  },
+  {
+    "Oper": "schatten",
+    "Aufzug": 3,
+    "Szene": 2,
+    "???": "?3??2?",
+    "???": "Die Frau ohne Schatten, Op.65 (1914-17)"
+  },
+  {
+    "Oper": "schatten",
+    "Aufzug": 3,
+    "Szene": 3,
+    "???": "?3??3?",
+    "???": "Die Frau ohne Schatten, Op.65 (1914-17)"
+  },
+  {
+    "Oper": "schatten",
+    "Aufzug": 3,
+    "Szene": 4,
+    "???": "?3??4?",
+    "???": "Die Frau ohne Schatten, Op.65 (1914-17)"
+  },
+  {
+    "Oper": "intermezzo",
+    "Aufzug": 1,
+    "Szene": 1,
+    "???": "?1??1?",
+    "???": "Intermezzo, Op.72 (1919-23)"
+  },
+  {
+    "Oper": "intermezzo",
+    "Aufzug": 1,
+    "Szene": 2,
+    "???": "?1??2?",
+    "???": "Intermezzo, Op.72 (1919-23)"
+  },
+  {
+    "Oper": "intermezzo",
+    "Aufzug": 1,
+    "Szene": 3,
+    "???": "?1??3?",
+    "???": "Intermezzo, Op.72 (1919-23)"
+  },
+  {
+    "Oper": "intermezzo",
+    "Aufzug": 1,
+    "Szene": 4,
+    "???": "?1??4?",
+    "???": "Intermezzo, Op.72 (1919-23)"
+  },
+  {
+    "Oper": "intermezzo",
+    "Aufzug": 1,
+    "Szene": 5,
+    "???": "?1??5?",
+    "???": "Intermezzo, Op.72 (1919-23)"
+  },
+  {
+    "Oper": "intermezzo",
+    "Aufzug": 1,
+    "Szene": 6,
+    "???": "?1??6?",
+    "???": "Intermezzo, Op.72 (1919-23)"
+  },
+  {
+    "Oper": "intermezzo",
+    "Aufzug": 1,
+    "Szene": 7,
+    "???": "?1??7?",
+    "???": "Intermezzo, Op.72 (1919-23)"
+  },
+  {
+    "Oper": "intermezzo",
+    "Aufzug": 2,
+    "Szene": 1,
+    "???": "?2??1?",
+    "???": "Intermezzo, Op.72 (1919-23)"
+  },
+  {
+    "Oper": "intermezzo",
+    "Aufzug": 2,
+    "Szene": 2,
+    "???": "?2??2?",
+    "???": "Intermezzo, Op.72 (1919-23)"
+  },
+  {
+    "Oper": "intermezzo",
+    "Aufzug": 2,
+    "Szene": 3,
+    "???": "?2??3?",
+    "???": "Intermezzo, Op.72 (1919-23)"
+  },
+  {
+    "Oper": "intermezzo",
+    "Aufzug": 2,
+    "Szene": 4,
+    "???": "?2??4?",
+    "???": "Intermezzo, Op.72 (1919-23)"
+  },
+  {
+    "Oper": "intermezzo",
+    "Aufzug": 2,
+    "Szene": 5,
+    "???": "?2??5?",
+    "???": "Intermezzo, Op.72 (1919-23)"
+  },
+  {
+    "Oper": "intermezzo",
+    "Aufzug": 2,
+    "Szene": 6,
+    "???": "?2??6?",
+    "???": "Intermezzo, Op.72 (1919-23)"
+  },
+  {
+    "Oper": "helena",
+    "Aufzug": "einleitung",
+    "Szene": "",
+    "???": "???",
+    "???": "Die ?gyptische Helena, Op.75 (1924-27)"
+  },
+  {
+    "Oper": "helena",
+    "Aufzug": 1,
+    "Szene": 1,
+    "???": "?1??1?",
+    "???": "Die ?gyptische Helena, Op.75 (1924-27)"
+  },
+  {
+    "Oper": "helena",
+    "Aufzug": 1,
+    "Szene": 2,
+    "???": "?1??2?",
+    "???": "Die ?gyptische Helena, Op.75 (1924-27)"
+  },
+  {
+    "Oper": "helena",
+    "Aufzug": 1,
+    "Szene": 3,
+    "???": "?1??3?",
+    "???": "Die ?gyptische Helena, Op.75 (1924-27)"
+  },
+  {
+    "Oper": "helena",
+    "Aufzug": 1,
+    "Szene": 4,
+    "???": "?1??4?",
+    "???": "Die ?gyptische Helena, Op.75 (1924-27)"
+  },
+  {
+    "Oper": "helena",
+    "Aufzug": 1,
+    "Szene": "finale",
+    "???": "?1??????",
+    "???": "Die ?gyptische Helena, Op.75 (1924-27)"
+  },
+  {
+    "Oper": "helena",
+    "Aufzug": 2,
+    "Szene": "",
+    "???": "?2?",
+    "???": "Die ?gyptische Helena, Op.75 (1924-27)"
+  },
+  {
+    "Oper": "arabella",
+    "Aufzug": 1,
+    "Szene": "",
+    "???": "?1?",
+    "???": "Arabella, Op.79 (1930-32)"
+  },
+  {
+    "Oper": "arabella",
+    "Aufzug": 2,
+    "Szene": "",
+    "???": "?2?",
+    "???": "Arabella, Op.79 (1930-32)"
+  },
+  {
+    "Oper": "arabella",
+    "Aufzug": 3,
+    "Szene": "",
+    "???": "?3?",
+    "???": "Arabella, Op.79 (1930-32)"
+  },
+  {
+    "Oper": "schweigsame",
+    "Aufzug": 1,
+    "Szene": 1,
+    "???": "?1??1?",
+    "???": "Die schweigsame Frau, Op.80 (1932-35)"
+  },
+  {
+    "Oper": "schweigsame",
+    "Aufzug": 1,
+    "Szene": 2,
+    "???": "?1??2?",
+    "???": "Die schweigsame Frau, Op.80 (1932-35)"
+  },
+  {
+    "Oper": "schweigsame",
+    "Aufzug": 1,
+    "Szene": 3,
+    "???": "?1??3?",
+    "???": "Die schweigsame Frau, Op.80 (1932-35)"
+  },
+  {
+    "Oper": "schweigsame",
+    "Aufzug": 1,
+    "Szene": 4,
+    "???": "?1??4?",
+    "???": "Die schweigsame Frau, Op.80 (1932-35)"
+  },
+  {
+    "Oper": "schweigsame",
+    "Aufzug": 2,
+    "Szene": 1,
+    "???": "?2??1?",
+    "???": "Die schweigsame Frau, Op.80 (1932-35)"
+  },
+  {
+    "Oper": "schweigsame",
+    "Aufzug": 2,
+    "Szene": 2,
+    "???": "?2??2?",
+    "???": "Die schweigsame Frau, Op.80 (1932-35)"
+  },
+  {
+    "Oper": "schweigsame",
+    "Aufzug": 2,
+    "Szene": 3,
+    "???": "?2??3?",
+    "???": "Die schweigsame Frau, Op.80 (1932-35)"
+  },
+  {
+    "Oper": "schweigsame",
+    "Aufzug": 2,
+    "Szene": 4,
+    "???": "?2??4?",
+    "???": "Die schweigsame Frau, Op.80 (1932-35)"
+  },
+  {
+    "Oper": "schweigsame",
+    "Aufzug": 2,
+    "Szene": 5,
+    "???": "?2??5?",
+    "???": "Die schweigsame Frau, Op.80 (1932-35)"
+  },
+  {
+    "Oper": "schweigsame",
+    "Aufzug": 2,
+    "Szene": 6,
+    "???": "?2??6?",
+    "???": "Die schweigsame Frau, Op.80 (1932-35)"
+  },
+  {
+    "Oper": "schweigsame",
+    "Aufzug": 2,
+    "Szene": 7,
+    "???": "?2??7?",
+    "???": "Die schweigsame Frau, Op.80 (1932-35)"
+  },
+  {
+    "Oper": "schweigsame",
+    "Aufzug": 2,
+    "Szene": 8,
+    "???": "?2??8?",
+    "???": "Die schweigsame Frau, Op.80 (1932-35)"
+  },
+  {
+    "Oper": "schweigsame",
+    "Aufzug": 2,
+    "Szene": 9,
+    "???": "?2??9?",
+    "???": "Die schweigsame Frau, Op.80 (1932-35)"
+  },
+  {
+    "Oper": "schweigsame",
+    "Aufzug": 2,
+    "Szene": 10,
+    "???": "?2??10?",
+    "???": "Die schweigsame Frau, Op.80 (1932-35)"
+  },
+  {
+    "Oper": "schweigsame",
+    "Aufzug": 2,
+    "Szene": 11,
+    "???": "?2??11?",
+    "???": "Die schweigsame Frau, Op.80 (1932-35)"
+  },
+  {
+    "Oper": "schweigsame",
+    "Aufzug": 2,
+    "Szene": 12,
+    "???": "?2??12?",
+    "???": "Die schweigsame Frau, Op.80 (1932-35)"
+  },
+  {
+    "Oper": "schweigsame",
+    "Aufzug": 3,
+    "Szene": "einleitung",
+    "???": "?3????",
+    "???": "Die schweigsame Frau, Op.80 (1932-35)"
+  },
+  {
+    "Oper": "schweigsame",
+    "Aufzug": 3,
+    "Szene": 1,
+    "???": "?3??1?",
+    "???": "Die schweigsame Frau, Op.80 (1932-35)"
+  },
+  {
+    "Oper": "schweigsame",
+    "Aufzug": 3,
+    "Szene": 2,
+    "???": "?3??2?",
+    "???": "Die schweigsame Frau, Op.80 (1932-35)"
+  },
+  {
+    "Oper": "schweigsame",
+    "Aufzug": 3,
+    "Szene": 3,
+    "???": "?3??3?",
+    "???": "Die schweigsame Frau, Op.80 (1932-35)"
+  },
+  {
+    "Oper": "schweigsame",
+    "Aufzug": 3,
+    "Szene": 4,
+    "???": "?3??4?",
+    "???": "Die schweigsame Frau, Op.80 (1932-35)"
+  },
+  {
+    "Oper": "schweigsame",
+    "Aufzug": 3,
+    "Szene": 5,
+    "???": "?3??5?",
+    "???": "Die schweigsame Frau, Op.80 (1932-35)"
+  },
+  {
+    "Oper": "schweigsame",
+    "Aufzug": 3,
+    "Szene": 6,
+    "???": "?3??6?",
+    "???": "Die schweigsame Frau, Op.80 (1932-35)"
+  },
+  {
+    "Oper": "schweigsame",
+    "Aufzug": 3,
+    "Szene": 7,
+    "???": "?3??7?",
+    "???": "Die schweigsame Frau, Op.80 (1932-35)"
+  },
+  {
+    "Oper": "schweigsame",
+    "Aufzug": 3,
+    "Szene": 8,
+    "???": "?3??8?",
+    "???": "Die schweigsame Frau, Op.80 (1932-35)"
+  },
+  {
+    "Oper": "schweigsame",
+    "Aufzug": 3,
+    "Szene": 9,
+    "???": "?3??9?",
+    "???": "Die schweigsame Frau, Op.80 (1932-35)"
+  },
+  {
+    "Oper": "schweigsame",
+    "Aufzug": 3,
+    "Szene": 10,
+    "???": "?3??10?",
+    "???": "Die schweigsame Frau, Op.80 (1932-35)"
+  },
+  {
+    "Oper": "tag",
+    "Aufzug": 1,
+    "Szene": "",
+    "???": "?1?",
+    "???": "Friedenstag, Op.81 (1935-36)"
+  },
+  {
+    "Oper": "daphne",
+    "Aufzug": 1,
+    "Szene": "",
+    "???": "?1?",
+    "???": "Daphne, Op.82 (1936-37)"
+  },
+  {
+    "Oper": "danae",
+    "Aufzug": 1,
+    "Szene": "",
+    "???": "?1?",
+    "???": "Die Liebe der Danae, Op.83 (1938-40)"
+  },
+  {
+    "Oper": "danae",
+    "Aufzug": 2,
+    "Szene": "",
+    "???": "?2?",
+    "???": "Die Liebe der Danae, Op.83 (1938-40)"
+  },
+  {
+    "Oper": "danae",
+    "Aufzug": 3,
+    "Szene": "",
+    "???": "?3?",
+    "???": "Die Liebe der Danae, Op.83 (1938-40)"
+  },
+  {
+    "Oper": "cap",
+    "Aufzug": "",
+    "Szene": "einleitung",
+    "???": "???",
+    "???": "Capriccio, Op.85 (1940-41)"
+  },
+  {
+    "Oper": "cap",
+    "Aufzug": "",
+    "Szene": 1,
+    "???": "?1?",
+    "???": "Capriccio, Op.85 (1940-41)"
+  },
+  {
+    "Oper": "cap",
+    "Aufzug": "",
+    "Szene": 2,
+    "???": "?2?",
+    "???": "Capriccio, Op.85 (1940-41)"
+  },
+  {
+    "Oper": "cap",
+    "Aufzug": "",
+    "Szene": 3,
+    "???": "?3?",
+    "???": "Capriccio, Op.85 (1940-41)"
+  },
+  {
+    "Oper": "cap",
+    "Aufzug": "",
+    "Szene": 4,
+    "???": "?4?",
+    "???": "Capriccio, Op.85 (1940-41)"
+  },
+  {
+    "Oper": "cap",
+    "Aufzug": "",
+    "Szene": 5,
+    "???": "?5?",
+    "???": "Capriccio, Op.85 (1940-41)"
+  },
+  {
+    "Oper": "cap",
+    "Aufzug": "",
+    "Szene": 6,
+    "???": "?6?",
+    "???": "Capriccio, Op.85 (1940-41)"
+  },
+  {
+    "Oper": "cap",
+    "Aufzug": "",
+    "Szene": 7,
+    "???": "?7?",
+    "???": "Capriccio, Op.85 (1940-41)"
+  },
+  {
+    "Oper": "cap",
+    "Aufzug": "",
+    "Szene": 8,
+    "???": "?8?",
+    "???": "Capriccio, Op.85 (1940-41)"
+  },
+  {
+    "Oper": "cap",
+    "Aufzug": "",
+    "Szene": 9,
+    "???": "?9?",
+    "???": "Capriccio, Op.85 (1940-41)"
+  },
+  {
+    "Oper": "cap",
+    "Aufzug": "",
+    "Szene": 10,
+    "???": "?10?",
+    "???": "Capriccio, Op.85 (1940-41)"
+  },
+  {
+    "Oper": "cap",
+    "Aufzug": "",
+    "Szene": 11,
+    "???": "?11?",
+    "???": "Capriccio, Op.85 (1940-41)"
+  },
+  {
+    "Oper": "cap",
+    "Aufzug": "",
+    "Szene": 12,
+    "???": "?12?",
+    "???": "Capriccio, Op.85 (1940-41)"
+  },
+  {
+    "Oper": "cap",
+    "Aufzug": "",
+    "Szene": 13,
+    "???": "?13?",
+    "???": "Capriccio, Op.85 (1940-41)"
+  }
+]
