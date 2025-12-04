@@ -38,7 +38,7 @@
                 .replace(/ö/g, 'oe')
                 .replace(/ü/g, 'ue')
                 .replace(/ß/g, 'ss')
-                .replace(/[^a-z0-9.]/g, '');
+                .replace(/[^a-z0-9.\s]/g, ''); // スペースを保持
         }
 
         // Helper to normalize term entry
@@ -201,7 +201,15 @@
             const normalizedInput = normalizeString(input);
             const matches = termEntries
                 .filter(entry => entry.normalized.includes(normalizedInput))
-                .sort((a, b) => a.normalized.localeCompare(b.normalized));
+                .sort((a, b) => {
+                    // 前方一致を優先
+                    const aStarts = a.normalized.startsWith(normalizedInput);
+                    const bStarts = b.normalized.startsWith(normalizedInput);
+                    if (aStarts && !bStarts) return -1;
+                    if (!aStarts && bStarts) return 1;
+                    return a.normalized.localeCompare(b.normalized);
+                })
+                .slice(0, 50); // 候補数を50件に制限
 
             updateDatalist(matches);
 
@@ -213,8 +221,7 @@
             datalist.innerHTML = '';
             suggestions.forEach(entry => {
                 const option = document.createElement('option');
-                option.value = entry.normalized; // 入力欄は英字のまま
-                option.label = entry.original;   // ユーザーには de 列の文字列を表示
+                option.value = entry.original; // 元の形式を使用
                 option.textContent = entry.original;
                 datalist.appendChild(option);
             });
