@@ -14,7 +14,7 @@
   {
     "de": "1. 2. 3. 4. Horn in F in der Ferne; sind an den in der Partitur bemerkten Stellen mit im Orch. thätig.",
     "de_normalized": "1. 2. 3. 4. horn in f in der ferne; sind an den in der partitur bemerkten stellen mit im orch. thaetig.",
-    "ja": "遠いところに配置された1.2.3.4.in Fホルン：スコアの指定されている箇所においてオーケストラの中で演奏する",
+    "ja": "第1，第2，第3，第4ホルン（F管）は遠方に配置する．ただし，スコアに指示された箇所では管弦楽（主オーケストラ）に加わって演奏すること．",
     "data": "M-2-5-0-hr&"
   },
   {
@@ -2354,13 +2354,13 @@
   {
     "de": "auf Holz",
     "de_normalized": "auf holz",
-    "ja": "木で",
+    "ja": "（Ruteでバスドラムなどの）木の部分（木枠や胴部）を叩く",
     "data": "M-6-1-384-rt&"
   },
   {
     "de": "auf Holz geschlagen",
     "de_normalized": "auf holz geschlagen",
-    "ja": "木で叩く",
+    "ja": "（Ruteでバスドラムなどの）木の部分（木枠や胴部）を叩く",
     "data": "M-2-3-11-rt&"
   },
   {
@@ -2864,7 +2864,7 @@
   {
     "de": "bispigliando",
     "de_normalized": "bispigliando",
-    "ja": "ささやくように",
+    "ja": "ささやくように\n（訳注：bisbigliando の異綴り，あるいは古い用法）",
     "data": "M-8-t2-1289-hp&"
   },
   {
@@ -7790,13 +7790,13 @@
   {
     "de": "Kopfstimme",
     "de_normalized": "kopfstimme",
-    "ja": "頭声",
+    "ja": "頭声で",
     "data": "M-8-t2-1464-chor2&M-b1-t2-313-chor&"
   },
   {
     "de": "Kopfstimme!",
     "de_normalized": "kopfstimme!",
-    "ja": "頭声！",
+    "ja": "頭声で！",
     "data": "M-3-5-96-fchor&"
   },
   {
