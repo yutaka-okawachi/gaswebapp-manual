@@ -14,7 +14,46 @@ function doPost(e) {
       'rs_terms_search.html': '用語から検索 (RS)',
       'rw_terms_search.html': '用語から検索 (RW)',
       'richard_strauss.html': '曲名から検索 (RS)',
-      'richard_wagner.html': '曲名から検索 (RW)'
+      'richard_strauss': '曲名から検索 (RS)',
+      'richard_wagner.html': '曲名から検索 (RW)',
+      'richard_wagner': '曲名から検索 (RW)'
+    };
+    
+    // オペラ名のマッピング（リヒャルト・シュトラウス）
+    var operaNameMap_RS = {
+      'guntram': 'Guntram, Op.25',
+      'feuersnot': 'Feuersnot, Op.50',
+      'salome': 'Salome, Op.54',
+      'elektra': 'Elektra, Op.58',
+      'rosenkavalier': 'Der Rosenkavalier, Op.59',
+      'ariadne': 'Ariadne auf Naxos, Op.60',
+      'schatten': 'Die Frau ohne Schatten, Op.65',
+      'intermezzo': 'Intermezzo, Op.72',
+      'helena': 'Die ägyptische Helena, Op.75',
+      'arabella': 'Arabella, Op.79',
+      'schweigsame': 'Die schweigsame Frau, Op.80',
+      'tag': 'Friedenstag, Op.81',
+      'daphne': 'Daphne, Op.82',
+      'danae': 'Die Liebe der Danae, Op.83',
+      'cap': 'Capriccio, Op.85'
+    };
+    
+    // オペラ名のマッピング（リヒャルト・ワーグナー）
+    var operaNameMap_RW = {
+      'feen': 'Die Feen, WWV 32',
+      'liebes': 'Das Liebesverbot, WWV 38',
+      'rienzi': 'Rienzi, WWV 49',
+      'holländer': 'Der fliegende Holländer, WWV 63',
+      'tann_dresden': 'Tannhäuser, WWV 70 (Dresden版)',
+      'tann_paris': 'Tannhäuser, WWV 70 (Paris版)',
+      'lohengrin': 'Lohengrin, WWV 75',
+      'rheingold': 'Das Rheingold, WWV 86A',
+      'walküre': 'Die Walküre, WWV 86B',
+      'siegfried': 'Siegfried, WWV 86C',
+      'götter': 'Götterdämmerung, WWV 86D',
+      'tristan': 'Tristan und Isolde, WWV 90',
+      'meister': 'Die Meistersinger von Nürnberg, WWV 96',
+      'parsifal': 'Parsifal, WWV 111'
     };
     
     // 楽器名のマッピング（フロントエンドのdMappingと対応）
@@ -153,21 +192,38 @@ function doPost(e) {
     }
     
     // workを日本語に変換
-    function translateWork(work) {
+    function translateWork(work, pageName) {
       if (!work || work === "N/A") return "未指定";
       if (work === "All (GM)") return "全作品";
       if (work === "Mahler Search") return "マーラー検索";
+      
+      // RS/RWのオペラ名を変換
+      var operaKey = work.toLowerCase();
+      
+      // ページ名からRS/RWを判定
+      if (pageName && (pageName.indexOf('richard_strauss') >= 0 || pageName.indexOf('(RS)') >= 0)) {
+        if (operaNameMap_RS[operaKey]) {
+          return operaNameMap_RS[operaKey];
+        }
+      } else if (pageName && (pageName.indexOf('richard_wagner') >= 0 || pageName.indexOf('(RW)') >= 0)) {
+        if (operaNameMap_RW[operaKey]) {
+          return operaNameMap_RW[operaKey];
+        }
+      }
+      
       return work;
     }
     
-    var work = translateWork(data.work);
-    var scope = translateScope(data.scope);
-    var term = getValue(data.term);
     var page = getValue(data.page);
     var userAgent = getValue(data.userAgent);
     
     // ページ名を日本語に変換
     var pageName = pageNameMap[page] || page;
+    
+    // work と scope を変換（pageNameを使用）
+    var work = translateWork(data.work, page);
+    var scope = translateScope(data.scope);
+    var term = getValue(data.term);
     
     var now = new Date();
     // Use JST for the timestamp
@@ -187,7 +243,15 @@ function doPost(e) {
     if (scope === "用語検索") {
       body += "【検索語】 " + term + "\n" +
               "【検索タイプ】 " + scope + "\n";
+    } else if (scope === "場面検索") {
+      // RS/RWの場面検索は後で追加された情報から取得
+      body += "【検索タイプ】 場面検索\n" +
+              "【場面】 " + term + "\n"; // termに場面情報が入っている場合
+    } else if (scope.indexOf("ページ番号:") === 0) {
+      body += "【検索タイプ】 ページ検索\n" +
+              "【" + scope.split(':')[0] + "】 " + scope.split(':')[1].trim() + "\n";
     } else {
+      // GM の曲名・楽器検索
       body += "【検索タイプ】 曲名・楽器検索\n" +
               "【楽器】 " + scope + "\n";
     }
