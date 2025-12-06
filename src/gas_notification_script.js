@@ -104,9 +104,46 @@ function doPost(e) {
       // 特殊なケース
       if (scope === "Term") return "用語検索";
       if (scope === "Mahler Search") return "曲名・楽器検索";
+      if (scope === "Scene Search") return "場面検索";
+      if (scope === "Page Search") return "ページ検索";
       if (scope.toLowerCase() === "all_global") return "全楽器";
       
-      // カンマ区切りの楽器コードを変換
+      // ページ検索の場合（例: "Page 10-20"）
+      if (scope.indexOf("Page ") === 0) {
+        var pageNumbers = scope.substring(5); // "Page "を削除
+        return "ページ番号: " + pageNumbers;
+      }
+      
+      // 場面検索の場合（例: "2-, 3-" または "all"）
+      if (scope === "all") return "全場面";
+      
+      // "数字-" または "数字-数字" のパターンをチェック（場面情報）
+      var scenePattern = /^\d+(-\d*)?$/;
+      var parts = scope.split(',').map(function(part) { return part.trim(); });
+      var hasScenePattern = parts.every(function(part) {
+        return part === "all" || scenePattern.test(part);
+      });
+      
+      if (hasScenePattern) {
+        // 場面情報を日本語化
+        var sceneParts = parts.map(function(part) {
+          if (part === "all") return "全場面";
+          
+          var matches = part.split('-');
+          var aufzug = matches[0];
+          var szene = matches[1];
+          
+          var result = "";
+          if (aufzug) result += "第" + aufzug + "幕";
+          if (szene) result += "第" + szene + "場";
+          if (!szene && aufzug) result += "（全体）"; // "2-"のような場合
+          
+          return result || part;
+        });
+        return sceneParts.join(', ');
+      }
+      
+      // 楽器コードの場合（カンマ区切りの楽器コードを変換）
       var instruments = scope.split(',').map(function(code) {
         code = code.trim().toLowerCase();
         return instrumentMap[code] || code;
