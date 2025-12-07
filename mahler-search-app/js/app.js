@@ -1383,11 +1383,11 @@ function searchGenericTermsLocal(query, dataKey, type) {
         html += `<div class="search-result-item">`;
         html += `<div class="result-a">${escapeHtmlWithBreaks(de)}</div>`;
         
-        // 日本語訳は最初の項目のものを1回だけ表示
-        const ja = escapeHtmlWithBreaks(String(itemsForThisDe[0].ja || ''));
-        html += `<div class="result-c">${ja}</div>`;
-        
         itemsForThisDe.forEach(row => {
+            // 各用例ごとに日本語訳を表示（訳語の揺れがわかるように）
+            const ja = escapeHtmlWithBreaks(String(row.ja || ''));
+            html += `<div class="result-c">${ja}</div>`;
+            
             const whom = escapeHtml(String(row.whom || ''));
             const operKey = normalizeString(String(row.Oper || ''));
             const aufzug = (row.aufzug || '0').toString().trim().toLowerCase();
