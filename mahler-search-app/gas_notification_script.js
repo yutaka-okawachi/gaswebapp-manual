@@ -156,29 +156,71 @@ function doPost(e) {
       // 場面検索の場合（例: "2-, 3-" または "all"）
       if (scope === "all") return "全場面";
       
-      // "数字-" または "数字-数字" のパターンをチェック（場面情報）
-      var scenePattern = /^\d+(-\d*)?$/;
-      var parts = scope.split(',').map(function(part) { return part.trim(); });
-      var hasScenePattern = parts.every(function(part) {
-        return part === "all" || scenePattern.test(part);
-      });
+      // 特殊な場面表記のマッピング
+      var sceneTermMap = {
+        'einleitung': '導入部',
+        'vorspiel': '前奏曲',
+        'introduction': '導入部',
+        'prelude': '前奏曲',
+        'finale': 'フィナーレ'
+      };
       
-      if (hasScenePattern) {
-        // 場面情報を日本語化
-        var sceneParts = parts.map(function(part) {
-          if (part === "all") return "全場面";
-          
-          var matches = part.split('-');
-          var aufzug = matches[0];
-          var szene = matches[1];
+      // 各パートを個別に処理（混合形式に対応）
+      var parts = scope.split(',').map(function(part) { return part.trim(); });
+      var hasAnyScenePattern = false;
+      
+      var sceneParts = parts.map(function(part) {
+        if (part === "all") {
+          hasAnyScenePattern = true;
+          return "全場面";
+        }
+        
+        // "数字-数字" または "数字-" のパターン
+        var numericPattern = /^(\d+)(-(\d*))?$/;
+        var numericMatch = numericPattern.exec(part);
+        
+        if (numericMatch) {
+          hasAnyScenePattern = true;
+          var aufzug = numericMatch[1];
+          var szene = numericMatch[3];
           
           var result = "";
           if (aufzug) result += "第" + aufzug + "幕";
           if (szene) result += "第" + szene + "場";
-          if (!szene && aufzug) result += "（全体）"; // "2-"のような場合
+          if (!szene && aufzug) result += "（全体）";
           
-          return result || part;
-        });
+          return result;
+        }
+        
+        // "数字-文字列" のパターン（例: "3-einleitung"）
+        var mixedPattern = /^(\d+)-(.+)$/;
+        var mixedMatch = mixedPattern.exec(part);
+        
+        if (mixedMatch) {
+          hasAnyScenePattern = true;
+          var aufzug = mixedMatch[1];
+          var term = mixedMatch[2].toLowerCase();
+          
+          var result = "第" + aufzug + "幕";
+          var translatedTerm = sceneTermMap[term] || term;
+          result += translatedTerm;
+          
+          return result;
+        }
+        
+        // 文字列のみの場合（特殊な表記）
+        var lowerPart = part.toLowerCase();
+        if (sceneTermMap[lowerPart]) {
+          hasAnyScenePattern = true;
+          return sceneTermMap[lowerPart];
+        }
+        
+        // それ以外はそのまま返す
+        return part;
+      });
+      
+      // 少なくとも1つでも場面パターンがあれば、場面情報として扱う
+      if (hasAnyScenePattern) {
         return sceneParts.join(', ');
       }
       
