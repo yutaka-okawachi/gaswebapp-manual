@@ -1356,7 +1356,9 @@ function searchGenericTermsLocal(query, dataKey, type) {
         return acc;
     }, {});
 
-    let html = `<div class="result-message">全部で${filteredData.length}件ありました。</div>`;
+    // 見出し語の件数を表示
+    const headwordCount = Object.keys(groupedByDe).length;
+    let html = `<div class="result-message">${headwordCount}件ありました。</div>`;
     
     const sortedDeKeys = Object.keys(groupedByDe).sort((a, b) => a.localeCompare(b, 'de'));
     
@@ -1377,11 +1379,15 @@ function searchGenericTermsLocal(query, dataKey, type) {
     };
 
     sortedDeKeys.forEach(de => {
+        const itemsForThisDe = groupedByDe[de];
         html += `<div class="search-result-item">`;
         html += `<div class="result-a">${escapeHtmlWithBreaks(de)}</div>`;
         
-        groupedByDe[de].forEach(row => {
-            const ja = escapeHtmlWithBreaks(String(row.ja || ''));
+        // 日本語訳は最初の項目のものを1回だけ表示
+        const ja = escapeHtmlWithBreaks(String(itemsForThisDe[0].ja || ''));
+        html += `<div class="result-c">${ja}</div>`;
+        
+        itemsForThisDe.forEach(row => {
             const whom = escapeHtml(String(row.whom || ''));
             const operKey = normalizeString(String(row.Oper || ''));
             const aufzug = (row.aufzug || '0').toString().trim().toLowerCase();
@@ -1395,12 +1401,14 @@ function searchGenericTermsLocal(query, dataKey, type) {
             const pageDisplay = page ? `p.${page}` : '';
             let locationText = `${operaDisplayName} ${sceneName} ${pageDisplay}`.trim();
             if (whom) {
-                locationText = `${locationText} 【${whom}】`;
+                locationText += `：${whom}`;
             }
 
-            html += `<div class="result-c">${ja}</div>`;
-            html += `<div class="result-loc">${locationText}</div>`;
+            html += `<div class="result-loc">【${locationText}】</div>`;
         });
+        
+        // 各見出し語の件数を表示
+        html += `<div class="result-loc">(${itemsForThisDe.length}件)</div>`;
         html += `</div>`;
     });
 

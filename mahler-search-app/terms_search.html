@@ -163,7 +163,7 @@
                 return '<div class="result-message">検索中にエラーが発生しました。</div>';
             }
 
-            return `<div class="result-message">全部で${results.length}件ありました。</div>${resultHTML}`;
+            return `<div class="result-message">${results.length}件ありました。</div>${resultHTML}`;
         };
 
         // DOM構築後に動作をセット
