@@ -240,16 +240,18 @@ function doPost(e) {
                "【作品】 " + work + "\n";
     
     // 検索タイプによって表示を変更
-    if (scope === "用語検索") {
+    if (term === "Scene Search") {
+      // RS/RWの場面検索
+      body += "【検索タイプ】 場面検索\n" +
+              "【場面】 " + scope + "\n";
+    } else if (term === "Page Search") {
+      // RS/RWのページ検索
+      body += "【検索タイプ】 ページ検索\n" +
+              "【ページ番号】 " + scope.replace("ページ番号: ", "") + "\n";
+    } else if (scope === "用語検索") {
+      // GM/RS/RWの用語検索
       body += "【検索語】 " + term + "\n" +
               "【検索タイプ】 " + scope + "\n";
-    } else if (scope === "場面検索") {
-      // RS/RWの場面検索は後で追加された情報から取得
-      body += "【検索タイプ】 場面検索\n" +
-              "【場面】 " + term + "\n"; // termに場面情報が入っている場合
-    } else if (scope.indexOf("ページ番号:") === 0) {
-      body += "【検索タイプ】 ページ検索\n" +
-              "【" + scope.split(':')[0] + "】 " + scope.split(':')[1].trim() + "\n";
     } else {
       // GM の曲名・楽器検索
       body += "【検索タイプ】 曲名・楽器検索\n" +
