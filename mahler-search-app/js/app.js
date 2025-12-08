@@ -884,7 +884,12 @@ function normalizeGermanForSort(text) {
 }
 
 function getSortLetter(text) {
-    return normalizeGermanForSort(text).charAt(0).toUpperCase();
+    const firstChar = normalizeGermanForSort(text).charAt(0).toUpperCase();
+    // 数字や記号の場合は "OTHER" を返す
+    if (firstChar && !window.customOrder.includes(firstChar)) {
+        return "OTHER";
+    }
+    return firstChar;
 }
 
 function compareGermanStrings(a, b) {
@@ -929,7 +934,7 @@ function renderDictionaryList(data) {
         // Anchor assignment
         if (german && typeof german === "string") {
             const anchorLetter = getSortLetter(german);
-            if (anchorLetter && window.customOrder.includes(anchorLetter) && !anchorSet[anchorLetter]) {
+            if (anchorLetter && (window.customOrder.includes(anchorLetter) || anchorLetter === "OTHER") && !anchorSet[anchorLetter]) {
                 rowDiv.id = "letter-" + anchorLetter;
                 anchorSet[anchorLetter] = true;
             }
