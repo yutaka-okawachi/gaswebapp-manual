@@ -405,32 +405,66 @@
 
     <div id="scrollToTop" onclick="scrollToTop()">▲ ページのトップへ戻る</div>
     
+    <!-- Debug Info Panel -->
+    <div id="debug-panel" style="position: fixed; top: 70px; right: 10px; background: rgba(0,0,0,0.8); color: #0f0; padding: 10px; font-family: monospace; font-size: 11px; z-index: 10000; border-radius: 4px; max-width: 200px;">
+        <div style="margin-bottom: 5px; font-weight: bold; color: #ff0;">デバッグ情報</div>
+        <div id="debug-content"></div>
+        <button onclick="document.getElementById('debug-panel').style.display='none'" style="margin-top: 5px; font-size: 10px; padding: 2px 5px;">閉じる</button>
+    </div>
+    
     <script>
-        // Dynamic Floating Bar Position Adjustment
+        // Dynamic Floating Bar Position Adjustment with Debug
         (function() {
             const alphaBar = document.getElementById('alpha-floating-bar');
             if (!alphaBar) return;
 
             let adjustTimer = null;
+            const debugContent = document.getElementById('debug-content');
+            
+            function updateDebugInfo(info) {
+                if (debugContent) {
+                    debugContent.innerHTML = `
+                        Window高: ${info.windowHeight}px<br>
+                        Viewport高: ${info.viewportHeight}px<br>
+                        UIバー高: ${info.uiBarHeight}px<br>
+                        Bottom位置: ${info.bottomPosition}px<br>
+                        <span style="color: #ff0">実際の下端: ${info.actualBottom}px</span>
+                    `;
+                }
+            }
             
             function adjustFloatingBarPosition() {
                 // Use visualViewport for more accurate browser UI detection
                 const visualViewport = window.visualViewport;
                 const windowHeight = window.innerHeight;
                 
+                let bottomPosition = 8;
+                let viewportHeight = windowHeight;
+                let uiBarHeight = 0;
+                
                 if (visualViewport) {
                     // Calculate the difference between window height and visual viewport height
                     // This represents the height of browser UI (address bar, toolbar, etc.)
-                    const viewportHeight = visualViewport.height;
-                    const uiBarHeight = windowHeight - viewportHeight;
+                    viewportHeight = visualViewport.height;
+                    uiBarHeight = windowHeight - viewportHeight;
                     
                     // Set bottom position to be above the UI bars
-                    const bottomPosition = Math.max(uiBarHeight + 8, 8);
+                    bottomPosition = Math.max(uiBarHeight + 8, 8);
                     alphaBar.style.bottom = `${bottomPosition}px`;
                 } else {
                     // Fallback for browsers that don't support visualViewport
                     alphaBar.style.bottom = '8px';
                 }
+                
+                // Update debug info
+                const actualBottom = windowHeight - (alphaBar.getBoundingClientRect().bottom);
+                updateDebugInfo({
+                    windowHeight,
+                    viewportHeight,
+                    uiBarHeight,
+                    bottomPosition,
+                    actualBottom: Math.round(actualBottom)
+                });
             }
             
             // Debounced version to reduce frequent executions
