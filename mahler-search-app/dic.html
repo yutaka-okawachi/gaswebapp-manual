@@ -220,7 +220,7 @@
                     const prevRow = i > 0 ? currentData[i-1] : null;
                     const prevLetter = prevRow ? getSortLetter(prevRow[0]) : null;
                     
-                    if (anchorLetter && window.customOrder.includes(anchorLetter) && anchorLetter !== prevLetter) {
+                    if (anchorLetter && (window.customOrder.includes(anchorLetter) || anchorLetter === "OTHER") && anchorLetter !== prevLetter) {
                         rowDiv.id = "letter-" + anchorLetter;
                     }
                 }
@@ -301,7 +301,7 @@
                     const prevRow = i > 0 ? currentData[i-1] : null;
                     const prevLetter = prevRow ? getSortLetter(prevRow[0]) : null;
                     
-                    if (anchorLetter && window.customOrder.includes(anchorLetter) && anchorLetter !== prevLetter) {
+                    if (anchorLetter && (window.customOrder.includes(anchorLetter) || anchorLetter === "OTHER") && anchorLetter !== prevLetter) {
                         rowDiv.id = "letter-" + anchorLetter;
                     }
                 }
