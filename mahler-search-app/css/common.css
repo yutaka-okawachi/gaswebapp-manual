@@ -422,7 +422,7 @@ button.clear-input-btn:hover {
     left: 0;
     right: 0;
     /* bottom will be dynamically set by JavaScript */
-    bottom: 20px;
+    bottom: 40px;
     z-index: 9998;
     display: flex;
     gap: 8px;

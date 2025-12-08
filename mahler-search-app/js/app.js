@@ -1472,15 +1472,15 @@ function normalizeString(str) {
             const uiBarHeight = windowHeight - viewportHeight;
             
             // Set bottom position to be above the UI bars
-            // 理想値20pxに変更
-            const bottomPosition = Math.max(uiBarHeight + 20, 20);
+            // 理想値40pxに変更
+            const bottomPosition = Math.max(uiBarHeight + 40, 40);
             alphaBar.style.bottom = `${bottomPosition}px`;
             
             // Debug log (can be removed in production)
             // console.log(`Floating bar position adjusted: ${bottomPosition}px (UI height: ${uiBarHeight}px)`);
         } else {
-            // Fallback: 20pxを使用
-            alphaBar.style.bottom = '20px';
+            // Fallback: 40pxを使用
+            alphaBar.style.bottom = '40px';
         }
     }
     

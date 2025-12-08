@@ -15,7 +15,7 @@
     <title>用語集</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="css/common.css">
-    <script src="js/app.js?v=20241208"></script>
+    <script src="js/app.js?v=20241208-2"></script>
     <style>
         /* dic.html specific styles */
         #fixedHeader {
@@ -438,7 +438,7 @@
                 const visualViewport = window.visualViewport;
                 const windowHeight = window.innerHeight;
                 
-                let bottomPosition = 20; // 理想値20pxに変更
+                let bottomPosition = 40; // 理想値40pxに変更
                 let viewportHeight = windowHeight;
                 let uiBarHeight = 0;
                 
@@ -451,12 +451,12 @@
                     // viewportOffsetY = ビューポートの上端のY座標（通常スクロール時に変化）
                     const viewportOffsetY = visualViewport.offsetTop || 0;
                     
-                    // 画面全体の高さから、viewport下端までの距離を引いて、目標の20pxを加える
-                    bottomPosition = Math.max(uiBarHeight + 20, 20);
+                    // 画面全体の高さから、viewport下端までの距離を引いて、目標の40pxを加える
+                    bottomPosition = Math.max(uiBarHeight + 40, 40);
                     alphaBar.style.bottom = `${bottomPosition}px`;
                 } else {
-                    // Fallback: 20pxを使用
-                    alphaBar.style.bottom = '20px';
+                    // Fallback: 40pxを使用
+                    alphaBar.style.bottom = '40px';
                 }
                 
                 // Update debug info
