@@ -303,7 +303,12 @@
     }
 
     function getSortLetter(text) {
-      return normalizeGermanForSort(text).charAt(0).toUpperCase();
+      const firstChar = normalizeGermanForSort(text).charAt(0).toUpperCase();
+      // 数字や記号の場合は "OTHER" を返す
+      if (firstChar && !customOrder.includes(firstChar)) {
+        return "OTHER";
+      }
+      return firstChar;
     }
 
     function compareGermanStrings(a, b) {
@@ -369,10 +374,10 @@
         const rowDiv = document.createElement("div");
         rowDiv.classList.add("row");
 
-        // アンカー割り当て (A, Ä, B...Z)
+        // アンカー割り当て (A, Ä, B...Z, そして数字・記号)
         if (german && typeof german === "string") {
           const anchorLetter = getSortLetter(german);
-          if (anchorLetter && customOrder.includes(anchorLetter) && !anchorSet[anchorLetter]) {
+          if (anchorLetter && (customOrder.includes(anchorLetter) || anchorLetter === "OTHER") && !anchorSet[anchorLetter]) {
             rowDiv.id = "letter-" + anchorLetter;
             anchorSet[anchorLetter] = true;
           }
@@ -508,6 +513,7 @@
     <a href="#letter-X">X</a>
     <a href="#letter-Y">Y</a>
     <a href="#letter-Z">Z</a>
+    <a href="#letter-OTHER">数字，記号</a>
   </div>
 
   <div id="scrollToTop" onclick="scrollToTop()">▲ ページのトップへ戻る</div>
