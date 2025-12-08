@@ -438,22 +438,25 @@
                 const visualViewport = window.visualViewport;
                 const windowHeight = window.innerHeight;
                 
-                let bottomPosition = 8;
+                let bottomPosition = 20; // 理想値20pxに変更
                 let viewportHeight = windowHeight;
                 let uiBarHeight = 0;
                 
                 if (visualViewport) {
                     // Calculate the difference between window height and visual viewport height
-                    // This represents the height of browser UI (address bar, toolbar, etc.)
                     viewportHeight = visualViewport.height;
                     uiBarHeight = windowHeight - viewportHeight;
                     
-                    // Set bottom position to be above the UI bars
-                    bottomPosition = Math.max(uiBarHeight + 8, 8);
+                    // 新しい計算方法：viewportの下端から20pxの位置に配置
+                    // viewportOffsetY = ビューポートの上端のY座標（通常スクロール時に変化）
+                    const viewportOffsetY = visualViewport.offsetTop || 0;
+                    
+                    // 画面全体の高さから、viewport下端までの距離を引いて、目標の20pxを加える
+                    bottomPosition = Math.max(uiBarHeight + 20, 20);
                     alphaBar.style.bottom = `${bottomPosition}px`;
                 } else {
-                    // Fallback for browsers that don't support visualViewport
-                    alphaBar.style.bottom = '8px';
+                    // Fallback: 20pxを使用
+                    alphaBar.style.bottom = '20px';
                 }
                 
                 // Update debug info
