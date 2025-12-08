@@ -1450,3 +1450,62 @@ function normalizeString(str) {
         .replace(/ß/g, 'ss')
         .trim();
 }
+
+// --- Dynamic Floating Bar Position Adjustment ---
+// Dynamically adjusts the alpha-floating-bar position to avoid browser UI bars on mobile
+
+(function() {
+    const alphaBar = document.getElementById('alpha-floating-bar');
+    if (!alphaBar) return;
+
+    let adjustTimer = null;
+    
+    function adjustFloatingBarPosition() {
+        // Use visualViewport for more accurate browser UI detection
+        const visualViewport = window.visualViewport;
+        const windowHeight = window.innerHeight;
+        
+        if (visualViewport) {
+            // Calculate the difference between window height and visual viewport height
+            // This difference represents the height of browser UI (address bar, toolbar, etc.)
+            const viewportHeight = visualViewport.height;
+            const uiBarHeight = windowHeight - viewportHeight;
+            
+            // Set bottom position to be above the UI bars
+            // Add 8px as a small buffer
+            const bottomPosition = Math.max(uiBarHeight + 8, 8);
+            alphaBar.style.bottom = `${bottomPosition}px`;
+            
+            // Debug log (can be removed in production)
+            // console.log(`Floating bar position adjusted: ${bottomPosition}px (UI height: ${uiBarHeight}px)`);
+        } else {
+            // Fallback for browsers that don't support visualViewport
+            // Use a reasonable default
+            alphaBar.style.bottom = '8px';
+        }
+    }
+    
+    // Debounced version to reduce frequent executions
+    function debouncedAdjust() {
+        clearTimeout(adjustTimer);
+        adjustTimer = setTimeout(adjustFloatingBarPosition, 100);
+    }
+    
+    // Initial adjustment
+    adjustFloatingBarPosition();
+    
+    // Adjust on scroll (debounced to reduce performance impact)
+    window.addEventListener('scroll', debouncedAdjust, { passive: true });
+    
+    // Adjust on window resize
+    window.addEventListener('resize', debouncedAdjust, { passive: true });
+    
+    // Adjust on orientation change
+    window.addEventListener('orientationchange', adjustFloatingBarPosition);
+    
+    // Adjust when visualViewport changes (for browsers that support it)
+    if (window.visualViewport) {
+        window.visualViewport.addEventListener('resize', debouncedAdjust);
+        window.visualViewport.addEventListener('scroll', debouncedAdjust);
+    }
+})();

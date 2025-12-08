@@ -402,7 +402,62 @@
         </script>
     </div>
 
+
     <div id="scrollToTop" onclick="scrollToTop()">▲ ページのトップへ戻る</div>
+    
+    <script>
+        // Dynamic Floating Bar Position Adjustment
+        (function() {
+            const alphaBar = document.getElementById('alpha-floating-bar');
+            if (!alphaBar) return;
+
+            let adjustTimer = null;
+            
+            function adjustFloatingBarPosition() {
+                // Use visualViewport for more accurate browser UI detection
+                const visualViewport = window.visualViewport;
+                const windowHeight = window.innerHeight;
+                
+                if (visualViewport) {
+                    // Calculate the difference between window height and visual viewport height
+                    // This represents the height of browser UI (address bar, toolbar, etc.)
+                    const viewportHeight = visualViewport.height;
+                    const uiBarHeight = windowHeight - viewportHeight;
+                    
+                    // Set bottom position to be above the UI bars
+                    const bottomPosition = Math.max(uiBarHeight + 8, 8);
+                    alphaBar.style.bottom = `${bottomPosition}px`;
+                } else {
+                    // Fallback for browsers that don't support visualViewport
+                    alphaBar.style.bottom = '8px';
+                }
+            }
+            
+            // Debounced version to reduce frequent executions
+            function debouncedAdjust() {
+                clearTimeout(adjustTimer);
+                adjustTimer = setTimeout(adjustFloatingBarPosition, 100);
+            }
+            
+            // Initial adjustment
+            adjustFloatingBarPosition();
+            
+            // Adjust on scroll (debounced)
+            window.addEventListener('scroll', debouncedAdjust, { passive: true });
+            
+            // Adjust on window resize
+            window.addEventListener('resize', debouncedAdjust, { passive: true });
+            
+            // Adjust on orientation change
+            window.addEventListener('orientationchange', adjustFloatingBarPosition);
+            
+            // Adjust when visualViewport changes
+            if (window.visualViewport) {
+                window.visualViewport.addEventListener('resize', debouncedAdjust);
+                window.visualViewport.addEventListener('scroll', debouncedAdjust);
+            }
+        })();
+    </script>
 </body>
 
 </html>

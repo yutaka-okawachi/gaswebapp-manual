@@ -421,30 +421,20 @@ button.clear-input-btn:hover {
     position: fixed;
     left: 0;
     right: 0;
-    bottom: calc(env(safe-area-inset-bottom, 0px) + 8px);
-    /* lift slightly so phone UI won't cover it */
+    /* bottom will be dynamically set by JavaScript */
+    bottom: 8px;
     z-index: 9998;
     display: flex;
     gap: 8px;
-    /* Add padding that respects the safe area */
-    padding: 12px 12px calc(12px + env(safe-area-inset-bottom, 0px));
+    padding: 12px;
     background: rgba(248, 249, 250, 0.95);
-    /* Slightly less transparent */
     box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.15);
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
-    /* Ensure it has a minimum height */
     min-height: 50px;
     align-items: center;
-    /* Vertically center the links */
-}
-
-@media (max-width: 640px) {
-    #alpha-floating-bar {
-        bottom: calc(env(safe-area-inset-bottom, 0px) + 72px);
-        /* keep above mobile browser toolbars */
-        padding-bottom: 12px;
-    }
+    transition: bottom 0.2s ease;
+    /* Smooth position changes */
 }
 
 #alpha-floating-bar a {
