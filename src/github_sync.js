@@ -55,7 +55,7 @@ function getFileSha(path, config) {
 /**
  * GitHubにファイルをプッシュ（作成または更新）
  * @param {string} path - ファイルパス
- * @param {Object} content - JSONデータ
+ * @param {Object|string} content - JSONデータまたはHTML文字列
  * @param {string} message - コミットメッセージ
  * @param {Object} config - GitHub設定
  * @return {Object} レスポンス
@@ -63,11 +63,25 @@ function getFileSha(path, config) {
 function pushFileToGitHub(path, content, message, config) {
   const url = `https://api.github.com/repos/${config.owner}/${config.repo}/contents/${path}`;
   
-  // JSONを文字列化してUTF-8でBase64エンコード
-  const jsonString = JSON.stringify(content, null, 2);
+  // コンテンツタイプを判定（HTMLファイルかJSONファイルか）
+  const isHtml = path.endsWith('.html');
+  
+  // HTMLの場合は文字列として、JSONの場合はJSON.stringifyで処理
+  let stringContent;
+  let contentType;
+  
+  if (isHtml) {
+    // HTMLファイル：既に文字列なのでそのまま使用
+    stringContent = content;
+    contentType = 'text/html; charset=utf-8';
+  } else {
+    // JSONファイル：オブジェクトをJSON文字列に変換
+    stringContent = JSON.stringify(content, null, 2);
+    contentType = 'application/json; charset=utf-8';
+  }
   
   // UTF-8として正しくエンコードするためにBlobを使用
-  const blob = Utilities.newBlob(jsonString, 'application/json; charset=utf-8');
+  const blob = Utilities.newBlob(stringContent, contentType);
   const base64Content = Utilities.base64Encode(blob.getBytes());
   
   // 既存ファイルのSHAを取得

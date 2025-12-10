@@ -160,6 +160,11 @@ function exportAllDataToJson() {
         abbrJson = data.slice(1).map(row => [row[0], row[1], row[2]]);
     }
 
+    // 9. Generate dic.html (静的HTML生成)
+    Logger.log('=== dic.htmlを生成中 ===');
+    const dicHtml = generateDicHtml(dicNotesJson, abbrJson);
+    Logger.log('dic.html生成完了: ' + Math.round(dicHtml.length / 1024) + ' KB');
+
     // GitHubへ直接プッシュ（Google Drive不要）
     const files = {
         'mahler-search-app/data/mahler.json': mahlerJson,
@@ -168,7 +173,8 @@ function exportAllDataToJson() {
         'mahler-search-app/data/rs_scenes.json': rsScenes,
         'mahler-search-app/data/rw_scenes.json': rwScenes,
         'mahler-search-app/data/dic_notes.json': dicNotesJson,
-        'mahler-search-app/data/abbr_list.json': abbrJson
+        'mahler-search-app/data/abbr_list.json': abbrJson,
+        'mahler-search-app/dic.html': dicHtml  // 新規: 生成されたHTML
     };
 
     // 自動生成されたコミットメッセージ
