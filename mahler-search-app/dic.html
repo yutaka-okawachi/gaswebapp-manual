@@ -176,7 +176,7 @@
 
         function handleHashChange() {
             const hash = window.location.hash;
-            if (!hash || hash === '#top' || hash === '#abbrListContainer') {
+            if (!hash || hash === '#abbrListContainer') {
                 return; // Let default behavior handle these
             }
 
@@ -368,12 +368,7 @@
         <h1>用語集</h1>
     </div>
 
-    <div id="top"></div>
-
     <div class="container">
-        <div class="top-message sticky-top-message" id="listStickyNotice">
-            略記一覧は<a href="#abbrListContainer">こちら</a>
-        </div>
         <div id="listContainer">
             <div class="loading">表示中・・・</div>
         </div>
@@ -390,7 +385,7 @@
 
     <!-- Floating Alphabet Bar -->
     <div id="alpha-floating-bar">
-        <a href="#top">Top</a>
+        <a href="#abbrListContainer">略記一覧</a>
         <script>
             // Generate alphabet links
             const letters = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"];
