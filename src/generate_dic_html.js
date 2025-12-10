@@ -164,6 +164,9 @@ function generateDicHtml(dicData, abbrData) {
 <html>
 
 <head>
+    <!-- Google Search Console Verification -->
+    <meta name="google-site-verification" content="oMTfhSgc1nOrF9dVnBCR_YGcwCDYlrqNmyYn-UJuBJc" />
+    
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZT6MPW5MNG"></script>
     <script>
