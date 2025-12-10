@@ -176,8 +176,17 @@
 
         function handleHashChange() {
             const hash = window.location.hash;
-            if (!hash || hash === '#abbrListContainer') {
-                return; // Let default behavior handle these
+            if (!hash) {
+                return; // No hash, do nothing
+            }
+
+            // Handle abbreviation list link
+            if (hash === '#abbrListContainer') {
+                const targetElement = document.getElementById('abbrListContainer');
+                if (targetElement) {
+                    targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+                return;
             }
 
             // Check if it's a letter anchor
