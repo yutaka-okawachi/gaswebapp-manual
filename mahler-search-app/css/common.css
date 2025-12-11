@@ -427,8 +427,10 @@ button.clear-input-btn:hover {
     z-index: 9998;
     display: flex;
     flex-direction: column;
-    gap: 6px;
+    gap: 3px;
     padding: 12px 6px;
+    justify-content: center;
+    min-height: 50vh;
     background: rgba(248, 249, 250, 0.9);
     box-shadow: -2px 0 8px rgba(0, 0, 0, 0.15);
     overflow-y: auto;
@@ -444,15 +446,15 @@ button.clear-input-btn:hover {
 
 #alpha-floating-bar a {
     display: inline-block;
-    padding: 8px 0;
+    padding: 5px 0;
     border-radius: 4px;
     background: rgba(240, 240, 240, 0.9);
     color: var(--button-bg);
     text-decoration: none;
     font-weight: 600;
     margin-right: 0;
-    margin-bottom: 4px;
-    font-size: 0.9rem;
+    margin-bottom: 2px;
+    font-size: 0.85rem;
     text-align: center;
     width: 32px;
 }
