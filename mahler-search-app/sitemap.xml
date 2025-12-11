@@ -39,4 +39,28 @@
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
+  
+  <!-- Richard Strauss曲名検索 -->
+  <url>
+    <loc>https://yutaka-okawachi.github.io/gaswebapp-manual/mahler-search-app/richard_strauss.html</loc>
+    <lastmod>2025-12-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  
+  <!-- Richard Wagner曲名検索 -->
+  <url>
+    <loc>https://yutaka-okawachi.github.io/gaswebapp-manual/mahler-search-app/richard_wagner.html</loc>
+    <lastmod>2025-12-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  
+  <!-- 訳出についての覚書 -->
+  <url>
+    <loc>https://yutaka-okawachi.github.io/gaswebapp-manual/mahler-search-app/notes.html</loc>
+    <lastmod>2025-12-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
 </urlset>
