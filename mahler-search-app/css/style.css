@@ -439,7 +439,7 @@ button.clear-input-btn:hover {
     position: fixed;
     left: 0;
     right: 0;
-    bottom: calc(env(safe-area-inset-bottom, 0px) + 8px);
+    bottom: calc(env(safe-area-inset-bottom, 0px) + 28px);
     z-index: 9998;
     display: flex;
     gap: 8px;
@@ -454,7 +454,7 @@ button.clear-input-btn:hover {
 
 @media (max-width: 640px) {
     #alpha-floating-bar {
-        bottom: calc(env(safe-area-inset-bottom, 0px) + 72px);
+        bottom: calc(env(safe-area-inset-bottom, 0px) + 92px);
         padding-bottom: 12px;
     }
 }
