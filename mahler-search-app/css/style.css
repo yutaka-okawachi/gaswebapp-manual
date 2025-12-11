@@ -446,8 +446,8 @@ button.clear-input-btn:hover {
     z-index: 9998;
     display: flex;
     flex-direction: column; /* Vertical layout */
-    gap: 4px;
-    padding: 8px 4px;
+    gap: 6px; /* Increased gap */
+    padding: 12px 6px; /* Increased padding */
     background: rgba(248, 249, 250, 0.9);
     box-shadow: -2px 0 8px rgba(0, 0, 0, 0.15);
     overflow-y: auto; /* Scroll if too tall */
@@ -472,11 +472,11 @@ button.clear-input-btn:hover {
 #alpha-floating-bar a {
     display: inline-block;
     margin-right: 0;
-    margin-bottom: 2px;
-    font-size: 0.85rem;
+    margin-bottom: 4px; /* Increased margin */
+    font-size: 0.9rem; /* Slightly larger font */
     text-align: center;
-    width: 28px; /* Fixed width for consistency */
-    padding: 4px 0;
+    width: 32px; /* Slightly wider */
+    padding: 8px 0; /* Increased padding for height */
 }
 
 #alpha-floating-bar a:active {
