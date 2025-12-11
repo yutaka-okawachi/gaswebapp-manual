@@ -435,40 +435,48 @@ button.clear-input-btn:hover {
 }
 
 /* Alphabet floating bar (for list/notes pages) */
+/* Alphabet floating bar (for list/notes pages) - Right Vertical Layout */
 #alpha-floating-bar {
     position: fixed;
-    left: 0;
     right: 0;
-    bottom: calc(env(safe-area-inset-bottom, 0px) + 28px);
+    top: 50%;
+    transform: translateY(-50%);
+    bottom: auto; /* Reset bottom */
+    left: auto;   /* Reset left */
     z-index: 9998;
     display: flex;
-    gap: 8px;
-    padding: 12px 12px calc(12px + env(safe-area-inset-bottom, 0px));
-    background: rgba(248, 249, 250, 0.95);
-    box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.15);
-    overflow-x: auto;
+    flex-direction: column; /* Vertical layout */
+    gap: 4px;
+    padding: 8px 4px;
+    background: rgba(248, 249, 250, 0.9);
+    box-shadow: -2px 0 8px rgba(0, 0, 0, 0.15);
+    overflow-y: auto; /* Scroll if too tall */
+    max-height: 90vh; /* Prevent overflowing screen height */
     -webkit-overflow-scrolling: touch;
-    min-height: 50px;
+    width: auto;
+    min-width: 30px;
     align-items: center;
+    border-top-left-radius: 8px;
+    border-bottom-left-radius: 8px;
 }
 
 @media (max-width: 640px) {
     #alpha-floating-bar {
-        bottom: calc(env(safe-area-inset-bottom, 0px) + 92px);
-        padding-bottom: 12px;
+        /* Mobile specific adjustments if needed */
+        padding: 6px 2px;
+        background: rgba(255, 255, 255, 0.95);
     }
 }
+/* Previous tablet media query is removed as vertical layout is consistent */
 
 #alpha-floating-bar a {
     display: inline-block;
-    white-space: nowrap;
-    padding: 6px 10px;
-    border-radius: 6px;
-    background: rgba(240, 240, 240, 0.9);
-    color: var(--button-bg);
-    text-decoration: none;
-    font-weight: 600;
-    margin-right: 6px;
+    margin-right: 0;
+    margin-bottom: 2px;
+    font-size: 0.85rem;
+    text-align: center;
+    width: 28px; /* Fixed width for consistency */
+    padding: 4px 0;
 }
 
 #alpha-floating-bar a:active {
