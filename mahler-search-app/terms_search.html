@@ -230,8 +230,8 @@
             datalist.innerHTML = '';
             suggestions.forEach(entry => {
                 const option = document.createElement('option');
-                option.value = entry.original; // 元の形式を使用
-                option.textContent = entry.original;
+                option.value = entry.normalized; // 正規化された値を使用
+                option.textContent = entry.original; // 表示は元の形式
                 datalist.appendChild(option);
             });
         }
