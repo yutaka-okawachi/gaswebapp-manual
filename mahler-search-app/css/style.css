@@ -448,7 +448,7 @@ button.clear-input-btn:hover {
     flex-direction: column; /* Vertical layout */
     gap: 3px; /* Reduced gap for better visibility */
     padding: 12px 6px;
-    justify-content: center; /* Center content */
+    /* justify-content: center; removed to fix scroll issue */
     min-height: 50vh; /* Ensure bar has length */
     background: rgba(248, 249, 250, 0.9);
     box-shadow: -2px 0 8px rgba(0, 0, 0, 0.15);
