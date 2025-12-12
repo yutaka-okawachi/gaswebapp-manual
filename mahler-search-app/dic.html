@@ -91,14 +91,14 @@
             background-color: rgba(255, 242, 224, 0.5);
             padding: 1.5rem;
             border-radius: 8px;
-            scroll-margin-top: 90px; /* 固定ヘッダー(約60-80px) + 余白(10px) */
+            scroll-margin-top: 60px; /* 固定ヘッダーの高さ(約50px) + 余白(10px) */
         }
 
         .row {
             border-bottom: 1px solid #ccc;
             padding-bottom: 10px;
             margin-bottom: 10px;
-            scroll-margin-top: 90px; /* 固定ヘッダー(約60-80px) + 余白(10px) */
+            scroll-margin-top: 60px; /* 固定ヘッダーの高さ(約50px) + 余白(10px) */
         }
 
         .german {
@@ -170,7 +170,7 @@
             if (hash === '#abbrListContainer') {
                 const targetElement = document.getElementById('abbrListContainer');
                 if (targetElement) {
-                    targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    targetElement.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
                 }
                 return;
             }
@@ -179,7 +179,7 @@
             if (hash.startsWith('#letter-')) {
                 const targetElement = document.getElementById(hash.substring(1));
                 if (targetElement) {
-                    targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    targetElement.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
                 }
             }
         }
