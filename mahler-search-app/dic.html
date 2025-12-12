@@ -91,14 +91,14 @@
             background-color: rgba(255, 242, 224, 0.5);
             padding: 1.5rem;
             border-radius: 8px;
-            scroll-margin-top: 60px; /* 固定ヘッダーの高さ(約50px) + 余白(10px) */
+            scroll-margin-top: 120px;
         }
 
         .row {
             border-bottom: 1px solid #ccc;
             padding-bottom: 10px;
             margin-bottom: 10px;
-            scroll-margin-top: 60px; /* 固定ヘッダーの高さ(約50px) + 余白(10px) */
+            scroll-margin-top: 120px;
         }
 
         .german {
@@ -140,19 +140,6 @@
         }
     </style>
     <script>
-        // Debounce function to limit the rate at which a function can fire
-        function debounce(func, wait) {
-            let timeout;
-            return function executedFunction(...args) {
-                const later = () => {
-                    clearTimeout(timeout);
-                    func(...args);
-                };
-                clearTimeout(timeout);
-                timeout = setTimeout(later, wait);
-            };
-        }
-
         // ハッシュ変更時のナビゲーション処理
         window.addEventListener('DOMContentLoaded', () => {
             handleHashChange();
@@ -170,7 +157,7 @@
             if (hash === '#abbrListContainer') {
                 const targetElement = document.getElementById('abbrListContainer');
                 if (targetElement) {
-                    targetElement.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                    targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
                 }
                 return;
             }
@@ -179,7 +166,7 @@
             if (hash.startsWith('#letter-')) {
                 const targetElement = document.getElementById(hash.substring(1));
                 if (targetElement) {
-                    targetElement.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                    targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
                 }
             }
         }
@@ -191,20 +178,6 @@
                 behavior: 'smooth'
             });
         }
-
-        // Optimized scroll event handler with debounce for scrollToTop button
-        const handleScroll = debounce(() => {
-            const btn = document.getElementById('scrollToTop');
-            if (btn) {
-                if (window.scrollY > 300) {
-                    btn.style.display = 'block';
-                } else {
-                    btn.style.display = 'none';
-                }
-            }
-        }, 100); // Execute at most once every 100ms
-
-        window.addEventListener('scroll', handleScroll);
     </script>
 </head>
 
@@ -417,7 +390,7 @@
   <div>
     <span class="german">Angst</span><span class="source">[RW: Oper], [RS: Oper]</span>
   </div>
-  <div class="translation">(≒ fear, anxiety, anguish / paura, angoscia, ansia)<br>【一般的な意味】 不安，恐れ，恐怖，苦悩．<br>【音楽用語としての訳例】 「不安」，「恐怖」，「苦悩」，「（voll Angst で）不安に満ちて」，「おののいて」，「怯えて」，「不安そうに」</div>
+  <div class="translation">(≒ fear, anxiety, anguish / paura, angoscia, ansia)<br>【一般的な意味】<br>不安，恐れ，恐怖，苦悩．<br>【音楽用語としての訳例】<br>「不安」，「恐怖」，「苦悩」，「（voll Angst で）不安に満ちて」，「おののいて」，「怯えて」，「不安そうに」</div>
 </div>
 <div class="row">
   <div>
@@ -3897,7 +3870,7 @@
   <div>
     <span class="german">Schallbecher</span><span class="source">[RS: Tod]</span>
   </div>
-  <div class="translation">(≒ bell of wind instrument / padiglione)<br>【一般的な意味】<br>① （管楽器の）朝顔（ベル）．<br>② （古い用法で）音響を増幅する筒状の部位．<br><br>木管楽器や金管楽器の管の末端部，および一部のオルガンのリード管の開口部を指す一般名．Schalltrichter，Schallstück とほぼ同義の語である．とりわけ ホルンの文脈では，右手を入れてストップ奏法や音色調整を行う部分として Schallbecher という語が頻繁に用いられる．</div>
+  <div class="translation">(≒ bell of wind instrument / padiglione)<br>【一般的な意味】<br>① （管楽器の）朝顔（ベル）．<br>② （古い用法で）音響を増幅する筒状の部位．<br><br>木管楽器や金管楽器の管の末端部，および一部のオルガンのリード管の開口部を指す一般名．Schalltrichter，Schallstück とほぼ同義の語である．とりわけホルンの文脈では，右手を入れてストップ奏法や音色調整を行う部分として Schallbecher という語が頻繁に用いられる．</div>
 </div>
 <div class="row">
   <div>
@@ -5774,11 +5747,7 @@
             }
         })();
     </script>
-
-    <!-- Scroll to Top Button -->
-    <button id="scrollToTop" onclick="scrollToTop()">トップへ戻る</button>
-
 </body>
 
 </html>
-<!-- Generated: 2025/12/11 15:52:44 -->
+<!-- Generated: 2025/12/12 21:11:51 -->
