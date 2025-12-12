@@ -140,6 +140,19 @@
         }
     </style>
     <script>
+        // Debounce function to limit the rate at which a function can fire
+        function debounce(func, wait) {
+            let timeout;
+            return function executedFunction(...args) {
+                const later = () => {
+                    clearTimeout(timeout);
+                    func(...args);
+                };
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+            };
+        }
+
         // ハッシュ変更時のナビゲーション処理
         window.addEventListener('DOMContentLoaded', () => {
             handleHashChange();
@@ -178,6 +191,20 @@
                 behavior: 'smooth'
             });
         }
+
+        // Optimized scroll event handler with debounce for scrollToTop button
+        const handleScroll = debounce(() => {
+            const btn = document.getElementById('scrollToTop');
+            if (btn) {
+                if (window.scrollY > 300) {
+                    btn.style.display = 'block';
+                } else {
+                    btn.style.display = 'none';
+                }
+            }
+        }, 100); // Execute at most once every 100ms
+
+        window.addEventListener('scroll', handleScroll);
     </script>
 </head>
 
@@ -5747,6 +5774,10 @@
             }
         })();
     </script>
+
+    <!-- Scroll to Top Button -->
+    <button id="scrollToTop" onclick="scrollToTop()">トップへ戻る</button>
+
 </body>
 
 </html>

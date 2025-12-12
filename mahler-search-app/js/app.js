@@ -1006,14 +1006,32 @@ function scrollToTop() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-window.addEventListener('scroll', () => {
+// Debounce function to limit the rate at which a function can fire
+function debounce(func, wait) {
+    let timeout;
+    return function executedFunction(...args) {
+        const later = () => {
+            clearTimeout(timeout);
+            func(...args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+    };
+}
+
+// Optimized scroll event handler with debounce
+const handleScroll = debounce(() => {
     const btn = document.getElementById('scrollToTop');
-    if (window.scrollY > 300) {
-        btn.style.display = 'block';
-    } else {
-        btn.style.display = 'none';
+    if (btn) {
+        if (window.scrollY > 300) {
+            btn.style.display = 'block';
+        } else {
+            btn.style.display = 'none';
+        }
     }
-});
+}, 100); // Execute at most once every 100ms
+
+window.addEventListener('scroll', handleScroll);
 
 function focusResultsPanel(options) {
     const resultsDiv = document.getElementById('results');
