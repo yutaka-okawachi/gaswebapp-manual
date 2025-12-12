@@ -253,14 +253,14 @@ function generateDicHtml(dicData, abbrData) {
             background-color: rgba(255, 242, 224, 0.5);
             padding: 1.5rem;
             border-radius: 8px;
-            scroll-margin-top: 120px;
+            scroll-margin-top: 60px; /* 固定ヘッダーの高さ(約50px) + 余白(10px) */
         }
 
         .row {
             border-bottom: 1px solid #ccc;
             padding-bottom: 10px;
             margin-bottom: 10px;
-            scroll-margin-top: 120px;
+            scroll-margin-top: 60px; /* 固定ヘッダーの高さ(約50px) + 余白(10px) */
         }
 
         .german {
@@ -302,6 +302,19 @@ function generateDicHtml(dicData, abbrData) {
         }
     </style>
     <script>
+        // Debounce function to limit the rate at which a function can fire
+        function debounce(func, wait) {
+            let timeout;
+            return function executedFunction(...args) {
+                const later = () => {
+                    clearTimeout(timeout);
+                    func(...args);
+                };
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+            };
+        }
+
         // ハッシュ変更時のナビゲーション処理
         window.addEventListener('DOMContentLoaded', () => {
             handleHashChange();
@@ -319,7 +332,7 @@ function generateDicHtml(dicData, abbrData) {
             if (hash === '#abbrListContainer') {
                 const targetElement = document.getElementById('abbrListContainer');
                 if (targetElement) {
-                    targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    targetElement.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
                 }
                 return;
             }
@@ -328,7 +341,7 @@ function generateDicHtml(dicData, abbrData) {
             if (hash.startsWith('#letter-')) {
                 const targetElement = document.getElementById(hash.substring(1));
                 if (targetElement) {
-                    targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    targetElement.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
                 }
             }
         }
@@ -340,6 +353,20 @@ function generateDicHtml(dicData, abbrData) {
                 behavior: 'smooth'
             });
         }
+
+        // Optimized scroll event handler with debounce for scrollToTop button
+        const handleScroll = debounce(() => {
+            const btn = document.getElementById('scrollToTop');
+            if (btn) {
+                if (window.scrollY > 300) {
+                    btn.style.display = 'block';
+                } else {
+                    btn.style.display = 'none';
+                }
+            }
+        }, 100); // Execute at most once every 100ms
+
+        window.addEventListener('scroll', handleScroll);
     </script>
 </head>
 
