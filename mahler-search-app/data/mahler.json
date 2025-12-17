@@ -2552,7 +2552,7 @@
   {
     "de": "Bck. freihängend mit Schwammschlägel",
     "de_normalized": "bck. freihaengend mit schwammschlaegel",
-    "ja": "吊り下げられたシンパル，スポンジのマレットで",
+    "ja": "（スタンド等に固定せず）自由に吊るした状態のシンパルをスポンジのマレットで",
     "data": "M-d-d01-64-bec&M-d-d01-74-bec&"
   },
   {
@@ -2582,7 +2582,7 @@
   {
     "de": "Becken (freihängend)",
     "de_normalized": "becken (freihaengend)",
-    "ja": "（吊り下げられた）シンバル",
+    "ja": "（スタンド等に固定せず，自由に吊るした状態の）シンバルで",
     "data": "M-3-1-0-bec&"
   },
   {
@@ -2606,7 +2606,7 @@
   {
     "de": "Becken freihängend mit Schwammschlägeln",
     "de_normalized": "becken freihaengend mit schwammschlaegeln",
-    "ja": "吊り下げられたシンパル，スポンジのマレットで",
+    "ja": "（スタンド等に固定せず）自由に吊るした状態のシンパルをスポンジのマレットで",
     "data": "M-5-1-145-bec&"
   },
   {
