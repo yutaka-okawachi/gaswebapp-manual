@@ -5876,7 +5876,7 @@
   {
     "de": "großer markiger Strich!",
     "de_normalized": "grosser markiger strich!",
-    "ja": "より大きくしっかりとした弓で！",
+    "ja": "より大きく力強い弓で！",
     "data": "M-7-5-15-v1,v2,va,vc,kb&"
   },
   {
@@ -6062,7 +6062,7 @@
   {
     "de": "Heftig , aber markig",
     "de_normalized": "heftig , aber markig",
-    "ja": "激しく，しかししっかりと",
+    "ja": "激しく，ただし骨太に",
     "data": "M-6-1-1-all&"
   },
   {
@@ -6860,7 +6860,7 @@
   {
     "de": "immer ff und sehr markig",
     "de_normalized": "immer ff und sehr markig",
-    "ja": "変わらずffのままで，そしてたいへんしっかりと",
+    "ja": "変わらずffのままで，そしてたいへん骨太に",
     "data": "M-7-5-31-v1&"
   },
   {
@@ -8366,7 +8366,7 @@
   {
     "de": "markig",
     "de_normalized": "markig",
-    "ja": "しっかりと！",
+    "ja": "骨太に！",
     "data": "M-6-4-665-vc,kb&M-6-4-666-v1,v2,va&"
   },
   {
