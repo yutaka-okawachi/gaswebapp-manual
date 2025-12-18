@@ -214,7 +214,7 @@ function generateDicHtml(dicData, abbrData) {
         }
 
         .abbr-title {
-            font-size: 0.8rem;
+            font-size: 0.85rem;
             font-weight: bold;
             color: #000;
             background-color: #ffe6d1;
@@ -241,6 +241,7 @@ function generateDicHtml(dicData, abbrData) {
             flex: 1;
             margin-left: 1em;
             font-family: 'Lora', serif;
+            font-size: 0.8rem;
         }
 
         .section-divider {
