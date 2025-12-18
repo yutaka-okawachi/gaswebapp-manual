@@ -1,12 +1,12 @@
-# dic.htmlレイアウト更新 自動化スクリプト
+# dic.htmlレイアウト更新 自動化スクリプト（完全自動化版）
 
-dic.htmlのレイアウト変更作業を自動化するPowerShellスクリプトです。
+dic.htmlのレイアウト変更作業を**完全自動化**するPowerShellスクリプトです。
 
 ## 📜 スクリプト
 
-### **update-dic-layout.ps1**
+### **update-dic-layout.ps1** ✨ 完全自動化
 
-**用途**: clasp push → GAS実行（手動） → git pull を自動化
+**用途**: clasp push → GAS実行 → git pull → git push を**すべて自動実行**
 
 **実行方法**:
 ```powershell
@@ -20,26 +20,52 @@ dic.htmlのレイアウト変更作業を自動化するPowerShellスクリプ�
 
 **処理フロー**:
 1. ✅ `clasp push` (自動)
-2. ⏸️ GASで`exportAllDataToJson`実行（手動・待機）
-3. ✅ `git pull` (自動)
-4. ✅ `git push` (オプション)
+2. ✅ Web App経由で`exportAllDataToJson`実行 (自動) ← **NEW!**
+3. ✅ `git pull --rebase` (自動)
+4. ✅ `git add . && git commit && git push` (自動) ← **NEW!**
+
+**確認プロンプトなし** - 全自動で完了します！
 
 ---
 
-## 🚀 使用例
+## � 初回セットアップ（一度だけ）
 
-### 基本的な使い方
+Web App経由でGAS関数を自動実行するための設定を行います（約5分）。
+
+### セットアップスクリプトの実行
 
 ```powershell
-# 1. generate_dic_html.js を編集
+.\setup-web-trigger.ps1
+```
+
+### セットアップ手順
+
+1. **GASをWeb Appとしてデプロイ**（スクリプトが手順を表示）
+   - GASエディタで「デプロイ」→「新しいデプロイ」
+   - 種類: 「ウェブアプリ」、実行ユーザー: 「自分」、アクセス: 「全員」
+
+2. **環境変数の設定**（スクリプトが対話的に設定）
+   - Web App URL と秘密トークンを入力
+
+3. **接続テスト**
+   - 自動的に実行され、成功を確認
+
+設定は永続的に保存されます（ユーザー環境変数）。
+
+---
+
+## �🚀 使用例
+
+### 基本的な使い方（完全自動化）
+
+```powershell
+# 1. generate_dic_html.js を編集（任意）
 code c:\Users\okawa\gaswebapp-manual\src\generate_dic_html.js
 
-# 2. スクリプト実行
+# 2. スクリプト実行（これだけ！）
 .\update-dic-layout.ps1
 
-# 3. 指示に従ってGASで関数実行
-# 4. Enterキーで続行
-# 5. 完了！
+# 完了！確認プロンプトなし、全自動で完了します
 ```
 
 ### カスタムコミットメッセージ
@@ -57,15 +83,17 @@ code c:\Users\okawa\gaswebapp-manual\src\generate_dic_html.js
 │ 1. clasp push                       │ ← 自動
 │    └→ GASにコードをアップロード      │
 ├─────────────────────────────────────┤
-│ 2. GASで関数実行                     │ ← 手動（待機）
+│ 2. Web App経由でGAS関数実行          │ ← 自動（NEW!）
 │    └→ exportAllDataToJson           │
 ├─────────────────────────────────────┤
-│ 3. git pull                         │ ← 自動
+│ 3. git pull --rebase                │ ← 自動
 │    └→ 最新のdic.htmlを取得          │
 ├─────────────────────────────────────┤
-│ 4. git push (オプション)             │ ← 選択制
-│    └→ すべての変更ファイルをpush     │
+│ 4. git add/commit/push              │ ← 自動（NEW!）
+│    └→ すべての変更ファイルを自動push │
 └─────────────────────────────────────┘
+
+✅ **確認プロンプトなし - 完全自動実行**
 ```
 
 ---

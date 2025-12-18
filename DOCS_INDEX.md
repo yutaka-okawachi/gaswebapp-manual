@@ -90,11 +90,20 @@ PowerShellコマンドやGitコマンドを直接指定することもできま�
 
 手作業を効率化するPowerShellスクリプト:
 
-### dic.htmlレイアウト更新
+### dic.htmlレイアウト更新（完全自動化✨）
 ```powershell
-# GAS実行のみ手動、それ以外は自動
+# 初回のみ: セットアップ（約5分）
+.\setup-web-trigger.ps1
+
+# 以降は、これだけで完全自動実行！
 .\update-dic-layout.ps1
 ```
+
+**完全自動で実行される処理**:
+1. clasp push (GASにアップロード)
+2. GAS関数実行 (Web App経由)
+3. git pull (更新を取得)
+4. git push (自動プッシュ)
 
 詳細: [AUTOMATION_SCRIPTS_GUIDE.md](file:///c:/Users/okawa/gaswebapp-manual/AUTOMATION_SCRIPTS_GUIDE.md)
 
@@ -132,12 +141,16 @@ PowerShellコマンドやGitコマンドを直接指定することもできま�
 
 **方法2: 直接スクリプト実行**
 ```powershell
-# 1. テンプレートを編集
+# テンプレートを編集（任意）
 code src\generate_dic_html.js
 
-# 2. スクリプト実行（すべて自動化）
+# スクリプト実行（完全自動）
 .\update-dic-layout.ps1
+
+# 完了！確認プロンプトなし、全自動で完了
 ```
+
+**初回のみ**: `.\setup-web-trigger.ps1` でセットアップ（約5分）
 
 詳細: [AUTOMATION_SCRIPTS_GUIDE.md](file:///c:/Users/okawa/gaswebapp-manual/AUTOMATION_SCRIPTS_GUIDE.md)
 
