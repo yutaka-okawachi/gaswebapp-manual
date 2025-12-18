@@ -235,13 +235,13 @@ function generateDicHtml(dicData, abbrData) {
             flex: 0 0 20%;
             font-weight: bold;
             font-family: 'Lora', serif;
+            font-size: 0.9rem;
         }
 
         .abbr-long {
             flex: 1;
             margin-left: 1em;
             font-family: 'Lora', serif;
-            font-size: 1.0rem;
         }
 
         .section-divider {
