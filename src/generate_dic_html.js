@@ -283,24 +283,6 @@ function generateDicHtml(dicData, abbrData) {
             font-family: 'Lora', serif;
         }
 
-        #scrollToTop {
-            position: fixed;
-            bottom: 80px;
-            right: 20px;
-            background-color: rgba(0, 0, 0, 0.7);
-            color: white;
-            padding: 10px 15px;
-            border-radius: 5px;
-            cursor: pointer;
-            display: none;
-            z-index: 1001;
-            font-size: 0.9rem;
-        }
-
-        #scrollToTop:hover {
-            background-color: rgba(0, 0, 0, 0.9);
-        }
-
         @media (max-width: 600px) {
             .abbr-row {
                 display: block;
