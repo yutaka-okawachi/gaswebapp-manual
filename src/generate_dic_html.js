@@ -241,7 +241,7 @@ function generateDicHtml(dicData, abbrData) {
             flex: 1;
             margin-left: 1em;
             font-family: 'Lora', serif;
-            font-size: 0.8rem;
+            font-size: 1.0rem;
         }
 
         .section-divider {
