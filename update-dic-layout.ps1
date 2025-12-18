@@ -29,11 +29,12 @@ Write-Host "[4/4] Push changes to GitHub? (y/N)" -ForegroundColor Yellow
 $push = Read-Host
 if ($push -eq 'y' -or $push -eq 'Y') {
     Write-Host "Pushing changes..." -ForegroundColor Yellow
-    git add src/generate_dic_html.js
+    git add .
     git commit -m $message
     git push
     if ($LASTEXITCODE -eq 0) { Write-Host "OK Push complete" -ForegroundColor Green } else { Write-Warning "Push issue" }
 } else { Write-Host "Skipped push" -ForegroundColor Gray }
+
 Write-Host ""
 Write-Host "================================" -ForegroundColor Cyan
 Write-Host "OK Complete!" -ForegroundColor Green

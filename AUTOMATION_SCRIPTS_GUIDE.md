@@ -64,7 +64,7 @@ code c:\Users\okawa\gaswebapp-manual\src\generate_dic_html.js
 │    └→ 最新のdic.htmlを取得          │
 ├─────────────────────────────────────┤
 │ 4. git push (オプション)             │ ← 選択制
-│    └→ generate_dic_html.jsをpush    │
+│    └→ すべての変更ファイルをpush     │
 └─────────────────────────────────────┘
 ```
 

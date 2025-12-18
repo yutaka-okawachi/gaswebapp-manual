@@ -26,7 +26,7 @@ code c:\Users\okawa\gaswebapp-manual\src\generate_dic_html.js
 
 3. 指示に従ってGASで`exportAllDataToJson`を実行
 
-4. Enterキーで続行 → 自動的に`git pull`と`git push`が実行される
+4. Enterキーで続行 → 自動的に`git pull`と`git push`が実行される（すべての変更ファイルを含む）
 
 ---
 
