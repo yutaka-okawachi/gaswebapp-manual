@@ -10,23 +10,44 @@ description: dic.htmlのレイアウト変更
 > `mahler-search-app/dic.html`を直接編集しないでください。
 > 次回のGAS更新で上書きされます。
 
-## 🚀 クイックスタート（自動化スクリプト使用）
+## 🚀 クイックスタート（完全自動化スクリプト）
 
 // turbo-all
 
-1. テンプレートファイルを編集
+### 初回のみ: セットアップ
+
+Web App経由でGAS関数を自動実行するための設定を行います（約5分）。
+
+1. セットアップスクリプトを実行
 ```powershell
-code c:\Users\okawa\gaswebapp-manual\src\generate_dic_html.js
+.\setup-web-trigger.ps1
 ```
 
-2. 自動化スクリプトを実行
+2. スクリプトの指示に従って以下を実行:
+   - GASエディタで`generateSecretToken`関数を実行してトークンを生成
+   - `web_trigger.js`の`SECRET_TOKEN`を更新
+   - Web Appとしてデプロイ
+   - デプロイURLとトークンを入力
+
+3. 接続テストが成功すれば設定完了！
+
+### 日常の使い方
+
+テンプレートを編集したら、以下のコマンド1つで完了：
+
 ```powershell
 .\update-dic-layout.ps1
 ```
 
-3. 指示に従ってGASで`exportAllDataToJson`を実行
+**完全自動で実行される処理**:
+1. `clasp push` でGASにアップロード
+2. Web App経由で`exportAllDataToJson`を自動実行
+3. `git pull` で更新を取得
+4. `git add . && git commit && git push` で自動プッシュ
 
-4. Enterキーで続行 → 自動的に`git pull`と`git push`が実行される（すべての変更ファイルを含む）
+✅ **確認プロンプトなし** - 全自動で完了します！
+
+
 
 ---
 
@@ -80,6 +101,19 @@ start mahler-search-app/dic.html
 ---
 
 ## トラブルシューティング
+
+### Web Appが動作しない場合
+
+```powershell
+# 接続テストを実行
+.\setup-web-trigger.ps1
+```
+
+**チェック項目**:
+1. `GAS_DEPLOY_URL`と`GAS_SECRET_TOKEN`環境変数が設定されているか
+2. `web_trigger.js`の`SECRET_TOKEN`がPowerShellの環境変数と一致しているか
+3. Web Appが正しくデプロイされているか（GASエディタで確認）
+4. Web Appのアクセス権限が「全員」になっているか
 
 ### 誤ってローカルのdic.htmlを編集してしまった場合
 
