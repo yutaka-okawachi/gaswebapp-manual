@@ -20,7 +20,28 @@
     <link rel="stylesheet" href="css/common.css">
     <style>
         /* dic.html specific styles */
+        #fixedHeader {
+            font-size: 1.5rem;
+            font-weight: bold;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background-color: var(--primary-bg);
+            border-bottom: 1px solid #ccc;
+        }
+
+        #fixedHeader h1 {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin: 0;
+            padding: 10px;
+            text-align: center;
+        }
+
         .container {
+            margin-top: 80px;
             margin-bottom: 80px;
         }
 
@@ -58,7 +79,6 @@
             flex: 1;
             margin-left: 1em;
             font-family: 'Lora', serif;
-            font-size: 0.85rem;
         }
 
         .section-divider {
@@ -71,14 +91,14 @@
             background-color: rgba(255, 242, 224, 0.5);
             padding: 1.5rem;
             border-radius: 8px;
-            scroll-margin-top: 20px;
+            scroll-margin-top: 60px; /* 固定ヘッダーの高さ(約50px) + 余白(10px) */
         }
 
         .row {
             border-bottom: 1px solid #ccc;
             padding-bottom: 10px;
             margin-bottom: 10px;
-            scroll-margin-top: 20px;
+            scroll-margin-top: 60px; /* 固定ヘッダーの高さ(約50px) + 余白(10px) */
         }
 
         .german {
@@ -189,8 +209,11 @@
 </head>
 
 <body>
-    <div class="container">
+    <div id="fixedHeader">
         <h1>用語集</h1>
+    </div>
+
+    <div class="container">
         <div id="listContainer">
 <div class="row" id="letter-OTHER">
   <div>
@@ -1954,7 +1977,7 @@
   <div>
     <span class="german">freihängend</span><span class="source">[GM]</span>
   </div>
-  <div class="translation">サスペンド(シンバル ) </div>
+  <div class="translation">スタンド等に固定せず，自由に吊るした状態の（シンバルで）</div>
 </div>
 <div class="row">
   <div>
@@ -2218,7 +2241,7 @@
   <div>
     <span class="german">gestrichen</span><span class="source">[B], [GM]</span>
   </div>
-  <div class="translation">gezogen (≒ drawn, pulled, sustained / tirato, tratto, sostenuto) ziehen の過去分詞<br>【一般的な意味】<br>① 引っ張られた，引き出された．<br>② （線などが）引かれた．<br>③ （時間や空間が）延ばされた，長く続いた．<br>④ 育てられた，栽培された．<br>【音楽用語としての訳例】 「保って」，「引き延ばして」，「（Bruckner において）弓を十分に引いて」，「歌うように途切れさせず」，「旋律の流れを強調して」<br><br>【Brucknerにおける &quot;gestrichen&quot; の用法】<br>&quot;gestrichen&quot; は個々の音の独立性を強調する意味で使われていることが多く，「個々の音を明確に分ける（Detaché:）」のニュアンスが強い．&quot;gestrichen&quot; が単独で（ピチカートの後でもないのに）現れる場合，それはしばしば &quot;gebunden&quot;（&quot;legato&quot;）の対義語として機能している．「一音ごとに弓を返して（あるいは弓を止めて），音の分離を明確にする」 という意味合いをもつ．<br><br>【Brucknerにおける &quot;gezogen&quot; の用法】<br>&quot;gezogen&quot; は線的な流れを強調する意味で使われていることが多く，しばしば &quot;gestrichen&quot;（輪郭・アクセント重視）と対比的に用いられ，弓をたっぷりと使い，滑らかで途切れのない「歌うような（cantabile）」メロデ ィックな流れを強調する際に指示される．そもそもドイツ語の &quot;ziehen&quot;（引く）には「線を描く」「長く伸ばす」というニュアンスがある．Bruckner の交響曲ではしばしば「オルガン的」と言われるが，&quot;gezogen&quot;（または &quot;lang gezogen&quot;）という指示は，弦楽器に対して「弓を返す際に音を痩せさせず，オルガンの持続音のように均質なテンションで音を保つこと」を要求している．&quot;legato&quot;との違いは単なる &quot;legato&quot;（スラーでつなぐ）以上に，「弓の速度と圧力を一定に保って，音を太く長く引き抜く」という物理的な運動を示唆している．ちなみに[B: 5]においては&quot;gestrichen&quot;，&quot;gezogen&quot;が同じ場所で指示されている個所もある．<br><br>【 GM における &quot;gestrichen&quot; の用法】<br> GM において，&quot;pizz.&quot; や &quot;col legno&quot; の後に現れる &quot;gestrichen&quot; (または &quot;wieder gestrichen&quot;) は，ほとんどが「通常奏法（&quot;arco&quot;）に戻せ」という機能的なリセットの指示である．<br><br>【 GM における &quot;gezogen&quot; の用法】<br>複合語としての使用: &quot;gezogen&quot; が単独で現れることはなく，必ず &quot;lang&quot; (長く) や&quot; breit&quot; (幅広く) と結びつき，&quot;lang gezogen&quot; (長く引き伸ばして) のように音価やフレージングの長さを規定するために使われている．<br><br>以上により，Bruckner においてこれらの用語を GM 的な「arco」と混同することは避けたい．</div>
+  <div class="translation">gezogen (≒ drawn, pulled, sustained / tirato, tratto, sostenuto) ziehen の過去分詞<br>【一般的な意味】<br>① 引っ張られた，引き出された．<br>② （線などが）引かれた．<br>③ （時間や空間が）延ばされた，長く続いた．<br>④ 育てられた，栽培された．<br>【音楽用語としての訳例】 「保って」，「引き延ばして」，「（Bruckner において）弓を十分に引いて」，「歌うように途切れさせず」，「旋律の流れを強調して」<br><br>【Brucknerにおける &quot;gestrichen&quot; の用法】<br>&quot;gestrichen&quot; は個々の音の独立性を強調する意味で使われていることが多く，「個々の音を明確に分ける（Detaché:）」のニュアンスが強い．&quot;gestrichen&quot; が単独で（ピチカートの後でもないのに）現れる場合，それはしばしば &quot;gebunden&quot;（&quot;legato&quot;）の対義語として機能している．「一音ごとに弓を返して（あるいは弓を止めて），音の分離を明確にする」 という意味合いをもつ．<br><br>【Brucknerにおける &quot;gezogen&quot; の用法】<br>&quot;gezogen&quot; は線的な流れを強調する意味で使われていることが多く，しばしば &quot;gestrichen&quot;（輪郭・アクセント重視）と対比的に用いられ，弓をたっぷりと使い，滑らかで途切れのない「歌うような（cantabile）」メロデ ィックな流れを強調する際に指示される．そもそもドイツ語の &quot;ziehen&quot;（引く）には「線を描く」「長く伸ばす」というニュアンスがある．Bruckner の交響曲ではしばしば「オルガン的」と言われるが，&quot;gezogen&quot;（または &quot;lang gezogen&quot;）という指示は，弦楽器に対して「弓を返す際に音を痩せさせず，オルガンの持続音のように均質なテンションで音を保つこと」を要求している．&quot;legato&quot;との違いは単なる &quot;legato&quot;（スラーでつなぐ）以上に，「弓の速度と圧力を一定に保って，音を太く長く引き抜く」という物理的な運動を示唆している．ちなみに[B: 5]においては&quot;gestrichen&quot;，&quot;gezogen&quot;が同じ場所で指示されている個所もある．<br><br>【 GM における &quot;gestrichen&quot; の用法】<br> GM において，&quot;pizz.&quot; や &quot;col legno&quot; の後に現れる &quot;gestrichen&quot; (または &quot;wieder gestrichen&quot;) は，ほとんどが「通常奏法（&quot;arco&quot;）に戻せ」という機能的なリセットの指示である．<br><br>【 GM における &quot;gezogen&quot; の用法】<br>複合語としての使用: &quot;gezogen&quot; が単独で現れることはなく，必ず &quot;lang&quot; (長く) や&quot; breit&quot; (幅広く) と結びつき，&quot;lang gezogen&quot; (長く引き伸ばして) のように音価やフレージングの長さを規定するために使われている．<br><br>以上により，Bruckner においてこれらの用語を GM 的な「arco」と混同することは避けたい．簡単に言うと GM では「How to play」，Bruckner では「How it sounds」だろう．</div>
 </div>
 <div class="row">
   <div>
@@ -2230,7 +2253,7 @@
   <div>
     <span class="german">getheilt</span><span class="source">[GM],  [RW: Oper], [RS: Oper]</span>
   </div>
-  <div class="translation">(≒ divided, split / diviso)<br>teilen（旧正書法では theilen）の過去分詞<br>【一般的な意味】<br>① 分けられた，分割された，分離した．<br>② 共有された，分かち合われた．<br>【音楽用語としての訳例】<br>「divisi」，「（プルトを）分けて」，「分割して」，「（弦楽器などが）分奏で」</div>
+  <div class="translation">(≒ divided, split / diviso)<br>teilen（旧正書法での theilen）の過去分詞<br>【一般的な意味】<br>① 分けられた，分割された，分離した．<br>② 共有された，分かち合われた．<br>【音楽用語としての訳例】<br>「divisi」，「（プルトを）分けて」，「分割して」，「（弦楽器などが）分奏で」</div>
 </div>
 <div class="row">
   <div>
@@ -3208,7 +3231,7 @@
   <div>
     <span class="german">markig</span><span class="source">[GM], [B]</span>
   </div>
-  <div class="translation">(≒ pithy, robust, vigorous / robusto, vigoroso)<br>【一般的な意味】<br>① 髄のある，実質のある，内容のある．<br>② 強健な，力強い，活力のある．<br>【音楽用語としての訳例】<br>「robusto」，「vigoroso」，「力強く」，「たくましく」，「充実した響きで」<br><br>GM では「きびきびと」とはしたが「骨太に」と訳した方がよいか，と思われる部分もある．</div>
+  <div class="translation">(≒ pithy, robust, vigorous / robusto, vigoroso)<br>【一般的な意味】<br>① 髄のある，実質のある，内容のある．<br>② 強健な，力強い，活力のある．<br>【音楽用語としての訳例】<br>「robusto」，「vigoroso」，「力強く」，「たくましく」，「充実した響きで」<br><br>GM では「骨太に」，「力強く」などと訳しているが，「角立てて」，「芯のある音で」などでもよいだろう．</div>
 </div>
 <div class="row">
   <div>
@@ -5754,4 +5777,4 @@
 </body>
 
 </html>
-<!-- Generated: 2025/12/17 22:58:11 -->
+<!-- Generated: 2025/12/18 17:37:34 -->
