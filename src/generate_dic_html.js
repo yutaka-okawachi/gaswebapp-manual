@@ -214,7 +214,7 @@ function generateDicHtml(dicData, abbrData) {
         }
 
         .abbr-title {
-            font-size: 0.95rem;
+            font-size: 0.85rem;
             font-weight: bold;
             color: #000;
             background-color: #ffe6d1;
