@@ -246,7 +246,7 @@ function generateDicHtml(dicData, abbrData) {
 
         .german {
             font-weight: bold;
-            font-size: 1.1em;
+            font-size: 1.0rem;
             display: block;
             font-family: 'Lora', serif;
         }
@@ -254,11 +254,11 @@ function generateDicHtml(dicData, abbrData) {
         .translation {
             margin-left: 1em;
             font-family: 'Lora', serif;
-            font-size: 0.85em;
+            font-size: 0.95rem;
         }
 
         .source {
-            font-size: 0.8em;
+            font-size: 0.85rem;
             color: #555;
             margin-left: 0.5em;
             font-family: 'Lora', serif;
