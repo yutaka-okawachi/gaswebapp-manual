@@ -22,7 +22,9 @@ dic.htmlのレイアウト変更作業を**完全自動化**するPowerShellス�
 1. ✅ `clasp push` (自動)
 2. ✅ Web App経由で`exportAllDataToJson`実行 (自動) ← **NEW!**
 3. ✅ `git pull --rebase` (自動)
-4. ✅ `git add . && git commit && git push` (自動) ← **NEW!**
+4. ✅ **dic.htmlのCSS自動検証** (自動) ← **NEW!**
+   - フォントサイズが正しく反映されているかチェックします
+5. ✅ `git add . && git commit && git push` (自動)
 
 **確認プロンプトなし** - 全自動で完了します！
 
@@ -109,6 +111,21 @@ clasp login
 # .clasp.jsonが正しいか確認
 cat .clasp.json
 ```
+
+### 変更が反映されない（font-sizeが変わらないなど）
+
+`clasp push`は成功しているのに、生成される`dic.html`が古いままの場合：
+
+**原因**:
+GAS Web Appのデプロイバージョンが古いままで固定されている可能性があります。
+
+**解決策**:
+1. [GASエディタ](https://script.google.com/home)を開く
+2. 右上の「デプロイ」→「デプロイを管理」をクリック
+3. 「設定（鉛筆アイコン）」をクリック
+4. バージョンで **「新バージョン」** を選択して「デプロイ」ボタンをクリック
+
+これを行った後、再度`update-dic-layout.ps1`を実行してください。
 
 ### git pullでコンフリクト
 

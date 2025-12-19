@@ -147,7 +147,10 @@ try {
 
 Write-Host ""
 Write-Host "================================" -ForegroundColor Cyan
-Write-Host "✓ Setup Complete!" -ForegroundColor Green
+Write-Host "Important: If 'clasp push' doesn't seem to work later," -ForegroundColor Yellow
+Write-Host "           you may need to create a 'New Version' in GAS Deploy settings." -ForegroundColor Yellow
+Write-Host ""
+Write-Host "Setup Complete!" -ForegroundColor Green
 Write-Host "================================" -ForegroundColor Cyan
 Write-Host ""
 Write-Host "You can now use:" -ForegroundColor White
