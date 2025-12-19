@@ -372,7 +372,7 @@ button.clear-input-btn:hover {
     font-weight: normal;
     color: #555;
     white-space: nowrap;
-    font-size: 0.85em;
+    font-size: 0.85rem;
 }
 
 .result-content {
@@ -381,7 +381,7 @@ button.clear-input-btn:hover {
 
 .result-de {
     font-weight: bold;
-    font-size: 1.2em;
+    font-size: 1.0rem;
     line-height: 1.45;
     display: block;
     font-family: 'Lora', serif;
@@ -389,7 +389,7 @@ button.clear-input-btn:hover {
 
 .result-ja-loc {
     display: block;
-    font-size: 0.95em;
+    font-size: 0.95rem;
     color: #333;
 }
 
@@ -499,18 +499,18 @@ button.clear-input-btn:hover {
     font-weight: bold;
     color: #000;
     margin-top: 0;
-    font-size: 1.1em;
+    font-size: 1.0rem;
 }
 
 .result-c {
     margin-left: 15px;
     color: #333;
-    font-size: 1.0em;
+    font-size: 0.95rem;
 }
 
 .result-loc {
     margin-left: 30px;
-    font-size: 0.85em;
+    font-size: 0.85rem;
     color: #666;
 }
 /* Search Result Item Styling - Similar to dic.html .row */
