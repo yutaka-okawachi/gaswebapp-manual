@@ -106,7 +106,7 @@ try {
 Write-Host ""
 
 # ステップ 3: GitHub から最新の dic.html を取得
-Write-Host "[3/5] Getting latest dic.html from GitHub..." -ForegroundColor Yellow
+Write-Host "[3/6] Getting latest dic.html from GitHub..." -ForegroundColor Yellow
 git pull --rebase
 if ($LASTEXITCODE -ne 0) {
     Write-Warning "⚠ git pull had issues, but continuing..."
@@ -115,8 +115,36 @@ if ($LASTEXITCODE -ne 0) {
 }
 Write-Host ""
 
+# ステップ 3.5: dic.htmlのCSS検証
+Write-Host "[3.5/6] Verifying CSS in dic.html..." -ForegroundColor Yellow
+$dicHtmlPath = "mahler-search-app\dic.html"
+if (Test-Path $dicHtmlPath) {
+    $dicHtmlContent = Get-Content $dicHtmlPath -Raw -Encoding UTF8
+    
+    # .abbr-titleのfont-sizeをチェック
+    if ($dicHtmlContent -match '\.abbr-title\s*\{[^}]*font-size:\s*1\.0rem') {
+        Write-Host "✓ CSS verified: .abbr-title is 1.0rem" -ForegroundColor Green
+    } elseif ($dicHtmlContent -match '\.abbr-title\s*\{[^}]*font-size:\s*0\.8rem') {
+        Write-Warning "⚠ CSS mismatch detected!"
+        Write-Warning ".abbr-title is still 0.8rem (expected 1.0rem)"
+        Write-Host ""
+        Write-Host "This may indicate:" -ForegroundColor Yellow
+        Write-Host "  1. GAS did not regenerate dic.html" -ForegroundColor White
+        Write-Host "  2. GAS is using an old version of generate_dic_html.js" -ForegroundColor White
+        Write-Host ""
+        Write-Host "Please manually verify in GAS Editor:" -ForegroundColor Yellow
+        Write-Host "  https://script.google.com/home" -ForegroundColor Cyan
+        Write-Host ""
+    } else {
+        Write-Host "✓ CSS check: .abbr-title found (unable to determine exact font-size)" -ForegroundColor Gray
+    }
+} else {
+    Write-Warning "⚠ dic.html not found at $dicHtmlPath"
+}
+Write-Host ""
+
 # ステップ 4: その他の変更を確認してコミット
-Write-Host "[4/5] Committing other changes..." -ForegroundColor Yellow
+Write-Host "[4/6] Committing other changes..." -ForegroundColor Yellow
 $otherChanges = git status --porcelain
 if ($otherChanges) {
     Write-Host "✓ Found other changes to commit" -ForegroundColor Gray
@@ -129,7 +157,7 @@ if ($otherChanges) {
 Write-Host ""
 
 # ステップ 5: 変更を GitHub にプッシュ
-Write-Host "[5/5] Pushing to GitHub..." -ForegroundColor Yellow
+Write-Host "[5/6] Pushing to GitHub..." -ForegroundColor Yellow
 git push
 if ($LASTEXITCODE -eq 0) {
     Write-Host "✓ Push complete" -ForegroundColor Green
