@@ -137,9 +137,20 @@ function generateAbbrListHtml(abbrData) {
     if (colA && !isNaN(parseInt(colA))) {
       html += `<div class="abbr-title">${escapeHtml(colB)}</div>\n`;
     } else if (colB || colC) {
+      // colAで作曲者名と曲名を区別
+      // colAが空または「C」なら作曲者名、「T」なら曲名、それ以外は通常の略記
+      let longClass = 'abbr-long';
+      if (colA === 'C' || (colA === '' && colC && colC.includes(':'))) {
+        // 作曲者名（例: [RW] : Richard Wagner）
+        longClass = 'abbr-long abbr-composer';
+      } else if (colA === 'T' || (colC && !colC.includes(':'))) {
+        // 曲名（例: Die Feen WWV 32）
+        longClass = 'abbr-long abbr-work';
+      }
+      
       // 通常の略記エントリー
       html += `<div class="abbr-row">
-  <span class="abbr-short">${escapeHtml(colB)}</span><span class="abbr-long">${escapeHtml(colC)}</span>
+  <span class="abbr-short">${escapeHtml(colB)}</span><span class="${longClass}">${escapeHtml(colC)}</span>
 </div>\n`;
     }
   });
@@ -242,6 +253,14 @@ function generateDicHtml(dicData, abbrData) {
             flex: 1;
             margin-left: 1em;
             font-family: 'Lora', serif;
+        }
+
+        .abbr-composer {
+            font-size: 1.0rem;
+        }
+
+        .abbr-work {
+            font-size: 0.8rem;
         }
 
         .section-divider {
