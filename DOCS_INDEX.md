@@ -75,8 +75,7 @@ PowerShell繧ｳ繝槭Φ繝峨ｄGit繧ｳ繝槭Φ繝峨ｒ逶ｴ謗･謖・ｮ
 ## 耳 髢狗匱繧ｬ繧､繝・
 
 ### dic.html髢｢騾｣
-- [DIC_LAYOUT_CHANGE_GUIDE.md](file:///c:/Users/okawa/gaswebapp-manual/DIC_LAYOUT_CHANGE_GUIDE.md) - **dic.html繝ｬ繧､繧｢繧ｦ繝亥､画峩繧ｬ繧､繝会ｼ磯㍾隕・ｼ・*
-- [AUTOMATION_SCRIPTS_GUIDE.md](file:///c:/Users/okawa/gaswebapp-manual/AUTOMATION_SCRIPTS_GUIDE.md) - **閾ｪ蜍募喧繧ｹ繧ｯ繝ｪ繝励ヨ繧ｬ繧､繝会ｼ磯㍾隕・ｼ・*
+- - [AUTOMATION_SCRIPTS_GUIDE.md](file:///c:/Users/okawa/gaswebapp-manual/AUTOMATION_SCRIPTS_GUIDE.md) - **閾ｪ蜍募喧繧ｹ繧ｯ繝ｪ繝励ヨ繧ｬ繧､繝会ｼ磯㍾隕・ｼ・*
 
 ### SEO
 - [GOOGLE_SEARCH_CONSOLE_SETUP.md](file:///c:/Users/okawa/gaswebapp-manual/GOOGLE_SEARCH_CONSOLE_SETUP.md) - Google Search Console險ｭ螳・
@@ -200,4 +199,5 @@ cd ..
 > **霑ｷ縺｣縺溘ｉ**
 > 
 > 繧ｨ繝ｼ繧ｸ繧ｧ繝ｳ繝医↓縲隈IT_SYNC_WORKFLOW.md繧帝幕縺・※縲阪→謖・､ｺ縺励※縺上□縺輔＞縲・
+
 
