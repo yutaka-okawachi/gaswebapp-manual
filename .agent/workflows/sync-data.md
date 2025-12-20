@@ -1,13 +1,13 @@
 ---
-description: dic.htmlのレイアウト変更
+description: スプレッドシートデータの同期
 ---
 
-# dic.htmlレイアウト変更ワークフロー
+# データ同期ワークフロー
 
-`dic.html`は自動生成されるため、直接編集せず、テンプレートを編集します。
+スプレッドシートのデータを全て同期し、GitHubに反映します。
 
 > [!WARNING]
-> `mahler-search-app/dic.html`を直接編集しないでください。
+> 自動生成されるファイル（`dic.html`など）を直接編集しないでください。
 > 次回のGAS更新で上書きされます。
 
 ## 🚀 クイックスタート（完全自動化スクリプト）
@@ -36,12 +36,12 @@ Web App経由でGAS関数を自動実行するための設定を行います（�
 テンプレートを編集したら、以下のコマンド1つで完了：
 
 ```powershell
-.\update-dic-layout.ps1
+.\sync-data.ps1
 ```
 
 **完全自動で実行される処理**:
 1. `clasp push` でGASにアップロード
-2. Web App経由で`exportAllDataToJson`を自動実行
+2. `clasp run` で`exportAllDataToJson`を自動実行
 3. `git pull` で更新を取得
 4. `git add . && git commit && git push` で自動プッシュ
 

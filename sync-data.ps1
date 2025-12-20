@@ -15,8 +15,8 @@
 #   .\setup-web-trigger.ps1
 # 
 # 使い方:
-#   .\update-dic-layout.ps1
-#   .\update-dic-layout.ps1 -message "Custom commit message"
+#   .\sync-data.ps1
+#   .\sync-data.ps1 -message "Custom commit message"
 # ========================================
 
 Write-Host "================================" -ForegroundColor Cyan
@@ -176,4 +176,5 @@ Write-Host ""
 Write-Host "GitHub Pages will update in a few minutes:" -ForegroundColor White
 Write-Host "  https://yutaka-okawachi.github.io/gaswebapp-manual/mahler-search-app/dic.html" -ForegroundColor Blue
 Write-Host ""
+
 
