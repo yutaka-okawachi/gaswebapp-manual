@@ -254,11 +254,11 @@ function generateDicHtml(dicData, abbrData) {
         .translation {
             margin-left: 1em;
             font-family: 'Lora', serif;
-            font-size: 0.90rem;
+            font-size: 0.85rem;
         }
 
         .source {
-            font-size: 0.80rem;
+            font-size: 0.75rem;
             color: #555;
             margin-left: 0.5em;
             font-family: 'Lora', serif;

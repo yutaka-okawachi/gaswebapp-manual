@@ -372,7 +372,7 @@ button.clear-input-btn:hover {
     font-weight: normal;
     color: #555;
     white-space: nowrap;
-    font-size: 0.80rem;
+    font-size: 0.75rem;
 }
 
 .result-content {
@@ -389,7 +389,7 @@ button.clear-input-btn:hover {
 
 .result-ja-loc {
     display: block;
-    font-size: 0.90rem;
+    font-size: 0.85rem;
     color: #333;
 }
 
@@ -505,12 +505,12 @@ button.clear-input-btn:hover {
 .result-c {
     margin-left: 15px;
     color: #333;
-    font-size: 0.90rem;
+    font-size: 0.85rem;
 }
 
 .result-loc {
     margin-left: 30px;
-    font-size: 0.80rem;
+    font-size: 0.75rem;
     color: #666;
 }
 /* Search Result Item Styling - Similar to dic.html .row */
