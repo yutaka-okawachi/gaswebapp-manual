@@ -292,3 +292,9 @@ Write-Host "Check: mahler-search-app/dic.html" -ForegroundColor Gray
 Write-Host ""
 Write-Host "GitHub Pages will update in a few minutes:" -ForegroundColor White
 Write-Host "  https://yutaka-okawachi.github.io/gaswebapp-manual/mahler-search-app/dic.html" -ForegroundColor Blue
+Write-Host ""
+Write-Host "⚠️  IMPORTANT NOTICE ON ACCESS PERMISSIONS ⚠️" -ForegroundColor Yellow
+Write-Host "Google Apps Script may have reset the Web App access permissions during deployment update." -ForegroundColor White
+Write-Host "Please verify that 'Who has access' is set to 'Anyone' (not 'Anyone with Google Account')." -ForegroundColor White
+Write-Host "Check here: https://script.google.com/home/projects/1WTZicVS_Dnu5PHQf1RPrXyS03LffwjbTwPu7bn61WTJTfQzTcimC5Pqs/deployments" -ForegroundColor Cyan
+Write-Host ""
