@@ -389,13 +389,13 @@ button.clear-input-btn:hover {
     border-left: 5px solid #79a9f2;
     border-radius: 5px;
     font-size: 0.95em;
-    color: #333;
 }
 
 #scrollToTop {
     position: fixed;
-    right: 20px;
-    top: calc(20px + env(safe-area-inset-top, 0px));
+    right: 60px;
+    bottom: 20px;
+    top: auto;
     background-color: rgba(26, 115, 232, 0.95);
     color: white;
     padding: 8px 16px;

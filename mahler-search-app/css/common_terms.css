@@ -159,8 +159,9 @@ button.clear-input-btn:hover {
 /* トップへ戻るボタン */
 #scrollToTop {
     position: fixed;
-    right: 20px;
-    top: calc(20px + env(safe-area-inset-top, 0px));
+    right: 60px;
+    bottom: 20px;
+    top: auto;
     background-color: rgba(26, 115, 232, 0.95);
     color: white;
     padding: 8px 12px;
