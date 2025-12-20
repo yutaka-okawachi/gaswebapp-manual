@@ -61,7 +61,33 @@ if (-not $DEPLOY_URL -or -not $SECRET_TOKEN) {
     exit 1
 }
 
+
+# ステップ 0.5: app.js の GAS_NOTIFICATION_URL を更新
+Write-Host "[0.5/5] Updating app.js with current Deployment URL..." -ForegroundColor Yellow
+$appJsPath = "mahler-search-app\js\app.js"
+if (Test-Path $appJsPath) {
+    try {
+        $appJsContent = Get-Content $appJsPath -Raw -Encoding UTF8
+        # Regex to find: const GAS_NOTIFICATION_URL = '...';
+        # We replace the URL inside the quotes.
+        $newContent = $appJsContent -replace "(const GAS_NOTIFICATION_URL\s*=\s*['`"])([^'`"]*)(['`"];)", "`$1$DEPLOY_URL`$3"
+        
+        if ($newContent -ne $appJsContent) {
+            Set-Content -Path $appJsPath -Value $newContent -Encoding UTF8
+            Write-Host "✓ Updated GAS_NOTIFICATION_URL in app.js" -ForegroundColor Green
+        } else {
+             Write-Host "✓ app.js already has the correct URL" -ForegroundColor Gray
+        }
+    } catch {
+        Write-Warning "⚠ Failed to update app.js: $_"
+    }
+} else {
+    Write-Warning "⚠ app.js not found at $appJsPath"
+}
+Write-Host ""
+
 # ステップ 0: ローカル変更を先にコミット（ワークフロー競合を回避）
+
 Write-Host "[0/5] Checking for local changes..." -ForegroundColor Yellow
 $hasChanges = git status --porcelain src/generate_dic_html.js
 if ($hasChanges) {
@@ -77,7 +103,7 @@ Write-Host ""
 # ステップ 1: GAS にアップロード
 Write-Host "[1/5] Uploading to GAS..." -ForegroundColor Yellow
 Push-Location "c:\Users\okawa\gaswebapp-manual\src"
-clasp push
+clasp push -f
 if ($LASTEXITCODE -ne 0) {
     Write-Error "❌ clasp push failed"
     Pop-Location
@@ -232,6 +258,7 @@ if (Test-Path $dicHtmlPath) {
     Write-Warning "⚠ dic.html not found at $dicHtmlPath"
 }
 Write-Host ""
+
 
 # ステップ 4: その他の変更を確認してコミット
 Write-Host "[4/6] Committing other changes..." -ForegroundColor Yellow

@@ -1,4 +1,4 @@
-// app.js
+﻿// app.js
 console.log('app.js: Script execution started');
 
 // Global state to hold loaded data (guarded to avoid shadowing inline window.appData)
@@ -14,7 +14,7 @@ window.appData = window.appData || {
 
 // --- Configuration ---
 // TODO: Replace with your deployed Web App URL
-const GAS_NOTIFICATION_URL = 'https://script.google.com/macros/s/AKfycbxWl-KLwo8SnOyqQT84gJyrofRQnIp_GBv8Pg0N5athPAoxp9LBuwj0HDTXkFqh0xiGsw/exec';
+const GAS_NOTIFICATION_URL = 'https://script.google.com/macros/s/AKfycbzsgiXGZ3ptAGqR-qMDR26tRNI235IYUVBox-quohfqvNlnkxGSqNb9yY8DiD41JB8qWA/exec';
 
 /**
  * Sends a search notification to the Google Apps Script Web App.
@@ -1469,5 +1469,6 @@ function normalizeString(str) {
         .replace(/ß/g, 'ss')
         .trim();
 }
+
 
 
