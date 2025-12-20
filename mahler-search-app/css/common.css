@@ -395,8 +395,9 @@ button.clear-input-btn:hover {
 
 #scrollToTop {
     position: fixed;
-    right: 20px;
-    top: 55px;  /* 固定ヘッダー（約50px）より下に配置 */
+    right: 60px; /* アルファベットバーと重ならないように左にずらす */
+    bottom: 20px;
+    top: auto;
     background-color: rgba(26, 115, 232, 0.95);
     color: white;
     padding: 8px 16px;
