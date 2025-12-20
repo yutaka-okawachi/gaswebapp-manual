@@ -160,7 +160,7 @@ button.clear-input-btn:hover {
 #scrollToTop {
     position: fixed;
     right: 20px;
-    top: 70px;  /* 固定ヘッダーより少し下に配置 */
+    top: 30px;  /* ヘッダー直下に配置 */
     bottom: auto;
     background-color: rgba(26, 115, 232, 0.95);
     color: white;
