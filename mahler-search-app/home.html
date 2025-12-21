@@ -15,8 +15,12 @@
     
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="マーラー、ワーグナー、R.シュトラウス作品の用語検索・翻訳支援サイト。楽譜中のドイツ語用語を日本語で検索できます。">
-    <title>マーラー・ワーグナー・シュトラウス 用語検索</title>
+    <meta name="description" content="マーラー，ワーグナー，R.シュトラウス作品の用語検索・翻訳支援サイト．楽譜中のドイツ語用語を日本語で検索できます．">
+    <title>ドイツ語の音楽用語</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;500;600;700&display=swap" rel="stylesheet">
     
     <style>
         * {
@@ -26,52 +30,63 @@
         }
         
         body {
-            font-family: serif;
+            font-family: 'Lora', serif;
             line-height: 1.8;
-            color: #333;
-            background: #e8e8e8;
-            font-size: 16px;
+            color: #1d1d1f;
+            background: #fffaf7;
+            font-size: 17px;
+            -webkit-font-smoothing: antialiased;
         }
         
         /* ナビゲーションバー */
         .nav-toggle {
             display: none;
             position: fixed;
-            top: 10px;
-            left: 10px;
+            top: 20px;
+            left: 20px;
             z-index: 1001;
-            background: #333;
-            color: white;
+            background: rgba(255, 255, 255, 0.95);
+            color: #1d1d1f;
             border: none;
-            padding: 10px 15px;
+            padding: 12px 18px;
             cursor: pointer;
-            font-size: 1.2rem;
+            font-size: 1rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            font-family: 'Lora', serif;
         }
         
         .sidebar {
             position: fixed;
             left: 0;
             top: 0;
-            width: 220px;
+            width: 260px;
             height: 100vh;
-            background: #2c3e50;
-            color: white;
-            padding: 30px 20px;
+            background: #ffffff;
+            color: #1d1d1f;
+            padding: 40px 30px;
             overflow-y: auto;
             z-index: 1000;
+            border-right: 1px solid #d2d2d7;
         }
         
         .sidebar h3 {
-            font-size: 1rem;
-            margin-bottom: 15px;
-            color: #ecf0f1;
-            border-bottom: 1px solid #34495e;
-            padding-bottom: 8px;
+            font-size: 0.85rem;
+            margin-bottom: 12px;
+            margin-top: 28px;
+            color: #86868b;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .sidebar h3:first-of-type {
+            margin-top: 0;
         }
         
         .sidebar ul {
             list-style: none;
-            margin-bottom: 25px;
+            margin-bottom: 0;
         }
         
         .sidebar li {
@@ -79,65 +94,146 @@
         }
         
         .sidebar a {
-            color: #ecf0f1;
+            color: #1d1d1f;
             text-decoration: none;
-            font-size: 0.9rem;
+            font-size: 0.95rem;
             display: block;
-            padding: 5px 0;
+            padding: 6px 0;
+            transition: color 0.2s;
         }
         
         .sidebar a:hover {
-            color: #3498db;
+            color: #0066cc;
         }
         
         /* メインコンテンツエリア */
         .page-wrapper {
-            margin-left: 220px;
-            padding: 40px 20px;
+            margin-left: 260px;
+            padding: 60px 40px;
         }
         
         .container {
-            max-width: 700px;
+            max-width: 720px;
             margin: 0 auto;
             background: white;
-            padding: 50px;
+            padding: 80px 60px;
+            border-radius: 18px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.04);
         }
         
-        h1, h2 {
-            font-weight: bold;
-            color: #000;
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #1d1d1f;
+            margin-bottom: 50px;
+            letter-spacing: -0.02em;
+        }
+        
+        /* セクションカード */
+        .section-card {
+            border-radius: 12px;
+            padding: 28px 32px;
+            margin-bottom: 24px;
+            background: #fafafa;
+            border: 1px solid #f0f0f0;
+            transition: all 0.2s;
+        }
+        
+        .section-card:hover {
+            background: #f5f5f5;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
         }
         
         h2 {
-            font-size: 1.3rem;
-            margin-top: 40px;
-            margin-bottom: 12px;
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: #1d1d1f;
+            margin-bottom: 18px;
+            letter-spacing: -0.01em;
+        }
+        
+        h2 .emoji {
+            margin-right: 8px;
+            font-size: 1.2em;
         }
         
         ul {
-            list-style: disc;
-            margin-left: 1.5em;
-            margin-bottom: 16px;
+            list-style: none;
+            margin-bottom: 0;
         }
         
         li {
-            margin-bottom: 6px;
+            margin-bottom: 10px;
         }
         
-        a {
-            color: #000;
-            text-decoration: underline;
+        li a {
+            display: inline-block;
+            color: #0066cc;
+            text-decoration: none;
+            padding: 6px 16px;
+            border-radius: 6px;
+            transition: all 0.2s;
+            background: transparent;
+            border: 1px solid transparent;
         }
         
-        a:hover {
+        li a:hover {
+            background: #e8f2ff;
+            border-color: #0066cc;
             text-decoration: none;
         }
         
-        .note {
-            margin-top: 20px;
-            margin-bottom: 30px;
+        /* 注意書きボックス */
+        .info-box {
+            background: #fff9e6;
+            border-left: 4px solid #f5c518;
+            padding: 24px 28px;
+            margin: 40px 0;
+            border-radius: 8px;
             font-size: 0.95rem;
             line-height: 1.7;
+            color: #3d3d3d;
+        }
+        
+        .info-box p {
+            margin-bottom: 12px;
+        }
+        
+        .info-box p:last-child {
+            margin-bottom: 0;
+        }
+        
+        .info-box .composer-list {
+            font-size: 0.85rem;
+            color: #6e6e73;
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid #f0e6b8;
+        }
+        
+        /* 用語集セクション */
+        .glossary-section {
+            margin-top: 40px;
+        }
+        
+        .glossary-link {
+            display: inline-block;
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: #0066cc;
+            text-decoration: none;
+            padding: 16px 32px;
+            background: linear-gradient(135deg, #e8f2ff 0%, #f0f8ff 100%);
+            border-radius: 12px;
+            border: 2px solid #0066cc;
+            transition: all 0.3s;
+            margin-top: 8px;
+        }
+        
+        .glossary-link:hover {
+            background: linear-gradient(135deg, #d0e7ff 0%, #e0f0ff 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,102,204,0.2);
         }
         
         /* タブレット・スマホ対応 */
@@ -149,6 +245,7 @@
             .sidebar {
                 transform: translateX(-100%);
                 transition: transform 0.3s ease;
+                box-shadow: 2px 0 16px rgba(0,0,0,0.1);
             }
             
             .sidebar.active {
@@ -157,11 +254,34 @@
             
             .page-wrapper {
                 margin-left: 0;
-                padding: 60px 20px 20px;
+                padding: 80px 20px 40px;
             }
             
             .container {
-                padding: 30px 20px;
+                padding: 40px 24px;
+                border-radius: 12px;
+            }
+            
+            h1 {
+                font-size: 2rem;
+                margin-bottom: 40px;
+            }
+            
+            h2 {
+                font-size: 1.2rem;
+            }
+            
+            .section-card {
+                padding: 20px 24px;
+            }
+            
+            .info-box {
+                padding: 20px 24px;
+            }
+            
+            .glossary-link {
+                padding: 14px 28px;
+                font-size: 1.2rem;
             }
         }
     </style>
@@ -172,28 +292,25 @@
     
     <!-- サイドバーナビゲーション -->
     <nav class="sidebar" id="sidebar">
-        <h3>Richard Wagner (RW)</h3>
+        <h3><strong>Richard Wagner (RW)</strong></h3>
         <ul>
             <li><a href="richard_wagner.html">曲名から検索</a></li>
             <li><a href="rw_terms_search.html">用語から検索</a></li>
         </ul>
         
-        <h3>Gustav Mahler (GM)</h3>
+        <h3><strong>Gustav Mahler (GM)</strong></h3>
         <ul>
             <li><a href="index.html">曲名と楽器等から検索</a></li>
             <li><a href="terms_search.html">用語から検索</a></li>
         </ul>
         
-        <h3>Richard Strauss (RS)</h3>
+        <h3><strong>Richard Strauss (RS)</strong></h3>
         <ul>
             <li><a href="richard_strauss.html">曲名から検索</a></li>
             <li><a href="rs_terms_search.html">用語から検索</a></li>
         </ul>
         
-        <h3>用語集</h3>
-        <ul>
-            <li><a href="dic.html">用語集ページ</a></li>
-        </ul>
+        <h3><a href="dic.html" style="color: #1d1d1f;">用語集</a></h3>
         
         <h3>その他</h3>
         <ul>
@@ -204,45 +321,48 @@
     <!-- メインコンテンツ -->
     <div class="page-wrapper">
         <div class="container">
-            <h2>Richard Wagner (RW)</h2>
-            <ul>
-                <li><a href="richard_wagner.html">曲名から検索</a></li>
-                <li><a href="rw_terms_search.html">用語から検索</a></li>
-            </ul>
-
-            <h2>Gustav Mahler (GM)</h2>
-            <ul>
-                <li><a href="index.html">曲名と楽器等から検索</a></li>
-                <li><a href="terms_search.html">用語から検索</a></li>
-            </ul>
-
-            <h2>Richard Strauss (RS)</h2>
-            <ul>
-                <li><a href="richard_strauss.html">曲名から検索</a></li>
-                <li><a href="rs_terms_search.html">用語から検索</a></li>
-            </ul>
-
-            <h2>用語集</h2>
-            <div class="note">
-                <p>用語集で収録しているのは以下の作曲家．気になった用語を集めたたけであり，採用している訳，出典は限定的ではない．</p>
+            <h1>ドイツ語の音楽用語</h1>
+            
+            <div class="section-card">
+                <h2><span class="emoji">�</span>Richard Wagner (RW)</h2>
+                <ul>
+                    <li><a href="richard_wagner.html">曲名から検索</a></li>
+                    <li><a href="rw_terms_search.html">用語から検索</a></li>
+                </ul>
             </div>
-            <ul>
-                <li>RW, GM, RS</li>
-                <li>Anton Bruckner</li>
-                <li>Paul Hindemith</li>
-                <li>Sigfrid Karg-Elert</li>
-            </ul>
-            <div class="note">
-                <p>RW，RSのページでは主に舞台指示および声楽に対する指示が含まれている．オーケストラに対する指示で GM の用語検索ページで何とかなりそうなものは基本的に不採用</p>
+
+            <div class="section-card">
+                <h2><span class="emoji">🎼</span>Gustav Mahler (GM)</h2>
+                <ul>
+                    <li><a href="index.html">曲名と楽器等から検索</a></li>
+                    <li><a href="terms_search.html">用語から検索</a></li>
+                </ul>
+            </div>
+
+            <div class="section-card">
+                <h2><span class="emoji">🎵</span>Richard Strauss (RS)</h2>
+                <ul>
+                    <li><a href="richard_strauss.html">曲名から検索</a></li>
+                    <li><a href="rs_terms_search.html">用語から検索</a></li>
+                </ul>
+            </div>
+
+            <!-- 注意書き（用語集の前に配置） -->
+            <div class="info-box">
+                <p><strong>RW・RSのページ</strong>では主に舞台指示および声楽に対する指示が含まれている．オーケストラに対する指示でGMの用語検索ページで何とかなりそうなものは基本的に不採用</p>
                 <p>イタリア語，フランス語は（原本的に）不採用</p>
-                <p>歌唱には非対応．僅かに訳が数多く出回っているのでそちらを参照</p>
+                <p>歌詞には非対応．優れた訳が数多く出回っているのでそちらを参照</p>
+                <div class="composer-list">
+                    <p><strong>用語集で収録している作曲家：</strong></p>
+                    <p>RW, GM, RS / Anton Bruckner / Paul Hindemith / Sigfrid Karg-Elert</p>
+                    <p style="margin-top: 8px; font-size: 0.8rem;">※気になった用語を集めただけであり，採用している用語，出典は網羅的ではない</p>
+                </div>
             </div>
-            <ul>
-                <li><a href="dic.html">用語集ページ</a></li>
-            </ul>
 
-            <h2>その他</h2>
-            <p style="color: #999; font-size: 0.9rem;">（今後追加予定）</p>
+            <!-- 用語集セクション -->
+            <div class="glossary-section">
+                <a href="dic.html" class="glossary-link">📖 用語集を見る</a>
+            </div>
         </div>
     </div>
     

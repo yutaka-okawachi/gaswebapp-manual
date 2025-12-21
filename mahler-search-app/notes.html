@@ -120,11 +120,22 @@
     </div>
 
     <div id="top"></div>
-
-    <div class="container">
-        <div class="home-link-wrapper"><a href="home.html" class="home-link">← ホームへ戻る</a></div>
-        <div id="notesContainer">
-            <div class="loading">表示中・・・</div>
+    <button class="nav-toggle" onclick="toggleNav()">☰ メニュー</button>
+    <nav class="sidebar" id="sidebar">
+        <h3><strong>Richard Wagner (RW)</strong></h3>
+        <ul><li><a href="richard_wagner.html">曲名から検索</a></li><li><a href="rw_terms_search.html">用語から検索</a></li></ul>
+        <h3><strong>Gustav Mahler (GM)</strong></h3>
+        <ul><li><a href="index.html">曲名と楽器等から検索</a></li><li><a href="terms_search.html">用語から検索</a></li></ul>
+        <h3><strong>Richard Strauss (RS)</strong></h3>
+        <ul><li><a href="richard_strauss.html">曲名から検索</a></li><li><a href="rs_terms_search.html">用語から検索</a></li></ul>
+        <h3><a href="dic.html" style="color: #1d1d1f;">用語集</a></h3>
+        <h3><a href="home.html" style="color: #1d1d1f;">ホーム</a></h3>
+    </nav>
+    <div class="page-wrapper">
+        <div class="container">
+            <div id="notesContainer">
+                <div class="loading">表示中・・・</div>
+            </div>
         </div>
     </div>
 
@@ -141,6 +152,10 @@
     </div>
 
     <div id="scrollToTop" onclick="scrollToTop()">▲ ページのトップへ戻る</div>
+    <script>
+        function toggleNav(){const sidebar=document.getElementById('sidebar');sidebar.classList.toggle('active');}
+        document.addEventListener('click',function(event){if(window.innerWidth<=768){const sidebar=document.getElementById('sidebar');const toggle=document.querySelector('.nav-toggle');if(!sidebar.contains(event.target)&&!toggle.contains(event.target)){sidebar.classList.remove('active');}}});
+    </script>
 </body>
 
 </html>
