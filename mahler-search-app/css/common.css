@@ -40,6 +40,26 @@ body {
     line-height: 1.6;
 }
 
+/* ホームへ戻るリンク */
+.home-link-wrapper {
+    text-align: center;
+    padding: 10px 0 5px;
+}
+
+.home-link {
+    color: #1a73e8;
+    text-decoration: none;
+    font-size: 0.85rem;
+    padding: 5px 12px;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+}
+
+.home-link:hover {
+    background: #e8f0fe;
+    text-decoration: underline;
+}
+
 .container {
     width: 90%;
     max-width: 1000px;
