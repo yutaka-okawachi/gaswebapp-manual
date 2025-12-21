@@ -66,7 +66,7 @@ body {
     height: 100vh;
     background: #ffffff;
     color: #1d1d1f;
-    padding: 40px 30px;
+    padding: 24px 24px;
     overflow-y: auto;
     z-index: 1000;
     border-right: 1px solid #d2d2d7;
@@ -74,8 +74,8 @@ body {
 
 .sidebar h3 {
     font-size: 1.1rem;
-    margin-bottom: 12px;
-    margin-top: 28px;
+    margin-bottom: 8px;
+    margin-top: 16px;
     color: #86868b;
     font-weight: 600;
     text-transform: uppercase;
@@ -96,7 +96,7 @@ body {
 }
 
 .sidebar li {
-    margin-bottom: 8px;
+    margin-bottom: 4px;
 }
 
 .sidebar a {
@@ -104,7 +104,7 @@ body {
     text-decoration: none;
     font-size: 0.95rem;
     display: block;
-    padding: 6px 0;
+    padding: 4px 0;
     transition: color 0.2s;
     font-family: 'Lora', serif;
 }
