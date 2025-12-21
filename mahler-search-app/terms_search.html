@@ -12,22 +12,22 @@
       gtag('config', 'G-ZT6MPW5MNG');
     </script>
     <meta charset="UTF-8">
-    <!-- レスポンシブ対忁E-->
+    <!-- 繝ｬ繧ｹ繝昴Φ繧ｷ繝門ｯｾ蠢・-->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>用語から検索 (GM)</title>
+    <title>逕ｨ隱槭°繧画､懃ｴ｢ (GM)</title>
     <link rel="stylesheet" href="css/common.css">
     <script src="js/app.js?v=8"></script>
 
     <script>
         /*******************************************************************
-         * クライアントサイドスクリプト�E�用語から検索ペ�Eジ�E�E
+         * 繧ｯ繝ｩ繧､繧｢繝ｳ繝医し繧､繝峨せ繧ｯ繝ｪ繝励ヨ・育畑隱槭°繧画､懃ｴ｢繝壹・繧ｸ・・
          * 
-         * - 入力を監視してサーバ�Eの searchEnglishTermsPartially() を呼び出し、E
-         *   suggest 用チE�Eタを取得し datalist を更新
-         * - 最終的に searchByTerm() を呼び出して結果を画面に表示
+         * - 蜈･蜉帙ｒ逶｣隕悶＠縺ｦ繧ｵ繝ｼ繝舌・縺ｮ searchEnglishTermsPartially() 繧貞他縺ｳ蜃ｺ縺励・
+         *   suggest 逕ｨ繝・・繧ｿ繧貞叙蠕励＠ datalist 繧呈峩譁ｰ
+         * - 譛邨ら噪縺ｫ searchByTerm() 繧貞他縺ｳ蜃ｺ縺励※邨先棡繧堤判髱｢縺ｫ陦ｨ遉ｺ
          ******************************************************************/
 
-        // debounce(防振)用の関数�E�一定時間�E力が止まるまで検索しなぁE��ぁE��する
+        // debounce(髦ｲ謖ｯ)逕ｨ縺ｮ髢｢謨ｰ・壻ｸ螳壽凾髢灘・蜉帙′豁｢縺ｾ繧九∪縺ｧ讀懃ｴ｢縺励↑縺・ｈ縺・↓縺吶ｋ
         function debounce(func, delay) {
             let timer;
             return function (...args) {
@@ -37,16 +37,16 @@
         }
 
         let currentSearchId = 0;
-        let termEntries = []; // { original, normalized } の配�Eを保持
+        let termEntries = []; // { original, normalized } 縺ｮ驟榊・繧剃ｿ晄戟
 
         // Helper to normalize string (Inlined for robustness)
         function normalizeString(str) {
             if (!str) return '';
             return str.toLowerCase()
-                .replace(/ä/g, 'ae')
-                .replace(/ö/g, 'oe')
-                .replace(/ü/g, 'ue')
-                .replace(/ÁEg, 'ss')
+                .replace(/ﾃ､/g, 'ae')
+                .replace(/ﾃｶ/g, 'oe')
+                .replace(/ﾃｼ/g, 'ue')
+                .replace(/ﾃ・g, 'ss')
                 .trim();
         }
 
@@ -106,7 +106,7 @@
         // Override/Define searchMahlerTermsLocal to handle object data correctly
         window.searchMahlerTermsLocal = function (query) {
             const data = window.appData.mahler;
-            if (!data) return '<div class="result-message">チE�Eタが読み込まれてぁE��せん、E/div>';
+            if (!data) return '<div class="result-message">繝・・繧ｿ縺瑚ｪｭ縺ｿ霎ｼ縺ｾ繧後※縺・∪縺帙ｓ縲・/div>';
 
             // Allow periods in search query normalization
             const normalizedQuery = normalizeString(query);
@@ -116,7 +116,7 @@
             });
 
             if (results.length === 0) {
-                return '<div class="result-message">該当するデータが見つかりませんでした、E/div>';
+                return '<div class="result-message">隧ｲ蠖薙☆繧九ョ繝ｼ繧ｿ縺瑚ｦ九▽縺九ｊ縺ｾ縺帙ｓ縺ｧ縺励◆縲・/div>';
             }
 
             let resultHTML = '';
@@ -138,16 +138,16 @@
                         if (!a || !b || !c || !d) return;
 
                         segmentCount++;
-                        const aLabel = window.aReverseMap[a.toLowerCase()] || `不�E(${a})`;
+                        const aLabel = window.aReverseMap[a.toLowerCase()] || `荳肴・(${a})`;
                         const movementText = formatMovementNumber(a, b);
-                        const measureText = `第${c}小節`;
+                        const measureText = `隨ｬ${c}蟆冗ｯ`;
                         
                         // Parse instruments (d)
                         const dArr = d.split(',').map(x => x.trim());
                         const mappedInstruments = dArr.map(code => window.dMapping[code] || code).join(', ');
                         
-                        // Format location text - use �E�！Einstead of 【、E
-                        detailsHTML += `<div class="result-loc">${aLabel} ${movementText}�E�E{measureText}、E{mappedInstruments}、E/div>`;
+                        // Format location text - use ・茨ｼ・instead of 縲舌・
+                        detailsHTML += `<div class="result-loc">${aLabel} ${movementText}・・{measureText}縲・{mappedInstruments}縲・/div>`;
                     });
 
                     // Generate HTML with .search-result-item wrapper
@@ -155,21 +155,21 @@
                     resultHTML += `<div class="result-a">${escapeHtmlWithBreaks(deData)}</div>`;
                     resultHTML += `<div class="result-c">${escapeHtmlWithBreaks(jaData)}</div>`;
                     resultHTML += detailsHTML;
-                    resultHTML += `<div class="result-loc">(${segmentCount}件)</div>`;
+                    resultHTML += `<div class="result-loc">(${segmentCount}莉ｶ)</div>`;
                     resultHTML += `</div>`;
                 });
             } catch (e) {
                 console.error("Search error:", e);
-                return '<div class="result-message">検索中にエラーが発生しました、E/div>';
+                return '<div class="result-message">讀懃ｴ｢荳ｭ縺ｫ繧ｨ繝ｩ繝ｼ縺檎匱逕溘＠縺ｾ縺励◆縲・/div>';
             }
 
-            return `<div class="result-message">${results.length}件ありました、E/div>${resultHTML}`;
+            return `<div class="result-message">${results.length}莉ｶ縺ゅｊ縺ｾ縺励◆縲・/div>${resultHTML}`;
         };
 
-        // DOM構築後に動作をセチE��
+        // DOM讒狗ｯ牙ｾ後↓蜍穂ｽ懊ｒ繧ｻ繝・ヨ
         window.addEventListener('DOMContentLoaded', async () => {
             const inputField = document.getElementById('termInput');
-            // 入力フィールドに斁E��を入力するたびにイベント発火
+            // 蜈･蜉帙ヵ繧｣繝ｼ繝ｫ繝峨↓譁・ｭ励ｒ蜈･蜉帙☆繧九◆縺ｳ縺ｫ繧､繝吶Φ繝育匱轣ｫ
             inputField.addEventListener('input', debouncedOnTermInput);
 
             // Load data locally first (needed for local search)
@@ -177,17 +177,17 @@
                 await loadData('terms_search');
             }
 
-            // ペ�Eジ読み込み時に全用語リストを取征E
+            // 繝壹・繧ｸ隱ｭ縺ｿ霎ｼ縺ｿ譎ゅ↓蜈ｨ逕ｨ隱槭Μ繧ｹ繝医ｒ蜿門ｾ・
             if (typeof google !== 'undefined' && google.script && google.script.run) {
                 google.script.run
                     .withSuccessHandler(terms => {
                         termEntries = (Array.isArray(terms) ? terms : [])
                             .map(term => normalizeTermEntry(term))
                             .filter(Boolean);
-                        console.log(`${termEntries.length}件のGM用語を読み込みました。`);
+                        console.log(`${termEntries.length}莉ｶ縺ｮGM逕ｨ隱槭ｒ隱ｭ縺ｿ霎ｼ縺ｿ縺ｾ縺励◆縲Ａ);
                     })
                     .withFailureHandler(err => {
-                        console.error('GM用語�E取得に失敗しました:', err);
+                        console.error('GM逕ｨ隱槭・蜿門ｾ励↓螟ｱ謨励＠縺ｾ縺励◆:', err);
                         termEntries = [];
                     })
                     .getGMTermsForClient();
@@ -198,11 +198,11 @@
             }
         });
 
-        // 入力があったら300ms後にサジェスト検索を実行する関数
+        // 蜈･蜉帙′縺ゅ▲縺溘ｉ300ms蠕後↓繧ｵ繧ｸ繧ｧ繧ｹ繝域､懃ｴ｢繧貞ｮ溯｡後☆繧矩未謨ｰ
         const debouncedOnTermInput = debounce((event) => {
             const input = event.target.value.trim();
             if (input.length < 2) {
-                // 2斁E��未満ならサジェストをクリア
+                // 2譁・ｭ玲悴貅縺ｪ繧峨し繧ｸ繧ｧ繧ｹ繝医ｒ繧ｯ繝ｪ繧｢
                 document.getElementById('termSuggestions').innerHTML = '';
                 return;
             }
@@ -211,44 +211,44 @@
             const matches = termEntries
                 .filter(entry => entry.normalized.includes(normalizedInput))
                 .sort((a, b) => {
-                    // 前方一致を優允E
+                    // 蜑肴婿荳閾ｴ繧貞━蜈・
                     const aStarts = a.normalized.startsWith(normalizedInput);
                     const bStarts = b.normalized.startsWith(normalizedInput);
                     if (aStarts && !bStarts) return -1;
                     if (!aStarts && bStarts) return 1;
                     return a.normalized.localeCompare(b.normalized);
                 })
-                .slice(0, 50); // 候補数めE0件に制陁E
+                .slice(0, 50); // 蛟呵｣懈焚繧・0莉ｶ縺ｫ蛻ｶ髯・
 
             updateDatalist(matches);
 
         }, 300);
 
-        // datalist に候補を表示する
+        // datalist 縺ｫ蛟呵｣懊ｒ陦ｨ遉ｺ縺吶ｋ
         function updateDatalist(suggestions) {
             const datalist = document.getElementById('termSuggestions');
             datalist.innerHTML = '';
             suggestions.forEach(entry => {
                 const option = document.createElement('option');
-                option.value = entry.normalized; // 正規化された値を使用
-                option.textContent = entry.original; // 表示は允E�E形弁E
+                option.value = entry.normalized; // 豁｣隕丞喧縺輔ｌ縺溷､繧剃ｽｿ逕ｨ
+                option.textContent = entry.original; // 陦ｨ遉ｺ縺ｯ蜈・・蠖｢蠑・
                 datalist.appendChild(option);
             });
         }
 
-        // 「検索」�Eタン押下時
+        // 縲梧､懃ｴ｢縲阪・繧ｿ繝ｳ謚ｼ荳区凾
         function search() {
             const query = document.getElementById('termInput').value.trim();
             const resultsDiv = document.getElementById('results');
-            const loadingHtml = '<p class="loading">検索中・・・</p>';
+            const loadingHtml = '<p class="loading">讀懃ｴ｢荳ｭ繝ｻ繝ｻ繝ｻ</p>';
             resultsDiv.innerHTML = loadingHtml;
             if (typeof focusResultsPanel === 'function') {
                 focusResultsPanel({ instant: true });
             }
 
-            // 空斁E��チェチE��
+            // 遨ｺ譁・ｭ励メ繧ｧ繝・け
             if (!query) {
-                resultsDiv.innerHTML = '<p class="result-message">検索語句を�E力してください、E/p>';
+                resultsDiv.innerHTML = '<p class="result-message">讀懃ｴ｢隱槫唱繧貞・蜉帙＠縺ｦ縺上□縺輔＞縲・/p>';
                 if (typeof focusResultsPanel === 'function') {
                     focusResultsPanel({ instant: true });
                 }
@@ -266,7 +266,7 @@
                 if (typeof searchMahlerTermsLocal === 'function') {
                     html = searchMahlerTermsLocal(query);
                 } else {
-                    html = '<div class="result-message">検索機�Eが見つかりません (searchMahlerTermsLocal missing)</div>';
+                    html = '<div class="result-message">讀懃ｴ｢讖溯・縺瑚ｦ九▽縺九ｊ縺ｾ縺帙ｓ (searchMahlerTermsLocal missing)</div>';
                 }
                 
                 resultsDiv.innerHTML = html;
@@ -289,7 +289,7 @@
         function cancelSearch() {
             currentSearchId++;
             const resultsDiv = document.getElementById('results');
-            resultsDiv.innerHTML = '<p class="result-message">検索を中止しました、E/p>';
+            resultsDiv.innerHTML = '<p class="result-message">讀懃ｴ｢繧剃ｸｭ豁｢縺励∪縺励◆縲・/p>';
         }
 
         function clearInput() {
@@ -302,47 +302,60 @@
 </head>
 
 <body>
-  <!-- ハンバ�Eガーメニューボタン�E�スマ�Eのみ�E�E-->
-  <button class="nav-toggle" onclick="toggleNav()">☰ メニュー</button>
+  <!-- 繝上Φ繝舌・繧ｬ繝ｼ繝｡繝九Η繝ｼ繝懊ち繝ｳ・医せ繝槭・縺ｮ縺ｿ・・-->
+  <button class="nav-toggle" onclick="toggleNav()">笘ｰ 繝｡繝九Η繝ｼ</button>
   <nav class="sidebar" id="sidebar">
-    <h3><strong>Richard Wagner (RW)</strong></h3>
-    <ul><li><a href="richard_wagner.html">曲名から検索</a></li><li><a href="rw_terms_search.html">用語から検索</a></li></ul>
-    <h3><strong>Gustav Mahler (GM)</strong></h3>
-    <ul><li><a href="index.html">曲名と楽器等から検索</a></li><li><a href="terms_search.html">用語から検索</a></li></ul>
-    <h3><strong>Richard Strauss (RS)</strong></h3>
-    <ul><li><a href="richard_strauss.html">曲名から検索</a></li><li><a href="rs_terms_search.html">用語から検索</a></li></ul>
-    <h3><a href="dic.html" style="color: #1d1d1f;">用語集</a></h3>
-    <h3><a href="home.html" style="color: #1d1d1f;">ホ�Eム</a></h3>
+      <h3><a href="home.html" style="color: #1d1d1f;">HOME</a></h3>
+      
+      <h3><strong>Richard Wagner (RW)</strong></h3>
+      <ul>
+          <li><a href="richard_wagner.html">曲名から検索</a></li>
+          <li><a href="rw_terms_search.html">用語から検索</a></li>
+      </ul>
+      
+      <h3><strong>Gustav Mahler (GM)</strong></h3>
+      <ul>
+          <li><a href="index.html">曲名と楽器等から検索</a></li>
+          <li><a href="terms_search.html">用語から検索</a></li>
+      </ul>
+      
+      <h3><strong>Richard Strauss (RS)</strong></h3>
+      <ul>
+          <li><a href="richard_strauss.html">曲名から検索</a></li>
+          <li><a href="rs_terms_search.html">用語から検索</a></li>
+      </ul>
+      
+      <h3><a href="dic.html" style="color: #1d1d1f;">用語集</a></h3>
   </nav>
   <div class="page-wrapper"><div class="container">
-    <h1>用語から検索 (GM)</h1>
-        <p style="text-align: center;"><span style="font-size: 0.9rem;">吁E��語につぁE��のコメント�E</span><a href="dic.html" target="_blank" style="font-size: 1.2rem; font-weight: bold; color: var(--button-bg); text-decoration: none; border-bottom: 2px solid transparent; transition: all 0.2s ease;">用語集</a><span style="font-size: 0.9rem;">を参照</span></p>
+    <h1>逕ｨ隱槭°繧画､懃ｴ｢ (GM)</h1>
+        <p style="text-align: center;"><span style="font-size: 0.9rem;">蜷・畑隱槭↓縺､縺・※縺ｮ繧ｳ繝｡繝ｳ繝医・</span><a href="dic.html" target="_blank" style="font-size: 1.2rem; font-weight: bold; color: var(--button-bg); text-decoration: none; border-bottom: 2px solid transparent; transition: all 0.2s ease;">逕ｨ隱樣寔</a><span style="font-size: 0.9rem;">繧貞盾辣ｧ</span></p>
         <p>
-            検索は英字�E力なので�E�特殊文字�E入力�E慣例にしたがう<br>
+            讀懃ｴ｢縺ｯ闍ｱ蟄怜・蜉帙↑縺ｮ縺ｧ・檎音谿頑枚蟄励・蜈･蜉帙・諷｣萓九↓縺励◆縺後≧<br>
         <ul>
-            <li>ä⇒ae　例：Dämpfer⇒Daempfer</li>
-            <li>ü⇒ue　例：zurückhalten⇒zurueckhalten</li>
-            <li>ö⇒oe　例：Flöte⇒Floete</li>
-            <li>ß��ss　例：fließend⇒fliessend</li>
+            <li>ﾃ､竍誕e縲萓具ｼ咼ﾃ､mpfer竍奪aempfer</li>
+            <li>ﾃｼ竍置e縲萓具ｼ營urﾃｼckhalten竍築urueckhalten</li>
+            <li>ﾃｶ竍弛e縲萓具ｼ哥lﾃｶte竍巽loete</li>
+            <li>ﾃ溪∫ss縲萓具ｼ喃lieﾃ歹nd竍断liessend</li>
         </ul>
         </p>
 
-        <!-- 検索入力欁E-->
-        <input type="text" id="termInput" list="termSuggestions" placeholder="検索する用語を入劁E>
+        <!-- 讀懃ｴ｢蜈･蜉帶ｬ・-->
+        <input type="text" id="termInput" list="termSuggestions" placeholder="讀懃ｴ｢縺吶ｋ逕ｨ隱槭ｒ蜈･蜉・>
         <datalist id="termSuggestions"></datalist>
 
-        <!-- ボタン顁E-->
+        <!-- 繝懊ち繝ｳ鬘・-->
         <div style="text-align: center;">
-            <button type="button" onclick="search()" class="btn-search">検索</button>
-            <button type="button" onclick="cancelSearch()" class="btn-danger">中止</button>
-            <button type="button" onclick="clearInput()" class="clear-input-btn">入力をクリア</button>
+            <button type="button" onclick="search()" class="btn-search">讀懃ｴ｢</button>
+            <button type="button" onclick="cancelSearch()" class="btn-danger">荳ｭ豁｢</button>
+            <button type="button" onclick="clearInput()" class="clear-input-btn">蜈･蜉帙ｒ繧ｯ繝ｪ繧｢</button>
         </div>
 
-        <!-- 結果表示枠 -->
+        <!-- 邨先棡陦ｨ遉ｺ譫� -->
         <div id="results"></div>
 
-        <!-- トップへ戻る�Eタン -->
-        <div id="scrollToTop" onclick="scrollToTop()">▲ ペ�Eジのトップへ戻めE/div>
+        <!-- 繝医ャ繝励∈謌ｻ繧九・繧ｿ繝ｳ -->
+        <div id="scrollToTop" onclick="scrollToTop()">笆ｲ 繝壹・繧ｸ縺ｮ繝医ャ繝励∈謌ｻ繧・/div>
     </div></div>
   <script>
     function toggleNav(){const sidebar=document.getElementById('sidebar');sidebar.classList.toggle('active');}
