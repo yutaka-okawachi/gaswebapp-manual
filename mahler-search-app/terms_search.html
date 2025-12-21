@@ -12,7 +12,7 @@
       gtag('config', 'G-ZT6MPW5MNG');
     </script>
     <meta charset="UTF-8">
-    <!-- レスポンシブ対応 -->
+    <!-- レスポンシブ対忁E-->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>用語から検索 (GM)</title>
     <link rel="stylesheet" href="css/common.css">
@@ -20,14 +20,14 @@
 
     <script>
         /*******************************************************************
-         * クライアントサイドスクリプト（用語から検索ページ）
+         * クライアントサイドスクリプト�E�用語から検索ペ�Eジ�E�E
          * 
-         * - 入力を監視してサーバーの searchEnglishTermsPartially() を呼び出し、
-         *   suggest 用データを取得し datalist を更新
+         * - 入力を監視してサーバ�Eの searchEnglishTermsPartially() を呼び出し、E
+         *   suggest 用チE�Eタを取得し datalist を更新
          * - 最終的に searchByTerm() を呼び出して結果を画面に表示
          ******************************************************************/
 
-        // debounce(防振)用の関数：一定時間入力が止まるまで検索しないようにする
+        // debounce(防振)用の関数�E�一定時間�E力が止まるまで検索しなぁE��ぁE��する
         function debounce(func, delay) {
             let timer;
             return function (...args) {
@@ -37,7 +37,7 @@
         }
 
         let currentSearchId = 0;
-        let termEntries = []; // { original, normalized } の配列を保持
+        let termEntries = []; // { original, normalized } の配�Eを保持
 
         // Helper to normalize string (Inlined for robustness)
         function normalizeString(str) {
@@ -46,7 +46,7 @@
                 .replace(/ä/g, 'ae')
                 .replace(/ö/g, 'oe')
                 .replace(/ü/g, 'ue')
-                .replace(/ß/g, 'ss')
+                .replace(/ÁEg, 'ss')
                 .trim();
         }
 
@@ -106,7 +106,7 @@
         // Override/Define searchMahlerTermsLocal to handle object data correctly
         window.searchMahlerTermsLocal = function (query) {
             const data = window.appData.mahler;
-            if (!data) return '<div class="result-message">データが読み込まれていません。</div>';
+            if (!data) return '<div class="result-message">チE�Eタが読み込まれてぁE��せん、E/div>';
 
             // Allow periods in search query normalization
             const normalizedQuery = normalizeString(query);
@@ -116,7 +116,7 @@
             });
 
             if (results.length === 0) {
-                return '<div class="result-message">該当するデータが見つかりませんでした。</div>';
+                return '<div class="result-message">該当するデータが見つかりませんでした、E/div>';
             }
 
             let resultHTML = '';
@@ -138,7 +138,7 @@
                         if (!a || !b || !c || !d) return;
 
                         segmentCount++;
-                        const aLabel = window.aReverseMap[a.toLowerCase()] || `不明(${a})`;
+                        const aLabel = window.aReverseMap[a.toLowerCase()] || `不�E(${a})`;
                         const movementText = formatMovementNumber(a, b);
                         const measureText = `第${c}小節`;
                         
@@ -146,8 +146,8 @@
                         const dArr = d.split(',').map(x => x.trim());
                         const mappedInstruments = dArr.map(code => window.dMapping[code] || code).join(', ');
                         
-                        // Format location text - use （） instead of 【】
-                        detailsHTML += `<div class="result-loc">${aLabel} ${movementText}：${measureText}【${mappedInstruments}】</div>`;
+                        // Format location text - use �E�！Einstead of 【、E
+                        detailsHTML += `<div class="result-loc">${aLabel} ${movementText}�E�E{measureText}、E{mappedInstruments}、E/div>`;
                     });
 
                     // Generate HTML with .search-result-item wrapper
@@ -160,16 +160,16 @@
                 });
             } catch (e) {
                 console.error("Search error:", e);
-                return '<div class="result-message">検索中にエラーが発生しました。</div>';
+                return '<div class="result-message">検索中にエラーが発生しました、E/div>';
             }
 
-            return `<div class="result-message">${results.length}件ありました。</div>${resultHTML}`;
+            return `<div class="result-message">${results.length}件ありました、E/div>${resultHTML}`;
         };
 
-        // DOM構築後に動作をセット
+        // DOM構築後に動作をセチE��
         window.addEventListener('DOMContentLoaded', async () => {
             const inputField = document.getElementById('termInput');
-            // 入力フィールドに文字を入力するたびにイベント発火
+            // 入力フィールドに斁E��を入力するたびにイベント発火
             inputField.addEventListener('input', debouncedOnTermInput);
 
             // Load data locally first (needed for local search)
@@ -177,7 +177,7 @@
                 await loadData('terms_search');
             }
 
-            // ページ読み込み時に全用語リストを取得
+            // ペ�Eジ読み込み時に全用語リストを取征E
             if (typeof google !== 'undefined' && google.script && google.script.run) {
                 google.script.run
                     .withSuccessHandler(terms => {
@@ -187,7 +187,7 @@
                         console.log(`${termEntries.length}件のGM用語を読み込みました。`);
                     })
                     .withFailureHandler(err => {
-                        console.error('GM用語の取得に失敗しました:', err);
+                        console.error('GM用語�E取得に失敗しました:', err);
                         termEntries = [];
                     })
                     .getGMTermsForClient();
@@ -202,7 +202,7 @@
         const debouncedOnTermInput = debounce((event) => {
             const input = event.target.value.trim();
             if (input.length < 2) {
-                // 2文字未満ならサジェストをクリア
+                // 2斁E��未満ならサジェストをクリア
                 document.getElementById('termSuggestions').innerHTML = '';
                 return;
             }
@@ -211,14 +211,14 @@
             const matches = termEntries
                 .filter(entry => entry.normalized.includes(normalizedInput))
                 .sort((a, b) => {
-                    // 前方一致を優先
+                    // 前方一致を優允E
                     const aStarts = a.normalized.startsWith(normalizedInput);
                     const bStarts = b.normalized.startsWith(normalizedInput);
                     if (aStarts && !bStarts) return -1;
                     if (!aStarts && bStarts) return 1;
                     return a.normalized.localeCompare(b.normalized);
                 })
-                .slice(0, 50); // 候補数を50件に制限
+                .slice(0, 50); // 候補数めE0件に制陁E
 
             updateDatalist(matches);
 
@@ -231,12 +231,12 @@
             suggestions.forEach(entry => {
                 const option = document.createElement('option');
                 option.value = entry.normalized; // 正規化された値を使用
-                option.textContent = entry.original; // 表示は元の形式
+                option.textContent = entry.original; // 表示は允E�E形弁E
                 datalist.appendChild(option);
             });
         }
 
-        // 「検索」ボタン押下時
+        // 「検索」�Eタン押下時
         function search() {
             const query = document.getElementById('termInput').value.trim();
             const resultsDiv = document.getElementById('results');
@@ -246,9 +246,9 @@
                 focusResultsPanel({ instant: true });
             }
 
-            // 空文字チェック
+            // 空斁E��チェチE��
             if (!query) {
-                resultsDiv.innerHTML = '<p class="result-message">検索語句を入力してください。</p>';
+                resultsDiv.innerHTML = '<p class="result-message">検索語句を�E力してください、E/p>';
                 if (typeof focusResultsPanel === 'function') {
                     focusResultsPanel({ instant: true });
                 }
@@ -266,7 +266,7 @@
                 if (typeof searchMahlerTermsLocal === 'function') {
                     html = searchMahlerTermsLocal(query);
                 } else {
-                    html = '<div class="result-message">検索機能が見つかりません (searchMahlerTermsLocal missing)</div>';
+                    html = '<div class="result-message">検索機�Eが見つかりません (searchMahlerTermsLocal missing)</div>';
                 }
                 
                 resultsDiv.innerHTML = html;
@@ -289,7 +289,7 @@
         function cancelSearch() {
             currentSearchId++;
             const resultsDiv = document.getElementById('results');
-            resultsDiv.innerHTML = '<p class="result-message">検索を中止しました。</p>';
+            resultsDiv.innerHTML = '<p class="result-message">検索を中止しました、E/p>';
         }
 
         function clearInput() {
@@ -302,7 +302,7 @@
 </head>
 
 <body>
-  <!-- ハンバーガーメニューボタン（スマホのみ） -->
+  <!-- ハンバ�Eガーメニューボタン�E�スマ�Eのみ�E�E-->
   <button class="nav-toggle" onclick="toggleNav()">☰ メニュー</button>
   <nav class="sidebar" id="sidebar">
     <h3><strong>Richard Wagner (RW)</strong></h3>
@@ -312,26 +312,26 @@
     <h3><strong>Richard Strauss (RS)</strong></h3>
     <ul><li><a href="richard_strauss.html">曲名から検索</a></li><li><a href="rs_terms_search.html">用語から検索</a></li></ul>
     <h3><a href="dic.html" style="color: #1d1d1f;">用語集</a></h3>
-    <h3><a href="home.html" style="color: #1d1d1f;">ホーム</a></h3>
+    <h3><a href="home.html" style="color: #1d1d1f;">ホ�Eム</a></h3>
   </nav>
   <div class="page-wrapper"><div class="container">
     <h1>用語から検索 (GM)</h1>
-        <p style="text-align: center;"><span style="font-size: 0.9rem;">各用語についてのコメントは</span><a href="dic.html" target="_blank" style="font-size: 1.2rem; font-weight: bold; color: var(--button-bg); text-decoration: none; border-bottom: 2px solid transparent; transition: all 0.2s ease;">用語集</a><span style="font-size: 0.9rem;">を参照</span></p>
+        <p style="text-align: center;"><span style="font-size: 0.9rem;">吁E��語につぁE��のコメント�E</span><a href="dic.html" target="_blank" style="font-size: 1.2rem; font-weight: bold; color: var(--button-bg); text-decoration: none; border-bottom: 2px solid transparent; transition: all 0.2s ease;">用語集</a><span style="font-size: 0.9rem;">を参照</span></p>
         <p>
-            検索は英字入力なので，特殊文字の入力は慣例にしたがう<br>
+            検索は英字�E力なので�E�特殊文字�E入力�E慣例にしたがう<br>
         <ul>
             <li>ä⇒ae　例：Dämpfer⇒Daempfer</li>
             <li>ü⇒ue　例：zurückhalten⇒zurueckhalten</li>
             <li>ö⇒oe　例：Flöte⇒Floete</li>
-            <li>ß⇒ss　例：fließend⇒fliessend</li>
+            <li>ß��ss　例：fließend⇒fliessend</li>
         </ul>
         </p>
 
-        <!-- 検索入力欄 -->
-        <input type="text" id="termInput" list="termSuggestions" placeholder="検索する用語を入力">
+        <!-- 検索入力欁E-->
+        <input type="text" id="termInput" list="termSuggestions" placeholder="検索する用語を入劁E>
         <datalist id="termSuggestions"></datalist>
 
-        <!-- ボタン類 -->
+        <!-- ボタン顁E-->
         <div style="text-align: center;">
             <button type="button" onclick="search()" class="btn-search">検索</button>
             <button type="button" onclick="cancelSearch()" class="btn-danger">中止</button>
@@ -341,8 +341,8 @@
         <!-- 結果表示枠 -->
         <div id="results"></div>
 
-        <!-- トップへ戻るボタン -->
-        <div id="scrollToTop" onclick="scrollToTop()">▲ ページのトップへ戻る</div>
+        <!-- トップへ戻る�Eタン -->
+        <div id="scrollToTop" onclick="scrollToTop()">▲ ペ�Eジのトップへ戻めE/div>
     </div></div>
   <script>
     function toggleNav(){const sidebar=document.getElementById('sidebar');sidebar.classList.toggle('active');}
