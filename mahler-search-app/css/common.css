@@ -73,13 +73,14 @@ body {
 }
 
 .sidebar h3 {
-    font-size: 1.0rem;
+    font-size: 1.1rem;
     margin-bottom: 12px;
     margin-top: 28px;
     color: #86868b;
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.5px;
+    font-family: 'Lora', serif;
 }
 
 .sidebar h3:first-of-type {
@@ -89,6 +90,9 @@ body {
 .sidebar ul {
     list-style: none;
     margin-bottom: 0;
+    padding: 0;
+    border: none;
+    background: none;
 }
 
 .sidebar li {
@@ -102,6 +106,7 @@ body {
     display: block;
     padding: 6px 0;
     transition: color 0.2s;
+    font-family: 'Lora', serif;
 }
 
 .sidebar a:hover {
@@ -123,6 +128,7 @@ body {
         transform: translateX(-100%);
         transition: transform 0.3s ease;
         box-shadow: 2px 0 16px rgba(0,0,0,0.1);
+        padding-top: 80px; /* メニューボタンと重ならないように調整 */
     }
     
     .sidebar.active {

@@ -164,6 +164,9 @@ function generateDicHtml(dicData, abbrData) {
 <html>
 
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
     <!-- Google Search Console Verification -->
     <meta name="google-site-verification" content="oMTfhSgc1nOrF9dVnBCR_YGcwCDYlrqNmyYn-UJuBJc" />
     
@@ -176,9 +179,7 @@ function generateDicHtml(dicData, abbrData) {
 
       gtag('config', 'G-ZT6MPW5MNG');
     </script>
-    <meta charset="UTF-8">
     <title>用語集</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="css/common.css">
     <style>
         /* dic.html specific styles */
@@ -352,6 +353,35 @@ function generateDicHtml(dicData, abbrData) {
 </head>
 
 <body>
+    <!-- ハンバーガーメニューボタン（スマホのみ） -->
+    <button class="nav-toggle" onclick="toggleNav()">☰ メニュー</button>
+    
+    <!-- サイドバーナビゲーション -->
+    <nav class="sidebar" id="sidebar">
+        <h3><a href="home.html" style="color: #1d1d1f;">HOME</a></h3>
+        
+        <h3><strong>Richard Wagner (RW)</strong></h3>
+        <ul>
+            <li><a href="richard_wagner.html">曲名から検索</a></li>
+            <li><a href="rw_terms_search.html">用語から検索</a></li>
+        </ul>
+        
+        <h3><strong>Gustav Mahler (GM)</strong></h3>
+        <ul>
+            <li><a href="index.html">曲名と楽器等から検索</a></li>
+            <li><a href="terms_search.html">用語から検索</a></li>
+        </ul>
+        
+        <h3><strong>Richard Strauss (RS)</strong></h3>
+        <ul>
+            <li><a href="richard_strauss.html">曲名から検索</a></li>
+            <li><a href="rs_terms_search.html">用語から検索</a></li>
+        </ul>
+        
+        <h3><a href="dic.html" style="color: #1d1d1f;">用語集</a></h3>
+    </nav>
+
+    <div class="page-wrapper">
     <div class="container">
         <h1>用語集</h1>
         <div id="listContainer">
@@ -366,6 +396,8 @@ ${dicListHtml}
 ${abbrListHtml}
             </div>
         </div>
+        </div>
+    </div>
     </div>
 
     <!-- Floating Alphabet Bar -->
@@ -426,6 +458,23 @@ ${abbrListHtml}
                 window.visualViewport.addEventListener('scroll', debouncedAdjust);
             }
         })();
+    </script>
+    <script>
+        function toggleNav() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('active');
+        }
+        
+        // サイドバー外をクリックしたら閉じる（スマホのみ）
+        document.addEventListener('click', function(event) {
+            if (window.innerWidth <= 768) {
+                const sidebar = document.getElementById('sidebar');
+                const toggle = document.querySelector('.nav-toggle');
+                if (!sidebar.contains(event.target) && !toggle.contains(event.target)) {
+                    sidebar.classList.remove('active');
+                }
+            }
+        });
     </script>
 </body>
 
