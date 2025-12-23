@@ -276,10 +276,11 @@
                     focusResultsPanel({ instant: true });
                 }
                 
-                // 実験用：用語集へのリンクを適用（現在は無効化）
-                // if (typeof applyDicLinksToPage === 'function') {
-                //     setTimeout(() => applyDicLinksToPage(), 50);
-                // }
+                
+                // 用語集へのリンクを適用
+                if (typeof applyDicLinksToPage === 'function') {
+                    setTimeout(() => applyDicLinksToPage(), 50);
+                }
 
                 // Send notification
                 if (typeof sendSearchNotification === 'function') {
