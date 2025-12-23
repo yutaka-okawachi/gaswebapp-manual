@@ -160,10 +160,15 @@ function exportAllDataToJson() {
         abbrJson = data.slice(1).map(row => [row[0], row[1], row[2]]);
     }
 
-    // 9. Generate dic.html (静的HTML生成)
-    Logger.log('=== dic.htmlを生成中 ===');
-    const dicHtml = generateDicHtml(dicNotesJson, abbrJson);
+    // 9. Generate dic.html (静的HTML生成 - リンク機能付き実験版を使用)
+    Logger.log('=== dic.htmlを生成中（リンク機能付き） ===');
+    const dicHtml = generateDicHtmlExperimental(dicNotesJson, abbrJson);
     Logger.log('dic.html生成完了: ' + Math.round(dicHtml.length / 1024) + ' KB');
+    
+    // 10. Generate dic_terms_index.json (リンク用インデックス)
+    Logger.log('=== 用語インデックスを生成中 ===');
+    const termsIndex = generateDicTermsIndex(dicNotesJson);
+    Logger.log('用語インデックス生成完了: ' + Object.keys(termsIndex).length + ' 件の用語');
 
     // GitHubへ直接プッシュ（Google Drive不要）
     const files = {
@@ -174,7 +179,8 @@ function exportAllDataToJson() {
         'mahler-search-app/data/rw_scenes.json': rwScenes,
         'mahler-search-app/data/dic_notes.json': dicNotesJson,
         'mahler-search-app/data/abbr_list.json': abbrJson,
-        'mahler-search-app/dic.html': dicHtml  // 新規: 生成されたHTML
+        'mahler-search-app/dic.html': dicHtml,  // リンク機能付きHTML
+        'mahler-search-app/data/dic_terms_index.json': termsIndex  // 新規: 用語インデックス
     };
 
     // 自動生成されたコミットメッセージ
