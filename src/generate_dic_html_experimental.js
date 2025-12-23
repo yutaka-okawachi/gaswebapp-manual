@@ -72,22 +72,27 @@ function getSortLetterExp(str) {
 function normalizeForId(str) {
   if (!str || typeof str !== 'string') return '';
   
-  // ウムラウトと特殊文字を変換
+  // ウムラウトと特殊文字を変換（dic_linking.js と統一）
+  let normalized = str.toLowerCase();
+  
   const umlautMap = {
-    'ä': 'ae', 'ö': 'oe', 'ü': 'ue',
-    'Ä': 'Ae', 'Ö': 'Oe', 'Ü': 'Ue',
-    'ß': 'ss', 'ẞ': 'SS'
+    'ä': 'ae', 'ö': 'oe', 'ü': 'ue', 'ß': 'ss'
   };
   
-  let normalized = str;
   Object.keys(umlautMap).forEach(key => {
     normalized = normalized.replace(new RegExp(key, 'g'), umlautMap[key]);
   });
   
-  // スペースや特殊文字を削除（英数字とハイフンのみ残す）
-  normalized = normalized.replace(/[^a-zA-Z0-9\-]/g, '');
+  // スペースをハイフンに置換（URLハッシュ対応）
+  normalized = normalized.replace(/\s+/g, '-');
   
-  return normalized;
+  // 英数字とハイフンのみ残し、他を削除
+  normalized = normalized.replace(/[^a-z0-9\-]/g, '');
+  
+  // 連続するハイフンを1つに
+  normalized = normalized.replace(/-+/g, '-');
+  
+  return normalized.trim().replace(/^-+|-+$/g, '');
 }
 
 /**
@@ -132,9 +137,9 @@ function generateDicListHtmlExp(dicData) {
       prevLetter = currentLetter;
     }
     
-    // 個別用語用のIDを生成（半角スペースを含まない場合のみ）
+    // 個別用語用のIDを生成（スペースを含む場合も対応）
     let termId = '';
-    if (german && typeof german === 'string' && !german.includes(' ')) {
+    if (german && typeof german === 'string') {
       const normalizedId = normalizeForId(german);
       if (normalizedId) {
         // anchorIdがある場合は両方設定できないので、data属性として保持
@@ -515,8 +520,8 @@ function generateDicTermsIndex(dicData) {
   dicData.forEach(row => {
     const [german] = row;
     
-    // 半角スペースを含まない単語のみ
-    if (german && typeof german === 'string' && !german.includes(' ')) {
+    // ドイツ語単語が存在する場合にIDを生成
+    if (german && typeof german === 'string') {
       const normalizedId = normalizeForId(german);
       if (normalizedId) {
         const key = german.toLowerCase();

@@ -53,6 +53,17 @@ function doGet(e) {
         };
         break;
         
+      case "exportDicExperimental":
+        Logger.log("Starting exportExperimentalDicHtml...");
+        exportExperimentalDicHtml();
+        Logger.log("exportExperimentalDicHtml completed");
+        result = {
+          success: true,
+          message: "dic_experimental.html exported and pushed to GitHub successfully",
+          timestamp: new Date().toISOString()
+        };
+        break;
+        
       case "ping":
         // 接続テスト用
         result = {
@@ -66,7 +77,7 @@ function doGet(e) {
         result = {
           success: false,
           error: "Unknown action: " + action,
-          availableActions: ["exportDic", "ping"]
+          availableActions: ["exportDic", "exportDicExperimental", "ping"]
         };
     }
     
