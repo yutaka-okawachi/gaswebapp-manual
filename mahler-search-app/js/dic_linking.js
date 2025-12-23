@@ -58,41 +58,94 @@
     function normalizeGerman(text) {
         if (!text || typeof text !== 'string') return '';
         
-        return text
-            .toLowerCase()
+        let normalized = text.toLowerCase()
             .replace(/ä/g, 'ae')
             .replace(/ö/g, 'oe')
             .replace(/ü/g, 'ue')
             .replace(/ß/g, 'ss')
-            .trim();
+            .replace(/\s+/g, '-'); // スペースをハイフンに置換
+            
+        // GAS側の normalizeForId と完全に一致させる
+        // 英数字とハイフンのみを残す
+        normalized = normalized.split('').map(char => {
+            if (/[a-z0-9\-]/.test(char)) return char;
+            return '';
+        }).join('');
+
+        return normalized
+            .replace(/-+/g, '-')   // 連続するハイフンをまとめる
+            .trim()
+            .replace(/^-+|-+$/g, ''); // 先頭と末尾のハイフンを除去
     }
     
     /**
-     * 単一のドイツ語テキストをリンク化する
+     * 単一のドイツ語テキストまたはテキスト内の単語をリンク化する
      * 
      * @param {string} text - ドイツ語テキスト
-     * @return {string} リンク化されたHTML（該当する場合）または元のテキスト
+     * @return {string} リンク化されたHTML
      */
     function linkGermanTextToDic(text) {
         if (!text || !window.dicLinkingEnabled || !window.dicTermsIndex) {
-            return text;
+            return escapeHtml(text);
         }
         
-        // 半角スペースを含む場合はリンク化しない（長い文章を除外）
-        if (text.includes(' ')) {
-            return text;
+        // 記号やスペースを保持したままトークン化
+        // 分割ルール：スペース、括弧、引用符、コロン、セミコロン、カンマ、ドット（ただし直後に数字がない場合）
+        const tokens = text.split(/(\s+|[()\[\]{}'":;,]|(?<!\d)\.(?!\d))/);
+        
+        let resultHtml = '';
+        let i = 0;
+        
+        while (i < tokens.length) {
+            const token = tokens[i];
+            
+            // 区切り文字や空文字はそのまま追加
+            if (!token || /^\s+|[()\[\]{}'":;,.]/.test(token)) {
+                resultHtml += escapeHtml(token);
+                i++;
+                continue;
+            }
+            
+            // 最長一致（Greedy Match）を試みる
+            let longestMatch = null;
+            let tokensToConsume = 1;
+            let currentPhrase = token;
+            
+            // 1. まず現在のトークン単体を確認
+            const normalizedToken = normalizeGerman(token);
+            if (window.dicTermsIndex[normalizedToken]) {
+                longestMatch = {
+                    id: window.dicTermsIndex[normalizedToken],
+                    text: currentPhrase
+                };
+            }
+            
+            // 2. 先読みして長いフレーズを探す（最大5トークン先まで）
+            let lookAheadStr = currentPhrase;
+            for (let j = 1; j <= 8 && (i + j) < tokens.length; j++) {
+                lookAheadStr += tokens[i + j];
+                const normalizedPhrase = normalizeGerman(lookAheadStr);
+                
+                // フレーズが辞書にあるか確認
+                if (window.dicTermsIndex[normalizedPhrase]) {
+                    longestMatch = {
+                        id: window.dicTermsIndex[normalizedPhrase],
+                        text: lookAheadStr
+                    };
+                    tokensToConsume = j + 1;
+                }
+            }
+            
+            if (longestMatch) {
+                resultHtml += `<a href="dic_experimental.html#${longestMatch.id}" title="用語集で確認: ${escapeHtml(longestMatch.text)}" class="dic-link">${escapeHtml(longestMatch.text)}</a>`;
+                i += tokensToConsume;
+            } else {
+                resultHtml += escapeHtml(token);
+                i++;
+            }
         }
         
-        // 用語インデックスと照合（小文字で）
-        const normalizedText = normalizeGerman(text);
-        const termId = window.dicTermsIndex[normalizedText];
-        
-        if (termId) {
-            // リンクを作成
-            return `<a href="dic_experimental.html#${termId}" title="用語集で確認" class="dic-link">${escapeHtml(text)}</a>`;
-        }
-        
-        return escapeHtml(text);
+        return resultHtml;
     }
     
     /**
@@ -163,6 +216,46 @@
     }
     
     /**
+     * 動的に追加される検索結果を監視する MutationObserver
+     */
+    function setupMutationObserver() {
+        // すでに監視中の場合は何もしない
+        if (window.dicObserver) {
+            return;
+        }
+
+        console.log('[DicLinking] Setting up MutationObserver...');
+        
+        const observer = new MutationObserver((mutations) => {
+            let shouldApply = false;
+            for (const mutation of mutations) {
+                if (mutation.addedNodes.length > 0) {
+                    shouldApply = true;
+                    break;
+                }
+            }
+            
+            if (shouldApply) {
+                // 大量のノードが追加された場合のパフォーマンスを考慮し、少し遅延させて実行
+                if (window.dicLinkTimeout) {
+                    clearTimeout(window.dicLinkTimeout);
+                }
+                window.dicLinkTimeout = setTimeout(() => {
+                    applyDicLinksToPage();
+                }, 100);
+            }
+        });
+
+        // body全体を監視（検索結果のコンテナがページによって異なるため）
+        observer.observe(document.body, {
+            childList: true,
+            subtree: true
+        });
+        
+        window.dicObserver = observer;
+    }
+    
+    /**
      * 改行を含むテキストを処理する場合（将来の拡張用）
      * 
      * 現在は使用していないが、複数行のドイツ語テキストを処理する必要がある場合に使用
@@ -184,11 +277,17 @@
     // ページ読み込み時に初期化
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', function() {
-            initDicLinking();
+            initDicLinking().then(() => {
+                applyDicLinksToPage();
+                setupMutationObserver();
+            });
         });
     } else {
         // DOMContentLoadedが既に発火している場合
-        initDicLinking();
+        initDicLinking().then(() => {
+            applyDicLinksToPage();
+            setupMutationObserver();
+        });
     }
     
     console.log('[DicLinking] Script loaded');

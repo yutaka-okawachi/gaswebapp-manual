@@ -524,7 +524,7 @@ function generateDicTermsIndex(dicData) {
     if (german && typeof german === 'string') {
       const normalizedId = normalizeForId(german);
       if (normalizedId) {
-        const key = german.toLowerCase();
+        const key = normalizedId; // normalizedIdそのものをキーとして使用
         // 重複がある場合は最初の出現を優先
         if (!termsIndex[key]) {
           termsIndex[key] = `term-${normalizedId}`;
