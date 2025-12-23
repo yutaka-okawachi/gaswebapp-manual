@@ -17,6 +17,8 @@
     <title>用語から検索 (GM)</title>
     <link rel="stylesheet" href="css/common.css">
     <script src="js/app.js?v=8"></script>
+    <!-- 実験用：用語集リンク機能 -->
+    <script src="js/dic_linking.js"></script>
 
     <script>
         /*******************************************************************
@@ -272,6 +274,11 @@
                 resultsDiv.innerHTML = html;
                 if (typeof focusResultsPanel === 'function') {
                     focusResultsPanel({ instant: true });
+                }
+                
+                // 実験用：用語集へのリンクを適用
+                if (typeof applyDicLinksToPage === 'function') {
+                    setTimeout(() => applyDicLinksToPage(), 50);
                 }
 
                 // Send notification

@@ -228,3 +228,98 @@ function exportAllDataToJson() {
         throw error;
     }
 }
+
+/**
+ * 実験用：dic_experimental.html と dic_terms_index.json を生成してGitHubへプッシュ
+ * 
+ * この関数は実験用のため、本番用の exportAllDataToJson() には影響しません。
+ * 手動でGoogle Sheetsのカスタムメニューから実行するか、clasp run で実行してください。
+ * 
+ * 生成されるファイル：
+ * - mahler-search-app/dic_experimental.html: 個別用語IDが付与された実験版dic.html
+ * - mahler-search-app/data/dic_terms_index.json: リンク用の用語インデックス
+ */
+function exportExperimentalDicHtml() {
+    const ss = SpreadsheetApp.openById(SPREADSHEET_ID);
+    
+    Logger.log('=== 実験用dic.htmlを生成中 ===');
+    
+    // Dictionary Notes (Notes sheet)
+    const dicNotesSheet = ss.getSheetByName('Notes');
+    let dicNotesJson = [];
+    if (dicNotesSheet) {
+        const data = dicNotesSheet.getDataRange().getValues();
+        dicNotesJson = data.slice(1).map(row => [row[0], row[1], row[2]]);
+    }
+    
+    // Abbreviation List (略記一覧)
+    const abbrSheet = ss.getSheetByName('略記一覧');
+    let abbrJson = [];
+    if (abbrSheet) {
+        const data = abbrSheet.getDataRange().getValues();
+        abbrJson = data.slice(1).map(row => [row[0], row[1], row[2]]);
+    }
+    
+    // 実験版dic.htmlを生成
+    const dicExpHtml = generateDicHtmlExperimental(dicNotesJson, abbrJson);
+    Logger.log('dic_experimental.html生成完了: ' + Math.round(dicExpHtml.length / 1024) + ' KB');
+    
+    // 用語インデックスを生成（リンク用）
+    const termsIndex = generateDicTermsIndex(dicNotesJson);
+    Logger.log('用語インデックス生成完了: ' + Object.keys(termsIndex).length + ' 件の用語');
+    
+    // GitHubへプッシュするファイル
+    const files = {
+        'mahler-search-app/dic_experimental.html': dicExpHtml,
+        'mahler-search-app/data/dic_terms_index.json': termsIndex
+    };
+    
+    const timestamp = new Date().toLocaleString('ja-JP', { timeZone: 'Asia/Tokyo' });
+    const commitMessage = `実験: 用語集リンク機能のための実験版ファイルを追加 [${timestamp}]`;
+    
+    Logger.log('=== GitHubへ実験用ファイルをプッシュ中 ===');
+    
+    try {
+        const result = pushToGitHub(files, commitMessage);
+        
+        Logger.log('=== 完了 ===');
+        Logger.log(`成功: ${result.success.length} ファイル`);
+        Logger.log(`失敗: ${result.failed.length} ファイル`);
+        
+        if (result.success.length > 0) {
+            Logger.log('\n✓ 成功したファイル:');
+            result.success.forEach(path => Logger.log(`  - ${path}`));
+        }
+        
+        if (result.failed.length > 0) {
+            Logger.log('\n✗ 失敗したファイル:');
+            result.failed.forEach(f => Logger.log(`  - ${f.path}: ${f.error}`));
+        }
+        
+        // ユーザーへの通知
+        if (result.success.length === result.total) {
+            SpreadsheetApp.getActiveSpreadsheet().toast(
+                `実験用ファイル（${result.total}個）をGitHubへプッシュしました`,
+                '✓ 実験用エクスポート完了',
+                5
+            );
+        } else {
+            SpreadsheetApp.getActiveSpreadsheet().toast(
+                `${result.success.length}/${result.total}個のファイルをプッシュしました（${result.failed.length}個失敗）`,
+                '⚠️ 一部失敗',
+                10
+            );
+        }
+        
+        return result;
+        
+    } catch (error) {
+        Logger.log('✗ エラー: ' + error.message);
+        SpreadsheetApp.getActiveSpreadsheet().toast(
+            'エラー: ' + error.message,
+            '✗ 失敗',
+            10
+        );
+        throw error;
+    }
+}
