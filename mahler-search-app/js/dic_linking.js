@@ -174,11 +174,11 @@
         try {
             console.log('[DicLinking] Applying links to page...');
             
-            // .result-a クラスの要素を取得（ドイツ語原文）
-            const germanElements = document.querySelectorAll('.result-a');
+            // Mahlerページは .result-a、Wagner/Straussページは .result-de を使用
+            const germanElements = document.querySelectorAll('.result-a, .result-de');
             
             if (germanElements.length === 0) {
-                console.log('[DicLinking] No .result-a elements found');
+                console.log('[DicLinking] No .result-a or .result-de elements found');
                 return;
             }
             
