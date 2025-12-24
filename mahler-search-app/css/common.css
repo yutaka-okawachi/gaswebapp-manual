@@ -524,3 +524,26 @@ button.clear-input-btn:hover {
 .search-result-item:last-child {
     border-bottom: none;
 }
+
+/* Dictionary Term Link Styling */
+.term-link {
+    color: #0066cc;
+    text-decoration: none;
+    border-bottom: 1px dotted #0066cc;
+    transition: all 0.2s ease;
+}
+
+.term-link:hover {
+    color: #0044aa;
+    border-bottom-color: #0044aa;
+}
+
+/* Target Highlight Animation */
+:target {
+    animation: highlightFade 3s ease-out;
+}
+
+@keyframes highlightFade {
+    0% { background-color: #ffeb3b; }
+    100% { background-color: transparent; }
+}
