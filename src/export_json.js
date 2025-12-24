@@ -162,7 +162,7 @@ function exportAllDataToJson() {
 
     // 9. Generate dic.html (静的HTML生成 - リンク機能付き)
     Logger.log('=== dic.htmlを生成中（リンク機能付き） ===');
-    const dicHtml = generateDicHtmlExperimental(dicNotesJson, abbrJson);
+    const dicHtml = generateDicHtml(dicNotesJson, abbrJson);
     Logger.log('dic.html生成完了: ' + Math.round(dicHtml.length / 1024) + ' KB');
     
     // 10. 用語インデックスを生成

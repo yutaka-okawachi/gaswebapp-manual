@@ -1,7 +1,108 @@
 /**
  * dic.html 静的HTML生成スクリプト
  * スプレッドシートのデータから完全なHTMLファイルを生成
+ * リンク機能付き版
  */
+
+// --- リンク生成関数 ---
+
+/**
+ * 用語をID用の文字列に正規化する
+ * @param {string} term - ドイツ語用語
+ * @return {string} 正規化されたID文字列
+ */
+function normalizeForId(term) {
+  if (!term) return '';
+  let id = term.toLowerCase().trim();
+  // ウムラウトの変換
+  id = id.replace(/ä/g, 'ae').replace(/ö/g, 'oe').replace(/ü/g, 'ue').replace(/ß/g, 'ss');
+  // 非英数字をハイフンに置換
+  id = id.replace(/[^a-z0-9]+/g, '-');
+  // 先頭・末尾のハイフンを削除
+  id = id.replace(/^-+|-+$/g, '');
+  return id;
+}
+
+/**
+ * 用語インデックスを生成
+ * @param {Array} dicData - 用語データ [[german, translation, source], ...]
+ * @return {Object} 用語インデックス（正規化キー → ID）
+ */
+function generateDicTermsIndex(dicData) {
+  const termsIndex = {};
+  if (!dicData || dicData.length === 0) return termsIndex;
+  
+  dicData.forEach(row => {
+    const [german] = row;
+    if (german && typeof german === 'string') {
+      const normalizedId = normalizeForId(german);
+      if (normalizedId && !termsIndex[normalizedId]) {
+        termsIndex[normalizedId] = `term-${normalizedId}`;
+      }
+    }
+  });
+  
+  return termsIndex;
+}
+
+/**
+ * 正規化された用語から正規表現パターンを生成
+ * @param {string} normalizedTerm - 正規化された用語
+ * @return {string} 正規表現パターン
+ */
+function generateTermPattern(normalizedTerm) {
+  if (!normalizedTerm) return null;
+  let pattern = normalizedTerm;
+  pattern = pattern.split('ae').join('(?:ae|ä)');
+  pattern = pattern.split('oe').join('(?:oe|ö)');
+  pattern = pattern.split('ue').join('(?:ue|ü)');
+  pattern = pattern.split('ss').join('(?:ss|ß)');
+  pattern = pattern.split('-').join('[\\s\\-]?');
+  return pattern;
+}
+
+/**
+ * テキスト内の辞書用語をリンクに変換する
+ * @param {string} text - 変換対象のテキスト
+ * @param {Object} termsIndex - 用語インデックス（正規化キー → ID）
+ * @return {string} リンク付きHTML
+ */
+function linkTermsInTranslation(text, termsIndex) {
+  if (!text || !termsIndex || Object.keys(termsIndex).length === 0) {
+    return escapeHtmlWithBreaks(text);
+  }
+  
+  let escaped = escapeHtml(text);
+  const terms = Object.keys(termsIndex).sort((a, b) => b.length - a.length);
+  const placeholders = [];
+  
+  terms.forEach((term) => {
+    if (term.length < 3) return;
+    const termId = termsIndex[term];
+    const termPattern = generateTermPattern(term);
+    if (!termPattern) return;
+    
+    try {
+      const regex = new RegExp(`(?<![a-zA-Z0-9äöüßÄÖÜ])(${termPattern})(?![a-zA-Z0-9äöüßÄÖÜ])`, 'gi');
+      escaped = escaped.replace(regex, (match) => {
+        const placeholder = `__PLACEHOLDER_${placeholders.length}__`;
+        placeholders.push({
+          placeholder: placeholder,
+          content: `<a href="#${termId}" class="term-link">${match}</a>`
+        });
+        return placeholder;
+      });
+    } catch (e) {
+      // Ignore invalid regex
+    }
+  });
+  
+  placeholders.forEach(p => {
+    escaped = escaped.replace(p.placeholder, p.content);
+  });
+  
+  return escaped.replace(/\n/g, '<br>');
+}
 
 /**
  * HTMLエスケープ関数
@@ -77,11 +178,12 @@ function sortDicData(data) {
 }
 
 /**
- * 用語リストのHTMLを生成
+ * 用語リストのHTMLを生成（リンク機能付き）
  * @param {Array} dicData - 用語データ [[german, translation, source], ...]
+ * @param {Object} termsIndex - 用語インデックス（正規化キー → ID）
  * @return {string} 生成されたHTML
  */
-function generateDicListHtml(dicData) {
+function generateDicListHtml(dicData, termsIndex) {
   if (!dicData || dicData.length === 0) {
     return '<div class="result-message">データが存在しません。</div>';
   }
@@ -99,19 +201,26 @@ function generateDicListHtml(dicData) {
     
     const currentLetter = getSortLetter(german);
     
-    // 最初の出現時にIDを追加
+    // 最初の出現時にアルファベットIDを追加
     let anchorId = '';
     if (currentLetter !== prevLetter && (currentLetter === 'OTHER' || (currentLetter >= 'A' && currentLetter <= 'Z'))) {
       anchorId = ` id="letter-${currentLetter}"`;
       prevLetter = currentLetter;
     }
     
+    // 個別用語のID生成
+    const termId = german ? normalizeForId(german) : '';
+    const termIdAttr = termId ? (anchorId ? ` data-term-id="term-${termId}"` : ` id="term-${termId}"`) : '';
+    
+    // translationにリンクを適用
+    const linkedTranslation = termsIndex ? linkTermsInTranslation(translation, termsIndex) : escapeHtmlWithBreaks(translation);
+    
     // rowのHTML生成
-    html += `<div class="row"${anchorId}>
+    html += `<div class="row"${anchorId}${termIdAttr}>
   <div>
     <span class="german">${escapeHtml(german)}</span><span class="source">${escapeHtml(source)}</span>
   </div>
-  <div class="translation">${escapeHtmlWithBreaks(translation)}</div>
+  <div class="translation">${linkedTranslation}</div>
 </div>\n`;
   });
   
@@ -148,13 +257,16 @@ function generateAbbrListHtml(abbrData) {
 }
 
 /**
- * 完全なdic.htmlを生成
+ * 完全なdic.htmlを生成（リンク機能付き）
  * @param {Array} dicData - 用語データ
  * @param {Array} abbrData - 略記データ
  * @return {string} 完全なHTMLファイルの内容
  */
 function generateDicHtml(dicData, abbrData) {
-  const dicListHtml = generateDicListHtml(dicData);
+  // 用語インデックスを生成
+  const termsIndex = generateDicTermsIndex(dicData);
+  
+  const dicListHtml = generateDicListHtml(dicData, termsIndex);
   const abbrListHtml = generateAbbrListHtml(abbrData);
   
   // タイムスタンプをコメントに追加
