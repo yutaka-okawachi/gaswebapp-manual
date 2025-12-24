@@ -553,6 +553,85 @@ function linkTermsInTranslation(text, termsIndex) {
     return escaped.replace(/\n/g, '<br>');
 }
 
+// --- Dictionary Link Functions ---
+
+/**
+ * 用語をID用の文字列に正規化する
+ * @param {string} term - ドイツ語用語
+ * @return {string} 正規化されたID文字列
+ */
+function normalizeForId(term) {
+    if (!term) return '';
+    let id = term.toLowerCase().trim();
+    // ウムラウトの変換
+    id = id.replace(/ä/g, 'ae').replace(/ö/g, 'oe').replace(/ü/g, 'ue').replace(/ß/g, 'ss');
+    // 非英数字をハイフンに置換
+    id = id.replace(/[^a-z0-9]+/g, '-');
+    // 先頭・末尾のハイフンを削除
+    id = id.replace(/^-+|-+$/g, '');
+    return id;
+}
+
+/**
+ * 正規化された用語から正規表現パターンを生成
+ * @param {string} normalizedTerm - 正規化された用語
+ * @return {string} 正規表現パターン
+ */
+function generateTermPattern(normalizedTerm) {
+    if (!normalizedTerm) return null;
+    let pattern = normalizedTerm;
+    // 正規化されたaeをä|aeなどにマッチするパターンに変換
+    pattern = pattern.split('ae').join('(?:ae|ä)');
+    pattern = pattern.split('oe').join('(?:oe|ö)');
+    pattern = pattern.split('ue').join('(?:ue|ü)');
+    pattern = pattern.split('ss').join('(?:ss|ß)');
+    pattern = pattern.split('-').join('[\\s\\-]?');
+    return pattern;
+}
+
+/**
+ * テキスト内の辞書用語をリンクに変換する
+ * @param {string} text - 変換対象のテキスト
+ * @param {Object} termsIndex - 用語インデックス（正規化キー → ID）
+ * @return {string} リンク付きHTML
+ */
+function linkTermsInTranslation(text, termsIndex) {
+    if (!text || !termsIndex || Object.keys(termsIndex).length === 0) {
+        return escapeHtmlWithBreaks(text);
+    }
+    
+    let escaped = escapeHtml(text);
+    const terms = Object.keys(termsIndex).sort((a, b) => b.length - a.length);
+    const placeholders = [];
+    
+    terms.forEach((term) => {
+        if (term.length < 3) return;
+        const termId = termsIndex[term];
+        const termPattern = generateTermPattern(term);
+        if (!termPattern) return;
+        
+        try {
+            const regex = new RegExp(`(?<![a-zA-Z0-9äöüßÄÖÜ])(${termPattern})(?![a-zA-Z0-9äöüßÄÖÜ])`, 'gi');
+            escaped = escaped.replace(regex, (match) => {
+                const placeholder = `__PLACEHOLDER_${placeholders.length}__`;
+                placeholders.push({
+                    placeholder: placeholder,
+                    content: `<a href="dic.html#${termId}" class="term-link">${match}</a>`
+                });
+                return placeholder;
+            });
+        } catch (e) {
+            // Ignore invalid regex
+        }
+    });
+    
+    placeholders.forEach(p => {
+        escaped = escaped.replace(p.placeholder, p.content);
+    });
+    
+    return escaped.replace(/\n/g, '<br>');
+}
+
 function formatGenericResults(data) {
     if (data.length === 0) {
         return '<div class="result-message">該当するデータが見つかりませんでした。</div>';
