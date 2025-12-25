@@ -115,14 +115,46 @@
 </head>
 
 <body>
-    <div id="fixedHeader">
-        <div class="home-link" style="padding: 5px 10px;"><a href="home.html">HOME</a></div>
-        <h1>各用語についてのコメント</h1>
-    </div>
+    <!-- サイドバーナビゲーション -->
+    <nav class="sidebar" id="sidebar">
+        <h3>Richard Wagner (RW)</h3>
+        <ul>
+            <li><a href="richard_wagner.html">曲名から検索</a></li>
+            <li><a href="rw_terms_search.html">用語から検索</a></li>
+        </ul>
 
-    <div id="top"></div>
+        <h3>Gustav Mahler (GM)</h3>
+        <ul>
+            <li><a href="index.html">曲名と楽器等から検索</a></li>
+            <li><a href="terms_search.html">用語から検索</a></li>
+        </ul>
 
-    <div class="container">
+        <h3>Richard Strauss (RS)</h3>
+        <ul>
+            <li><a href="richard_strauss.html">曲名から検索</a></li>
+            <li><a href="rs_terms_search.html">用語から検索</a></li>
+        </ul>
+
+        <h3>用語集</h3>
+        <ul>
+            <li><a href="dic.html">用語集ページ</a></li>
+        </ul>
+
+        <h3>その他</h3>
+        <ul>
+            <!-- 今後追加予定 -->
+        </ul>
+    </nav>
+
+    <div class="page-wrapper">
+        <div id="fixedHeader">
+            <div class="home-link" style="padding: 5px 10px; margin-bottom: 0;"><a href="home.html">HOME</a></div>
+            <h1>各用語についてのコメント</h1>
+        </div>
+
+        <div id="top"></div>
+
+        <div class="container">
         <div id="notesContainer">
             <div class="loading">表示中・・・</div>
         </div>
@@ -141,6 +173,8 @@
     </div>
 
     <div id="scrollToTop" onclick="scrollToTop()">▲ ページのトップへ戻る</div>
+        </div>
+    </div>
 </body>
 
 </html>

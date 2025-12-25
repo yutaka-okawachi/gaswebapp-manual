@@ -20,9 +20,41 @@
 </head>
 
 <body>
-    <div class="container">
-        <div class="home-link"><a href="home.html">HOME</a></div>
-        <h1>曲名から検索 (RS)</h1>
+    <!-- サイドバーナビゲーション -->
+    <nav class="sidebar" id="sidebar">
+        <h3>Richard Wagner (RW)</h3>
+        <ul>
+            <li><a href="richard_wagner.html">曲名から検索</a></li>
+            <li><a href="rw_terms_search.html">用語から検索</a></li>
+        </ul>
+
+        <h3>Gustav Mahler (GM)</h3>
+        <ul>
+            <li><a href="index.html">曲名と楽器等から検索</a></li>
+            <li><a href="terms_search.html">用語から検索</a></li>
+        </ul>
+
+        <h3>Richard Strauss (RS)</h3>
+        <ul>
+            <li><a href="richard_strauss.html">曲名から検索</a></li>
+            <li><a href="rs_terms_search.html">用語から検索</a></li>
+        </ul>
+
+        <h3>用語集</h3>
+        <ul>
+            <li><a href="dic.html">用語集ページ</a></li>
+        </ul>
+
+        <h3>その他</h3>
+        <ul>
+            <!-- 今後追加予定 -->
+        </ul>
+    </nav>
+
+    <div class="page-wrapper">
+        <div class="container">
+            <div class="home-link"><a href="home.html">HOME</a></div>
+            <h1>曲名から検索 (RS)</h1>
         <p style="text-align: center;"><span style="font-size: 0.9rem;">Richard Strauss の管弦楽曲については</span><a href="dic.html" target="_blank" style="font-size: 1.2rem; font-weight: bold; color: var(--button-bg); text-decoration: none; border-bottom: 2px solid transparent; transition: all 0.2s ease;">用語集</a><span style="font-size: 0.9rem;">のページを参照</span></p>
         <p>オーケストラに対する指示で Gustav Mahler の用語検索ページで何とかなりそうなものは基本的に不記載．</p>
         <div class="big-label">曲を選択</div>
@@ -92,6 +124,8 @@
     </div>
 
     <div id="scrollToTop" onclick="scrollToTop()">▲ ページのトップへ戻る</div>
+        </div>
+    </div>
 </body>
 
 </html>
