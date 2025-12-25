@@ -1,23 +1,24 @@
 ﻿<!DOCTYPE html>
 <html lang="ja">
+
 <head>
     <!-- Google Search Console Verification -->
     <meta name="google-site-verification" content="oMTfhSgc1nOrF9dVnBCR_YGcwCDYlrqNmyYn-UJuBJc" />
-    
+
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZT6MPW5MNG"></script>
     <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-ZT6MPW5MNG');
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+        gtag('config', 'G-ZT6MPW5MNG');
     </script>
-    
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="マーラー、ワーグナー、R.シュトラウス作品の用語検索・翻訳支援サイト。楽譜中のドイツ語用語を日本語で検索できます。">
     <title>マーラー・ワーグナー・シュトラウス 用語検索</title>
-    
+
     <link rel="stylesheet" href="css/common.css">
     <style>
         /* home.html固有の追加スタイルがあればここに記述 */
@@ -25,13 +26,13 @@
             max-width: 700px;
             padding: 50px;
         }
-        
+
         h2 {
             font-size: 1.3rem;
             margin-top: 40px;
             margin-bottom: 12px;
         }
-        
+
         .note {
             margin-top: 20px;
             margin-bottom: 30px;
@@ -44,7 +45,7 @@
             color: #000;
             text-decoration: underline;
         }
-        
+
         .page-wrapper a:hover {
             text-decoration: none;
         }
@@ -56,10 +57,11 @@
         }
     </style>
 </head>
+
 <body class="home-page">
     <!-- ハンバーガーメニューボタン（スマホのみ） -->
     <button class="nav-toggle" onclick="toggleNav()">☰ メニュー</button>
-    
+
     <!-- サイドバーナビゲーション -->
     <nav class="sidebar" id="sidebar">
         <!-- HomeページではCSSにより非表示になります -->
@@ -68,34 +70,36 @@
             <li><a href="richard_wagner.html">曲名から検索</a></li>
             <li><a href="rw_terms_search.html">用語から検索</a></li>
         </ul>
-        
+
         <h3>Gustav Mahler (GM)</h3>
         <ul>
             <li><a href="index.html">曲名と楽器等から検索</a></li>
             <li><a href="terms_search.html">用語から検索</a></li>
         </ul>
-        
+
         <h3>Richard Strauss (RS)</h3>
         <ul>
             <li><a href="richard_strauss.html">曲名から検索</a></li>
             <li><a href="rs_terms_search.html">用語から検索</a></li>
         </ul>
-        
+
         <h3>用語集</h3>
         <ul>
             <li><a href="dic.html">用語集ページ</a></li>
         </ul>
-        
+
         <h3>その他</h3>
         <ul>
             <!-- 今後追加予定 -->
         </ul>
     </nav>
-    
+
     <!-- メインコンテンツ -->
     <div class="page-wrapper">
         <div class="container">
-            <h1 style="text-align: center; margin-bottom: 40px; color: var(--text-color); font-size: 2.2rem; border-bottom: 3px solid var(--button-bg); display: inline-block; padding-bottom: 15px; width: 100%; font-family: 'Lora', serif;">🎶 ドイツ語の音楽用語</h1>
+            <h1
+                style="text-align: center; margin-bottom: 40px; color: var(--text-color); font-size: 1.8rem; border-bottom: 3px solid var(--button-bg); display: inline-block; padding-bottom: 15px; width: 100%; font-family: 'Lora', serif;">
+                ドイツ語の音楽用語</h1>
 
             <div class="section-card card-rw">
                 <h2>Richard Wagner (RW)</h2>
@@ -120,11 +124,15 @@
                     <li><a href="rs_terms_search.html">📑 用語から検索</a></li>
                 </ul>
             </div>
+            <div class="note">
+                <p>⚠️ RW，RSのページでは主に舞台指示および声楽に対する指示が含まれている．オーケストラに対する指示で GM の用語検索ページで何とかなりそうなものや，イタリア語，フランス語は基本的に不採用</p>
+                <p style="margin-top: 10px;">🚫 歌詞には非対応．僅かに訳が数多く出回っているのでそちらを参照</p>
+            </div>
 
             <div class="section-card card-dic">
                 <h2>用語集</h2>
                 <div class="note">
-                    <p><strong>📖 収録作曲家</strong></p>
+                    <p><strong>📖 収録している作曲家は以下．気になった用語を集めただけであり，採用している用語，出典は網羅的ではない．</strong></p>
                     <ul style="margin-top: 10px; padding-left: 20px; list-style: disc;">
                         <li style="margin-bottom: 5px;">RW, GM, RS</li>
                         <li style="margin-bottom: 5px;">Anton Bruckner</li>
@@ -132,12 +140,9 @@
                         <li style="margin-bottom: 5px;">Sigfrid Karg-Elert</li>
                     </ul>
                 </div>
-                <div class="note">
-                    <p>⚠️ RW，RSのページでは主に舞台指示および声楽に対する指示が含まれている．オーケストラに対する指示で GM の用語検索ページで何とかなりそうなものや，イタリア語，フランス語は基本的に不採用</p>
-                    <p style="margin-top: 10px;">🚫 歌唱には非対応．僅かに訳が数多く出回っているのでそちらを参照</p>
-                </div>
                 <ul>
-                    <li><a href="dic.html" style="font-weight: bold; font-size: 1.1rem; color: var(--color-dic);">👉 用語集ページへ</a></li>
+                    <li><a href="dic.html" style="font-weight: bold; font-size: 1.1rem; color: var(--color-dic);">👉
+                            用語集ページへ</a></li>
                 </ul>
             </div>
 
@@ -147,15 +152,15 @@
             </div>
         </div>
     </div>
-    
+
     <script>
         function toggleNav() {
             const sidebar = document.getElementById('sidebar');
             sidebar.classList.toggle('active');
         }
-        
+
         // サイドバー外をクリックしたら閉じる（スマホのみ）
-        document.addEventListener('click', function(event) {
+        document.addEventListener('click', function (event) {
             if (window.innerWidth <= 768) {
                 const sidebar = document.getElementById('sidebar');
                 const toggle = document.querySelector('.nav-toggle');
@@ -166,4 +171,5 @@
         });
     </script>
 </body>
+
 </html>
