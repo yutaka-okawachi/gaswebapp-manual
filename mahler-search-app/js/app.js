@@ -153,6 +153,12 @@ async function loadData(key) {
             window.appData.dic_terms_index = await fetchJson('data/dic_terms_index.json');
         }
     }
+    // Load dic_terms_index for Mahler search
+    if (key === 'mahler') {
+        if (!window.appData.dic_terms_index) {
+            window.appData.dic_terms_index = await fetchJson('data/dic_terms_index.json');
+        }
+    }
 }
 
 async function fetchJson(path) {
@@ -640,6 +646,7 @@ function linkTermsInTranslation(text, termsIndex) {
     return escaped.replace(/\n/g, '<br>');
 }
 
+
 function formatGenericResults(data) {
     if (data.length === 0) {
         return '<div class="result-message">該当するデータが見つかりませんでした。</div>';
@@ -697,8 +704,8 @@ function formatGenericResults(data) {
         }
 
         const pageDisplay = row.page ? `p.${row.page}` : '';
-        const de = escapeHtmlWithBreaks(row.de);
-        const ja = linkTermsInTranslation(row.ja, window.appData.dic_terms_index);
+        const de = linkTermsInTranslation(row.de, window.appData.dic_terms_index);
+        const ja = escapeHtmlWithBreaks(row.ja);
         const whom = escapeHtml(row.whom);
 
         html += `
