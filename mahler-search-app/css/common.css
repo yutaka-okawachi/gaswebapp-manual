@@ -26,6 +26,13 @@
     --placeholder-color: #aaa;
     --section-title-color: #1a73e8;
     --focus-ring-color: #1a73e8;
+
+    /* 作曲家別テーマカラー */
+    --color-rw: #e35d76; /* Wagner - Reddish */
+    --color-gm: #1a73e8; /* Mahler - Blue */
+    --color-rs: #ed6c02; /* Strauss - Orange */
+    --color-dic: #2e7d32; /* Dictionary - Green */
+    --color-other: #757575; /* Others - Grey */
 }
 
 * {
@@ -136,6 +143,17 @@
     }
 }
 
+/* Homeページ専用：サイドバーを常に隠す */
+.home-page .sidebar {
+    display: none;
+}
+.home-page .page-wrapper {
+    margin-left: 0;
+}
+.home-page .nav-toggle {
+    display: none; /* Homeではサイドバー不要なのでトグルも隠す */
+}
+
 @media (max-width: 600px) {
     h1 {
         font-size: 1.2rem;
@@ -195,6 +213,39 @@
     margin: 15px 0;
     border-radius: 0 8px 8px 0;
     font-size: 0.95rem;
+}
+
+/* カードバリエーション */
+.card-rw h2 { color: var(--color-rw); border-bottom-color: rgba(227, 93, 118, 0.2); }
+.card-rw h2::before { color: var(--color-rw); }
+.card-rw .note { border-left-color: var(--color-rw); }
+
+.card-gm h2 { color: var(--color-gm); border-bottom-color: rgba(26, 115, 232, 0.2); }
+.card-gm h2::before { color: var(--color-gm); }
+.card-gm .note { border-left-color: var(--color-gm); }
+
+.card-rs h2 { color: var(--color-rs); border-bottom-color: rgba(237, 108, 2, 0.2); }
+.card-rs h2::before { color: var(--color-rs); }
+.card-rs .note { border-left-color: var(--color-rs); }
+
+.card-dic h2 { color: var(--color-dic); border-bottom-color: rgba(46, 125, 50, 0.2); }
+.card-dic h2::before { color: var(--color-dic); }
+.card-dic .note { border-left-color: var(--color-dic); }
+
+.card-other h2 { color: var(--color-other); border-bottom-color: rgba(117, 117, 117, 0.2); }
+.card-other h2::before { color: var(--color-other); }
+
+/* Homeページ用グリッドレイアウト */
+.home-page .container {
+    max-width: 1000px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 30px;
+    padding: 40px 20px;
+}
+
+.home-page h1 {
+    grid-column: 1 / -1;
 }
 
 /* セクションタイトルの強調 */
