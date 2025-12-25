@@ -78,6 +78,23 @@
     border-radius: 0;
 }
 
+.sidebar h3.sidebar-home {
+    border-bottom: 2px solid #3498db;
+    margin-bottom: 20px;
+}
+
+.sidebar h3.sidebar-home a {
+    color: #fff;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.sidebar h3.sidebar-home a:hover {
+    color: #3498db;
+}
+
 .sidebar ul {
     list-style: none;
     margin-bottom: 25px;
@@ -156,8 +173,30 @@
 
 @media (max-width: 600px) {
     h1 {
-        font-size: 1.2rem;
+        font-size: 1.5rem;
     }
+}
+
+h1 {
+    text-align: center;
+    margin: 30px auto 40px;
+    color: var(--text-color);
+    font-size: 2rem;
+    position: relative;
+    padding-bottom: 15px;
+    font-family: 'Lora', serif;
+    letter-spacing: 0.05em;
+    max-width: fit-content;
+}
+
+h1::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 10%;
+    right: 10%;
+    height: 3px;
+    background: linear-gradient(to right, transparent, var(--button-bg), transparent);
 }
 
 /* ホームページのセクションカード */
@@ -238,14 +277,27 @@
 /* Homeページ用グリッドレイアウト */
 .home-page .container {
     max-width: 1000px;
+    margin: 0 auto; /* センタリング */
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
     gap: 30px;
-    padding: 40px 20px;
+    padding: 40px 30px; /* 左右パディングを少し広げる */
 }
 
 .home-page h1 {
     grid-column: 1 / -1;
+}
+
+.container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 30px 40px;
+}
+
+@media (max-width: 768px) {
+    .container {
+        padding: 20px 20px;
+    }
 }
 
 /* セクションタイトルの強調 */
