@@ -673,9 +673,8 @@ function formatGenericResults(data) {
 
     let html = '';
 
-    // Add score info at the top (once)
     if (data[0] && data[0].hasOwnProperty('楽譜情報') && data[0]['楽譜情報']) {
-        html += `<div style="background-color: #e3f2fd; padding: 10px; margin-bottom: 15px; border-radius: 5px; font-family: 'Lora', serif;">楽譜情報: ${escapeHtml(data[0]['楽譜情報'])}</div>`;
+        html += `<div class="score-info-banner">楽譜情報: ${escapeHtml(data[0]['楽譜情報'])}</div>`;
     }
 
     let prevAufzug = null;

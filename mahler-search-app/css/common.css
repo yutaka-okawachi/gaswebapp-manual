@@ -1,5 +1,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Lora:wght@400;500;600;700&display=swap');
 
+body {
+    font-family: 'Lora', 'Hiragino Kaku Gothic ProN', 'Meiryo', sans-serif;
+}
+
 /*
 * common_styles.html
 * 全ページで共通して使用される基本的なスタイルシート。
@@ -286,6 +290,19 @@ h1::after {
     font-size: 0.85rem;
     margin-top: 20px;
     opacity: 0.8;
+}
+
+/* 楽譜情報バナー */
+.score-info-banner {
+    background-color: #e3f2fd;
+    padding: 8px 12px;
+    margin-bottom: 15px;
+    border-radius: 5px;
+    font-family: 'Lora', serif;
+    font-size: 0.75rem; /* 小さく設定 */
+    line-height: 1.4;
+    color: #555;
+    border-left: 3px solid #1a73e8;
 }
 
 /* Homeページ用グリッドレイアウト */

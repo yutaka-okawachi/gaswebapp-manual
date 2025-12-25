@@ -272,7 +272,7 @@ function searchRichardWagnerByScene(operaName, scenes) {
 
     let finalHtml = '';
     if (scoreInfo) {
-      finalHtml += `<div class="score-info">楽譜情報: ${escapeHtml(scoreInfo)}</div>`;
+      finalHtml += `<div class="score-info-banner">楽譜情報: ${escapeHtml(scoreInfo)}</div>`;
     }
     // 対象オペラの場合、注釈を追加
     if (mottlOperas.includes(normalizedOperaName)) {
@@ -326,7 +326,7 @@ function searchRichardWagnerByPage(operaName, pageInput) {
 
     let finalHtml = '';
     if (scoreInfo) {
-      finalHtml += `<div class="score-info">楽譜情報: ${escapeHtml(scoreInfo)}</div>`;
+      finalHtml += `<div class="score-info-banner">楽譜情報: ${escapeHtml(scoreInfo)}</div>`;
     }
     // 対象オペラの場合、注釈を追加
     if (mottlOperas.includes(normalizedOperaName)) {
