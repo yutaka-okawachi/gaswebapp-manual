@@ -137,13 +137,21 @@ async function loadData(key) {
     }
 
     // Load scene data for operas
-    if (key === 'richard_strauss' && !window.appData.rs_scenes) {
-        window.appData.rs_scenes = await fetchJson('data/rs_scenes.json');
-        if (!window.appData.dic_terms_index) window.appData.dic_terms_index = await fetchJson('data/dic_terms_index.json');
+    if (key === 'richard_strauss') {
+        if (!window.appData.rs_scenes) {
+            window.appData.rs_scenes = await fetchJson('data/rs_scenes.json');
+        }
+        if (!window.appData.dic_terms_index) {
+            window.appData.dic_terms_index = await fetchJson('data/dic_terms_index.json');
+        }
     }
-    if (key === 'richard_wagner' && !window.appData.rw_scenes) {
-        window.appData.rw_scenes = await fetchJson('data/rw_scenes.json');
-        if (!window.appData.dic_terms_index) window.appData.dic_terms_index = await fetchJson('data/dic_terms_index.json');
+    if (key === 'richard_wagner') {
+        if (!window.appData.rw_scenes) {
+            window.appData.rw_scenes = await fetchJson('data/rw_scenes.json');
+        }
+        if (!window.appData.dic_terms_index) {
+            window.appData.dic_terms_index = await fetchJson('data/dic_terms_index.json');
+        }
     }
 }
 
