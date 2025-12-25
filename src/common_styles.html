@@ -170,7 +170,7 @@ body {
     background: #fff;
     border-radius: 12px;
     padding: 25px;
-    margin-bottom: 30px;
+    margin-bottom: 0;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
     border: 1px solid #eee;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
@@ -271,8 +271,8 @@ body {
 .home-page .container {
     max-width: 1000px;
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-    gap: 30px;
+    justify-content: center; /* 内部のカードも中央寄りに配置 */
+    gap: 20px;
     padding: 40px 20px;
 }
 
