@@ -242,8 +242,8 @@ h1::after {
 .section-card ul {
     border: none;
     background: none;
-    padding: 0;
-    margin: 0;
+    padding-left: 20px; /* 左インデントを追加 */
+    margin: 10px 0;
 }
 
 .section-card li {
