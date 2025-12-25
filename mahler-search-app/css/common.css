@@ -280,6 +280,7 @@ h1::after {
     margin: 0 auto; /* センタリング */
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    justify-content: center; /* 内部のカードも中央寄りに配置 */
     gap: 30px;
     padding: 40px 30px; /* 左右パディングを少し広げる */
 }
