@@ -271,8 +271,22 @@ h1::after {
 .card-dic h2::before { color: var(--color-dic); }
 .card-dic .note { border-left-color: var(--color-dic); }
 
-.card-other h2 { color: var(--color-other); border-bottom-color: rgba(117, 117, 117, 0.2); }
-.card-other h2::before { color: var(--color-other); }
+.card-other h2 {
+    color: var(--color-other);
+    border-bottom-color: rgba(117, 117, 117, 0.2);
+    font-size: 1.1rem; /* 少し小さく設定 */
+}
+
+.card-other h2::before {
+    color: var(--color-other);
+}
+
+/* サイドバーの「その他」ヘッダー用 */
+.sidebar h3.sidebar-other {
+    font-size: 0.85rem;
+    margin-top: 20px;
+    opacity: 0.8;
+}
 
 /* Homeページ用グリッドレイアウト */
 .home-page .container {
