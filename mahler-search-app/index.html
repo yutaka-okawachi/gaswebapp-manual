@@ -878,7 +878,7 @@
             const entryDiv = document.createElement('div');
             entryDiv.classList.add('result-entry');
 
-            let html = `<div class="result-a">${escapeHtmlWithBreaks(item.de)}</div>`;
+            let html = `<div class="result-a">${window.linkTermsInTranslation ? window.linkTermsInTranslation(item.de, window.appData.dic_terms_index) : escapeHtmlWithBreaks(item.de)}</div>`;
             html += `<div class="result-c">${escapeHtmlWithBreaks(item.ja)}</div>`;
             item.locs.forEach(loc => {
                 html += `<div class="result-loc">${escapeHtml(loc)}</div>`;

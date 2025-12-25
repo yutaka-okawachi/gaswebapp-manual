@@ -646,6 +646,8 @@ function linkTermsInTranslation(text, termsIndex) {
     return escaped.replace(/\n/g, '<br>');
 }
 
+// Expose for use in other scripts (e.g., index.html)
+window.linkTermsInTranslation = linkTermsInTranslation;
 
 function formatGenericResults(data) {
     if (data.length === 0) {
