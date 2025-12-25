@@ -571,7 +571,7 @@
   ],
   [
     "bispigliando",
-    "bisbigliando の項を参照",
+    "bisbigliando の項を参照．",
     "[GM]"
   ],
   [
@@ -2310,6 +2310,11 @@
     "[B: 5]"
   ],
   [
+    "Lakai",
+    "(≒ lackey, footman, flunkey / lacchè, servitore)\n\n【一般的な意味】\n① 従僕，召使い，（特にお仕着せを着た）家来．\n② （蔑称として）おべっか使い，へつらう者，盲従する人．\n\nDer Rosenkavalier の使用人たちについては \"Haushofmeister\" の項を参照． ",
+    "[RS: Oper]"
+  ],
+  [
     "landläufigen",
     "(≒ common, prevalent, conventional / comune, diffuso)\nlandläufig の格変化形\n【一般的な意味】\n① 世間一般に広まっている，普通の，一般的な．\n② 慣習的な，従来の，通俗的な．",
     "[K: Cap]"
@@ -2733,6 +2738,11 @@
     "näselnd",
     "(≒ nasal, twangy, pinched / nasale, sferzante)\nnäseln の現在分詞\n\n【一般的な意味】\n① 鼻にかかった声で話す，鼻声の．\n② （音色などが）鼻に抜けるような，甲高い．\n【音楽用語としての訳例】\n「nasale」，「鼻にかかった音色で」，「ツンと抜けるように」，「鼻声で」，「（音色が）不快な響きで」\n\nRS の Feuersnot において Oboe に対する指示としてある．",
     "[RS: Oper]"
+  ],
+  [
+    "Naturlaut",
+    "(≒ sound of nature, natural sound / suono della natura)\n\n【一般的な意味】 ① 自然界の音（鳥の声，風の音，せせらぎなど）． ② 未分化な叫び声，本能的な発声．\n\nGMの交響曲第1番，第3番で用いられている．「自然の音（自然界の響き）」 であるが，交響曲第1番の \"Wie ein Naturlaut\" （「自然の響きのように」と訳している）では，単なる “自然描写” ととらえるべきではなく 「人為的に整えられた楽音ではないもの」 というニュアンスが強い．音楽が始まる前からそこに“鳴っていた”かのような，外部（自然界）由来の響き，「環境音の立ち上げ」を要求している．また，交響曲第3番の Oboe に対する指示で \"hinaufziehen\"「上へポルタメント」と併用されている場合は，「環境音の立ち上げ」というよりも人工的ではない自然の音が混じるような効果を想定しているだろう．",
+    "[GM]"
   ],
   [
     "NB",
@@ -3561,8 +3571,8 @@
   ],
   [
     "summend",
-    "(≒ humming, buzzing, droning / ronzante, ronzio)\nsummen の現在分詞\n【一般的な意味】\n① ハミングしている，鼻歌を歌っている．\n② （昆虫などが）ブンブンと羽音を立てている，（機械などが）唸っている．\n【音楽用語としての訳例】\n「ronzante」，「（ハチの羽音のように）ブンブンと」，「ハミングで」，「鼻歌のように」\n\nGM では「ハミング」の意味で訳している．",
-    "[GM]"
+    "(≒ humming, buzzing, droning / ronzante, ronzio)\nsummen の現在分詞\n【一般的な意味】\n① ハミングしている，鼻歌を歌っている．\n② （昆虫などが）ブンブンと羽音を立てている，（機械などが）唸っている．\n【音楽用語としての訳例】\n「口ずさんて」，「ハミングで」，「鼻歌のように」，「ronzante」，「（ハチの羽音のように）ブンブンと」\n\nGM では「ハミング」の意味で訳している．",
+    "[GM], [RS: Oper]"
   ],
   [
     "tactig",
@@ -3571,8 +3581,8 @@
   ],
   [
     "Tal",
-    "(≒ valley, dale / valle, vallata)\n【一般的な意味】\n① 谷，谷間，渓谷．\n② （比喩的に）低地，深い場所，苦難．\n\n[H: Sch] ではもちろん「谷」，「渓谷」",
-    "[H: Sch]"
+    "(≒ valley, dale / valle, vallata)\n【一般的な意味】\n① 谷，谷間，渓谷．\n② （比喩的に）低地，深い場所，苦難．",
+    "[H: Sch], [RW: Oper]"
   ],
   [
     "täppisch",
