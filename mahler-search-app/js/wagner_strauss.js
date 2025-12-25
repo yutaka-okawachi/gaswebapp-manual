@@ -15,6 +15,14 @@ document.addEventListener('DOMContentLoaded', async () => {
         // Also load scene data
         if (composer === 'richard_wagner') await loadData('rw_scenes');
         if (composer === 'richard_strauss') await loadData('rs_scenes');
+        // Load dic_terms_index for linking functionality
+        if (!window.appData.dic_terms_index && typeof fetchJson === 'function') {
+            try {
+                window.appData.dic_terms_index = await fetchJson('data/dic_terms_index.json');
+            } catch (e) {
+                console.warn('dic_terms_index.json の読み込みに失敗:', e);
+            }
+        }
     }
 
     document.querySelectorAll('input[name="opera"]').forEach(radio => {
