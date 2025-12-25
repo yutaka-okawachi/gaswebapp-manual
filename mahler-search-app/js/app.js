@@ -122,11 +122,13 @@ async function loadData(key) {
 
     if (key === 'rw_terms_search' || key === 'rs_terms_search') {
         if (!window.appData.dic_notes) window.appData.dic_notes = await fetchJson('data/dic_notes.json');
+        if (!window.appData.dic_terms_index) window.appData.dic_terms_index = await fetchJson('data/dic_terms_index.json');
         return;
     }
 
     if (key === 'terms_search') {
         if (!window.appData.mahler) window.appData.mahler = await fetchJson('data/mahler.json');
+        if (!window.appData.dic_terms_index) window.appData.dic_terms_index = await fetchJson('data/dic_terms_index.json');
         return;
     }
 
@@ -1583,7 +1585,7 @@ function searchGenericTermsLocal(query, dataKey, type) {
     sortedDeKeys.forEach(de => {
         const itemsForThisDe = groupedByDe[de];
         html += `<div class="search-result-item">`;
-        html += `<div class="result-a">${escapeHtmlWithBreaks(de)}</div>`;
+        html += `<div class="result-a">${linkTermsInTranslation(de, window.appData.dic_terms_index)}</div>`;
         
         itemsForThisDe.forEach(row => {
             // 各用例ごとに日本語訳を表示（訳語の揺れがわかるように）
