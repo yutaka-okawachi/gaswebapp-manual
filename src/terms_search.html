@@ -155,36 +155,41 @@
 </head>
 
 <body>
-  <div class="container">
-    <h1>用語から検索 (GM)</h1>
-    <p class="glossary-link"><b>用語集は<a href="https://sites.google.com/site/brucknermahleryinleyongyu/%E7%94%A8%E8%AA%9E%E9%9B%86"
-          target="_blank">こちら</a></b></p>
-    <p>
-      検索は英字入力なので，特殊文字の入力は慣例にしたがう<br>
-    <ul>
-      <li>ä⇒ae　例：Dämpfer⇒Daempfer</li>
-      <li>ü⇒ue　例：zurückhalten⇒zurueckhalten</li>
-      <li>ö⇒oe　例：Flöte⇒Floete</li>
-      <li>ß⇒ss　例：fließend⇒fliessend</li>
-    </ul>
-    </p>
+  <?!= include('sidebar.html') ?>
 
-    <!-- 検索入力欄 -->
-    <input type="text" id="termInput" list="termSuggestions" placeholder="検索する用語を入力">
-    <datalist id="termSuggestions"></datalist>
-
-    <!-- ボタン類 -->
-    <div style="text-align: center;">
-      <button type="button" onclick="search()" class="btn-search">検索</button>
-      <button type="button" onclick="cancelSearch()" class="btn-danger">中止</button>
-      <button type="button" onclick="clearInput()" class="clear-input-btn">入力をクリア</button>
+  <div class="page-wrapper">
+    <div class="container">
+      <div class="home-link"><a href="home.html">HOME</a></div>
+      <h1>用語から検索 (GM)</h1>
+      <p class="glossary-link"><b>用語集は<a href="https://sites.google.com/site/brucknermahleryinleyongyu/%E7%94%A8%E8%AA%9E%E9%9B%86"
+            target="_blank">こちら</a></b></p>
+      <p>
+        検索は英字入力なので，特殊文字の入力は慣例にしたがう<br>
+      <ul>
+        <li>ä⇒ae　例：Dämpfer⇒Daempfer</li>
+        <li>ü⇒ue　例：zurückhalten⇒zurueckhalten</li>
+        <li>ö⇒oe　例：Flöte⇒Floete</li>
+        <li>ß⇒ss　例：fließend⇒fliessend</li>
+      </ul>
+      </p>
+  
+      <!-- 検索入力欄 -->
+      <input type="text" id="termInput" list="termSuggestions" placeholder="検索する用語を入力">
+      <datalist id="termSuggestions"></datalist>
+  
+      <!-- ボタン類 -->
+      <div style="text-align: center;">
+        <button type="button" onclick="search()" class="btn-search">検索</button>
+        <button type="button" onclick="cancelSearch()" class="btn-danger">中止</button>
+        <button type="button" onclick="clearInput()" class="clear-input-btn">入力をクリア</button>
+      </div>
+  
+      <!-- 結果表示枠 -->
+      <div id="results"></div>
+  
+      <!-- トップへ戻るボタン -->
+      <div id="scrollToTop" onclick="scrollToTop()">▲ ページのトップへ戻る</div>
     </div>
-
-    <!-- 結果表示枠 -->
-    <div id="results"></div>
-
-    <!-- トップへ戻るボタン -->
-    <div id="scrollToTop" onclick="scrollToTop()">▲ ページのトップへ戻る</div>
   </div>
   <?!= include('common_scripts.html') ?>
 </body>

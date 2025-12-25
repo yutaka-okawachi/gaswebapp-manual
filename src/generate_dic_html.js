@@ -271,8 +271,7 @@ function generateDicHtml(dicData, abbrData) {
   
   // タイムスタンプをコメントに追加
   const timestamp = new Date().toLocaleString('ja-JP', { timeZone: 'Asia/Tokyo' });
-  
-  const html = `<!DOCTYPE html>
+    const html = `<!DOCTYPE html>
 <html>
 
 <head>
@@ -460,22 +459,74 @@ function generateDicHtml(dicData, abbrData) {
         }, 100); // Execute at most once every 100ms
 
         window.addEventListener('scroll', handleScroll);
+
+        function toggleNav() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('active');
+        }
+
+        // サイドバー外をクリックしたら閉じる（スマホのみ）
+        document.addEventListener('click', function (event) {
+            if (window.innerWidth <= 768) {
+                const sidebar = document.getElementById('sidebar');
+                const toggle = document.querySelector('.nav-toggle');
+                if (sidebar && toggle && !sidebar.contains(event.target) && !toggle.contains(event.target)) {
+                    sidebar.classList.remove('active');
+                }
+            }
+        });
     </script>
 </head>
 
 <body>
-    <div class="container">
-        <h1>用語集</h1>
-        <div id="listContainer">
+    <button class="nav-toggle" onclick="toggleNav()">☰ メニュー</button>
+
+    <!-- サイドバーナビゲーション -->
+    <nav class="sidebar" id="sidebar">
+        <h3>Richard Wagner (RW)</h3>
+        <ul>
+            <li><a href="richard_wagner.html">曲名から検索</a></li>
+            <li><a href="rw_terms_search.html">用語から検索</a></li>
+        </ul>
+
+        <h3>Gustav Mahler (GM)</h3>
+        <ul>
+            <li><a href="index.html">曲名と楽器等から検索</a></li>
+            <li><a href="terms_search.html">用語から検索</a></li>
+        </ul>
+
+        <h3>Richard Strauss (RS)</h3>
+        <ul>
+            <li><a href="richard_strauss.html">曲名から検索</a></li>
+            <li><a href="rs_terms_search.html">用語から検索</a></li>
+        </ul>
+
+        <h3>用語集</h3>
+        <ul>
+            <li><a href="dic.html">用語集ページ</a></li>
+        </ul>
+
+        <h3>その他</h3>
+        <ul>
+            <!-- 今後追加予定 -->
+        </ul>
+    </nav>
+
+    <div class="page-wrapper">
+        <div class="container">
+            <div class="home-link"><a href="home.html">HOME</a></div>
+            <h1>用語集</h1>
+            <div id="listContainer">
 ${dicListHtml}
-        </div>
+            </div>
 
-        <hr class="section-divider">
+            <hr class="section-divider">
 
-        <div id="abbrListContainer">
-            <div class="top-message" id="abbrMessage">(*)は特記すべきドイツ語はなし</div>
-            <div id="abbrContent">
+            <div id="abbrListContainer">
+                <div class="top-message" id="abbrMessage">(*)は特記すべきドイツ語はなし</div>
+                <div id="abbrContent">
 ${abbrListHtml}
+                </div>
             </div>
         </div>
     </div>
@@ -545,6 +596,7 @@ ${abbrListHtml}
 <!-- Generated: ${timestamp} -->`;
 
   return html;
+
 }
 
 /**

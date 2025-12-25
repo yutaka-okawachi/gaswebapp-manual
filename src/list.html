@@ -452,8 +452,12 @@
 </head>
 
 <body>
-  <div id="fixedHeader">
-    <h1>Gustav Mahler 以外のドイツ語</h1>
+  <?!= include('sidebar.html') ?>
+
+  <div class="page-wrapper">
+    <div id="fixedHeader">
+      <div class="home-link" style="margin: 5px 10px 0;"><a href="home.html">HOME</a></div>
+      <h1>Gustav Mahler 以外のドイツ語</h1>
     <div id="navbar">
       <!-- alphabet links removed; floating bar at bottom replaces them -->
     </div>
@@ -511,7 +515,8 @@
     <a href="#letter-Z">Z</a>
   </div>
 
-  <div id="scrollToTop" onclick="scrollToTop()">▲ ページのトップへ戻る</div>
+    <div id="scrollToTop" onclick="scrollToTop()">▲ ページのトップへ戻る</div>
+  </div>
   <?!= include('common_scripts.html') ?>
 </body>
 

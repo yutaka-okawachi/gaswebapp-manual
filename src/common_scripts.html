@@ -172,4 +172,22 @@
       }
     });
   })();
+
+  function toggleNav() {
+    const sidebar = document.getElementById('sidebar');
+    if (sidebar) {
+      sidebar.classList.toggle('active');
+    }
+  }
+
+  // サイドバー外をクリックしたら閉じる（スマホのみ）
+  document.addEventListener('click', function (event) {
+    if (window.innerWidth <= 768) {
+      const sidebar = document.getElementById('sidebar');
+      const toggle = document.querySelector('.nav-toggle');
+      if (sidebar && toggle && !sidebar.contains(event.target) && !toggle.contains(event.target)) {
+        sidebar.classList.remove('active');
+      }
+    }
+  });
 </script>

@@ -282,6 +282,14 @@
       max-height: 24vh;
       min-height: 120px;
       overflow: hidden;
+      left: 220px; /* PC/Tablet offset for sidebar */
+      width: calc(100% - 220px);
+    }
+    @media (max-width: 768px) {
+      #floating-bar {
+        left: 0;
+        width: 100%;
+      }
     }
     #floating-bar .button-group {
       display: flex;
@@ -865,8 +873,12 @@
 </head>
 
 <body>
-  <div class="container">
-    <h1>曲名と楽器から検索 (GM)</h1>
+  <?!= include('sidebar.html') ?>
+
+  <div class="page-wrapper">
+    <div class="container">
+      <div class="home-link"><a href="home.html">HOME</a></div>
+      <h1>曲名と楽器から検索 (GM)</h1>
 
     <!-- 曲名エリア -->
     <div class="big-label">
@@ -1054,6 +1066,7 @@
     <!-- 検索結果表示領域 -->
     <div id="results"></div>
   </div>
+</div>
 
   <!-- フローティング検索バー -->
   <div id="floating-bar">
