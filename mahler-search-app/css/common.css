@@ -10,7 +10,7 @@ body {
 * 全ページで共通して使用される基本的なスタイルシート。
 */
 :root {
-    --primary-bg: #fdf5e6;
+    --primary-bg: #f0f8ff;
     --container-bg: #fff;
     --title-bg: #ffdce0;
     --title-border: #e35d76;
