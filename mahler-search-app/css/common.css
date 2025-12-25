@@ -190,6 +190,7 @@ h1 {
     position: relative;
     padding-bottom: 15px;
     font-family: 'Lora', serif;
+    font-weight: bold;
     letter-spacing: 0.05em;
     max-width: fit-content;
 }

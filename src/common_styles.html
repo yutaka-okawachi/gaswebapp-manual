@@ -160,6 +160,29 @@ body {
     display: none; /* Homeではサイドバー不要なのでトグルも隠す */
 }
 
+h1 {
+    text-align: center;
+    margin: 30px auto 40px;
+    color: var(--text-color);
+    font-size: 2rem;
+    position: relative;
+    padding-bottom: 15px;
+    font-family: 'Lora', serif;
+    font-weight: bold;
+    letter-spacing: 0.05em;
+    max-width: fit-content;
+}
+
+h1::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 10%;
+    right: 10%;
+    height: 3px;
+    background: linear-gradient(to right, transparent, var(--button-bg), transparent);
+}
+
 @media (max-width: 600px) {
     h1 {
         font-size: 1.2rem;
