@@ -21,7 +21,7 @@
    *例: `.\sync-data.ps1 -message "フォントサイズを0.85remに変更"`*
 
 3. **完了**
-   スクリプトが自動的に Git Commit, GAS Push, GAS実行, Git Pull, Git Push を行います。
+   スクリプトが自動的に ローカル変更のCommit, GAS Push, GAS実行, Git Pull (Rebase), Git Push を行います。
    数分後に [GitHub Pages](https://yutaka-okawachi.github.io/gaswebapp-manual/mahler-search-app/dic.html) に反映されます。
 
 ---
