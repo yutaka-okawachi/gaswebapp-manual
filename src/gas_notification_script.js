@@ -61,11 +61,11 @@ function doPost(e) {
       // 弦楽器
       'v1': 'Violine1',
       'v2': 'Violine2',
-      'va': 'Bratche',
+      'va': 'Bratsche',
       'vc': 'Violoncello',
       'kb': 'Kontrabaß',
       'sv': 'Solo Violine',
-      'sva': 'Solo Bratche',
+      'sva': 'Solo Bratsche',
       'svc': 'Solo Violoncello',
       'skb': 'Solo Kontrabaß',
       // 木管楽器
