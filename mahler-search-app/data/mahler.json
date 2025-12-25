@@ -6242,19 +6242,19 @@
   {
     "de": "hinaufziehen",
     "de_normalized": "hinaufziehen",
-    "ja": "上へポルタメント",
+    "ja": "上へのポルタメント",
     "data": "M-3-4-44-eh&M-3-4-70-ob&M-3-4-102-ob&M-3-4-132-ob&"
   },
   {
     "de": "hinaufziehen (Wie ein Naturlaut)",
     "de_normalized": "hinaufziehen (wie ein naturlaut)",
-    "ja": "上へポルタメント（自然音のように）",
+    "ja": "上へのポルタメント（自然の響きのように）",
     "data": "M-3-4-32-ob&"
   },
   {
     "de": "hinunterziehen",
     "de_normalized": "hinunterziehen",
-    "ja": "下へポルタメント",
+    "ja": "下へのポルタメント",
     "data": "M-3-1-91-fg,cfg,pos,bt&"
   },
   {
