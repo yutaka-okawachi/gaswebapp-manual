@@ -1,4 +1,9 @@
 ﻿**/node_modules/**
 **/.git/**
 
+# clasp認証情報
 .clasprc.json
+.clasp*.json
+
+# ログファイル
+*.log
