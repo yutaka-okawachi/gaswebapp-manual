@@ -16,38 +16,59 @@ description: スプレッドシートデータの同期
 
 ### 初回のみ: セットアップ
 
-Web App経由でGAS関数を自動実行するための設定を行います（約5分）。
+#### 1. clasp認証（必須）
 
-1. セットアップスクリプトを実行
+初回実行時は、claspでGoogleアカウント認証が必要です：
+
+```powershell
+clasp login
+```
+
+ブラウザでGoogleアカウントの認証を完了してください。
+
+#### 2. GAS関数の権限認証（初回実行時のみ）
+
+初めて`sync-data.ps1`を実行する際、またはGASエディタで`exportAllDataToJson`を初めて実行する際に、権限承認画面が表示されます。
+
+**手順**:
+1. GASエディタ（https://script.google.com）を開く
+2. `exportAllDataToJson`関数を選択して実行
+3. 権限承認画面が表示されたら「承認」をクリック
+4. 必要な権限（Spreadsheets, Drive, External Request）を許可
+
+> [!IMPORTANT]
+> この権限認証は**1度だけ**必要です。認証後は`sync-data.ps1`が自動的に実行できます。
+
+#### 3. Web App設定（オプション・推奨）
+
+`clasp run`が失敗する環境では、Web App経由での実行が自動的にフォールバックされます。
+
+セットアップ（約5分）：
+
 ```powershell
 .\setup-web-trigger.ps1
 ```
 
-2. スクリプトの指示に従って以下を実行:
-   - GASエディタで`generateSecretToken`関数を実行してトークンを生成
-   - `web_trigger.js`の`SECRET_TOKEN`を更新
-   - Web Appとしてデプロイ
-   - デプロイURLとトークンを入力
-
-3. 接続テストが成功すれば設定完了！
-
 ### 日常の使い方
 
-テンプレートを編集したら、以下のコマンド1つで完了：
+セットアップ完了後は、以下のコマンド1つで完了：
 
 ```powershell
 .\sync-data.ps1
 ```
 
 **完全自動で実行される処理**:
-**完全自動で実行される処理**:
 1. `clasp push` でGASにアップロード
 2. `git commit` でローカル変更を保存（自動）
-3. `clasp run` で`exportAllDataToJson`を自動実行
+3. `clasp run` または Web App経由で`exportAllDataToJson`を自動実行
 4. `git pull --rebase` で更新を取得
 5. `git push` で自動プッシュ
 
 ✅ **確認プロンプトなし** - 全自動で完了します！
+
+> [!TIP]
+> `clasp run`が失敗しても、Web App経由で自動的にフォールバックします。
+> 初回の権限認証さえ完了していれば、以降は完全自動で動作します。
 
 
 
