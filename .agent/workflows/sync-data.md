@@ -102,7 +102,75 @@ start mahler-search-app/dic.html
 
 ---
 
+---
+
 ## トラブルシューティング
+
+### clasp認証エラー（Permission denied / Not logged in）
+
+**症状**: `sync-data.ps1`実行時に「permission」「unauthorized」などのエラーが表示される
+
+**原因**: 別のGASプロジェクトを使った後、claspの認証情報が混乱している
+
+**解決方法**（自動検出あり）:
+
+v2024.12以降の`sync-data.ps1`は、認証エラーを自動検出して解決手順を表示します：
+
+```powershell
+# スクリプトが自動的にエラーを検出し、以下の手順を表示します:
+⚠ Authentication error detected. Please re-login to clasp.
+
+Run the following commands:
+  1. clasp logout
+  2. clasp login
+  3. .\sync-data.ps1
+```
+
+**手動で解決する場合**:
+
+```powershell
+# 1. ログアウト
+clasp logout
+
+# 2. 再ログイン（ブラウザで認証）
+clasp login
+
+# 3. sync-data.ps1を再実行
+.\sync-data.ps1
+```
+
+> [!TIP]
+> 複数のGASプロジェクトを使う場合、プロジェクト切り替え時に認証エラーが発生することがあります。
+> その場合は上記の手順で再ログインしてください。
+
+### Script function not found エラー
+
+**症状**: `clasp run exportAllDataToJson`で「Script function not found」エラー
+
+**原因**: Apps Script APIで関数が実行可能になっていない
+
+**解決方法**（自動検出あり）:
+
+v2024.12以降の`sync-data.ps1`は、このエラーも自動検出します：
+
+```powershell
+⚠ Function not found. This may be due to Apps Script API not being enabled.
+
+To fix this issue:
+  1. Open the GAS editor: https://script.google.com
+  2. Manually execute 'exportAllDataToJson' function once
+  3. Then run: git pull
+```
+
+**根本的な解決**:
+
+`src/appsscript.json`に以下を追加（2024.12以降は既に設定済み）:
+
+```json
+"executionApi": {
+  "access": "ANYONE"
+}
+```
 
 ### Web Appが動作しない場合
 

@@ -29,12 +29,30 @@ $gasChanges = git status --porcelain src/
 if ($gasChanges) {
     Write-Host "✓ Detected changes in GAS source. Uploading..." -ForegroundColor Gray
     Push-Location "src"
-    clasp push -f
-    if ($LASTEXITCODE -ne 0) {
-        Write-Error "❌ clasp push failed. Script aborted."
+    
+    # clasp push を実行（エラー出力をキャプチャ）
+    $pushOutput = clasp push -f 2>&1
+    $pushExitCode = $LASTEXITCODE
+    
+    if ($pushExitCode -ne 0) {
+        # 権限エラーを検出
+        if ($pushOutput -match "permission|unauthorized|credentials|not logged in") {
+            Write-Host ""
+            Write-Warning "⚠ Authentication error detected. Please re-login to clasp."
+            Write-Host ""
+            Write-Host "Run the following commands:" -ForegroundColor Cyan
+            Write-Host "  1. clasp logout" -ForegroundColor White
+            Write-Host "  2. clasp login" -ForegroundColor White
+            Write-Host "  3. .\sync-data.ps1" -ForegroundColor White
+            Write-Host ""
+            Pop-Location
+            exit 1
+        }
+        Write-Error "❌ clasp push failed."
         Pop-Location
         exit 1
     }
+    
     Pop-Location
     Write-Host "✓ GAS source updated successfully." -ForegroundColor Green
 } else {
@@ -61,9 +79,36 @@ Write-Host ""
 Write-Host "[3/5] Triggering GAS function (exportAllDataToJson)..." -ForegroundColor Yellow
 Write-Host "This will update data files and dic.html on GitHub..." -ForegroundColor Gray
 
-# clasp run を実行
-clasp run exportAllDataToJson
-if ($LASTEXITCODE -ne 0) {
+# clasp run を実行（エラー出力をキャプチャ）
+$runOutput = clasp run exportAllDataToJson 2>&1
+$runExitCode = $LASTEXITCODE
+
+if ($runExitCode -ne 0) {
+    # 権限エラーまたは関数が見つからないエラーを検出
+    if ($runOutput -match "permission|unauthorized|credentials|not logged in") {
+        Write-Host ""
+        Write-Warning "⚠ Authentication error detected. Please re-login to clasp."
+        Write-Host ""
+        Write-Host "Run the following commands:" -ForegroundColor Cyan
+        Write-Host "  1. clasp logout" -ForegroundColor White
+        Write-Host "  2. clasp login" -ForegroundColor White
+        Write-Host "  3. .\sync-data.ps1" -ForegroundColor White
+        Write-Host ""
+        exit 1
+    }
+    if ($runOutput -match "Script function not found") {
+        Write-Host ""
+        Write-Warning "⚠ Function not found. This may be due to Apps Script API not being enabled."
+        Write-Host ""
+        Write-Host "To fix this issue:" -ForegroundColor Cyan
+        Write-Host "  1. Open the GAS editor: https://script.google.com" -ForegroundColor White
+        Write-Host "  2. Manually execute 'exportAllDataToJson' function once" -ForegroundColor White
+        Write-Host "  3. Then run: git pull" -ForegroundColor White
+        Write-Host ""
+        Write-Host "Alternatively, check that appsscript.json has 'executionApi' configured." -ForegroundColor Gray
+        Write-Host ""
+        exit 1
+    }
     Write-Error "❌ clasp run failed. Make sure you are logged in with 'clasp login' and Apps Script API is enabled."
     exit 1
 }
