@@ -78,12 +78,24 @@ Write-Host ""
 # --- [3/5] GAS 関数の実行 (最新データ生成) ---
 Write-Host "[3/5] Triggering GAS function (exportAllDataToJson)..." -ForegroundColor Yellow
 Write-Host "This will update data files and dic.html on GitHub..." -ForegroundColor Gray
+Write-Host ""
+
+# 実行時間計測開始
+$startTime = Get-Date
 
 # clasp run を実行（エラー出力をキャプチャ）
+Write-Host "Attempting clasp run..." -ForegroundColor Gray
 $runOutput = clasp run exportAllDataToJson 2>&1
 $runExitCode = $LASTEXITCODE
 
 if ($runExitCode -ne 0) {
+    Write-Host "✗ clasp run failed (exit code: $runExitCode)" -ForegroundColor Yellow
+    
+    # clasp runの出力を表示（デバッグ用）
+    if ($runOutput) {
+        Write-Host "clasp run output: $($runOutput | Out-String)" -ForegroundColor DarkGray
+    }
+    
     # 権限エラーまたは関数が見つからないエラーを検出
     if ($runOutput -match "permission|unauthorized|credentials|not logged in") {
         Write-Host ""
@@ -99,23 +111,34 @@ if ($runExitCode -ne 0) {
     
     # clasp run失敗時はWeb App経由で実行を試みる
     Write-Host ""
-    Write-Warning "⚠ clasp run failed. Trying alternative method (Web App)..."
+    Write-Host "→ Falling back to Web App method..." -ForegroundColor Yellow
     Write-Host ""
     
     # Web App環境変数をチェック
     if ($env:GAS_DEPLOY_URL -and $env:GAS_SECRET_TOKEN) {
-        Write-Host "Using Web App endpoint..." -ForegroundColor Gray
+        Write-Host "Using Web App endpoint: $($env:GAS_DEPLOY_URL.Substring(0, 50))..." -ForegroundColor Gray
         
         try {
+            $webStartTime = Get-Date
+            
             $webBody = @{
                 function = "exportAllDataToJson"
                 token = $env:GAS_SECRET_TOKEN
             } | ConvertTo-Json
             
+            Write-Host "Sending request to Web App..." -ForegroundColor Gray
             $webResponse = Invoke-RestMethod -Uri $env:GAS_DEPLOY_URL -Method Post -Body $webBody -ContentType "application/json" -TimeoutSec 300
+            
+            $webDuration = (Get-Date) - $webStartTime
             
             if ($webResponse.status -eq "success") {
                 Write-Host "✓ GAS function executed successfully via Web App." -ForegroundColor Green
+                Write-Host "  Execution time: $([math]::Round($webDuration.TotalSeconds, 1)) seconds" -ForegroundColor Gray
+                
+                # 結果の詳細を表示
+                if ($webResponse.result) {
+                    Write-Host "  Files processed: $($webResponse.result.success.Length) succeeded" -ForegroundColor Gray
+                }
             } else {
                 Write-Error "❌ Web App execution failed: $($webResponse.error)"
                 exit 1
@@ -150,8 +173,13 @@ if ($runExitCode -ne 0) {
         Write-Host ""
         exit 1
     }
+} else {
+    $duration = (Get-Date) - $startTime
+    Write-Host "✓ GAS function executed successfully via clasp run." -ForegroundColor Green
+    Write-Host "  Execution time: $([math]::Round($duration.TotalSeconds, 1)) seconds" -ForegroundColor Gray
 }
-Write-Host "✓ GAS function executed successfully. Files pushed to GitHub." -ForegroundColor Green
+
+Write-Host "✓ GAS function completed. Files should be pushed to GitHub." -ForegroundColor Green
 Write-Host ""
 
 # --- [4/5] 最新データのローカル同期 (git pull) ---
