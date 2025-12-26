@@ -96,21 +96,60 @@ if ($runExitCode -ne 0) {
         Write-Host ""
         exit 1
     }
-    if ($runOutput -match "Script function not found") {
+    
+    # clasp run失敗時はWeb App経由で実行を試みる
+    Write-Host ""
+    Write-Warning "⚠ clasp run failed. Trying alternative method (Web App)..."
+    Write-Host ""
+    
+    # Web App環境変数をチェック
+    if ($env:GAS_DEPLOY_URL -and $env:GAS_SECRET_TOKEN) {
+        Write-Host "Using Web App endpoint..." -ForegroundColor Gray
+        
+        try {
+            $webBody = @{
+                function = "exportAllDataToJson"
+                token = $env:GAS_SECRET_TOKEN
+            } | ConvertTo-Json
+            
+            $webResponse = Invoke-RestMethod -Uri $env:GAS_DEPLOY_URL -Method Post -Body $webBody -ContentType "application/json" -TimeoutSec 300
+            
+            if ($webResponse.status -eq "success") {
+                Write-Host "✓ GAS function executed successfully via Web App." -ForegroundColor Green
+            } else {
+                Write-Error "❌ Web App execution failed: $($webResponse.error)"
+                exit 1
+            }
+        } catch {
+            Write-Error "❌ Web App request failed: $_"
+            Write-Host ""
+            Write-Host "Please try manual execution:" -ForegroundColor Yellow
+            Write-Host "  1. Open GAS editor: https://script.google.com" -ForegroundColor White
+            Write-Host "  2. Run 'exportAllDataToJson' function" -ForegroundColor White
+            Write-Host "  3. Then run: git pull" -ForegroundColor White
+            Write-Host ""
+            exit 1
+        }
+    } else {
+        # Web App未設定の場合
         Write-Host ""
-        Write-Warning "⚠ Function not found. This may be due to Apps Script API not being enabled."
+        Write-Warning "⚠ Web App is not configured. clasp run requires Apps Script API."
         Write-Host ""
         Write-Host "To fix this issue:" -ForegroundColor Cyan
-        Write-Host "  1. Open the GAS editor: https://script.google.com" -ForegroundColor White
-        Write-Host "  2. Manually execute 'exportAllDataToJson' function once" -ForegroundColor White
-        Write-Host "  3. Then run: git pull" -ForegroundColor White
+        Write-Host "  Option 1: Enable Apps Script API" -ForegroundColor White
+        Write-Host "    • Visit: https://script.google.com/home/usersettings" -ForegroundColor Gray
+        Write-Host "    • Enable 'Google Apps Script API'" -ForegroundColor Gray
         Write-Host ""
-        Write-Host "Alternatively, check that appsscript.json has 'executionApi' configured." -ForegroundColor Gray
+        Write-Host "  Option 2: Setup Web App (recommended)" -ForegroundColor White
+        Write-Host "    • Run: .\setup-web-trigger.ps1" -ForegroundColor Gray
+        Write-Host ""
+        Write-Host "  Option 3: Manual execution" -ForegroundColor White
+        Write-Host "    1. Open GAS editor: https://script.google.com" -ForegroundColor Gray
+        Write-Host "    2. Run 'exportAllDataToJson' function" -ForegroundColor Gray
+        Write-Host "    3. Then run: git pull" -ForegroundColor Gray
         Write-Host ""
         exit 1
     }
-    Write-Error "❌ clasp run failed. Make sure you are logged in with 'clasp login' and Apps Script API is enabled."
-    exit 1
 }
 Write-Host "✓ GAS function executed successfully. Files pushed to GitHub." -ForegroundColor Green
 Write-Host ""
