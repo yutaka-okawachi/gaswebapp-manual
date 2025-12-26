@@ -1,0 +1,730 @@
+[
+  {
+    "Oper": "guntram",
+    "Aufzug": 1,
+    "Szene": "vorspiel",
+    "日本語": "第1幕前奏曲",
+    "作品名": "Guntram, Op.25 (1888-93, revised 1934–39)"
+  },
+  {
+    "Oper": "guntram",
+    "Aufzug": 1,
+    "Szene": 1,
+    "日本語": "第1幕第1場",
+    "作品名": "Guntram, Op.25 (1888-93, revised 1934–39)"
+  },
+  {
+    "Oper": "guntram",
+    "Aufzug": 1,
+    "Szene": 2,
+    "日本語": "第1幕第2場",
+    "作品名": "Guntram, Op.25 (1888-93, revised 1934–39)"
+  },
+  {
+    "Oper": "guntram",
+    "Aufzug": 1,
+    "Szene": 3,
+    "日本語": "第1幕第3場",
+    "作品名": "Guntram, Op.25 (1888-93, revised 1934–39)"
+  },
+  {
+    "Oper": "guntram",
+    "Aufzug": 2,
+    "Szene": "vorspiel",
+    "日本語": "第2幕前奏曲",
+    "作品名": "Guntram, Op.25 (1888-93, revised 1934–39)"
+  },
+  {
+    "Oper": "guntram",
+    "Aufzug": 2,
+    "Szene": 1,
+    "日本語": "第2幕第1場",
+    "作品名": "Guntram, Op.25 (1888-93, revised 1934–39)"
+  },
+  {
+    "Oper": "guntram",
+    "Aufzug": 2,
+    "Szene": 2,
+    "日本語": "第2幕第2場",
+    "作品名": "Guntram, Op.25 (1888-93, revised 1934–39)"
+  },
+  {
+    "Oper": "guntram",
+    "Aufzug": 2,
+    "Szene": 3,
+    "日本語": "第2幕第3場",
+    "作品名": "Guntram, Op.25 (1888-93, revised 1934–39)"
+  },
+  {
+    "Oper": "guntram",
+    "Aufzug": 3,
+    "Szene": "vorspiel",
+    "日本語": "第3幕前奏曲",
+    "作品名": "Guntram, Op.25 (1888-93, revised 1934–39)"
+  },
+  {
+    "Oper": "guntram",
+    "Aufzug": 3,
+    "Szene": 1,
+    "日本語": "第3幕第1場",
+    "作品名": "Guntram, Op.25 (1888-93, revised 1934–39)"
+  },
+  {
+    "Oper": "guntram",
+    "Aufzug": 3,
+    "Szene": 2,
+    "日本語": "第3幕第2場",
+    "作品名": "Guntram, Op.25 (1888-93, revised 1934–39)"
+  },
+  {
+    "Oper": "guntram",
+    "Aufzug": 3,
+    "Szene": 3,
+    "日本語": "第3幕第3場",
+    "作品名": "Guntram, Op.25 (1888-93, revised 1934–39)"
+  },
+  {
+    "Oper": "guntram",
+    "Aufzug": 3,
+    "Szene": 4,
+    "日本語": "第3幕第4場",
+    "作品名": "Guntram, Op.25 (1888-93, revised 1934–39)"
+  },
+  {
+    "Oper": "feuersnot",
+    "Aufzug": "",
+    "Szene": "",
+    "日本語": "全1幕",
+    "作品名": "Feuersnot, Op.50 (1900-01)"
+  },
+  {
+    "Oper": "salome",
+    "Aufzug": "",
+    "Szene": 1,
+    "日本語": "第1場",
+    "作品名": "Salome, Op.54 (1903-05)"
+  },
+  {
+    "Oper": "salome",
+    "Aufzug": "",
+    "Szene": 2,
+    "日本語": "第2場",
+    "作品名": "Salome, Op.54 (1903-05)"
+  },
+  {
+    "Oper": "salome",
+    "Aufzug": "",
+    "Szene": 3,
+    "日本語": "第3場",
+    "作品名": "Salome, Op.54 (1903-05)"
+  },
+  {
+    "Oper": "salome",
+    "Aufzug": "",
+    "Szene": 4,
+    "日本語": "第4場",
+    "作品名": "Salome, Op.54 (1903-05)"
+  },
+  {
+    "Oper": "elektra",
+    "Aufzug": "",
+    "Szene": "",
+    "日本語": "全1幕",
+    "作品名": "Elektra,  Op.58 (1906-08)"
+  },
+  {
+    "Oper": "rosenkavalier",
+    "Aufzug": 1,
+    "Szene": "",
+    "日本語": "第1幕",
+    "作品名": "Der Rosenkavlier, Op.59 (1909-10)"
+  },
+  {
+    "Oper": "rosenkavalier",
+    "Aufzug": 2,
+    "Szene": "",
+    "日本語": "第2幕",
+    "作品名": "Der Rosenkavlier, Op.59 (1909-10)"
+  },
+  {
+    "Oper": "rosenkavalier",
+    "Aufzug": 3,
+    "Szene": "",
+    "日本語": "第3幕",
+    "作品名": "Der Rosenkavlier, Op.59 (1909-10)"
+  },
+  {
+    "Oper": "ariadne",
+    "Aufzug": "",
+    "Szene": "Vorspiel",
+    "日本語": "プロローグ",
+    "作品名": "Ariadne auf Naxos, Op.60 (1912, revised 1916)"
+  },
+  {
+    "Oper": "ariadne",
+    "Aufzug": "Oper",
+    "Szene": "",
+    "日本語": "オペラ",
+    "作品名": "Ariadne auf Naxos, Op.60 (1912, revised 1916)"
+  },
+  {
+    "Oper": "schatten",
+    "Aufzug": 1,
+    "Szene": 1,
+    "日本語": "第1幕第1場",
+    "作品名": "Die Frau ohne Schatten, Op.65 (1914-17)"
+  },
+  {
+    "Oper": "schatten",
+    "Aufzug": 1,
+    "Szene": 2,
+    "日本語": "第1幕第2場",
+    "作品名": "Die Frau ohne Schatten, Op.65 (1914-17)"
+  },
+  {
+    "Oper": "schatten",
+    "Aufzug": 2,
+    "Szene": 1,
+    "日本語": "第2幕第1場",
+    "作品名": "Die Frau ohne Schatten, Op.65 (1914-17)"
+  },
+  {
+    "Oper": "schatten",
+    "Aufzug": 2,
+    "Szene": 2,
+    "日本語": "第2幕第2場",
+    "作品名": "Die Frau ohne Schatten, Op.65 (1914-17)"
+  },
+  {
+    "Oper": "schatten",
+    "Aufzug": 2,
+    "Szene": 3,
+    "日本語": "第2幕第3場",
+    "作品名": "Die Frau ohne Schatten, Op.65 (1914-17)"
+  },
+  {
+    "Oper": "schatten",
+    "Aufzug": 2,
+    "Szene": 4,
+    "日本語": "第2幕第4場",
+    "作品名": "Die Frau ohne Schatten, Op.65 (1914-17)"
+  },
+  {
+    "Oper": "schatten",
+    "Aufzug": 2,
+    "Szene": 5,
+    "日本語": "第2幕第5場",
+    "作品名": "Die Frau ohne Schatten, Op.65 (1914-17)"
+  },
+  {
+    "Oper": "schatten",
+    "Aufzug": 3,
+    "Szene": 1,
+    "日本語": "第3幕第1場",
+    "作品名": "Die Frau ohne Schatten, Op.65 (1914-17)"
+  },
+  {
+    "Oper": "schatten",
+    "Aufzug": 3,
+    "Szene": 2,
+    "日本語": "第3幕第2場",
+    "作品名": "Die Frau ohne Schatten, Op.65 (1914-17)"
+  },
+  {
+    "Oper": "schatten",
+    "Aufzug": 3,
+    "Szene": 3,
+    "日本語": "第3幕第3場",
+    "作品名": "Die Frau ohne Schatten, Op.65 (1914-17)"
+  },
+  {
+    "Oper": "schatten",
+    "Aufzug": 3,
+    "Szene": 4,
+    "日本語": "第3幕第4場",
+    "作品名": "Die Frau ohne Schatten, Op.65 (1914-17)"
+  },
+  {
+    "Oper": "intermezzo",
+    "Aufzug": 1,
+    "Szene": 1,
+    "日本語": "第1幕第1場",
+    "作品名": "Intermezzo, Op.72 (1919-23)"
+  },
+  {
+    "Oper": "intermezzo",
+    "Aufzug": 1,
+    "Szene": 2,
+    "日本語": "第1幕第2場",
+    "作品名": "Intermezzo, Op.72 (1919-23)"
+  },
+  {
+    "Oper": "intermezzo",
+    "Aufzug": 1,
+    "Szene": 3,
+    "日本語": "第1幕第3場",
+    "作品名": "Intermezzo, Op.72 (1919-23)"
+  },
+  {
+    "Oper": "intermezzo",
+    "Aufzug": 1,
+    "Szene": 4,
+    "日本語": "第1幕第4場",
+    "作品名": "Intermezzo, Op.72 (1919-23)"
+  },
+  {
+    "Oper": "intermezzo",
+    "Aufzug": 1,
+    "Szene": 5,
+    "日本語": "第1幕第5場",
+    "作品名": "Intermezzo, Op.72 (1919-23)"
+  },
+  {
+    "Oper": "intermezzo",
+    "Aufzug": 1,
+    "Szene": 6,
+    "日本語": "第1幕第6場",
+    "作品名": "Intermezzo, Op.72 (1919-23)"
+  },
+  {
+    "Oper": "intermezzo",
+    "Aufzug": 1,
+    "Szene": 7,
+    "日本語": "第1幕第7場",
+    "作品名": "Intermezzo, Op.72 (1919-23)"
+  },
+  {
+    "Oper": "intermezzo",
+    "Aufzug": 2,
+    "Szene": 1,
+    "日本語": "第2幕第1場",
+    "作品名": "Intermezzo, Op.72 (1919-23)"
+  },
+  {
+    "Oper": "intermezzo",
+    "Aufzug": 2,
+    "Szene": 2,
+    "日本語": "第2幕第2場",
+    "作品名": "Intermezzo, Op.72 (1919-23)"
+  },
+  {
+    "Oper": "intermezzo",
+    "Aufzug": 2,
+    "Szene": 3,
+    "日本語": "第2幕第3場",
+    "作品名": "Intermezzo, Op.72 (1919-23)"
+  },
+  {
+    "Oper": "intermezzo",
+    "Aufzug": 2,
+    "Szene": 4,
+    "日本語": "第2幕第4場",
+    "作品名": "Intermezzo, Op.72 (1919-23)"
+  },
+  {
+    "Oper": "intermezzo",
+    "Aufzug": 2,
+    "Szene": 5,
+    "日本語": "第2幕第5場",
+    "作品名": "Intermezzo, Op.72 (1919-23)"
+  },
+  {
+    "Oper": "intermezzo",
+    "Aufzug": 2,
+    "Szene": 6,
+    "日本語": "第2幕第6場",
+    "作品名": "Intermezzo, Op.72 (1919-23)"
+  },
+  {
+    "Oper": "helena",
+    "Aufzug": "einleitung",
+    "Szene": "",
+    "日本語": "導入部",
+    "作品名": "Die ägyptische Helena, Op.75 (1924-27)"
+  },
+  {
+    "Oper": "helena",
+    "Aufzug": 1,
+    "Szene": 1,
+    "日本語": "第1幕第1場",
+    "作品名": "Die ägyptische Helena, Op.75 (1924-27)"
+  },
+  {
+    "Oper": "helena",
+    "Aufzug": 1,
+    "Szene": 2,
+    "日本語": "第1幕第2場",
+    "作品名": "Die ägyptische Helena, Op.75 (1924-27)"
+  },
+  {
+    "Oper": "helena",
+    "Aufzug": 1,
+    "Szene": 3,
+    "日本語": "第1幕第3場",
+    "作品名": "Die ägyptische Helena, Op.75 (1924-27)"
+  },
+  {
+    "Oper": "helena",
+    "Aufzug": 1,
+    "Szene": 4,
+    "日本語": "第1幕第4場",
+    "作品名": "Die ägyptische Helena, Op.75 (1924-27)"
+  },
+  {
+    "Oper": "helena",
+    "Aufzug": 1,
+    "Szene": "finale",
+    "日本語": "第1幕フィナーレ",
+    "作品名": "Die ägyptische Helena, Op.75 (1924-27)"
+  },
+  {
+    "Oper": "helena",
+    "Aufzug": 2,
+    "Szene": "",
+    "日本語": "第2幕",
+    "作品名": "Die ägyptische Helena, Op.75 (1924-27)"
+  },
+  {
+    "Oper": "arabella",
+    "Aufzug": 1,
+    "Szene": "",
+    "日本語": "第1幕",
+    "作品名": "Arabella, Op.79 (1930-32)"
+  },
+  {
+    "Oper": "arabella",
+    "Aufzug": 2,
+    "Szene": "",
+    "日本語": "第2幕",
+    "作品名": "Arabella, Op.79 (1930-32)"
+  },
+  {
+    "Oper": "arabella",
+    "Aufzug": 3,
+    "Szene": "",
+    "日本語": "第3幕",
+    "作品名": "Arabella, Op.79 (1930-32)"
+  },
+  {
+    "Oper": "schweigsame",
+    "Aufzug": 1,
+    "Szene": 1,
+    "日本語": "第1幕第1場",
+    "作品名": "Die schweigsame Frau, Op.80 (1932-35)"
+  },
+  {
+    "Oper": "schweigsame",
+    "Aufzug": 1,
+    "Szene": 2,
+    "日本語": "第1幕第2場",
+    "作品名": "Die schweigsame Frau, Op.80 (1932-35)"
+  },
+  {
+    "Oper": "schweigsame",
+    "Aufzug": 1,
+    "Szene": 3,
+    "日本語": "第1幕第3場",
+    "作品名": "Die schweigsame Frau, Op.80 (1932-35)"
+  },
+  {
+    "Oper": "schweigsame",
+    "Aufzug": 1,
+    "Szene": 4,
+    "日本語": "第1幕第4場",
+    "作品名": "Die schweigsame Frau, Op.80 (1932-35)"
+  },
+  {
+    "Oper": "schweigsame",
+    "Aufzug": 2,
+    "Szene": 1,
+    "日本語": "第2幕第1場",
+    "作品名": "Die schweigsame Frau, Op.80 (1932-35)"
+  },
+  {
+    "Oper": "schweigsame",
+    "Aufzug": 2,
+    "Szene": 2,
+    "日本語": "第2幕第2場",
+    "作品名": "Die schweigsame Frau, Op.80 (1932-35)"
+  },
+  {
+    "Oper": "schweigsame",
+    "Aufzug": 2,
+    "Szene": 3,
+    "日本語": "第2幕第3場",
+    "作品名": "Die schweigsame Frau, Op.80 (1932-35)"
+  },
+  {
+    "Oper": "schweigsame",
+    "Aufzug": 2,
+    "Szene": 4,
+    "日本語": "第2幕第4場",
+    "作品名": "Die schweigsame Frau, Op.80 (1932-35)"
+  },
+  {
+    "Oper": "schweigsame",
+    "Aufzug": 2,
+    "Szene": 5,
+    "日本語": "第2幕第5場",
+    "作品名": "Die schweigsame Frau, Op.80 (1932-35)"
+  },
+  {
+    "Oper": "schweigsame",
+    "Aufzug": 2,
+    "Szene": 6,
+    "日本語": "第2幕第6場",
+    "作品名": "Die schweigsame Frau, Op.80 (1932-35)"
+  },
+  {
+    "Oper": "schweigsame",
+    "Aufzug": 2,
+    "Szene": 7,
+    "日本語": "第2幕第7場",
+    "作品名": "Die schweigsame Frau, Op.80 (1932-35)"
+  },
+  {
+    "Oper": "schweigsame",
+    "Aufzug": 2,
+    "Szene": 8,
+    "日本語": "第2幕第8場",
+    "作品名": "Die schweigsame Frau, Op.80 (1932-35)"
+  },
+  {
+    "Oper": "schweigsame",
+    "Aufzug": 2,
+    "Szene": 9,
+    "日本語": "第2幕第9場",
+    "作品名": "Die schweigsame Frau, Op.80 (1932-35)"
+  },
+  {
+    "Oper": "schweigsame",
+    "Aufzug": 2,
+    "Szene": 10,
+    "日本語": "第2幕第10場",
+    "作品名": "Die schweigsame Frau, Op.80 (1932-35)"
+  },
+  {
+    "Oper": "schweigsame",
+    "Aufzug": 2,
+    "Szene": 11,
+    "日本語": "第2幕第11場",
+    "作品名": "Die schweigsame Frau, Op.80 (1932-35)"
+  },
+  {
+    "Oper": "schweigsame",
+    "Aufzug": 2,
+    "Szene": 12,
+    "日本語": "第2幕第12場",
+    "作品名": "Die schweigsame Frau, Op.80 (1932-35)"
+  },
+  {
+    "Oper": "schweigsame",
+    "Aufzug": 3,
+    "Szene": "einleitung",
+    "日本語": "第3幕導入部",
+    "作品名": "Die schweigsame Frau, Op.80 (1932-35)"
+  },
+  {
+    "Oper": "schweigsame",
+    "Aufzug": 3,
+    "Szene": 1,
+    "日本語": "第3幕第1場",
+    "作品名": "Die schweigsame Frau, Op.80 (1932-35)"
+  },
+  {
+    "Oper": "schweigsame",
+    "Aufzug": 3,
+    "Szene": 2,
+    "日本語": "第3幕第2場",
+    "作品名": "Die schweigsame Frau, Op.80 (1932-35)"
+  },
+  {
+    "Oper": "schweigsame",
+    "Aufzug": 3,
+    "Szene": 3,
+    "日本語": "第3幕第3場",
+    "作品名": "Die schweigsame Frau, Op.80 (1932-35)"
+  },
+  {
+    "Oper": "schweigsame",
+    "Aufzug": 3,
+    "Szene": 4,
+    "日本語": "第3幕第4場",
+    "作品名": "Die schweigsame Frau, Op.80 (1932-35)"
+  },
+  {
+    "Oper": "schweigsame",
+    "Aufzug": 3,
+    "Szene": 5,
+    "日本語": "第3幕第5場",
+    "作品名": "Die schweigsame Frau, Op.80 (1932-35)"
+  },
+  {
+    "Oper": "schweigsame",
+    "Aufzug": 3,
+    "Szene": 6,
+    "日本語": "第3幕第6場",
+    "作品名": "Die schweigsame Frau, Op.80 (1932-35)"
+  },
+  {
+    "Oper": "schweigsame",
+    "Aufzug": 3,
+    "Szene": 7,
+    "日本語": "第3幕第7場",
+    "作品名": "Die schweigsame Frau, Op.80 (1932-35)"
+  },
+  {
+    "Oper": "schweigsame",
+    "Aufzug": 3,
+    "Szene": 8,
+    "日本語": "第3幕第8場",
+    "作品名": "Die schweigsame Frau, Op.80 (1932-35)"
+  },
+  {
+    "Oper": "schweigsame",
+    "Aufzug": 3,
+    "Szene": 9,
+    "日本語": "第3幕第9場",
+    "作品名": "Die schweigsame Frau, Op.80 (1932-35)"
+  },
+  {
+    "Oper": "schweigsame",
+    "Aufzug": 3,
+    "Szene": 10,
+    "日本語": "第3幕第10場",
+    "作品名": "Die schweigsame Frau, Op.80 (1932-35)"
+  },
+  {
+    "Oper": "tag",
+    "Aufzug": 1,
+    "Szene": "",
+    "日本語": "全1幕",
+    "作品名": "Friedenstag, Op.81 (1935-36)"
+  },
+  {
+    "Oper": "daphne",
+    "Aufzug": 1,
+    "Szene": "",
+    "日本語": "全1幕",
+    "作品名": "Daphne, Op.82 (1936-37)"
+  },
+  {
+    "Oper": "danae",
+    "Aufzug": 1,
+    "Szene": "",
+    "日本語": "第1幕",
+    "作品名": "Die Liebe der Danae, Op.83 (1938-40)"
+  },
+  {
+    "Oper": "danae",
+    "Aufzug": 2,
+    "Szene": "",
+    "日本語": "第2幕",
+    "作品名": "Die Liebe der Danae, Op.83 (1938-40)"
+  },
+  {
+    "Oper": "danae",
+    "Aufzug": 3,
+    "Szene": "",
+    "日本語": "第3幕",
+    "作品名": "Die Liebe der Danae, Op.83 (1938-40)"
+  },
+  {
+    "Oper": "cap",
+    "Aufzug": "",
+    "Szene": "einleitung",
+    "日本語": "導入部",
+    "作品名": "Capriccio, Op.85 (1940-41)"
+  },
+  {
+    "Oper": "cap",
+    "Aufzug": "",
+    "Szene": 1,
+    "日本語": "第1場",
+    "作品名": "Capriccio, Op.85 (1940-41)"
+  },
+  {
+    "Oper": "cap",
+    "Aufzug": "",
+    "Szene": 2,
+    "日本語": "第2場",
+    "作品名": "Capriccio, Op.85 (1940-41)"
+  },
+  {
+    "Oper": "cap",
+    "Aufzug": "",
+    "Szene": 3,
+    "日本語": "第3場",
+    "作品名": "Capriccio, Op.85 (1940-41)"
+  },
+  {
+    "Oper": "cap",
+    "Aufzug": "",
+    "Szene": 4,
+    "日本語": "第4場",
+    "作品名": "Capriccio, Op.85 (1940-41)"
+  },
+  {
+    "Oper": "cap",
+    "Aufzug": "",
+    "Szene": 5,
+    "日本語": "第5場",
+    "作品名": "Capriccio, Op.85 (1940-41)"
+  },
+  {
+    "Oper": "cap",
+    "Aufzug": "",
+    "Szene": 6,
+    "日本語": "第6場",
+    "作品名": "Capriccio, Op.85 (1940-41)"
+  },
+  {
+    "Oper": "cap",
+    "Aufzug": "",
+    "Szene": 7,
+    "日本語": "第7場",
+    "作品名": "Capriccio, Op.85 (1940-41)"
+  },
+  {
+    "Oper": "cap",
+    "Aufzug": "",
+    "Szene": 8,
+    "日本語": "第8場",
+    "作品名": "Capriccio, Op.85 (1940-41)"
+  },
+  {
+    "Oper": "cap",
+    "Aufzug": "",
+    "Szene": 9,
+    "日本語": "第9場",
+    "作品名": "Capriccio, Op.85 (1940-41)"
+  },
+  {
+    "Oper": "cap",
+    "Aufzug": "",
+    "Szene": 10,
+    "日本語": "第10場",
+    "作品名": "Capriccio, Op.85 (1940-41)"
+  },
+  {
+    "Oper": "cap",
+    "Aufzug": "",
+    "Szene": 11,
+    "日本語": "第11場",
+    "作品名": "Capriccio, Op.85 (1940-41)"
+  },
+  {
+    "Oper": "cap",
+    "Aufzug": "",
+    "Szene": 12,
+    "日本語": "第12場",
+    "作品名": "Capriccio, Op.85 (1940-41)"
+  },
+  {
+    "Oper": "cap",
+    "Aufzug": "",
+    "Szene": 13,
+    "日本語": "第13場",
+    "作品名": "Capriccio, Op.85 (1940-41)"
+  }
+]
