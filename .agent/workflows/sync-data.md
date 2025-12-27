@@ -127,42 +127,47 @@ start mahler-search-app/dic.html
 
 ## トラブルシューティング
 
-### clasp認証エラー（Permission denied / Not logged in）
+### clasp pushの認証エラー（Permission denied / Insufficient Permission）
 
-**症状**: `sync-data.ps1`実行時に「permission」「unauthorized」などのエラーが表示される
+**症状**: `sync-data.ps1`実行時に「permission」「Insufficient Permission」などの警告が表示される
 
-**原因**: 別のGASプロジェクトを使った後、claspの認証情報が混乱している
+**原因**: 別のGoogleアカウントでclaspにログインしているため、GASプロジェクトの編集権限がない
 
-**解決方法**（自動検出あり）:
+**動作**: ✅ **スクリプトは自動的に続行します**
 
-v2024.12以降の`sync-data.ps1`は、認証エラーを自動検出して解決手順を表示します：
+v2024.12.27以降の`sync-data.ps1`は、clasp pushが失敗しても**自動的にスキップして続行**します：
 
 ```powershell
-# スクリプトが自動的にエラーを検出し、以下の手順を表示します:
-⚠ Authentication error detected. Please re-login to clasp.
+⚠ clasp push failed: Authentication error detected.
 
-Run the following commands:
-  1. clasp logout
-  2. clasp login
-  3. .\sync-data.ps1
+This usually means clasp is logged in with a different Google account.
+The script will continue using Web App for GAS function execution.
+
+To fix authentication (optional):
+  1. cd src
+  2. clasp logout
+  3. clasp login
+  4. Select the correct Google account (pistares@gmail.com)
+
+⚠ Skipping clasp push. GAS files will not be updated.
+✓ GAS function executed successfully via Web App.
 ```
 
-**手動で解決する場合**:
+> [!IMPORTANT]
+> GASファイル（`src/`内のファイル）をローカルで編集した場合のみ、clasp認証の修正が必要です。
+> スプレッドシートのデータ更新だけなら、認証エラーは無視して問題ありません。
+
+**手動で認証を修正する場合**（GASファイルを編集する場合のみ）:
 
 ```powershell
-# 1. ログアウト
+cd src
 clasp logout
-
-# 2. 再ログイン（ブラウザで認証）
-clasp login
-
-# 3. sync-data.ps1を再実行
-.\sync-data.ps1
+clasp login  # ブラウザで pistares@gmail.com を選択
 ```
 
 > [!TIP]
-> 複数のGASプロジェクトを使う場合、プロジェクト切り替え時に認証エラーが発生することがあります。
-> その場合は上記の手順で再ログインしてください。
+> clasp pushの認証エラーは、**Web App経由でのデータ更新には影響しません**。
+> GASファイルの編集が不要なら、エラーを無視して構いません。
 
 ### Script function not found エラー
 

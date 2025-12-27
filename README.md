@@ -45,7 +45,36 @@
 
 ## トラブルシューティング
 
+### clasp pushの認証エラー
+
+**症状**: `sync-data.ps1`実行時に「Insufficient Permission」「permission」などの警告が表示される
+
+**原因**: 別のGoogleアカウントでclaspにログインしているため、GASプロジェクトの編集権限がない
+
+**動作**: ✅ **スクリプトは自動的に続行します**（v2024.12.27以降）
+
+```
+⚠ clasp push failed: Authentication error detected.
+⚠ Skipping clasp push. GAS files will not be updated.
+✓ GAS function executed successfully via Web App.
+```
+
+**対処が必要な場合**: GASファイル（`src/`内のファイル）をローカルで編集した場合のみ
+
+```powershell
+cd src
+clasp logout
+clasp login  # ブラウザで pistares@gmail.com を選択
+```
+
+> **Note**: スプレッドシートのデータ更新だけなら、認証エラーは無視して問題ありません。
+
+---
+
+### GAS実行時のAuth Error (401)
+
 **Q. GAS実行時に Auth Error (401) が出る**
+
 A. しばらくデプロイを更新していなかったり、大幅な変更をした直後は、Googleのセキュリティロックがかかることがあります。
 一度、ブラウザで [Web App URL](https://script.google.com/macros/s/AKfycbzsgiXGZ3ptAGqR-qMDR26tRNI235IYUVBox-quohfqvNlnkxGSqNb9yY8DiD41JB8qWA/exec) にアクセスし、画面の指示に従って「許可」ボタンを押してください。その後、再度スクリプトを実行すれば通ります。
 

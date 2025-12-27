@@ -36,25 +36,35 @@ if ($gasChanges) {
     
     if ($pushExitCode -ne 0) {
         # 権限エラーを検出
-        if ($pushOutput -match "permission|unauthorized|credentials|not logged in") {
+        if ($pushOutput -match "permission|unauthorized|credentials|not logged in|Insufficient") {
             Write-Host ""
-            Write-Warning "⚠ Authentication error detected. Please re-login to clasp."
+            Write-Warning "⚠ clasp push failed: Authentication error detected."
             Write-Host ""
-            Write-Host "Run the following commands:" -ForegroundColor Cyan
-            Write-Host "  1. clasp logout" -ForegroundColor White
-            Write-Host "  2. clasp login" -ForegroundColor White
-            Write-Host "  3. .\sync-data.ps1" -ForegroundColor White
+            Write-Host "This usually means clasp is logged in with a different Google account." -ForegroundColor Gray
+            Write-Host "The script will continue using Web App for GAS function execution." -ForegroundColor Gray
+            Write-Host ""
+            Write-Host "To fix authentication (optional):" -ForegroundColor Cyan
+            Write-Host "  1. cd src" -ForegroundColor White
+            Write-Host "  2. clasp logout" -ForegroundColor White
+            Write-Host "  3. clasp login" -ForegroundColor White
+            Write-Host "  4. Select the correct Google account (pistares@gmail.com)" -ForegroundColor White
             Write-Host ""
             Pop-Location
-            exit 1
+            # エラーで停止せず、警告として続行
+            Write-Host "⚠ Skipping clasp push. GAS files will not be updated." -ForegroundColor Yellow
+        } else {
+            # 認証以外のエラー
+            Write-Host ""
+            Write-Warning "⚠ clasp push failed with an unexpected error."
+            Write-Host "Error output: $($pushOutput | Out-String)" -ForegroundColor DarkGray
+            Write-Host ""
+            Write-Host "Continuing with Web App execution..." -ForegroundColor Gray
+            Pop-Location
         }
-        Write-Error "❌ clasp push failed."
+    } else {
         Pop-Location
-        exit 1
+        Write-Host "✓ GAS source updated successfully." -ForegroundColor Green
     }
-    
-    Pop-Location
-    Write-Host "✓ GAS source updated successfully." -ForegroundColor Green
 } else {
     Write-Host "✓ No changes in src/ detected. Skipping clasp push." -ForegroundColor Gray
 }
