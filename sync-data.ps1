@@ -102,7 +102,7 @@ $runExitCode = $LASTEXITCODE
 $runFailed = ($runExitCode -ne 0) -or ($runOutput -match "Unable to run|function not found|Script function not found")
 
 if ($runFailed) {
-    Write-Host "✗ clasp run failed (exit code: $runExitCode)" -ForegroundColor Yellow
+    Write-Host "✗ clasp run failed or unavailable (exit code: $runExitCode)" -ForegroundColor Yellow
     
     # clasp runの出力を表示（デバッグ用）
     if ($runOutput) {
@@ -110,24 +110,7 @@ if ($runFailed) {
         Write-Host ($runOutput | Out-String) -ForegroundColor DarkGray
     }
     
-    #デバッグ: 認証エラーチェック
-    $isAuthError = $runOutput -match "permission|unauthorized|credentials|not logged in"
-    Write-Host "DEBUG: isAuthError = $isAuthError" -ForegroundColor Magenta
-    
-    # 認証エラーの場合は停止（再ログインが必要）
-    if ($isAuthError) {
-        Write-Host ""
-        Write-Warning "⚠ Authentication error detected. Please re-login to clasp."
-        Write-Host ""
-        Write-Host "Run the following commands:" -ForegroundColor Cyan
-        Write-Host "  1. clasp logout" -ForegroundColor White
-        Write-Host "  2. clasp login" -ForegroundColor White
-        Write-Host "  3. .\sync-data.ps1" -ForegroundColor White
-        Write-Host ""
-        exit 1
-    }
-    
-    # 認証エラー以外（Apps Script API問題等）はWeb Appフォールバックに移行
+    # Web App経由で実行を試みる
     Write-Host ""
     Write-Host "→ Falling back to Web App method..." -ForegroundColor Yellow
     Write-Host ""
