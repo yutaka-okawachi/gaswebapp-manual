@@ -106,11 +106,16 @@ if ($runFailed) {
     
     # clasp runの出力を表示（デバッグ用）
     if ($runOutput) {
-        Write-Host "clasp run output: $($runOutput | Out-String)" -ForegroundColor DarkGray
+        Write-Host "clasp run output:" -ForegroundColor DarkGray
+        Write-Host ($runOutput | Out-String) -ForegroundColor DarkGray
     }
     
+    #デバッグ: 認証エラーチェック
+    $isAuthError = $runOutput -match "permission|unauthorized|credentials|not logged in"
+    Write-Host "DEBUG: isAuthError = $isAuthError" -ForegroundColor Magenta
+    
     # 認証エラーの場合は停止（再ログインが必要）
-    if ($runOutput -match "permission|unauthorized|credentials|not logged in") {
+    if ($isAuthError) {
         Write-Host ""
         Write-Warning "⚠ Authentication error detected. Please re-login to clasp."
         Write-Host ""
