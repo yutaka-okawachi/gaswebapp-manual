@@ -98,7 +98,10 @@ Write-Host "Attempting clasp run..." -ForegroundColor Gray
 $runOutput = clasp run exportAllDataToJson 2>&1
 $runExitCode = $LASTEXITCODE
 
-if ($runExitCode -ne 0) {
+# clasp runは失敗しても Exit code 0 を返すことがあるため、出力テキストもチェック
+$runFailed = ($runExitCode -ne 0) -or ($runOutput -match "Unable to run|function not found|Script function not found|Error")
+
+if ($runFailed) {
     Write-Host "✗ clasp run failed (exit code: $runExitCode)" -ForegroundColor Yellow
     
     # clasp runの出力を表示（デバッグ用）
@@ -106,7 +109,7 @@ if ($runExitCode -ne 0) {
         Write-Host "clasp run output: $($runOutput | Out-String)" -ForegroundColor DarkGray
     }
     
-    # 権限エラーまたは関数が見つからないエラーを検出
+    # 権限エラーを検出
     if ($runOutput -match "permission|unauthorized|credentials|not logged in") {
         Write-Host ""
         Write-Warning "⚠ Authentication error detected. Please re-login to clasp."
@@ -148,6 +151,9 @@ if ($runExitCode -ne 0) {
                 # 結果の詳細を表示
                 if ($webResponse.result) {
                     Write-Host "  Files processed: $($webResponse.result.success.Length) succeeded" -ForegroundColor Gray
+                }
+                if ($webResponse.duration) {
+                    Write-Host "  GAS execution time: $([math]::Round($webResponse.duration, 1)) seconds" -ForegroundColor Gray
                 }
             } else {
                 Write-Error "❌ Web App execution failed: $($webResponse.error)"
