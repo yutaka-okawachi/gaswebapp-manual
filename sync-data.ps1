@@ -194,12 +194,67 @@ Write-Host ""
 
 # --- [4/5] 最新データのローカル同期 (git pull) ---
 Write-Host "[4/5] Pulling latest data from GitHub..." -ForegroundColor Yellow
-git pull --rebase
-if ($LASTEXITCODE -ne 0) {
-    Write-Warning "⚠ git pull failed or has conflicts. Please resolve manually."
-    exit 1
+
+# GASからのGitHubプッシュが完了するまで少し待機
+Write-Host "Waiting for GAS to push data to GitHub..." -ForegroundColor Gray
+Start-Sleep -Seconds 3
+
+# git pullを実行（出力をキャプチャ）
+$pullOutput = git pull --rebase 2>&1
+$pullExitCode = $LASTEXITCODE
+
+if ($pullExitCode -ne 0) {
+    Write-Host ""
+    Write-Warning "⚠ git pull failed."
+    Write-Host "Pull output:" -ForegroundColor DarkGray
+    Write-Host ($pullOutput | Out-String) -ForegroundColor DarkGray
+    Write-Host ""
+    
+    # コンフリクトかその他のエラーかを判定
+    if ($pullOutput -match "conflict|CONFLICT") {
+        Write-Host "Conflict detected. Attempting to resolve..." -ForegroundColor Yellow
+        Write-Host ""
+        Write-Host "To resolve manually:" -ForegroundColor Cyan
+        Write-Host "  1. git status  # Check conflicts" -ForegroundColor White
+        Write-Host "  2. git checkout --theirs <file>  # Accept GitHub version" -ForegroundColor White
+        Write-Host "  3. git rebase --continue" -ForegroundColor White
+        Write-Host ""
+        exit 1
+    } else {
+        # その他のエラー: リトライ
+        Write-Host "Retrying pull in 5 seconds..." -ForegroundColor Yellow
+        Start-Sleep -Seconds 5
+        
+        $pullOutput2 = git pull --rebase 2>&1
+        $pullExitCode2 = $LASTEXITCODE
+        
+        if ($pullExitCode2 -ne 0) {
+            Write-Error "❌ git pull failed after retry."
+            Write-Host "Pull output:" -ForegroundColor DarkGray
+            Write-Host ($pullOutput2 | Out-String) -ForegroundColor DarkGray
+            Write-Host ""
+            Write-Host "Please run manually: git pull --rebase" -ForegroundColor Yellow
+            exit 1
+        } else {
+            Write-Host "✓ Pull succeeded on retry." -ForegroundColor Green
+        }
+    }
+} else {
+    # git pullの詳細を表示
+    if ($pullOutput -match "Fast-forward|Updating|Already up to date") {
+        Write-Host "✓ Local repository is now up to date." -ForegroundColor Green
+        
+        # 更新されたファイルを表示（情報提供）
+        if ($pullOutput -match "mahler-search-app/dic.html") {
+            Write-Host "  • dic.html updated from GitHub" -ForegroundColor Gray
+        }
+        if ($pullOutput -match "mahler-search-app/data/") {
+            Write-Host "  • Data files updated from GitHub" -ForegroundColor Gray
+        }
+    } else {
+        Write-Host "✓ Local repository is now up to date." -ForegroundColor Green
+    }
 }
-Write-Host "✓ Local repository is now up to date." -ForegroundColor Green
 Write-Host ""
 
 # --- [5/5] 全ての変更を GitHub に公開 (git push) ---

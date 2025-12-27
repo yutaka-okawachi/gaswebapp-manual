@@ -71,6 +71,32 @@ clasp login  # ブラウザで pistares@gmail.com を選択
 
 ---
 
+### git pull失敗（sync-data.ps1実行時）
+
+**症状**: `sync-data.ps1`の`[4/5] Pulling latest data from GitHub...`でエラーが発生
+
+**原因**: ローカルとGitHubで競合が発生、またはネットワークエラー
+
+**対処**: v2024.12.27以降のスクリプトは自動的にリトライします
+
+```
+⚠ git pull failed.
+Retrying pull in 5 seconds...
+✓ Pull succeeded on retry.
+```
+
+**手動で解決する場合**:
+```powershell
+git pull --rebase
+# コンフリクトが発生した場合
+git checkout --theirs mahler-search-app/dic.html  # GitHub版を採用
+git rebase --continue
+```
+
+> **Note**: v2024.12.27以降、スクリプトは自動的に3秒待機してからgit pullを実行し、失敗時は5秒後にリトライします。
+
+---
+
 ### GAS実行時のAuth Error (401)
 
 **Q. GAS実行時に Auth Error (401) が出る**
