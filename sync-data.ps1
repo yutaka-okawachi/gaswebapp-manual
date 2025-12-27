@@ -99,7 +99,7 @@ $runOutput = clasp run exportAllDataToJson 2>&1
 $runExitCode = $LASTEXITCODE
 
 # clasp runは失敗しても Exit code 0 を返すことがあるため、出力テキストもチェック
-$runFailed = ($runExitCode -ne 0) -or ($runOutput -match "Unable to run|function not found|Script function not found|Error")
+$runFailed = ($runExitCode -ne 0) -or ($runOutput -match "Unable to run|function not found|Script function not found")
 
 if ($runFailed) {
     Write-Host "✗ clasp run failed (exit code: $runExitCode)" -ForegroundColor Yellow
@@ -109,7 +109,7 @@ if ($runFailed) {
         Write-Host "clasp run output: $($runOutput | Out-String)" -ForegroundColor DarkGray
     }
     
-    # 権限エラーを検出
+    # 認証エラーの場合は停止（再ログインが必要）
     if ($runOutput -match "permission|unauthorized|credentials|not logged in") {
         Write-Host ""
         Write-Warning "⚠ Authentication error detected. Please re-login to clasp."
@@ -122,7 +122,7 @@ if ($runFailed) {
         exit 1
     }
     
-    # clasp run失敗時はWeb App経由で実行を試みる
+    # 認証エラー以外（Apps Script API問題等）はWeb Appフォールバックに移行
     Write-Host ""
     Write-Host "→ Falling back to Web App method..." -ForegroundColor Yellow
     Write-Host ""
