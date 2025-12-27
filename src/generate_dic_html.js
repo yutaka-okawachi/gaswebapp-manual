@@ -517,6 +517,9 @@ function generateDicHtml(dicData, abbrData) {
         <div class="container">
             <div class="home-link"><a href="home.html">HOME</a></div>
             <h1>用語集</h1>
+            <p style="font-size: 0.85rem; color: #555; margin-top: 0.5em; margin-bottom: 1em;">
+                RSの管弦楽曲，Anton Bruckner，Paul Hindemith, Sigfrid Karg-Elert については楽譜に記されている2語以上のものについては最初の単語で検索
+            </p>
             <div id="listContainer">
 ${dicListHtml}
             </div>
