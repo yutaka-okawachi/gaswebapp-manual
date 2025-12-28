@@ -1,0 +1,5 @@
+================================
+Unified Sync & Export Script
+================================
+
+[1/5] Checking GAS source changes (src/)...
