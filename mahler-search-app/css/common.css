@@ -805,7 +805,7 @@ button.clear-input-btn:hover {
 }
 
 /* Target Highlight Animation */
-:target {
+:target, .highlight-target {
     animation: highlightFade 3s ease-out;
 }
 

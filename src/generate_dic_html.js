@@ -421,16 +421,23 @@ function generateDicHtml(dicData, abbrData) {
             }
 
             const targetId = hash.substring(1);
+            
+            // Remove previous highlights
+            document.querySelectorAll('.highlight-target').forEach(el => el.classList.remove('highlight-target'));
+
             let targetElement = document.getElementById(targetId);
 
             // If not found by ID (happens when it's the first term of an alphabet section), 
             // check data-term-id attribute.
             if (!targetElement) {
                 targetElement = document.querySelector(\`[data-term-id="\${targetId}"]\`);
+                if (targetElement) {
+                    targetElement.classList.add('highlight-target');
+                }
             }
 
             if (targetElement) {
-                targetElement.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
             }
         }
 
