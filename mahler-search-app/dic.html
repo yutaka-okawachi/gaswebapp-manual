@@ -75,7 +75,7 @@
             scroll-margin-top: 20px;
         }
 
-        .row {
+        .row, div[id^="letter-"] {
             border-bottom: 1px solid #ccc;
             padding-bottom: 10px;
             margin-bottom: 10px;
@@ -83,14 +83,21 @@
             transition: background-color 0.3s;
         }
 
+        div[id^="letter-"] {
+            border-bottom: none;
+            padding-bottom: 0;
+            margin-bottom: 0;
+        }
+
         /* Target Highlight Animation */
-        .row.highlight-active, .row:target {
-            animation: highlightFade 3s ease-out !important;
+        .row.highlight-active {
+            animation: highlightFade 2.5s ease-out !important;
         }
 
         @keyframes highlightFade {
-            0% { background-color: #ffeb3b !important; }
-            100% { background-color: transparent !important; }
+            0% { background-color: #ffeb3b; }
+            15% { background-color: #ffeb3b; }
+            100% { background-color: transparent; }
         }
 
         .german {
@@ -168,21 +175,23 @@
             // If not found by ID (happens when it's the first term of an alphabet section), 
             // check data-term-id attribute.
             if (!targetElement) {
-                targetElement = document.querySelector(`[data-term-id="${targetId}"]`);
+                return;
             }
 
-            if (targetElement) {
-                targetElement.scrollIntoView({ behavior: 'auto', block: 'start' });
-                
-                // Remove class first, force reflow, then add back to trigger animation
-                targetElement.classList.remove('highlight-active');
-                void targetElement.offsetWidth; // Trigger reflow
-                
-                // Use requestAnimationFrame to ensure the class addition triggers animation
-                requestAnimationFrame(() => {
-                    targetElement.classList.add('highlight-active');
-                });
-            }
+            // Highlighting
+            targetElement.scrollIntoView({ behavior: 'auto', block: 'start' });
+            
+            // Remove previous highlights
+            document.querySelectorAll('.row.highlight-active').forEach(el => el.classList.remove('highlight-active'));
+            
+            // Trigger animation
+            // Use reflow + frame delay to ensure it restarts even if same hash
+            targetElement.classList.remove('highlight-active');
+            void targetElement.offsetWidth; 
+            
+            setTimeout(() => {
+                targetElement.classList.add('highlight-active');
+            }, 0);
         }
 
         // ページトップへスクロール
@@ -268,7 +277,8 @@
                 RSの管弦楽曲，Anton Bruckner，Paul Hindemith, Sigfrid Karg-Elert については楽譜に記されている2語以上のものについては最初の単語で検索
             </p>
             <div id="listContainer">
-<div class="row" id="letter-OTHER" data-term-id="term-bedeutet-stets-starkes-portamento">
+<div id="letter-OTHER"></div>
+<div class="row" id="term-bedeutet-stets-starkes-portamento">
   <div>
     <span class="german">/ bedeutet stets: starkes Portamento!</span><span class="source">[RS: Held]</span>
   </div>
@@ -298,7 +308,8 @@
   </div>
   <div class="translation">5小節間の長さで </div>
 </div>
-<div class="row" id="letter-A" data-term-id="term-abdaempfen">
+<div id="letter-A"></div>
+<div class="row" id="term-abdaempfen">
   <div>
     <span class="german">abdämpfen</span><span class="source">[GM]</span>
   </div>
@@ -712,7 +723,8 @@
   </div>
   <div class="translation">(≒ selection, choice / selezione, scelta)<br>【一般的な意味】<br>① 選ぶこと，選択，選定，選抜．<br>② 品揃え，選り抜きの品，（詩などの）選集，抜粋．<br>【音楽用語としての訳例】<br>「選抜」，「抜粋」，「セレクション」，「選集」，「（楽器などの）選定」</div>
 </div>
-<div class="row" id="letter-B" data-term-id="term-bache">
+<div id="letter-B"></div>
+<div class="row" id="term-bache">
   <div>
     <span class="german">Bache</span><span class="source">[RS: Alpen]</span>
   </div>
@@ -1048,7 +1060,8 @@
   </div>
   <div class="translation">(≒ <a href="dic.html#term-brutal" class="term-link">brutal</a>, violent, savage / brutale, violento)<br>【一般的な意味】<br>① （人や行為が）残忍な，野蛮な，暴力的な，獣のような．<br>② （事実などが）露骨な，赤裸々な，荒削りの，容赦のない．<br>【音楽用語としての訳例】<br>「暴力的に」，「野蛮に」，「荒々しく」，「（音を）叩きつけるように」，「（美しさを顧みず）粗野に」，「容赦なく」<br><br>交響曲第6番第4楽章にのみ使用例がある．「粗暴に」と訳している．</div>
 </div>
-<div class="row" id="letter-C" data-term-id="term-charakter">
+<div id="letter-C"></div>
+<div class="row" id="term-charakter">
   <div>
     <span class="german">Charakter</span><span class="source">[GM]</span>
   </div>
@@ -1084,7 +1097,8 @@
   </div>
   <div class="translation">これはフランス語．&quot;<a href="dic.html#term-schmetternd" class="term-link">schmetternd</a>&quot; の項を参照</div>
 </div>
-<div class="row" id="letter-D" data-term-id="term-d-h">
+<div id="letter-D"></div>
+<div class="row" id="term-d-h">
   <div>
     <span class="german">d.h.</span><span class="source">[GM]</span>
   </div>
@@ -1498,7 +1512,8 @@
   </div>
   <div class="translation">(≒ gloomy, somber, dark, sinister / cupo, oscuro, tetro)<br>【一般的な意味】<br>① （光がなく）暗い，薄暗い，陰気な，どんよりした．<br>② （気分や表情が）沈んだ，憂鬱な，陰鬱な．<br>③ （未来や雰囲気が）不吉な，険悪な，不気味な．<br>【音楽用語としての訳例】<br>「暗く（cupo）」，「陰鬱に」，「沈鬱に」，「不気味に」，「（音色を）くすませて」，「重苦しく」<br><br>GM では大地の歌第1楽章にのみ使われている．「陰鬱に」と訳している．</div>
 </div>
-<div class="row" id="letter-E" data-term-id="term-eben">
+<div id="letter-E"></div>
+<div class="row" id="term-eben">
   <div>
     <span class="german">eben</span><span class="source">[GM], [RW: Oper], [RS: Oper]</span>
   </div>
@@ -1876,7 +1891,8 @@
   </div>
   <div class="translation">いくらかテンポを緩めて</div>
 </div>
-<div class="row" id="letter-F" data-term-id="term-fach">
+<div id="letter-F"></div>
+<div class="row" id="term-fach">
   <div>
     <span class="german">fach</span><span class="source">[GM]</span>
   </div>
@@ -2074,7 +2090,8 @@
   </div>
   <div class="translation">(≒ by oneself, independently, separately / per sé, da solo, separatamente)<br>【一般的な意味】<br>① 自分自身のために，自分だけで．<br>② 単独で，別個に，他とは切り離されて．<br>③ （表現などが）それ自体で，本質的に．<br>④ 秘密に，内密に．<br><br>直訳すると「自分のために」<br>行為が “内側に閉じている”（他人に聞こえない，完全に内的）<br>「心の中で」，「ひとりで」，「密かに」など．<br><br>一方で，&quot;<a href="dic.html#term-vor-sich" class="term-link">vor sich</a>&quot; は直訳すると「自分の前で」<br>行為が “外に向かって” 現れている（独り言や小声含むが外部化されている）<br>「独り言のように」，「自分に向かって（声を出して）」など．<br><br>どちらも「独り言のように」と訳していることが多い．</div>
 </div>
-<div class="row" id="letter-G" data-term-id="term-g-saite-aufangs-breit-markig">
+<div id="letter-G"></div>
+<div class="row" id="term-g-saite-aufangs-breit-markig">
   <div>
     <span class="german">G Saite aufangs breit markig</span><span class="source">[B: 5]</span>
   </div>
@@ -2506,7 +2523,8 @@
   </div>
   <div class="translation">(≒ ground, reason, base, bottom, foundation / ragione, base, fondamento)<br>【一般的な意味】<br>① 地面，土地，基礎，土台．<br>② 根拠，理由，原因．<br>③ 底部，奥．<br><br>「（和声の）根音」の意味もある．</div>
 </div>
-<div class="row" id="letter-H" data-term-id="term-hab-lumbedruwwel-mit-me-lumbeschatz">
+<div id="letter-H"></div>
+<div class="row" id="term-hab-lumbedruwwel-mit-me-lumbeschatz">
   <div>
     <span class="german">Hab lumbedruwwel mit me lumbeschatz</span><span class="source">[H: Pitt]</span>
   </div>
@@ -2710,7 +2728,8 @@
   </div>
   <div class="translation">(≒ humorous, witty, funny / umoristico, spiritoso)<br>【一般的な意味】<br>① ユーモアのある，こっけいな．<br>② 機知に富んだ，気の利いた．<br>【音楽用語としての訳例】<br>「ユーモラスに」，「滑稽に」，「おどけて」</div>
 </div>
-<div class="row" id="letter-I" data-term-id="term-ii-cello-am-i-pult-mit-dem-v-pult">
+<div id="letter-I"></div>
+<div class="row" id="term-ii-cello-am-i-pult-mit-dem-v-pult">
   <div>
     <span class="german">II.Cello am I.Pult mit dem V.Pult</span><span class="source">[RS: Qui]</span>
   </div>
@@ -2836,7 +2855,8 @@
   </div>
   <div class="translation">(≒ false paths, astray, devious ways / via sbagliata, in errore)<br>Irrweg (道に迷うこと，過ち) の複数形（主に３格）<br>【一般的な意味】<br>① 間違った道，迷路，回り道．<br>② （比喩的に）誤り，間違い，過失．<br>【音楽用語としての訳例】<br>[RS: Alpen] において，「道に迷って」</div>
 </div>
-<div class="row" id="letter-J" data-term-id="term-jagd">
+<div id="letter-J"></div>
+<div class="row" id="term-jagd">
   <div>
     <span class="german">Jagd</span><span class="source">[B: 4-2], , [RW: Oper], [RS: Oper]</span>
   </div>
@@ -2890,7 +2910,8 @@
   </div>
   <div class="translation">(≒ however, yet, nevertheless / tuttavia, eppure)<br>【一般的な意味】<br>① しかし，けれども，だが．<br>② （強調として）確かに，まさしく．</div>
 </div>
-<div class="row" id="letter-K" data-term-id="term-kammerdiener">
+<div id="letter-K"></div>
+<div class="row" id="term-kammerdiener">
   <div>
     <span class="german">Kammerdiener</span><span class="source">[RS: Oper]</span>
   </div>
@@ -3058,7 +3079,8 @@
   </div>
   <div class="translation">(≒ future, coming, subsequent / futuro, successivo)<br>künftig の格変化形<br>【一般的な意味】<br>① 将来の，今後の，未来の．<br>② 後に続く，次の，後続の．</div>
 </div>
-<div class="row" id="letter-L" data-term-id="term-lakai">
+<div id="letter-L"></div>
+<div class="row" id="term-lakai">
   <div>
     <span class="german">Lakai</span><span class="source">[RS: Oper]</span>
   </div>
@@ -3262,7 +3284,8 @@
   </div>
   <div class="translation">(≒ funny, amusing, merry / divertente, allegro, giocoso)<br>【一般的な意味】<br>① おかしい，こっけいな，滑稽な．<br>② 陽気な，快活な，楽しい．<br>③ （古い用法で）粋な，洒脱な．<br>【音楽用語としての訳例】<br>「滑稽に」，「陽気に」，「快活に」，「面白おかしく」</div>
 </div>
-<div class="row" id="letter-M" data-term-id="term-m-d">
+<div id="letter-M"></div>
+<div class="row" id="term-m-d">
   <div>
     <span class="german">m.d.</span><span class="source">[GM]</span>
   </div>
@@ -3496,7 +3519,8 @@
   </div>
   <div class="translation">(≒ grumpy, sullen, morose / scontroso, imbronciato)<br>【一般的な意味】<br>① 不機嫌な，むっつりした，むっつり屋の．<br>② ぶっきらぼうな，気難しい．<br>【音楽用語としての訳例】<br>「不機嫌そうに」，「むっつりと」，「ぶっきらぼうに」</div>
 </div>
-<div class="row" id="letter-N" data-term-id="term-nach-dem-trio">
+<div id="letter-N"></div>
+<div class="row" id="term-nach-dem-trio">
   <div>
     <span class="german">nach dem Trio</span><span class="source">[B: 2]</span>
   </div>
@@ -3724,13 +3748,15 @@
   </div>
   <div class="translation">ただ穏やかに動きをもって</div>
 </div>
-<div class="row" id="letter-O" data-term-id="term-oder-8-bassa">
+<div id="letter-O"></div>
+<div class="row" id="term-oder-8-bassa">
   <div>
     <span class="german">oder 8 bassa</span><span class="source">[B: 6]</span>
   </div>
   <div class="translation">あるいは1オクターブ低く</div>
 </div>
-<div class="row" id="letter-P" data-term-id="term-p-stets-sehr-deutlich-und-knapp">
+<div id="letter-P"></div>
+<div class="row" id="term-p-stets-sehr-deutlich-und-knapp">
   <div>
     <span class="german">p stets sehr deutlich und knapp</span><span class="source">[H: Con]</span>
   </div>
@@ -3826,13 +3852,15 @@
   </div>
   <div class="translation">プルトごとに </div>
 </div>
-<div class="row" id="letter-Q" data-term-id="term-quelle">
+<div id="letter-Q"></div>
+<div class="row" id="term-quelle">
   <div>
     <span class="german">Quelle</span><span class="source">[GM]</span>
   </div>
   <div class="translation">(≒ source, spring, origin / fonte, origine)<br>【一般的な意味】<br>① （水の）源泉，泉，水源．<br>② （情報・権力・起源などの）源，根源，出所，出典．<br>【音楽用語としての訳例】<br>「（楽譜の）原典資料」，「出所」，「（原典版における）資料源」<br><br>GM の &quot;Anmerkung in der <a href="dic.html#term-quelle" class="term-link">Quelle</a>&quot; は「自筆譜における注意」とした</div>
 </div>
-<div class="row" id="letter-R" data-term-id="term-rand">
+<div id="letter-R"></div>
+<div class="row" id="term-rand">
   <div>
     <span class="german">Rand</span><span class="source">[H: Con]</span>
   </div>
@@ -3964,7 +3992,8 @@
   </div>
   <div class="translation">ラジオ放送，ラジオ，放送局 </div>
 </div>
-<div class="row" id="letter-S" data-term-id="term-saemtlich">
+<div id="letter-S"></div>
+<div class="row" id="term-saemtlich">
   <div>
     <span class="german">sämtlich</span><span class="source">[GM], [RW: Oper]</span>
   </div>
@@ -4582,7 +4611,8 @@
   </div>
   <div class="translation">(≒ humming, buzzing, droning / ronzante, ronzio)<br>summen の現在分詞<br>【一般的な意味】<br>① ハミングしている，鼻歌を歌っている．<br>② （昆虫などが）ブンブンと羽音を立てている，（機械などが）唸っている．<br>【音楽用語としての訳例】<br>「口ずさんて」，「ハミングで」，「鼻歌のように」，「ronzante」，「（ハチの羽音のように）ブンブンと」<br><br>GM では「ハミング」の意味で訳している．</div>
 </div>
-<div class="row" id="letter-T" data-term-id="term-tactig">
+<div id="letter-T"></div>
+<div class="row" id="term-tactig">
   <div>
     <span class="german">tactig</span><span class="source">[RS: Dom]</span>
   </div>
@@ -4672,7 +4702,8 @@
   </div>
   <div class="translation">(≒ <a href="dic.html#term-tumult" class="term-link">tumult</a>, uproar, commotion, riot / tumulto, clamore)<br>【一般的な意味】<br>① 喧騒，騒ぎ，騒動，騒乱．<br>② （感情の）激しい動揺，混乱．<br><br>RS の Die Schweaigsame Frau にはオーケストラに対する指示として &quot;tumultuoso&quot; の指示がある（これはイタリア語）</div>
 </div>
-<div class="row" id="letter-U" data-term-id="term-ueber-hinaus">
+<div id="letter-U"></div>
+<div class="row" id="term-ueber-hinaus">
   <div>
     <span class="german">über~hinaus</span><span class="source">[GM]</span>
   </div>
@@ -4816,7 +4847,8 @@
   </div>
   <div class="translation">(≒ original, initial, fundamental / originale, iniziale)<br>【一般的な意味】<br>① 最初の，元の，初期の，本来の．<br>② 独創的な，根源的な，根本的な．<br>【音楽用語としての訳例】<br>「元の」，「最初の」，「（Tempo につけて）元のテンポで（Tempo primo）」</div>
 </div>
-<div class="row" id="letter-V" data-term-id="term-variante">
+<div id="letter-V"></div>
+<div class="row" id="term-variante">
   <div>
     <span class="german">Variante</span><span class="source">[H: KM5], [RW: Oper]</span>
   </div>
@@ -5194,7 +5226,8 @@
   </div>
   <div class="translation">(≒ to be performed, to be presented / da eseguire, da presentare)<br>分離動詞 vortragen の zu-不定詞形<br>【一般的な意味】<br>① 上演する，演奏する，歌う．<br>② （意見・報告などを）述べる，提出する．<br>③ （病気などを）患っている，抱えている．<br>【音楽用語としての訳例】<br>「演奏されるべき」，「提示すべき」，「（表情をもって）歌われるべき」</div>
 </div>
-<div class="row" id="letter-W" data-term-id="term-wahnsinn">
+<div id="letter-W"></div>
+<div class="row" id="term-wahnsinn">
   <div>
     <span class="german">wahnsinn</span><span class="source">[RW: Oper], [RS: Oper]</span>
   </div>
@@ -5416,7 +5449,8 @@
   </div>
   <div class="translation">(≒ furious, enraged, raging / furioso, infuriato)<br>【一般的な意味】<br>① 激怒した，憤慨した，怒り狂った．<br>② （感情や行動が）猛烈な，激しい．<br>【音楽用語としての訳例】<br>「furioso」，「furente」，「激怒して」，「荒れ狂って」，「猛烈な勢いで」<br><br>GM では交響曲第6番第1楽章にある．「怒り狂って」と訳している．</div>
 </div>
-<div class="row" id="letter-Z" data-term-id="term-z-b">
+<div id="letter-Z"></div>
+<div class="row" id="term-z-b">
   <div>
     <span class="german">z. B.</span><span class="source">[RS: Juan]</span>
   </div>
@@ -5891,4 +5925,4 @@
 </body>
 
 </html>
-<!-- Generated: 2025/12/28 23:01:20 -->
+<!-- Generated: 2025/12/28 23:19:53 -->
