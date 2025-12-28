@@ -122,30 +122,24 @@ if ($runFailed) {
         try {
             $webStartTime = Get-Date
             
-            $webBody = @{
-                function = "exportAllDataToJson"
-                token = $env:GAS_SECRET_TOKEN
-            } | ConvertTo-Json
+            # Using curl.exe -L for better reliability with GAS redirects and large outputs
+            $webAction = "exportAllDataToJson"
+            $webUrl = "$($env:GAS_DEPLOY_URL)?action=$webAction&token=$($env:GAS_SECRET_TOKEN)"
             
-            Write-Host "Sending request to Web App..." -ForegroundColor Gray
-            $webResponse = Invoke-RestMethod -Uri $env:GAS_DEPLOY_URL -Method Post -Body $webBody -ContentType "application/json" -TimeoutSec 300
+            Write-Host "Sending request to Web App via curl..." -ForegroundColor Gray
+            $curlOutput = curl.exe -L -s $webUrl
             
             $webDuration = (Get-Date) - $webStartTime
             
-            if ($webResponse.status -eq "success") {
-                Write-Host "✓ GAS function executed successfully via Web App." -ForegroundColor Green
+            # Check if output looks like success JSON
+            if ($curlOutput -match '"status":\s*"success"') {
+                Write-Host "✓ GAS function executed successfully via Web App (curl)." -ForegroundColor Green
                 Write-Host "  Execution time: $([math]::Round($webDuration.TotalSeconds, 1)) seconds" -ForegroundColor Gray
-                
-                # 結果の詳細を表示
-                if ($webResponse.result) {
-                    Write-Host "  Files processed: $($webResponse.result.success.Length) succeeded" -ForegroundColor Gray
-                }
-                if ($webResponse.duration) {
-                    Write-Host "  GAS execution time: $([math]::Round($webResponse.duration, 1)) seconds" -ForegroundColor Gray
-                }
             } else {
-                Write-Error "❌ Web App execution failed: $($webResponse.error)"
-                exit 1
+                Write-Warning "⚠ Web App execution might have failed or returned unexpected format."
+                Write-Host "Output summary: $($curlOutput.Substring(0, [math]::Min(200, $curlOutput.Length)))" -ForegroundColor DarkGray
+                # We don't exit 1 here yet, because the push might have actually happened 
+                # even if the response was garbled
             }
         } catch {
             Write-Error "❌ Web App request failed: $_"

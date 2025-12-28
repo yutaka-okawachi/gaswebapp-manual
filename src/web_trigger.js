@@ -30,16 +30,13 @@ function doGet(e) {
   return handleRequest(e.parameter);
 }
 
-/**
- * HTTP POST リクエストのハンドラー
- */
 function doPost(e) {
   try {
     const params = JSON.parse(e.postData.contents);
     return handleRequest(params);
   } catch (error) {
     return createJsonResponse({
-      success: false,
+      status: "error",
       error: "Invalid JSON payload: " + error.toString()
     }, 400);
   }
@@ -50,14 +47,14 @@ function doPost(e) {
  */
 function handleRequest(params) {
   try {
-    // パラメータの取得
+    // パラメータの取得 (GET/POST両対応)
     const token = params.token;
-    const action = params.action || params.function; // function パラメータも受け入れるようにする
+    const action = params.action || params.function;
     
     // 認証チェック
     if (!token || token !== SECRET_TOKEN) {
       return createJsonResponse({
-        success: false,
+        status: "error",
         error: "Unauthorized: Invalid or missing token"
       }, 401);
     }
@@ -69,7 +66,7 @@ function handleRequest(params) {
       exportAllDataToJson();
       Logger.log("exportAllDataToJson completed");
       result = {
-        status: "success", // sync-data.ps1 が status をチェックしているため
+        status: "success",
         message: "dic.html exported and pushed to GitHub successfully",
         timestamp: new Date().toISOString()
       };
@@ -81,9 +78,8 @@ function handleRequest(params) {
       };
     } else {
       result = {
-        success: false,
-        error: "Unknown action: " + action,
-        availableActions: ["exportDic", "exportAllDataToJson", "ping"]
+        status: "error",
+        error: "Unknown action: " + action
       };
     }
     
@@ -92,7 +88,7 @@ function handleRequest(params) {
   } catch (error) {
     Logger.log("Error in handleRequest: " + error.toString());
     return createJsonResponse({
-      success: false,
+      status: "error",
       error: error.toString(),
       stack: error.stack
     }, 500);
