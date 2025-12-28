@@ -810,6 +810,6 @@ button.clear-input-btn:hover {
 }
 
 @keyframes highlightFade {
-    0% { background-color: #ffeb3b; }
+    0% { background-color: #ffeb3b !important; }
     100% { background-color: transparent; }
 }

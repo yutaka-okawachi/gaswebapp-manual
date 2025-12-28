@@ -431,13 +431,13 @@ function generateDicHtml(dicData, abbrData) {
             // check data-term-id attribute.
             if (!targetElement) {
                 targetElement = document.querySelector(\`[data-term-id="\${targetId}"]\`);
-                if (targetElement) {
-                    targetElement.classList.add('highlight-target');
-                }
             }
 
             if (targetElement) {
-                targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                // Force a reflow to restart the animation
+                void targetElement.offsetWidth;
+                targetElement.classList.add('highlight-target');
+                targetElement.scrollIntoView({ behavior: 'auto', block: 'start' });
             }
         }
 
