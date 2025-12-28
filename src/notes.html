@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <title>訳出についての覚書</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <?!= include('common_styles.html') ?>
+  <style>
+    /* notes.html固有のスタイル */
+    body {
+      font-family: Arial, sans-serif;
+      overflow-x: hidden;
+      max-width: 100%;
+    }
+
+    #fixedHeader {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      background-color: var(--primary-bg);
+      border-bottom: 1px solid #ccc;
+    }
+
+    #fixedHeader h1 {
+      font-size: 1.5rem;
+      margin: 0;
+    }
+
+    #navbar {
+      text-align: center;
+      background-color: #e0ffe0;
+      padding: 8px 10px;
+      border-bottom: 1px solid #ccc;
+    }
+
+    #navbar a {
+      margin: 0 3px;
+      text-decoration: none;
+      color: #1a73e8;
+      font-weight: 500;
+      font-family: 'Lora', serif;
+      padding: 4px 8px;
+      border-radius: 4px;
+      background-color: rgba(255, 255, 255, 0.7);
+      transition: all 0.2s ease;
+      display: inline-block;
+    }
+
+    #navbar a:hover {
+      background-color: rgba(26, 115, 232, 0.1);
+      transform: translateY(-1px);
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+    }
+
+    #navbar a:active {
+      transform: translateY(0);
+      background-color: rgba(26, 115, 232, 0.2);
+      box-shadow: none;
+    }
+
+    .container {
+      margin: 120px auto 20px;
+      background-color: var(--results-bg);
+    }
+
+    .row {
+      display: flex;
+      flex-direction: column;
+      border-bottom: 1px solid #ccc;
+      padding-bottom: 10px;
+      margin-bottom: 10px;
+      word-wrap: break-word;
+      word-break: break-word;
+    }
+
+    .row[id] {
+      scroll-margin-top: 120px;
+    }
+
+    /* Make German headings bold and slightly larger to match search-result sizing */
+    .german {
+      font-family: 'Lora', serif;
+      font-weight: bold;
+      font-size: 1.2em;
+      line-height: 1.45;
+      white-space: pre-wrap;
+      display: block;
+    }
+
+    .translation {
+      font-family: 'Lora', serif;
+      font-size: 1em;
+      line-height: 1.6;
+      white-space: pre-wrap;
+      margin-left: 1rem;
+    }
+
+    #loadingMessage {
+      color: #555;
+    }
+
+    #scrollToTop {
+      right: 20px;
+      top: calc(20px + env(safe-area-inset-top, 0px));
+      z-index: 9999;
+    }
+
+    /* 位置を上に (safe-area 対応) */
+    @media (max-width: 600px) {
+      body {
+        font-size: 12px;
+      }
+
+      #fixedHeader h1 {
+        font-size: 1.2rem;
+      }
+
+      .german {
+        font-weight: bold;
+        font-size: 1.2em;
+      }
+
+      .translation {
+        font-size: 1em;
+      }
+    }
+  </style>
+
+  <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;700&display=swap" rel="stylesheet">
+
+  <script>
+    /*******************************************************************
+     * クライアントサイドスクリプト（訳出についての覚書ページ）
+     ******************************************************************/
+
+    // カスタムソート用の配列（A->Ä->B->C...）
+    const customOrder = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J",
+      "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T",
+      "U", "V", "W", "X", "Y", "Z"];
+
+    // 文字の優先順序を返す
+    function getOrder(letter) {
+      const idx = customOrder.indexOf(letter);
+      return idx === -1 ? 999 : idx;
+    }
+
+
+    function normalizeGermanForSort(text) {
+      if (typeof text !== "string") {
+        return "";
+      }
+      const trimmed = text.trim();
+      if (!trimmed) {
+        return "";
+      }
+      const normalized = typeof trimmed.normalize === "function"
+        ? trimmed.normalize("NFD")
+        : trimmed;
+      return normalized.replace(/[\u0300-\u036f]/g, "").replace(/ß/gi, "ss");
+    }
+
+    function getSortLetter(text) {
+      return normalizeGermanForSort(text).charAt(0).toUpperCase();
+    }
+
+    function compareGermanStrings(a, b) {
+      const letterA = getSortLetter(a);
+      const letterB = getSortLetter(b);
+      const orderDiff = getOrder(letterA) - getOrder(letterB);
+      if (orderDiff !== 0) {
+        return orderDiff;
+      }
+
+      const textA = (a || "").toString().trim();
+      const textB = (b || "").toString().trim();
+      if (typeof textA.localeCompare === "function") {
+        return textA.localeCompare(textB, "de", { sensitivity: "base" });
+      }
+      if (textA === textB) {
+        return 0;
+      }
+      return textA > textB ? 1 : -1;
+    }
+
+    // ページ読み込み時にサーバーの getNotesData() を呼び出す
+    window.addEventListener("DOMContentLoaded", function () {
+      console.log("ページ読み込み完了。getNotesData() を呼び出します。");
+      google.script.run
+        .withSuccessHandler(function (data) {
+          console.log("サーバーからのデータ受信:", data);
+          renderNotes(data);
+        })
+        .withFailureHandler(function (error) {
+          // ★★★ エラーハンドリングを強化 ★★★
+          console.error("データ取得に失敗しました:", error);
+          const loadingDiv = document.getElementById("loadingMessage");
+          loadingDiv.style.textAlign = 'left'; // 読みやすいように左揃えに変更
+          loadingDiv.style.padding = '10px';
+          loadingDiv.innerHTML = `
+            <strong style="color: red;">データの取得に失敗しました。</strong>
+            <br><br>
+            <strong>サーバーからの具体的なエラー内容:</strong>
+            <pre style="white-space: pre-wrap; word-wrap: break-word; background-color: #f0f0f0; padding: 10px; border-radius: 5px; margin-top: 5px;">${error.message}</pre>
+            <br>
+            このエラーは、多くの場合サーバー側のスクリプト(mahler.gs)またはスプレッドシートに原因があります。
+            <br>
+            (例: シート名が「訳出についての覚書」と完全に一致していない、など)
+          `;
+        })
+        .getNotesData();
+    });
+
+    // 取得した data ( [ [ドイツ語, 日本語], ... ] ) を表示
+    function renderNotes(data) {
+      // カスタム順でソート
+      data.sort((a, b) => compareGermanStrings(a[0], b[0]));
+
+      const container = document.getElementById("notesContainer");
+      container.innerHTML = "";
+
+      // 先頭文字ごとに初出アンカーを設定するための集合
+      const anchorSet = {};
+
+      data.forEach(row => {
+        // row: [ドイツ語, 日本語]
+        const [german, translation] = row;
+
+        const rowDiv = document.createElement("div");
+        rowDiv.classList.add("row");
+
+        // アンカー設定: 先頭文字が customOrder にあれば初出時に id を付与
+        if (german && typeof german === "string") {
+          const anchorLetter = getSortLetter(german);
+          if (anchorLetter && customOrder.includes(anchorLetter) && !anchorSet[anchorLetter]) {
+            rowDiv.id = "letter-" + anchorLetter;
+            anchorSet[anchorLetter] = true;
+          }
+        }
+
+        // ドイツ語表示
+        const germanDiv = document.createElement("div");
+        germanDiv.classList.add("german");
+        germanDiv.textContent = german;
+
+        // 日本語表示
+        const translationDiv = document.createElement("div");
+        translationDiv.classList.add("translation");
+        translationDiv.textContent = translation;
+
+        rowDiv.appendChild(germanDiv);
+        rowDiv.appendChild(translationDiv);
+
+        container.appendChild(rowDiv);
+      });
+
+      // データが空の場合
+      if (data.length === 0) {
+        container.innerHTML = '<div class="result-message">データが存在しません。</div>';
+      }
+    }
+
+  </script>
+</head>
+
+<body>
+  <?!= include('sidebar.html') ?>
+
+  <div class="page-wrapper">
+    <div id="fixedHeader">
+      <div class="home-link" style="margin: 5px 10px 0;"><a href="home.html">HOME</a></div>
+      <h1>各用語についてのコメント</h1>
+    </div>
+
+    <div id="top"></div>
+
+    <div class="container">
+      <div id="notesContainer">
+        <div id="loadingMessage" class="loading">表示中・・・</div>
+      </div>
+    </div>
+
+    <!-- アルファベットのフローティングバー（下部） -->
+    <div id="alpha-floating-bar">
+      <a href="#top" class="abbr-list-link">Top</a>
+      <a href="#letter-A">A</a>
+      <a href="#letter-B">B</a>
+      <a href="#letter-C">C</a>
+      <a href="#letter-D">D</a>
+      <a href="#letter-E">E</a>
+      <a href="#letter-F">F</a>
+      <a href="#letter-G">G</a>
+      <a href="#letter-H">H</a>
+      <a href="#letter-I">I</a>
+      <a href="#letter-J">J</a>
+      <a href="#letter-K">K</a>
+      <a href="#letter-L">L</a>
+      <a href="#letter-M">M</a>
+      <a href="#letter-N">N</a>
+      <a href="#letter-O">O</a>
+      <a href="#letter-P">P</a>
+      <a href="#letter-Q">Q</a>
+      <a href="#letter-R">R</a>
+      <a href="#letter-S">S</a>
+      <a href="#letter-T">T</a>
+      <a href="#letter-U">U</a>
+      <a href="#letter-V">V</a>
+      <a href="#letter-W">W</a>
+      <a href="#letter-X">X</a>
+      <a href="#letter-Y">Y</a>
+      <a href="#letter-Z">Z</a>
+    </div>
+
+    <div id="scrollToTop" onclick="scrollToTop()">▲ ページのトップへ戻る</div>
+  </div>
+  <?!= include('common_scripts.html') ?>
+</body>
+
+</html>

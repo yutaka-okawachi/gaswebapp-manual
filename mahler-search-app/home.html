@@ -1,0 +1,177 @@
+﻿<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <!-- Google Search Console Verification -->
+    <meta name="google-site-verification" content="oMTfhSgc1nOrF9dVnBCR_YGcwCDYlrqNmyYn-UJuBJc" />
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZT6MPW5MNG"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+        gtag('config', 'G-ZT6MPW5MNG');
+    </script>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="グスタフ・マーラー、リヒャルト・ワーグナー、リヒャルト・シュトラウス作品のドイツ語音楽用語検索・翻訳支援サイト。楽譜中のドイツ語音楽用語の日本語訳を検索できます。">
+    <title>ドイツ語の音楽用語</title>
+
+    <link rel="stylesheet" href="css/common.css">
+    <style>
+        /* home.html固有の追加スタイルがあればここに記述 */
+
+        h2 {
+            font-size: 1.3rem;
+            margin-top: 40px;
+            margin-bottom: 12px;
+        }
+
+        .note {
+            margin-top: 20px;
+            margin-bottom: 30px;
+            font-size: 0.95rem;
+            line-height: 1.7;
+        }
+
+        /* 既存のリンクカラーなど微調整が必要な場合 */
+        .page-wrapper a {
+            color: #000;
+            text-decoration: underline;
+        }
+
+        .section-card ul li a {
+            font-size: 1.15rem; /* リンクの文字サイズを少し大きく */
+        }
+
+        .page-wrapper a:hover {
+            text-decoration: none;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 30px 20px;
+            }
+        }
+    </style>
+</head>
+
+<body class="home-page">
+    <!-- ハンバーガーメニューボタン（スマホのみ） -->
+    <button class="nav-toggle" onclick="toggleNav()">☰ メニュー</button>
+
+    <!-- サイドバーナビゲーション -->
+    <nav class="sidebar" id="sidebar">
+        <!-- HomeページではCSSにより非表示になります -->
+        <h3>Richard Wagner (RW)</h3>
+        <ul>
+            <li><a href="richard_wagner.html">曲名から検索</a></li>
+            <li><a href="rw_terms_search.html">用語から検索</a></li>
+        </ul>
+
+        <h3>Gustav Mahler (GM)</h3>
+        <ul>
+            <li><a href="index.html">曲名と楽器等から検索</a></li>
+            <li><a href="terms_search.html">用語から検索</a></li>
+        </ul>
+
+        <h3>Richard Strauss (RS)</h3>
+        <ul>
+            <li><a href="richard_strauss.html">曲名から検索</a></li>
+            <li><a href="rs_terms_search.html">用語から検索</a></li>
+        </ul>
+
+        <h3>用語集</h3>
+        <ul>
+            <li><a href="dic.html">用語集ページ</a></li>
+        </ul>
+
+        <h3 class="sidebar-other"><a href="other.html" style="color: inherit; text-decoration: none;">その他</a></h3>
+        <ul>
+            <!-- 以前の項目は other.html へ移動 -->
+        </ul>
+    </nav>
+
+    <!-- メインコンテンツ -->
+    <div class="page-wrapper">
+        <div class="container">
+            <h1
+                style="text-align: center; margin-bottom: 40px; color: var(--text-color); font-size: 1.8rem; border-bottom: 3px solid var(--button-bg); padding-bottom: 15px; font-family: 'Lora', serif;">
+                ドイツ語の音楽用語</h1>
+
+            <div class="section-card card-rw">
+                <h2>Richard Wagner (RW)</h2>
+                <ul>
+                    <li><a href="richard_wagner.html">🪈 曲名から検索</a></li>
+                    <li><a href="rw_terms_search.html">📑 用語から検索</a></li>
+                </ul>
+            </div>
+
+            <div class="section-card card-gm">
+                <h2>Gustav Mahler (GM)</h2>
+                <ul>
+                    <li><a href="index.html">🪈 曲名と楽器等から検索</a></li>
+                    <li><a href="terms_search.html">📑 用語から検索</a></li>
+                </ul>
+            </div>
+
+            <div class="section-card card-rs">
+                <h2>Richard Strauss (RS)</h2>
+                <ul>
+                    <li><a href="richard_strauss.html">🪈 曲名から検索</a></li>
+                    <li><a href="rs_terms_search.html">📑 用語から検索</a></li>
+                </ul>
+            </div>
+            <div class="note">
+                <p>⚠️ RW，RSのページでは主に舞台指示および声楽に対する指示が含まれている．オーケストラに対する指示で GM の用語検索ページで何とかなりそうなものや，イタリア語，フランス語は基本的に不採用．</p>
+                <p style="margin-top: 10px;">⚠️ 歌詞には非対応．優れた訳が数多く出回っているのでそちらを参照</p>
+            </div>
+
+            <div class="section-card card-dic">
+                <h2>用語集</h2>
+                <div class="note">
+                    <p><strong>📖 気になった用語を集めただけであり，採用している用語，出典は網羅的ではない．以下が収録している作曲家．</strong></p>
+                    <ul style="margin-top: 10px; padding-left: 20px; list-style: disc;">
+                        <li style="margin-bottom: 5px;">RW, GM, RS</li>
+                        <li style="margin-bottom: 5px;">Anton Bruckner</li>
+                        <li style="margin-bottom: 5px;">Paul Hindemith</li>
+                        <li style="margin-bottom: 5px;">Sigfrid Karg-Elert</li>
+                    </ul>
+                </div>
+                <ul>
+                    <li><a href="dic.html" style="font-weight: bold; font-size: 1.1rem; color: var(--color-dic);">👉
+                            用語集ページへ</a></li>
+                </ul>
+            </div>
+
+            <div class="section-card card-other">
+                <h2><a href="other.html" style="color: inherit; text-decoration: none;">その他</a></h2>
+                <div class="note" style="border-left: none; background: transparent; padding: 0; margin-top: 10px;">
+                    <p style="margin-top: 15px;"><a href="other.html" class="other-link" style="font-weight: bold; color: var(--button-bg);">👉 使用楽譜情報など </a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleNav() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('active');
+        }
+
+        // サイドバー外をクリックしたら閉じる（スマホのみ）
+        document.addEventListener('click', function (event) {
+            if (window.innerWidth <= 768) {
+                const sidebar = document.getElementById('sidebar');
+                const toggle = document.querySelector('.nav-toggle');
+                if (!sidebar.contains(event.target) && !toggle.contains(event.target)) {
+                    sidebar.classList.remove('active');
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>

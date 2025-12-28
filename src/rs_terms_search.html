@@ -1,0 +1,144 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>用語から検索 (RS)</title>
+  <?!= include('common_terms_styles.html') ?>
+  <script>
+    function debounce(func, delay) {
+      let timer; return function (...args) { clearTimeout(timer); timer = setTimeout(() => func.apply(this, args), delay); };
+    }
+    let currentSearchId = 0;
+    let termEntries = []; // { original, normalized } の配列を保持
+
+    window.addEventListener('DOMContentLoaded', () => {
+      const inputField = document.getElementById('termInput');
+      inputField.addEventListener('input', debouncedOnTermInput);
+
+      // ページ読み込み時に全用語リストを取得してクライアント側で保持
+      google.script.run
+        .withSuccessHandler(terms => {
+          termEntries = (Array.isArray(terms) ? terms : [])
+            .map(term => normalizeTermEntry(term))
+            .filter(Boolean);
+          console.log(`${termEntries.length}件のRS用語を読み込みました。`);
+        })
+        .withFailureHandler(err => {
+          console.error('RS用語の取得に失敗しました:', err);
+          termEntries = [];
+        })
+        .getRSTermsForClient();
+    });
+
+    const debouncedOnTermInput = debounce((event) => {
+      const input = event.target.value.trim();
+      if (input.length < 2) { document.getElementById('termSuggestions').innerHTML = ''; return; }
+
+      const normalizedInput = normalizeString(input);
+      const matches = termEntries
+        .filter(entry => entry.normalized.includes(normalizedInput))
+        .sort((a, b) => a.normalized.localeCompare(b.normalized));
+
+      updateDatalist(matches);
+    }, 300);
+
+    function updateDatalist(suggestions) {
+      const datalist = document.getElementById('termSuggestions');
+      datalist.innerHTML = '';
+      (suggestions || []).forEach(entry => {
+        const option = document.createElement('option');
+        option.value = entry.normalized;
+        datalist.appendChild(option);
+      });
+    }
+    function search() {
+      const query = document.getElementById('termInput').value.trim();
+      const resultsDiv = document.getElementById('results');
+      const loadingHtml = '<p class=\"loading\">検索中・・・</p>';
+      resultsDiv.innerHTML = loadingHtml;
+      focusResultsPanel({ instant: true });
+      if (!query) {
+        resultsDiv.innerHTML = '<p class=\"result-message\">用語を入力してください</p>';
+        focusResultsPanel({ instant: true });
+        return;
+      }
+      currentSearchId++; const thisSearchId = currentSearchId;
+      google.script.run.withSuccessHandler(html => {
+        if (thisSearchId === currentSearchId) {
+          resultsDiv.innerHTML = html;
+          focusResultsPanel({ instant: true });
+        }
+      }).searchRSTerms(query);
+    }
+
+    function normalizeTermEntry(term) {
+      if (typeof term === 'string') {
+        const trimmed = term.trim();
+        return trimmed ? { original: trimmed, normalized: normalizeString(trimmed) } : null;
+      }
+      if (term && typeof term === 'object') {
+        const original = typeof term.original === 'string' ? term.original.trim() : '';
+        if (!original) return null;
+        const normalized = typeof term.normalized === 'string'
+          ? term.normalized.trim().toLowerCase()
+          : '';
+        return { original, normalized: normalized || normalizeString(original) };
+      }
+      return null;
+    }
+
+    // 正規化関数 — クライアントサイドでも共通利用
+    function normalizeString(str) {
+      if (typeof str !== 'string') return '';
+      return str
+        .toLowerCase()
+        .replace(/ä/g, 'ae')
+        .replace(/ö/g, 'oe')
+        .replace(/ü/g, 'ue')
+        .replace(/\u00df/g, 'ss')
+        .trim();
+    }
+
+    function cancelSearch() { document.getElementById('results').innerHTML = '<p class="loading">検索を中止しました</p>'; currentSearchId++; }
+    function clearInput() { document.getElementById('termInput').value = ''; document.getElementById('termSuggestions').innerHTML = ''; document.getElementById('results').innerHTML = ''; }
+  </script>
+</head>
+
+<body>
+  <?!= include('sidebar.html') ?>
+
+  <div class="page-wrapper">
+    <div class="container">
+      <div class="home-link"><a href="home.html">HOME</a></div>
+      <h1>用語から検索 (RS)</h1>
+      <p class="glossary-link"><b>Richard Strauss の管弦楽曲については<a
+            href="https://sites.google.com/site/brucknermahleryinleyongyu/%E7%94%A8%E8%AA%9E%E9%9B%86"
+            target="_blank">用語集</a>のページを参照</b></p>
+      <p>検索は英字入力なので，特殊文字の入力は慣例にしたがう</p>
+      <ul>
+        <li>ä⇒ae　例：Dämpfer⇒Daempfer</li>
+        <li>ü⇒ue　例：zurückhalten⇒zurueckhalten</li>
+        <li>ö⇒oe　例：Flöte⇒Floete</li>
+        <li>ß⇒ss　例：fließend⇒fliessend</li>
+      </ul>
+  
+      <input type="text" id="termInput" list="termSuggestions" placeholder="用語を入力">
+      <datalist id="termSuggestions"></datalist>
+  
+      <div style="text-align: center;">
+        <button type="button" onclick="search()" class="btn-search">検索</button>
+        <button type="button" onclick="cancelSearch()" class="btn-danger">中止</button>
+        <button type="button" onclick="clearInput()" class="clear-input-btn">クリア</button>
+      </div>
+  
+      <div id="results"></div>
+    </div>
+  </div>
+
+  <div id="scrollToTop" onclick="scrollToTop()">▲ ページのトップへ戻る</div>
+  <?!= include('common_scripts.html') ?>
+</body>
+
+</html>

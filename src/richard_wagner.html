@@ -1,0 +1,88 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>R. Wagner用語検索</title>
+  <?!= include('common_styles.html') ?>
+</head>
+
+<body>
+  <?!= include('sidebar.html') ?>
+
+  <div class="page-wrapper">
+    <div class="container">
+      <div class="home-link"><a href="home.html">HOME</a></div>
+      <h1>曲名から検索 (RW)</h1>
+      <p class="glossary-link"><b>用語集は<a href="https://sites.google.com/site/brucknermahleryinleyongyu/%E7%94%A8%E8%AA%9E%E9%9B%86"
+            target="_blank">こちら</a></b></p>
+
+      <p>オーケストラに対する指示で Gustav Mahler の用語検索ページで何とかなりそうなものは基本的に不記載</p>
+      <div class="big-label">曲を選択</div>
+      <fieldset>
+        <legend>オペラ</legend>
+        <div class="radio-group" id="opera-selection">
+          <label><input type="radio" name="opera" value="feen"> Die Feen, WWV 32 (1833-34)</label>
+          <label><input type="radio" name="opera" value="liebes"> Das Liebesverbot, WWV 38 (1834)</label>
+          <label><input type="radio" name="opera" value="rienzi"> Rienzi, WWV 49 (1840)</label>
+          <label><input type="radio" name="opera" value="holländer"> Der fliegende Holländer, WWV 63 (1840-41)</label>
+          <label><input type="radio" name="opera" value="tann_dresden"> Tannhäuser (Dresden), WWV 70 (1845)</label>
+          <label><input type="radio" name="opera" value="tann_paris"> Tannhäuser (Paris), WWV 70 (1861)</label>
+          <label><input type="radio" name="opera" value="lohengrin"> Lohengrin, WWV 75 (1846-48)</label>
+          <label><input type="radio" name="opera" value="rheingold"> Das Rheingold, WWV 86A (1853-54)</label>
+          <label><input type="radio" name="opera" value="walküre"> Die Walküre, WWV 86B (1854-56)</label>
+          <label><input type="radio" name="opera" value="siegfried"> Siegfried, WWV 86C (1856-71)</label>
+          <label><input type="radio" name="opera" value="götter"> Götterdämmerung, WWV 86D (1869-74)</label>
+          <label><input type="radio" name="opera" value="tristan"> Tristan und Isolde, WWV 90 (1857-59)</label>
+          <label><input type="radio" name="opera" value="meister"> Die Meistersinger von Nürnberg, WWV 96
+            (1862-67)</label>
+          <label><input type="radio" name="opera" value="parsifal"> Parsifal, WWV 111 (1877-82)</label>
+        </div>
+      </fieldset>
+
+      <div id="search-method-container" style="display: none;">
+        <div class="big-label">検索方法を選択</div>
+        <fieldset>
+          <legend>方法</legend>
+          <div class="radio-group">
+            <label><input type="radio" name="search-type" value="scene"> 場面から検索</label>
+            <label><input type="radio" name="search-type" value="page"> ページから検索</label>
+          </div>
+        </fieldset>
+      </div>
+
+      <div id="scene-selection-container" class="accordion-content">
+        <fieldset>
+          <legend>場面</legend>
+          <div id="scene-options-wrapper"></div>
+        </fieldset>
+        <div class="button-container">
+          <button type="button" onclick="searchByScene()" class="btn-search">検索</button>
+          <button type="button" onclick="cancelSearch()" class="btn-danger">中止</button>
+          <button type="button" onclick="clearScenes()" class="btn-clear">クリア</button>
+        </div>
+      </div>
+
+      <div id="page-selection-container" class="accordion-content">
+        <fieldset>
+          <legend>ページ番号</legend>
+          <p style="font-size: 0.9em; color: #555;">ページ番号を半角で入力</p>
+          <input type="text" id="page-input" placeholder="例 3,14,15-92">
+        </fieldset>
+        <div class="button-container">
+          <button type="button" onclick="searchByPage()" class="btn-search">検索</button>
+          <button type="button" onclick="cancelSearch()" class="btn-danger">中止</button>
+          <button type="button" onclick="clearPageInput()" class="btn-clear">クリア</button>
+        </div>
+      </div>
+
+      <div id="results"></div>
+    </div>
+    <div id="scrollToTop" onclick="scrollToTop()">▲ ページのトップへ戻る</div>
+  </div>
+  <?!= include('common_scripts.html') ?>
+  <?!= include('richard_wagner_script.html') ?>
+</body>
+
+</html>

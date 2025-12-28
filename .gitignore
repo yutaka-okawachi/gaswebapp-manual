@@ -1,0 +1,19 @@
+﻿**/node_modules/**
+**/.git/**
+
+# clasp認証情報
+.clasprc.json
+.clasp.json
+.clasp*.json
+
+# 環境変数
+.env
+
+# ログファイル
+*.log
+gitlog.txt
+sync-data_output.log
+
+# その他管理ファイル
+deployments_list.txt
+clasp_check/

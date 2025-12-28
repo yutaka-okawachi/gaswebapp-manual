@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZT6MPW5MNG"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-ZT6MPW5MNG');
+    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>曲名から検索（RW）</title>
+    <link rel="stylesheet" href="css/common.css">
+    <script src="js/app.js"></script>
+    <script src="js/wagner_strauss.js"></script>
+</head>
+
+<body>
+    <!-- サイドバーナビゲーション -->
+    <nav class="sidebar" id="sidebar">
+        <h3 class="sidebar-home"><a href="home.html">🏠 HOME</a></h3>
+
+        <h3>Richard Wagner (RW)</h3>
+        <ul>
+            <li><a href="richard_wagner.html">曲名から検索</a></li>
+            <li><a href="rw_terms_search.html">用語から検索</a></li>
+        </ul>
+
+        <h3>Gustav Mahler (GM)</h3>
+        <ul>
+            <li><a href="index.html">曲名と楽器等から検索</a></li>
+            <li><a href="terms_search.html">用語から検索</a></li>
+        </ul>
+
+        <h3>Richard Strauss (RS)</h3>
+        <ul>
+            <li><a href="richard_strauss.html">曲名から検索</a></li>
+            <li><a href="rs_terms_search.html">用語から検索</a></li>
+        </ul>
+
+        <h3>用語集</h3>
+        <ul>
+            <li><a href="dic.html">用語集ページ</a></li>
+        </ul>
+
+        <h3 class="sidebar-other"><a href="other.html" style="color: inherit; text-decoration: none;">その他</a></h3>
+        <ul>
+            <!-- 以前の項目は other.html へ移動 -->
+        </ul>
+    </nav>
+
+    <div class="page-wrapper">
+        <div class="container">
+            <div class="home-link"><a href="home.html">HOME</a></div>
+            <h1>曲名から検索 (RW)</h1>
+        <p style="text-align: center;"><span style="font-size: 0.9rem;">各用語についてのコメントは</span><a href="dic.html" target="_blank" style="font-size: 1.2rem; font-weight: bold; color: var(--button-bg); text-decoration: none; border-bottom: 2px solid transparent; transition: all 0.2s ease;">用語集</a><span style="font-size: 0.9rem;">を参照</span></p>
+        <p>オーケストラに対する指示で Gustav Mahler の用語検索ページで何とかなりそうなものは基本的に不記載</p>
+        <div class="big-label">曲を選択</div>
+        <fieldset>
+            <legend>オペラ</legend>
+            <div class="radio-group" id="opera-selection">
+                <label><input type="radio" name="opera" value="feen"> Die Feen, WWV 32 (1833-34)</label>
+                <label><input type="radio" name="opera" value="liebes"> Das Liebesverbot, WWV 38 (1834)</label>
+                <label><input type="radio" name="opera" value="rienzi"> Rienzi, WWV 49 (1840)</label>
+                <label><input type="radio" name="opera" value="holländer"> Der fliegende Holländer, WWV 63
+                    (1840-41)</label>
+                <label><input type="radio" name="opera" value="tann_dresden"> Tannhäuser (Dresden), WWV 70
+                    (1845)</label>
+                <label><input type="radio" name="opera" value="tann_paris"> Tannhäuser (Paris), WWV 70 (1861)</label>
+                <label><input type="radio" name="opera" value="lohengrin"> Lohengrin, WWV 75 (1846-48)</label>
+                <label><input type="radio" name="opera" value="rheingold"> Das Rheingold, WWV 86A (1853-54)</label>
+                <label><input type="radio" name="opera" value="walküre"> Die Walküre, WWV 86B (1854-56)</label>
+                <label><input type="radio" name="opera" value="siegfried"> Siegfried, WWV 86C (1856-71)</label>
+                <label><input type="radio" name="opera" value="götter"> Götterdämmerung, WWV 86D (1869-74)</label>
+                <label><input type="radio" name="opera" value="tristan"> Tristan und Isolde, WWV 90 (1857-59)</label>
+                <label><input type="radio" name="opera" value="meister"> Die Meistersinger von Nürnberg, WWV 96
+                    (1862-67)</label>
+                <label><input type="radio" name="opera" value="parsifal"> Parsifal, WWV 111 (1877-82)</label>
+            </div>
+        </fieldset>
+
+        <div id="search-method-container" style="display: none;">
+            <div class="big-label">検索方法を選択</div>
+            <fieldset>
+                <legend>方法</legend>
+                <div class="radio-group">
+                    <label><input type="radio" name="search-type" value="scene"> 場面から検索</label>
+                    <label><input type="radio" name="search-type" value="page"> ページから検索</label>
+                </div>
+            </fieldset>
+        </div>
+
+        <div id="scene-selection-container" class="accordion-content">
+            <fieldset>
+                <legend>場面</legend>
+                <div id="scene-options-wrapper"></div>
+            </fieldset>
+            <div class="button-container">
+                <button type="button" onclick="searchByScene()" class="btn-search">検索</button>
+                <button type="button" onclick="cancelSearch()" class="btn-danger">中止</button>
+                <button type="button" onclick="clearScenes()" class="btn-clear">クリア</button>
+            </div>
+        </div>
+
+        <div id="page-selection-container" class="accordion-content">
+            <fieldset>
+                <legend>ページ番号</legend>
+                <p style="font-size: 0.9em; color: #555;">ページ番号を半角で入力</p>
+                <input type="text" id="page-input" placeholder="例 3,14,15-92">
+            </fieldset>
+            <div class="button-container">
+                <button type="button" onclick="searchByPage()" class="btn-search">検索</button>
+                <button type="button" onclick="cancelSearch()" class="btn-danger">中止</button>
+                <button type="button" onclick="clearPageInput()" class="btn-clear">クリア</button>
+            </div>
+        </div>
+
+        <div id="results"></div>
+    </div>
+
+    <div id="scrollToTop" onclick="scrollToTop()">▲ ページのトップへ戻る</div>
+        </div>
+    </div>
+</body>
+
+</html>

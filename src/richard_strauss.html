@@ -1,0 +1,87 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>R. Strauss用語検索</title>
+  <?!= include('common_styles.html') ?>
+</head>
+
+<body>
+  <?!= include('sidebar.html') ?>
+
+  <div class="page-wrapper">
+    <div class="container">
+      <div class="home-link"><a href="home.html">HOME</a></div>
+      <h1>曲名から検索 (RS)</h1>
+      <p class="glossary-link"><b>用語集は<a href="https://sites.google.com/site/brucknermahleryinleyongyu/%E7%94%A8%E8%AA%9E%E9%9B%86"
+            target="_blank">こちら</a></b></p>
+  
+      <p>オーケストラに対する指示で Gustav Mahler の用語検索ページで何とかなりそうなものは基本的に不記載</p>
+      <div class="big-label">曲を選択</div>
+      <fieldset>
+        <legend>作品</legend>
+        <div class="radio-group" id="opera-selection">
+          <label><input type="radio" name="opera" value="salome"> Salome, Op. 54 (1905)</label>
+          <label><input type="radio" name="opera" value="elektra"> Elektra, Op. 58 (1906-08)</label>
+          <label><input type="radio" name="opera" value="rosenkavalier"> Der Rosenkavalier, Op. 59 (1909-10)</label>
+          <label><input type="radio" name="opera" value="frau"> Die Frau ohne Schatten, Op. 65 (1914-17)</label>
+          <label><input type="radio" name="opera" value="don_juan"> Don Juan, Op. 20 (1888-89)</label>
+          <label><input type="radio" name="opera" value="tod"> Tod und Verklärung, Op. 24 (1888-89)</label>
+          <label><input type="radio" name="opera" value="till"> Till Eulenspiegels lustige Streiche, Op. 28 (1894-95)</label>
+          <label><input type="radio" name="opera" value="zara"> Also sprach Zarathustra, Op. 30 (1896)</label>
+          <label><input type="radio" name="opera" value="quixote"> Don Quixote, Op. 35 (1897)</label>
+          <label><input type="radio" name="opera" value="helden"> Ein Heldenleben, Op. 40 (1898)</label>
+          <label><input type="radio" name="opera" value="domestica"> Symphonia domestica, Op. 53 (1902-03)</label>
+          <label><input type="radio" name="opera" value="alpen"> Eine Alpensinfonie, Op. 64 (1911-15)</label>
+        </div>
+      </fieldset>
+  
+      <div id="search-method-container" style="display: none;">
+        <div class="big-label">検索方法を選択</div>
+        <fieldset>
+          <legend>方法</legend>
+          <div class="radio-group">
+            <label><input type="radio" name="search-type" value="scene"> 場面から検索</label>
+            <label><input type="radio" name="search-type" value="page"> ページから検索</label>
+          </div>
+        </fieldset>
+      </div>
+  
+      <div id="scene-selection-container" class="accordion-content">
+        <fieldset>
+          <legend>場面</legend>
+          <div id="scene-options-wrapper"></div>
+        </fieldset>
+        <div class="button-container">
+          <button type="button" onclick="searchByScene()" class="btn-search">検索</button>
+          <button type="button" onclick="cancelSearch()" class="btn-danger">中止</button>
+          <button type="button" onclick="clearScenes()" class="btn-clear">クリア</button>
+        </div>
+      </div>
+  
+      <div id="page-selection-container" class="accordion-content">
+        <fieldset>
+          <legend>ページ番号</legend>
+          <p style="font-size: 0.9em; color: #555;">ページ番号を半角で入力</p>
+          <input type="text" id="page-input" placeholder="例 3,14,15-92">
+        </fieldset>
+        <div class="button-container">
+          <button type="button" onclick="searchByPage()" class="btn-search">検索</button>
+          <button type="button" onclick="cancelSearch()" class="btn-danger">中止</button>
+          <button type="button" onclick="clearPageInput()" class="btn-clear">クリア</button>
+        </div>
+      </div>
+  
+      <div id="results"></div>
+  
+      <div id="scrollToTop" onclick="scrollToTop()">▲ ページのトップへ戻る</div>
+    </div>
+  </div>
+  <?!= include('common_scripts.html') ?>
+  <!-- スクリプトは richard_wagner.html のものを共用 -->
+  <?!= include('richard_wagner_script.html') ?>
+</body>
+
+</html>

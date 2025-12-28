@@ -1,0 +1,785 @@
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Lora:wght@400;500;600;700&display=swap');
+
+body {
+    font-family: 'Lora', 'Hiragino Kaku Gothic ProN', 'Meiryo', sans-serif;
+    background-color: var(--primary-bg);
+}
+
+/*
+ * common_styles.html
+ * 全ページで共通して使用される基本的なスタイルシート。
+ */
+:root {
+    --primary-bg: #f0f8ff;
+    --container-bg: #fff;
+    --title-bg: #ffdce0;
+    --title-border: #e35d76;
+    --section-label-bg: #ffe9cc;
+    --results-bg: #fff2e0;
+    --button-bg: #1a73e8;
+    --button-hover-bg: #1557b0;
+    --button-active-bg: #174ea6;
+    --danger-button-bg: #dc3545;
+    --danger-button-hover-bg: #c82333;
+    --clear-button-bg: #6c757d;
+    --clear-button-hover-bg: #5a6268;
+    --clear-input-btn-bg: #e9ecef;
+    --clear-input-btn-hover-bg: #dde2e6;
+    --input-border: #79a9f2;
+    --input-bg: #f4faff;
+    --text-color: #333;
+    --placeholder-color: #aaa;
+    --section-title-color: #1a73e8;
+    --focus-ring-color: #1a73e8;
+
+    /* 作曲家別テーマカラー */
+    --color-rw: #e35d76; /* Wagner - Reddish */
+    --color-gm: #1a73e8; /* Mahler - Blue */
+    --color-rs: #ed6c02; /* Strauss - Orange */
+    --color-dic: #2e7d32; /* Dictionary - Green */
+    --color-other: #757575; /* Others - Grey */
+}
+
+* {
+    box-sizing: border-box;
+}
+
+/* ナビゲーション・サイドバー */
+.nav-toggle {
+    display: none;
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    z-index: 1001;
+    background: #333;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    cursor: pointer;
+    font-size: 1.2rem;
+}
+
+.sidebar {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 220px;
+    height: 100vh;
+    background: #2c3e50;
+    color: white;
+    padding: 30px 20px;
+    overflow-y: auto;
+    z-index: 1000;
+}
+
+.sidebar h3 {
+    font-size: 1rem;
+    margin-bottom: 15px;
+    color: #ecf0f1;
+    border-bottom: 1px solid #34495e;
+    padding-bottom: 8px;
+    text-align: left; /* reset from h1 center if inherited */
+    background: none;
+    border-radius: 0;
+}
+
+.sidebar ul {
+    list-style: none;
+    margin-bottom: 25px;
+    padding: 0;
+    border: none;
+    background: none;
+}
+
+.sidebar li {
+    margin-bottom: 8px;
+    font-size: 0.9rem;
+}
+
+.sidebar a {
+    color: #ecf0f1;
+    text-decoration: none;
+    display: block;
+    padding: 5px 0;
+}
+
+.sidebar a:hover {
+    color: #3498db;
+}
+
+.page-wrapper {
+    margin-left: 220px;
+    transition: margin-left 0.3s ease;
+}
+
+/* ホームリンク */.home-link {
+    display: none; /* デフォルト（PC）では非表示 */
+    margin-bottom: 10px;
+    font-size: 0.9rem;
+}
+
+.home-link a {
+    color: var(--button-bg);
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+
+.home-link a:hover {
+    color: var(--button-hover-bg);
+    text-decoration: underline;
+}
+
+.home-link a::before {
+    content: "← ";
+}
+
+@media (max-width: 768px) {
+    .sidebar {
+        display: none;
+    }
+    
+    .page-wrapper {
+        margin-left: 0;
+    }
+
+    .home-link {
+        display: block; /* モバイルでは表示 */
+    }
+}
+
+/* Homeページ専用：サイドバーを常に隠す */
+.home-page .sidebar {
+    display: none;
+}
+.home-page .page-wrapper {
+    margin-left: 0;
+}
+.home-page .nav-toggle {
+    display: none; /* Homeではサイドバー不要なのでトグルも隠す */
+}
+
+h1 {
+    text-align: center;
+    margin: 30px auto 40px;
+    color: var(--text-color);
+    font-size: 2rem;
+    position: relative;
+    padding-bottom: 15px;
+    font-family: 'Lora', serif;
+    font-weight: bold;
+    letter-spacing: 0.05em;
+    max-width: fit-content;
+}
+
+h1::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 10%;
+    right: 10%;
+    height: 3px;
+    background: linear-gradient(to right, transparent, var(--button-bg), transparent);
+}
+
+@media (max-width: 600px) {
+    h1 {
+        font-size: 1.2rem;
+    }
+}
+
+/* ホームページのセクションカード */
+.section-card {
+    background: #fff;
+    border-radius: 12px;
+    padding: 25px;
+    margin-bottom: 0;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    border: 1px solid #eee;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.section-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+}
+
+.section-card h2 {
+    font-size: 1.4rem;
+    color: var(--button-bg);
+    margin-top: 0;
+    margin-bottom: 15px;
+    border-bottom: 2px solid #f0f4f8;
+    padding-bottom: 10px;
+    display: flex;
+    align-items: center;
+}
+
+.section-card h2::before {
+    content: "●";
+    font-size: 0.8rem;
+    margin-right: 10px;
+    opacity: 0.7;
+}
+
+.section-card ul {
+    border: none;
+    background: none;
+    padding-left: 20px; /* 左インデントを追加 */
+    margin: 10px 0;
+}
+
+.section-card li {
+    list-style: none;
+    margin-bottom: 10px;
+}
+
+.section-card .note {
+    background: #f8fafd;
+    border-left: 4px solid var(--button-bg);
+    padding: 15px;
+    margin: 15px 0;
+    border-radius: 0 8px 8px 0;
+    font-size: 0.95rem;
+}
+
+/* カードバリエーション */
+.card-rw h2 { color: var(--color-rw); border-bottom-color: rgba(227, 93, 118, 0.2); }
+.card-rw h2::before { color: var(--color-rw); }
+.card-rw .note { border-left-color: var(--color-rw); }
+
+.card-gm h2 { color: var(--color-gm); border-bottom-color: rgba(26, 115, 232, 0.2); }
+.card-gm h2::before { color: var(--color-gm); }
+.card-gm .note { border-left-color: var(--color-gm); }
+
+.card-rs h2 { color: var(--color-rs); border-bottom-color: rgba(237, 108, 2, 0.2); }
+.card-rs h2::before { color: var(--color-rs); }
+.card-rs .note { border-left-color: var(--color-rs); }
+
+.card-dic h2 { color: var(--color-dic); border-bottom-color: rgba(46, 125, 50, 0.2); }
+.card-dic h2::before { color: var(--color-dic); }
+.card-dic .note { border-left-color: var(--color-dic); }
+
+.card-other h2 {
+    color: var(--color-other);
+    border-bottom-color: rgba(117, 117, 117, 0.2);
+    font-size: 1.1rem; /* 少し小さく設定 */
+}
+
+.card-other h2::before {
+    color: var(--color-other);
+}
+
+/* サイドバーの「その他」ヘッダー用 */
+.sidebar h3.sidebar-other {
+    font-size: 0.85rem;
+    margin-top: 20px;
+    opacity: 0.8;
+}
+
+/* 楽譜情報バナー */
+.score-info-banner {
+    background-color: #e3f2fd;
+    padding: 8px 12px;
+    margin-bottom: 15px;
+    border-radius: 5px;
+    font-family: 'Lora', serif;
+    font-size: 0.75rem; /* 小さく設定 */
+    line-height: 1.4;
+    color: #555;
+    border-left: 3px solid #1a73e8;
+}
+
+/* Homeページ用グリッドレイアウト */
+.home-page .container {
+    max-width: 1000px;
+    display: grid;
+    justify-content: center; /* 内部のカードも中央寄りに配置 */
+    gap: 20px;
+    padding: 40px 20px;
+}
+
+.home-page h1 {
+    grid-column: 1 / -1;
+}
+
+/* セクションタイトルの強調 */
+.section-title {
+    font-size: 1.2em;
+    font-weight: 600;
+    padding: 0.5em;
+    margin: 1.5em 0 1em;
+    border-left: 4px solid var(--section-title-color);
+    background: #f8f9fa;
+    border-radius: 0 4px 4px 0;
+}
+
+.big-label {
+    font-size: 1.2rem;
+    margin: 1.5rem 0;
+    padding: 8px;
+    background-color: var(--section-label-bg);
+    border-radius: 5px;
+    font-weight: bold;
+}
+
+p,
+ul {
+    margin: 10px 0;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    color: var(--text-color);
+}
+
+/* 用語集リンクのスタイル */
+.glossary-link {
+    font-size: 1.2rem;
+    font-weight: bold;
+    text-align: center;
+}
+
+.glossary-link a {
+    color: var(--button-bg);
+    text-decoration: none;
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s ease;
+}
+
+.glossary-link a:hover {
+    color: var(--button-hover-bg);
+    border-bottom-color: var(--button-hover-bg);
+}
+
+ul {
+    .result-de {
+        font-weight: bold;
+        font-size: 1.2em;
+        line-height: 1.45;
+        display: block;
+        font-family: 'Lora', serif;
+    }
+
+    border: 1px solid #ccc;
+    padding: 15px;
+    border-radius: 10px;
+    background-color: #fafafa;
+}
+
+fieldset {
+    border: none;
+    padding: 15px;
+    border-radius: 10px;
+    background-color: #f8fafd;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
+    margin-bottom: 15px;
+}
+
+legend {
+    display: none;
+}
+
+.radio-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 20px;
+}
+
+/* 曲名リストを縦並びにするためのスタイル */
+.radio-group#opera-selection {
+    display: block;
+}
+
+.radio-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-family: Georgia, serif;
+    font-size: 0.95rem;
+    /* フォントサイズを少し小さく調整 */
+}
+
+.checkbox-group {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 5px 15px;
+    font-family: Georgia, serif;
+    font-size: 0.95rem;
+}
+
+.checkbox-group hr {
+    grid-column: 1 / -1;
+    width: 100%;
+    border: 0;
+    border-top: 1px solid #ccc;
+    margin: 5px 0;
+}
+
+.checkbox-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-family: inherit;
+}
+
+input[type="radio"],
+input[type="checkbox"] {
+    margin-right: 8px;
+    transform: scale(0.9);
+}
+
+input[type="checkbox"]:checked+label,
+input[type="radio"]:checked+label {
+    color: var(--button-bg);
+    font-weight: 500;
+}
+
+/* アコーディオンスタイル */
+details.instrument-group {
+    margin: 0.5em 0;
+    border-radius: 4px;
+}
+
+details.instrument-group summary {
+    padding: 0.4em 0.6em;
+    font-size: 0.9em;
+    cursor: pointer;
+    background: #f8f9fa;
+    border: 1px solid #eee;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+}
+
+details.instrument-group summary:hover {
+    background: #f0f2f5;
+}
+
+details.instrument-group[open] summary {
+    background: #e8f0fe;
+    border-color: #d2e3fc;
+}
+
+.accordion-content {
+    display: none;
+    margin-top: 10px;
+}
+
+input[type="text"] {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 10px;
+    margin-bottom: 10px;
+    font-size: 1rem;
+    border: 2px solid var(--input-border);
+    border-radius: 10px;
+    background-color: var(--input-bg);
+}
+
+input::placeholder {
+    color: var(--placeholder-color);
+    opacity: 1;
+}
+
+.button-container {
+    text-align: center;
+    margin-top: 20px;
+}
+
+button {
+    margin: 6px 4px;
+    padding: 6px 12px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.08);
+    background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.1), rgba(0, 0, 0, 0.1));
+}
+
+button:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15), 0 2px 4px rgba(0, 0, 0, 0.12);
+    transform: translateY(-1px);
+    filter: brightness(1.05);
+}
+
+button:active {
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+    transform: translateY(1px);
+    filter: brightness(0.95);
+    background-image: linear-gradient(to top, rgba(255, 255, 255, 0.1), rgba(0, 0, 0, 0.1));
+}
+
+button.btn-search,
+button.btn-action {
+    background-color: var(--button-bg);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+button.btn-search:hover,
+button.btn-action:hover {
+    background-color: var(--button-hover-bg);
+}
+
+button.btn-search:active,
+button.btn-action:active {
+    background-color: var(--button-active-bg);
+}
+
+button.btn-danger {
+    background-color: var(--danger-button-bg);
+    border: 1px solid rgba(220, 53, 69, 0.2);
+}
+
+button.btn-danger:hover {
+    background-color: var(--danger-button-hover-bg);
+}
+
+button.btn-clear {
+    background-color: var(--clear-button-bg);
+    border: 1px solid rgba(108, 117, 125, 0.2);
+}
+
+button.btn-clear:hover {
+    background-color: var(--clear-button-hover-bg);
+}
+
+/* ボタンが無効化されたときのスタイル */
+button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    box-shadow: none !important;
+    transform: none !important;
+    filter: grayscale(20%) !important;
+    background-image: none !important;
+}
+
+button.clear-input-btn {
+    background-color: var(--clear-input-btn-bg);
+}
+
+button.clear-input-btn:hover {
+    background-color: var(--clear-input-btn-hover-bg);
+}
+
+.loading,
+.result-message {
+    font-family: 'Lora', serif;
+    font-size: 1.0em;
+    font-weight: bold;
+    text-align: center;
+    padding: 20px;
+}
+
+#results {
+    margin-top: 20px;
+    background-color: var(--results-bg);
+    padding: 10px;
+    border-radius: 5px;
+    min-height: 150px;
+    line-height: 1.5;
+    white-space: normal;
+    font-family: 'Lora', serif;
+    font-size: 0.92em;
+}
+
+#results>div:first-child {
+    margin-bottom: 15px;
+}
+
+.scene-title {
+    font-size: 1.2em;
+    font-weight: bold;
+    padding-bottom: 4px;
+    border-bottom: 2px solid #ccc;
+    margin-top: 1.2em;
+    margin-bottom: 10px;
+}
+
+.result-entry {
+    display: flex;
+    align-items: baseline;
+    margin-bottom: 0.6em;
+    font-size: 0.92em;
+}
+
+.result-page {
+    flex: 0 0 4em;
+    font-weight: normal;
+    color: #555;
+    white-space: nowrap;
+    font-size: 0.75rem;
+}
+
+.result-content {
+    flex: 1;
+}
+
+.result-de {
+    font-weight: bold;
+    font-size: 1.0rem;
+    line-height: 1.45;
+    display: block;
+    font-family: 'Lora', serif;
+}
+
+.result-ja-loc {
+    display: block;
+    font-size: 0.85rem;
+    color: #333;
+}
+
+#scrollToTop {
+    position: fixed;
+    right: 20px;
+    top: 30px;  /* ヘッダー直下に配置 */
+    bottom: auto;
+    background-color: rgba(26, 115, 232, 0.95);
+    color: white;
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.85em;
+    font-weight: 500;
+    z-index: 9999;
+    display: none;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    transition: transform 0.18s ease, opacity 0.18s ease;
+    touch-action: manipulation;
+}
+
+/* helper classes: JS may toggle display or add the .show class */
+#scrollToTop.show {
+    display: block;
+    opacity: 1;
+    transform: translateY(0);
+}
+
+#scrollToTop.hidden {
+    opacity: 0;
+    transform: translateY(-8px);
+    pointer-events: none;
+}
+
+#scrollToTop:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.28);
+}
+
+#scrollToTop:active {
+    transform: translateY(1px);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+/* Alphabet floating bar (for list/notes pages) - Right Vertical Layout */
+#alpha-floating-bar {
+    position: fixed;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    bottom: auto;
+    left: auto;
+    z-index: 9998;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    padding: 12px 6px;
+    /* justify-content: center; removed */
+    min-height: 50vh;
+    background: rgba(248, 249, 250, 0.9);
+    box-shadow: -2px 0 8px rgba(0, 0, 0, 0.15);
+    overflow-y: auto;
+    max-height: 90vh;
+    -webkit-overflow-scrolling: touch;
+    width: auto;
+    min-width: 30px;
+    align-items: center;
+    border-top-left-radius: 8px;
+    border-bottom-left-radius: 8px;
+    transition: none; /* No transition needed for static position */
+}
+
+#alpha-floating-bar a {
+    display: inline-block;
+    padding: 5px 0;
+    border-radius: 4px;
+    background: rgba(240, 240, 240, 0.9);
+    color: var(--button-bg);
+    text-decoration: none;
+    font-weight: 600;
+    margin-right: 0;
+    margin-bottom: 2px;
+    font-size: 0.85rem;
+    text-align: center;
+    width: 32px;
+}
+
+#alpha-floating-bar a:active {
+    transform: translateY(0);
+}
+
+/* Search Results Styling */
+#results {
+    min-height: 200px;
+    margin-bottom: 100px;
+    font-family: 'Lora', serif;
+}
+
+.result-entry {
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #eee;
+}
+
+.result-a {
+    font-weight: bold;
+    color: #000;
+    margin-top: 0;
+    font-size: 1.0rem;
+}
+
+.result-c {
+    margin-left: 15px;
+    color: #333;
+    font-size: 0.85rem;
+}
+
+.result-loc {
+    margin-left: 30px;
+    font-size: 0.75rem;
+    color: #666;
+}
+/* Search Result Item Styling - Similar to dic.html .row */
+.search-result-item {
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+}
+
+.search-result-item:last-child {
+    border-bottom: none;
+}
+
+/* Dictionary Term Link Styling */
+.term-link {
+    color: #0066cc;
+    text-decoration: none;
+    border-bottom: 1px dotted #0066cc;
+    transition: all 0.2s ease;
+}
+
+.term-link:hover {
+    color: #0044aa;
+    border-bottom-color: #0044aa;
+}
+
+/* Target Highlight Animation */
+:target {
+    animation: highlightFade 3s ease-out;
+}
+
+@keyframes highlightFade {
+    0% { background-color: #ffeb3b; }
+    100% { background-color: transparent; }
+}
+</style>
