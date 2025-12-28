@@ -420,21 +420,17 @@ function generateDicHtml(dicData, abbrData) {
                 return;
             }
 
-            // 略記一覧へのリンク
-            if (hash === '#abbrListContainer') {
-                const targetElement = document.getElementById('abbrListContainer');
-                if (targetElement) {
-                    targetElement.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-                }
-                return;
+            const targetId = hash.substring(1);
+            let targetElement = document.getElementById(targetId);
+
+            // If not found by ID (happens when it's the first term of an alphabet section), 
+            // check data-term-id attribute.
+            if (!targetElement) {
+                targetElement = document.querySelector(\`[data-term-id="\${targetId}"]\`);
             }
 
-            // アルファベットリンク
-            if (hash.startsWith('#letter-')) {
-                const targetElement = document.getElementById(hash.substring(1));
-                if (targetElement) {
-                    targetElement.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-                }
+            if (targetElement) {
+                targetElement.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
             }
         }
 

@@ -38,6 +38,100 @@ function normalizeString(str) {
 }
 
 /**
+ * 用語をID用の文字列に正規化する (辞書リンク用)
+ */
+function normalizeForId(term) {
+  if (typeof term !== 'string') return '';
+  let id = term.toLowerCase().trim();
+  id = id.replace(/ä/g, 'ae').replace(/ö/g, 'oe').replace(/ü/g, 'ue').replace(/ß/g, 'ss');
+  id = id.replace(/[^a-z0-9]+/g, '-');
+  id = id.replace(/^-+|-+$/g, '');
+  return id;
+}
+
+/**
+ * 正規化された用語から正規表現パターンを生成
+ */
+function generateTermPattern(normalizedTerm) {
+  if (!normalizedTerm) return null;
+  let pattern = normalizedTerm;
+  pattern = pattern.split('ae').join('(?:ae|ä)');
+  pattern = pattern.split('oe').join('(?:oe|ö)');
+  pattern = pattern.split('ue').join('(?:ue|ü)');
+  pattern = pattern.split('ss').join('(?:ss|ß)');
+  pattern = pattern.split('-').join('[\\s\\-]?');
+  return pattern;
+}
+
+/**
+ * 辞書用語のインデックスを取得（キャッシュ対応）
+ */
+function getDicTermsIndex() {
+  const cache = CacheService.getScriptCache();
+  const cached = cache.get('dic_terms_index_v1');
+  if (cached) return JSON.parse(cached);
+
+  const ss = SpreadsheetApp.openById(SPREADSHEET_ID);
+  const sheet = ss.getSheetByName('Notes');
+  if (!sheet) return {};
+
+  const data = sheet.getDataRange().getValues();
+  const index = {};
+  for (let i = 1; i < data.length; i++) {
+    const german = data[i][0];
+    if (german) {
+      const id = normalizeForId(german);
+      index[id] = `term-${id}`;
+    }
+  }
+  cache.put('dic_terms_index_v1', JSON.stringify(index), 21600);
+  return index;
+}
+
+/**
+ * テキスト内の辞書用語をリンクに変換する (サーバーサイド版)
+ */
+function linkTermsInTranslation(text) {
+  if (!text) return '';
+  const termsIndex = getDicTermsIndex();
+  if (!termsIndex || Object.keys(termsIndex).length === 0) {
+    return escapeHtmlWithBreaks(text);
+  }
+  
+  let escaped = escapeHtml(text);
+  const sortedTerms = Object.keys(termsIndex).sort((a, b) => b.length - a.length);
+  const placeholders = [];
+  
+  sortedTerms.forEach((term) => {
+    if (term.length < 3) return;
+    const termId = termsIndex[term];
+    const termPattern = generateTermPattern(term);
+    if (!termPattern) return;
+    
+    try {
+      // 単語境界を考慮
+      const regex = new RegExp('(?<![a-zA-Z0-9äöüßÄÖÜ])(' + termPattern + ')(?![a-zA-Z0-9äöüßÄÖÜ])', 'gi');
+      escaped = escaped.replace(regex, (match) => {
+        const placeholder = `__PLACEHOLDER_${placeholders.length}__`;
+        placeholders.push({
+          placeholder: placeholder,
+          content: `<a href="dic.html#${termId}" class="term-link">${match}</a>`
+        });
+        return placeholder;
+      });
+    } catch (e) {
+      // Ignore invalid regex
+    }
+  });
+  
+  placeholders.forEach(p => {
+    escaped = escaped.replace(p.placeholder, p.content);
+  });
+  
+  return escaped.replace(/\n/g, '<br>');
+}
+
+/**
  * 外部ファイル（CSSやJS）をHTMLにインクルードするためのヘルパー関数
  * @param {string} filename - インクルードするファイル名
  * @returns {string} ファイルの内容
@@ -434,7 +528,7 @@ function searchRWTerms(query) {
 
     const sortedDeKeys = Object.keys(groupedByDe).sort((a, b) => a.localeCompare(b, 'de'));
     for (const de of sortedDeKeys) {
-      html += `<div class="result-a">${escapeHtmlWithBreaks(de)}</div>`;
+      html += `<div class="result-a">${linkTermsInTranslation(de)}</div>`;
       groupedByDe[de].forEach(row => {
         const ja = escapeHtmlWithBreaks(row.ja || '');
         const whom = escapeHtml(row.whom || '');
@@ -541,8 +635,8 @@ function formatGenericResults(data, sceneMap) {
       html += `<div class="scene-title">${escapeHtml(currentSceneTitle)}</div>`;
     }
 
-    // 各データをHTMLエスケープ処理する
-    const de = escapeHtmlWithBreaks(row.de || '');
+    // 各データをHTMLエスケープ処理し、用語リンクを作成する
+    const de = linkTermsInTranslation(row.de || '');
     const ja = escapeHtmlWithBreaks(row.ja || '');
     const whom = escapeHtml(row.whom || '');
     const pageValue = row.page ? String(row.page).trim() : '';
@@ -832,7 +926,7 @@ function searchByTerm(query) {
       detailsHTML += `<div class="result-loc">${workName} ${movement}：${measure}（${instruments}）</div>`;
     });
 
-    resultHTML += `<div class="result-a">${escapeHtmlWithBreaks(german)}</div>`;
+    resultHTML += `<div class="result-a">${linkTermsInTranslation(german)}</div>`;
     resultHTML += `<div class="result-c">${escapeHtmlWithBreaks(japanese)}</div>`;
     resultHTML += detailsHTML;
     resultHTML += `<div class="result-loc">(${segmentCount}件)</div>`;

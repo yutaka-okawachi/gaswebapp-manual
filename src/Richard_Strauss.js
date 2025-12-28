@@ -226,7 +226,7 @@ function searchRSTerms(query) {
 
     const sortedDeKeys = Object.keys(groupedByDe).sort((a, b) => a.localeCompare(b, 'de'));
     for (const de of sortedDeKeys) {
-      html += `<div class="result-a">${escapeHtmlWithBreaks(de)}</div>`;
+      html += `<div class="result-a">${linkTermsInTranslation(de)}</div>`;
       groupedByDe[de].forEach(row => {
         const ja = escapeHtmlWithBreaks(row.ja || '');
         const whom = escapeHtml(row.whom || '');

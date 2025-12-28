@@ -171,6 +171,9 @@ function exportAllDataToJson() {
     const termsIndex = generateDicTermsIndex(dicNotesJson);
     Logger.log('dic_terms_index.json生成完了: ' + Object.keys(termsIndex).length + ' 件');
 
+    // キャッシュを無効化（サーバーサイド検索用）
+    CacheService.getScriptCache().remove('dic_terms_index_v1');
+
     // GitHubへ直接プッシュ（Google Drive不要）
     const files = {
         'mahler-search-app/data/mahler.json': mahlerJson,
