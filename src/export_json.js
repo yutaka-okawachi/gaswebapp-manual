@@ -1,4 +1,4 @@
-const SPREADSHEET_ID = PropertiesService.getScriptProperties().getProperty('SPREADSHEET_ID');
+// SPREADSHEET_ID is defined in mahler.js
 
 function exportAllDataToJson() {
     const ss = SpreadsheetApp.openById(SPREADSHEET_ID);
