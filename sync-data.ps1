@@ -23,6 +23,18 @@ Write-Host ""
 # Node.js接続エラー対策: IPv4を優先
 $env:NODE_OPTIONS = "--dns-result-order=ipv4first"
 
+# --- [0.5] 環境変数のロード (.env) ---
+if (Test-Path ".env") {
+    Write-Host "Loading .env file..." -ForegroundColor Gray
+    Get-Content .env | ForEach-Object {
+        if ($_ -match "^\s*([^#\s][^=]*)\s*=\s*(.*)$") {
+            $name = $matches[1].Trim()
+            $value = $matches[2].Trim()
+            Set-Item -Path "env:$name" -Value $value
+        }
+    }
+}
+
 # --- [1/5] GAS へのアップロード (clasp push) ---
 Write-Host "[1/5] Checking GAS source changes (src/)..." -ForegroundColor Yellow
 $gasChanges = git status --porcelain src/
