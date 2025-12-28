@@ -1,6 +1,23 @@
 function doPost(e) {
+  Logger.log("doPost triggered with: " + (e.postData ? e.postData.contents : "no postData"));
   try {
     var data = JSON.parse(e.postData.contents);
+    
+    // Check if this is a sync trigger from sync-data.ps1
+    if (data.action === "exportDic" || data.function === "exportAllDataToJson") {
+      // Secret token check
+      var token = data.token;
+      var SECRET_TOKEN = PropertiesService.getScriptProperties().getProperty('GAS_SECRET_TOKEN');
+      if (!token || token !== SECRET_TOKEN) {
+        return ContentService.createTextOutput(JSON.stringify({status: "error", message: "Unauthorized"}))
+          .setMimeType(ContentService.MimeType.JSON);
+      }
+      
+      // Run the export
+      var result = exportAllDataToJson();
+      return ContentService.createTextOutput(JSON.stringify({status: "success", result: result}))
+        .setMimeType(ContentService.MimeType.JSON);
+    }
     
     // Helper function to handle empty values
     function getValue(val) {
@@ -304,11 +321,16 @@ function doPost(e) {
             "■ ユーザー環境\n" +
             userAgent;
                 
+    var recipient = 'pistares@ezweb.ne.jp';
+    Logger.log("Sending email to: " + recipient + " with subject: " + subject);
+    
     MailApp.sendEmail({
-      to: 'pistares@ezweb.ne.jp',
+      to: recipient,
       subject: subject,
       body: body
     });
+    
+    Logger.log("Email sent successfully");
     
     return ContentService.createTextOutput(JSON.stringify({status: "success"}))
       .setMimeType(ContentService.MimeType.JSON);
