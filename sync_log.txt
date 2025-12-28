@@ -3,3 +3,65 @@ Unified Sync & Export Script
 ================================
 
 [1/5] Checking GAS source changes (src/)...
+? No changes in src/ detected. Skipping clasp push.
+
+[2/5] Committing local changes...
+? Detected local changes. Committing to ensure clean rebase...
+warning: in the working copy of 'sync_log.txt', LF will be replaced by CRLF the next time Git touches it
+? Local changes committed.
+
+[3/5] Triggering GAS function (exportAllDataToJson)...
+This will update data files and dic.html on GitHub...
+
+Attempting clasp run...
+? clasp run failed or unavailable (exit code: 0)
+clasp run output:
+node.exe : Unable to run sc
+ript function. Please make 
+sure you have permission to
+ run the script function.
+発生場所 C:\Users\okawa\AppData
+\Roaming\npm\clasp.ps1:24 文
+字:5
++     & "node$exe"  "$based
+ir/node_modules/@google/cla
+sp/build/src/inde ...
++     ~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~
+    + CategoryInfo         
+     : NotSpecified: (Una  
+  ble to run s...cript f   
+ unction.:String) [], R    
+emoteException
+    + FullyQualifiedErrorI 
+   d : NativeCommandError
+ 
+
+
+→ Falling back to Web App method...
+
+Using Web App endpoint: https://script.google.com/macros/s/AKfycbzsgiXGZ3p...
+Sending request to Web App...
+C:\Users\okawa\gaswebapp-ma
+nual\sync-data.ps1 : ? Web 
+App request failed: リモー
+ト サーバーがエラーを返しま
+した: (401) 許可されていま
+せん
+    + CategoryInfo         
+     : NotSpecified: (:)   
+  [Write-Error], WriteEr   
+ rorException
+    + FullyQualifiedErrorI 
+   d : Microsoft.PowerShe  
+  ll.Commands.WriteError   
+ Exception,sync-data.ps    
+1
+ 
+
+Please try manual execution:
+  1. Open GAS editor: https://script.google.com
+  2. Run 'exportAllDataToJson' function
+  3. Then run: git pull
+

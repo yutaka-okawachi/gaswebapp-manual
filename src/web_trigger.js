@@ -27,10 +27,32 @@ const SECRET_TOKEN = PropertiesService.getScriptProperties().getProperty('GAS_SE
  * @return {ContentService.TextOutput} JSON レスポンス
  */
 function doGet(e) {
+  return handleRequest(e.parameter);
+}
+
+/**
+ * HTTP POST リクエストのハンドラー
+ */
+function doPost(e) {
+  try {
+    const params = JSON.parse(e.postData.contents);
+    return handleRequest(params);
+  } catch (error) {
+    return createJsonResponse({
+      success: false,
+      error: "Invalid JSON payload: " + error.toString()
+    }, 400);
+  }
+}
+
+/**
+ * リクエストの共通処理ロジック
+ */
+function handleRequest(params) {
   try {
     // パラメータの取得
-    const token = e.parameter.token;
-    const action = e.parameter.action;
+    const token = params.token;
+    const action = params.action || params.function; // function パラメータも受け入れるようにする
     
     // 認証チェック
     if (!token || token !== SECRET_TOKEN) {
@@ -42,39 +64,33 @@ function doGet(e) {
     
     // アクションの実行
     let result;
-    switch(action) {
-      case "exportDic":
-        Logger.log("Starting exportAllDataToJson...");
-        exportAllDataToJson();
-        Logger.log("exportAllDataToJson completed");
-        result = {
-          success: true,
-          message: "dic.html exported and pushed to GitHub successfully",
-          timestamp: new Date().toISOString()
-        };
-        break;
-        
-      case "ping":
-        // 接続テスト用
-        result = {
-          success: true,
-          message: "Web trigger is working correctly",
-          timestamp: new Date().toISOString()
-        };
-        break;
-        
-      default:
-        result = {
-          success: false,
-          error: "Unknown action: " + action,
-          availableActions: ["exportDic", "ping"]
-        };
+    if (action === "exportDic" || action === "exportAllDataToJson") {
+      Logger.log("Starting exportAllDataToJson...");
+      exportAllDataToJson();
+      Logger.log("exportAllDataToJson completed");
+      result = {
+        status: "success", // sync-data.ps1 が status をチェックしているため
+        message: "dic.html exported and pushed to GitHub successfully",
+        timestamp: new Date().toISOString()
+      };
+    } else if (action === "ping") {
+      result = {
+        status: "success",
+        message: "Web trigger is working correctly",
+        timestamp: new Date().toISOString()
+      };
+    } else {
+      result = {
+        success: false,
+        error: "Unknown action: " + action,
+        availableActions: ["exportDic", "exportAllDataToJson", "ping"]
+      };
     }
     
     return createJsonResponse(result);
     
   } catch (error) {
-    Logger.log("Error in doGet: " + error.toString());
+    Logger.log("Error in handleRequest: " + error.toString());
     return createJsonResponse({
       success: false,
       error: error.toString(),
