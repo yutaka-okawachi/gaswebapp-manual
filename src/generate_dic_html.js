@@ -208,15 +208,22 @@ function generateDicListHtml(dicData, termsIndex) {
       prevLetter = currentLetter;
     }
     
-    // 個別用語のID生成
+    // Alphabet anchor (if first term of a letter)
+    let alphabetAnchor = '';
+    if (anchorId) {
+      alphabetAnchor = `<div${anchorId}></div>\n`;
+    }
+    
+    // Individual Term ID (Always use id for native browser scrolling)
     const termId = german ? normalizeForId(german) : '';
-    const termIdAttr = termId ? (anchorId ? ` data-term-id="term-${termId}"` : ` id="term-${termId}"`) : '';
+    const termIdAttr = termId ? ` id="term-${termId}"` : '';
     
     // translationにリンクを適用
     const linkedTranslation = termsIndex ? linkTermsInTranslation(translation, termsIndex) : escapeHtmlWithBreaks(translation);
     
     // rowのHTML生成
-    html += `<div class="row"${anchorId}${termIdAttr}>
+    if (alphabetAnchor) html += alphabetAnchor;
+    html += `<div class="row"${termIdAttr}>
   <div>
     <span class="german">${escapeHtml(german)}</span><span class="source">${escapeHtml(source)}</span>
   </div>
@@ -348,7 +355,7 @@ function generateDicHtml(dicData, abbrData) {
             scroll-margin-top: 20px;
         }
 
-        .row {
+        .row, div[id^="letter-"] {
             border-bottom: 1px solid #ccc;
             padding-bottom: 10px;
             margin-bottom: 10px;
@@ -356,14 +363,21 @@ function generateDicHtml(dicData, abbrData) {
             transition: background-color 0.3s;
         }
 
+        div[id^="letter-"] {
+            border-bottom: none;
+            padding-bottom: 0;
+            margin-bottom: 0;
+        }
+
         /* Target Highlight Animation */
-        .row.highlight-active, .row:target {
-            animation: highlightFade 3s ease-out !important;
+        .row.highlight-active {
+            animation: highlightFade 2.5s ease-out !important;
         }
 
         @keyframes highlightFade {
-            0% { background-color: #ffeb3b !important; }
-            100% { background-color: transparent !important; }
+            0% { background-color: #ffeb3b; }
+            15% { background-color: #ffeb3b; }
+            100% { background-color: transparent; }
         }
 
         .german {
@@ -441,21 +455,23 @@ function generateDicHtml(dicData, abbrData) {
             // If not found by ID (happens when it's the first term of an alphabet section), 
             // check data-term-id attribute.
             if (!targetElement) {
-                targetElement = document.querySelector(\`[data-term-id="\${targetId}"]\`);
+                return;
             }
 
-            if (targetElement) {
-                targetElement.scrollIntoView({ behavior: 'auto', block: 'start' });
-                
-                // Remove class first, force reflow, then add back to trigger animation
-                targetElement.classList.remove('highlight-active');
-                void targetElement.offsetWidth; // Trigger reflow
-                
-                // Use requestAnimationFrame to ensure the class addition triggers animation
-                requestAnimationFrame(() => {
-                    targetElement.classList.add('highlight-active');
-                });
-            }
+            // Highlighting
+            targetElement.scrollIntoView({ behavior: 'auto', block: 'start' });
+            
+            // Remove previous highlights
+            document.querySelectorAll('.row.highlight-active').forEach(el => el.classList.remove('highlight-active'));
+            
+            // Trigger animation
+            // Use reflow + frame delay to ensure it restarts even if same hash
+            targetElement.classList.remove('highlight-active');
+            void targetElement.offsetWidth; 
+            
+            setTimeout(() => {
+                targetElement.classList.add('highlight-active');
+            }, 0);
         }
 
         // ページトップへスクロール
