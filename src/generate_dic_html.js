@@ -447,11 +447,13 @@ function generateDicHtml(dicData, abbrData) {
             if (targetElement) {
                 targetElement.scrollIntoView({ behavior: 'auto', block: 'start' });
                 
+                // Remove class first, force reflow, then add back to trigger animation
+                targetElement.classList.remove('highlight-active');
+                void targetElement.offsetWidth; // Trigger reflow
+                
                 // Use requestAnimationFrame to ensure the class addition triggers animation
                 requestAnimationFrame(() => {
-                    requestAnimationFrame(() => {
-                        targetElement.classList.add('highlight-active');
-                    });
+                    targetElement.classList.add('highlight-active');
                 });
             }
         }
