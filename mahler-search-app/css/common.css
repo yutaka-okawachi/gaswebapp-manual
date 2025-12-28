@@ -804,12 +804,4 @@ button.clear-input-btn:hover {
     border-bottom-color: #0044aa;
 }
 
-/* Target Highlight Animation */
-:target, .highlight-target {
-    animation: highlightFade 3s ease-out;
-}
 
-@keyframes highlightFade {
-    0% { background-color: #ffeb3b !important; }
-    100% { background-color: transparent; }
-}

@@ -353,6 +353,17 @@ function generateDicHtml(dicData, abbrData) {
             padding-bottom: 10px;
             margin-bottom: 10px;
             scroll-margin-top: 20px;
+            transition: background-color 0.3s;
+        }
+
+        /* Target Highlight Animation */
+        .row.highlight-active, .row:target {
+            animation: highlightFade 3s ease-out !important;
+        }
+
+        @keyframes highlightFade {
+            0% { background-color: #ffeb3b !important; }
+            100% { background-color: transparent !important; }
         }
 
         .german {
@@ -423,7 +434,7 @@ function generateDicHtml(dicData, abbrData) {
             const targetId = hash.substring(1);
             
             // Remove previous highlights
-            document.querySelectorAll('.highlight-target').forEach(el => el.classList.remove('highlight-target'));
+            document.querySelectorAll('.row.highlight-active').forEach(el => el.classList.remove('highlight-active'));
 
             let targetElement = document.getElementById(targetId);
 
@@ -434,10 +445,14 @@ function generateDicHtml(dicData, abbrData) {
             }
 
             if (targetElement) {
-                // Force a reflow to restart the animation
-                void targetElement.offsetWidth;
-                targetElement.classList.add('highlight-target');
                 targetElement.scrollIntoView({ behavior: 'auto', block: 'start' });
+                
+                // Use requestAnimationFrame to ensure the class addition triggers animation
+                requestAnimationFrame(() => {
+                    requestAnimationFrame(() => {
+                        targetElement.classList.add('highlight-active');
+                    });
+                });
             }
         }
 
