@@ -149,7 +149,7 @@ function exportAllDataToJson() {
         const targetMap = {};
         jsonArray.forEach(row => {
             const opera = String(row['Oper'] || '').toLowerCase().trim();
-            const whom = String(row['Whom'] || '').trim();
+            const whom = String(row['whom'] || '').trim();
             if (opera && whom) {
                 if (!targetMap[opera]) targetMap[opera] = new Set();
                 whom.split(',').forEach(p => {
