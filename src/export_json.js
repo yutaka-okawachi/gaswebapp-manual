@@ -144,6 +144,33 @@ function exportAllDataToJson() {
         });
     }
 
+    // 5. Extract Unique Targets (Whom) for RS and RW
+    const extractTargets = (jsonArray) => {
+        const targetMap = {};
+        jsonArray.forEach(row => {
+            const opera = String(row['Oper'] || '').toLowerCase().trim();
+            const whom = String(row['Whom'] || '').trim();
+            if (opera && whom) {
+                if (!targetMap[opera]) targetMap[opera] = new Set();
+                whom.split(',').forEach(p => {
+                    const trimmed = p.trim();
+                    if (trimmed) targetMap[opera].add(trimmed);
+                });
+            }
+        });
+        // Convert sets to sorted arrays
+        const result = {};
+        for (const opera in targetMap) {
+            result[opera] = Array.from(targetMap[opera]).sort();
+        }
+        return result;
+    };
+
+    const targetsIndex = {
+        rs: extractTargets(rsJson),
+        rw: extractTargets(rwJson)
+    };
+
     // 7. Dictionary Notes (Notes sheet)
     const dicNotesSheet = ss.getSheetByName('Notes');
     let dicNotesJson = [];
@@ -181,6 +208,7 @@ function exportAllDataToJson() {
         'mahler-search-app/data/richard_wagner.json': rwJson,
         'mahler-search-app/data/rs_scenes.json': rsScenes,
         'mahler-search-app/data/rw_scenes.json': rwScenes,
+        'mahler-search-app/data/targets_index.json': targetsIndex, // 新規: 指示対象インデックス
         'mahler-search-app/data/dic_notes.json': dicNotesJson,
         'mahler-search-app/data/abbr_list.json': abbrJson,
         'mahler-search-app/data/dic_terms_index.json': termsIndex,  // 新規: 用語インデックス

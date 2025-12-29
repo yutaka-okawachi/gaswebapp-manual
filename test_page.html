@@ -1,0 +1,229 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>UI Test Page</title>
+    <!-- Inject CSS -->
+    <style>
+        /* Mock common_styles.html content */
+        :root {
+            --primary-bg: #f0f8ff;
+            --container-bg: #fff;
+            --section-label-bg: #ffe9cc;
+            --button-bg: #1a73e8;
+            --button-hover-bg: #1557b0;
+            --danger-button-bg: #dc3545;
+            --results-bg: #fff2e0;
+        }
+        body { font-family: sans-serif; background-color: var(--primary-bg); }
+        .container { max-width: 800px; margin: 20px auto; background: white; padding: 20px; border-radius: 10px; }
+        .big-label { font-size: 1.2rem; margin: 1rem 0; padding: 8px; background-color: var(--section-label-bg); border-radius: 5px; font-weight: bold; }
+        .radio-group { display: flex; flex-wrap: wrap; gap: 10px; }
+        .checkbox-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; }
+        .btn-search { background-color: var(--button-bg); color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; }
+        .btn-danger { background-color: var(--danger-button-bg); color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; }
+        .btn-clear { background-color: #6c757d; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; }
+        .loading { text-align: center; padding: 10px; font-weight: bold; }
+        .results-container { margin-top: 20px; padding: 15px; background: var(--results-bg); border-radius: 5px; }
+        .accordion-content { margin-top: 15px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>曲名から検索 (Test)</h1>
+        
+        <div class="big-label">曲を選択</div>
+        <fieldset>
+            <div class="radio-group" id="opera-selection">
+                <label><input type="radio" name="opera" value="tristan"> Tristan und Isolde</label>
+                <label><input type="radio" name="opera" value="walküre"> Die Walküre</label>
+            </div>
+        </fieldset>
+
+        <div id="search-method-container" style="display: none;">
+            <div class="big-label">検索方法を選択</div>
+            <fieldset>
+                <div class="radio-group">
+                    <label><input type="radio" name="search-type" value="scene" onchange="handleSearchTypeSelection()"> 場面から検索</label>
+                    <label><input type="radio" name="search-type" value="page" onchange="handleSearchTypeSelection()"> ページから検索</label>
+                    <label><input type="radio" name="search-type" value="target" onchange="handleSearchTypeSelection()"> 指示対象から検索</label>
+                </div>
+            </fieldset>
+        </div>
+
+        <div id="scene-selection-container" class="accordion-content" style="display:none;">
+            <fieldset>
+                <legend>場面</legend>
+                <div id="scene-options-wrapper"></div>
+            </fieldset>
+        </div>
+
+        <div id="page-selection-container" class="accordion-content" style="display:none;">
+            <fieldset>
+                <legend>ページ番号</legend>
+                <input type="text" id="page-input" placeholder="例 10, 15-20">
+            </fieldset>
+        </div>
+
+        <div id="target-selection-container" class="accordion-content" style="display:none;">
+            <fieldset>
+                <legend>指示対象</legend>
+                <div id="target-checkboxes" class="checkbox-grid"></div>
+            </fieldset>
+        </div>
+
+        <div id="shared-button-container" class="button-container" style="display:none; margin-top: 20px;">
+            <button type="button" id="search-button" onclick="executeSearch()" class="btn-search">検索</button>
+            <button type="button" onclick="cancelSearch()" class="btn-danger">中止</button>
+            <button type="button" onclick="clearInputs()" class="btn-clear">クリア</button>
+        </div>
+
+        <div id="results" class="results-container"></div>
+    </div>
+
+    <!-- Mock google.script.run -->
+    <script>
+        const google = {
+            script: {
+                run: {
+                    withSuccessHandler: function(handler) {
+                        this.successHandler = handler;
+                        return this;
+                    },
+                    withFailureHandler: function(handler) {
+                        this.failureHandler = handler;
+                        return this;
+                    },
+                    getSceneOptionsForOpera: function(composer) {
+                        setTimeout(() => {
+                            this.successHandler({
+                                'tristan': [{ value: '1-1', text: '1幕 1場' }, { value: '1-2', text: '1幕 2場' }],
+                                'walküre': [{ value: '1-1', text: '1幕 1場' }]
+                            });
+                        }, 100);
+                    },
+                    getWagnerTargets: function(opera) {
+                        setTimeout(() => {
+                            if (opera === 'tristan') {
+                                this.successHandler(['Isolde', 'Tristan', 'Brangäne']);
+                            } else {
+                                this.successHandler(['Siegmund', 'Sieglinde']);
+                            }
+                        }, 100);
+                    },
+                    searchRichardWagnerByTarget: function(opera, targets) {
+                        setTimeout(() => {
+                            this.successHandler(`<div><h3>Search Result for ${targets.join(', ')} in ${opera}</h3><p>Dummy result content.</p></div>`);
+                        }, 500);
+                    },
+                    searchRichardWagnerByScene: function(opera, scenes) {
+                        setTimeout(() => {
+                            this.successHandler(`<div><h3>Search Result for scenes ${scenes.join(', ')} in ${opera}</h3><p>Dummy result content.</p></div>`);
+                        }, 500);
+                    }
+                }
+            }
+        };
+
+        // Inject modified functions from richard_wagner_script.html
+        /* ... I will copy the core logic here ... */
+    </script>
+    <!-- Adding the actual script logic manually for the test -->
+    <script>
+        const sceneOptionsCache = {};
+        const targetOptionsCache = {};
+        let currentSearchId = 0;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('input[name="opera"]').forEach(radio => {
+                radio.addEventListener('change', handleOperaSelection);
+            });
+            document.querySelectorAll('input[name="search-type"]').forEach(radio => {
+                radio.addEventListener('change', handleSearchTypeSelection);
+            });
+        });
+
+        function handleOperaSelection(event) {
+            const operaValue = event.target.value;
+            const composer = 'richard_wagner';
+
+            document.getElementById('search-method-container').style.display = 'block';
+            document.getElementById('shared-button-container').style.display = 'block';
+            resetSearchType();
+
+            google.script.run
+                .withSuccessHandler(options => {
+                    sceneOptionsCache[composer] = options || {};
+                    buildSceneCheckboxes(operaValue, sceneOptionsCache[composer]);
+                })
+                .getSceneOptionsForOpera(composer);
+
+            google.script.run
+                .withSuccessHandler(targets => {
+                    buildTargetCheckboxes(targets);
+                })
+                .getWagnerTargets(operaValue);
+        }
+
+        function buildSceneCheckboxes(operaValue, sceneOptionsData) {
+            const wrapper = document.getElementById('scene-options-wrapper');
+            wrapper.innerHTML = '';
+            const options = sceneOptionsData[operaValue];
+            if (!options) return;
+            options.forEach(opt => {
+                const label = document.createElement('label');
+                label.innerHTML = `<input type="checkbox" name="scene" value="${opt.value}"> ${opt.text}`;
+                wrapper.appendChild(label);
+            });
+        }
+
+        function buildTargetCheckboxes(targets) {
+            const wrapper = document.getElementById('target-checkboxes');
+            wrapper.innerHTML = '';
+            targets.forEach(target => {
+                const label = document.createElement('label');
+                label.innerHTML = `<input type="checkbox" name="target-item" value="${target}"> ${target}`;
+                wrapper.appendChild(label);
+            });
+        }
+
+        function handleSearchTypeSelection() {
+            const selectedType = document.querySelector('input[name="search-type"]:checked')?.value;
+            document.getElementById('scene-selection-container').style.display = selectedType === 'scene' ? 'block' : 'none';
+            document.getElementById('page-selection-container').style.display = selectedType === 'page' ? 'block' : 'none';
+            document.getElementById('target-selection-container').style.display = selectedType === 'target' ? 'block' : 'none';
+        }
+
+        function executeSearch() {
+            const selectedOpera = document.querySelector('input[name="opera"]:checked')?.value;
+            const selectedType = document.querySelector('input[name="search-type"]:checked')?.value;
+            if (!selectedOpera || !selectedType) return;
+
+            if (selectedType === 'target') {
+                const targets = Array.from(document.querySelectorAll('input[name="target-item"]:checked')).map(cb => cb.value);
+                document.getElementById('results').innerHTML = 'Searching...';
+                google.script.run.withSuccessHandler(html => {
+                    document.getElementById('results').innerHTML = html;
+                }).searchRichardWagnerByTarget(selectedOpera, targets);
+            }
+        }
+
+        function resetSearchType() {
+            document.querySelectorAll('input[name="search-type"]').forEach(r => r.checked = false);
+            document.getElementById('scene-selection-container').style.display = 'none';
+            document.getElementById('page-selection-container').style.display = 'none';
+            document.getElementById('target-selection-container').style.display = 'none';
+        }
+
+        function clearInputs() {
+            document.querySelectorAll('input[name="target-item"]').forEach(cb => cb.checked = false);
+            document.getElementById('results').innerHTML = '';
+        }
+
+        function cancelSearch() {
+            document.getElementById('results').innerHTML = 'Cancelled';
+        }
+    </script>
+</body>
+</html>

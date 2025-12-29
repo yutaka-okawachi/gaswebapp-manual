@@ -306,9 +306,8 @@ function getSceneMap(sheetName) {
  * @returns {Array<Object>} R. Wagnerのデータ配列
  */
 function getRichardWagnerData() {
-  const cacheKey = 'richard_wagner_data_v2'; // キーのバージョンを更新
+  const cacheKey = 'richard_wagner_data_v2';
 
-  // ★★★ 変更点：新しい取得関数を呼び出す ★★★
   const cached = getChunkedCache(cacheKey);
   if (cached) {
     return cached;
@@ -320,19 +319,100 @@ function getRichardWagnerData() {
 
   const lastRow = sheet.getLastRow();
   if (lastRow < 2) return [];
-  const range = sheet.getRange(1, 1, lastRow, 8); // 列数を8に変更
+  const range = sheet.getRange(1, 1, lastRow, 8);
   const data = range.getValues();
 
   const header = data.shift();
   const headerMap = header.reduce((obj, col, i) => { if (col) { obj[col.toString().trim().toLowerCase()] = i; } return obj; }, {});
-  const requiredHeaders = ['oper', 'aufzug', 'szene', 'page', 'whom', 'de', 'ja', 'de_normalized']; // de_normalized を追加
+  const requiredHeaders = ['oper', 'aufzug', 'szene', 'page', 'whom', 'de', 'ja', 'de_normalized'];
   for (const h of requiredHeaders) { if (headerMap[h] === undefined) { throw new Error(`シート「RW」に必要なヘッダー「${h}」がありません。`); } }
   const jsonData = data.map(row => { let obj = {}; for (const key in headerMap) { obj[key] = row[headerMap[key]]; } return obj; });
 
-  // ★★★ 変更点：新しい保存関数を呼び出す ★★★
-  setChunkedCache(cacheKey, jsonData, 21600); // 6時間キャッシュ
+  setChunkedCache(cacheKey, jsonData, 21600);
 
   return jsonData;
+}
+
+/**
+ * 選択されたオペラの指示対象リストを取得する
+ * @param {string} operaName - オペラ名
+ * @returns {Array<string>} 指示対象のリスト
+ */
+function getWagnerTargets(operaName) {
+  try {
+    const normalizedOperaName = normalizeString(operaName);
+    const allData = getRichardWagnerData();
+    
+    const targets = new Set();
+    allData.forEach(row => {
+      const sheetOperaValue = normalizeString(row.oper);
+      if (sheetOperaValue === normalizedOperaName && row.whom) {
+        const parts = row.whom.toString().split(',');
+        parts.forEach(part => {
+          const trimmed = part.trim();
+          if (trimmed) targets.add(trimmed);
+        });
+      }
+    });
+    
+    return Array.from(targets).sort();
+  } catch (e) {
+    Logger.log(`getWagnerTargets error: ${e.toString()}`);
+    return [];
+  }
+}
+
+/**
+ * ワーグナーの指示対象（Whom）による単独検索
+ */
+function searchRichardWagnerByTarget(operaName, targetFilter) {
+  try {
+    const scoreInfoMap = getScoreInfoMap();
+    const normalizedOperaName = normalizeString(operaName);
+    const scoreInfo = scoreInfoMap[normalizedOperaName] || '';
+
+    const allData = getRichardWagnerData();
+    const sceneMap = getSceneMap('RW幕構成');
+
+    if (!targetFilter || targetFilter.length === 0) {
+      return '<p class="result-message">指示対象を選択してください。</p>';
+    }
+
+    const filteredData = allData.filter(row => {
+      const sheetOperaValue = normalizeString(row.oper);
+      if (sheetOperaValue !== normalizedOperaName) return false;
+      if (!row.whom) return false;
+
+      const rowTargets = row.whom.toString().split(',').map(s => s.trim());
+      // 和集合（OR）
+      return rowTargets.some(t => targetFilter.includes(t));
+    });
+
+    const resultsHtml = formatGenericResults(filteredData, sceneMap);
+
+    const mottlOperas = ['tann_dresden', 'tann_paris', 'walkuere', 'tristan', 'parsifal'];
+    let finalHtml = '';
+    if (scoreInfo) {
+      finalHtml += `<div class="score-info-banner">楽譜情報: ${escapeHtml(scoreInfo)}</div>`;
+    }
+    if (mottlOperas.includes(normalizedOperaName)) {
+      finalHtml += `<div class="mottl-info" style="font-weight: bold; font-size: 0.9em;">Felix Mottl による指示も含む</div>`;
+    }
+    finalHtml += resultsHtml;
+
+    const emailSubject = 'R.Wagner 指示対象からの検索が実行されました';
+    const emailBody = `
+検索日時: ${new Date().toLocaleString('ja-JP')}
+オペラ: ${operaName}
+指示対象: ${targetFilter.join(', ')}
+    `.trim();
+    sendSearchNotification(emailSubject, emailBody);
+
+    return finalHtml;
+  } catch (e) {
+    Logger.log(e);
+    return `<p class="result-message">エラーが発生しました: ${e.message}</p>`;
+  }
 }
 
 function searchRichardWagnerByScene(operaName, scenes) {

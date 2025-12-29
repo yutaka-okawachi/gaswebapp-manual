@@ -46,8 +46,9 @@
         <fieldset>
           <legend>方法</legend>
           <div class="radio-group">
-            <label><input type="radio" name="search-type" value="scene"> 場面から検索</label>
-            <label><input type="radio" name="search-type" value="page"> ページから検索</label>
+            <label><input type="radio" name="search-type" value="scene" onchange="handleSearchTypeSelection()"> 場面から検索</label>
+            <label><input type="radio" name="search-type" value="page" onchange="handleSearchTypeSelection()"> ページから検索</label>
+            <label><input type="radio" name="search-type" value="target" onchange="handleSearchTypeSelection()"> 指示対象から検索</label>
           </div>
         </fieldset>
       </div>
@@ -57,11 +58,6 @@
           <legend>場面</legend>
           <div id="scene-options-wrapper"></div>
         </fieldset>
-        <div class="button-container">
-          <button type="button" onclick="searchByScene()" class="btn-search">検索</button>
-          <button type="button" onclick="cancelSearch()" class="btn-danger">中止</button>
-          <button type="button" onclick="clearScenes()" class="btn-clear">クリア</button>
-        </div>
       </div>
 
       <div id="page-selection-container" class="accordion-content">
@@ -70,11 +66,22 @@
           <p style="font-size: 0.9em; color: #555;">ページ番号を半角で入力</p>
           <input type="text" id="page-input" placeholder="例 3,14,15-92">
         </fieldset>
-        <div class="button-container">
-          <button type="button" onclick="searchByPage()" class="btn-search">検索</button>
-          <button type="button" onclick="cancelSearch()" class="btn-danger">中止</button>
-          <button type="button" onclick="clearPageInput()" class="btn-clear">クリア</button>
-        </div>
+      </div>
+
+      <div id="target-selection-container" class="accordion-content" style="display:none;">
+        <fieldset>
+          <legend>指示対象</legend>
+          <p style="font-size: 0.9em; color: #555;">指示対象を選択してください（複数選択可）</p>
+          <div id="target-checkboxes" class="checkbox-grid">
+            <!-- JavaScriptで動的に生成 -->
+          </div>
+        </fieldset>
+      </div>
+
+      <div id="shared-button-container" class="button-container" style="display:none; margin-top: 20px;">
+        <button type="button" onclick="executeSearch()" class="btn-search">検索</button>
+        <button type="button" onclick="cancelSearch()" class="btn-danger">中止</button>
+        <button type="button" onclick="clearInputs()" class="btn-clear">クリア</button>
       </div>
 
       <div id="results"></div>
