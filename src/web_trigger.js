@@ -61,19 +61,22 @@ function handleRequest(params) {
       exportAllDataToJson();
       result = {
         status: "success",
-        message: "dic.html exported and pushed to GitHub successfully",
+        message: "Data sync completed",
+        logs: Logger.getLog(), // 実行ログを含める
         timestamp: new Date().toISOString()
       };
     } else if (action === "ping") {
       result = {
         status: "success",
         message: "Web trigger is working correctly",
+        logs: Logger.getLog(),
         timestamp: new Date().toISOString()
       };
     } else {
       result = {
         status: "error",
-        error: "Unknown action: " + action
+        error: "Unknown action: " + action,
+        logs: Logger.getLog()
       };
     }
     
@@ -83,7 +86,8 @@ function handleRequest(params) {
     Logger.log("Error in handleRequest: " + error.toString());
     return createJsonResponse({
       status: "error",
-      error: error.toString()
+      error: error.toString(),
+      logs: Logger.getLog()
     }, 500);
   }
 }

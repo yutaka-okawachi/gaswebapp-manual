@@ -143,13 +143,27 @@ if ($runFailed) {
             
             $webDuration = (Get-Date) - $webStartTime
             
+            # Attempt to parse JSON output
+            $json = $null
+            try {
+                $json = $curlOutput | ConvertFrom-Json -ErrorAction SilentlyContinue
+            } catch {
+                # Not valid JSON, $json remains $null
+            }
+
             # Check if output looks like success JSON
-            if ($curlOutput -match '"status":\s*"success"') {
+            if ($json -and $json.status -eq "success") {
                 Write-Host "✓ GAS function executed successfully via Web App (curl)." -ForegroundColor Green
+                if ($json.logs) {
+                  Write-Host "--- GAS Execution Logs ---" -ForegroundColor Cyan
+                  Write-Host $json.logs -ForegroundColor Gray
+                  Write-Host "--------------------------" -ForegroundColor Cyan
+                }
+                # Use $webDuration for Web App execution time
                 Write-Host "  Execution time: $([math]::Round($webDuration.TotalSeconds, 1)) seconds" -ForegroundColor Gray
             } else {
                 Write-Warning "⚠ Web App execution might have failed or returned unexpected format."
-                Write-Host "Output summary: $($curlOutput.Substring(0, [math]::Min(200, $curlOutput.Length)))" -ForegroundColor DarkGray
+                Write-Host "Output: $curlOutput" -ForegroundColor DarkGray
                 # We don't exit 1 here yet, because the push might have actually happened 
                 # even if the response was garbled
             }

@@ -170,6 +170,7 @@ function exportAllDataToJson() {
         rs: extractTargets(rsJson),
         rw: extractTargets(rwJson)
     };
+    Logger.log(`指示対象抽出完了: RS=${Object.keys(targetsIndex.rs).length}曲, RW=${Object.keys(targetsIndex.rw).length}曲`);
 
     // 7. Dictionary Notes (Notes sheet)
     const dicNotesSheet = ss.getSheetByName('Notes');
@@ -225,9 +226,14 @@ function exportAllDataToJson() {
         // github_sync.js の pushToGitHub() を呼び出し
         const result = pushToGitHub(files, commitMessage);
         
-        Logger.log('=== 完了 ===');
-        Logger.log(`成功: ${result.success.length} ファイル`);
-        Logger.log(`失敗: ${result.failed.length} ファイル`);
+        Logger.log('=== GitHubプッシュ詳細結果 ===');
+        Logger.log(`合計ファイル数: ${result.total}`);
+        Logger.log(`成功数: ${result.success.length}`);
+        Logger.log(`失敗数: ${result.failed.length}`);
+        
+        if (result.failed.length > 0) {
+            result.failed.forEach(f => Logger.log(`  - 失敗: ${f.path} (エラー: ${f.error})`));
+        }
         
         if (result.success.length > 0) {
             Logger.log('\n✓ 成功したファイル:');
