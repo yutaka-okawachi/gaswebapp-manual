@@ -139,7 +139,7 @@ if ($runFailed) {
             $webUrl = "$($env:GAS_DEPLOY_URL)?action=$webAction&token=$($env:GAS_SECRET_TOKEN)"
             
             Write-Host "Sending request to Web App via curl..." -ForegroundColor Gray
-            $curlOutput = curl.exe -L -s $webUrl
+            $curlOutput = curl.exe -L -s "$webUrl"
             
             $webDuration = (Get-Date) - $webStartTime
             
