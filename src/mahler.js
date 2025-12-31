@@ -173,6 +173,46 @@ function getSceneOptionsForOpera(operaName) {
 }
 
 /**
+ * 指示対象 (whom) のオプションをオペラ毎に返す
+ * クライアントから呼ばれるラッパー関数
+ */
+function getWhomOptionsForOpera() {
+  try {
+    const cache = CacheService.getScriptCache();
+    const cacheKey = 'whom_options_v1';
+    const cached = cache.get(cacheKey);
+    if (cached) return JSON.parse(cached);
+
+    const whomMap = {};
+    const collect = (rows) => {
+      rows.forEach(row => {
+        const oper = normalizeString(row.oper || row.Oper || '');
+        const whomField = row.whom || row.Whom || '';
+        if (!oper || !whomField) return;
+        const parts = String(whomField).split(/[,、;\n]/).map(s => s.toString().trim()).filter(Boolean);
+        if (!whomMap[oper]) whomMap[oper] = new Set();
+        parts.forEach(p => whomMap[oper].add(p));
+      });
+    };
+
+    try { collect(getRichardWagnerData()); } catch (e) { /* ignore */ }
+    try { collect(getRichardStraussData()); } catch (e) { /* ignore */ }
+
+    const result = {};
+    Object.keys(whomMap).forEach(k => {
+      const arr = Array.from(whomMap[k]).sort((a,b) => a.localeCompare(b, 'ja'));
+      result[k] = arr.map(v => ({ value: v, text: v }));
+    });
+
+    cache.put(cacheKey, JSON.stringify(result), 3600);
+    return result;
+  } catch (e) {
+    Logger.log(e);
+    return {};
+  }
+}
+
+/**
  * 「楽譜情報」シートからデータを取得し、キャッシュする
  * @returns {Object} オペラの正規化名(key)と楽譜情報(value)のマップ
  */
@@ -445,6 +485,61 @@ function searchRichardWagnerByPage(operaName, pageInput) {
     return `<p class="result-message">検索中にサーバーエラーが発生しました: ${e.message}</p>`;
   }
 }
+
+  /**
+   * 指示対象（whom）での検索（R.Wagner）
+   * @param {string} operaName
+   * @param {Array<string>} whomList
+   */
+  function searchRichardWagnerByWhom(operaName, whomList) {
+    try {
+      const scoreInfoMap = getScoreInfoMap();
+      const normalizedOperaName = normalizeString(operaName);
+      const scoreInfo = scoreInfoMap[normalizedOperaName] || '';
+
+      if (!Array.isArray(whomList) || whomList.length === 0) {
+        return '<p class="result-message">指示対象を選択してください</p>';
+      }
+
+      const selected = new Set(whomList.map(s => normalizeString(s)));
+
+      const allData = getRichardWagnerData();
+      const sceneMap = getSceneMap('RW幕構成');
+
+      const filteredData = allData.filter(row => {
+        const sheetOperaValue = normalizeString(row.oper || '');
+        if (sheetOperaValue !== normalizedOperaName) return false;
+        if (row.page === undefined || row.page === null || String(row.page).trim() === '') return false;
+        const rowWhom = row.whom || '';
+        if (!rowWhom) return false;
+        const parts = String(rowWhom).split(/[,、;\n]/).map(p => normalizeString(p)).filter(Boolean);
+        return parts.some(p => selected.has(p));
+      });
+
+      const resultsHtml = formatGenericResults(filteredData, sceneMap);
+
+      const mottlOperas = ['tann_dresden', 'tann_paris', 'walkuere', 'tristan', 'parsifal'];
+
+      let finalHtml = '';
+      if (scoreInfo) {
+        finalHtml += `<div class="score-info-banner">楽譜情報: ${escapeHtml(scoreInfo)}</div>`;
+      }
+      if (mottlOperas.includes(normalizedOperaName)) {
+        finalHtml += `<div class="mottl-info" style="font-weight: bold; font-size: 0.9em;">Felix Mottl による指示も含む</div>`;
+      }
+      finalHtml += resultsHtml;
+
+      const emailSubject = 'R.Wagner 指示対象検索が実行されました';
+      const emailBody = `検索日時: ${new Date().toLocaleString('ja-JP')}\nオペラ: ${operaName}\n選択指示対象: ${whomList.join(', ')}`;
+      sendSearchNotification(emailSubject, emailBody);
+
+      return finalHtml;
+
+    } catch (e) {
+      Logger.log(e);
+      return `<p class="result-message">検索中にサーバーエラーが発生しました: ${e.message}</p>`;
+    }
+  }
 
 /***********************************************************
  * R. Wagner 用語検索関連

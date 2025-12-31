@@ -45,6 +45,7 @@
           <div class="radio-group">
             <label><input type="radio" name="search-type" value="scene"> 場面から検索</label>
             <label><input type="radio" name="search-type" value="page"> ページから検索</label>
+            <label><input type="checkbox" id="whom-checkbox"> 指示対象から選択</label>
           </div>
         </fieldset>
       </div>
@@ -71,6 +72,18 @@
           <button type="button" onclick="searchByPage()" class="btn-search">検索</button>
           <button type="button" onclick="cancelSearch()" class="btn-danger">中止</button>
           <button type="button" onclick="clearPageInput()" class="btn-clear">クリア</button>
+        </div>
+      </div>
+
+      <div id="whom-selection-container" class="accordion-content" style="display:none;">
+        <fieldset>
+          <legend>指示対象</legend>
+          <div id="whom-options-wrapper"></div>
+        </fieldset>
+        <div class="button-container">
+          <button type="button" onclick="searchByWhom()" class="btn-search">検索</button>
+          <button type="button" onclick="cancelSearch()" class="btn-danger">中止</button>
+          <button type="button" onclick="clearWhomSelection()" class="btn-clear">クリア</button>
         </div>
       </div>
   

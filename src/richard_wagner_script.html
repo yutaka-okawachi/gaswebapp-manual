@@ -6,7 +6,12 @@
    */
 
   const sceneOptionsCache = {};
+  const whomOptionsCache = {};
   let currentSearchId = 0;
+  function _escapeHtmlClient(s) {
+    if (!s && s !== 0) return '';
+    return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+  }
 
   document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('input[name="opera"]').forEach(radio => {
@@ -15,6 +20,12 @@
     document.querySelectorAll('input[name="search-type"]').forEach(radio => {
       radio.addEventListener('change', handleSearchTypeSelection);
     });
+    const whomCheckbox = document.getElementById('whom-checkbox');
+    if (whomCheckbox) {
+      whomCheckbox.addEventListener('change', (e) => {
+        document.getElementById('whom-selection-container').style.display = e.target.checked ? 'block' : 'none';
+      });
+    }
   });
 
   /**
@@ -48,6 +59,21 @@
         sceneOptionsWrapper.innerHTML = '<p class="result-message">場面データの取得に失敗しました</p>';
       })
       .getSceneOptionsForOpera(composer);
+
+    // 同時に指示対象データも取得しておく
+    if (whomOptionsCache[composer]) {
+      buildWhomCheckboxes(operaValue, whomOptionsCache[composer]);
+    } else {
+      google.script.run
+        .withSuccessHandler(options => {
+          whomOptionsCache[composer] = options || {};
+          buildWhomCheckboxes(operaValue, whomOptionsCache[composer]);
+        })
+        .withFailureHandler(err => {
+          console.error('指示対象データの取得に失敗しました', err);
+        })
+        .getWhomOptionsForOpera();
+    }
   }
 
   /**
@@ -235,6 +261,72 @@
 
   function clearPageInput() {
     document.getElementById('page-input').value = '';
+    setResults('');
+  }
+
+  /* ----------------- 指示対象検索 (whom) ----------------- */
+  function buildWhomCheckboxes(operaValue, whomOptionsData) {
+    const wrapper = document.getElementById('whom-options-wrapper');
+    if (!wrapper) return;
+    wrapper.innerHTML = '';
+    const options = whomOptionsData[operaValue];
+    if (!options || options.length === 0) {
+      wrapper.innerHTML = '<p>この曲の指示対象データは登録されていません。</p>';
+      return;
+    }
+
+    const group = document.createElement('div');
+    group.className = 'checkbox-group';
+    group.innerHTML += `<label><input type="checkbox" name="${operaValue}-whom" value="all"> すべて</label>`;
+    if (options.length > 1) group.innerHTML += '<hr>';
+    options.forEach(opt => {
+      group.innerHTML += `<label><input type="checkbox" name="${operaValue}-whom" value="${_escapeHtmlClient(opt.value)}"> ${_escapeHtmlClient(opt.text)}</label>`;
+    });
+    wrapper.appendChild(group);
+
+    const checkboxes = wrapper.querySelectorAll(`input[name="${operaValue}-whom"]`);
+    if (checkboxes.length > 1) {
+      const allCb = wrapper.querySelector(`input[name="${operaValue}-whom"][value="all"]`);
+      checkboxes.forEach(cb => cb.addEventListener('change', () => {
+        if (cb.value === 'all' && cb.checked) {
+          checkboxes.forEach(other => { if (other.value !== 'all') other.checked = false; });
+        } else if (cb.value !== 'all' && cb.checked && allCb) {
+          allCb.checked = false;
+        }
+      }));
+    }
+  }
+
+  function searchByWhom() {
+    const selectedOpera = document.querySelector('input[name="opera"]:checked');
+    if (!selectedOpera) {
+      setResults('<p class="result-message">曲を選択してください</p>');
+      return;
+    }
+    const operaValue = selectedOpera.value;
+    const whomCheckboxes = document.querySelectorAll(`input[name="${operaValue}-whom"]:checked`);
+    const selected = Array.from(whomCheckboxes).map(cb => cb.value).filter(v => v !== 'all');
+    if (selected.length === 0) {
+      setResults('<p class="result-message">指示対象を選択してください</p>');
+      return;
+    }
+
+    setResults('<p class="loading">検索中・・・</p>');
+    currentSearchId++;
+    const thisSearchId = currentSearchId;
+
+    const funcName = document.title.includes('Wagner') ? 'searchRichardWagnerByWhom' : 'searchRichardStraussByWhom';
+
+    google.script.run
+      .withSuccessHandler(html => { if (thisSearchId === currentSearchId) setResults(html); })
+      .withFailureHandler(err => { setResults(`<p class="result-message">検索に失敗しました: ${err.message}</p>`); })[funcName](operaValue, selected);
+  }
+
+  function clearWhomSelection() {
+    const selectedOpera = document.querySelector('input[name="opera"]:checked');
+    if (!selectedOpera) return;
+    const operaValue = selectedOpera.value;
+    document.querySelectorAll(`input[name="${operaValue}-whom"]`).forEach(cb => cb.checked = false);
     setResults('');
   }
 </script>

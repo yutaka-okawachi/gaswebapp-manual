@@ -119,6 +119,27 @@ function exportAllDataToJson() {
         }).filter(item => Object.values(item).some(val => val !== '')); // Filter out empty rows
     }
 
+    // 5. 指示対象 (whom) の抽出: RS / RW の whom 列をオペラ毎に集計して出力
+    const whomMap = {};
+    const collectWhomFromRows = (rows) => {
+        rows.forEach(item => {
+            const operKey = String((item['Oper'] || item['oper'] || '')).toLowerCase().trim();
+            const whomField = item['whom'] || item['Whom'] || item['Whom'] || '';
+            if (!operKey || !whomField) return;
+            const parts = String(whomField).split(/[,、;\n]/).map(s => s.toString().trim()).filter(Boolean);
+            if (!whomMap[operKey]) whomMap[operKey] = new Set();
+            parts.forEach(p => whomMap[operKey].add(p));
+        });
+    };
+
+    collectWhomFromRows(rsJson);
+    collectWhomFromRows(rwJson);
+
+    const whomList = {};
+    Object.keys(whomMap).forEach(k => {
+        whomList[k] = Array.from(whomMap[k]).sort((a,b) => a.localeCompare(b, 'ja'));
+    });
+
     // 4. Scene Maps (RS幕構成, RW幕構成) - Export raw data as well
     const rsSceneSheet = ss.getSheetByName('RS幕構成');
     let rsScenes = [];
@@ -185,6 +206,7 @@ function exportAllDataToJson() {
         'mahler-search-app/data/abbr_list.json': abbrJson,
         'mahler-search-app/data/dic_terms_index.json': termsIndex,  // 新規: 用語インデックス
         'mahler-search-app/dic.html': dicHtml  // 新規: 生成されたHTML（リンク付き）
+        , 'mahler-search-app/data/whom_list.json': whomList
     };
 
     // 自動生成されたコミットメッセージ
