@@ -6,7 +6,7 @@ if (Test-Path ".env") {
     Get-Content .env | ForEach-Object {
         if ($_ -match "^\s*([^#\s][^=]*)\s*=\s*(.*)$") {
             $name = $matches[1].Trim()
-            $value = $matches[2].Trim()
+            $value = $matches[2].Trim().Trim('"').Trim("'")
             Set-Item -Path "env:$name" -Value $value
         }
     }
@@ -25,7 +25,7 @@ if ([string]::IsNullOrWhiteSpace($token)) {
     exit 1
 }
 
-Write-Host "=== Web App API Test ===" -ForegroundColor Cyan
+Write-Host "=== Web App API Test (via curl.exe) ===" -ForegroundColor Cyan
 Write-Host "Target URL: $url" -ForegroundColor Gray
 Write-Host ""
 
@@ -33,9 +33,14 @@ Write-Host ""
 Write-Host "[Test 1] Testing ping action..." -ForegroundColor Yellow
 $pingUrl = "$url?token=$token&action=ping"
 try {
-    $response = Invoke-RestMethod -Uri $pingUrl -Method Get
+    $responseJson = curl.exe -s -L "$pingUrl"
+    
+    if ($LASTEXITCODE -ne 0) { throw "curl exited with code $LASTEXITCODE" }
+    
+    # Try parsing to ensure valid JSON
+    $response = $responseJson | ConvertFrom-Json
     Write-Host "✓ Ping successful!" -ForegroundColor Green
-    Write-Host "Response: $($response | ConvertTo-Json -Compress)"
+    Write-Host "Response: $responseJson"
 } catch {
     Write-Host "✗ Ping failed: $_" -ForegroundColor Red
 }
@@ -46,9 +51,14 @@ Write-Host ""
 Write-Host "[Test 2] Testing exportAllDataToJson action..." -ForegroundColor Yellow
 $exportUrl = "$url?token=$token&action=exportAllDataToJson"
 try {
-    $response = Invoke-RestMethod -Uri $exportUrl -Method Get -TimeoutSec 30
+    $responseJson = curl.exe -s -L --max-time 60 "$exportUrl"
+
+    if ($LASTEXITCODE -ne 0) { throw "curl exited with code $LASTEXITCODE" }
+
+    # Try parsing to ensure valid JSON
+    $response = $responseJson | ConvertFrom-Json
     Write-Host "✓ Export successful!" -ForegroundColor Green
-    Write-Host "Response: $($response | ConvertTo-Json -Compress)"
+    Write-Host "Response: $responseJson"
 } catch {
     Write-Host "✗ Export failed: $_" -ForegroundColor Red
 }
