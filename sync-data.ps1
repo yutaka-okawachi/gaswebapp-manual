@@ -149,21 +149,25 @@ if ($runFailed) {
             $response = Invoke-WebRequest -Uri $webUrl -Method Get -UseBasicParsing -TimeoutSec 60
             $curlOutput = $response.Content
             
+            # Save response for debugging
+            $curlOutput | Out-File -FilePath "webapp_response.txt" -Encoding UTF8
+            
             $webDuration = (Get-Date) - $webStartTime
             
             # Check if output looks like success JSON
             if ($curlOutput -match '"status":\s*"success"') {
-                Write-Host "✓ GAS function executed successfully via Web App (curl)." -ForegroundColor Green
+                Write-Host "✓ GAS function executed successfully via Web App." -ForegroundColor Green
                 Write-Host "  Execution time: $([math]::Round($webDuration.TotalSeconds, 1)) seconds" -ForegroundColor Gray
             } else {
                 Write-Host ""
                 Write-Error "❌ Web App execution failed or returned unexpected format."
                 $outputSummary = if ($curlOutput -and $curlOutput.Length -gt 0) { 
-                    $curlOutput.Substring(0, [math]::Min(200, $curlOutput.Length)) 
+                    $curlOutput.Substring(0, [math]::Min(500, $curlOutput.Length)) 
                 } else { 
                     "(empty response)" 
                 }
                 Write-Host "Output summary: $outputSummary" -ForegroundColor DarkGray
+                Write-Host "Full response saved to: webapp_response.txt" -ForegroundColor Gray
                 Write-Host ""
                 Write-Host "Please check the following:" -ForegroundColor Yellow
                 Write-Host "  1. Web App deployment is up to date" -ForegroundColor White
@@ -178,7 +182,12 @@ if ($runFailed) {
                 exit 1
             }
         } catch {
-            Write-Error "❌ Web App request failed: $_"
+            Write-Host "" 
+            Write-Error "❌ Web App request failed: $($_.Exception.Message)"
+            Write-Host "Error details: $($_.Exception.GetType().FullName)" -ForegroundColor DarkGray
+            if ($_.Exception.Response) {
+                Write-Host "Status Code: $($_.Exception.Response.StatusCode.value__)" -ForegroundColor DarkGray
+            }
             Write-Host ""
             Write-Host "Please try manual execution:" -ForegroundColor Yellow
             Write-Host "  1. Open GAS editor: https://script.google.com" -ForegroundColor White
