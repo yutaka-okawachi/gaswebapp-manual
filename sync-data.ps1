@@ -148,10 +148,21 @@ if ($runFailed) {
                 Write-Host "✓ GAS function executed successfully via Web App (curl)." -ForegroundColor Green
                 Write-Host "  Execution time: $([math]::Round($webDuration.TotalSeconds, 1)) seconds" -ForegroundColor Gray
             } else {
-                Write-Warning "⚠ Web App execution might have failed or returned unexpected format."
+                Write-Host ""
+                Write-Error "❌ Web App execution failed or returned unexpected format."
                 Write-Host "Output summary: $($curlOutput.Substring(0, [math]::Min(200, $curlOutput.Length)))" -ForegroundColor DarkGray
-                # We don't exit 1 here yet, because the push might have actually happened 
-                # even if the response was garbled
+                Write-Host ""
+                Write-Host "Please check the following:" -ForegroundColor Yellow
+                Write-Host "  1. Web App deployment is up to date" -ForegroundColor White
+                Write-Host "  2. GAS_DEPLOY_URL and GAS_SECRET_TOKEN are correct in .env" -ForegroundColor White
+                Write-Host "  3. Web App is deployed with 'Anyone' access" -ForegroundColor White
+                Write-Host ""
+                Write-Host "Or try manual execution:" -ForegroundColor Yellow
+                Write-Host "  1. Open GAS editor: https://script.google.com" -ForegroundColor White
+                Write-Host "  2. Run 'exportAllDataToJson' function" -ForegroundColor White
+                Write-Host "  3. Then run: git pull" -ForegroundColor White
+                Write-Host ""
+                exit 1
             }
         } catch {
             Write-Error "❌ Web App request failed: $_"

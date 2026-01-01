@@ -9,14 +9,12 @@
 const SECRET_TOKEN = PropertiesService.getScriptProperties().getProperty('GAS_SECRET_TOKEN');
 
 /**
- * HTTP GET handler
- */
-function doGet(e) {
-  return handleRequest(e.parameter);
-}
-
-/**
  * HTTP POST handler
+ * 
+ * Note: doGet関数はmahler.jsに統合されました。
+ * mahler.jsのdoGet関数が、tokenパラメータの有無に基づいて
+ * 管理APIリクエスト（token有り）とWeb UIリクエスト（token無し）を
+ * 自動的に振り分けます。
  */
 function doPost(e) {
   Logger.log("doPost triggered");
