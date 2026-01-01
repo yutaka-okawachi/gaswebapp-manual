@@ -129,7 +129,8 @@ if ($runFailed) {
     
     # Web App環境変数をチェック
     if ($env:GAS_DEPLOY_URL -and $env:GAS_SECRET_TOKEN) {
-        Write-Host "Using Web App endpoint: $($env:GAS_DEPLOY_URL.Substring(0, 50))..." -ForegroundColor Gray
+        $urlDisplay = if ($env:GAS_DEPLOY_URL.Length -gt 60) { $env:GAS_DEPLOY_URL.Substring(0, 60) + "..." } else { $env:GAS_DEPLOY_URL }
+        Write-Host "Using Web App endpoint: $urlDisplay" -ForegroundColor Gray
         
         try {
             $webStartTime = Get-Date
