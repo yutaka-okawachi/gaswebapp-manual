@@ -1,8 +1,32 @@
 # Simple Web App test script
-$url = "https://script.google.com/macros/s/AKfycbxXrpTOFxkBnR__yuekObS9UroJ-7UxX2FVl56MUCEIKmPufOhH6_L-C57mAs-elpfTiQ/exec"
-$token = "f14d3d3a-88f9-49b7-abcb-9da7a870f18b"
+
+# --- [0.5] 環境変数のロード (.env) ---
+if (Test-Path ".env") {
+    Write-Host "Loading .env file..." -ForegroundColor Gray
+    Get-Content .env | ForEach-Object {
+        if ($_ -match "^\s*([^#\s][^=]*)\s*=\s*(.*)$") {
+            $name = $matches[1].Trim()
+            $value = $matches[2].Trim()
+            Set-Item -Path "env:$name" -Value $value
+        }
+    }
+}
+
+$url = $env:GAS_DEPLOY_URL
+$token = $env:GAS_SECRET_TOKEN
+
+if ([string]::IsNullOrWhiteSpace($url)) {
+    Write-Error "Error: GAS_DEPLOY_URL is not set in .env"
+    exit 1
+}
+
+if ([string]::IsNullOrWhiteSpace($token)) {
+    Write-Error "Error: GAS_SECRET_TOKEN is not set in .env"
+    exit 1
+}
 
 Write-Host "=== Web App API Test ===" -ForegroundColor Cyan
+Write-Host "Target URL: $url" -ForegroundColor Gray
 Write-Host ""
 
 # Test 1: ping
