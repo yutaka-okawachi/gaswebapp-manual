@@ -142,9 +142,8 @@ if ($runFailed) {
         try {
             $webStartTime = Get-Date
             
-            # Using Invoke-WebRequest for better PowerShell compatibility
+            # Using curl.exe as requested for robust parameter handling
             $webAction = "exportAllDataToJson"
-            # Build URL with proper escaping
             $baseUrl = $env:GAS_DEPLOY_URL.Trim()
             $tokenParam = $env:GAS_SECRET_TOKEN.Trim()
             $webUrl = "${baseUrl}?action=${webAction}&token=${tokenParam}"
@@ -152,9 +151,10 @@ if ($runFailed) {
             Write-Host "Sending request to Web App..." -ForegroundColor Gray
             Write-Host "URL: $($baseUrl.Substring(0, [math]::Min(60, $baseUrl.Length)))..." -ForegroundColor DarkGray
             
-            # Use Invoke-WebRequest instead of curl for better error handling
-            $response = Invoke-WebRequest -Uri $webUrl -Method Get -UseBasicParsing -TimeoutSec 60
-            $curlOutput = $response.Content
+            # Use curl.exe with explicit quoting to handle URL parameters correctly
+            # -L: Follow redirects, -s: Silent
+            $curlOutputLines = & curl.exe -s -L "$webUrl"
+            $curlOutput = $curlOutputLines -join "`n"
             
             # Save response for debugging
             $curlOutput | Out-File -FilePath "webapp_response.txt" -Encoding UTF8
@@ -236,8 +236,8 @@ Write-Host ""
 Write-Host "[4/5] Pulling latest data from GitHub..." -ForegroundColor Yellow
 
 # GASからのGitHubプッシュが完了するまで少し待機
-Write-Host "Waiting for GAS to push data to GitHub..." -ForegroundColor Gray
-Start-Sleep -Seconds 3
+Write-Host "Waiting for GAS to push data to GitHub (15s)..." -ForegroundColor Gray
+Start-Sleep -Seconds 15
 
 # git pullを実行（出力をキャプチャ）
 $pullOutput = git pull --rebase 2>&1
