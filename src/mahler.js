@@ -145,13 +145,23 @@ function include(filename) {
  * 管理APIリクエスト（tokenパラメータ有り）とWeb UIリクエストを統合処理
  */
 function doGet(e) {
+  // デバッグログ: パラメータの状態を確認
+  Logger.log("doGet called");
+  Logger.log("e object: " + JSON.stringify(e));
+  if (e && e.parameter) {
+    Logger.log("e.parameter: " + JSON.stringify(e.parameter));
+    Logger.log("token parameter: " + e.parameter.token);
+  }
+  
   // web_trigger.js の管理API機能との統合
   // tokenパラメータがある場合は、管理APIリクエストとして web_trigger.js の handleRequest に委譲
   if (e && e.parameter && e.parameter.token) {
+    Logger.log("Routing to handleRequest");
     // web_trigger.js の handleRequest 関数を呼び出す
     return handleRequest(e.parameter);
   }
   
+  Logger.log("Routing to Web UI");
   // tokenパラメータがない場合は、従来通りのWeb UI表示
   // URLパラメータから表示するページ名を取得。なければ 'index' に。
   const page = (e && e.parameter && e.parameter.page) ? e.parameter.page : 'index';
