@@ -135,12 +135,19 @@ if ($runFailed) {
         try {
             $webStartTime = Get-Date
             
-            # Using curl.exe -L for better reliability with GAS redirects and large outputs
+            # Using Invoke-WebRequest for better PowerShell compatibility
             $webAction = "exportAllDataToJson"
-            $webUrl = "$($env:GAS_DEPLOY_URL)?action=$webAction&token=$($env:GAS_SECRET_TOKEN)"
+            # Build URL with proper escaping
+            $baseUrl = $env:GAS_DEPLOY_URL.Trim()
+            $tokenParam = $env:GAS_SECRET_TOKEN.Trim()
+            $webUrl = "${baseUrl}?action=${webAction}&token=${tokenParam}"
             
-            Write-Host "Sending request to Web App via curl..." -ForegroundColor Gray
-            $curlOutput = curl.exe -L -s "$webUrl"
+            Write-Host "Sending request to Web App..." -ForegroundColor Gray
+            Write-Host "URL: $($baseUrl.Substring(0, [math]::Min(60, $baseUrl.Length)))..." -ForegroundColor DarkGray
+            
+            # Use Invoke-WebRequest instead of curl for better error handling
+            $response = Invoke-WebRequest -Uri $webUrl -Method Get -UseBasicParsing -TimeoutSec 60
+            $curlOutput = $response.Content
             
             $webDuration = (Get-Date) - $webStartTime
             
