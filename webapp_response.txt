@@ -1,4 +1,5 @@
 ﻿{
-  "status": "error",
-  "error": "Unauthorized: Invalid or missing token"
+  "status": "success",
+  "message": "dic.html exported and pushed to GitHub successfully",
+  "timestamp": "2026-01-01T02:11:30.369Z"
 }
