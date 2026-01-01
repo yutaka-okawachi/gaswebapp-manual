@@ -151,7 +151,12 @@ if ($runFailed) {
             } else {
                 Write-Host ""
                 Write-Error "❌ Web App execution failed or returned unexpected format."
-                Write-Host "Output summary: $($curlOutput.Substring(0, [math]::Min(200, $curlOutput.Length)))" -ForegroundColor DarkGray
+                $outputSummary = if ($curlOutput -and $curlOutput.Length -gt 0) { 
+                    $curlOutput.Substring(0, [math]::Min(200, $curlOutput.Length)) 
+                } else { 
+                    "(empty response)" 
+                }
+                Write-Host "Output summary: $outputSummary" -ForegroundColor DarkGray
                 Write-Host ""
                 Write-Host "Please check the following:" -ForegroundColor Yellow
                 Write-Host "  1. Web App deployment is up to date" -ForegroundColor White
