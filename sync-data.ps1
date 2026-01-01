@@ -33,6 +33,13 @@ if (Test-Path ".env") {
             Set-Item -Path "env:$name" -Value $value
         }
     }
+    # Debug: Show loaded env vars (masked for security)
+    if ($env:GAS_DEPLOY_URL) {
+        Write-Host "  GAS_DEPLOY_URL loaded (length: $($env:GAS_DEPLOY_URL.Length))" -ForegroundColor DarkGray
+    }
+    if ($env:GAS_SECRET_TOKEN) {
+        Write-Host "  GAS_SECRET_TOKEN loaded (length: $($env:GAS_SECRET_TOKEN.Length))" -ForegroundColor DarkGray
+    }
 }
 
 # --- [1/5] GAS へのアップロード (clasp push) ---
@@ -129,32 +136,65 @@ if ($runFailed) {
     
     # Web App環境変数をチェック
     if ($env:GAS_DEPLOY_URL -and $env:GAS_SECRET_TOKEN) {
-        Write-Host "Using Web App endpoint: $($env:GAS_DEPLOY_URL.Substring(0, 50))..." -ForegroundColor Gray
+        $urlDisplay = if ($env:GAS_DEPLOY_URL.Length -gt 60) { $env:GAS_DEPLOY_URL.Substring(0, 60) + "..." } else { $env:GAS_DEPLOY_URL }
+        Write-Host "Using Web App endpoint: $urlDisplay" -ForegroundColor Gray
         
         try {
             $webStartTime = Get-Date
             
-            # Using curl.exe -L for better reliability with GAS redirects and large outputs
+            # Using curl.exe as requested for robust parameter handling
             $webAction = "exportAllDataToJson"
-            $webUrl = "$($env:GAS_DEPLOY_URL)?action=$webAction&token=$($env:GAS_SECRET_TOKEN)"
+            $baseUrl = $env:GAS_DEPLOY_URL.Trim()
+            $tokenParam = $env:GAS_SECRET_TOKEN.Trim()
+            $webUrl = "${baseUrl}?action=${webAction}&token=${tokenParam}"
             
-            Write-Host "Sending request to Web App via curl..." -ForegroundColor Gray
-            $curlOutput = curl.exe -L -s $webUrl
+            Write-Host "Sending request to Web App..." -ForegroundColor Gray
+            Write-Host "URL: $($baseUrl.Substring(0, [math]::Min(60, $baseUrl.Length)))..." -ForegroundColor DarkGray
+            
+            # Use curl.exe with explicit quoting to handle URL parameters correctly
+            # -L: Follow redirects, -s: Silent
+            $curlOutputLines = & curl.exe -s -L "$webUrl"
+            $curlOutput = $curlOutputLines -join "`n"
+            
+            # Save response for debugging
+            $curlOutput | Out-File -FilePath "webapp_response.txt" -Encoding UTF8
             
             $webDuration = (Get-Date) - $webStartTime
             
             # Check if output looks like success JSON
             if ($curlOutput -match '"status":\s*"success"') {
-                Write-Host "✓ GAS function executed successfully via Web App (curl)." -ForegroundColor Green
+                Write-Host "✓ GAS function executed successfully via Web App." -ForegroundColor Green
                 Write-Host "  Execution time: $([math]::Round($webDuration.TotalSeconds, 1)) seconds" -ForegroundColor Gray
             } else {
-                Write-Warning "⚠ Web App execution might have failed or returned unexpected format."
-                Write-Host "Output summary: $($curlOutput.Substring(0, [math]::Min(200, $curlOutput.Length)))" -ForegroundColor DarkGray
-                # We don't exit 1 here yet, because the push might have actually happened 
-                # even if the response was garbled
+                Write-Host ""
+                Write-Error "❌ Web App execution failed or returned unexpected format."
+                $outputSummary = if ($curlOutput -and $curlOutput.Length -gt 0) { 
+                    $curlOutput.Substring(0, [math]::Min(500, $curlOutput.Length)) 
+                } else { 
+                    "(empty response)" 
+                }
+                Write-Host "Output summary: $outputSummary" -ForegroundColor DarkGray
+                Write-Host "Full response saved to: webapp_response.txt" -ForegroundColor Gray
+                Write-Host ""
+                Write-Host "Please check the following:" -ForegroundColor Yellow
+                Write-Host "  1. Web App deployment is up to date" -ForegroundColor White
+                Write-Host "  2. GAS_DEPLOY_URL and GAS_SECRET_TOKEN are correct in .env" -ForegroundColor White
+                Write-Host "  3. Web App is deployed with 'Anyone' access" -ForegroundColor White
+                Write-Host ""
+                Write-Host "Or try manual execution:" -ForegroundColor Yellow
+                Write-Host "  1. Open GAS editor: https://script.google.com" -ForegroundColor White
+                Write-Host "  2. Run 'exportAllDataToJson' function" -ForegroundColor White
+                Write-Host "  3. Then run: git pull" -ForegroundColor White
+                Write-Host ""
+                exit 1
             }
         } catch {
-            Write-Error "❌ Web App request failed: $_"
+            Write-Host "" 
+            Write-Error "❌ Web App request failed: $($_.Exception.Message)"
+            Write-Host "Error details: $($_.Exception.GetType().FullName)" -ForegroundColor DarkGray
+            if ($_.Exception.Response) {
+                Write-Host "Status Code: $($_.Exception.Response.StatusCode.value__)" -ForegroundColor DarkGray
+            }
             Write-Host ""
             Write-Host "Please try manual execution:" -ForegroundColor Yellow
             Write-Host "  1. Open GAS editor: https://script.google.com" -ForegroundColor White
@@ -196,8 +236,8 @@ Write-Host ""
 Write-Host "[4/5] Pulling latest data from GitHub..." -ForegroundColor Yellow
 
 # GASからのGitHubプッシュが完了するまで少し待機
-Write-Host "Waiting for GAS to push data to GitHub..." -ForegroundColor Gray
-Start-Sleep -Seconds 3
+Write-Host "Waiting for GAS to push data to GitHub (15s)..." -ForegroundColor Gray
+Start-Sleep -Seconds 15
 
 # git pullを実行（出力をキャプチャ）
 $pullOutput = git pull --rebase 2>&1

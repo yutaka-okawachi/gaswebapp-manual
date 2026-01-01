@@ -1,0 +1,4 @@
+﻿{
+  "status": "error",
+  "error": "Unauthorized: Invalid or missing token"
+}

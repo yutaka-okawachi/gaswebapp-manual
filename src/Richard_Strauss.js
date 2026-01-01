@@ -145,6 +145,57 @@ function searchRichardStraussByPage(operaName, pageInput) {
   }
 }
 
+  /**
+   * 指示対象（whom）での検索（R.Strauss）
+   * @param {string} operaName
+   * @param {Array<string>} whomList
+   */
+  function searchRichardStraussByWhom(operaName, whomList) {
+    try {
+      const scoreInfoMap = getScoreInfoMap();
+      const normalizedOperaName = normalizeString(operaName);
+      const scoreInfo = scoreInfoMap[normalizedOperaName] || '';
+
+      if (!Array.isArray(whomList) || whomList.length === 0) {
+        return '<p class="result-message">指示対象を選択してください</p>';
+      }
+
+      const selected = new Set(whomList.map(s => normalizeString(s)));
+
+      const allData = getRichardStraussData();
+      const sceneMap = getSceneMap('RS幕構成');
+
+      const filteredData = allData.filter(row => {
+        const sheetOperaValue = normalizeString(row.oper || '');
+        if (sheetOperaValue !== normalizedOperaName) return false;
+        if (row.page === undefined || row.page === null || String(row.page).trim() === '') return false;
+        const rowWhom = row.whom || '';
+        if (!rowWhom) return false;
+        const parts = String(rowWhom).split(/[,、;\n]/).map(p => normalizeString(p)).filter(Boolean);
+        return parts.some(p => selected.has(p));
+      });
+
+      const resultsHtml = formatGenericResults(filteredData, sceneMap);
+
+      let finalHtml = '';
+      if (scoreInfo) {
+        finalHtml += `<div class="score-info-banner">楽譜情報: ${escapeHtml(scoreInfo)}</div>`;
+      }
+      finalHtml += resultsHtml;
+
+      const emailSubject = 'R.Strauss 指示対象検索が実行されました';
+      const emailBody = `検索日時: ${new Date().toLocaleString('ja-JP')}\nオペラ: ${operaName}\n選択指示対象: ${whomList.join(', ')}`;
+      sendSearchNotification(emailSubject, emailBody);
+
+      return finalHtml;
+
+    } catch (e) {
+      Logger.log(e);
+      return `<p class="result-message">検索中にサーバーエラーが発生しました: ${e.message}</p>`;
+    }
+  }
+
+
 /***********************************************************
  * R. Strauss 用語検索関連
  ***********************************************************/
