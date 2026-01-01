@@ -33,6 +33,13 @@ if (Test-Path ".env") {
             Set-Item -Path "env:$name" -Value $value
         }
     }
+    # Debug: Show loaded env vars (masked for security)
+    if ($env:GAS_DEPLOY_URL) {
+        Write-Host "  GAS_DEPLOY_URL loaded (length: $($env:GAS_DEPLOY_URL.Length))" -ForegroundColor DarkGray
+    }
+    if ($env:GAS_SECRET_TOKEN) {
+        Write-Host "  GAS_SECRET_TOKEN loaded (length: $($env:GAS_SECRET_TOKEN.Length))" -ForegroundColor DarkGray
+    }
 }
 
 # --- [1/5] GAS へのアップロード (clasp push) ---
