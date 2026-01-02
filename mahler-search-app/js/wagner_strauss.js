@@ -40,9 +40,9 @@ function handleOperaSelection(event) {
     const operaValue = event.target.value;
     const composer = (document.title.includes('Wagner') || document.title.includes('RW')) ? 'richard_wagner' : 'richard_strauss';
 
-    // 検索方法セクションを表示し初期化
-    document.getElementById('search-method-container').style.display = 'block';
-    resetSearchType();
+    // 以前は検索方法を隠していたが表示・非表示の切り替えは不要になった
+    // また、オペラ選択時に検索方法をリセットすると使い勝手が悪いためリセットも行わない
+    setResults('');
 
     const sceneOptionsWrapper = document.getElementById('scene-options-wrapper');
     sceneOptionsWrapper.innerHTML = '<p class="loading">場面データを読み込み中...</p>';
