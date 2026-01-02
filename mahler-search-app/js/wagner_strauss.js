@@ -40,6 +40,12 @@ function handleOperaSelection(event) {
     const operaValue = event.target.value;
     const composer = (document.title.includes('Wagner') || document.title.includes('RW')) ? 'richard_wagner' : 'richard_strauss';
 
+    // 曲名を選択したら「検索方法を選択」のバーが画面最上部に来るようにスクロール
+    const searchMethodContainer = document.getElementById('search-method-container');
+    if (searchMethodContainer) {
+        searchMethodContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
     // 以前は検索方法を隠していたが表示・非表示の切り替えは不要になった
     // また、オペラ選択時に検索方法をリセットすると使い勝手が悪いためリセットも行わない
     setResults('');
