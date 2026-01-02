@@ -69,7 +69,7 @@
         <div class="container">
             <div class="home-link"><a href="home.html">HOME</a></div>
             <h1>曲名から検索 (RS)</h1>
-        <p style="text-align: center;"><span style="font-size: 0.9rem;">Richard Strauss の管弦楽曲については</span><a href="dic.html" target="_blank" style="font-size: 1.2rem; font-weight: bold; color: var(--button-bg); text-decoration: none; border-bottom: 2px solid transparent; transition: all 0.2s ease;">用語集</a><span style="font-size: 0.9rem;">のページを参照</span></p>
+        <p><span style="font-size: 0.9rem;">Richard Strauss の管弦楽曲については</span><a href="dic.html" target="_blank" style="font-size: 1.2rem; font-weight: bold; color: var(--button-bg); text-decoration: none; border-bottom: 2px solid transparent; transition: all 0.2s ease;">用語集</a><span style="font-size: 0.9rem;">のページを参照</span></p>
         <p>オーケストラに対する指示で Gustav Mahler の用語検索ページで何とかなりそうなものは基本的に不記載．</p>
         <div class="big-label">曲名を選択</div>
         <fieldset>
@@ -112,7 +112,9 @@
         <div id="scene-selection-container" class="accordion-content">
             <fieldset>
                 <legend>場面</legend>
-                <div id="scene-options-wrapper"></div>
+                <div id="scene-options-wrapper">
+                    <p style="padding: 10px; color: #666;">（曲名を選択すると、ここに場面一覧が表示されます）</p>
+                </div>
             </fieldset>
             <div class="button-container">
                 <button type="button" onclick="searchByScene()" class="btn-search">検索</button>
