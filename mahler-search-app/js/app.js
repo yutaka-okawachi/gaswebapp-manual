@@ -146,6 +146,13 @@ async function loadData(key) {
         if (!window.appData.dic_terms_index) {
             window.appData.dic_terms_index = await fetchJson('data/dic_terms_index.json');
         }
+        if (!window.appData.whom_list) {
+            try {
+                window.appData.whom_list = await fetchJson('data/whom_list.json');
+            } catch (e) {
+                console.warn('whom_list.json not found, target search may not work properly.');
+            }
+        }
     }
     if (key === 'richard_wagner') {
         if (!window.appData.rw_scenes) {
@@ -153,6 +160,13 @@ async function loadData(key) {
         }
         if (!window.appData.dic_terms_index) {
             window.appData.dic_terms_index = await fetchJson('data/dic_terms_index.json');
+        }
+        if (!window.appData.whom_list) {
+            try {
+                window.appData.whom_list = await fetchJson('data/whom_list.json');
+            } catch (e) {
+                console.warn('whom_list.json not found, target search may not work properly.');
+            }
         }
     }
     // Load dic_terms_index for Mahler search

@@ -55,54 +55,58 @@ function handleOperaSelection(event) {
 
     // キャッシュ済みであればそれを利用
     if (sceneOptionsCache[composer] && sceneOptionsCache[composer][operaValue]) {
-        buildSceneCheckboxes(operaValue, sceneOptionsCache[composer]);
-        return;
-    }
-
-    // サーバーから場面データを取得 (Local fallback)
-    if (typeof google !== 'undefined' && google.script && google.script.run) {
-        google.script.run
-            .withSuccessHandler(options => {
-                if (!sceneOptionsCache[composer]) sceneOptionsCache[composer] = {};
-                Object.assign(sceneOptionsCache[composer], options || {});
-                buildSceneCheckboxes(operaValue, sceneOptionsCache[composer]);
-            })
-            .withFailureHandler(err => {
-                console.error('場面データの取得に失敗しました', err);
-                sceneOptionsWrapper.innerHTML = '<p class="result-message">場面データの取得に失敗しました</p>';
-            })
-            .getSceneOptionsForOpera(composer);
+        buildSceneCheckboxes(operaValue, sceneOptionsCache[composer][operaValue]);
     } else {
-        // Local fallback
-        setTimeout(() => {
-            try {
-                const scenesData = composer === 'richard_wagner' ? window.appData.rw_scenes : window.appData.rs_scenes;
-                if (!scenesData) {
-                    sceneOptionsWrapper.innerHTML = '<p class="result-message">場面データが読み込まれていません。</p>';
-                    return;
+        // サーバーから場面データを取得 (Local fallback)
+        if (typeof google !== 'undefined' && google.script && google.script.run) {
+            google.script.run
+                .withSuccessHandler(options => {
+                    if (!sceneOptionsCache[composer]) sceneOptionsCache[composer] = {};
+                    Object.assign(sceneOptionsCache[composer], options || {});
+                    buildSceneCheckboxes(operaValue, sceneOptionsCache[composer]);
+                })
+                .withFailureHandler(err => {
+                    console.error('場面データの取得に失敗しました', err);
+                    sceneOptionsWrapper.innerHTML = '<p class="result-message">場面データの取得に失敗しました</p>';
+                })
+                .getSceneOptionsForOpera(composer);
+        } else {
+            // Local fallback
+            setTimeout(() => {
+                try {
+                    const scenesData = composer === 'richard_wagner' ? window.appData.rw_scenes : window.appData.rs_scenes;
+                    if (!scenesData) {
+                        sceneOptionsWrapper.innerHTML = '<p class="result-message">場面データが読み込まれていません。</p>';
+                        return;
+                    }
+
+                    // Filter scenes for this opera
+                    const filteredScenes = scenesData.filter(s => normalizeString(s.Oper) === normalizeString(operaValue));
+                    
+                    // Transform to options format expected by buildSceneCheckboxes
+
+                    // Transform to options format expected by buildSceneCheckboxes
+                    const options = filteredScenes.map(scene => {
+                        const aufzug = scene.Aufzug !== undefined ? scene.Aufzug : '';
+                        const szene = scene.Szene !== undefined ? scene.Szene : '';
+                        const val = `${aufzug}-${szene}`;
+                        return { value: val, text: scene['日本語'] };
+                    });
+
+                    if (!sceneOptionsCache[composer]) sceneOptionsCache[composer] = {};
+                    sceneOptionsCache[composer][operaValue] = options;
+
+                    buildSceneCheckboxes(operaValue, sceneOptionsCache[composer][operaValue]);
+                } catch (e) {
+                    console.error('Error in local scene loading:', e);
+                    sceneOptionsWrapper.innerHTML = `<p class="result-message">場面データの読み込み中にエラーが発生しました: ${e.message}</p>`;
                 }
-
-                // Filter scenes for this opera
-                const filteredScenes = scenesData.filter(s => normalizeString(s.Oper) === normalizeString(operaValue));
-
-                // Transform to options format expected by buildSceneCheckboxes
-                const options = filteredScenes.map(scene => {
-                    const aufzug = scene.Aufzug !== undefined ? scene.Aufzug : '';
-                    const szene = scene.Szene !== undefined ? scene.Szene : '';
-                    const val = `${aufzug}-${szene}`;
-                    return { value: val, text: scene['日本語'] };
-                });
-
-                if (!sceneOptionsCache[composer]) sceneOptionsCache[composer] = {};
-                sceneOptionsCache[composer][operaValue] = options;
-
-                buildSceneCheckboxes(operaValue, sceneOptionsCache[composer]);
-            } catch (e) {
-                console.error('Error in local scene loading:', e);
-                sceneOptionsWrapper.innerHTML = `<p class="result-message">場面データの読み込み中にエラーが発生しました: ${e.message}</p>`;
-            }
-        }, 10);
+            }, 10);
+        }
     }
+    
+    // Build Whom (Target) checkboxes
+    buildWhomCheckboxes(operaValue);
 }
 
 /**
@@ -111,7 +115,9 @@ function handleOperaSelection(event) {
 function buildSceneCheckboxes(operaValue, sceneOptionsData) {
     const wrapper = document.getElementById('scene-options-wrapper');
     wrapper.innerHTML = '';
-    const options = sceneOptionsData[operaValue];
+    
+    // 修正: 引数が既にリスト（Array）ならそれを使い、そうでなければ曲名（Key）で取得を試みる
+    const options = Array.isArray(sceneOptionsData) ? sceneOptionsData : sceneOptionsData[operaValue];
 
     if (!options || options.length === 0) {
         wrapper.innerHTML = '<p>この曲の場面データは登録されていません。</p>';
@@ -158,6 +164,8 @@ function handleSearchTypeSelection(event) {
     const type = event.target.value;
     document.getElementById('scene-selection-container').style.display = type === 'scene' ? 'block' : 'none';
     document.getElementById('page-selection-container').style.display = type === 'page' ? 'block' : 'none';
+    const whomContainer = document.getElementById('whom-selection-container');
+    if (whomContainer) whomContainer.style.display = type === 'whom' ? 'block' : 'none';
 }
 
 /**
@@ -167,6 +175,8 @@ function resetSearchType() {
     document.querySelectorAll('input[name="search-type"]').forEach(radio => (radio.checked = false));
     document.getElementById('scene-selection-container').style.display = 'none';
     document.getElementById('page-selection-container').style.display = 'none';
+    const whomContainer = document.getElementById('whom-selection-container');
+    if (whomContainer) whomContainer.style.display = 'none';
     setResults('');
 }
 
@@ -382,7 +392,137 @@ function clearScenes() {
 }
 
 function clearPageInput() {
-    document.getElementById('page-input').value = '';
+    const pageInput = document.getElementById('page-input');
+    if (pageInput) pageInput.value = '';
+    setResults('');
+}
+
+/**
+ * 指示対象（Whom）データのチェックボックスを構築
+ */
+function buildWhomCheckboxes(operaValue) {
+    const wrapper = document.getElementById('whom-options-wrapper');
+    if (!wrapper) return; // コンテナがない場合は何もしない
+
+    wrapper.innerHTML = '<p class="loading">指示対象データを読み込み中...</p>';
+
+    // Load from window.appData.whom_list
+    // whom_list.json keys come from spreadsheet and are generally just lowercased (e.g. "walküre"), 
+    // while normalizeString() converts them (e.g. "walkuere"). We should check both.
+    const whomList = window.appData.whom_list;
+    if (!whomList) {
+        // データがまだロードされていない、または存在しない
+        wrapper.innerHTML = '<p>指示対象データを読み込み中/またはデータがありません。</p>';
+        return;
+    }
+
+    // Try direct key (e.g. "walküre") then normalized key (e.g. "walkuere")
+    let options = whomList[operaValue];
+    if (!options) {
+        options = whomList[normalizeString(operaValue)];
+    }
+
+    if (!options || options.length === 0) {
+        wrapper.innerHTML = '<p>この曲の指示対象データは登録されていません。</p>';
+        return;
+    }
+
+    wrapper.innerHTML = '';
+    const checkboxGroup = document.createElement('div');
+    checkboxGroup.className = 'checkbox-group';
+
+    // ユーザー要望: "指示対象の和集合... 複数選択可"
+    
+    options.forEach(targetName => {
+        checkboxGroup.innerHTML += `<label><input type="checkbox" name="${operaValue}-whom" value="${targetName}"> ${targetName}</label>`;
+    });
+
+    wrapper.appendChild(checkboxGroup);
+}
+
+function searchByWhom() {
+    const selectedOpera = document.querySelector('input[name="opera"]:checked');
+    if (!selectedOpera) {
+        setResults('<p class="result-message">曲を選択してください</p>');
+        return;
+    }
+    const operaValue = selectedOpera.value;
+
+    const whomCheckboxes = document.querySelectorAll(`input[name="${operaValue}-whom"]:checked`);
+    const selectedWhoms = Array.from(whomCheckboxes).map(cb => cb.value);
+
+    if (selectedWhoms.length === 0) {
+        setResults('<p class="result-message">指示対象を選択してください</p>');
+        return;
+    }
+
+    setResults('<p class="loading">検索中・・・</p>');
+    currentSearchId++;
+    const thisSearchId = currentSearchId;
+
+    const composer = (document.title.includes('Wagner') || document.title.includes('RW')) ? 'richard_wagner' : 'richard_strauss';
+    
+    // Local processing
+    setTimeout(() => {
+        if (thisSearchId !== currentSearchId) return;
+
+        try {
+            const data = window.appData[composer];
+            if (!data) {
+                setResults('<div class="result-message">データが読み込まれていません。</div>');
+                return;
+            }
+
+            // Normalization set for comparison
+            // whom field in data is comma separated.
+            // Requirement: "Set (union)" -> If any of the selected targets match any of the row's targets.
+            
+            // Prepare normalized selected targets for easier comparison
+            const selectedSet = new Set(selectedWhoms.map(s => normalizeString(s)));
+
+            const filteredData = data.filter(row => {
+                // Robust matching for opera name (User requested change only for Whom search)
+                const operMatch = normalizeString(row.Oper) === normalizeString(operaValue) ||
+                                  (row.Oper && row.Oper.trim().toLowerCase() === operaValue.trim().toLowerCase());
+                if (!operMatch) return false;
+                if (row.page === undefined || row.page === null || row.page === '') return false;
+                
+                const rowWhom = row.whom || row.Whom || '';
+                if (!rowWhom) return false;
+                
+                // Split row targets
+                const rowTargets = String(rowWhom).split(/[,、;\n]/).map(s => normalizeString(s.trim())).filter(Boolean);
+                
+                // Check intersection
+                return rowTargets.some(t => selectedSet.has(t));
+            });
+
+            const html = formatGenericResults(filteredData);
+            setResults(html);
+
+            // Send notification
+            if (typeof sendSearchNotification === 'function') {
+                const details = {
+                    work: operaValue,
+                    scope: selectedWhoms.join(', '),
+                    term: 'Whom Search'
+                };
+                sendSearchNotification(details, composer);
+            }
+        } catch (e) {
+            console.error('Error in local whom search:', e);
+            setResults(`<p class="result-message">検索中にエラーが発生しました: ${e.message}</p>`);
+        }
+    }, 10);
+}
+
+function clearWhom() {
+    const selectedOpera = document.querySelector('input[name="opera"]:checked');
+    if (!selectedOpera) return;
+    const operaValue = selectedOpera.value;
+    document.querySelectorAll(`input[name="${operaValue}-whom"]`).forEach(cb => {
+        cb.checked = false;
+    });
     setResults('');
 }
 
