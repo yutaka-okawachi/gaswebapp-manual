@@ -6,37 +6,47 @@
 
 const sceneOptionsCache = {};
 let currentSearchId = 0;
+let dataLoadedPromise = null;
 
-document.addEventListener('DOMContentLoaded', async () => {
-    // Load data locally first
-    const composer = document.title.includes('Wagner') || document.title.includes('RW') ? 'richard_wagner' : 'richard_strauss';
-    if (typeof loadData === 'function') {
-        await loadData(composer);
-        // Also load scene data
-        if (composer === 'richard_wagner') await loadData('rw_scenes');
-        if (composer === 'richard_strauss') await loadData('rs_scenes');
-        // Load dic_terms_index for linking functionality
-        if (!window.appData.dic_terms_index && typeof fetchJson === 'function') {
-            try {
-                window.appData.dic_terms_index = await fetchJson('data/dic_terms_index.json');
-            } catch (e) {
-                console.warn('dic_terms_index.json の読み込みに失敗:', e);
-            }
-        }
-    }
-
+document.addEventListener('DOMContentLoaded', () => {
+    // 1. リスナーを即座に登録（データロード完了前でもユーザーの操作を受け付ける）
     document.querySelectorAll('input[name="opera"]').forEach(radio => {
         radio.addEventListener('change', handleOperaSelection);
     });
     document.querySelectorAll('input[name="search-type"]').forEach(radio => {
         radio.addEventListener('change', handleSearchTypeSelection);
     });
+
+    // 2. データロード開始 (Promiseを保存)
+    dataLoadedPromise = (async () => {
+        const composer = document.title.includes('Wagner') || document.title.includes('RW') ? 'richard_wagner' : 'richard_strauss';
+        if (typeof loadData === 'function') {
+            await loadData(composer);
+            // Also load scene data
+            if (composer === 'richard_wagner') await loadData('rw_scenes');
+            if (composer === 'richard_strauss') await loadData('rs_scenes');
+            // Load dic_terms_index for linking functionality
+            if (!window.appData.dic_terms_index && typeof fetchJson === 'function') {
+                try {
+                    window.appData.dic_terms_index = await fetchJson('data/dic_terms_index.json');
+                } catch (e) {
+                    console.warn('dic_terms_index.json の読み込みに失敗:', e);
+                }
+            }
+        }
+    })();
+
+    // 3. 初期選択のケア（ブラウザの更新時などにラジオボタンが選択されている場合）
+    const initialChecked = document.querySelector('input[name="opera"]:checked');
+    if (initialChecked) {
+        handleOperaSelection({ target: initialChecked });
+    }
 });
 
 /**
  * オペラ（曲名）が選択されたときの処理
  */
-function handleOperaSelection(event) {
+async function handleOperaSelection(event) {
     const operaValue = event.target.value;
     const composer = (document.title.includes('Wagner') || document.title.includes('RW')) ? 'richard_wagner' : 'richard_strauss';
 
@@ -46,17 +56,22 @@ function handleOperaSelection(event) {
         searchMethodContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
 
-    // 以前は検索方法を隠していたが表示・非表示の切り替えは不要になった
-    // また、オペラ選択時に検索方法をリセットすると使い勝手が悪いためリセットも行わない
     setResults('');
 
     const sceneOptionsWrapper = document.getElementById('scene-options-wrapper');
-    sceneOptionsWrapper.innerHTML = '<p class="loading">場面データを読み込み中...</p>';
+    sceneOptionsWrapper.innerHTML = '<p class="loading">データを読み込み中...</p>';
 
     // キャッシュ済みであればそれを利用
     if (sceneOptionsCache[composer] && sceneOptionsCache[composer][operaValue]) {
         buildSceneCheckboxes(operaValue, sceneOptionsCache[composer][operaValue]);
-    } else {
+        buildWhomCheckboxes(operaValue);
+        return;
+    }
+
+    // データロードがまだ完了していない場合は待機
+    if (dataLoadedPromise) {
+        await dataLoadedPromise;
+    }
         // サーバーから場面データを取得 (Local fallback)
         if (typeof google !== 'undefined' && google.script && google.script.run) {
             google.script.run
@@ -103,7 +118,6 @@ function handleOperaSelection(event) {
                 }
             }, 10);
         }
-    }
     
     // Build Whom (Target) checkboxes
     buildWhomCheckboxes(operaValue);
