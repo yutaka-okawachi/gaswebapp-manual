@@ -81,12 +81,9 @@ function handleOperaSelection(event) {
                     }
 
                     // Filter scenes for this opera
-                    let filteredScenes = scenesData.filter(s => normalizeString(s.Oper) === normalizeString(operaValue));
+                    const filteredScenes = scenesData.filter(s => normalizeString(s.Oper) === normalizeString(operaValue));
                     
-                    // Fallback to simple lowercase check if normalization fails (e.g. walküre vs walkuere mismatch)
-                    if (filteredScenes.length === 0) {
-                        filteredScenes = scenesData.filter(s => s.Oper && s.Oper.toLowerCase().trim() === operaValue.toLowerCase().trim());
-                    }
+                    // Transform to options format expected by buildSceneCheckboxes
 
                     // Transform to options format expected by buildSceneCheckboxes
                     const options = filteredScenes.map(scene => {
@@ -118,7 +115,9 @@ function handleOperaSelection(event) {
 function buildSceneCheckboxes(operaValue, sceneOptionsData) {
     const wrapper = document.getElementById('scene-options-wrapper');
     wrapper.innerHTML = '';
-    const options = sceneOptionsData[operaValue];
+    
+    // 修正: 引数が既にリスト（Array）ならそれを使い、そうでなければ曲名（Key）で取得を試みる
+    const options = Array.isArray(sceneOptionsData) ? sceneOptionsData : sceneOptionsData[operaValue];
 
     if (!options || options.length === 0) {
         wrapper.innerHTML = '<p>この曲の場面データは登録されていません。</p>';
