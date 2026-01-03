@@ -404,15 +404,22 @@ function buildWhomCheckboxes(operaValue) {
     wrapper.innerHTML = '<p class="loading">指示対象データを読み込み中...</p>';
 
     // Load from window.appData.whom_list
-    // data format: { "feen": ["Arindal", "Ada", ...], ... }
+    // whom_list.json keys come from spreadsheet and are generally just lowercased (e.g. "walküre"), 
+    // while normalizeString() converts them (e.g. "walkuere"). We should check both.
     const whomList = window.appData.whom_list;
-    if (!whomList || !whomList[normalizeString(operaValue)]) {
-        wrapper.innerHTML = '<p>この曲の指示対象データは登録されていません。</p>';
+    if (!whomList) {
+        // データがまだロードされていない、または存在しない
+        wrapper.innerHTML = '<p>指示対象データを読み込み中/またはデータがありません。</p>';
         return;
     }
 
-    const options = whomList[normalizeString(operaValue)];
-    if (options.length === 0) {
+    // Try direct key (e.g. "walküre") then normalized key (e.g. "walkuere")
+    let options = whomList[operaValue];
+    if (!options) {
+        options = whomList[normalizeString(operaValue)];
+    }
+
+    if (!options || options.length === 0) {
         wrapper.innerHTML = '<p>この曲の指示対象データは登録されていません。</p>';
         return;
     }
