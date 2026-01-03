@@ -55,53 +55,52 @@ function handleOperaSelection(event) {
 
     // キャッシュ済みであればそれを利用
     if (sceneOptionsCache[composer] && sceneOptionsCache[composer][operaValue]) {
-        buildSceneCheckboxes(operaValue, sceneOptionsCache[composer]);
-        return;
-    }
-
-    // サーバーから場面データを取得 (Local fallback)
-    if (typeof google !== 'undefined' && google.script && google.script.run) {
-        google.script.run
-            .withSuccessHandler(options => {
-                if (!sceneOptionsCache[composer]) sceneOptionsCache[composer] = {};
-                Object.assign(sceneOptionsCache[composer], options || {});
-                buildSceneCheckboxes(operaValue, sceneOptionsCache[composer]);
-            })
-            .withFailureHandler(err => {
-                console.error('場面データの取得に失敗しました', err);
-                sceneOptionsWrapper.innerHTML = '<p class="result-message">場面データの取得に失敗しました</p>';
-            })
-            .getSceneOptionsForOpera(composer);
+        buildSceneCheckboxes(operaValue, sceneOptionsCache[composer][operaValue]);
     } else {
-        // Local fallback
-        setTimeout(() => {
-            try {
-                const scenesData = composer === 'richard_wagner' ? window.appData.rw_scenes : window.appData.rs_scenes;
-                if (!scenesData) {
-                    sceneOptionsWrapper.innerHTML = '<p class="result-message">場面データが読み込まれていません。</p>';
-                    return;
+        // サーバーから場面データを取得 (Local fallback)
+        if (typeof google !== 'undefined' && google.script && google.script.run) {
+            google.script.run
+                .withSuccessHandler(options => {
+                    if (!sceneOptionsCache[composer]) sceneOptionsCache[composer] = {};
+                    Object.assign(sceneOptionsCache[composer], options || {});
+                    buildSceneCheckboxes(operaValue, sceneOptionsCache[composer]);
+                })
+                .withFailureHandler(err => {
+                    console.error('場面データの取得に失敗しました', err);
+                    sceneOptionsWrapper.innerHTML = '<p class="result-message">場面データの取得に失敗しました</p>';
+                })
+                .getSceneOptionsForOpera(composer);
+        } else {
+            // Local fallback
+            setTimeout(() => {
+                try {
+                    const scenesData = composer === 'richard_wagner' ? window.appData.rw_scenes : window.appData.rs_scenes;
+                    if (!scenesData) {
+                        sceneOptionsWrapper.innerHTML = '<p class="result-message">場面データが読み込まれていません。</p>';
+                        return;
+                    }
+
+                    // Filter scenes for this opera
+                    const filteredScenes = scenesData.filter(s => normalizeString(s.Oper) === normalizeString(operaValue));
+
+                    // Transform to options format expected by buildSceneCheckboxes
+                    const options = filteredScenes.map(scene => {
+                        const aufzug = scene.Aufzug !== undefined ? scene.Aufzug : '';
+                        const szene = scene.Szene !== undefined ? scene.Szene : '';
+                        const val = `${aufzug}-${szene}`;
+                        return { value: val, text: scene['日本語'] };
+                    });
+
+                    if (!sceneOptionsCache[composer]) sceneOptionsCache[composer] = {};
+                    sceneOptionsCache[composer][operaValue] = options;
+
+                    buildSceneCheckboxes(operaValue, sceneOptionsCache[composer][operaValue]);
+                } catch (e) {
+                    console.error('Error in local scene loading:', e);
+                    sceneOptionsWrapper.innerHTML = `<p class="result-message">場面データの読み込み中にエラーが発生しました: ${e.message}</p>`;
                 }
-
-                // Filter scenes for this opera
-                const filteredScenes = scenesData.filter(s => normalizeString(s.Oper) === normalizeString(operaValue));
-
-                // Transform to options format expected by buildSceneCheckboxes
-                const options = filteredScenes.map(scene => {
-                    const aufzug = scene.Aufzug !== undefined ? scene.Aufzug : '';
-                    const szene = scene.Szene !== undefined ? scene.Szene : '';
-                    const val = `${aufzug}-${szene}`;
-                    return { value: val, text: scene['日本語'] };
-                });
-
-                if (!sceneOptionsCache[composer]) sceneOptionsCache[composer] = {};
-                sceneOptionsCache[composer][operaValue] = options;
-
-                buildSceneCheckboxes(operaValue, sceneOptionsCache[composer][operaValue]);
-            } catch (e) {
-                console.error('Error in local scene loading:', e);
-                sceneOptionsWrapper.innerHTML = `<p class="result-message">場面データの読み込み中にエラーが発生しました: ${e.message}</p>`;
-            }
-        }, 10);
+            }, 10);
+        }
     }
     
     // Build Whom (Target) checkboxes
