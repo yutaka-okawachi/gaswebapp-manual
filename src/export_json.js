@@ -1,15 +1,20 @@
 // SPREADSHEET_ID is defined in mahler.js
 
 function exportAllDataToJson() {
-    // 最新データを取得するためにキャッシュをクリア（チャンクキャッシュ用の _count キーも削除）
+    // 最新データを取得するためにキャッシュを確実にクリア
     const cache = CacheService.getScriptCache();
     const cacheKeys = [
         'mahler_data_v2', 'richard_strauss_data_v2', 'richard_wagner_data_v2',
         'rw_de_terms_cache_v2', 'rs_de_terms_cache_v2', 'whom_options_v1', 'dic_terms_index_v1'
     ];
     cacheKeys.forEach(key => {
+        // 通常のキャッシュ削除
         cache.remove(key);
+        // チャンクキャッシュの削除（安全のため多めに回す）
         cache.remove(key + '_count');
+        for (let i = 0; i < 20; i++) {
+            cache.remove(`${key}_${i}`);
+        }
     });
     
     const ss = SpreadsheetApp.openById(SPREADSHEET_ID);
