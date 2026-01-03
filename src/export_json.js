@@ -127,8 +127,9 @@ function exportAllDataToJson() {
             const whomField = item['whom'] || item['Whom'] || '';
             const pageField = item['page'] || item['Page'] || ''; // D列に対応
 
-            // Operが空、またはWhomが空の場合はスキップ（Pageは空でも許容するように変更）
-            if (!operKey || !whomField) return;
+            // Operが空、またはWhomが空、またはPageが空の場合はスキップ
+            // 最新の指示（D列空スキップ）に合わせて修正内容を反映
+            if (!operKey || !whomField || !pageField) return;
 
             // オペラ名が極端に長い（30文字以上）場合は、スプレッドシートの入力ミスまたは
             // ト書き行の誤検知の可能性が高いためスキップする（安全策）
