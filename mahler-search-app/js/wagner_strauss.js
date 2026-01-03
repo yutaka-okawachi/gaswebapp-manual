@@ -482,7 +482,10 @@ function searchByWhom() {
             const selectedSet = new Set(selectedWhoms.map(s => normalizeString(s)));
 
             const filteredData = data.filter(row => {
-                if (normalizeString(row.Oper) !== normalizeString(operaValue)) return false;
+                // Robust matching for opera name (User requested change only for Whom search)
+                const operMatch = normalizeString(row.Oper) === normalizeString(operaValue) ||
+                                  (row.Oper && row.Oper.trim().toLowerCase() === operaValue.trim().toLowerCase());
+                if (!operMatch) return false;
                 if (row.page === undefined || row.page === null || row.page === '') return false;
                 
                 const rowWhom = row.whom || row.Whom || '';
