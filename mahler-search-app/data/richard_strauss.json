@@ -9540,7 +9540,7 @@
     "場面タイトル": "第4場"
   },
   {
-    "Oper": "c",
+    "Oper": "salome",
     "Aufzug": "",
     "Szene": 4,
     "page": 301,
@@ -9548,8 +9548,8 @@
     "de": "Ein riesengrosser, schwarzer Arm, der Arm des Henkers, streckt sich aus der Cisteme heraus, auf einem silbernen Schild den Kopf des Jochanaan haltend, Salome ergreift ihn.",
     "de_normalized": "ein riesengrosser, schwarzer arm, der arm des henkers, streckt sich aus der cisteme heraus, auf einem silbernen schild den kopf des jochanaan haltend, salome ergreift ihn.",
     "ja": "途方もなく大きな黒い腕―死刑執行人の腕が，貯水槽（井戸）から突き出され，銀の大皿に載せた Jochanaan の首を差し出す．Salome はそれをひったくる．",
-    "楽譜情報": "",
-    "場面タイトル": ""
+    "楽譜情報": "Adolph Fürstner A. 5500 F.",
+    "場面タイトル": "第4場"
   },
   {
     "Oper": "salome",
@@ -14688,7 +14688,7 @@
     "場面タイトル": "第1幕"
   },
   {
-    "Oper": "すべてを声を潜めた内緒話のような口調で",
+    "Oper": "rosenkavalier",
     "Aufzug": 1,
     "Szene": "",
     "page": 87,
@@ -14696,8 +14696,8 @@
     "de": "alles nur in halblaut vertraulichem Ton",
     "de_normalized": "alles nur in halblaut vertraulichem ton",
     "ja": "すべてを声を潜めた内緒話のような口調で",
-    "楽譜情報": "",
-    "場面タイトル": ""
+    "楽譜情報": "Adolph Fürstner A. 5900 F.",
+    "場面タイトル": "第1幕"
   },
   {
     "Oper": "rosenkavalier",
@@ -20164,7 +20164,7 @@
     "Aufzug": 2,
     "Szene": "",
     "page": 324,
-    "whom": "男爵",
+    "whom": "x",
     "de": "er reißt mit der Linken den Brief auf, versucht ihn zu lesen, indem er ihn sehr weit von sich weghält",
     "de_normalized": "er reisst mit der linken den brief auf, versucht ihn zu lesen, indem er ihn sehr weit von sich weghaelt",
     "ja": "左手で手紙の封を切り，それを目から遠ざけて読もうとする",
