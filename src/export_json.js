@@ -124,8 +124,12 @@ function exportAllDataToJson() {
     const collectWhomFromRows = (rows) => {
         rows.forEach(item => {
             const operKey = String((item['Oper'] || item['oper'] || '')).toLowerCase().trim();
-            const whomField = item['whom'] || item['Whom'] || item['Whom'] || '';
-            if (!operKey || !whomField) return;
+            const whomField = item['whom'] || item['Whom'] || '';
+            const pageField = item['page'] || item['Page'] || ''; // D列に対応
+
+            // Operが空、またはWhomが空、またはPageが空の場合はスキップ
+            if (!operKey || !whomField || !pageField) return;
+
             const parts = String(whomField).split(/[,、;\n]/).map(s => s.toString().trim()).filter(Boolean);
             if (!whomMap[operKey]) whomMap[operKey] = new Set();
             parts.forEach(p => whomMap[operKey].add(p));
