@@ -127,8 +127,12 @@ function exportAllDataToJson() {
             const whomField = item['whom'] || item['Whom'] || '';
             const pageField = item['page'] || item['Page'] || ''; // D列に対応
 
-            // Operが空、またはWhomが空、またはPageが空の場合はスキップ
-            if (!operKey || !whomField || !pageField) return;
+            // Operが空、またはWhomが空の場合はスキップ（Pageは空でも許容するように変更）
+            if (!operKey || !whomField) return;
+
+            // オペラ名が極端に長い（30文字以上）場合は、スプレッドシートの入力ミスまたは
+            // ト書き行の誤検知の可能性が高いためスキップする（安全策）
+            if (operKey.length > 30) return;
 
             const parts = String(whomField).split(/[,、;\n]/).map(s => s.toString().trim()).filter(Boolean);
             if (!whomMap[operKey]) whomMap[operKey] = new Set();
