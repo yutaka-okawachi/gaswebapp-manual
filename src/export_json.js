@@ -140,11 +140,11 @@ function exportAllDataToJson() {
     const collectWhomFromRows = (rows) => {
         rows.forEach(item => {
             const operKey = String((item['Oper'] || item['oper'] || '')).toLowerCase().trim();
-            const whomField = item['whom'] || item['Whom'] || '';
-            const pageField = item['page'] || item['Page'] || ''; // D列に対応
+            const whomField = String(item['whom'] || item['Whom'] || '').trim();
+            const pageField = String(item['page'] || item['Page'] || '').trim(); // D列に対応
 
             // Operが空、またはWhomが空、またはPageが空の場合はスキップ
-            // 最新の指示（D列空スキップ）に合わせて修正内容を反映
+            // 空文字列 ("") も確実に弾くように .trim() と併用
             if (!operKey || !whomField || !pageField) return;
 
             // オペラ名が極端に長い（30文字以上）場合は、スプレッドシートの入力ミスまたは
