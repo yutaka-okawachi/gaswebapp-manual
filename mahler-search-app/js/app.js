@@ -298,12 +298,7 @@ function handleOperaSelection(event) {
 
     // Get scenes from window.appData.rs_scenes
     const scenesData = window.appData.rs_scenes || [];
-    let filteredScenes = scenesData.filter(s => normalizeString(s.Oper) === normalizeString(operaValue));
-    
-    // Fallback if normalization mismatch
-    if (filteredScenes.length === 0) {
-        filteredScenes = scenesData.filter(s => s.Oper && s.Oper.toLowerCase().trim() === operaValue.toLowerCase().trim());
-    }
+    const filteredScenes = scenesData.filter(s => normalizeString(s.Oper) === normalizeString(operaValue));
 
     if (filteredScenes.length === 0) {
         sceneOptionsWrapper.innerHTML = '<p>この曲の場面データは登録されていません。</p>';
