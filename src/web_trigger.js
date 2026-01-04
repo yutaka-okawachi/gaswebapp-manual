@@ -4,7 +4,6 @@
  * This script handles:
  * 1. GET/POST requests for administrative tasks (sync-data.ps1)
  * 2. POST requests for search notifications from GitHub Pages
- * (Updated for sync optimization)
  */
 
 const SECRET_TOKEN = PropertiesService.getScriptProperties().getProperty('GAS_SECRET_TOKEN');
@@ -55,18 +54,9 @@ function handleRequest(params) {
     }
     
     let result;
-    if (action === "exportAllDataToJsonReturn") {
-      Logger.log("Starting exportAllDataToJson (Return Mode)...");
-      const files = exportAllDataToJson(true);
-      result = {
-        status: "success",
-        message: "Data exported successfully",
-        files: files,
-        timestamp: new Date().toISOString()
-      };
-    } else if (action === "exportDic" || action === "exportAllDataToJson") {
+    if (action === "exportDic" || action === "exportAllDataToJson") {
       Logger.log("Starting exportAllDataToJson...");
-      exportAllDataToJson(false);
+      exportAllDataToJson();
       result = {
         status: "success",
         message: "dic.html exported and pushed to GitHub successfully",

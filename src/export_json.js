@@ -1,6 +1,6 @@
 // SPREADSHEET_ID is defined in mahler.js
 
-function exportAllDataToJson(returnOnly = false) {
+function exportAllDataToJson() {
     // 最新データを取得するためにキャッシュを確実にクリア
     const cache = CacheService.getScriptCache();
     const cacheKeys = [
@@ -233,11 +233,6 @@ function exportAllDataToJson(returnOnly = false) {
         'mahler-search-app/dic.html': dicHtml  // 新規: 生成されたHTML（リンク付き）
         , 'mahler-search-app/data/whom_list.json': whomList
     };
-
-    if (returnOnly) {
-        Logger.log('=== データ返却モード: GitHubへのプッシュをスキップします ===');
-        return files;
-    }
 
     // 自動生成されたコミットメッセージ
     const timestamp = new Date().toLocaleString('ja-JP', { timeZone: 'Asia/Tokyo' });
