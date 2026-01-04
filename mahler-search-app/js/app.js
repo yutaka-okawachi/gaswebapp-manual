@@ -671,13 +671,19 @@ function formatGenericResults(data) {
     }
 
     // Sort by Aufzug, Szene, then page
+    // Sort by Aufzug, Szene, then page
     data.sort((a, b) => {
         const aufzugA = Number(a.Aufzug) || 0;
         const aufzugB = Number(b.Aufzug) || 0;
         if (aufzugA !== aufzugB) return aufzugA - aufzugB;
 
-        const szeneA = Number(a.Szene) || 0;
-        const szeneB = Number(b.Szene) || 0;
+        const getSzeneOrder = (val) => {
+            if (typeof val === 'string' && val.toLowerCase() === 'finale') return 9999;
+            return Number(val) || 0;
+        };
+
+        const szeneA = getSzeneOrder(a.Szene);
+        const szeneB = getSzeneOrder(b.Szene);
         if (szeneA !== szeneB) return szeneA - szeneB;
 
         const pageA = Number(a.page) || 0;
