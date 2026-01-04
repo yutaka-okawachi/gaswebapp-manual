@@ -64,10 +64,6 @@
     "Begleiterinnen",
     "Chrysothemis",
     "Elektra",
-    "I. Dienerin",
-    "II. Dienerin",
-    "III. Dienerin",
-    "IV. Dienerin",
     "Klytämnestra",
     "Orchester",
     "Orest",
@@ -365,7 +361,6 @@
     "Dichter",
     "Flamand",
     "Haushofmeister",
-    "Monsieur Taupe",
     "Musiker",
     "Oliovier",
     "Olivier",
@@ -498,9 +493,6 @@
     "年配の巡礼者たち",
     "舞台指示",
     "領主"
-  ],
-  "今や谷全体が，さらに膨れ上がった狩りの一行でごった返している．": [
-    "舞台指示"
   ],
   "tann_paris": [
     "Alle",
@@ -688,19 +680,12 @@
   ],
   "parsifal": [
     "Amfortas",
-    "Der erste Ritter",
-    "Die vier knappen",
-    "Einige Mädchen",
-    "Erstes Mädchen",
     "Gurnemanz",
     "Klingsor",
-    "Knappen und Ritter",
     "Kundry",
-    "Mädchen",
     "Orchester",
     "Parsifal",
     "Titurel",
-    "Vierter Knappe",
     "花の乙女たち",
     "若者たち",
     "小姓たち",
