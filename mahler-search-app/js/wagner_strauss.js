@@ -445,9 +445,38 @@ function buildWhomCheckboxes(operaValue) {
     const checkboxGroup = document.createElement('div');
     checkboxGroup.className = 'checkbox-group';
 
-    // ユーザー要望: "指示対象の和集合... 複数選択可"
-    
+    // 優先表示する項目
+    const priorityItems = ['Orchester', '舞台指示'];
+    const priorityOptions = [];
+    const otherOptions = [];
+
     options.forEach(targetName => {
+        if (priorityItems.includes(targetName)) {
+            priorityOptions.push(targetName);
+        } else {
+            otherOptions.push(targetName);
+        }
+    });
+
+    // 優先項目の描画
+    if (priorityOptions.length > 0) {
+        // 優先順位通りにソート（priorityItemsの順序を守る）
+        priorityOptions.sort((a, b) => {
+            return priorityItems.indexOf(a) - priorityItems.indexOf(b);
+        });
+
+        priorityOptions.forEach(targetName => {
+            checkboxGroup.innerHTML += `<label><input type="checkbox" name="${operaValue}-whom" value="${targetName}"> ${targetName}</label>`;
+        });
+    }
+
+    // 区切り線（両方のリストに要素がある場合のみ）
+    if (priorityOptions.length > 0 && otherOptions.length > 0) {
+        checkboxGroup.innerHTML += '<hr style="margin: 10px 0; border: 0; border-top: 1px solid #ccc;">';
+    }
+
+    // その他の項目の描画
+    otherOptions.forEach(targetName => {
         checkboxGroup.innerHTML += `<label><input type="checkbox" name="${operaValue}-whom" value="${targetName}"> ${targetName}</label>`;
     });
 
