@@ -264,8 +264,15 @@ function doPost(e) {
     
     // work と scope を変換（pageNameを使用）
     var work = translateWork(data.work, page);
-    var scope = translateScope(data.scope);
     var term = getValue(data.term);
+    
+    // Whom Searchの場合は scope の変換をスキップしてそのまま使う（大文字小文字保持のため）
+    var scope;
+    if (term === "Whom Search") {
+      scope = data.scope; // Raw value
+    } else {
+      scope = translateScope(data.scope);
+    }
     
     var now = new Date();
     // Use JST for the timestamp
@@ -273,36 +280,41 @@ function doPost(e) {
 
     var subject = "【マーラー検索】検索通知: " + work;
     
-    // メール本文を構築
-    var body = "マーラー検索アプリで新しい検索がありました。\n\n" +
-               "■ 検索詳細\n" +
-               "--------------------------------------------------\n" +
-               "【日時】 " + formattedDate + "\n" +
-               "【検索元ページ】 " + pageName + "\n" +
-               "【作品】 " + work + "\n";
-    
-    // 検索タイプによって表示を変更
+    // 検索タイプの表示名決定
+    var searchTypeDisplay = "曲名・楽器検索";
+    var detailLabel = "詳細";
+    var detailContent = scope;
+
     if (term === "Scene Search") {
-      // RS/RWの場面検索
-      body += "【検索タイプ】 場面検索\n" +
-              "【場面】 " + scope + "\n";
+      searchTypeDisplay = "場面検索";
+      detailLabel = "場面";
     } else if (term === "Page Search") {
-      // RS/RWのページ検索
-      body += "【検索タイプ】 ページ検索\n" +
-              "【ページ番号】 " + scope.replace("ページ番号: ", "") + "\n";
+      searchTypeDisplay = "ページ検索";
+      detailLabel = "ページ番号";
+      detailContent = scope.replace("ページ番号: ", "");
+    } else if (term === "Whom Search") {
+      searchTypeDisplay = "指示対象検索";
+      detailLabel = "指示対象";
     } else if (scope === "用語検索") {
-      // GM/RS/RWの用語検索
-      body += "【検索語】 " + term + "\n" +
-              "【検索タイプ】 " + scope + "\n";
+      searchTypeDisplay = "用語検索";
+      detailLabel = "検索語";
+      detailContent = term; 
     } else {
-      // GM の曲名・楽器検索
-      body += "【検索タイプ】 曲名・楽器検索\n" +
-              "【楽器】 " + scope + "\n";
+      // Default: 曲名・楽器検索
+      detailLabel = "楽器";
     }
-    
-    body += "--------------------------------------------------\n\n" +
-            "■ ユーザー環境\n" +
-            userAgent;
+
+    // メール本文を構築（新フォーマット）
+    var body = "マーラー検索アプリで新しい検索がありました。\n\n" +
+               "■ 検索内容\n" +
+               "【　作品　】 " + work + "\n" +
+               "【　タイプ　】 " + searchTypeDisplay + "\n" +
+               "【　" + detailLabel + "　】 " + detailContent + "\n" +
+               "【　日時　】 " + formattedDate + "\n\n" +
+               "■ 検索元\n" +
+               "【　ページ　】 " + pageName + "\n\n" +
+               "■ ユーザー環境\n" +
+               userAgent;
                 
     MailApp.sendEmail({
       to: 'pistares@ezweb.ne.jp',

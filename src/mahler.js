@@ -433,15 +433,18 @@ function searchRichardWagnerByScene(operaName, scenes) {
     }
     finalHtml += resultsHtml;
 
-    // ▼▼▼ メール通知機能を追加 ▼▼▼
-    const emailSubject = 'R.Wagner 場面からの検索が実行されました';
-    const emailBody = `
-検索日時: ${new Date().toLocaleString('ja-JP')}
-オペラ: ${operaName}
-選択場面: ${scenes.join(', ')}
-    `.trim();
+    // ▼▼▼ メール通知機能（新フォーマット） ▼▼▼
+    const emailSubject = '【マーラー検索】検索通知: ' + operaName;
+    const emailBody = "マーラー検索アプリで新しい検索がありました。\n\n" +
+               "■ 検索内容\n" +
+               "【　作品　】 " + operaName + "\n" +
+               "【　タイプ　】 場面検索\n" +
+               "【　場面　】 " + scenes.join(', ') + "\n" +
+               "【　日時　】 " + new Date().toLocaleString('ja-JP') + "\n\n" +
+               "■ 検索元\n" +
+               "【　機能　】 場面検索 (Server)";
     sendSearchNotification(emailSubject, emailBody);
-    // ▲▲▲ メール通知機能を追加 ▲▲▲
+    // ▲▲▲ メール通知機能 ▲▲▲
 
     return finalHtml;
 
@@ -487,15 +490,18 @@ function searchRichardWagnerByPage(operaName, pageInput) {
     }
     finalHtml += resultsHtml;
 
-    // ▼▼▼ メール通知機能を追加 ▼▼▼
-    const emailSubject = 'R.Wagner ページからの検索が実行されました';
-    const emailBody = `
-検索日時: ${new Date().toLocaleString('ja-JP')}
-オペラ: ${operaName}
-入力ページ: ${pageInput}
-    `.trim();
+    // ▼▼▼ メール通知機能（新フォーマット） ▼▼▼
+    const emailSubject = '【マーラー検索】検索通知: ' + operaName;
+    const emailBody = "マーラー検索アプリで新しい検索がありました。\n\n" +
+               "■ 検索内容\n" +
+               "【　作品　】 " + operaName + "\n" +
+               "【　タイプ　】 ページ検索\n" +
+               "【　ページ番号　】 " + pageInput + "\n" +
+               "【　日時　】 " + new Date().toLocaleString('ja-JP') + "\n\n" +
+               "■ 検索元\n" +
+               "【　機能　】 ページ検索 (Server)";
     sendSearchNotification(emailSubject, emailBody);
-    // ▲▲▲ メール通知機能を追加 ▲▲▲
+    // ▲▲▲ メール通知機能 ▲▲▲
 
     return finalHtml;
 
@@ -548,8 +554,15 @@ function searchRichardWagnerByPage(operaName, pageInput) {
       }
       finalHtml += resultsHtml;
 
-      const emailSubject = 'R.Wagner 指示対象検索が実行されました';
-      const emailBody = `検索日時: ${new Date().toLocaleString('ja-JP')}\nオペラ: ${operaName}\n選択指示対象: ${whomList.join(', ')}`;
+      const emailSubject = '【マーラー検索】検索通知: ' + operaName;
+      const emailBody = "マーラー検索アプリで新しい検索がありました。\n\n" +
+               "■ 検索内容\n" +
+               "【　作品　】 " + operaName + "\n" +
+               "【　タイプ　】 指示対象検索\n" +
+               "【　指示対象　】 " + whomList.join(', ') + "\n" +
+               "【　日時　】 " + new Date().toLocaleString('ja-JP') + "\n\n" +
+               "■ 検索元\n" +
+               "【　機能　】 指示対象検索 (Server)";
       sendSearchNotification(emailSubject, emailBody);
 
       return finalHtml;
@@ -670,14 +683,17 @@ function searchRWTerms(query) {
       });
     }
 
-    // ▼▼▼ メール通知機能を追加 ▼▼▼
-    const emailSubject = 'R.Wagner 用語検索が実行されました';
-    const emailBody = `
-検索日時: ${new Date().toLocaleString('ja-JP')}
-検索語句: ${query}
-    `.trim();
+    // ▼▼▼ メール通知機能（新フォーマット） ▼▼▼
+    const emailSubject = '【マーラー検索】検索通知: 用語検索 (RW)';
+    const emailBody = "マーラー検索アプリで新しい検索がありました。\n\n" +
+               "■ 検索内容\n" +
+               "【　検索語　】 " + query + "\n" +
+               "【　タイプ　】 用語検索 (RW)\n" +
+               "【　日時　】 " + new Date().toLocaleString('ja-JP') + "\n\n" +
+               "■ 検索元\n" +
+               "【　機能　】 用語検索 (Server)";
     sendSearchNotification(emailSubject, emailBody);
-    // ▲▲▲ メール通知機能を追加 ▲▲▲
+    // ▲▲▲ メール通知機能 ▲▲▲
 
     return html;
 
@@ -936,10 +952,19 @@ function searchData(choice1Arr, choice2Arr, includeOrchestraAll) {
     }
   });
 
-  const emailSubject = '曲名と楽器等からの検索が実行されました';
+  const emailSubject = '【マーラー検索】検索通知: 曲名・楽器検索';
   const selectedWorks = choice1Arr.includes('ALL') ? 'ALL' : choice1Arr.join(', ');
   const selectedInstruments = choice2Arr.includes('ALL_GLOBAL') ? 'ALL_GLOBAL' : choice2Arr.join(', ');
-  const emailBody = `曲名と楽器等からの検索が実行されました。\n\n選択された曲名:\n${selectedWorks}\n\n選択された楽器:\n${selectedInstruments}\n\nオーケストラ全体を含める:\n${includeOrchestraAll ? 'はい' : 'いいえ'}\n\n検索日時: ${new Date().toLocaleString()}`.trim();
+  
+  const emailBody = "マーラー検索アプリで新しい検索がありました。\n\n" +
+               "■ 検索内容\n" +
+               "【　作品　】 " + selectedWorks + "\n" +
+               "【　タイプ　】 曲名・楽器検索\n" +
+               "【　楽器　】 " + selectedInstruments + "\n" +
+               "【　全体検索　】 " + (includeOrchestraAll ? 'はい' : 'いいえ') + "\n" +
+               "【　日時　】 " + new Date().toLocaleString('ja-JP') + "\n\n" +
+               "■ 検索元\n" +
+               "【　機能　】 曲名・楽器検索 (Server)";
   sendSearchNotification(emailSubject, emailBody);
 
   return totalMatches === 0 ? '<p class="result-message">該当するデータがありません。</p>' : `<div>${totalMatches}件ありました。</div>${resultHTML}`;
@@ -1046,8 +1071,14 @@ function searchByTerm(query) {
     resultHTML += `<div class="result-loc">(${segmentCount}件)</div>`;
   });
 
-  const emailSubject = '用語検索が実行されました';
-  const emailBody = `用語検索が実行されました。\n\n検索された用語:\n${query}\n\n検索日時: ${new Date().toLocaleString()}`.trim();
+  const emailSubject = '【マーラー検索】検索通知: 用語検索 (GM)';
+  const emailBody = "マーラー検索アプリで新しい検索がありました。\n\n" +
+               "■ 検索内容\n" +
+               "【　検索語　】 " + query + "\n" +
+               "【　タイプ　】 用語検索 (GM)\n" +
+               "【　日時　】 " + new Date().toLocaleString('ja-JP') + "\n\n" +
+               "■ 検索元\n" +
+               "【　機能　】 用語検索 (Server)";
   sendSearchNotification(emailSubject, emailBody);
 
   return resultHTML;

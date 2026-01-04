@@ -189,29 +189,54 @@ function handleSearchNotification(data) {
 
     const page = getValue(data.page);
     const work = translateWork(data.work, page);
-    const scope = translateScope(data.scope);
     const term = getValue(data.term);
+    
+    // Whom Searchの場合は scope の変換をスキップしてそのまま使う
+    let scope;
+    if (term === "Whom Search") {
+      scope = data.scope;
+    } else {
+      scope = translateScope(data.scope);
+    }
+
     const formattedDate = Utilities.formatDate(new Date(), "Asia/Tokyo", "yyyy/MM/dd HH:mm:ss");
 
     const subject = "【マーラー検索】検索通知: " + work;
-    let body = "マーラー検索アプリで新しい検索がありました。\n\n" +
-               "■ 検索詳細\n" +
-               "--------------------------------------------------\n" +
-               "【日時】 " + formattedDate + "\n" +
-               "【検索元ページ】 " + (pageNameMap[page] || page) + "\n" +
-               "【作品】 " + work + "\n";
+
+    // 検索タイプの表示名決定
+    let searchTypeDisplay = "曲名・楽器検索";
+    let detailLabel = "詳細";
+    let detailContent = scope;
 
     if (term === "Scene Search") {
-      body += "【検索タイプ】 場面検索\n【場面】 " + scope + "\n";
+      searchTypeDisplay = "場面検索";
+      detailLabel = "場面";
     } else if (term === "Page Search") {
-      body += "【検索タイプ】 ページ検索\n【ページ番号】 " + scope.replace("ページ番号: ", "") + "\n";
+      searchTypeDisplay = "ページ検索";
+      detailLabel = "ページ番号";
+      detailContent = scope.replace("ページ番号: ", "");
+    } else if (term === "Whom Search") {
+      searchTypeDisplay = "指示対象検索";
+      detailLabel = "指示対象";
     } else if (scope === "用語検索") {
-      body += "【検索語】 " + term + "\n【検索タイプ】 用語検索\n";
+      searchTypeDisplay = "用語検索";
+      detailLabel = "検索語";
+      detailContent = term;
     } else {
-      body += "【検索タイプ】 曲名・楽器検索\n【楽器】 " + scope + "\n";
+      detailLabel = "楽器";
     }
-    
-    body += "--------------------------------------------------\n\n■ ユーザー環境\n" + getValue(data.userAgent);
+
+    // メール本文を構築（新フォーマット）
+    const body = "マーラー検索アプリで新しい検索がありました。\n\n" +
+               "■ 検索内容\n" +
+               "【　作品　】 " + work + "\n" +
+               "【　タイプ　】 " + searchTypeDisplay + "\n" +
+               "【　" + detailLabel + "　】 " + detailContent + "\n" +
+               "【　日時　】 " + formattedDate + "\n\n" +
+               "■ 検索元\n" +
+               "【　ページ　】 " + (pageNameMap[page] || page) + "\n\n" +
+               "■ ユーザー環境\n" +
+               getValue(data.userAgent);
                 
     const recipient = 'pistares@ezweb.ne.jp';
     MailApp.sendEmail(recipient, subject, body);
