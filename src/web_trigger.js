@@ -54,9 +54,18 @@ function handleRequest(params) {
     }
     
     let result;
-    if (action === "exportDic" || action === "exportAllDataToJson") {
+    if (action === "exportAllDataToJsonReturn") {
+      Logger.log("Starting exportAllDataToJson (Return Mode)...");
+      const files = exportAllDataToJson(true);
+      result = {
+        status: "success",
+        message: "Data exported successfully",
+        files: files,
+        timestamp: new Date().toISOString()
+      };
+    } else if (action === "exportDic" || action === "exportAllDataToJson") {
       Logger.log("Starting exportAllDataToJson...");
-      exportAllDataToJson();
+      exportAllDataToJson(false);
       result = {
         status: "success",
         message: "dic.html exported and pushed to GitHub successfully",

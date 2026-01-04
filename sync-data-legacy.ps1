@@ -143,63 +143,28 @@ if ($runFailed) {
             $webStartTime = Get-Date
             
             # Using curl.exe as requested for robust parameter handling
-            # --- [改良版] データ取得モード (exportAllDataToJsonReturn) ---
-            $webAction = "exportAllDataToJsonReturn"
+            $webAction = "exportAllDataToJson"
             $baseUrl = $env:GAS_DEPLOY_URL.Trim()
             $tokenParam = $env:GAS_SECRET_TOKEN.Trim()
             $webUrl = "${baseUrl}?action=${webAction}&token=${tokenParam}"
             
-            Write-Host "Fetching data from Web App..." -ForegroundColor Gray
+            Write-Host "Sending request to Web App..." -ForegroundColor Gray
             Write-Host "URL: $($baseUrl.Substring(0, [math]::Min(60, $baseUrl.Length)))..." -ForegroundColor DarkGray
             
-            # Use curl.exe to get JSON response
+            # Use curl.exe with explicit quoting to handle URL parameters correctly
+            # -L: Follow redirects, -s: Silent
             $curlOutputLines = & curl.exe -s -L "$webUrl"
             $curlOutput = $curlOutputLines -join "`n"
+            
+            # Save response for debugging
+            $curlOutput | Out-File -FilePath "webapp_response.txt" -Encoding UTF8
             
             $webDuration = (Get-Date) - $webStartTime
             
             # Check if output looks like success JSON
             if ($curlOutput -match '"status":\s*"success"') {
-                Write-Host "✓ Data fetched successfully from GAS." -ForegroundColor Green
+                Write-Host "✓ GAS function executed successfully via Web App." -ForegroundColor Green
                 Write-Host "  Execution time: $([math]::Round($webDuration.TotalSeconds, 1)) seconds" -ForegroundColor Gray
-                
-                # Parse JSON and save files locally
-                try {
-                    $jsonObj = $curlOutput | ConvertFrom-Json
-                    if ($jsonObj.files) {
-                        Write-Host "Saving files locally..." -ForegroundColor Cyan
-                        foreach ($prop in $jsonObj.files.PSObject.Properties) {
-                            $filePath = $prop.Name
-                            $fileContent = $prop.Value
-                            
-                            # Ensure directory exists
-                            $dir = Split-Path -Parent $filePath
-                            if (-not (Test-Path $dir)) {
-                                New-Item -ItemType Directory -Force -Path $dir | Out-Null
-                            }
-                            
-                            # Determine encoding/type based on extension
-                            if ($filePath.EndsWith(".html")) {
-                                $fileContent | Out-File -FilePath $filePath -Encoding UTF8 -Force
-                            } else {
-                                # JSON content coming back as object, convert to string
-                                $jsonString = $fileContent | ConvertTo-Json -Depth 100 -Compress
-                                # Prettify JSON (optional, but good for git diff)
-                                # For simplicity, saving as matches format
-                                $fileContent | ConvertTo-Json -Depth 100 | Out-File -FilePath $filePath -Encoding UTF8 -Force
-                            }
-                            Write-Host "  Saved: $filePath" -ForegroundColor Gray
-                        }
-                        Write-Host "✓ All files updated locally." -ForegroundColor Green
-                    } else {
-                        Write-Warning "⚠ No 'files' property found in response."
-                    }
-                } catch {
-                     Write-Error "❌ Failed to process JSON response: $($_.Exception.Message)"
-                     # Fallback to legacy check if needed, or exit
-                     exit 1
-                }
-
             } else {
                 Write-Host ""
                 Write-Error "❌ Web App execution failed or returned unexpected format."
@@ -209,25 +174,59 @@ if ($runFailed) {
                     "(empty response)" 
                 }
                 Write-Host "Output summary: $outputSummary" -ForegroundColor DarkGray
-                # ... existing error handling ...
+                Write-Host "Full response saved to: webapp_response.txt" -ForegroundColor Gray
+                Write-Host ""
+                Write-Host "Please check the following:" -ForegroundColor Yellow
+                Write-Host "  1. Web App deployment is up to date" -ForegroundColor White
+                Write-Host "  2. GAS_DEPLOY_URL and GAS_SECRET_TOKEN are correct in .env" -ForegroundColor White
+                Write-Host "  3. Web App is deployed with 'Anyone' access" -ForegroundColor White
+                Write-Host ""
+                Write-Host "Or try manual execution:" -ForegroundColor Yellow
+                Write-Host "  1. Open GAS editor: https://script.google.com" -ForegroundColor White
+                Write-Host "  2. Run 'exportAllDataToJson' function" -ForegroundColor White
+                Write-Host "  3. Then run: git pull" -ForegroundColor White
+                Write-Host ""
                 exit 1
             }
         } catch {
-            # ... existing catch block ...
+            Write-Host "" 
             Write-Error "❌ Web App request failed: $($_.Exception.Message)"
+            Write-Host "Error details: $($_.Exception.GetType().FullName)" -ForegroundColor DarkGray
+            if ($_.Exception.Response) {
+                Write-Host "Status Code: $($_.Exception.Response.StatusCode.value__)" -ForegroundColor DarkGray
+            }
+            Write-Host ""
+            Write-Host "Please try manual execution:" -ForegroundColor Yellow
+            Write-Host "  1. Open GAS editor: https://script.google.com" -ForegroundColor White
+            Write-Host "  2. Run 'exportAllDataToJson' function" -ForegroundColor White
+            Write-Host "  3. Then run: git pull" -ForegroundColor White
+            Write-Host ""
             exit 1
         }
     } else {
-        # ... existing else block ...
-        Write-Warning "⚠ Web App is not configured."
+        # Web App未設定の場合
+        Write-Host ""
+        Write-Warning "⚠ Web App is not configured. clasp run requires Apps Script API."
+        Write-Host ""
+        Write-Host "To fix this issue:" -ForegroundColor Cyan
+        Write-Host "  Option 1: Enable Apps Script API" -ForegroundColor White
+        Write-Host "    • Visit: https://script.google.com/home/usersettings" -ForegroundColor Gray
+        Write-Host "    • Enable 'Google Apps Script API'" -ForegroundColor Gray
+        Write-Host ""
+        Write-Host "  Option 2: Setup Web App (recommended)" -ForegroundColor White
+        Write-Host "    • Run: .\setup-web-trigger.ps1" -ForegroundColor Gray
+        Write-Host ""
+        Write-Host "  Option 3: Manual execution" -ForegroundColor White
+        Write-Host "    1. Open GAS editor: https://script.google.com" -ForegroundColor Gray
+        Write-Host "    2. Run 'exportAllDataToJson' function" -ForegroundColor Gray
+        Write-Host "    3. Then run: git pull" -ForegroundColor Gray
+        Write-Host ""
         exit 1
     }
 } else {
     $duration = (Get-Date) - $startTime
     Write-Host "✓ GAS function executed successfully via clasp run." -ForegroundColor Green
-     # Note: clasp run method (legacy) still pushes to GitHub directly.
-     # If we want to fully switch, we should prefer Web App method or modify clasp run to return data.
-     # For now, if clasp run succeeds, we assume it did the old push behavior.
+    Write-Host "  Execution time: $([math]::Round($duration.TotalSeconds, 1)) seconds" -ForegroundColor Gray
 }
 
 Write-Host "✓ GAS function completed. Files should be pushed to GitHub." -ForegroundColor Green
