@@ -4,6 +4,7 @@
  * This script handles:
  * 1. GET/POST requests for administrative tasks (sync-data.ps1)
  * 2. POST requests for search notifications from GitHub Pages
+ * (Updated for sync optimization)
  */
 
 const SECRET_TOKEN = PropertiesService.getScriptProperties().getProperty('GAS_SECRET_TOKEN');
