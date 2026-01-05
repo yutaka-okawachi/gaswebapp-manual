@@ -673,8 +673,22 @@ function formatGenericResults(data) {
     // Sort by Aufzug, Szene, then page
     // Sort by Aufzug, Szene, then page
     data.sort((a, b) => {
-        const aufzugA = Number(a.Aufzug) || 0;
-        const aufzugB = Number(b.Aufzug) || 0;
+        const getAufzugOrder = (val) => {
+            if (val === undefined || val === null || val === '') return 0;
+            const num = Number(val);
+            if (!isNaN(num)) return num;
+
+            // Handle special text values in Aufzug
+            const str = String(val).toLowerCase().trim();
+            // Start keywords (should be at the top)
+            if (['einleitung', 'vorspiel', 'prolog', 'ouverture', 'overture'].includes(str)) return 0;
+
+            // Other text (e.g. "Anhang", "I zu Seite 28") -> Push to end
+            return 99999;
+        };
+
+        const aufzugA = getAufzugOrder(a.Aufzug);
+        const aufzugB = getAufzugOrder(b.Aufzug);
         if (aufzugA !== aufzugB) return aufzugA - aufzugB;
 
         const getSzeneOrder = (val) => {
