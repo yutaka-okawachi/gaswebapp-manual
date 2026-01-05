@@ -270,7 +270,8 @@ function searchByScene() {
                 });
 
                 const html = formatGenericResults(filteredData);
-                setResults(html);
+                const finalHtml = injectMottlNote(html, operaValue);
+                setResults(finalHtml);
 
                 // Send notification
                 if (typeof sendSearchNotification === 'function') {
@@ -365,7 +366,8 @@ function searchByPage() {
                 });
 
                 const html = formatGenericResults(filteredData);
-                setResults(html);
+                const finalHtml = injectMottlNote(html, operaValue);
+                setResults(finalHtml);
 
                 // Send notification
                 if (typeof sendSearchNotification === 'function') {
@@ -541,7 +543,8 @@ function searchByWhom() {
             });
 
             const html = formatGenericResults(filteredData);
-            setResults(html);
+            const finalHtml = injectMottlNote(html, operaValue);
+            setResults(finalHtml);
 
             // Send notification
             if (typeof sendSearchNotification === 'function') {
@@ -577,4 +580,24 @@ function setResults(html) {
     if (typeof focusResultsPanel === 'function') {
         focusResultsPanel({ instant: true });
     }
+}
+
+/**
+ * 検索結果にMottlの注記を注入するヘルパー関数
+ */
+function injectMottlNote(html, operaValue) {
+    if (!html) return html;
+    
+    // 対象のオペラかチェック
+    const targetOperas = ['tann_dresden', 'tann_paris', 'walküre', 'tristan', 'parsifal'];
+    if (!targetOperas.includes(operaValue)) {
+        return html;
+    }
+
+    const noteHtml = '<div style="font-family: \'Lora\', serif; font-weight: bold; margin-top: 5px;">Felix Mottl による指示も含む</div>';
+    
+    // score-info-bannerのdivブロックの終端を探して挿入
+    // <div class="score-info-banner">...</div> の後ろに挿入したい
+    // 正規表現でマッチ
+    return html.replace(/(<div class="score-info-banner">.*?<\/div>)/s, '$1' + noteHtml);
 }
