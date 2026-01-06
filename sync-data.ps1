@@ -23,6 +23,34 @@ Write-Host ""
 # Node.js接続エラー対策: IPv4を優先
 $env:NODE_OPTIONS = "--dns-result-order=ipv4first"
 
+# --- [0.1] Git状態チェック ---
+Write-Host "Checking git status..." -ForegroundColor Gray
+$currentBranch = git branch --show-current
+if (-not $currentBranch) {
+    Write-Error "❌ Error: Git is in a detached HEAD state (e.g., rebase in progress)."
+    Write-Host "Please run 'git status' and resolve the current state (e.g., git rebase --abort) before running this script." -ForegroundColor Yellow
+    exit 1
+}
+
+if ($currentBranch -ne "main") {
+    Write-Host "⚠ Currently on branch '$currentBranch'. Switching to 'main'..." -ForegroundColor Yellow
+    # Check for uncommitted changes first
+    $status = git status --porcelain
+    if ($status) {
+        Write-Error "❌ cannot switch branch: You have uncommitted changes."
+        Write-Host "Please commit or stash your changes before running this script." -ForegroundColor Yellow
+        exit 1
+    }
+    
+    git checkout main 2>&1 | Out-Null
+    if ($LASTEXITCODE -ne 0) {
+        Write-Error "❌ Failed to switch to main branch."
+        Write-Host "Please switch to main manually: git checkout main" -ForegroundColor Yellow
+        exit 1
+    }
+    Write-Host "✓ Switched to main." -ForegroundColor Green
+}
+
 # --- [0.5] 環境変数のロード (.env) ---
 if (Test-Path ".env") {
     Write-Host "Loading .env file..." -ForegroundColor Gray
