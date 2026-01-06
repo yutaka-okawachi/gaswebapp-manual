@@ -119,6 +119,26 @@
                 return '<div class="result-message">該当するデータが見つかりませんでした。</div>';
             }
 
+            // Create highlight regex (similar logic to linkTermsInTranslation but for highlighting)
+            // 1. Normalize query to handle special chars pattern
+            let highlightPattern = normalizedQuery;
+            highlightPattern = highlightPattern.split('ae').join('(?:ae|ä)');
+            highlightPattern = highlightPattern.split('oe').join('(?:oe|ö)');
+            highlightPattern = highlightPattern.split('ue').join('(?:ue|ü)');
+            highlightPattern = highlightPattern.split('ss').join('(?:ss|ß)');
+            // Escape regex special characters except the ones we just added
+            // Simplified approach: since normalizedQuery is lowercase alphanumeric + special chars replaced,
+            // we mainly need to be careful not to double escape.
+            // Actually, simple regex construction from the pattern is enough for this specific case.
+            
+            // Highlight Regex: Match pattern, but NOT inside HTML tags (lookahead for > which implies we are inside a tag if no < seen first?? 
+            // Actually, safer approach for simple text is to highlight BEFORE any HTML generation if possible, 
+            // OR use a regex that matches text nodes only.
+            // Given the requirement "daempfer is blue link, daemp is red inside", we need to modify the linked text.
+            // Best approach: Generate the term link first (if it exists), THEN apply highlight to the resulting HTML string.
+            // The regex must avoid matching inside href="..." attributes.
+            const highlightRegex = new RegExp(`(${highlightPattern})(?![^<]*>)`, 'gi');
+
             let resultHTML = '';
 
             try {
@@ -151,8 +171,16 @@
                     });
 
                     // Generate HTML with .search-result-item wrapper
+                    // 1. Generate Link first
+                    let resultDe = window.linkTermsInTranslation ? window.linkTermsInTranslation(deData, window.appData.dic_terms_index) : escapeHtmlWithBreaks(deData);
+                    
+                    // 2. Apply Highlight
+                    if (normalizedQuery.length >= 2) {
+                         resultDe = resultDe.replace(highlightRegex, '<span style="color: red;">$1</span>');
+                    }
+
                     resultHTML += `<div class="search-result-item">`;
-                    resultHTML += `<div class="result-a">${window.linkTermsInTranslation ? window.linkTermsInTranslation(deData, window.appData.dic_terms_index) : escapeHtmlWithBreaks(deData)}</div>`;
+                    resultHTML += `<div class="result-a">${resultDe}</div>`;
                     resultHTML += `<div class="result-c">${escapeHtmlWithBreaks(jaData)}</div>`;
                     resultHTML += detailsHTML;
                     resultHTML += `<div class="result-loc">(${segmentCount}件)</div>`;

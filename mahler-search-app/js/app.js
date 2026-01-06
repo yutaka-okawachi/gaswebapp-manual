@@ -1564,6 +1564,7 @@ window.searchRWTermsLocal = function (query) {
 };
 
 // Generic Terms Search Local for RS/RW
+// Generic Terms Search Local for RS/RW
 function searchGenericTermsLocal(query, dataKey, type) {
     const data = window.appData[dataKey];
     if (!data) return '<div class="result-message">データが読み込まれていません。</div>';
@@ -1581,6 +1582,15 @@ function searchGenericTermsLocal(query, dataKey, type) {
     if (filteredData.length === 0) {
         return '<div class="result-message">該当するデータが見つかりませんでした。</div>';
     }
+
+    // Create highlight regex
+    let highlightPattern = normalizedQuery;
+    highlightPattern = highlightPattern.split('ae').join('(?:ae|ä)');
+    highlightPattern = highlightPattern.split('oe').join('(?:oe|ö)');
+    highlightPattern = highlightPattern.split('ue').join('(?:ue|ü)');
+    highlightPattern = highlightPattern.split('ss').join('(?:ss|ß)');
+    
+    const highlightRegex = new RegExp(`(${highlightPattern})(?![^<]*>)`, 'gi');
 
     // Group by 'de' text
     const groupedByDe = filteredData.reduce((acc, row) => {
@@ -1617,8 +1627,16 @@ function searchGenericTermsLocal(query, dataKey, type) {
 
     sortedDeKeys.forEach(de => {
         const itemsForThisDe = groupedByDe[de];
+        // Generate Link first
+        let resultDe = linkTermsInTranslation(de, window.appData.dic_terms_index);
+        
+        // Apply Highlight
+        if (normalizedQuery.length >= 2) {
+             resultDe = resultDe.replace(highlightRegex, '<span style="color: red;">$1</span>');
+        }
+
         html += `<div class="search-result-item">`;
-        html += `<div class="result-a">${linkTermsInTranslation(de, window.appData.dic_terms_index)}</div>`;
+        html += `<div class="result-a">${resultDe}</div>`;
         
         itemsForThisDe.forEach(row => {
             // 各用例ごとに日本語訳を表示（訳語の揺れがわかるように）
