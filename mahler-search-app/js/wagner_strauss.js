@@ -692,31 +692,36 @@ function updateSelectionSummary() {
 
     let detailsText = '';
 
-    // Scene
     if (selectedOpera) {
         const operaValue = selectedOpera.value;
-        // 場面
-        const sceneCheckboxes = document.querySelectorAll(`input[name="${operaValue}-scene"]:checked`);
-        if (sceneCheckboxes.length > 0) {
-             const scenes = Array.from(sceneCheckboxes).map(cb => cb.parentElement.textContent.trim());
-             // 複数ある場合はカンマ区切り、多すぎる場合は省略するなど（現状はベタ書き）
-             const scenesStr = scenes.join(', ');
-             detailsText += `<div class="summary-block"><div class="summary-title">選んだ場面：</div><div class="summary-value">${scenesStr}</div></div>`;
+
+        // Scene: 検索タイプが scene の場合のみ表示
+        if (typeValue === 'scene') {
+            const sceneCheckboxes = document.querySelectorAll(`input[name="${operaValue}-scene"]:checked`);
+            if (sceneCheckboxes.length > 0) {
+                 const scenes = Array.from(sceneCheckboxes).map(cb => cb.parentElement.textContent.trim());
+                 const scenesStr = scenes.join(', ');
+                 detailsText += `<div class="summary-block"><div class="summary-title">選んだ場面：</div><div class="summary-value">${scenesStr}</div></div>`;
+            }
         }
 
-        // 指示対象
-        const whomCheckboxes = document.querySelectorAll(`input[name="${operaValue}-whom"]:checked`);
-        if (whomCheckboxes.length > 0) {
-             const whoms = Array.from(whomCheckboxes).map(cb => cb.value); 
-             const whomsStr = whoms.join(', ');
-             detailsText += `<div class="summary-block"><div class="summary-title">選んだ指示対象：</div><div class="summary-value">${whomsStr}</div></div>`;
+        // Whom: 検索タイプが whom の場合のみ表示
+        if (typeValue === 'whom') {
+            const whomCheckboxes = document.querySelectorAll(`input[name="${operaValue}-whom"]:checked`);
+            if (whomCheckboxes.length > 0) {
+                 const whoms = Array.from(whomCheckboxes).map(cb => cb.value); 
+                 const whomsStr = whoms.join(', ');
+                 detailsText += `<div class="summary-block"><div class="summary-title">選んだ指示対象：</div><div class="summary-value">${whomsStr}</div></div>`;
+            }
         }
     }
 
-    // Page (Opera関係なく入力があれば表示)
-    const pageInput = document.getElementById('page-input');
-    if (pageInput && pageInput.value.trim()) {
-        detailsText += `<div class="summary-block"><div class="summary-title">入力したページ：</div><div class="summary-value">${escapeHtml(pageInput.value.trim())}</div></div>`;
+    // Page: 検索タイプが page の場合のみ表示
+    if (typeValue === 'page') {
+        const pageInput = document.getElementById('page-input');
+        if (pageInput && pageInput.value.trim()) {
+            detailsText += `<div class="summary-block"><div class="summary-title">入力したページ：</div><div class="summary-value">${escapeHtml(pageInput.value.trim())}</div></div>`;
+        }
     }
 
     summaryDiv.innerHTML = `<div class="summary-block"><div class="summary-title">選んだ曲：</div><div class="summary-value">${operaText}</div></div>${detailsText}`;
