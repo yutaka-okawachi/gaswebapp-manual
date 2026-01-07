@@ -41,7 +41,37 @@ document.addEventListener('DOMContentLoaded', () => {
     if (initialChecked) {
         handleOperaSelection({ target: initialChecked });
     }
+
+    // 4. ページ入力の監視
+    const pageInput = document.getElementById('page-input');
+    if (pageInput) {
+        pageInput.addEventListener('input', updateSelectionSummary);
+    }
+    
+    // 5. 初期表示更新
+    updateSelectionSummary();
+    updateFloatingBarOffset();
 });
+
+function updateFloatingBarOffset() {
+    // リサイズやスクロールでオフセットが変わる場合の処理（index.htmlに準拠）
+    // 現状は簡易実装
+    window.visualViewport.addEventListener('resize', () => {
+         // 必要なら再計算
+         adjustFloatingBarSpacing();
+    });
+}
+
+function adjustFloatingBarSpacing() {
+      const floatingBar = document.getElementById('floating-bar');
+      const container = document.querySelector('.container');
+      if (!floatingBar || !container) return;
+
+      const barHeight = floatingBar.offsetHeight;
+      const safeArea = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--safe-area-bottom')) || 0;
+      const offset = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--floating-bar-offset')) || 0;
+      container.style.paddingBottom = (barHeight + 40 + safeArea + offset) + 'px';
+}
 
 /**
  * オペラ（曲名）が選択されたときの処理
@@ -50,11 +80,13 @@ async function handleOperaSelection(event) {
     const operaValue = event.target.value;
     const composer = (document.title.includes('Wagner') || document.title.includes('RW')) ? 'richard_wagner' : 'richard_strauss';
 
-    // 曲名を選択したら「検索方法を選択」のバーが画面最上部に来るようにスクロール
+    // 曲名を選んだ際のスクロール挙動（自動スクロール）は廃止
+    /*
     const searchMethodContainer = document.getElementById('search-method-container');
     if (searchMethodContainer) {
         searchMethodContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
+    */
 
     setResults('');
 
@@ -121,6 +153,8 @@ async function handleOperaSelection(event) {
     
     // Build Whom (Target) checkboxes
     buildWhomCheckboxes(operaValue);
+    
+    updateSelectionSummary();
 }
 
 /**
@@ -166,7 +200,17 @@ function buildSceneCheckboxes(operaValue, sceneOptionsData) {
                 } else if (cb.value !== 'all' && cb.checked && allCheckbox) {
                     allCheckbox.checked = false;
                 }
+                updateSelectionSummary();
             });
+        });
+        // allCheckboxにもリスナー追加
+        if (allCheckbox) {
+             allCheckbox.addEventListener('change', updateSelectionSummary);
+        }
+    } else {
+        // 場面が1つしかない場合などもリスナー追加
+        sceneCheckboxes.forEach(cb => {
+            cb.addEventListener('change', updateSelectionSummary);
         });
     }
 }
@@ -180,6 +224,8 @@ function handleSearchTypeSelection(event) {
     document.getElementById('page-selection-container').style.display = type === 'page' ? 'block' : 'none';
     const whomContainer = document.getElementById('whom-selection-container');
     if (whomContainer) whomContainer.style.display = type === 'whom' ? 'block' : 'none';
+    
+    updateSelectionSummary();
 }
 
 /**
@@ -405,12 +451,14 @@ function clearScenes() {
         cb.checked = false;
     });
     setResults('');
+    updateSelectionSummary();
 }
 
 function clearPageInput() {
     const pageInput = document.getElementById('page-input');
     if (pageInput) pageInput.value = '';
     setResults('');
+    updateSelectionSummary();
 }
 
 /**
@@ -483,6 +531,12 @@ function buildWhomCheckboxes(operaValue) {
     });
 
     wrapper.appendChild(checkboxGroup);
+    
+    // Checkbox change listener for Summary
+    const whomCheckboxes = wrapper.querySelectorAll(`input[name="${operaValue}-whom"]`);
+    whomCheckboxes.forEach(cb => {
+        cb.addEventListener('change', updateSelectionSummary);
+    });
 }
 
 function searchByWhom() {
@@ -570,6 +624,7 @@ function clearWhom() {
         cb.checked = false;
     });
     setResults('');
+    updateSelectionSummary();
 }
 
 // Helper for setResults if not in app.js or common
@@ -600,4 +655,71 @@ function injectMottlNote(html, operaValue) {
     // <div class="score-info-banner">...</div> の後ろに挿入したい
     // 正規表現でマッチ
     return html.replace(/(<div class="score-info-banner">.*?<\/div>)/s, '$1' + noteHtml);
+}
+
+/**
+ * フローティングバーの「検索」ボタンから呼び出される関数
+ */
+function performCurrentSearch() {
+    const selectedType = document.querySelector('input[name="search-type"]:checked');
+    if (!selectedType) {
+        setResults('<div class="result-message">検索方法を選択してください。</div>');
+        return;
+    }
+    const type = selectedType.value;
+    if (type === 'scene') searchByScene();
+    else if (type === 'page') searchByPage();
+    else if (type === 'whom') searchByWhom();
+}
+
+/**
+ * 選択状況のサマリーを更新する
+ */
+function updateSelectionSummary() {
+    const summaryDiv = document.getElementById('selection-summary');
+    if (!summaryDiv) return;
+
+    // 1. 曲名
+    const selectedOpera = document.querySelector('input[name="opera"]:checked');
+    let operaText = 'なし';
+    if (selectedOpera) {
+        operaText = selectedOpera.parentElement.textContent.trim();
+    }
+
+    // 2. 検索方法に基づく詳細
+    const selectedType = document.querySelector('input[name="search-type"]:checked');
+    const typeValue = selectedType ? selectedType.value : null;
+
+    let detailsText = '';
+
+    // Scene
+    if (selectedOpera) {
+        const operaValue = selectedOpera.value;
+        // 場面
+        const sceneCheckboxes = document.querySelectorAll(`input[name="${operaValue}-scene"]:checked`);
+        if (sceneCheckboxes.length > 0) {
+             const scenes = Array.from(sceneCheckboxes).map(cb => cb.parentElement.textContent.trim());
+             // 複数ある場合はカンマ区切り、多すぎる場合は省略するなど（現状はベタ書き）
+             const scenesStr = scenes.join(', ');
+             detailsText += `<div class="summary-block"><div class="summary-title">選んだ場面：</div><div class="summary-value">${scenesStr}</div></div>`;
+        }
+
+        // 指示対象
+        const whomCheckboxes = document.querySelectorAll(`input[name="${operaValue}-whom"]:checked`);
+        if (whomCheckboxes.length > 0) {
+             const whoms = Array.from(whomCheckboxes).map(cb => cb.value); 
+             const whomsStr = whoms.join(', ');
+             detailsText += `<div class="summary-block"><div class="summary-title">選んだ指示対象：</div><div class="summary-value">${whomsStr}</div></div>`;
+        }
+    }
+
+    // Page (Opera関係なく入力があれば表示)
+    const pageInput = document.getElementById('page-input');
+    if (pageInput && pageInput.value.trim()) {
+        detailsText += `<div class="summary-block"><div class="summary-title">入力したページ：</div><div class="summary-value">${escapeHtml(pageInput.value.trim())}</div></div>`;
+    }
+
+    summaryDiv.innerHTML = `<div class="summary-block"><div class="summary-title">選んだ曲：</div><div class="summary-value">${operaText}</div></div>${detailsText}`;
+    
+    adjustFloatingBarSpacing();
 }

@@ -28,6 +28,106 @@
             font-weight: 600;
             color: #1f2328;
         }
+
+        :root {
+          --safe-area-bottom: env(safe-area-inset-bottom, 0px);
+          --floating-bar-offset: 0px;
+        }
+
+        /* --- フローティング検索バー --- */
+        #floating-bar {
+          position: fixed;
+          bottom: calc(var(--safe-area-bottom) + var(--floating-bar-offset));
+          left: 0;
+          width: 100%;
+          background-color: rgba(255, 255, 255, 0.98);
+          padding: 10px 15px calc(10px + var(--safe-area-bottom)) 15px;
+          box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.15);
+          display: flex;
+          flex-wrap: nowrap;
+          align-items: stretch;
+          gap: 12px;
+          z-index: 1000;
+          font-weight: normal;
+          color: #333;
+          max-height: 24vh;
+          min-height: 120px;
+          overflow: hidden;
+        }
+
+        #floating-bar .button-group {
+          display: flex;
+          flex-direction: column;
+          gap: 8px;
+          align-items: stretch;
+          flex: 0 0 auto;
+        }
+
+        #floating-bar button {
+          font-weight: normal;
+        }
+
+        #floating-bar .button-group button {
+          min-width: 110px;
+        }
+
+        #selection-summary {
+          flex: 1 1 auto;
+          padding: 10px;
+          display: flex;
+          flex-direction: column;
+          gap: 10px;
+          word-break: break-word;
+          font-family: Georgia, serif;
+          font-size: 0.8em;
+          text-align: left;
+          align-items: flex-start;
+          overflow-y: auto;
+        }
+
+        #selection-summary .summary-block {
+          width: 100%;
+        }
+
+        #selection-summary .summary-title {
+          font-weight: normal;
+          text-align: left;
+          font-size: 0.9em;
+        }
+
+        #selection-summary .summary-value {
+          margin-top: 4px;
+          text-align: left;
+          line-height: 1.5;
+        }
+
+        @media (max-width: 600px) {
+          #floating-bar {
+            flex-direction: row;
+            align-items: stretch;
+            gap: 10px;
+            max-height: 28vh;
+          }
+
+          #selection-summary {
+            width: auto;
+            max-height: 22vh;
+          }
+
+          #floating-bar .button-group {
+            order: 0;
+            flex-direction: column;
+            justify-content: flex-start;
+            flex-wrap: nowrap;
+            gap: 8px;
+            width: auto;
+          }
+
+          #floating-bar .button-group button {
+            flex: 0 0 auto;
+            min-width: 120px;
+          }
+        }
     </style>
 </head>
 
@@ -148,7 +248,15 @@
             </div>
         </div>
 
-        <div id="results"></div>
+    <div id="results"></div>
+
+    <!-- フローティング検索バー -->
+    <div id="floating-bar">
+      <div id="selection-summary"></div>
+      <div class="button-group">
+        <button type="button" onclick="performCurrentSearch()" class="btn-action">検索</button>
+        <button type="button" onclick="cancelSearch()" class="btn-danger">中止</button>
+      </div>
     </div>
 
     <div id="scrollToTop" onclick="scrollToTop()">▲ ページのトップへ戻る</div>
