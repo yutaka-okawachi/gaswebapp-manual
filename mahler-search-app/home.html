@@ -87,9 +87,9 @@
         /* Header */
         header.main-header {
             text-align: center;
-            margin-bottom: 60px;
+            margin-bottom: 40px;
             border-bottom: 1px solid var(--border-color);
-            padding-bottom: 40px;
+            padding-bottom: 20px;
         }
 
         h1 {
@@ -116,7 +116,7 @@
         .composers-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 30px;
+            gap: 20px;
             margin-bottom: 40px;
         }
 
@@ -127,7 +127,7 @@
             /* border-left: 4px solid var(--accent-color);  Using specific colors below */
             border-radius: 8px;
             /* Slightly adjusted to look good with straight left border if needed, or keep rounded */
-            padding: 30px;
+            padding: 20px;
             display: flex;
             flex-direction: column;
             position: relative;
@@ -174,7 +174,7 @@
             font-size: 1.3rem;
             /* Reduced from 1.5rem */
             font-weight: 600;
-            margin: 0 0 20px 0;
+            margin: 0 0 10px 0;
             color: var(--text-color);
             z-index: 1;
             display: inline-block;
@@ -421,7 +421,7 @@
             <div class="subtitle"
                 style="max-width: 800px; margin: 20px auto 0; line-height: 1.8; text-align: left; font-size: 0.95rem;">
                 <p>Richard Wagner，Gustav Mahler，Richard Strauss
-                    のスコアに記されたドイツ語の指示（および日本語訳）を検索するためのサイト．楽劇，交響曲，オペラの「舞台指示」「歌唱指示」「演奏指示」が検索可能．検索結果の用語ごとのリンクから，各用語についての詳細な意味も参照可能．
+                    のスコアに記されたドイツ語の指示（および日本語訳）を検索するためのサイト．楽劇，交響曲，オペラの「舞台指示」「歌唱指示」「演奏指示」を検索．検索結果の用語ごとのリンクから，各用語についての詳細な意味も参照可能．
                 </p>
             </div>
         </header>
@@ -507,12 +507,19 @@
         </div>
 
         <!-- Dictionary Section -->
-        <div class="full-width-section dic-section">
-            <div class="content">
-                <h2>用語集</h2>
-                <p style="margin-bottom: 15px; line-height: 1.6;">
-                    収録されているドイツ語についての「一般的な意味」および「音楽用語としての意味」を収録した簡易辞書．
-                    気になった用語を集めただけであり，採用している用語，出典は網羅的ではない．</p>
+        <div class="home-card dic-section" data-initial="D" style="margin-bottom: 20px;">
+            <div class="content" style="width: 100%;">
+                <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+                    <div>
+                        <h2 style="margin: 0;">用語集</h2>
+                    </div>
+                    <div class="action">
+                        <a href="dic.html" class="btn-primary">👉 用語集ページへ</a>
+                    </div>
+                </div>
+                <p style="margin: 15px 0; line-height: 1.6;">
+                    収録されているドイツ語についての「一般的な意味」および「音楽用語としての意味」を収録した簡易辞書．気になった用語を集めただけであり，採用している用語，出典は網羅的ではない．
+                </p>
                 <div style="margin-top: 10px;">
                     <ul style="list-style: disc; margin-left: 20px; background: none; border: none; padding: 0;">
                         <li>RW, GM, RS</li>
@@ -523,10 +530,6 @@
                 </div>
             </div>
         </div>
-        <div class="action">
-            <a href="dic.html" class="btn-primary">👉 用語集ページへ</a>
-        </div>
-    </div>
 
     <!-- Other Section -->
     <div class="home-card other-card" data-initial="O">

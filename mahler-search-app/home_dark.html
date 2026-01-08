@@ -70,11 +70,11 @@
         /* Header */
         header.main-header {
             text-align: center;
-            margin-bottom: 80px;
+            margin-bottom: 40px;
             position: relative;
         }
 
-        /* Gold underline decoration */
+        /* Golden underline decoration */
         header.main-header::after {
             content: '';
             display: block;
@@ -108,7 +108,7 @@
         .composers-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 40px;
+            gap: 20px;
             margin-bottom: 60px;
         }
 
@@ -117,7 +117,7 @@
             background: var(--card-glass);
             border: 1px solid var(--card-border);
             border-radius: 4px;
-            padding: 40px 30px;
+            padding: 20px;
             transition: all 0.4s ease;
             display: flex;
             flex-direction: column;
@@ -137,7 +137,7 @@
             font-family: 'Playfair Display', serif;
             font-size: 2rem;
             font-weight: 400;
-            margin: 0 0 20px 0;
+            margin: 0 0 10px 0;
             color: var(--text-main);
             text-align: center;
             letter-spacing: 0.05em;
@@ -320,7 +320,7 @@
             <h1>ドイツ語音楽用語検索</h1>
             <div class="subtitle">German Music Terms Dictionary</div>
             <div style="max-width: 800px; margin: 30px auto 0; text-align: left; color: var(--text-main); opacity: 0.9;">
-                <p>Richard Wagner，Gustav Mahler，Richard Strauss のスコアに記されたドイツ語の指示（および日本語訳）を検索するためのサイト．楽劇，交響曲，オペラの「舞台指示」「歌唱指示」「演奏指示」が検索可能．検索結果の用語ごとのリンクから，各用語についての詳細な意味も参照可能．</p>
+                <p>Richard Wagner，Gustav Mahler，Richard Strauss のスコアに記されたドイツ語の指示（および日本語訳）を検索するためのサイト．楽劇，交響曲，オペラの「舞台指示」「歌唱指示」「演奏指示」を検索．検索結果の用語ごとのリンクから，各用語についての詳細な意味も参照可能．</p>
             </div>
         </header>
 
@@ -362,15 +362,17 @@
             </div>
         </div>
 
-        <div class="dic-section">
-            <h2>Dictionary</h2>
-            <p style="max-width: 800px; margin: 0 auto 30px; color: var(--text-muted);">
-                収録されているドイツ語についての「一般的な意味」および「音楽用語としての意味」を収録．各検索ページの検索結果から用語をクリックすることで用語の意味を参照可能．
-            </p>
-            <div>
-                <a href="dic.html" class="btn-gold">Enter Dictionary</a>
+        <div class="dic-section" style="padding: 20px; text-align: left;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <h2 style="margin: 0;">Dictionary</h2>
+                <div>
+                    <a href="dic.html" class="btn-gold" style="padding: 10px 20px; font-size: 0.9rem;">Enter Dictionary</a>
+                </div>
             </div>
-            <div class="note-block">
+            <p style="max-width: none; margin: 0 0 20px 0; color: var(--text-muted);">
+                収録されているドイツ語についての「一般的な意味」および「音楽用語としての意味」を収録した簡易辞書．気になった用語を集めただけであり，採用している用語，出典は網羅的ではない．
+            </p>
+            <div class="note-block" style="margin-top: 0;">
                 Includes: Anton Bruckner, Paul Hindemith, Sigfrid Karg-Elert
             </div>
         </div>
