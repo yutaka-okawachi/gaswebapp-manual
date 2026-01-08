@@ -1,10 +1,5 @@
 **/manage_deploy.js
 **/update_env.js
-**/setup_credentials.js
-**/setup_manual.js
-**/github_sync.js
-**/export_json.js
-**/generate_dic_html.js
 **/test_runner.js
 **/node_modules/**
 .git/**
