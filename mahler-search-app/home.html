@@ -33,17 +33,21 @@
     <style>
         :root {
             /* Palette */
-            --bg-color: #f0f8ff; /* AliceBlue to match richard_strauss.html (common.css) */
-            
+            --bg-color: #f0f8ff;
+            /* AliceBlue to match richard_strauss.html (common.css) */
+
             --text-color: #1a2c42;
             /* Deep Navy */
             --accent-color: #c44536;
             /* Subtle geometric red for accents */
-            
+
             /* Composer Themes */
-            --wagner-color: #d4af37; /* Gold */
-            --mahler-color: #8b0000; /* Dark Red */
-            --strauss-color: #4682b4; /* Steel Blue */
+            --wagner-color: #d4af37;
+            /* Gold */
+            --mahler-color: #8b0000;
+            /* Dark Red */
+            --strauss-color: #4682b4;
+            /* Steel Blue */
 
             --card-bg: #ffffff;
             --border-color: #e0e0e0;
@@ -121,7 +125,8 @@
             background: var(--card-bg);
             border: 1px solid var(--border-color);
             /* border-left: 4px solid var(--accent-color);  Using specific colors below */
-            border-radius: 8px; /* Slightly adjusted to look good with straight left border if needed, or keep rounded */
+            border-radius: 8px;
+            /* Slightly adjusted to look good with straight left border if needed, or keep rounded */
             padding: 30px;
             display: flex;
             flex-direction: column;
@@ -129,23 +134,28 @@
             overflow: hidden;
             /* Main card hover effect removed to focus focus on sub-cards */
         }
-        
+
         /* Composer Specific Accents */
         /* Composer Specific Accents */
         .home-card[data-initial="RW"] {
             border-left: 5px solid var(--wagner-color);
         }
+
         .home-card[data-initial="GM"] {
             border-left: 5px solid var(--mahler-color);
         }
+
         .home-card[data-initial="RS"] {
             border-left: 5px solid var(--strauss-color);
         }
+
         /* Other / Dic Card Accents */
-        .home-card[data-initial="D"], .home-card[data-initial="O"] {
-            border-left: 5px solid var(--secondary-text); /* Gray/Slate */
+        .home-card[data-initial="D"],
+        .home-card[data-initial="O"] {
+            border-left: 5px solid var(--secondary-text);
+            /* Gray/Slate */
         }
-        
+
         /* Composer Initial Background */
         .home-card::before {
             content: attr(data-initial);
@@ -161,7 +171,8 @@
 
         .home-card h2 {
             font-family: 'Lora', serif;
-            font-size: 1.3rem; /* Reduced from 1.5rem */
+            font-size: 1.3rem;
+            /* Reduced from 1.5rem */
             font-weight: 600;
             margin: 0 0 20px 0;
             color: var(--text-color);
@@ -193,7 +204,8 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 12px 16px; /* Reduced padding */
+            padding: 12px 16px;
+            /* Reduced padding */
             background: #3b5275;
             /* Lighter navy as requested */
             border: 1px solid transparent;
@@ -223,7 +235,8 @@
         }
 
         .link-card .icon {
-            font-size: 1.1rem; /* Reduced from 1.2rem */
+            font-size: 1.1rem;
+            /* Reduced from 1.2rem */
             margin-right: 12px;
             color: #fff;
             opacity: 0.9;
@@ -236,7 +249,8 @@
         .link-card .text {
             font-weight: 500;
             /* Slightly reduced weight for better readability on dark bg */
-            font-size: 0.9rem; /* Reduced from 1rem */
+            font-size: 0.9rem;
+            /* Reduced from 1rem */
             font-family: 'Lora', serif;
         }
 
@@ -317,13 +331,15 @@
             background-color: #3b5275;
             /* Lighter navy as requested */
             color: #fff;
-            padding: 10px 20px; /* Reduced padding */
+            padding: 10px 20px;
+            /* Reduced padding */
             border-radius: 4px;
             text-decoration: none;
             font-weight: 500;
             transition: background-color 0.2s;
             font-family: 'Lora', serif;
-            font-size: 0.95rem; /* Slightly smaller font */
+            font-size: 0.95rem;
+            /* Slightly smaller font */
         }
 
         .btn-primary:hover {
@@ -402,17 +418,26 @@
     <div class="page-wrapper">
         <header class="main-header">
             <h1>ドイツ語の音楽用語</h1>
+            <div class="subtitle"
+                style="max-width: 800px; margin: 20px auto 0; line-height: 1.8; text-align: left; font-size: 0.95rem;">
+                <p>Richard Wagner，Gustav Mahler，Richard Strauss
+                    のスコアに記されたドイツ語の指示（および日本語訳）を検索するためのサイト．楽劇，交響曲，オペラの「舞台指示」「歌唱指示」「演奏指示」が検索可能．検索結果の用語ごとのリンクから，各用語についての詳細な意味も参照可能．
+                </p>
+            </div>
         </header>
 
         <div class="composers-grid">
             <!-- Wagner Card -->
             <div class="home-card" data-initial="RW">
                 <h2>Richard Wagner (RW)</h2>
+                <p style="font-size: 0.9rem; color: var(--secondary-text); margin-bottom: 20px; line-height: 1.6;">
+                    ほぼすべての楽劇の舞台指示や歌唱指示を収録．「曲名・場面・スコアのページ・指示対象（登場人物）」を横断的に検索可能．
+                </p>
                 <div class="links-container">
                     <a href="richard_wagner.html" class="link-card">
                         <div class="content-wrapper">
-                            <span class="icon">🪈</span>
-                            <span class="text">曲名から検索</span>
+                            <sspan class="icon">🪈</span>
+                                <span class="text">曲名から検索</span>
                         </div>
                         <span class="arrow">&rarr;</span>
                     </a>
@@ -429,6 +454,9 @@
             <!-- Mahler Card -->
             <div class="home-card" data-initial="GM">
                 <h2>Gustav Mahler (GM)</h2>
+                <p style="font-size: 0.9rem; color: var(--secondary-text); margin-bottom: 20px; line-height: 1.6;">
+                    全交響曲および主要な管弦楽曲について収録．どの曲のどの部分で，どの楽器に対して記されたものかを横断的に検索可能．
+                </p>
                 <div class="links-container">
                     <a href="index.html" class="link-card">
                         <div class="content-wrapper">
@@ -450,6 +478,9 @@
             <!-- Strauss Card -->
             <div class="home-card" data-initial="RS">
                 <h2>Richard Strauss (RS)</h2>
+                <p style="font-size: 0.9rem; color: var(--secondary-text); margin-bottom: 20px; line-height: 1.6;">
+                    ほぼすべてのオペラの舞台指示や歌唱指示を収録．「曲名・場面・スコアのページ・指示対象（登場人物）」を横断的に検索可能．
+                </p>
                 <div class="links-container">
                     <a href="richard_strauss.html" class="link-card">
                         <div class="content-wrapper">
@@ -471,7 +502,7 @@
 
         <!-- Warning Note -->
         <div class="global-note">
-            <p>⚠️ RW，RSのページでは主に舞台指示および声楽に対する指示が含まれている．オーケストラに対する指示で GM の用語検索ページで何とかなりそうなものや，イタリア語，フランス語は基本的に不採用．</p>
+            <p>⚠️ RW，RSのページでは，オーケストラに対する指示で GM の用語検索ページで何とかなりそうなものや，イタリア語，フランス語は基本的に不採用としている．</p>
             <p style="margin-top: 10px;">⚠️ 歌詞には非対応．優れた訳が数多く出回っているのでそちらを参照．</p>
         </div>
 
@@ -479,36 +510,36 @@
         <div class="full-width-section dic-section">
             <div class="content">
                 <h2>用語集</h2>
-                <div>
-                    <p><strong>📖 収録している作曲家</strong></p>
-                    <p>気になった用語を集めただけであり，採用している用語，出典は網羅的ではない．</p>
-                    <div style="margin-top: 10px;">
-                        <ul style="list-style: disc; margin-left: 20px; background: none; border: none; padding: 0;">
-                            <li>RW, GM, RS</li>
-                            <li>Anton Bruckner</li>
-                            <li>Paul Hindemith</li>
-                            <li>Sigfrid Karg-Elert</li>
-                        </ul>
-                    </div>
+                <p style="margin-bottom: 15px; line-height: 1.6;">
+                    収録されているドイツ語についての「一般的な意味」および「音楽用語としての意味」を収録した簡易辞書．
+                    気になった用語を集めただけであり，採用している用語，出典は網羅的ではない．</p>
+                <div style="margin-top: 10px;">
+                    <ul style="list-style: disc; margin-left: 20px; background: none; border: none; padding: 0;">
+                        <li>RW, GM, RS</li>
+                        <li>Anton Bruckner</li>
+                        <li>Paul Hindemith</li>
+                        <li>Sigfrid Karg-Elert</li>
+                    </ul>
                 </div>
+            </div>
+        </div>
+        <div class="action">
+            <a href="dic.html" class="btn-primary">👉 用語集ページへ</a>
+        </div>
+    </div>
+
+    <!-- Other Section -->
+    <div class="home-card other-card" data-initial="O">
+        <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+            <div>
+                <h2>その他</h2>
+                <!-- <p>Information about scores and data sources.</p> -->
             </div>
             <div class="action">
-                <a href="dic.html" class="btn-primary">👉 用語集ページへ</a>
+                <a href="other.html" class="btn-primary">👉 使用楽譜など</a>
             </div>
         </div>
-
-        <!-- Other Section -->
-        <div class="home-card other-card" data-initial="O">
-            <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
-                <div>
-                    <h2>その他</h2>
-                    <!-- <p>Information about scores and data sources.</p> -->
-                </div>
-                <div class="action">
-                    <a href="other.html" class="btn-primary">👉 使用楽譜など</a>
-                </div>
-            </div>
-        </div>
+    </div>
     </div>
 
     <script>
