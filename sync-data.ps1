@@ -174,6 +174,30 @@ if ($runFailed) {
     # Web App経由で実行を試みる
     Write-Host ""
     Write-Host "→ Falling back to Web App method..." -ForegroundColor Yellow
+    
+    # ★★★ Deploymentの自動更新 (Auto-Deploy) ★★★
+    Write-Host "Updating Web App deployment to ensure latest code is used..." -ForegroundColor Cyan
+    Push-Location "src"
+    try {
+        # nodeコマンドの出力を表示しながら実行
+        cmd /c "node manage_deploy.js"
+        cmd /c "node update_env.js"
+    } catch {
+        Write-Warning "Failed to update deployment: $_"
+    } finally {
+        Pop-Location
+    }
+    
+    # .envの再読み込み (新しいURLを反映するため)
+    if (Test-Path ".env") {
+        Write-Host "Reloading .env..." -ForegroundColor Gray
+        Get-Content .env | ForEach-Object {
+            if ($_ -match "^\s*([^#\s][^=]*)\s*=\s*(.*)$") {
+                Set-Item -Path "env:$($matches[1].Trim())" -Value $matches[2].Trim()
+            }
+        }
+    }
+
     Write-Host ""
     
     # Web App環境変数をチェック
