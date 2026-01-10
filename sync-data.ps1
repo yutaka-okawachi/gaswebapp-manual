@@ -85,20 +85,34 @@ if ($gasChanges) {
         # 権限エラーを検出
         if ($pushOutput -match "permission|unauthorized|credentials|not logged in|Insufficient") {
             Write-Host ""
-            Write-Warning "⚠ clasp push failed: Authentication error detected."
+            Write-Error "❌ clasp push failed: Authentication error detected."
+            Write-Host "Your Google Apps Script credentials have expired or are missing." -ForegroundColor Yellow
+            Write-Host "Code changes in 'src/' cannot be uploaded without logging in." -ForegroundColor Yellow
             Write-Host ""
-            Write-Host "This usually means clasp is logged in with a different Google account." -ForegroundColor Gray
-            Write-Host "The script will continue using Web App for GAS function execution." -ForegroundColor Gray
-            Write-Host ""
-            Write-Host "To fix authentication (optional):" -ForegroundColor Cyan
-            Write-Host "  1. cd src" -ForegroundColor White
-            Write-Host "  2. clasp logout" -ForegroundColor White
-            Write-Host "  3. clasp login" -ForegroundColor White
-            Write-Host "  4. Select the correct Google account (pistares@gmail.com)" -ForegroundColor White
-            Write-Host ""
-            Pop-Location
-            # エラーで停止せず、警告として続行
-            Write-Host "⚠ Skipping clasp push. GAS files will not be updated." -ForegroundColor Yellow
+
+            # ユーザーにログインを促す
+            $loginChoice = Read-Host "Do you want to run 'clasp login' now? (Y to login, N to abort)"
+            if ($loginChoice -match "^[Yy]") {
+                Write-Host "Running 'clasp login'... (A browser tab will open)" -ForegroundColor Cyan
+                clasp login
+                
+                Write-Host "Retrying clasp push..." -ForegroundColor Cyan
+                # 再試行
+                $pushOutput = clasp push -f 2>&1
+                if ($LASTEXITCODE -eq 0) {
+                    Write-Host "✓ GAS source updated successfully (Retry)." -ForegroundColor Green
+                    Pop-Location
+                } else {
+                    Write-Error "❌ clasp push failed again."
+                    Write-Host "Error output: $($pushOutput | Out-String)" -ForegroundColor DarkGray
+                    Pop-Location
+                    exit 1
+                }
+            } else {
+                Write-Host "Aborted. Please run 'cd src; clasp login' manually." -ForegroundColor Red
+                Pop-Location
+                exit 1
+            }
         } else {
             # 認証以外のエラー
             Write-Host ""
