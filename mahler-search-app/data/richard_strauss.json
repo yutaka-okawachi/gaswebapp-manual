@@ -78,7 +78,7 @@
     "page": 20,
     "whom": "Guntram",
     "de": "Als letzter tritt Friedhold auf, der sich, von den Übrigen getrennt, am Ufer des See's  niederlässt.",
-    "de_normalized": "als letzter tritt friedhold auf, der sich, von den übrigen getrennt, am ufer des see's  niederlaesst.",
+    "de_normalized": "als letzter tritt friedhold auf, der sich, von den uebrigen getrennt, am ufer des see's  niederlaesst.",
     "ja": "最後に Friedhold が現れ，他の者たちから離れて湖の岸辺に腰を下ろす．",
     "楽譜情報": "Adolph Fürstner A. 9027 F.",
     "場面タイトル": "第1幕第1場"
@@ -3678,7 +3678,7 @@
     "page": 433,
     "whom": "Orchester",
     "de": "bis zum Äussersten beschleunigen",
-    "de_normalized": "bis zum äussersten beschleunigen",
+    "de_normalized": "bis zum aeussersten beschleunigen",
     "ja": "極限まで加速して",
     "楽譜情報": "Adolph Fürstner A. 9027 F.",
     "場面タイトル": "第3幕第2場"
@@ -6918,7 +6918,7 @@
     "page": 188,
     "whom": "Diemut",
     "de": "sie lässt den langen Zipfel ihres Ärmels über die Brüstung hängen",
-    "de_normalized": "sie laesst den langen zipfel ihres ärmels ueber die bruestung haengen",
+    "de_normalized": "sie laesst den langen zipfel ihres aermels ueber die bruestung haengen",
     "ja": "彼女は長い袖の先を欄干から垂らす．",
     "楽譜情報": "Adolph Fürstner A. 9028 F.",
     "場面タイトル": "全1幕"
@@ -6930,7 +6930,7 @@
     "page": 189,
     "whom": "Diemut",
     "de": "Diemut streift den Ärmel zurück und streckt, sich vornüber beugend, den Arm hinunter.",
-    "de_normalized": "diemut streift den ärmel zurueck und streckt, sich vornueber beugend, den arm hinunter.",
+    "de_normalized": "diemut streift den aermel zurueck und streckt, sich vornueber beugend, den arm hinunter.",
     "ja": "Diemut は袖をまくり上げ，前かがみになって腕を下へ伸ばす．",
     "楽譜情報": "Adolph Fürstner A. 9028 F.",
     "場面タイトル": "全1幕"
@@ -9438,7 +9438,7 @@
     "page": 294,
     "whom": "Orchester",
     "de": "Dieser Ton, statt auf das Griffbrett aufgedrückt zu werden, ist zwischen Daumen und Zeigefinger fest zusammenzuklemmen; mit dem Bogen ein ganz kurzer, scharfer Strich, sodass ein Ton erzeugt wird, der dem unterdrückten Stöhnen und Ächzen eines Weihes ähnelt.",
-    "de_normalized": "dieser ton, statt auf das griffbrett aufgedrueckt zu werden, ist zwischen daumen und zeigefinger fest zusammenzuklemmen; mit dem bogen ein ganz kurzer, scharfer strich, sodass ein ton erzeugt wird, der dem unterdrueckten stoehnen und ächzen eines weihes aehnelt.",
+    "de_normalized": "dieser ton, statt auf das griffbrett aufgedrueckt zu werden, ist zwischen daumen und zeigefinger fest zusammenzuklemmen; mit dem bogen ein ganz kurzer, scharfer strich, sodass ein ton erzeugt wird, der dem unterdrueckten stoehnen und aechzen eines weihes aehnelt.",
     "ja": "この音は，指板に押しつけるのではなく，親指と人差し指の間で固く挟み込むこと．弓でごく短く．鋭いボウイングを行うことで．トビ（あるいはチュウヒ）が喉を詰まらせて呻き，喘ぐような音を作り出さねばならない．",
     "楽譜情報": "Adolph Fürstner A. 5500 F.",
     "場面タイトル": "第4場"
@@ -12198,7 +12198,7 @@
     "page": 312,
     "whom": "Ägisth",
     "de": "Ägisth tritt rechts durch die Hoftür auf.",
-    "de_normalized": "ägisth tritt rechts durch die hoftuer auf.",
+    "de_normalized": "aegisth tritt rechts durch die hoftuer auf.",
     "ja": "Ägisth が右手中庭の戸口から登場する．",
     "楽譜情報": "Adolph Fürstner A. 5650 5661 F.",
     "場面タイトル": "全1幕"
@@ -12234,7 +12234,7 @@
     "page": 313,
     "whom": "Ägisth",
     "de": "Ägisth erschrickt vor der wirren Gestalt im zuckenden Licht, weicht zurück.",
-    "de_normalized": "ägisth erschrickt vor der wirren gestalt im zuckenden licht, weicht zurueck.",
+    "de_normalized": "aegisth erschrickt vor der wirren gestalt im zuckenden licht, weicht zurueck.",
     "ja": "Ägisth は揺らめく光の中の錯乱した姿（Elektra）に驚き，後ずさる．",
     "楽譜情報": "Adolph Fürstner A. 5650 5661 F.",
     "場面タイトル": "全1幕"
@@ -12330,7 +12330,7 @@
     "page": 319,
     "whom": "Ägisth",
     "de": "Ägisth geht in's Haus.",
-    "de_normalized": "ägisth geht in's haus.",
+    "de_normalized": "aegisth geht in's haus.",
     "ja": "Ägisth は宮殿の中へ入る．",
     "楽譜情報": "Adolph Fürstner A. 5650 5661 F.",
     "場面タイトル": "全1幕"
@@ -15318,7 +15318,7 @@
     "page": 112,
     "whom": "フルーティスト, 従僕たち, 美容師, 美容師の助手, 元帥婦人, 伝令, 家令",
     "de": "Der Flötist ist inzwischen vorgetreten und beginnt seine Cadenz. Die Lakaien haben rechts ganz vorne Stellung genommen, andere stehen im Hintergrunde. Nach einer kurzen Überlegung hat der Friseur seinen Plan gefaßt, er eilt mit Entschlossenheit auf Marschallin zu, beginnt zu frisieren. Ein Lauffer in rosa, schwarz und silber, tritt auf, überbringt ein Billet. Haushofmeister mit Silbertablett ist schnell zur Hand, präsentiert es der Marschallin. Friseur hält inne, sie lesen zu lassen. Gehilfe reicht ihm ein neues Eisen, Friseur schwenkt es: es ist zu heiß. Gehilfe reicht ihm nach fragendem Blick der Marschallin, die nickt, das Billet, das er lächelnd verwendet, um das Eisen zu kühlen.",
-    "de_normalized": "der floetist ist inzwischen vorgetreten und beginnt seine cadenz. die lakaien haben rechts ganz vorne stellung genommen, andere stehen im hintergrunde. nach einer kurzen überlegung hat der friseur seinen plan gefasst, er eilt mit entschlossenheit auf marschallin zu, beginnt zu frisieren. ein lauffer in rosa, schwarz und silber, tritt auf, ueberbringt ein billet. haushofmeister mit silbertablett ist schnell zur hand, praesentiert es der marschallin. friseur haelt inne, sie lesen zu lassen. gehilfe reicht ihm ein neues eisen, friseur schwenkt es: es ist zu heiss. gehilfe reicht ihm nach fragendem blick der marschallin, die nickt, das billet, das er laechelnd verwendet, um das eisen zu kuehlen.",
+    "de_normalized": "der floetist ist inzwischen vorgetreten und beginnt seine cadenz. die lakaien haben rechts ganz vorne stellung genommen, andere stehen im hintergrunde. nach einer kurzen ueberlegung hat der friseur seinen plan gefasst, er eilt mit entschlossenheit auf marschallin zu, beginnt zu frisieren. ein lauffer in rosa, schwarz und silber, tritt auf, ueberbringt ein billet. haushofmeister mit silbertablett ist schnell zur hand, praesentiert es der marschallin. friseur haelt inne, sie lesen zu lassen. gehilfe reicht ihm ein neues eisen, friseur schwenkt es: es ist zu heiss. gehilfe reicht ihm nach fragendem blick der marschallin, die nickt, das billet, das er laechelnd verwendet, um das eisen zu kuehlen.",
     "ja": "その間にフルート奏者が前へ進み出てカデンツァを吹き始める．従僕たちは右手の最前列に陣取り，他の者たちは後方に立っている．少し考えた後，美髪師は意を決し，元帥夫人のもとへ急ぎ寄り，髪結いを始める．ピンク・黒・銀の制服を着た伝令が現れ，手紙を渡す．家令が銀の盆を持って素早く現れ，それを元帥夫人に差し出す．美容師は手を止め，彼女が読めるようにする．助手が新しいヘアアイロンを渡すと，美容師はそれを振ってみせ，熱すぎることを示す．元帥夫人がうなずくのを見て，助手は彼女（美容師）に手紙を渡し，美容師は微笑しながらそれを使ってヘアアイロンを冷ます．",
     "楽譜情報": "Adolph Fürstner A. 5900 F.",
     "場面タイトル": "第1幕"
@@ -18858,7 +18858,7 @@
     "page": 270,
     "whom": "Octavian",
     "de": "faßt ihm am Ärmel",
-    "de_normalized": "fasst ihm am ärmel",
+    "de_normalized": "fasst ihm am aermel",
     "ja": "彼（男爵）の袖を掴む",
     "楽譜情報": "Adolph Fürstner A. 5900 F.",
     "場面タイトル": "第2幕"
@@ -21030,7 +21030,7 @@
     "page": 377,
     "whom": "男爵",
     "de": "Baron erhebt sich, der Moment für den ersten Kuß scheint ihm gekommen. Wie sein Gesicht dem der Partnerin ganz nahe ist, durchzuckt ihn jäh die Ähnlichkeit mit Octavian. Er fährt zurück und greift unwillkürlich nach dem verwundeten Arm.",
-    "de_normalized": "baron erhebt sich, der moment fuer den ersten kuss scheint ihm gekommen. wie sein gesicht dem der partnerin ganz nahe ist, durchzuckt ihn jaeh die ähnlichkeit mit octavian. er faehrt zurueck und greift unwillkuerlich nach dem verwundeten arm.",
+    "de_normalized": "baron erhebt sich, der moment fuer den ersten kuss scheint ihm gekommen. wie sein gesicht dem der partnerin ganz nahe ist, durchzuckt ihn jaeh die aehnlichkeit mit octavian. er faehrt zurueck und greift unwillkuerlich nach dem verwundeten arm.",
     "ja": "男爵は立ち上がり，最初のキスの瞬間が来たと感じる．彼の顔が相手の顔に間近に迫ったとき，Octavian に似ていることが突然彼を貫く．彼ははっと身を引き，思わず傷ついた腕に手をやる．",
     "楽譜情報": "Adolph Fürstner A. 5900 F.",
     "場面タイトル": "第3幕"
@@ -29190,7 +29190,7 @@
     "page": 49,
     "whom": "Orchester",
     "de": "Äußerst schwungvoll. (Bläulich grünliche Reflexe des Morgenlichtes)",
-    "de_normalized": "äusserst schwungvoll. (blaeulich gruenliche reflexe des morgenlichtes)",
+    "de_normalized": "aeusserst schwungvoll. (blaeulich gruenliche reflexe des morgenlichtes)",
     "ja": "きわめて熱狂的に（青緑色の朝の光の反射）",
     "楽譜情報": "Adolph Fürstner A. 7500 F.",
     "場面タイトル": "第1幕第1場"
@@ -47418,7 +47418,7 @@
     "page": "",
     "whom": "",
     "de": "Die Fiakermilli geht sogleich aus ihrem Lied in ein freches übermütiges Jodeln über. Der Jodler bildet die Überleitung zu dem nun einsetzenden Walzer. Arabella, unter den Klängen des Walzers den Milli mitjodelt, nimmt Blumen aus dem Bukett und verteilt sie unter die Herren und Fiaker. Zuletzt wirft sie das ausgeplünderte Bukett unter sie und nimmt Dominiks Arm, und steigt mit ihm in den Ballsaal hinab, von allen gefolgt. Mandryka sieht ihnen nach, dann wendet er sich. Adelaide erscheint in diesem Augenblick von rechts. Matteo ist zugleich links herausgetreten, Zdenka schüchtern hinter ihm, in Knabenkleidern, aber einer Art von schwarzem Frack, sich hinter einer Säule deckend",
-    "de_normalized": "die fiakermilli geht sogleich aus ihrem lied in ein freches uebermuetiges jodeln ueber. der jodler bildet die überleitung zu dem nun einsetzenden walzer. arabella, unter den klaengen des walzers den milli mitjodelt, nimmt blumen aus dem bukett und verteilt sie unter die herren und fiaker. zuletzt wirft sie das ausgepluenderte bukett unter sie und nimmt dominiks arm, und steigt mit ihm in den ballsaal hinab, von allen gefolgt. mandryka sieht ihnen nach, dann wendet er sich. adelaide erscheint in diesem augenblick von rechts. matteo ist zugleich links herausgetreten, zdenka schuechtern hinter ihm, in knabenkleidern, aber einer art von schwarzem frack, sich hinter einer saeule deckend",
+    "de_normalized": "die fiakermilli geht sogleich aus ihrem lied in ein freches uebermuetiges jodeln ueber. der jodler bildet die ueberleitung zu dem nun einsetzenden walzer. arabella, unter den klaengen des walzers den milli mitjodelt, nimmt blumen aus dem bukett und verteilt sie unter die herren und fiaker. zuletzt wirft sie das ausgepluenderte bukett unter sie und nimmt dominiks arm, und steigt mit ihm in den ballsaal hinab, von allen gefolgt. mandryka sieht ihnen nach, dann wendet er sich. adelaide erscheint in diesem augenblick von rechts. matteo ist zugleich links herausgetreten, zdenka schuechtern hinter ihm, in knabenkleidern, aber einer art von schwarzem frack, sich hinter einer saeule deckend",
     "ja": "Fiakermilli は歌の直後、抜け抜けとした陽気なヨーデルへと移る．このヨーデルが、次に始まるワルツへの移行部を形成する．Arabella は、Milli がヨーデルで歌うワルツの響きにのって、花束から花を取り、紳士たちやフィアカーたちに配る．最後に、花を抜き取られた花束を彼らの中に投げ入れ、Dominik の腕を取り、皆に続いて舞踏会場へと降りていく．Mandryka は彼女らを見送り、そして向き直る．その瞬間、Adelaide が右から現れる．Matteo も同時に左から登場し、Zdenka がその後に続く．Zdenka は男装しているが、一種の黒い燕尾服姿で、柱の陰に隠れながら、内気な様子である．",
     "楽譜情報": "Verlag Dr. Richard Strauss GmbH & Co. KG A. 8250 F.; Adolph Fürstner (reprint)",
     "場面タイトル": "第2幕"
@@ -49338,7 +49338,7 @@
     "page": 381,
     "whom": "舞台指示",
     "de": "Im Hotel. Offener Raum, zugleich Stiegenhaus. Die Stiege läuft in zwei Wendungen aufwärts. Unten stehen ein paar Tische mit Zeitungen, Schaukelstühle, Fauteuils. Vorne rechts ist die Portiersloge und der Ausgang auf die Gasse. Es ist Nacht; der Raum ist mit Öllampen erleuchtet.",
-    "de_normalized": "im hotel. offener raum, zugleich stiegenhaus. die stiege laeuft in zwei wendungen aufwaerts. unten stehen ein paar tische mit zeitungen, schaukelstuehle, fauteuils. vorne rechts ist die portiersloge und der ausgang auf die gasse. es ist nacht; der raum ist mit öllampen erleuchtet.",
+    "de_normalized": "im hotel. offener raum, zugleich stiegenhaus. die stiege laeuft in zwei wendungen aufwaerts. unten stehen ein paar tische mit zeitungen, schaukelstuehle, fauteuils. vorne rechts ist die portiersloge und der ausgang auf die gasse. es ist nacht; der raum ist mit oellampen erleuchtet.",
     "ja": "ホテルの中．吹き抜けの空間で，同時に階段ホールになっている．階段は二回折れて上階へと続いている．階下には新聞の置かれたテーブルがいくつかと，揺り椅子，肘掛け椅子がある．右手前方にはポーター室と表通りへの出口．夜である．空間はオイルランプで照らされている．",
     "楽譜情報": "Verlag Dr. Richard Strauss GmbH & Co. KG A. 8250 F.; Adolph Fürstner (reprint)",
     "場面タイトル": "第3幕"
@@ -55614,7 +55614,7 @@
     "page": 439,
     "whom": "Henry",
     "de": "Überreicht ihr eine Rolle",
-    "de_normalized": "überreicht ihr eine rolle",
+    "de_normalized": "ueberreicht ihr eine rolle",
     "ja": "彼女に楽譜を手渡す",
     "楽譜情報": "Verlag Dr. Richard Strauss GmbH & Co. KG A. 8300 F.; Adolph Fürstner (reprint)",
     "場面タイトル": "第3幕第3場"
@@ -57390,7 +57390,7 @@
     "page": 5,
     "whom": "舞台指示",
     "de": "Kreisrunder Saal in der Zitadelle. Den Raum umschließt in Manneshöhe ein Gang, in dem die Schießscharten liegen. Eine Treppe führt zum höheren Stockwerk der Feste empor, eine zweite in die Tiefe. Überall Riesenmauern, mittelalterlich, neu bezogen zum Zwecke des neuen Krieges. Wo das Gemäuer klafft, ist es flüchtig mit Stein und Holz wiederhergestellt. Die Wache an einem großen Eichentisch. Verwitterte, martialische Gestalten in Lederkollern und Helm. Sie sind regungslos, man weiß nicht, ob sie schlafen oder nur erstarrt sind vor Müdigkeit und Entbehrung. Auf dem Tisch Zinnkrüge, aber kein Becher. Das Feuer, ihnen im Rücken, beleuchtet sie mit schwachem Schein. Sie sind von ihren gewaltigen Waffen umgeben, Musketen, Schwertern, Bihändern, einige haben den Küraß abgelegt. Anbrechender Morgen. Erstes Blau aus den Schießscharten, seltsam vermischt mit dem dunkelroten Schein des ersterbenden Feuers.",
-    "de_normalized": "kreisrunder saal in der zitadelle. den raum umschliesst in manneshoehe ein gang, in dem die schiessscharten liegen. eine treppe fuehrt zum hoeheren stockwerk der feste empor, eine zweite in die tiefe. überall riesenmauern, mittelalterlich, neu bezogen zum zwecke des neuen krieges. wo das gemaeuer klafft, ist es fluechtig mit stein und holz wiederhergestellt. die wache an einem grossen eichentisch. verwitterte, martialische gestalten in lederkollern und helm. sie sind regungslos, man weiss nicht, ob sie schlafen oder nur erstarrt sind vor muedigkeit und entbehrung. auf dem tisch zinnkruege, aber kein becher. das feuer, ihnen im ruecken, beleuchtet sie mit schwachem schein. sie sind von ihren gewaltigen waffen umgeben, musketen, schwertern, bihaendern, einige haben den kuerass abgelegt. anbrechender morgen. erstes blau aus den schiessscharten, seltsam vermischt mit dem dunkelroten schein des ersterbenden feuers.",
+    "de_normalized": "kreisrunder saal in der zitadelle. den raum umschliesst in manneshoehe ein gang, in dem die schiessscharten liegen. eine treppe fuehrt zum hoeheren stockwerk der feste empor, eine zweite in die tiefe. ueberall riesenmauern, mittelalterlich, neu bezogen zum zwecke des neuen krieges. wo das gemaeuer klafft, ist es fluechtig mit stein und holz wiederhergestellt. die wache an einem grossen eichentisch. verwitterte, martialische gestalten in lederkollern und helm. sie sind regungslos, man weiss nicht, ob sie schlafen oder nur erstarrt sind vor muedigkeit und entbehrung. auf dem tisch zinnkruege, aber kein becher. das feuer, ihnen im ruecken, beleuchtet sie mit schwachem schein. sie sind von ihren gewaltigen waffen umgeben, musketen, schwertern, bihaendern, einige haben den kuerass abgelegt. anbrechender morgen. erstes blau aus den schiessscharten, seltsam vermischt mit dem dunkelroten schein des ersterbenden feuers.",
     "ja": "城塞内の円形の広間 ．人の背丈ほどの高さの通路が部屋を取り囲んでおり，そこには銃眼がある ．一つの階段は要塞の上層階へと続き，もう一つの階段は地下へと続いている ．いたる所に巨大な壁があり，中世のものだが，新たな戦争のために新しく改修されている ．石壁に裂け目がある箇所は，石や木で間に合わせに修復されている ．衛兵たちが大きなオーク材のテーブルについている ．革の上着と兜を身につけた，風雨にさらされたような，いかつい風貌の者たち ．彼らは身じろぎもせず，眠っているのか，それとも疲労と欠乏でただこわばっているだけなのか分からない ．テーブルの上には錫の水差しがいくつかあるが，杯はない ．彼らの背後にある火が，弱々しい光で彼らを照らしている ．彼らはマスケット銃，剣，両手剣といった物々しい武器に囲まれており，何人かは胸当てを外している ．夜が明けかかっている ．銃眼から最初の青い光が差し込み，消えかかった火の暗赤色の光に奇妙に混じり合っている ．",
     "楽譜情報": "Verlag Dr. Richard Strauss GmbH & Co. KG A. 9032 F.",
     "場面タイトル": "全1幕"
@@ -59502,7 +59502,7 @@
     "page": 7,
     "whom": "舞台指示",
     "de": "Steiniges Flußufer, dichte Ölbaumgruppen. Letzte Sonne. Rechts steigt die Landschaft zum Hause des Fischers Peneios auf. Im Hintergrunde ist der Fluß zu denken. Den Abschluss bildet das gewaltige Massiv des Olymp. Man hört die Bewegung großer Schafherden Zurufe, Geläute, Schieben, Drängen, Hundegebell. Mitten hinein der Laut eines mächtigen Alphorns.",
-    "de_normalized": "steiniges flussufer, dichte ölbaumgruppen. letzte sonne. rechts steigt die landschaft zum hause des fischers peneios auf. im hintergrunde ist der fluss zu denken. den abschluss bildet das gewaltige massiv des olymp. man hoert die bewegung grosser schafherden zurufe, gelaeute, schieben, draengen, hundegebell. mitten hinein der laut eines maechtigen alphorns.",
+    "de_normalized": "steiniges flussufer, dichte oelbaumgruppen. letzte sonne. rechts steigt die landschaft zum hause des fischers peneios auf. im hintergrunde ist der fluss zu denken. den abschluss bildet das gewaltige massiv des olymp. man hoert die bewegung grosser schafherden zurufe, gelaeute, schieben, draengen, hundegebell. mitten hinein der laut eines maechtigen alphorns.",
     "ja": "石の多い川岸，密生したオリーブの木々．最後の陽光．右手には漁師 Peneios の家へと続く上り坂の風景．背景には川があると想定される．奥にはオリュンポスの巨大な山塊がそびえ立つ．大きな羊の群れの動く音が聞こえる．呼び声，鈴の音，押し合う音，群がる音，犬の吠え声．その真っ只中に，力強いアルプホルンの響きが混じる．",
     "楽譜情報": "Verlag Dr. Richard Strauss GmbH & Co. KG A. 8380 F.",
     "場面タイトル": "全1幕"
@@ -60258,7 +60258,7 @@
     "page": 108,
     "whom": "舞台指示",
     "de": "Rotes Lichterzucken aus dem Ölbaumwald.",
-    "de_normalized": "rotes lichterzucken aus dem ölbaumwald.",
+    "de_normalized": "rotes lichterzucken aus dem oelbaumwald.",
     "ja": "オリーブの森から赤い光が閃く．",
     "楽譜情報": "Verlag Dr. Richard Strauss GmbH & Co. KG A. 8380 F.",
     "場面タイトル": "全1幕"
@@ -66630,7 +66630,7 @@
     "page": 191,
     "whom": "劇場監督",
     "de": "unterdrückt seinen Ärger",
-    "de_normalized": "unterdrueckt seinen ärger",
+    "de_normalized": "unterdrueckt seinen aerger",
     "ja": "怒りを抑えて",
     "楽譜情報": "B. Schott's Söhne; Boosey & Hawkes",
     "場面タイトル": "第9場"
@@ -67926,7 +67926,7 @@
     "page": 304,
     "whom": "召使いたち",
     "de": "Älterer Mann",
-    "de_normalized": "älterer mann",
+    "de_normalized": "aelterer mann",
     "ja": "年配の召使い",
     "楽譜情報": "B. Schott's Söhne; Boosey & Hawkes",
     "場面タイトル": "第11場"
