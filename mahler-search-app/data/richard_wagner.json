@@ -1722,7 +1722,7 @@
     "page": 73,
     "whom": "Brighella",
     "de": "Brighella liest das Gesetz vor:\n\nWir– tief entwürdigt durch das gräuliche Überhandnehmen abscheulicher Lüderlichkeiten und Lasterhaftigkeiten in unserer gottlosen und verderbten Stadt, fühlen uns zur Wiederherstellung eines reineren und gottgefälligeren Wandels, sowie zur Verhütung größerer Ausschweifungen, bewogen, mit exemplarischer Strenge den Grund und die Wurzel des Übels zu vertilgen. Wir befehlen Kraft der uns übertragenen Gewalt hiermit: „Der Carneval, dieses üppige und lasterhafte Fest, ist aufgehoben, und bei Todesstrafe jede Gebräuchlichkeit desselben verboten; alle Wirtschaften und Belustigungsörter sollen aufgehoben und geräumt werden, und jedes Vergehen des Trunkes, sowie der Liebe, werde fortan mit dem Tode bestraft.\n\nIm Namen des Königs,  \nsein Statthalter Friedrich.",
-    "de_normalized": "brighella liest das gesetz vor:\n\nwir– tief entwuerdigt durch das graeuliche überhandnehmen abscheulicher luederlichkeiten und lasterhaftigkeiten in unserer gottlosen und verderbten stadt, fuehlen uns zur wiederherstellung eines reineren und gottgefaelligeren wandels, sowie zur verhuetung groesserer ausschweifungen, bewogen, mit exemplarischer strenge den grund und die wurzel des übels zu vertilgen. wir befehlen kraft der uns uebertragenen gewalt hiermit: „der carneval, dieses ueppige und lasterhafte fest, ist aufgehoben, und bei todesstrafe jede gebraeuchlichkeit desselben verboten; alle wirtschaften und belustigungsoerter sollen aufgehoben und geraeumt werden, und jedes vergehen des trunkes, sowie der liebe, werde fortan mit dem tode bestraft.\n\nim namen des koenigs,  \nsein statthalter friedrich.",
+    "de_normalized": "brighella liest das gesetz vor:\n\nwir– tief entwuerdigt durch das graeuliche ueberhandnehmen abscheulicher luederlichkeiten und lasterhaftigkeiten in unserer gottlosen und verderbten stadt, fuehlen uns zur wiederherstellung eines reineren und gottgefaelligeren wandels, sowie zur verhuetung groesserer ausschweifungen, bewogen, mit exemplarischer strenge den grund und die wurzel des uebels zu vertilgen. wir befehlen kraft der uns uebertragenen gewalt hiermit: „der carneval, dieses ueppige und lasterhafte fest, ist aufgehoben, und bei todesstrafe jede gebraeuchlichkeit desselben verboten; alle wirtschaften und belustigungsoerter sollen aufgehoben und geraeumt werden, und jedes vergehen des trunkes, sowie der liebe, werde fortan mit dem tode bestraft.\n\nim namen des koenigs,  \nsein statthalter friedrich.",
     "ja": "Brighellaは法を読み上げる:\n\n我々は，神をも恐れぬこの堕落した町において，忌まわしい乱淫や悪徳の行いが恐るべき勢いで広まり，深く貶められている．それゆえ，より清く神の意に適う生き方を回復し，さらなる放縦を防ぐために，模範的な厳しさをもってその悪の根源を絶やさねばならないと感じる．ここに与えられた権限にもとづき命ずる: 「カーニバル―この放蕩かつ罪深い祭りは廃止とし，死罪をもっていかなる慣習もこれを禁ず．あらゆる酒場と娯楽の場は閉鎖し，取り払われるものとする．さらに，飲酒の罪と同様に，愛の罪も今後はいずれも死をもって罰せられるであろう．」\n\n国王の名において\nその総督Friedrich",
     "楽譜情報": "Breitkopf & Härtel",
     "場面タイトル": "第1幕"
@@ -2298,7 +2298,7 @@
     "page": 268,
     "whom": "Isabella",
     "de": "Isabella sinkt stumm zusammen, der Chor und die Übrigen nähern sich ihr teilnahmsvoll.",
-    "de_normalized": "isabella sinkt stumm zusammen, der chor und die übrigen naehern sich ihr teilnahmsvoll.",
+    "de_normalized": "isabella sinkt stumm zusammen, der chor und die uebrigen naehern sich ihr teilnahmsvoll.",
     "ja": "Isabella は声もなく崩れ落ち，合唱とほかの人々が同情を込めて彼女に近づく．",
     "楽譜情報": "Breitkopf & Härtel",
     "場面タイトル": "第1幕"
@@ -8754,7 +8754,7 @@
     "page": 88,
     "whom": "Tannhäuser",
     "de": "auf das Äußerste hingerissen, greift mit trunkener Gebärde in die Harfe",
-    "de_normalized": "auf das äusserste hingerissen, greift mit trunkener gebaerde in die harfe",
+    "de_normalized": "auf das aeusserste hingerissen, greift mit trunkener gebaerde in die harfe",
     "ja": "この上なく心を奪われ，酔ったような身振りでハープに手を伸ばす",
     "楽譜情報": "C. F. Peters 10352",
     "場面タイトル": "第1幕第2場"
@@ -9630,7 +9630,7 @@
     "page": 176,
     "whom": "Orchester",
     "de": "Nicht zu schnell anfangen. Überleiten!",
-    "de_normalized": "nicht zu schnell anfangen. überleiten!",
+    "de_normalized": "nicht zu schnell anfangen. ueberleiten!",
     "ja": "速すぎずに開始し，（次の場面へ）移行すること！",
     "楽譜情報": "C. F. Peters 10352",
     "場面タイトル": "第2幕第2場"
@@ -11382,7 +11382,7 @@
     "page": 423,
     "whom": "舞台指示",
     "de": "Die Bühne stellt das Innere des Venusberges (Hörselberges bei Eisenach) dar. Weite Grotte, welche sich im Hintergrunde durch eine Biegung nach rechts wie unabsehbar dahinzieht. Aus einer zerklüfteten Öffnung, durch welche mattes Tageslicht herein scheint, stürzt sich die ganze Höhe der Grotte entlang ein grünlicher Wasserfall herab, wild über Gestein schäumend; aus dem Becken, welches das Wasser auffängt, fließt nach dem fernen Hintergrunde der Bach hin, welcher dort sich zu einem See sammelt, in welchem man die Gestalten badender Najaden, und an dessen Ufern gelagerte Sirenen gewahrt. Zu beiden Seiten der Grotte Felsenabsprünge von unregelmäßiger Form, mit wunderbaren, corallenartigen, tropischen Gewächsen bewachsen. Vor einer nach links aufwärts sich dehnenden Grottenöffnung, aus welcher ein zarter rosiger Dämmer heraus scheint, liegt im Vordergrunde Venus auf einem reichen Lager, vor ihr, das Haupt in ihrem Schoße, die Harfe zur Seite, Tannhäuser, halb knieend. Das Lager umgeben, in reizender Verschlingung gelagert, die drei Grazien . Zur Seite und hinter dem Lager zahlreiche schlafende Amoretten, wild über und neben einander gelagert einen verworrenen Knäul bildend, wie Kinder, die, von einer Balgerei ermattet, eingeschlafen sind. Der ganze Vordergrund ist von einem zauberhaften, von unten her durchscheinenden, rötlichen Lichte beleuchtet, durch welches das Smaragdgrün des Wasserfalles, mit dem Weiß seiner schäumenden Wellen, stark durchbricht. Der ferne Hintergrund mit den Seeufern ist von einem verklärt blauen Dufte mondscheinartig erhellt. - Beim Aufzuge des Vorhanges sind, auf den erhöhten Vorsprüngen bei Bechern, noch die Jünglinge gelagert, welche jetzt sofort den verlockenden Winken der Nymphen folgen, zu diesen hinab eilen; die Nymphenn hatten um das schäumende Becken des Wasserfalles den auffordernden Reigen begonnen, welcher die Jünglinge zu ihnen führen sollte: Die Paare finden und mischen sich: Suchen, Fliehen und reizendes Necken beleben den Tanz.",
-    "de_normalized": "die buehne stellt das innere des venusberges (hoerselberges bei eisenach) dar. weite grotte, welche sich im hintergrunde durch eine biegung nach rechts wie unabsehbar dahinzieht. aus einer zerkluefteten öffnung, durch welche mattes tageslicht herein scheint, stuerzt sich die ganze hoehe der grotte entlang ein gruenlicher wasserfall herab, wild ueber gestein schaeumend; aus dem becken, welches das wasser auffaengt, fliesst nach dem fernen hintergrunde der bach hin, welcher dort sich zu einem see sammelt, in welchem man die gestalten badender najaden, und an dessen ufern gelagerte sirenen gewahrt. zu beiden seiten der grotte felsenabspruenge von unregelmaessiger form, mit wunderbaren, corallenartigen, tropischen gewaechsen bewachsen. vor einer nach links aufwaerts sich dehnenden grottenoeffnung, aus welcher ein zarter rosiger daemmer heraus scheint, liegt im vordergrunde venus auf einem reichen lager, vor ihr, das haupt in ihrem schosse, die harfe zur seite, tannhaeuser, halb knieend. das lager umgeben, in reizender verschlingung gelagert, die drei grazien . zur seite und hinter dem lager zahlreiche schlafende amoretten, wild ueber und neben einander gelagert einen verworrenen knaeul bildend, wie kinder, die, von einer balgerei ermattet, eingeschlafen sind. der ganze vordergrund ist von einem zauberhaften, von unten her durchscheinenden, roetlichen lichte beleuchtet, durch welches das smaragdgruen des wasserfalles, mit dem weiss seiner schaeumenden wellen, stark durchbricht. der ferne hintergrund mit den seeufern ist von einem verklaert blauen dufte mondscheinartig erhellt. - beim aufzuge des vorhanges sind, auf den erhoehten vorspruengen bei bechern, noch die juenglinge gelagert, welche jetzt sofort den verlockenden winken der nymphen folgen, zu diesen hinab eilen; die nymphenn hatten um das schaeumende becken des wasserfalles den auffordernden reigen begonnen, welcher die juenglinge zu ihnen fuehren sollte: die paare finden und mischen sich: suchen, fliehen und reizendes necken beleben den tanz.",
+    "de_normalized": "die buehne stellt das innere des venusberges (hoerselberges bei eisenach) dar. weite grotte, welche sich im hintergrunde durch eine biegung nach rechts wie unabsehbar dahinzieht. aus einer zerkluefteten oeffnung, durch welche mattes tageslicht herein scheint, stuerzt sich die ganze hoehe der grotte entlang ein gruenlicher wasserfall herab, wild ueber gestein schaeumend; aus dem becken, welches das wasser auffaengt, fliesst nach dem fernen hintergrunde der bach hin, welcher dort sich zu einem see sammelt, in welchem man die gestalten badender najaden, und an dessen ufern gelagerte sirenen gewahrt. zu beiden seiten der grotte felsenabspruenge von unregelmaessiger form, mit wunderbaren, corallenartigen, tropischen gewaechsen bewachsen. vor einer nach links aufwaerts sich dehnenden grottenoeffnung, aus welcher ein zarter rosiger daemmer heraus scheint, liegt im vordergrunde venus auf einem reichen lager, vor ihr, das haupt in ihrem schosse, die harfe zur seite, tannhaeuser, halb knieend. das lager umgeben, in reizender verschlingung gelagert, die drei grazien . zur seite und hinter dem lager zahlreiche schlafende amoretten, wild ueber und neben einander gelagert einen verworrenen knaeul bildend, wie kinder, die, von einer balgerei ermattet, eingeschlafen sind. der ganze vordergrund ist von einem zauberhaften, von unten her durchscheinenden, roetlichen lichte beleuchtet, durch welches das smaragdgruen des wasserfalles, mit dem weiss seiner schaeumenden wellen, stark durchbricht. der ferne hintergrund mit den seeufern ist von einem verklaert blauen dufte mondscheinartig erhellt. - beim aufzuge des vorhanges sind, auf den erhoehten vorspruengen bei bechern, noch die juenglinge gelagert, welche jetzt sofort den verlockenden winken der nymphen folgen, zu diesen hinab eilen; die nymphenn hatten um das schaeumende becken des wasserfalles den auffordernden reigen begonnen, welcher die juenglinge zu ihnen fuehren sollte: die paare finden und mischen sich: suchen, fliehen und reizendes necken beleben den tanz.",
     "ja": "舞台は Venusberg（Eisenach 近郊の Hörselberg）の洞窟内部を表す．広大な洞窟は奥で右に曲がり，果てしなく続いているかのように見える．裂け目のある開口部からは鈍い昼の光が射し込み，そこから緑がかった滝が洞窟の高さいっぱいに荒々しく岩を越えてほとばしるように流れ落ちる．その水を受ける水盤からは小川が遠くへ流れ，やがて湖をなす．湖では水浴する Najaden（水のニンフ）の姿があり，岸辺には横たわる Sirenen（セイレーン）が見える．洞窟の両側には不規則な岩棚があり，奇妙なサンゴ状の熱帯植物が繁茂している．左手上方に広がる洞窟の入口からは薔薇色の薄明かりが射し，その前景には Venus が豪華な寝台に横たわり，膝に頭を寄せた Tannhäuser が半ば跪き，傍らにハープが置かれている．寝台のまわりには三人の Grazien（三美神）が優美に身を絡め合って横たわり，さらに脇や後方には数多くの Amoretten（キューピッドたち）が重なり合って眠り，まるで取っ組み合いに疲れ眠り込んだ子供たちのような入り乱れたかたまりとなっている．舞台前面は下から透けるような魔法めいた赤みを帯びた光に照らされ，その中を滝のエメラルドの緑と白い泡が鮮やかに突き抜けている．奥の湖岸は神々しく美化された青い霞に包まれ，月光のように照らされている．幕が上がると，高い岩棚の上で杯を手にくつろいでいた若者たちが，Nymphen（ニンフたち）の誘惑的な合図に惹かれてすぐさま彼女たちのもとへ駆け下りる．Nymphen（ニンフたち）は滝壺のまわりで誘いかけるような輪舞を始め，若者たちを導こうとする．男女が互いに相手を見つけ合い，寄り添い，追い，逃げ，戯れながら，踊りは次第に活気を増してゆく．",
     "楽譜情報": "C. F. Peters 10352",
     "場面タイトル": "Paris version への p.28 からの接続部分"
@@ -11934,7 +11934,7 @@
     "page": 518,
     "whom": "Tannhäuser",
     "de": "Tannhäuser auf das Äußerste hingerissen, nochmals die Harfe ergreifend.",
-    "de_normalized": "tannhaeuser auf das äusserste hingerissen, nochmals die harfe ergreifend.",
+    "de_normalized": "tannhaeuser auf das aeusserste hingerissen, nochmals die harfe ergreifend.",
     "ja": "Tannhäuser はこの上なく心を奪われ，再びハープを手に取る．",
     "楽譜情報": "C. F. Peters 10352",
     "場面タイトル": "Paris version への p.28 からの接続部分"
@@ -12462,7 +12462,7 @@
     "page": 28,
     "whom": "舞台指示",
     "de": "Die Bühne stellt das Innere des Venusberges (Hörselberges bei Eisenach) dar. Weite Grotte, welche sich im Hintergrunde durch eine Biegung nach rechts wie unabsehbar dahinzieht. Aus einer zerklüfteten Öffnung, durch welche mattes Tageslicht herein scheint, stürzt sich die ganze Höhe der Grotte entlang ein grünlicher Wasserfall herab, wild über Gestein schäumend; aus dem Becken, welches das Wasser auffängt, fließt nach dem fernen Hintergrunde der Bach hin, welcher dort sich zu einem See sammelt, in welchem man die Gestalten badender Najaden, und an dessen Ufern gelagerte Sirenen gewahrt. Zu beiden Seiten der Grotte Felsenabsprünge von unregelmäßiger Form, mit wunderbaren, corallenartigen, tropischen Gewächsen bewachsen. Vor einer nach links aufwärts sich dehnenden Grottenöffnung, aus welcher ein zarter rosiger Dämmer heraus scheint, liegt im Vordergrunde Venus auf einem reichen Lager, vor ihr, das Haupt in ihrem Schoße, die Harfe zur Seite, Tannhäuser, halb knieend. Das Lager umgeben, in reizender Verschlingung gelagert, die drei Grazien . Zur Seite und hinter dem Lager zahlreiche schlafende Amoretten, wild über und neben einander gelagert einen verworrenen Knäul bildend, wie Kinder, die, von einer Balgerei ermattet, eingeschlafen sind. Der ganze Vordergrund ist von einem zauberhaften, von unten her durchscheinenden, rötlichen Lichte beleuchtet, durch welches das Smaragdgrün des Wasserfalles, mit dem Weiß seiner schäumenden Wellen, stark durchbricht. Der ferne Hintergrund mit den Seeufern ist von einem verklärt blauen Dufte mondscheinartig erhellt. - Beim Aufzuge des Vorhanges sind, auf den erhöhten Vorsprüngen bei Bechern, noch die Jünglinge gelagert, welche jetzt sofort den verlockenden Winken der Nymphen folgen, zu diesen hinab eilen; die Nymphenn hatten um das schäumende Becken des Wasserfalles den auffordernden Reigen begonnen, welcher die Jünglinge zu ihnen führen sollte: Die Paare finden und mischen sich: Suchen, Fliehen und reizendes Necken beleben den Tanz.",
-    "de_normalized": "die buehne stellt das innere des venusberges (hoerselberges bei eisenach) dar. weite grotte, welche sich im hintergrunde durch eine biegung nach rechts wie unabsehbar dahinzieht. aus einer zerkluefteten öffnung, durch welche mattes tageslicht herein scheint, stuerzt sich die ganze hoehe der grotte entlang ein gruenlicher wasserfall herab, wild ueber gestein schaeumend; aus dem becken, welches das wasser auffaengt, fliesst nach dem fernen hintergrunde der bach hin, welcher dort sich zu einem see sammelt, in welchem man die gestalten badender najaden, und an dessen ufern gelagerte sirenen gewahrt. zu beiden seiten der grotte felsenabspruenge von unregelmaessiger form, mit wunderbaren, corallenartigen, tropischen gewaechsen bewachsen. vor einer nach links aufwaerts sich dehnenden grottenoeffnung, aus welcher ein zarter rosiger daemmer heraus scheint, liegt im vordergrunde venus auf einem reichen lager, vor ihr, das haupt in ihrem schosse, die harfe zur seite, tannhaeuser, halb knieend. das lager umgeben, in reizender verschlingung gelagert, die drei grazien . zur seite und hinter dem lager zahlreiche schlafende amoretten, wild ueber und neben einander gelagert einen verworrenen knaeul bildend, wie kinder, die, von einer balgerei ermattet, eingeschlafen sind. der ganze vordergrund ist von einem zauberhaften, von unten her durchscheinenden, roetlichen lichte beleuchtet, durch welches das smaragdgruen des wasserfalles, mit dem weiss seiner schaeumenden wellen, stark durchbricht. der ferne hintergrund mit den seeufern ist von einem verklaert blauen dufte mondscheinartig erhellt. - beim aufzuge des vorhanges sind, auf den erhoehten vorspruengen bei bechern, noch die juenglinge gelagert, welche jetzt sofort den verlockenden winken der nymphen folgen, zu diesen hinab eilen; die nymphenn hatten um das schaeumende becken des wasserfalles den auffordernden reigen begonnen, welcher die juenglinge zu ihnen fuehren sollte: die paare finden und mischen sich: suchen, fliehen und reizendes necken beleben den tanz.",
+    "de_normalized": "die buehne stellt das innere des venusberges (hoerselberges bei eisenach) dar. weite grotte, welche sich im hintergrunde durch eine biegung nach rechts wie unabsehbar dahinzieht. aus einer zerkluefteten oeffnung, durch welche mattes tageslicht herein scheint, stuerzt sich die ganze hoehe der grotte entlang ein gruenlicher wasserfall herab, wild ueber gestein schaeumend; aus dem becken, welches das wasser auffaengt, fliesst nach dem fernen hintergrunde der bach hin, welcher dort sich zu einem see sammelt, in welchem man die gestalten badender najaden, und an dessen ufern gelagerte sirenen gewahrt. zu beiden seiten der grotte felsenabspruenge von unregelmaessiger form, mit wunderbaren, corallenartigen, tropischen gewaechsen bewachsen. vor einer nach links aufwaerts sich dehnenden grottenoeffnung, aus welcher ein zarter rosiger daemmer heraus scheint, liegt im vordergrunde venus auf einem reichen lager, vor ihr, das haupt in ihrem schosse, die harfe zur seite, tannhaeuser, halb knieend. das lager umgeben, in reizender verschlingung gelagert, die drei grazien . zur seite und hinter dem lager zahlreiche schlafende amoretten, wild ueber und neben einander gelagert einen verworrenen knaeul bildend, wie kinder, die, von einer balgerei ermattet, eingeschlafen sind. der ganze vordergrund ist von einem zauberhaften, von unten her durchscheinenden, roetlichen lichte beleuchtet, durch welches das smaragdgruen des wasserfalles, mit dem weiss seiner schaeumenden wellen, stark durchbricht. der ferne hintergrund mit den seeufern ist von einem verklaert blauen dufte mondscheinartig erhellt. - beim aufzuge des vorhanges sind, auf den erhoehten vorspruengen bei bechern, noch die juenglinge gelagert, welche jetzt sofort den verlockenden winken der nymphen folgen, zu diesen hinab eilen; die nymphenn hatten um das schaeumende becken des wasserfalles den auffordernden reigen begonnen, welcher die juenglinge zu ihnen fuehren sollte: die paare finden und mischen sich: suchen, fliehen und reizendes necken beleben den tanz.",
     "ja": "舞台は Venusberg（Eisenach 近郊の Hörselberg）の洞窟内部を表す．広大な洞窟は奥で右に曲がり，果てしなく続いているかのように見える．裂け目のある開口部からは鈍い昼の光が射し込み，そこから緑がかった滝が洞窟の高さいっぱいに荒々しく岩を越えてほとばしるように流れ落ちる．その水を受ける水盤からは小川が遠くへ流れ，やがて湖をなす．湖では水浴する Najaden（水のニンフ）の姿があり，岸辺には横たわる Sirenen（セイレーン）が見える．洞窟の両側には不規則な岩棚があり，奇妙なサンゴ状の熱帯植物が繁茂している．左手上方に広がる洞窟の入口からは薔薇色の薄明かりが射し，その前景には Venus が豪華な寝台に横たわり，膝に頭を寄せた Tannhäuser が半ば跪き，傍らにハープが置かれている．寝台のまわりには三人の Grazien（三美神）が優美に身を絡め合って横たわり，さらに脇や後方には数多くの Amoretten（キューピッドたち）が重なり合って眠り，まるで取っ組み合いに疲れ眠り込んだ子供たちのような入り乱れたかたまりとなっている．舞台前面は下から透けるような魔法めいた赤みを帯びた光に照らされ，その中を滝のエメラルドの緑と白い泡が鮮やかに突き抜けている．奥の湖岸は神々しく美化された青い霞に包まれ，月光のように照らされている．幕が上がると，高い岩棚の上で杯を手にくつろいでいた若者たちが，Nymphen（ニンフたち）の誘惑的な合図に惹かれてすぐさま彼女たちのもとへ駆け下りる．Nymphen（ニンフたち）は滝壺のまわりで誘いかけるような輪舞を始め，若者たちを導こうとする．男女が互いに相手を見つけ合い，寄り添い，追い，逃げ，戯れながら，踊りは次第に活気を増してゆく．",
     "楽譜情報": "C. F. Peters 10352",
     "場面タイトル": "第1幕第1場"
@@ -13014,7 +13014,7 @@
     "page": 123,
     "whom": "Tannhäuser",
     "de": "Tannhäuser auf das Äußerste hingerissen, nochmals die Harfe ergreifend.",
-    "de_normalized": "tannhaeuser auf das äusserste hingerissen, nochmals die harfe ergreifend.",
+    "de_normalized": "tannhaeuser auf das aeusserste hingerissen, nochmals die harfe ergreifend.",
     "ja": "Tannhäuser はこの上なく心を奪われ，再びハープを手に取る．",
     "楽譜情報": "C. F. Peters 10352",
     "場面タイトル": "第1幕第2場"
@@ -13962,7 +13962,7 @@
     "page": 230,
     "whom": "Orchester",
     "de": "Nicht zu schnell anfangen. Überleiten!",
-    "de_normalized": "nicht zu schnell anfangen. überleiten!",
+    "de_normalized": "nicht zu schnell anfangen. ueberleiten!",
     "ja": "速すぎずに開始し，（次の場面へ）移行すること！",
     "楽譜情報": "C. F. Peters 10352",
     "場面タイトル": "第2幕第2場"
@@ -20742,7 +20742,7 @@
     "page": 382,
     "whom": "全員",
     "de": "Alle drücken ihre lebhafte Überraschung aus.",
-    "de_normalized": "alle druecken ihre lebhafte überraschung aus.",
+    "de_normalized": "alle druecken ihre lebhafte ueberraschung aus.",
     "ja": "全員が驚きを露わにする．",
     "楽譜情報": "Breitkopf & Härtel 15451",
     "場面タイトル": "第3幕第3場"
@@ -25662,7 +25662,7 @@
     "page": 33,
     "whom": "Sieglinde",
     "de": "Sieglinde hängt die Waffen an Ästen des Eschenstammes auf; dann holt sie Speise und Trank aus dem Speicher und rüstet auf dem Tische das Nachtmahl.",
-    "de_normalized": "sieglinde haengt die waffen an ästen des eschenstammes auf; dann holt sie speise und trank aus dem speicher und ruestet auf dem tische das nachtmahl.",
+    "de_normalized": "sieglinde haengt die waffen an aesten des eschenstammes auf; dann holt sie speise und trank aus dem speicher und ruestet auf dem tische das nachtmahl.",
     "ja": "Sieglinde はトネリコの幹の枝に武器を掛け，食料庫から食べ物と飲み物を取り出し，テーブルに夕食の準備をする．",
     "楽譜情報": "C. F. Peters 10170",
     "場面タイトル": "第1幕第2場"
@@ -28734,7 +28734,7 @@
     "page": 445,
     "whom": "Ortlinde",
     "de": "Änderung:",
-    "de_normalized": "änderung:",
+    "de_normalized": "aenderung:",
     "ja": "変更（案）",
     "楽譜情報": "C. F. Peters 10170",
     "場面タイトル": "第3幕第1場"
@@ -29130,7 +29130,7 @@
     "page": 487,
     "whom": "Waltraute",
     "de": "Änderung.",
-    "de_normalized": "änderung.",
+    "de_normalized": "aenderung.",
     "ja": "変更（案）",
     "楽譜情報": "C. F. Peters 10170",
     "場面タイトル": "第3幕第1場"
@@ -30738,7 +30738,7 @@
     "page": 13,
     "whom": "Siegfried",
     "de": "Siegfried in wilder Waldkleidung, mit einem silbernen Horn an einer Kette, kommt mit jähem Ungestüm aus dem Walde herein; er hat einen grossen Bären mit einen Bastseile gezäumt, und treibt diesen mit lustigem Übermuthe gegen Mime an.",
-    "de_normalized": "siegfried in wilder waldkleidung, mit einem silbernen horn an einer kette, kommt mit jaehem ungestuem aus dem walde herein; er hat einen grossen baeren mit einen bastseile gezaeumt, und treibt diesen mit lustigem übermuthe gegen mime an.",
+    "de_normalized": "siegfried in wilder waldkleidung, mit einem silbernen horn an einer kette, kommt mit jaehem ungestuem aus dem walde herein; er hat einen grossen baeren mit einen bastseile gezaeumt, und treibt diesen mit lustigem uebermuthe gegen mime an.",
     "ja": "野生的な森の衣装をまとい，銀の角笛を鎖で下げて，森から突然乱暴に入ってくる，大きな熊に樹皮の縄で手綱を付け，陽気な悪戯心からこの熊を Mime に向けてけしかける．",
     "楽譜情報": "B. Schott's Söhne 21544",
     "場面タイトル": "第1幕第1場"
@@ -41538,7 +41538,7 @@
     "page": 22,
     "whom": "Brangäne",
     "de": "an der Öffnung",
-    "de_normalized": "an der öffnung",
+    "de_normalized": "an der oeffnung",
     "ja": "（船室の）開口部で",
     "楽譜情報": "C. F. Peters 9904",
     "場面タイトル": "第1幕第1場"
@@ -41982,7 +41982,7 @@
     "page": 41,
     "whom": "水夫たち",
     "de": "Schiffsleute ziehen, immer mit dem dritten Viertel, ein Tau aus der Öffnung auf dem Verdeck nach oben.",
-    "de_normalized": "schiffsleute ziehen, immer mit dem dritten viertel, ein tau aus der öffnung auf dem verdeck nach oben.",
+    "de_normalized": "schiffsleute ziehen, immer mit dem dritten viertel, ein tau aus der oeffnung auf dem verdeck nach oben.",
     "ja": "水夫たちは常に3拍目に合わせて，甲板の開口部からロープを上へ引き上げる．",
     "楽譜情報": "C. F. Peters 9904",
     "場面タイトル": "第1幕第2場"
@@ -43746,7 +43746,7 @@
     "page": 153,
     "whom": "Isolde",
     "de": "Übergang zur Ironie. (Zart!)",
-    "de_normalized": "übergang zur ironie. (zart!)",
+    "de_normalized": "uebergang zur ironie. (zart!)",
     "ja": "皮肉へと転じる（繊細に！）",
     "楽譜情報": "C. F. Peters 9904",
     "場面タイトル": "第1幕第5場"
@@ -46554,7 +46554,7 @@
     "page": 466,
     "whom": "舞台指示",
     "de": "Burggarten. Zur einen Seite hohe Burggebäude, zur andren eine niedrige Mauerbrüstung, von einer Warte unterbrochen; im Hintergrunde das Burgtor. Die Lage ist auf felsiger Höhe anzunehmen; durch Öffnungen blickt man auf einen weiten Meereshorizont. Das Ganze macht den Eindruck der Herrenlosigkeit, übel gepflegt, hie und da schadhaft und bewachsen. Im Vordergrunde, an der inneren Seite, liegt Tristan, unter dem Schatten einer großen Linde, auf einem Ruhebett schlafend, wie leblos ausgestreckt. Zu Häupten ihm sitzt Kurwenal, in Schmerz über ihn hingebeugt und sorgsam seinem Atem lauschend. - Von der Außenseite hört man einen Hirtenreigen blasen.",
-    "de_normalized": "burggarten. zur einen seite hohe burggebaeude, zur andren eine niedrige mauerbruestung, von einer warte unterbrochen; im hintergrunde das burgtor. die lage ist auf felsiger hoehe anzunehmen; durch öffnungen blickt man auf einen weiten meereshorizont. das ganze macht den eindruck der herrenlosigkeit, uebel gepflegt, hie und da schadhaft und bewachsen. im vordergrunde, an der inneren seite, liegt tristan, unter dem schatten einer grossen linde, auf einem ruhebett schlafend, wie leblos ausgestreckt. zu haeupten ihm sitzt kurwenal, in schmerz ueber ihn hingebeugt und sorgsam seinem atem lauschend. - von der aussenseite hoert man einen hirtenreigen blasen.",
+    "de_normalized": "burggarten. zur einen seite hohe burggebaeude, zur andren eine niedrige mauerbruestung, von einer warte unterbrochen; im hintergrunde das burgtor. die lage ist auf felsiger hoehe anzunehmen; durch oeffnungen blickt man auf einen weiten meereshorizont. das ganze macht den eindruck der herrenlosigkeit, uebel gepflegt, hie und da schadhaft und bewachsen. im vordergrunde, an der inneren seite, liegt tristan, unter dem schatten einer grossen linde, auf einem ruhebett schlafend, wie leblos ausgestreckt. zu haeupten ihm sitzt kurwenal, in schmerz ueber ihn hingebeugt und sorgsam seinem atem lauschend. - von der aussenseite hoert man einen hirtenreigen blasen.",
     "ja": "城の庭．片側に高い城郭の建物，反対側には低い胸壁があり，物見櫓によって途切れている．奥には城門．場所は岩だらけの高地と想定され，開口部からは広大な海の水平線が見える．全体として放置され，荒廃した印象で，手入れも行き届かず，あちこちが崩れ，草が生い茂っている．前景手前，内側の菩提樹の大きな木陰で，Tristan が寝椅子に横たわり，まるで死んでいるかのようにぐったりと眠っている．彼の頭側には Kurwenal が座り，悲しみに打ちひしがれ，彼の息遣いに注意深く耳を澄ませている．城の外からは羊飼いの歌が聞こえてくる．",
     "楽譜情報": "C. F. Peters 9904",
     "場面タイトル": "第3幕第1場"
@@ -53046,7 +53046,7 @@
     "page": 428,
     "whom": "Sachs, Walther, Eva, 舞台指示",
     "de": "Sachs beobachtet noch eine Zeit lang den wachsenden Tumult, löscht aber alsbald sein Licht aus, und schließt den Laden so weit, daß er, ungesehen, stets durch eine kleine Öffnung den Platz unter der Linde beobachten kann. - Walther und Eva sehen mit wachsender Sorge dem anschwellenden Auflaufe zu; er schließt sie in seinen Mantel fest an sich, und birgt sich hart an der Linde im Gebüsche, so dass beide fast ungesehen bleiben. - Die Nachbarn verlassen die Fenster, und kommen nach und nach in Nachtkleidern einzeln auf die Straße herab.",
-    "de_normalized": "sachs beobachtet noch eine zeit lang den wachsenden tumult, loescht aber alsbald sein licht aus, und schliesst den laden so weit, dass er, ungesehen, stets durch eine kleine öffnung den platz unter der linde beobachten kann. - walther und eva sehen mit wachsender sorge dem anschwellenden auflaufe zu; er schliesst sie in seinen mantel fest an sich, und birgt sich hart an der linde im gebuesche, so dass beide fast ungesehen bleiben. - die nachbarn verlassen die fenster, und kommen nach und nach in nachtkleidern einzeln auf die strasse herab.",
+    "de_normalized": "sachs beobachtet noch eine zeit lang den wachsenden tumult, loescht aber alsbald sein licht aus, und schliesst den laden so weit, dass er, ungesehen, stets durch eine kleine oeffnung den platz unter der linde beobachten kann. - walther und eva sehen mit wachsender sorge dem anschwellenden auflaufe zu; er schliesst sie in seinen mantel fest an sich, und birgt sich hart an der linde im gebuesche, so dass beide fast ungesehen bleiben. - die nachbarn verlassen die fenster, und kommen nach und nach in nachtkleidern einzeln auf die strasse herab.",
     "ja": "Sachs はしばらくのあいだ大きくなる騒ぎを観察していたが，すぐに明かりを消し，店先の戸を少しだけ閉じて，誰にも気づかれぬようにしながら菩提樹の下の広場を小さなすき間から常に見張れるようにする．Walther と Eva は高まる騒ぎを不安げに見つめ，Walther は Eva をしっかりとマントの中に引き寄せ，自らは菩提樹のそばの茂みに身を潜める．そのため二人はほとんど人目につかない．近所の人々は窓辺を離れ，やがて次第に寝間着姿で一人また一人と通りへと降りてくる．",
     "楽譜情報": "C. F. Peters 9821",
     "場面タイトル": "第2幕第7場"
@@ -55002,7 +55002,7 @@
     "page": 553,
     "whom": "Beckmesser",
     "de": "Ärgerliche Gedanken entstehen dadurch, gegen die er mit schmeichelndem Selbstgefühle anzukämpen sucht.",
-    "de_normalized": "ärgerliche gedanken entstehen dadurch, gegen die er mit schmeichelndem selbstgefuehle anzukaempen sucht.",
+    "de_normalized": "aergerliche gedanken entstehen dadurch, gegen die er mit schmeichelndem selbstgefuehle anzukaempen sucht.",
     "ja": "それによって不愉快な考えが湧き起こるが，彼はうぬぼれた自己満足感でそれを抑え込もうとする．",
     "楽譜情報": "C. F. Peters 9821",
     "場面タイトル": "第3幕第3場"
@@ -55494,7 +55494,7 @@
     "page": 652,
     "whom": "Sachs, Eva",
     "de": "Er tritt aus der Mitte des Halbkreises, der von den Übrigen um ihn gebildet worden war, auf die Seite, so daß nun Eva in die Mitte zu stehen kommt.",
-    "de_normalized": "er tritt aus der mitte des halbkreises, der von den übrigen um ihn gebildet worden war, auf die seite, so dass nun eva in die mitte zu stehen kommt.",
+    "de_normalized": "er tritt aus der mitte des halbkreises, der von den uebrigen um ihn gebildet worden war, auf die seite, so dass nun eva in die mitte zu stehen kommt.",
     "ja": "彼は，他の者たちが彼の周りに作っていた半円の中央から脇へと退き，それによって今度は Eva が中央に立つことになる．",
     "楽譜情報": "C. F. Peters 9821",
     "場面タイトル": "第3幕第4場"
@@ -55530,7 +55530,7 @@
     "page": 661,
     "whom": "Sachs",
     "de": "zu den Übrigen sich wendend.",
-    "de_normalized": "zu den übrigen sich wendend.",
+    "de_normalized": "zu den uebrigen sich wendend.",
     "ja": "他の者たちの方を向きながら",
     "楽譜情報": "C. F. Peters 9821",
     "場面タイトル": "第3幕第4場"
