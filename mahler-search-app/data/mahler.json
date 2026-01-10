@@ -2023,7 +2023,7 @@
   },
   {
     "de": "Anmerkung für den Dirigenten:'CÄSUR' und hierauf plötzlich vorwärts!",
-    "de_normalized": "anmerkung fuer den dirigenten:'cäsur' und hierauf ploetzlich vorwaerts!",
+    "de_normalized": "anmerkung fuer den dirigenten:'caesur' und hierauf ploetzlich vorwaerts!",
     "ja": "指揮者への注意：「休止」，それから突然前へ進む",
     "data": "M-2-1-291-dir&"
   },
@@ -2060,7 +2060,7 @@
   {
     "de": "Anmerkung für den Dirigenten: Der Sinn dieses riten. ist beide Male: ein kurzes Anhalten, um zum darauffolgenden Akkorde mit grosser Wucht auszuholen. Die Figur selbst muss im schnellen Tempo ausgeführt werden.",
     "de_normalized": "anmerkung fuer den dirigenten: der sinn dieses riten. ist beide male: ein kurzes anhalten, um zum darauffolgenden akkorde mit grosser wucht auszuholen. die figur selbst muss im schnellen tempo ausgefuehrt werden.",
-    "ja": "指揮者への注意：この ritardando（ritenuto）の意味は、どちらの場合も、次に来る和音を強い力で打ち出すための\n短い間（タメ）をつくることである．フレーズ自体は速いテンポで演奏されなければならない．",
+    "ja": "指揮者への注意：この ritardando（ritenuto）の意味は、どちらの場合も、次に来る和音を強い力で打ち出すための短い間（タメ）をつくることである．フレーズ自体は速いテンポで演奏されなければならない．",
     "data": "M-5-2-1-dir&"
   },
   {
@@ -2455,19 +2455,19 @@
   },
   {
     "de": "Äußerst langsam",
-    "de_normalized": "äusserst langsam",
+    "de_normalized": "aeusserst langsam",
     "ja": "きわめてゆっくりと",
     "data": "M-8-t2-780-all&M-9-4-179-all&"
   },
   {
     "de": "Äußerst langsam und zurückhaltend",
-    "de_normalized": "äusserst langsam und zurueckhaltend",
+    "de_normalized": "aeusserst langsam und zurueckhaltend",
     "ja": "きわめてゆっくりと，速度を緩めて",
     "data": "M-f-f3-1-all&"
   },
   {
     "de": "Äusserst rhythmisch",
-    "de_normalized": "äusserst rhythmisch",
+    "de_normalized": "aeusserst rhythmisch",
     "ja": "きわめてリズミカルに",
     "data": "M-1-3-139-fl,ob,eh,cl,escl&"
   },
@@ -14749,7 +14749,7 @@
   },
   {
     "de": "Wieder mit plötzlichem Übergange",
-    "de_normalized": "wieder mit ploetzlichem übergange",
+    "de_normalized": "wieder mit ploetzlichem uebergange",
     "ja": "ふたたび突然の変換で",
     "data": "M-4-3-278-dir&"
   },
