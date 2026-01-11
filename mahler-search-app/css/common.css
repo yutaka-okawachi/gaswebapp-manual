@@ -51,13 +51,13 @@ body {
     top: 15px;
     left: 15px;
     z-index: 2000;
-    padding: 10px 15px;
-    background-color: var(--button-bg);
+    background: #333;
     color: white;
     border: none;
-    border-radius: 4px;
-    font-size: 1rem;
+    padding: 10px 15px;
     cursor: pointer;
+    font-size: 1.2rem;
+    border-radius: 4px;
     box-shadow: 0 2px 5px rgba(0,0,0,0.2);
 }
 
@@ -65,25 +65,26 @@ body {
     position: fixed;
     top: 0;
     left: 0;
-    width: 280px;
+    width: 220px;
     height: 100vh;
-    background-color: #f8f9fa;
-    border-right: 1px solid #dee2e6;
-    padding: 20px;
+    background: #2c3e50;
+    color: white;
+    padding: 30px 20px;
     overflow-y: auto;
     z-index: 1000;
     transition: transform 0.3s ease-in-out;
 }
 
 .sidebar h3 {
-    font-size: 1.1rem;
+    font-size: 1.0rem;
     margin-top: 15px;
-    margin-bottom: 10px;
-    color: #495057;
-    border-bottom: 2px solid #e9ecef;
-    padding-bottom: 5px;
-    /* サイドバーの見出しは明朝体でなくてよいかもしれないが、統一感のためBitterにするか、視認性重視でSansにするか。
-       ここでは指定なし（継承=Lora）か、あえてBitterにする。要望は「各ページのタイトル」なので h1 重視だが、h3もBitterが見やすい。 */
+    margin-bottom: 15px;
+    color: #ecf0f1;
+    border-bottom: 1px solid #34495e;
+    padding-bottom: 8px;
+    text-align: left;
+    background: none;
+    border-radius: 0;
     font-family: 'Bitter', serif;
     font-weight: 700;
 }
@@ -91,6 +92,8 @@ body {
 .sidebar h3.sidebar-home {
     border-bottom: 2px solid #3498db;
     margin-bottom: 20px;
+    margin-top: 0 !important;
+    font-size: 1.2rem !important;
 }
 
 .sidebar h3.sidebar-home a {
@@ -99,6 +102,7 @@ body {
     display: flex;
     align-items: center;
     gap: 8px;
+    text-decoration: none;
 }
 
 .sidebar h3.sidebar-home a:hover {
@@ -107,35 +111,34 @@ body {
 
 .sidebar ul {
     list-style: none;
+    margin-bottom: 25px;
     padding: 0;
-    margin-bottom: 20px;
+    border: none;
+    background: none;
 }
 
 .sidebar li {
     margin-bottom: 8px;
+    font-size: 0.9rem;
 }
 
 .sidebar a {
+    color: #ecf0f1;
     text-decoration: none;
-    color: var(--button-bg);
-    font-size: 0.95rem;
+    display: block;
+    padding: 5px 0;
     transition: color 0.2s;
+    font-size: 0.95rem;
 }
 
 .sidebar a:hover {
-    color: var(--button-hover-bg);
-    text-decoration: underline;
-}
-
-/* Homeへのリンク（サイドバー内） */
-.sidebar-home {
-    margin-top: 0 !important;
-    font-size: 1.2rem !important;
+    color: #3498db;
+    text-decoration: none;
 }
 
 /* ページラッパー（サイドバーの分だけ右にずらす） */
 .page-wrapper {
-    margin-left: 280px;
+    margin-left: 220px;
     transition: margin-left 0.3s ease-in-out;
 }
 
