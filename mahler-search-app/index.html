@@ -1051,9 +1051,9 @@
       let includeOrchMsg = '';
       if (includeOrchRadio) {
           if (includeOrchRadio.value === 'off') {
-              includeOrchMsg = '<span style="font-size:0.85rem; color:#d32f2f; margin-left: 8px;">(オーケストラ全体への指示は含めない)</span>';
+              includeOrchMsg = '<span style="color:#d32f2f; margin-left: 8px;">(オーケストラ全体への指示は含めない)</span>';
           } else {
-              includeOrchMsg = '<span style="font-size:0.85rem; color:#388e3c; margin-left: 8px;">(オーケストラ全体への指示を含める)</span>';
+              includeOrchMsg = '<span style="color:#388e3c; margin-left: 8px;">(オーケストラ全体への指示を含める)</span>';
           }
       }
 
@@ -1063,8 +1063,12 @@
     }
 
     // ラジオボタンの変更イベントを監視してサマリーを更新
-    document.querySelectorAll('input[name="include-orchestra-all"]').forEach(radio => {
-        radio.addEventListener('change', updateSelectionSummary);
+    document.addEventListener('DOMContentLoaded', () => {
+        document.querySelectorAll('input[name="include-orchestra-all"]').forEach(radio => {
+            radio.addEventListener('change', updateSelectionSummary);
+        });
+        // 初期表示更新
+        updateSelectionSummary();
     });
 
     function adjustFloatingBarSpacing() {
