@@ -33,20 +33,54 @@ if (-not $currentBranch) {
 }
 
 if ($currentBranch -ne "main") {
-    Write-Host "⚠ Currently on branch '$currentBranch'. Switching to 'main'..." -ForegroundColor Yellow
-    # Check for uncommitted changes first
+    Write-Host "⚠ Currently on branch '$currentBranch'." -ForegroundColor Yellow
     $status = git status --porcelain
+
     if ($status) {
-        Write-Error "❌ cannot switch branch: You have uncommitted changes."
-        Write-Host "Please commit or stash your changes before running this script." -ForegroundColor Yellow
-        exit 1
+        Write-Host "Uncommitted changes detected." -ForegroundColor Yellow
+        $resp = Read-Host "Do you want to COMMIT these changes and MERGE '$currentBranch' into 'main'? (Y/N)"
+        
+        if ($resp -match "^[Yy]") {
+            Write-Host "Committing changes..." -ForegroundColor Gray
+            git add .
+            git commit -m "Auto-commit/merge via sync-data from $currentBranch"
+            
+            Write-Host "Switching to main and merging..." -ForegroundColor Gray
+            git checkout main
+            git merge $currentBranch
+            if ($LASTEXITCODE -ne 0) {
+                Write-Error "❌ Merge failed (Conflict?). Please resolve manually."
+                exit 1
+            }
+        } else {
+             $stashResp = Read-Host "Do you want to STASH changes and switch to main? (Y/N)"
+             if ($stashResp -match "^[Yy]") {
+                 Write-Host "Stashing changes..." -ForegroundColor Gray
+                 git stash push -u -m "Auto-stash by sync-data"
+                 git checkout main
+             } else {
+                 Write-Error "❌ Aborted. Please handle uncommitted changes manually."
+                 exit 1
+             }
+        }
+    } else {
+        # Clean state
+        $resp = Read-Host "Do you want to MERGE '$currentBranch' into 'main'? (Y=Merge, N=Just Switch)"
+        if ($resp -match "^[Yy]") {
+            Write-Host "Switching to main and merging..." -ForegroundColor Gray
+            git checkout main
+            git merge $currentBranch
+        } else {
+            Write-Host "Switching to main..." -ForegroundColor Gray
+            git checkout main
+        }
     }
-    
-    git checkout main 2>&1 | Out-Null
-    if ($LASTEXITCODE -ne 0) {
-        Write-Error "❌ Failed to switch to main branch."
-        Write-Host "Please switch to main manually: git checkout main" -ForegroundColor Yellow
-        exit 1
+
+    # Ensure we are on main now
+    $newBranch = git branch --show-current
+    if ($newBranch -ne "main") {
+         Write-Error "❌ Failed to switch to main branch."
+         exit 1
     }
     Write-Host "✓ Switched to main." -ForegroundColor Green
 }

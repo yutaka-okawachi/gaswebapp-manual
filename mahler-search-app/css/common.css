@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Lora:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Bitter:wght@700&family=Lora:wght@400;500;600;700&display=swap');
 
 body {
     font-family: 'Lora', 'Hiragino Kaku Gothic ProN', 'Meiryo', sans-serif;
@@ -48,39 +48,44 @@ body {
 .nav-toggle {
     display: none;
     position: fixed;
-    top: 10px;
-    left: 10px;
-    z-index: 1001;
-    background: #333;
+    top: 15px;
+    left: 15px;
+    z-index: 2000;
+    padding: 10px 15px;
+    background-color: var(--button-bg);
     color: white;
     border: none;
-    padding: 10px 15px;
+    border-radius: 4px;
+    font-size: 1rem;
     cursor: pointer;
-    font-size: 1.2rem;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
 }
 
 .sidebar {
     position: fixed;
-    left: 0;
     top: 0;
-    width: 220px;
+    left: 0;
+    width: 280px;
     height: 100vh;
-    background: #2c3e50;
-    color: white;
-    padding: 30px 20px;
+    background-color: #f8f9fa;
+    border-right: 1px solid #dee2e6;
+    padding: 20px;
     overflow-y: auto;
     z-index: 1000;
+    transition: transform 0.3s ease-in-out;
 }
 
 .sidebar h3 {
-    font-size: 1rem;
-    margin-bottom: 15px;
-    color: #ecf0f1;
-    border-bottom: 1px solid #34495e;
-    padding-bottom: 8px;
-    text-align: left; /* reset from h1 center if inherited */
-    background: none;
-    border-radius: 0;
+    font-size: 1.1rem;
+    margin-top: 15px;
+    margin-bottom: 10px;
+    color: #495057;
+    border-bottom: 2px solid #e9ecef;
+    padding-bottom: 5px;
+    /* サイドバーの見出しは明朝体でなくてよいかもしれないが、統一感のためBitterにするか、視認性重視でSansにするか。
+       ここでは指定なし（継承=Lora）か、あえてBitterにする。要望は「各ページのタイトル」なので h1 重視だが、h3もBitterが見やすい。 */
+    font-family: 'Bitter', serif;
+    font-weight: 700;
 }
 
 .sidebar h3.sidebar-home {
@@ -102,48 +107,52 @@ body {
 
 .sidebar ul {
     list-style: none;
-    margin-bottom: 25px;
     padding: 0;
-    border: none;
-    background: none;
+    margin-bottom: 20px;
 }
 
 .sidebar li {
     margin-bottom: 8px;
-    font-size: 0.9rem;
 }
 
 .sidebar a {
-    color: #ecf0f1;
     text-decoration: none;
-    display: block;
-    padding: 5px 0;
+    color: var(--button-bg);
+    font-size: 0.95rem;
+    transition: color 0.2s;
 }
 
 .sidebar a:hover {
-    color: #3498db;
+    color: var(--button-hover-bg);
+    text-decoration: underline;
 }
 
+/* Homeへのリンク（サイドバー内） */
+.sidebar-home {
+    margin-top: 0 !important;
+    font-size: 1.2rem !important;
+}
+
+/* ページラッパー（サイドバーの分だけ右にずらす） */
 .page-wrapper {
-    margin-left: 220px;
-    transition: margin-left 0.3s ease;
+    margin-left: 280px;
+    transition: margin-left 0.3s ease-in-out;
 }
 
 /* ホームリンク */
 .home-link {
-    display: none; /* デフォルト（PC）では非表示 */
-    margin-bottom: 10px;
+    display: none; /* PCではサイドバーにあるので隠す */
+    margin-bottom: 20px;
     font-size: 0.9rem;
 }
 
 .home-link a {
-    color: var(--button-bg);
     text-decoration: none;
-    transition: all 0.2s ease;
+    color: #666;
 }
 
 .home-link a:hover {
-    color: var(--button-hover-bg);
+    color: #333;
     text-decoration: underline;
 }
 
@@ -165,7 +174,8 @@ body {
     }
 }
 
-/* Homeページ専用：サイドバーを常に隠す */
+/* Homeページ専用：サイドバーを常に隠す -> 表示するように変更 (2025/01/11) */
+/*
 .home-page .sidebar {
     display: none;
 }
@@ -173,8 +183,9 @@ body {
     margin-left: 0;
 }
 .home-page .nav-toggle {
-    display: none; /* Homeではサイドバー不要なのでトグルも隠す */
+    display: none; 
 }
+*/
 
 @media (max-width: 600px) {
     h1 {
@@ -189,7 +200,7 @@ h1 {
     font-size: 2.0rem;
     position: relative;
     padding-bottom: 15px;
-    font-family: 'Lora', serif;
+    font-family: 'Bitter', serif;
     font-weight: 700;
     letter-spacing: 0.05em;
     max-width: fit-content;
@@ -228,6 +239,8 @@ h1::after {
     margin-bottom: 15px;
     border-bottom: 2px solid #f0f4f8;
     padding-bottom: 10px;
+    font-family: 'Bitter', serif;
+    font-weight: 700;
     display: flex;
     align-items: center;
 }
@@ -754,6 +767,26 @@ button.clear-input-btn:hover {
     min-height: 200px;
     margin-bottom: 100px;
     font-family: 'Lora', serif;
+}
+
+h2 {
+    color: var(--color-gm);
+    border-bottom: 2px solid var(--color-gm);
+    padding-bottom: 5px;
+    margin-top: 40px;
+    margin-bottom: 20px;
+    font-size: 1.5rem;
+    font-family: 'Bitter', serif;
+    font-weight: 700;
+}
+
+h3 {
+    margin-top: 30px;
+    margin-bottom: 15px;
+    color: #444;
+    font-size: 1.2rem;
+    font-family: 'Bitter', serif;
+    font-weight: 700;
 }
 
 .result-entry {

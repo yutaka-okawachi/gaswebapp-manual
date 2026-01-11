@@ -543,10 +543,7 @@ function generateDicHtml(dicData, abbrData) {
             <li><a href="dic.html">用語集ページ</a></li>
         </ul>
 
-        <h3>その他</h3>
-        <ul>
-            <!-- 今後追加予定 -->
-        </ul>
+
     </nav>
 
     <div class="page-wrapper">
