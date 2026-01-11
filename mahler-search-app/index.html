@@ -1045,10 +1045,27 @@
         }
       }
 
-      summaryDiv.innerHTML = '<div class="summary-block">' + '<div class="summary-title">選択した曲：</div>' + '<div class="summary-value">' + workValue + '</div>' + '</div>' + '<div class="summary-block">' + '<div class="summary-title">選択した楽器：</div>' + '<div class="summary-value">' + instrumentValue + '</div>' + '</div>';
+      
+      // オーケストラ全体設定の取得
+      const includeOrchRadio = document.querySelector('input[name="include-orchestra-all"]:checked');
+      let includeOrchMsg = '';
+      if (includeOrchRadio) {
+          if (includeOrchRadio.value === 'off') {
+              includeOrchMsg = '<span style="font-size:0.85rem; color:#d32f2f; margin-left: 8px;">(オーケストラ全体への指示は含めない)</span>';
+          } else {
+              includeOrchMsg = '<span style="font-size:0.85rem; color:#388e3c; margin-left: 8px;">(オーケストラ全体への指示を含める)</span>';
+          }
+      }
+
+      summaryDiv.innerHTML = '<div class="summary-block">' + '<div class="summary-title">選択した曲：</div>' + '<div class="summary-value">' + workValue + '</div>' + '</div>' + '<div class="summary-block">' + '<div class="summary-title">選択した楽器：' + includeOrchMsg + '</div>' + '<div class="summary-value">' + instrumentValue + '</div>' + '</div>';
 
       adjustFloatingBarSpacing();
     }
+
+    // ラジオボタンの変更イベントを監視してサマリーを更新
+    document.querySelectorAll('input[name="include-orchestra-all"]').forEach(radio => {
+        radio.addEventListener('change', updateSelectionSummary);
+    });
 
     function adjustFloatingBarSpacing() {
       const floatingBar = document.getElementById('floating-bar');
