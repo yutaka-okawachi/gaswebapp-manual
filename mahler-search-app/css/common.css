@@ -177,8 +177,7 @@ body {
     }
 }
 
-/* Homeページ専用：サイドバーを常に隠す -> 表示するように変更 (2025/01/11) */
-/*
+/* Homeページ専用：サイドバーを常に隠す */
 .home-page .sidebar {
     display: none;
 }
@@ -188,7 +187,6 @@ body {
 .home-page .nav-toggle {
     display: none; 
 }
-*/
 
 @media (max-width: 600px) {
     h1 {
