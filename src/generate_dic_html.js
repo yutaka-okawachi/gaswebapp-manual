@@ -554,7 +554,7 @@ function generateDicHtml(dicData, abbrData) {
             <div class="home-link"><a href="home.html">HOME</a></div>
             <h1>用語集</h1>
             <p style="font-size: 0.85rem; color: #555; margin-top: 0.5em; margin-bottom: 1em;">
-                RSの管弦楽曲，Anton Bruckner，Paul Hindemith, Sigfrid Karg-Elert についても収録している．どの曲で使用されているかの情報は「略記一覧」を参照のこと．
+                どの曲で使用されているかの情報は「略記一覧」を参照のこと．
             </p>
             <div id="listContainer">
 ${dicListHtml}
