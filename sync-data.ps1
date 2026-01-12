@@ -157,6 +157,15 @@ if ($gasChanges) {
             Pop-Location
         }
     } else {
+        # ★★★ Deploymentの自動更新 (Auto-Deploy) ★★★
+        Write-Host "Updating Web App deployment..." -ForegroundColor Cyan
+        try {
+            cmd /c "node manage_deploy.js"
+            cmd /c "node update_env.js"
+        } catch {
+            Write-Warning "Failed to update deployment: $_"
+        }
+
         Pop-Location
         Write-Host "✓ GAS source updated successfully." -ForegroundColor Green
     }
@@ -209,18 +218,18 @@ if ($runFailed) {
     Write-Host ""
     Write-Host "→ Falling back to Web App method..." -ForegroundColor Yellow
     
-    # ★★★ Deploymentの自動更新 (Auto-Deploy) ★★★
-    Write-Host "Updating Web App deployment to ensure latest code is used..." -ForegroundColor Cyan
-    Push-Location "src"
-    try {
-        # nodeコマンドの出力を表示しながら実行
-        cmd /c "node manage_deploy.js"
-        cmd /c "node update_env.js"
-    } catch {
-        Write-Warning "Failed to update deployment: $_"
-    } finally {
-        Pop-Location
-    }
+    # ★★★ Deploymentの自動更新 (Auto-Deploy) - Step 1で実施済みのためスキップ ★★★
+    # Write-Host "Updating Web App deployment to ensure latest code is used..." -ForegroundColor Cyan
+    # Push-Location "src"
+    # try {
+    #     # nodeコマンドの出力を表示しながら実行
+    #     cmd /c "node manage_deploy.js"
+    #     cmd /c "node update_env.js"
+    # } catch {
+    #     Write-Warning "Failed to update deployment: $_"
+    # } finally {
+    #     Pop-Location
+    # }
     
     # .envの再読み込み (新しいURLを反映するため)
     if (Test-Path ".env") {

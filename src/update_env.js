@@ -28,9 +28,8 @@ exec('clasp deployments', (err, stdout, stderr) => {
 
         // Update .env
         try {
-            // Read .env from parent dir (since we are in src) or current? 
-            // We run this from src, but .env is in parent. Based on previous commands, .env is in c:\Users\okawa\gaswebapp-manual
-            const envPath = '../.env'; 
+            const path = require('path');
+            const envPath = path.join(__dirname, '../.env'); 
             let envContent = fs.readFileSync(envPath, 'utf-8');
             
             // Regex replace
@@ -45,6 +44,34 @@ exec('clasp deployments', (err, stdout, stderr) => {
 
         } catch (e) {
             console.error('Error updating .env:', e);
+        }
+
+        // Update app.js
+        try {
+            const path = require('path');
+            const appJsPath = path.join(__dirname, '../mahler-search-app/js/app.js');
+            console.log('Target app.js path:', appJsPath);
+            
+            if (fs.existsSync(appJsPath)) {
+                let appJsContent = fs.readFileSync(appJsPath, 'utf-8');
+                // Replace const GAS_NOTIFICATION_URL = '...';
+                // Using a regex that captures the existing URL string to replace it
+                const appJsNewContent = appJsContent.replace(
+                    /const GAS_NOTIFICATION_URL = '.*';/, 
+                    `const GAS_NOTIFICATION_URL = '${newUrl}';`
+                );
+                
+                if (appJsContent === appJsNewContent) {
+                     console.log('app.js was not updated (regex match failed or already same).');
+                } else {
+                    fs.writeFileSync(appJsPath, appJsNewContent);
+                    console.log('app.js updated successfully with new URL.');
+                }
+            } else {
+                console.warn('app.js not found at expected path:', appJsPath);
+            }
+        } catch (e) {
+            console.error('Error updating app.js:', e);
         }
 
     } else {
