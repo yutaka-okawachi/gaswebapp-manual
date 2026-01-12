@@ -229,12 +229,12 @@ function handleSearchNotification(data) {
     // メール本文を構築（新フォーマット）
     const body = "マーラー検索アプリで新しい検索がありました。\n\n" +
                "■ 検索内容\n" +
-               "【　作品　】 " + work + "\n" +
-               "【　タイプ　】 " + searchTypeDisplay + "\n" +
-               "【　" + detailLabel + "　】 " + detailContent + "\n" +
-               "【　日時　】 " + formattedDate + "\n\n" +
+               "【作品】 " + work + "\n" +
+               "【タイプ】 " + searchTypeDisplay + "\n" +
+               "【" + detailLabel + "】 " + detailContent + "\n" +
+               "【日時】 " + formattedDate + "\n\n" +
                "■ 検索元\n" +
-               "【　ページ　】 " + (pageNameMap[page] || page) + "\n\n" +
+               "【ページ】 " + (pageNameMap[page] || page) + "\n\n" +
                "■ ユーザー環境\n" +
                getValue(data.userAgent);
                 
