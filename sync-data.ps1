@@ -208,28 +208,52 @@ $runFailed = ($runExitCode -ne 0) -or ($runOutput -match "Unable to run|function
 if ($runFailed) {
     Write-Host "✗ clasp run failed or unavailable (exit code: $runExitCode)" -ForegroundColor Yellow
     
-    # clasp runの出力を表示（デバッグ用）
-    if ($runOutput) {
-        Write-Host "clasp run output:" -ForegroundColor DarkGray
-        Write-Host ($runOutput | Out-String) -ForegroundColor DarkGray
+    # 認証エラーチェックと再ログイン
+    if ($runOutput -match "permission|unauthorized|credentials|not logged in|Insufficient") {
+        Write-Host ""
+        Write-Host "⚠ clasp run failed due to authentication error." -ForegroundColor Yellow
+        
+        $loginChoice = Read-Host "Do you want to run 'clasp login' now? (Y to login, N to verify Web App fallback)"
+        if ($loginChoice -match "^[Yy]") {
+            Push-Location "src"
+            Write-Host "Running 'clasp login'... (A browser tab will open)" -ForegroundColor Cyan
+            clasp login
+            Pop-Location
+            
+            Write-Host "Retrying clasp run..." -ForegroundColor Cyan
+            $runOutput = clasp run exportAllDataToJson 2>&1
+            $runExitCode = $LASTEXITCODE
+            $runFailed = ($runExitCode -ne 0) -or ($runOutput -match "Unable to run|function not found|Script function not found")
+            
+            if (-not $runFailed) {
+                Write-Host "✓ GAS function executed successfully (Retry)." -ForegroundColor Green
+            }
+        }
     }
+
+    if ($runFailed) {
+        # clasp runの出力を表示（デバッグ用）
+        if ($runOutput) {
+            Write-Host "clasp run output:" -ForegroundColor DarkGray
+            Write-Host ($runOutput | Out-String) -ForegroundColor DarkGray
+        }
+        
+        # Web App経由で実行を試みる
+        Write-Host ""
+        Write-Host "→ Falling back to Web App method..." -ForegroundColor Yellow
     
-    # Web App経由で実行を試みる
-    Write-Host ""
-    Write-Host "→ Falling back to Web App method..." -ForegroundColor Yellow
-    
-    # ★★★ Deploymentの自動更新 (Auto-Deploy) - Step 1で実施済みのためスキップ ★★★
-    # Write-Host "Updating Web App deployment to ensure latest code is used..." -ForegroundColor Cyan
-    # Push-Location "src"
-    # try {
-    #     # nodeコマンドの出力を表示しながら実行
-    #     cmd /c "node manage_deploy.js"
-    #     cmd /c "node update_env.js"
-    # } catch {
-    #     Write-Warning "Failed to update deployment: $_"
-    # } finally {
-    #     Pop-Location
-    # }
+    # ★★★ Deploymentの自動更新 (Auto-Deploy) - フォールバック時にも念のため実施 ★★★
+    Write-Host "Updating Web App deployment to ensure latest code is used..." -ForegroundColor Cyan
+    Push-Location "src"
+    try {
+        # nodeコマンドの出力を表示しながら実行
+        cmd /c "node manage_deploy.js"
+        cmd /c "node update_env.js"
+    } catch {
+        Write-Warning "Failed to update deployment: $_"
+    } finally {
+        Pop-Location
+    }
     
     # .envの再読み込み (新しいURLを反映するため)
     if (Test-Path ".env") {
@@ -331,6 +355,7 @@ if ($runFailed) {
         Write-Host "    3. Then run: git pull" -ForegroundColor Gray
         Write-Host ""
         exit 1
+    }
     }
 } else {
     $duration = (Get-Date) - $startTime
