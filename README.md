@@ -21,7 +21,7 @@
    *例: `.\sync-data.ps1 -message "フォントサイズを0.85remに変更"`*
 
 3. **完了**
-   スクリプトが自動的に ローカル変更のCommit, GAS Push, GAS実行, Git Pull (Rebase), Git Push を行います。
+   スクリプトが自動的に ローカル変更のCommit, GAS Push, **Web Appデプロイの更新, フロントエンド設定の同期**, GAS実行, Git Pull (Rebase), Git Push を行います。
    数分後に [GitHub Pages](https://yutaka-okawachi.github.io/gaswebapp-manual/mahler-search-app/dic.html) に反映されます。
 
 ---
@@ -116,3 +116,6 @@ A. しばらくデプロイを更新していなかったり、大幅な変更�
 
 ### その他
 - **用語集 (`dic.html`) の修正**: 特定の用語（Sigfrid Karg-Elertなど）に関する説明文の文言を修正しました。
+
+### 検索通知機能の復旧 (search notification fix)
+- **Web App URLの自動同期**: `src/` 以下の GAS コードを更新した際、自動的に Web App のデプロイを更新し、その新しい URL をフロントエンド（`app.js`）の設定に反映させる仕組みを導入しました。これにより、検索通知が届かなくなる問題を解決しました。
