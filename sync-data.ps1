@@ -366,6 +366,17 @@ if ($runFailed) {
 Write-Host "✓ GAS function completed. Files should be pushed to GitHub." -ForegroundColor Green
 Write-Host ""
 
+# --- [3.5/5] 中間コミット (Intermediate Commit) ---
+# Step 3 (Web Appフォールバック) で app.js 等が更新された場合、git pull --rebase が失敗するため、ここでコミットする
+$localStatusStart = git status --porcelain
+if ($localStatusStart) {
+    Write-Host "[3.5/5] Committing app.js updates..." -ForegroundColor User
+    git add .
+    git commit -m "Update Web App URL in app.js (Auto-sync)"
+    Write-Host "✓ Local changes committed." -ForegroundColor Green
+    Write-Host ""
+}
+
 # --- [4/5] 最新データのローカル同期 (git pull) ---
 Write-Host "[4/5] Pulling latest data from GitHub..." -ForegroundColor Yellow
 
