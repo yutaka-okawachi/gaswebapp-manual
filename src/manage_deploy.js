@@ -1,4 +1,25 @@
 const { exec } = require('child_process');
+const fs = require('fs');
+const path = require('path');
+
+// Helper to get current deployment ID from .env
+function getCurrentDeploymentId() {
+    try {
+        const envPath = path.join(__dirname, '../.env');
+        if (!fs.existsSync(envPath)) return null;
+        
+        const envContent = fs.readFileSync(envPath, 'utf-8');
+        // GAS_DEPLOY_URL=https://script.google.com/macros/s/DEPLOY_ID/exec
+        const match = envContent.match(/GAS_DEPLOY_URL=https:\/\/script\.google\.com\/macros\/s\/([A-Za-z0-9_-]+)\/exec/);
+        return match ? match[1] : null;
+    } catch (e) {
+        console.error('Error reading .env:', e);
+        return null;
+    }
+}
+
+const currentId = getCurrentDeploymentId();
+console.log('Current Deployment ID from .env:', currentId || 'None');
 
 console.log('Fetching deployments...');
 exec('clasp deployments', (err, stdout, stderr) => {
@@ -8,49 +29,30 @@ exec('clasp deployments', (err, stdout, stderr) => {
     }
 
     const lines = stdout.split('\n');
-    const list = [];
+    const deployments = {};
     lines.forEach(l => {
-        // ID pattern: allow alphanumeric, underscore, hyphen
         const m = l.match(/- ([A-Za-z0-9_-]+) @([0-9]+)/);
         if(m) {
-            list.push({ id: m[1].trim(), ver: parseInt(m[2], 10) });
+            deployments[m[1].trim()] = parseInt(m[2], 10);
         }
     });
 
-    // Sort by version (ascending)
-    list.sort((a, b) => a.ver - b.ver);
+    console.log(`Found ${Object.keys(deployments).length} deployments.`);
 
-    console.log(`Found ${list.length} deployments.`);
-    
-    if (list.length > 0) {
-        // Delete the oldest one
-        const target = list[0];
-        console.log(`Targeting oldest deployment: ${target.id} (@${target.ver})`);
-        
-        exec(`clasp undeploy ${target.id}`, (e, out, er) => {
-            console.log('Undeploy stdout:', out);
-            if (er) console.error('Undeploy stderr:', er);
-
-            // Even if undeploy fails (maybe already gone?), try to deploy new one?
-            // Usually if undeploy fails with "Invalid ID", we should try the next one?
-            // But let's assume it works or we proceed if it was just a glitch.
-            
-            // If the error implies "not found", maybe we can proceed. 
-            // But if it implies "permission denied", we are stuck.
-            
-            if (!e || (er && er.includes('Invalid execution'))) { 
-                 console.log('Proceeding to create new deployment...');
-                 exec('clasp deploy -d "Fix whom update logic (via node)"', (e2, out2, er2) => {
-                     console.log('Deploy stdout:', out2);
-                     if(er2) console.error('Deploy stderr:', er2);
-                 });
-            }
+    if (currentId && deployments[currentId] !== undefined) {
+        console.log(`Targeting existing deployment: ${currentId}`);
+        // Update existing deployment
+        exec(`clasp deploy -i "${currentId}" -d "Auto-update via sync-data"`, (e, out, er) => {
+            console.log('Deploy (Update) stdout:', out);
+            if(er) console.error('Deploy (Update) stderr:', er);
         });
     } else {
-        console.log('No deployments found to delete? Trying to deploy anyway...');
-        exec('clasp deploy -d "Fix whom update logic (via node)"', (e2, out2, er2) => {
-             console.log('Deploy stdout:', out2);
-             if(er2) console.error('Deploy stderr:', er2);
+        console.log('Current deployment ID not found or invalid. Creating new deployment...');
+        // Create new deployment
+        exec('clasp deploy -d "New Deployment via sync-data"', (e, out, er) => {
+            console.log('Deploy (New) stdout:', out);
+            if(er) console.error('Deploy (New) stderr:', er);
+            // update_env.js will handle updating .env with the new ID
         });
     }
 });

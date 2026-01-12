@@ -370,7 +370,7 @@ Write-Host ""
 # Step 3 (Web Appフォールバック) で app.js 等が更新された場合、git pull --rebase が失敗するため、ここでコミットする
 $localStatusStart = git status --porcelain
 if ($localStatusStart) {
-    Write-Host "[3.5/5] Committing app.js updates..." -ForegroundColor User
+    Write-Host "[3.5/5] Committing app.js updates..." -ForegroundColor Cyan
     git add .
     git commit -m "Update Web App URL in app.js (Auto-sync)"
     Write-Host "✓ Local changes committed." -ForegroundColor Green
