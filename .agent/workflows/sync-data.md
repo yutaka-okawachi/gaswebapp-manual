@@ -61,14 +61,16 @@ clasp login
 1. `clasp push` でGASにアップロード
 2. `git commit` でローカル変更を保存（自動）
 3. `clasp run` または Web App経由で`exportAllDataToJson`を自動実行
-4. `git pull --rebase` で更新を取得
-5. `git push` で自動プッシュ
+    - `clasp run` 失敗時、認証エラーなら再ログインを促し、Web Appフォールバック時も自動的にデプロイを更新して最新コードを利用します。
+4. `git commit` (中間コミット): Web App実行で `app.js` 等が更新された場合、自動的にコミットします。
+5. `git pull --rebase` で更新を取得
+6. `git push` で自動プッシュ
 
-✅ **確認プロンプトなし** - 全自動で完了します！
+✅ **確認プロンプトなし** - 基本的に全自動で完了しますが、認証エラー時のみ対話的に解決できます。
 
 > [!TIP]
 > `clasp run`が失敗しても、Web App経由で自動的にフォールバックします。
-> 初回の権限認証さえ完了していれば、以降は完全自動で動作します。
+> フォールバック時、古いデプロイしかない場合でも自動的に更新・`.env`同期を行うため、常に最新の状態で実行されます。
 
 
 
@@ -142,20 +144,21 @@ v2024.12.27以降の`sync-data.ps1`は、clasp pushが失敗しても**自動的
 
 This usually means clasp is logged in with a different Google account.
 The script will continue using Web App for GAS function execution.
-
-To fix authentication (optional):
-  1. cd src
-  2. clasp logout
-  3. clasp login
-  4. Select the correct Google account (pistares@gmail.com)
-
-⚠ Skipping clasp push. GAS files will not be updated.
-✓ GAS function executed successfully via Web App.
 ```
 
+**v2025.1.12以降の改善**:
+`sync-data.ps1` は `clasp run` で認証エラーを検知した場合、以下のように対話的に再ログインを促します。
+
+```powershell
+⚠ clasp run failed due to authentication error.
+Do you want to run 'clasp login' now? (Y to login, N to verify Web App fallback)
+```
+
+ここで `Y` を入力すれば、その場でブラウザが開き再ログインできます。`N` を選べばそのままWeb Appへのフォールバック（自動デプロイ更新付き）が行われます。
+
 > [!IMPORTANT]
-> GASファイル（`src/`内のファイル）をローカルで編集した場合のみ、clasp認証の修正が必要です。
-> スプレッドシートのデータ更新だけなら、認証エラーは無視して問題ありません。
+> GASファイル（`src/`内のファイル）をローカルで編集した場合のみ、clasp認証の修正（再ログイン）が必要です。
+> スプレッドシートのデータ更新だけなら、認証エラーは無視して（`N`を選択して）Web Appフォールバックで問題ありません。
 
 **手動で認証を修正する場合**（GASファイルを編集する場合のみ）:
 
