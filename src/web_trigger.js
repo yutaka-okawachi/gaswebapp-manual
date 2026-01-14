@@ -288,7 +288,10 @@ function logToSpreadsheet(data, detail) {
     const work = safeStr(data.work);
     const page = safeStr(data.page);
     const term = safeStr(data.term);
-    const scope = safeStr(data.scope);
+    let scope = safeStr(data.scope);
+    if (data.includeGlobal) {
+      scope += " (全体を含む)";
+    }
     const ua = safeStr(data.userAgent);
     
     // Append row

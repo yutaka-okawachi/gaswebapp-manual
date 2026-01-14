@@ -965,7 +965,20 @@ function searchData(choice1Arr, choice2Arr, includeOrchestraAll) {
                "【　日時　】 " + new Date().toLocaleString('ja-JP') + "\n\n" +
                "■ 検索元\n" +
                "【　機能　】 曲名・楽器検索 (Server)";
+                "■ 検索元\n" +
+                "【　機能　】 曲名・楽器検索 (Server)";
   sendSearchNotification(emailSubject, emailBody);
+
+  // Log to Spreadsheet
+  // userAgent is not available in server-side function unless passed from client
+  logToSpreadsheet({
+    work: selectedWorks,
+    page: 'index.html',
+    term: '曲名・楽器検索',
+    scope: selectedInstruments,
+    userAgent: 'N/A', // Client doesn't pass UA to searchData yet
+    includeGlobal: includeOrchestraAll
+  }, emailBody);
 
   return totalMatches === 0 ? '<p class="result-message">該当するデータがありません。</p>' : `<div>${totalMatches}件ありました。</div>${resultHTML}`;
 }
