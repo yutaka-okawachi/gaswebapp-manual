@@ -14,7 +14,7 @@ window.appData = window.appData || {
 
 // --- Configuration ---
 // TODO: Replace with your deployed Web App URL
-const GAS_NOTIFICATION_URL = 'https://script.google.com/macros/s/AKfycbwekMiUZv1GXvUGk2xeJd7dgOmgIxZtaEZNd5kvW9bmBQK-HoEmqj3oDvm19KEyN5CW5g/exec';
+const GAS_NOTIFICATION_URL = 'https://script.google.com/macros/s/AKfycbzFD2EDHfECX0yK3cP0toN5zJRpcCNMO9HiEBM7WrD_9fX8N5bjHo9IYtEEXu_fsifO4Q/exec';
 
 /**
  * Sends a search notification to the Google Apps Script Web App.
