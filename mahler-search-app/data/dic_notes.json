@@ -1270,6 +1270,11 @@
     "[GM], [RW: Oper], [RS: Oper]"
   ],
   [
+    "ernst",
+    "(≒ serious, earnest, grave / serio, grave)\n【一般的な意味】\n① 重大な，深刻な，ゆゆしき．\n② 真面目な，真剣な，本気の．\n③ 厳格な，厳しい，（顔つきなどが）険しい．",
+    "[RW: Oper], [RS: Oper]"
+  ],
+  [
     "erregt",
     "(≒ excited, agitated / agitato, eccitato)\nerregen の過去分詞\n【一般的な意味】\n① （感情が）高ぶった，興奮した，激した．\n② （神経などが）刺激された．\n【音楽用語としての訳例】\n「激して」，「興奮して」，「（感情が）高ぶって」，「焦燥感を持って」，「荒々しく」",
     "[RW: Oper], [RS: Oper], [H: Welt], [K: Cap], [K: App]"
@@ -2018,6 +2023,11 @@
     "hinter der Scene",
     "(≒ behind the scenes, off-stage / dietro le quinte, fuori scena)\n（Scene は旧正書法）\n【一般的な意味】\n① 舞台裏で，背景の奥で．\n② （比喩的に）裏で，人知れず．\n【音楽用語としての訳例】\n「舞台裏で（演奏すること）」，「客席から見えない場所で」，「遠くからの響きとして」",
     "[RS: Held], [RS: Alpen], [RW: Oper], [RS: Oper]"
+  ],
+  [
+    "Hintergrund",
+    "(≒ background / sfondo)\n【一般的な意味】\n① 背景，後景，（舞台などの）書き割り．\n② （事件などの）背後関係，隠された事情，理由．\n③ （人の）経歴，育ち，バックグラウンド．\n【音楽用語としての訳例】\n 「背景で」，「舞台の後方で」，「舞台奥で」，「遠くで」，「（他の楽器を際立たせるために）背景として」\n\nRW でも RS でも①の意味で用いられている．対義語は \"Vordergrund\" ．",
+    "[RW: Oper], [RS: Oper]"
   ],
   [
     "Hinterweltlern",
@@ -3400,11 +3410,6 @@
     "[RW: Oper], [RS: Oper]"
   ],
   [
-    "sich überstürzend",
-    "(≒ rushing headlong, tumbling over, precipitate / precipitando, affrettandosi)\nsich überstürzen の現在分詞\n【一般的な意味】\n① （人が）慌てふためく，我を忘れて急ぐ，先を争う．\n② （出来事が）立て続けに起こる，急激に起こる．\n【音楽用語としての訳例】\n「precipitato」, 「affrettato」，「慌てるように」，「急ぎ足で」，「我を忘れて急ぎ」，「慌ただしく」，「転げ落ちるように」，「混沌として」",
-    "[K: Cap]"
-  ],
-  [
     "singend",
     "(≒ singing, cantabile, melodious / cantando, melodioso)\nsingen の現在分詞\n【一般的な意味】\n① 歌っている，歌唱している．\n② （音色などが）歌うような，メロディアスな．\n③ （詩などが）朗詠されている．\n【音楽用語としての訳例】\n「cantando」，「melodioso」，「歌うように」，「カンタービレで」，「旋律的に」",
     "[GM], [RW: Oper], [RS: Oper]"
@@ -3780,6 +3785,11 @@
     "[RW: Oper], [RS: Oper]"
   ],
   [
+    "überstürzend",
+    "(≒ precipitating, rushing, headlong / precipitoso, affrettato) \nüberstürzen の現在分詞\n【一般的な意味】\n① （行動などが）あまりにも急な，性急な，軽率な．\n② （事態などが）予期せず急展開する，重なり合って起こる． \n【音楽用語としての訳例】\n「急き立てるように」，「追い立てられるように」，「（前の音に）重なり合うほど急いで」，「なだれを打つように」\n\"sich überstürzend\" で「慌てるように」，「急ぎ足で」，「我を忘れて急ぎ」，「慌ただしく」．",
+    "[K: Cap]"
+  ],
+  [
     "überstürzt",
     "(≒ hasty, precipitate, rushed, frantic / precipitato, affrettato)\nüberstürzen の過去分詞\n【一般的な意味】\n① 慌てすぎた，軽率な，拙速な．\n② 性急な，急いで行われた．\n③ （事件などが）急に起こった．\n【音楽用語としての訳例】\n「大急ぎで」，「慌ただしく」，「軽率に」，「（テンポを）前へ急いで」",
     "[K: App]"
@@ -4143,6 +4153,11 @@
     "vorangehen",
     "(≒ to go ahead, to precede, to lead the way / precedere, avanzare)\n【一般的な意味】\n① 先に行く，先行する，道案内をする．\n② （物事が）先に進む，順調に進展する．\n【音楽用語としての訳例】\n「accelerando」，「stringendo」，「先に進む」，「前進する」，「（テンポを）速める」",
     "[H: KM4], [H: KM5], [H: Tanz], [H: Welt], [RW: Oper]"
+  ],
+  [
+    "Vordergrund",
+    "(≒ foreground / primo piano)\n【一般的な意味】\n① 前景，（舞台などの）最前部．\n② 最前面，目立つ場所，重要視される地位．\n【音楽用語としての訳例】\n「前景で」，「最前部で」，「舞台の前面で」，「（他の楽器よりも）際立って」，「前面に押し出して」\n\n対義語は \"Hintergrund\" ",
+    "[RW: Oper], [RS: Oper]"
   ],
   [
     "vorher",
