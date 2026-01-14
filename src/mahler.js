@@ -956,8 +956,7 @@ function searchData(choice1Arr, choice2Arr, includeOrchestraAll) {
   const selectedWorks = choice1Arr.includes('ALL') ? 'ALL' : choice1Arr.join(', ');
   const selectedInstruments = choice2Arr.includes('ALL_GLOBAL') ? 'ALL_GLOBAL' : choice2Arr.join(', ');
   
-  const emailBody = "マーラー検索アプリで新しい検索がありました。\n\n" +
-               "■ 検索内容\n" +
+  const emailBody ="■ 検索内容\n" +
                "【　作品　】 " + selectedWorks + "\n" +
                "【　タイプ　】 曲名・楽器検索\n" +
                "【　楽器　】 " + selectedInstruments + "\n" +
