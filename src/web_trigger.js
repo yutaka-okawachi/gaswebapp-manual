@@ -241,6 +241,9 @@ function handleSearchNotification(data) {
     const recipient = 'pistares@ezweb.ne.jp';
     MailApp.sendEmail(recipient, subject, body);
     
+    // Log to Spreadsheet
+    logToSpreadsheet(data, body);
+    
     return createJsonResponse({status: "success"});
       
   } catch (error) {
@@ -257,4 +260,43 @@ function createJsonResponse(data, statusCode) {
     .setMimeType(ContentService.MimeType.JSON);
   if (statusCode) data.httpStatus = statusCode;
   return output;
+}
+
+/**
+ * Log search history to Spreadsheet
+ */
+function logToSpreadsheet(data, detail) {
+  try {
+    const ss = SpreadsheetApp.getActiveSpreadsheet();
+    const sheetName = '検索履歴';
+    let sheet = ss.getSheetByName(sheetName);
+    
+    // Create sheet if it doesn't exist
+    if (!sheet) {
+      sheet = ss.insertSheet(sheetName);
+    }
+    
+    // Add header if sheet is empty
+    if (sheet.getLastRow() === 0) {
+      sheet.appendRow(['日時', 'Work', 'Page', 'Term', 'Scope', 'UserAgent', '詳細']);
+    }
+    
+    // Prepare data
+    const timestamp = new Date();
+    // Helper to safely get string values
+    const safeStr = (val) => (val && val !== 'N/A') ? String(val) : '';
+    
+    const work = safeStr(data.work);
+    const page = safeStr(data.page);
+    const term = safeStr(data.term);
+    const scope = safeStr(data.scope);
+    const ua = safeStr(data.userAgent);
+    
+    // Append row
+    sheet.appendRow([timestamp, work, page, term, scope, ua, detail]);
+    
+  } catch (e) {
+    // Log error but don't fail the request
+    Logger.log("Failed to log to spreadsheet: " + e.toString());
+  }
 }
