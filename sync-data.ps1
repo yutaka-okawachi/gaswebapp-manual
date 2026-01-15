@@ -227,18 +227,18 @@ if ($runFailed) {
         }
     }
 
-    if ($runFailed) {
-        # clasp runの出力を表示（デバッグ用）
-        if ($runOutput) {
-            Write-Host "clasp run output:" -ForegroundColor DarkGray
-            Write-Host ($runOutput | Out-String) -ForegroundColor DarkGray
-        }
 
-        # Web App経由で実行を試みる
-        
-        # Web App経由で実行を試みる
-        Write-Host ""
-        Write-Host "→ Falling back to Web App method..." -ForegroundColor Yellow
+    # clasp runの出力を表示（デバッグ用）
+    if ($runOutput) {
+        Write-Host "clasp run output:" -ForegroundColor DarkGray
+        Write-Host ($runOutput | Out-String) -ForegroundColor DarkGray
+    }
+
+    # Web App経由で実行を試みる
+    
+    # Web App経由で実行を試みる
+    Write-Host ""
+    Write-Host "→ Falling back to Web App method..." -ForegroundColor Yellow
     
     # ★★★ Deploymentの自動更新 (Auto-Deploy) - フォールバック時にも念のため実施 ★★★
     Write-Host "Updating Web App deployment to ensure latest code is used..." -ForegroundColor Cyan
@@ -354,7 +354,7 @@ if ($runFailed) {
         Write-Host ""
         exit 1
     }
-    } # End retry if
+
 } else {
     $duration = (Get-Date) - $startTime
     Write-Host "✓ GAS function executed successfully via clasp run." -ForegroundColor Green
