@@ -107,71 +107,67 @@ if (Test-Path ".env") {
 # --- [1/5] GAS へのアップロード (clasp push) ---
 Write-Host "[1/5] Checking GAS source changes (src/)..." -ForegroundColor Yellow
 $gasChanges = git status --porcelain src/
-if ($gasChanges) {
-    Write-Host "✓ Detected changes in GAS source. Uploading..." -ForegroundColor Gray
-    Push-Location "src"
-    
-    # clasp push を実行（エラー出力をキャプチャ）
-    $pushOutput = clasp push -f 2>&1
-    $pushExitCode = $LASTEXITCODE
-    
-    if ($pushExitCode -ne 0) {
-        # 権限エラーを検出
-        if ($pushOutput -match "permission|unauthorized|credentials|not logged in|Insufficient") {
-            Write-Host ""
-            Write-Error "❌ clasp push failed: Authentication error detected."
-            Write-Host "Your Google Apps Script credentials have expired or are missing." -ForegroundColor Yellow
-            Write-Host "Code changes in 'src/' cannot be uploaded without logging in." -ForegroundColor Yellow
-            Write-Host ""
+# Always check/push GAS source to ensure sync
+Write-Host "✓ Uploading GAS source..." -ForegroundColor Gray
+Push-Location "src"
 
-            # ユーザーにログインを促す
-            $loginChoice = Read-Host "Do you want to run 'clasp login' now? (Y to login, N to abort)"
-            if ($loginChoice -match "^[Yy]") {
-                Write-Host "Running 'clasp login'... (A browser tab will open)" -ForegroundColor Cyan
-                clasp login
-                
-                Write-Host "Retrying clasp push..." -ForegroundColor Cyan
-                # 再試行
-                $pushOutput = clasp push -f 2>&1
-                if ($LASTEXITCODE -eq 0) {
-                    Write-Host "✓ GAS source updated successfully (Retry)." -ForegroundColor Green
-                    Pop-Location
-                } else {
-                    Write-Error "❌ clasp push failed again."
-                    Write-Host "Error output: $($pushOutput | Out-String)" -ForegroundColor DarkGray
-                    Pop-Location
-                    exit 1
-                }
+# clasp push を実行（エラー出力をキャプチャ）
+$pushOutput = clasp push -f 2>&1
+$pushExitCode = $LASTEXITCODE
+
+if ($pushExitCode -ne 0) {
+    # 権限エラーを検出
+    if ($pushOutput -match "permission|unauthorized|credentials|not logged in|Insufficient") {
+        Write-Host ""
+        Write-Error "❌ clasp push failed: Authentication error detected."
+        Write-Host "Your Google Apps Script credentials have expired or are missing." -ForegroundColor Yellow
+        Write-Host "Code changes in 'src/' cannot be uploaded without logging in." -ForegroundColor Yellow
+        Write-Host ""
+
+        # ユーザーにログインを促す
+        $loginChoice = Read-Host "Do you want to run 'clasp login' now? (Y to login, N to abort)"
+        if ($loginChoice -match "^[Yy]") {
+            Write-Host "Running 'clasp login'... (A browser tab will open)" -ForegroundColor Cyan
+            clasp login
+            
+            Write-Host "Retrying clasp push..." -ForegroundColor Cyan
+            # 再試行
+            $pushOutput = clasp push -f 2>&1
+            if ($LASTEXITCODE -eq 0) {
+                Write-Host "✓ GAS source updated successfully (Retry)." -ForegroundColor Green
             } else {
-                Write-Host "Aborted. Please run 'cd src; clasp login' manually." -ForegroundColor Red
+                Write-Error "❌ clasp push failed again."
+                Write-Host "Error output: $($pushOutput | Out-String)" -ForegroundColor DarkGray
                 Pop-Location
                 exit 1
             }
         } else {
-            # 認証以外のエラー
-            Write-Host ""
-            Write-Warning "⚠ clasp push failed with an unexpected error."
-            Write-Host "Error output: $($pushOutput | Out-String)" -ForegroundColor DarkGray
-            Write-Host ""
-            Write-Host "Continuing with Web App execution..." -ForegroundColor Gray
+            Write-Host "Aborted. Please run 'cd src; clasp login' manually." -ForegroundColor Red
             Pop-Location
+            exit 1
         }
     } else {
-        # ★★★ Deploymentの自動更新 (Auto-Deploy) ★★★
-        Write-Host "Updating Web App deployment..." -ForegroundColor Cyan
-        try {
-            cmd /c "node manage_deploy.js"
-            cmd /c "node update_env.js"
-        } catch {
-            Write-Warning "Failed to update deployment: $_"
-        }
-
-        Pop-Location
-        Write-Host "✓ GAS source updated successfully." -ForegroundColor Green
+        # 認証以外のエラー
+        Write-Host ""
+        Write-Warning "⚠ clasp push failed with an unexpected error."
+        Write-Host "Error output: $($pushOutput | Out-String)" -ForegroundColor DarkGray
+        Write-Host ""
+        Write-Host "Continuing with Web App execution..." -ForegroundColor Gray
     }
 } else {
-    Write-Host "✓ No changes in src/ detected. Skipping clasp push." -ForegroundColor Gray
+    Write-Host "✓ GAS source updated successfully." -ForegroundColor Green
 }
+
+# ★★★ Deploymentの自動更新 (Auto-Deploy) - Always run ★★★
+Write-Host "Updating Web App deployment..." -ForegroundColor Cyan
+try {
+    cmd /c "node manage_deploy.js"
+    cmd /c "node update_env.js"
+} catch {
+    Write-Warning "Failed to update deployment: $_"
+}
+
+Pop-Location
 Write-Host ""
 
 # --- [2/5] ローカル変更のコミット (Git Commit) ---

@@ -227,7 +227,6 @@ function handleSearchNotification(data) {
     }
 
     // メール本文を構築（新フォーマット）
-    // メール本文を構築（新フォーマット）
     let body = "マーラー検索アプリで新しい検索がありました。\n\n" +
                "■ 検索内容\n" +
                "【作品】 " + work + "\n" +

@@ -957,15 +957,13 @@ function searchData(choice1Arr, choice2Arr, includeOrchestraAll) {
   const selectedInstruments = choice2Arr.includes('ALL_GLOBAL') ? 'ALL_GLOBAL' : choice2Arr.join(', ');
   
   const emailBody ="■ 検索内容\n" +
-               "【　作品　】 " + selectedWorks + "\n" +
-               "【　タイプ　】 曲名・楽器検索\n" +
-               "【　楽器　】 " + selectedInstruments + "\n" +
-               "【　全体検索　】 " + (includeOrchestraAll ? 'はい (全体を含む)' : 'いいえ') + "\n" +
-               "【　日時　】 " + new Date().toLocaleString('ja-JP') + "\n\n" +
+               "【作品】 " + selectedWorks + "\n" +
+               "【タイプ】 曲名・楽器検索\n" +
+               "【楽器】 " + selectedInstruments + "\n" +
+               "【全体検索】 " + (includeOrchestraAll ? 'はい (全体を含む)' : 'いいえ') + "\n" +
+               "【日時】 " + new Date().toLocaleString('ja-JP') + "\n\n" +
                "■ 検索元\n" +
-               "【　機能　】 曲名・楽器検索 (Server)";
-                "■ 検索元\n" +
-                "【　機能　】 曲名・楽器検索 (Server)";
+               "【機能】 曲名・楽器検索 (Server)";
   sendSearchNotification(emailSubject, emailBody);
 
   // Log to Spreadsheet
