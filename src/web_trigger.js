@@ -301,7 +301,7 @@ function logToSpreadsheet(data, detail) {
     };
 
     // Logic to populate specific fields based on search type
-    if (scopeRaw === '用語検索') {
+    if (scopeRaw === '用語検索' || scopeRaw === 'Term') {
         dataMap['Term'] = termParam;
     } else if (termParam === 'Mahler Search' || termParam === '曲名・楽器検索') {
         dataMap['Instruments'] = translateScope(scopeRaw);
