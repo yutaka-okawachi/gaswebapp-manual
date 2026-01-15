@@ -354,7 +354,7 @@ if ($runFailed) {
         Write-Host ""
         exit 1
     }
-    }
+    } # End retry if
 } else {
     $duration = (Get-Date) - $startTime
     Write-Host "✓ GAS function executed successfully via clasp run." -ForegroundColor Green
