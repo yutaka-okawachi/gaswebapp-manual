@@ -39,7 +39,8 @@ async function sendSearchNotification(details, pageName) {
                 scope: details.scope,
                 term: details.term,
                 page: pageName,
-                userAgent: navigator.userAgent
+                userAgent: navigator.userAgent,
+                includeGlobal: details.includeGlobal || false
             })
         });
         console.log('Search notification sent');
