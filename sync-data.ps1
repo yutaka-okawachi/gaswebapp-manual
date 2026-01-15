@@ -158,15 +158,6 @@ if ($pushExitCode -ne 0) {
     Write-Host "✓ GAS source updated successfully." -ForegroundColor Green
 }
 
-# ★★★ Deploymentの自動更新 (Auto-Deploy) - Always run ★★★
-Write-Host "Updating Web App deployment..." -ForegroundColor Cyan
-try {
-    cmd /c "node manage_deploy.js"
-    cmd /c "node update_env.js"
-} catch {
-    Write-Warning "Failed to update deployment: $_"
-}
-
 Pop-Location
 Write-Host ""
 
@@ -182,6 +173,19 @@ if ($appChanges) {
     Write-Host "✓ Local changes committed." -ForegroundColor Green
 } else {
     Write-Host "✓ No local changes to commit." -ForegroundColor Gray
+}
+Write-Host ""
+
+# ★★★ Deploymentの自動更新 (Auto-Deploy) - Always run AFTER commit ★★★
+Write-Host "Updating Web App deployment..." -ForegroundColor Cyan
+Push-Location "src"
+try {
+    cmd /c "node manage_deploy.js"
+    cmd /c "node update_env.js"
+} catch {
+    Write-Warning "Failed to update deployment: $_"
+} finally {
+    Pop-Location
 }
 Write-Host ""
 
