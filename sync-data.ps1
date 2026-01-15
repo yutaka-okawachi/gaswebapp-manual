@@ -179,11 +179,42 @@ Write-Host ""
 # ★★★ Deploymentの自動更新 (Auto-Deploy) - Always run AFTER commit ★★★
 Write-Host "Updating Web App deployment..." -ForegroundColor Cyan
 Push-Location "src"
+$deploySuccess = $false
 try {
+    # 1st Attempt
     cmd /c "node manage_deploy.js"
-    cmd /c "node update_env.js"
+    if ($LASTEXITCODE -eq 0) {
+        $deploySuccess = $true
+        cmd /c "node update_env.js"
+    } else {
+        throw "manage_deploy.js failed with exit code $LASTEXITCODE"
+    }
 } catch {
     Write-Warning "Failed to update deployment: $_"
+    
+    # Check if it was likely an auth error (simplified check)
+    Write-Host ""
+    Write-Host "⚠ Deployment update failed. This is often due to expired 'clasp' login." -ForegroundColor Yellow
+    $loginChoice = Read-Host "Do you want to run 'clasp login' now and retry deployment? (Y/N)"
+    
+    if ($loginChoice -match "^[Yy]") {
+        Write-Host "Running 'clasp login'... (A browser tab will open)" -ForegroundColor Cyan
+        clasp login
+        
+        Write-Host "Retrying deployment update..." -ForegroundColor Cyan
+        try {
+            cmd /c "node manage_deploy.js"
+            if ($LASTEXITCODE -eq 0) {
+                $deploySuccess = $true
+                Write-Host "✓ Deployment updated successfully (Retry)." -ForegroundColor Green
+                cmd /c "node update_env.js"
+            } else {
+                Write-Error "Deployment update failed again. Please check the logs."
+            }
+        } catch {
+             Write-Error "Deployment update failed again: $_"
+        }
+    }
 } finally {
     Pop-Location
 }
