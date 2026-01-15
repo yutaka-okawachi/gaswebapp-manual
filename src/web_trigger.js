@@ -74,7 +74,7 @@ const translateWork = (work, page) => {
   return work;
 };
 
-const translateScope = (scope) => {
+const translateScope = (scope, work) => {
   if (!scope || scope === "N/A") return "未指定";
   if (scope === "Term") return "用語検索";
   if (scope === "Mahler Search") return "曲名・楽器検索";
@@ -82,16 +82,29 @@ const translateScope = (scope) => {
   if (scope === "Page Search") return "ページ検索";
   if (scope.toLowerCase() === "all_global") return "全楽器";
   if (scope.indexOf("Page ") === 0) return "ページ番号: " + scope.substring(5);
-  if (scope === "all") return "全場面";
+  
+  const workKey = work ? work.toLowerCase() : "";
+  const singleActWorks = ['elektra', 'salome', 'feuersnot', 'daphne', 'tag', 'rheingold'];
+  
+  const isSingleAct = singleActWorks.includes(workKey);
+
+  if (scope === "all") {
+      return isSingleAct ? "全一幕" : "全場面";
+  }
 
   const sceneTermMap = { 'einleitung': '導入部', 'vorspiel': '前奏曲', 'introduction': '導入部', 'prelude': '前奏曲', 'finale': 'フィナーレ' };
   const parts = scope.split(',').map(p => p.trim());
 
   const results = parts.map(part => {
-    if (part === "all") { return "全場面"; }
+    if (part === "all") { return isSingleAct ? "全一幕" : "全場面"; }
     // Case for empty Aufzug + empty Szene (e.g. Elektra "Whole Act") -> "-"
-    if (part === "-" || part === "") { return "全体"; }
+    if (part === "-" || part === "") { return "全一幕"; } // Assuming blank/hyphen in scene context implies whole work/act
     
+    // Case for "1-" (Daphne, Friedenstag Whole Act)
+    if (part === "1-" && (workKey === 'daphne' || workKey === 'tag')) {
+        return "全一幕";
+    }
+
     // Case for empty Aufzug + specific Szene (e.g. Salome "-1")
     const noActMatch = /^-(\d+)$/.exec(part);
     if (noActMatch) {
@@ -182,13 +195,14 @@ function handleSearchNotification(data) {
     const pageTitle = pageNameMap[pageRaw] || pageRaw;
     const workFull = translateWork(data.work, pageRaw);
     const term = getValue(data.term);
+    const workKey = data.work; // Pass raw work key
     
     // Whom Searchの場合は scope の変換をスキップ
     let scope;
     if (term === "Whom Search") {
       scope = data.scope;
     } else {
-      scope = translateScope(data.scope);
+      scope = translateScope(data.scope, workKey);
     }
 
     const formattedDate = Utilities.formatDate(new Date(), "Asia/Tokyo", "yyyy/MM/dd HH:mm:ss");
@@ -320,10 +334,10 @@ function logToSpreadsheet(data, detail) {
     if (scopeRaw === '用語検索' || scopeRaw === 'Term') {
         dataMap['Term'] = termParam;
     } else if (termParam === 'Mahler Search' || termParam === '曲名・楽器検索') {
-        dataMap['Instruments'] = translateScope(scopeRaw);
+        dataMap['Instruments'] = translateScope(scopeRaw, workRaw);
         dataMap['Global'] = data.includeGlobal ? 'Yes' : 'No';
     } else if (termParam === 'Scene Search' || termParam === '場面検索') {
-        dataMap['Szene'] = translateScope(scopeRaw);
+        dataMap['Szene'] = translateScope(scopeRaw, workRaw);
     } else if (termParam === 'Page Search' || termParam === 'ページ検索') {
         dataMap['Page_Num'] = scopeRaw.replace('Page: ', '').replace('ページ番号: ', '');
     } else if (termParam === 'Whom Search' || termParam === '指示対象検索') {
