@@ -243,7 +243,11 @@ function handleSearchNotification(data) {
                getValue(data.userAgent);
                 
     const recipient = 'pistares@ezweb.ne.jp';
-    MailApp.sendEmail(recipient, subject, body);
+    try {
+      MailApp.sendEmail(recipient, subject, body);
+    } catch (e) {
+      Logger.log("Email sending failed (likely quota exceeded): " + e.toString());
+    }
     
     // Log to Spreadsheet
     logToSpreadsheet(data, body);

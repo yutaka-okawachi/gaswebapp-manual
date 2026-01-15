@@ -1140,15 +1140,10 @@ function escapeHtmlWithBreaks(str) {
  * @param {string} body - メールの本文
  */
 function sendSearchNotification(subject, body) {
+  const recipient = 'pistares@ezweb.ne.jp';
   try {
-    // ★★★ 変更点：通知先のメールアドレスを固定 ★★★
-    const recipient = "pistares@ezweb.ne.jp";
-    if (recipient) {
-      // メールを送信
-      MailApp.sendEmail(recipient, subject, body);
-    }
+    MailApp.sendEmail(recipient, subject, body);
   } catch (e) {
-    // メール送信に失敗しても、メインの検索処理は続行させるため、エラーはログに記録するだけにする
     Logger.log(`メール通知の送信に失敗しました: ${e.toString()}`);
   }
 }
