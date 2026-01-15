@@ -164,12 +164,10 @@ Write-Host ""
 # ★★★ Deploymentの自動更新 (Auto-Deploy) - Run BEFORE commit to include app.js updates ★★★
 Write-Host "Updating Web App deployment..." -ForegroundColor Cyan
 Push-Location "src"
-$deploySuccess = $false
 try {
     # 1st Attempt
     cmd /c "node manage_deploy.js"
     if ($LASTEXITCODE -eq 0) {
-        $deploySuccess = $true
         cmd /c "node update_env.js"
     } else {
         throw "manage_deploy.js failed with exit code $LASTEXITCODE"
@@ -190,7 +188,6 @@ try {
         try {
             cmd /c "node manage_deploy.js"
             if ($LASTEXITCODE -eq 0) {
-                $deploySuccess = $true
                 Write-Host "✓ Deployment updated successfully (Retry)." -ForegroundColor Green
                 cmd /c "node update_env.js"
             } else {
