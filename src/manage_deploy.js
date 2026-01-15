@@ -25,11 +25,6 @@ console.log('Fetching deployments...');
 exec('clasp deployments', (err, stdout, stderr) => {
     if (err) {
         console.error('Error fetching deployments:', stderr);
-        // Authentication required error often appears here
-        if (stderr.includes('gcloud auth login') || stderr.includes('not logged in')) {
-             console.error('CLASP_AUTH_REQUIRED');
-        }
-        process.exit(1);
         return;
     }
 
@@ -49,12 +44,7 @@ exec('clasp deployments', (err, stdout, stderr) => {
         // Update existing deployment
         exec(`clasp deploy -i "${currentId}" -d "Auto-update via sync-data"`, (e, out, er) => {
             console.log('Deploy (Update) stdout:', out);
-            if(e || er) {
-                console.error('Deploy (Update) failed:', er);
-                process.exit(1);
-            } else {
-                process.exit(0);
-            }
+            if(er) console.error('Deploy (Update) stderr:', er);
         });
     } else {
         console.log('Current deployment ID not found or invalid. Finding latest...');
@@ -65,24 +55,14 @@ exec('clasp deployments', (err, stdout, stderr) => {
             console.log(`Falling back to updating: ${latestId}`);
              exec(`clasp deploy -i "${latestId}" -d "Auto-update via sync-data"`, (e, out, er) => {
                 console.log('Deploy (Update fallback) stdout:', out);
-                if(e || er) {
-                    console.error('Deploy (Update fallback) failed:', er);
-                    process.exit(1);
-                } else {
-                    process.exit(0);
-                }
+                if(er) console.error('Deploy (Update fallback) stderr:', er);
             });
         } else {
              console.log('No deployments found. Creating new...');
             // Create new deployment
             exec('clasp deploy -d "New Deployment via sync-data"', (e, out, er) => {
                 console.log('Deploy (New) stdout:', out);
-                if(e || er) {
-                    console.error('Deploy (New) stderr:', er);
-                    process.exit(1);
-                } else {
-                    process.exit(0);
-                }
+                if(er) console.error('Deploy (New) stderr:', er);
                 // update_env.js will handle updating .env with the new ID
             });
         }

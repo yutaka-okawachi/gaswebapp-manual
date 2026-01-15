@@ -324,8 +324,7 @@ function searchByScene() {
                     const details = {
                         work: operaValue,
                         scope: selectedScenes.join(', '),
-                        term: 'Scene Search',
-                        type: 'scene'
+                        term: 'Scene Search'
                     };
                     sendSearchNotification(details, composer);
                 }
@@ -420,9 +419,8 @@ function searchByPage() {
                 if (typeof sendSearchNotification === 'function') {
                     const details = {
                         work: operaValue,
-                        scope: pageInput,
-                        term: 'Page Search',
-                        type: 'page'
+                        scope: 'Page ' + pageInput,
+                        term: 'Page Search'
                     };
                     sendSearchNotification(details, composer);
                 }
@@ -607,8 +605,7 @@ function searchByWhom() {
                 const details = {
                     work: operaValue,
                     scope: selectedWhoms.join(', '),
-                    term: 'Whom Search',
-                    type: 'whom'
+                    term: 'Whom Search'
                 };
                 sendSearchNotification(details, composer);
             }
