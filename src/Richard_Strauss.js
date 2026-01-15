@@ -305,11 +305,14 @@ function searchRSTerms(query) {
     }
 
     // ▼▼▼ メール通知機能を追加 ▼▼▼
-    const emailSubject = 'R.Strauss 用語検索が実行されました';
-    const emailBody = `
-検索日時: ${new Date().toLocaleString('ja-JP')}
-検索語句: ${query}
-    `.trim();
+    const emailSubject = '【マーラー検索】検索通知: 用語検索 (RS)';
+    const emailBody = "マーラー検索アプリで新しい検索がありました。\n\n" +
+               "■ 検索内容\n" +
+               "【　検索語　】 " + query + "\n" +
+               "【　タイプ　】 用語検索 (RS)\n" +
+               "【　日時　】 " + new Date().toLocaleString('ja-JP') + "\n\n" +
+               "■ 検索元\n" +
+               "【　機能　】 用語検索 (Server)";
     sendSearchNotification(emailSubject, emailBody);
     // ▲▲▲ メール通知機能を追加 ▲▲▲
 
