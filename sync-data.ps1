@@ -161,22 +161,7 @@ if ($pushExitCode -ne 0) {
 Pop-Location
 Write-Host ""
 
-# --- [2/5] ローカル変更のコミット (Git Commit) ---
-Write-Host "[2/5] Committing local changes..." -ForegroundColor Yellow
-$appChanges = git status --porcelain
-if ($appChanges) {
-    Write-Host "✓ Detected local changes. Committing to ensure clean rebase..." -ForegroundColor Gray
-    git add .
-    # ユーザー指定のメッセージがない場合は自動生成
-    $commitMsg = if ($message -eq "automated sync update") { "Sync: App update and data refresh [$([DateTime]::Now.ToString('yyyy-MM-dd HH:mm'))]" } else { $message }
-    git commit -m $commitMsg -q
-    Write-Host "✓ Local changes committed." -ForegroundColor Green
-} else {
-    Write-Host "✓ No local changes to commit." -ForegroundColor Gray
-}
-Write-Host ""
-
-# ★★★ Deploymentの自動更新 (Auto-Deploy) - Always run AFTER commit ★★★
+# ★★★ Deploymentの自動更新 (Auto-Deploy) - Run BEFORE commit to include app.js updates ★★★
 Write-Host "Updating Web App deployment..." -ForegroundColor Cyan
 Push-Location "src"
 $deploySuccess = $false
@@ -217,6 +202,21 @@ try {
     }
 } finally {
     Pop-Location
+}
+Write-Host ""
+
+# --- [2/5] ローカル変更のコミット (Git Commit) ---
+Write-Host "[2/5] Committing local changes..." -ForegroundColor Yellow
+$appChanges = git status --porcelain
+if ($appChanges) {
+    Write-Host "✓ Detected local changes. Committing to ensure clean rebase..." -ForegroundColor Gray
+    git add .
+    # ユーザー指定のメッセージがない場合は自動生成
+    $commitMsg = if ($message -eq "automated sync update") { "Sync: App update and data refresh [$([DateTime]::Now.ToString('yyyy-MM-dd HH:mm'))]" } else { $message }
+    git commit -m $commitMsg -q
+    Write-Host "✓ Local changes committed." -ForegroundColor Green
+} else {
+    Write-Host "✓ No local changes to commit." -ForegroundColor Gray
 }
 Write-Host ""
 
