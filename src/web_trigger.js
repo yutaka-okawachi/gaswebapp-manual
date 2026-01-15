@@ -301,8 +301,10 @@ function logToSpreadsheet(data, detail) {
       'index.html': '曲名と楽器から検索（GM）',
       'terms_search.html': '用語から検索（GM）',
       'richard_wagner.html': '曲名から検索（RW）',
+      'richard_wagner': '曲名から検索（RW）', // Added for JS calls
       'rw_terms_search.html': '用語から検索（RW）',
       'richard_strauss.html': '曲名から検索（RS）',
+      'richard_strauss': '曲名から検索（RS）', // Added for JS calls
       'rs_terms_search.html': '用語から検索（RS）',
       'dic.html': '用語集',
       'home.html': 'HOME'
@@ -315,6 +317,7 @@ function logToSpreadsheet(data, detail) {
         '9': '交響曲第9番', '10': '交響曲第10番', 'das_lied': '大地の歌',
         'klagende': '嘆きの歌', 'gesellen': 'さすらう若人の歌', 'knaben': '子供の魔法の角笛',
         'kindertoten': '子供の死の歌', 'rueckert': 'リュッケルトの歌',
+        'blumine': 'Blumine', 'totenfeier': 'Totenfeier',
         // RW
         'feen': 'Die Feen', 'liebes': 'Das Liebesverbot', 'rienzi': 'Rienzi',
         'holländer': 'Der fliegende Holländer', 'tann_dresden': 'Tannhäuser (Dresden)',
@@ -323,77 +326,76 @@ function logToSpreadsheet(data, detail) {
         'götter': 'Götterdämmerung', 'tristan': 'Tristan und Isolde',
         'meister': 'Die Meistersinger von Nürnberg', 'parsifal': 'Parsifal',
         // RS
-        'salome': 'Salome', 'elektra': 'Elektra', 'rosenkavalier': 'Der Rosenkavalier',
+        'guntram': 'Guntram', 'feuersnot': 'Feuersnot', 'salome': 'Salome',
+        'elektra': 'Elektra', 'rosenkavalier': 'Der Rosenkavalier',
         'ariadne': 'Ariadne auf Naxos', 'schatten': 'Die Frau ohne Schatten',
-        'guntram': 'Guntram', 'feuersnot': 'Feuersnot', 'intermezzo': 'Intermezzo',
-        'helena': 'Die ägyptische Helena', 'arabella': 'Arabella',
-        'schweigsame': 'Die schweigsame Frau', 'tag': 'Friedenstag',
-        'daphne': 'Daphne', 'danae': 'Die Liebe der Danae', 'cap': 'Capriccio'
+        'intermezzo': 'Intermezzo', 'helena': 'Die ägyptische Helena',
+        'arabella': 'Arabella', 'schweigsame': 'Die schweigsame Frau',
+        'tag': 'Friedenstag', 'daphne': 'Daphne', 'danae': 'Die Liebe der Danae',
+        'cap': 'Capriccio',
+        'metamorphosen': 'Metamorphosen', 'vier_letzte': 'Vier letzte Lieder'
     };
 
     // --- Data Preparation ---
     const formattedDate = Utilities.formatDate(new Date(), "Asia/Tokyo", "yyyy/MM/dd HH:mm:ss");
     
     // Work
-    let workRaw = data.work || '';
-    // Handle multiple works if comma separated
-    const works = workRaw.split(',').map(w => w.trim());
-    const workDisplay = works.map(w => workNameMap[w] || w).join(', ');
+    let workDisplay = data.work || '';
+    if (workDisplay.includes(',')) {
+        workDisplay = workDisplay.split(',').map(w => workNameMap[w.trim()] || w.trim()).join(', ');
+    } else {
+        workDisplay = workNameMap[workDisplay] || workDisplay;
+    }
 
     // Page
     const pageRaw = data.page || '';
     const pageDisplay = pageNameMap[pageRaw] || pageRaw;
 
-    // Term
-    // Only populated if using "Terms Search" or "Details Search" where 'term' is the primary input
-    // In current implementation:
-    // GM Term Search -> page: terms_search.html, term: <term>
-    // RW/RS Term Search -> page: rw/rs_terms_search.html, term: <term>
+    // --- Column Population Logic ---
     let termDisplay = '';
+    let instrumentsDisplay = '';
+    let whomDisplay = '';
+    let szeneDisplay = '';
+    let pageNumDisplay = '';
+
+    // 1. Term Column
     if (pageRaw.includes('terms_search')) {
         termDisplay = data.term || '';
     }
-
-    // Determine context for data.scope (which usually holds instruments, scenes, or whom)
-    let instrumentsDisplay = '';
-    let whomDisplay = '';
-    let pageNumDisplay = '';
-
-    // Logic to distinguish content based on page/context
-    // 'index.html' (GM Search) uses 'scope' for Instruments.
-    // 'richard_wagner.html'/'richard_strauss.html':
-    //    - If searchType is 'scene' -> 'scope' is Scene list -> Treat as 'Whom'? Or maybe 'Instruments' isn't right.
-    //      The user request said: "Instructed Object" -> Whom column.
-    //    - If searchType is 'page' -> 'scope' is page numbers -> Page_Num column.
     
-    // Determine Search Type if available (data.searchType or similar?)
-    // data.scope often contains the value.
-    
+    // 2. Instruments Column (Strictly for GM Search)
     if (pageRaw === 'index.html') {
-        // GM Main Search -> Instruments
         instrumentsDisplay = data.scope || '';
-    } else if (pageRaw.includes('richard_wagner.html') || pageRaw.includes('richard_strauss.html')) {
-        // Check if input looks like page numbers or scene names?
-        // Actually the backend receives explicit fields usually, but here 'data' structure depends on what calls it.
-        // app.js sends: work, scope, term.
-        // For RW/RS:
-        //   Scene Search -> scope: "Act 1, Scene 2" etc.
-        //   Page Search -> scope: "p.10, p.12" etc.
-        
-        // Better heuristic: checks if content looks like page numbers (digits, p., etc)
-        const scopeVal = data.scope || '';
+    }
+
+    // 3. Whom, Szene & Page_Num Columns
+    const scopeVal = data.scope || '';
+    const searchType = data.type; 
+
+    if (searchType === 'page') {
+        pageNumDisplay = scopeVal;
+    } else if (searchType === 'scene') {
+        szeneDisplay = scopeVal; // Scene -> Szene column
+    } else if (searchType === 'whom') {
+        whomDisplay = scopeVal; // Whom -> Whom column
+    } else if (!searchType && (pageRaw.includes('richard_wagner') || pageRaw.includes('richard_strauss'))) {
+        // Fallback for legacy calls
         if (scopeVal.match(/^p\.|^\d+(?:-\d+)?(?:,|$)/)) {
              pageNumDisplay = scopeVal;
+        } else if (scopeVal.startsWith('Page ')) {
+             pageNumDisplay = scopeVal.replace('Page ', '');
         } else {
-             // Treat as "Whom" (Scene/Object) for now as requested? 
-             // "If searched by 'Search from Indicated Object' -> Whom"
-             // In Japanese UI: "場面から検索" (Scene) and "ページから検索" (Page).
-             // So "Scene" -> Whom column? User said "Whom". OK.
-             whomDisplay = scopeVal;
+             // Default to Whom if ambiguous, or Szene? 
+             // Legacy "Scene Search" used to go here. But user asked for Szene column.
+             // If looks like scene "Act 1, Scene 2", put in Szene?
+             // It's safer to leave legacy behavior or put in Whom as generic bucket if unsure.
+             // Let's assume Whom for now unless it clearly says "Scene".
+             if (data.term && data.term === 'Scene Search') {
+                 szeneDisplay = scopeVal;
+             } else {
+                 whomDisplay = scopeVal;
+             }
         }
-    } else {
-        // For term searches, scope might be empty or category.
-        // Just leave empty if not applicable.
     }
 
     // Global
@@ -402,11 +404,10 @@ function logToSpreadsheet(data, detail) {
     // UserAgent
     const ua = data.userAgent || '';
 
-    // Detail (Full Body backup)
+    // Detail
     const detailedBody = detail || '';
 
-    // Construct Row matches HEADERS order
-    // ['日時', 'Work', 'Page', 'Term', 'Instruments', 'Whom', 'Page_Num', 'Global', 'UserAgent', '詳細']
+    // Construct Row
     const rowData = [
         formattedDate,
         workDisplay,
@@ -414,6 +415,7 @@ function logToSpreadsheet(data, detail) {
         termDisplay,
         instrumentsDisplay,
         whomDisplay,
+        szeneDisplay,
         pageNumDisplay,
         globalDisplay,
         ua,
