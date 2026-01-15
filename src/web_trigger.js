@@ -89,6 +89,22 @@ const translateScope = (scope) => {
 
   const results = parts.map(part => {
     if (part === "all") { return "全場面"; }
+    // Case for empty Aufzug + empty Szene (e.g. Elektra "Whole Act") -> "-"
+    if (part === "-" || part === "") { return "全体"; }
+    
+    // Case for empty Aufzug + specific Szene (e.g. Salome "-1")
+    const noActMatch = /^-(\d+)$/.exec(part);
+    if (noActMatch) {
+         return "第" + noActMatch[1] + "場";
+    }
+
+    // Case for empty Aufzug + text Szene (e.g. Capriccio "-einleitung")
+    const noActTerm = /^-(.+)$/.exec(part);
+    if (noActTerm) {
+         const term = noActTerm[1];
+         return sceneTermMap[term.toLowerCase()] || term;
+    }
+
     const numericMatch = /^(\d+)(-(\d*))?$/.exec(part);
     if (numericMatch) {
       const aufzug = numericMatch[1], szene = numericMatch[3];
