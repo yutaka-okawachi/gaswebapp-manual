@@ -173,8 +173,18 @@ function handleRequest(params) {
     
     let result;
     if (action === "exportDic" || action === "exportAllDataToJson") {
-      exportAllDataToJson();
-      result = { status: "success", message: "Export success" };
+      const exportResult = exportAllDataToJson();
+      
+      // Check for partial failures in exportResult (returned by pushToGitHub)
+      if (exportResult && exportResult.failed && exportResult.failed.length > 0) {
+        result = { 
+          status: "error", 
+          error: "GitHub push failed for " + exportResult.failed.length + " files.",
+          details: exportResult.failed
+        };
+      } else {
+        result = { status: "success", message: "Export success", details: exportResult };
+      }
     } else if (action === "ping") {
       result = { status: "success", message: "Pong" };
     } else {
