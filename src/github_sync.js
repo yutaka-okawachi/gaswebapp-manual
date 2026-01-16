@@ -1,6 +1,7 @@
 /**
- * GitHub API連携スクリプト
- * スプレッドシートから取得したJSONデータをGitHubリポジトリに直接プッシュ
+ * GitHub API連携スクリプト (Batch Commit Version)
+ * スプレッドシートから取得したJSONデータをGitHubリポジトリに
+ * Git Data APIを使用して「1回のコミット」でプッシュします。
  */
 
 // 設定情報をスクリプトプロパティから取得
@@ -15,197 +16,183 @@ function getGitHubConfig() {
 }
 
 /**
- * GitHubの既存ファイルのSHAを取得
- * @param {string} path - ファイルパス
- * @param {Object} config - GitHub設定
- * @return {string} SHA（存在しない場合はnull）
+ * GitHub APIへの共通リクエスト処理
  */
-function getFileSha(path, config) {
-  const url = `https://api.github.com/repos/${config.owner}/${config.repo}/contents/${path}?ref=${config.branch}`;
-  
+function githubRequest(method, endpoint, payload, config) {
+  const url = `https://api.github.com/repos/${config.owner}/${config.repo}${endpoint}`;
   const options = {
-    method: 'get',
-    headers: {
-      'Authorization': `token ${config.token}`,
-      'Accept': 'application/vnd.github.v3+json'
-    },
-    muteHttpExceptions: true
-  };
-  
-  try {
-    const response = UrlFetchApp.fetch(url, options);
-    const statusCode = response.getResponseCode();
-    
-    if (statusCode === 200) {
-      const data = JSON.parse(response.getContentText());
-      return data.sha;
-    } else if (statusCode === 404) {
-      // ファイルが存在しない場合
-      return null;
-    } else {
-      Logger.log(`警告: ${path} のSHA取得に失敗 (Status: ${statusCode})`);
-      return null;
-    }
-  } catch (e) {
-    Logger.log(`エラー: ${path} のSHA取得中にエラー - ${e.message}`);
-    return null;
-  }
-}
-
-/**
- * GitHubにファイルをプッシュ（作成または更新）
- * @param {string} path - ファイルパス
- * @param {Object|string} content - JSONデータまたはHTML文字列
- * @param {string} message - コミットメッセージ
- * @param {Object} config - GitHub設定
- * @return {Object} レスポンス
- */
-function pushFileToGitHub(path, content, message, config) {
-  const url = `https://api.github.com/repos/${config.owner}/${config.repo}/contents/${path}`;
-  
-  // コンテンツタイプを判定（HTMLファイルかJSONファイルか）
-  const isHtml = path.endsWith('.html');
-  
-  // HTMLの場合は文字列として、JSONの場合はJSON.stringifyで処理
-  let stringContent;
-  let contentType;
-  
-  if (isHtml) {
-    // HTMLファイル：既に文字列なのでそのまま使用
-    stringContent = content;
-    contentType = 'text/html; charset=utf-8';
-  } else {
-    // JSONファイル：オブジェクトをJSON文字列に変換
-    stringContent = JSON.stringify(content, null, 2);
-    contentType = 'application/json; charset=utf-8';
-  }
-  
-  // UTF-8として正しくエンコードするためにBlobを使用
-  const blob = Utilities.newBlob(stringContent, contentType);
-  const base64Content = Utilities.base64Encode(blob.getBytes());
-  
-  // 既存ファイルのSHAを取得
-  const sha = getFileSha(path, config);
-  
-  const payload = {
-    message: message,
-    content: base64Content,
-    branch: config.branch
-  };
-  
-  // 既存ファイルの場合はSHAを追加
-  if (sha) {
-    payload.sha = sha;
-  }
-  
-  const options = {
-    method: 'put',
+    method: method,
     headers: {
       'Authorization': `token ${config.token}`,
       'Accept': 'application/vnd.github.v3+json',
       'Content-Type': 'application/json'
     },
-    payload: JSON.stringify(payload),
     muteHttpExceptions: true
   };
   
-  try {
-    const response = UrlFetchApp.fetch(url, options);
-    const statusCode = response.getResponseCode();
-    const responseText = response.getContentText();
-    
-    if (statusCode === 200 || statusCode === 201) {
-      Logger.log(`✓ 成功: ${path} をプッシュしました`);
-      return { success: true, path: path, statusCode: statusCode };
-    } else {
-      Logger.log(`✗ エラー: ${path} のプッシュに失敗 (Status: ${statusCode})`);
-      Logger.log(`レスポンス: ${responseText}`);
-      return { success: false, path: path, statusCode: statusCode, error: responseText };
-    }
-  } catch (e) {
-    Logger.log(`✗ 例外エラー: ${path} - ${e.message}`);
-    return { success: false, path: path, error: e.message };
+  if (payload) {
+    options.payload = JSON.stringify(payload);
+  }
+
+  const response = UrlFetchApp.fetch(url, options);
+  const statusCode = response.getResponseCode();
+  const content = response.getContentText();
+  
+  if (statusCode >= 200 && statusCode < 300) {
+    return JSON.parse(content);
+  } else {
+    throw new Error(`GitHub API Error (${statusCode}): ${endpoint} - ${content}`);
   }
 }
 
 /**
- * 複数のファイルをGitHubにプッシュ
- * @param {Object} files - { 'path/to/file.json': jsonData, ... }
- * @param {string} commitMessage - コミットメッセージ（オプション）
+ * ブランチの最新コミットSHAを取得
+ */
+function getLatestCommitSha(config) {
+  const ref = githubRequest('get', `/git/ref/heads/${config.branch}`, null, config);
+  return ref.object.sha;
+}
+
+/**
+ * コミットSHAからBase Tree SHAを取得
+ */
+function getBaseTreeSha(commitSha, config) {
+  const commit = githubRequest('get', `/git/commits/${commitSha}`, null, config);
+  return commit.tree.sha;
+}
+
+/**
+ * Blobを作成してSHAを取得
+ */
+function createBlob(content, config) {
+  const payload = {
+    content: content,
+    encoding: 'utf-8'
+  };
+  const result = githubRequest('post', '/git/blobs', payload, config);
+  return result.sha;
+}
+
+/**
+ * 複数のファイルを1回のコミットでGitHubにプッシュ
+ * Git Data APIを使用: Blobs -> Tree -> Commit -> Ref Update
+ * 
+ * @param {Object} files - { 'path/to/file.json': jsonData, 'path/to/file.html': htmlString, ... }
+ * @param {string} commitMessage - コミットメッセージ
  * @return {Object} 結果サマリー
  */
 function pushToGitHub(files, commitMessage) {
   const config = getGitHubConfig();
   
-  // 設定チェック
   if (!config.token) {
     throw new Error('GitHub Tokenが設定されていません。setup_credentials.js を実行してください。');
   }
-  
-  // デフォルトのコミットメッセージ
+
   const message = commitMessage || `自動更新: スプレッドシートからデータ同期 [${new Date().toLocaleString('ja-JP')}]`;
   
-  const results = {
-    success: [],
-    failed: [],
-    total: Object.keys(files).length
-  };
-  
-  // 各ファイルをプッシュ
-  for (const [path, content] of Object.entries(files)) {
-    Logger.log(`処理中: ${path}`);
+  Logger.log('=== GitHub Batch Push Start ===');
+  Logger.log(`Target: ${config.owner}/${config.repo} [${config.branch}]`);
+
+  try {
+    // 1. 最新のコミットSHAを取得
+    Logger.log('[1/5] Getting latest commit SHA...');
+    const latestCommitSha = getLatestCommitSha(config);
     
-    // APIレート制限対策: 各リクエスト間に1秒待機
-    if (results.success.length + results.failed.length > 0) {
-      Utilities.sleep(1000);
+    // 2. Base Tree SHAを取得
+    Logger.log('[2/5] Getting base tree SHA...');
+    const baseTreeSha = getBaseTreeSha(latestCommitSha, config);
+
+    // 3. 各ファイルのBlobを作成し、Treeアイテムを準備
+    Logger.log(`[3/5] Creating blobs for ${Object.keys(files).length} files...`);
+    const treeItems = [];
+    
+    for (const [path, content] of Object.entries(files)) {
+      let stringContent;
+      // オブジェクトならJSON化、文字列ならそのまま
+      if (typeof content === 'string') {
+        stringContent = content;
+      } else {
+        stringContent = JSON.stringify(content, null, 2);
+      }
+      
+      const blobSha = createBlob(stringContent, config);
+      treeItems.push({
+        path: path,
+        mode: '100644', // 通常ファイル
+        type: 'blob',
+        sha: blobSha
+      });
+      
+      // APIレート制限回避のための微小待機（任意）
+      if (treeItems.length % 5 === 0) Utilities.sleep(500);
     }
-    
-    const result = pushFileToGitHub(path, content, message, config);
-    
-    if (result.success) {
-      results.success.push(path);
-    } else {
-      results.failed.push({ path: path, error: result.error });
-    }
+
+    // 4. 新しいTreeを作成
+    Logger.log('[4/5] Creating new tree...');
+    const treePayload = {
+      base_tree: baseTreeSha,
+      tree: treeItems
+    };
+    const newTree = githubRequest('post', '/git/trees', treePayload, config);
+    const newTreeSha = newTree.sha;
+
+    // 5. 新しいCommitを作成
+    Logger.log('[5/5] Creating commit...');
+    const commitPayload = {
+      message: message,
+      tree: newTreeSha,
+      parents: [latestCommitSha]
+    };
+    const newCommit = githubRequest('post', '/git/commits', commitPayload, config);
+    const newCommitSha = newCommit.sha;
+
+    // 6. 参照（HEAD）を更新
+    Logger.log('Updating reference...');
+    githubRequest('patch', `/git/refs/heads/${config.branch}`, { sha: newCommitSha }, config);
+
+    Logger.log('✓ Batch push completed successfully!');
+    Logger.log(`New Commit: ${newCommitSha}`);
+
+    // 既存のレスポンス形式に合わせて成功結果を返す
+    // 呼び出し元の export_json.js が result.success, result.failed を期待しているため
+    return {
+      success: Object.keys(files), // 全ファイル成功とみなす
+      failed: [],
+      total: Object.keys(files).length,
+      commitSha: newCommitSha
+    };
+
+  } catch (e) {
+    Logger.log('✗ Critical Error in batch push: ' + e.message);
+    // 呼び出し元でログ出力されるように例外を再スロー、または全失敗として返す
+    return {
+      success: [],
+      failed: Object.keys(files).map(p => ({ path: p, error: e.message })),
+      total: Object.keys(files).length,
+      error: e.message
+    };
   }
-  
-  // 結果をログ出力
-  Logger.log('=== プッシュ結果 ===');
-  Logger.log(`成功: ${results.success.length} / ${results.total}`);
-  Logger.log(`失敗: ${results.failed.length} / ${results.total}`);
-  
-  if (results.failed.length > 0) {
-    Logger.log('失敗したファイル:');
-    results.failed.forEach(f => Logger.log(`  - ${f.path}: ${f.error}`));
-  }
-  
-  return results;
 }
 
 /**
- * テスト用: 単一のテストファイルをプッシュ
+ * テスト機能: 現在の時刻でダミーファイルをバッチコミットテスト
  */
 function testGitHubSync() {
-  const testData = {
-    test: 'data',
-    timestamp: new Date().toISOString(),
-    message: 'GASからのテストプッシュ'
-  };
-  
-  const files = {
-    'test/gas_test.json': testData
+  const timestamp = new Date().toISOString();
+  const testFiles = {
+    'test/batch_test_1.json': { time: timestamp, id: 1 },
+    'test/batch_test_2.txt': `Test text file content at ${timestamp}`
   };
   
   try {
-    const result = pushToGitHub(files, 'テスト: GAS GitHub連携確認');
-    Logger.log('テスト結果: ' + JSON.stringify(result, null, 2));
-    
+    const result = pushToGitHub(testFiles, `テスト: Batch Commit ${timestamp}`);
     if (result.success.length > 0) {
-      Logger.log('✓ テスト成功！GitHubリポジトリを確認してください。');
+      Logger.log('Test PASSED.');
     } else {
-      Logger.log('✗ テスト失敗。設定を確認してください。');
+      Logger.log('Test FAILED: ' + result.error);
     }
   } catch (e) {
-    Logger.log('✗ エラー: ' + e.message);
+    Logger.log('Test EXCEPTION: ' + e.message);
   }
 }
+
