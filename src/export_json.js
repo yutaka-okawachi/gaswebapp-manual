@@ -236,7 +236,7 @@ function exportAllDataToJson() {
 
     // 自動生成されたコミットメッセージ
     const timestamp = new Date().toLocaleString('ja-JP', { timeZone: 'Asia/Tokyo' });
-    const commitMessage = `自動更新: スプレッドシートからデータ同期 [${timestamp}] [skip ci]`;
+    const commitMessage = `[skip ci] 自動更新: スプレッドシートからデータ同期 [${timestamp}]`;
 
     Logger.log('=== GitHubへデータをプッシュ中 ===');
     
