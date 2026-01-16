@@ -74,7 +74,7 @@ const translateWork = (work, page) => {
   return work;
 };
 
-const translateScope = (scope, work) => {
+const translateScope = (scope, work, type) => {
   if (!scope || scope === "N/A") return "未指定";
   if (scope === "Term") return "用語検索";
   if (scope === "Mahler Search") return "曲名・楽器検索";
@@ -89,6 +89,9 @@ const translateScope = (scope, work) => {
   const isSingleAct = singleActWorks.includes(workKey);
 
   if (scope === "all") {
+      if (type === 'instrument') {
+          return "全楽器";
+      }
       return isSingleAct ? "全一幕" : "全場面";
   }
 
@@ -96,7 +99,10 @@ const translateScope = (scope, work) => {
   const parts = scope.split(',').map(p => p.trim());
 
   const results = parts.map(part => {
-    if (part === "all") { return isSingleAct ? "全一幕" : "全場面"; }
+    if (part === "all") { 
+        if (type === 'instrument') return "全楽器";
+        return isSingleAct ? "全一幕" : "全場面"; 
+    }
     // Case for empty Aufzug + empty Szene (e.g. Elektra "Whole Act") -> "-"
     if (part === "-" || part === "") { return "全一幕"; } // Assuming blank/hyphen in scene context implies whole work/act
     
@@ -197,38 +203,50 @@ function handleSearchNotification(data) {
     const term = getValue(data.term);
     const workKey = data.work; // Pass raw work key
     
-    // Whom Searchの場合は scope の変換をスキップ
-    let scope;
-    if (term === "Whom Search") {
-      scope = data.scope;
+    // Determine Search Type
+    let searchType = 'INSTRUMENT';
+    if (data.scope === '用語検索' || data.scope === 'Term') {
+        searchType = 'TERM';
+    } else if (term === 'Scene Search' || term === '場面検索') {
+        searchType = 'SCENE';
+    } else if (term === 'Page Search' || term === 'ページ検索') {
+        searchType = 'PAGE';
+    } else if (term === 'Whom Search' || term === '指示対象検索') {
+        searchType = 'WHOM';
     } else {
-      scope = translateScope(data.scope, workKey);
+        searchType = 'INSTRUMENT';
     }
 
     const formattedDate = Utilities.formatDate(new Date(), "Asia/Tokyo", "yyyy/MM/dd HH:mm:ss");
     const subject = "【マーラー検索】検索通知: " + workFull;
 
-    // 表示用ラベル
+    // 表示用ラベルとコンテンツの決定
     let searchTypeDisplay = "曲名・楽器検索";
     let detailLabel = "詳細";
-    let detailContent = scope;
+    let detailContent = "";
 
-    if (term === "Scene Search") {
-      searchTypeDisplay = "場面検索";
-      detailLabel = "場面";
-    } else if (term === "Page Search") {
-      searchTypeDisplay = "ページ検索";
-      detailLabel = "ページ番号";
-      detailContent = scope.replace("ページ番号: ", "");
-    } else if (term === "Whom Search") {
-      searchTypeDisplay = "指示対象検索";
-      detailLabel = "指示対象";
-    } else if (data.scope === "用語検索") {
-      searchTypeDisplay = "用語検索";
-      detailLabel = "検索語";
-      detailContent = term;
+    if (searchType === 'TERM') {
+        searchTypeDisplay = "用語検索";
+        detailLabel = "検索語";
+        detailContent = term;
+    } else if (searchType === 'SCENE') {
+        searchTypeDisplay = "場面検索";
+        detailLabel = "場面";
+        detailContent = translateScope(data.scope, workKey, 'scene');
+    } else if (searchType === 'PAGE') {
+        searchTypeDisplay = "ページ検索";
+        detailLabel = "ページ番号";
+        detailContent = data.scope.replace("ページ番号: ", "");
+    } else if (searchType === 'WHOM') {
+        searchTypeDisplay = "指示対象検索";
+        detailLabel = "指示対象";
+        detailContent = data.scope;
     } else {
-      detailLabel = "楽器";
+        // INSTRUMENT
+        searchTypeDisplay = "曲名・楽器検索";
+        detailLabel = "楽器";
+        // 楽器検索のコンテキスト ('instrument') を渡す
+        detailContent = translateScope(data.scope, workKey, 'instrument');
     }
 
     // メール本文
@@ -334,10 +352,10 @@ function logToSpreadsheet(data, detail) {
     if (scopeRaw === '用語検索' || scopeRaw === 'Term') {
         dataMap['Term'] = termParam;
     } else if (termParam === 'Mahler Search' || termParam === '曲名・楽器検索') {
-        dataMap['Instruments'] = translateScope(scopeRaw, workRaw);
+        dataMap['Instruments'] = translateScope(scopeRaw, workRaw, 'instrument');
         dataMap['Global'] = data.includeGlobal ? 'Yes' : 'No';
     } else if (termParam === 'Scene Search' || termParam === '場面検索') {
-        dataMap['Szene'] = translateScope(scopeRaw, workRaw);
+        dataMap['Szene'] = translateScope(scopeRaw, workRaw, 'scene');
     } else if (termParam === 'Page Search' || termParam === 'ページ検索') {
         dataMap['Page_Num'] = scopeRaw.replace('Page: ', '').replace('ページ番号: ', '');
     } else if (termParam === 'Whom Search' || termParam === '指示対象検索') {
