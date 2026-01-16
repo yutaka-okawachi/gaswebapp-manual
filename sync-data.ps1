@@ -106,7 +106,7 @@ if (Test-Path ".env") {
 
 # --- [1/5] GAS へのアップロード (clasp push) ---
 Write-Host "[1/5] Checking GAS source changes (src/)..." -ForegroundColor Yellow
-$gasChanges = git status --porcelain src/
+#$gasChanges = git status --porcelain src/
 # Always check/push GAS source to ensure sync
 Write-Host "✓ Uploading GAS source..." -ForegroundColor Gray
 Push-Location "src"
