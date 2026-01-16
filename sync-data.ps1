@@ -223,6 +223,7 @@ if ($runFailed) {
             
             if (-not $runFailed) {
                 Write-Host "✓ GAS function executed successfully (Retry)." -ForegroundColor Green
+                $runFailed = $false
             }
         }
     }
@@ -235,10 +236,9 @@ if ($runFailed) {
     }
 
     # Web App経由で実行を試みる
-    
-    # Web App経由で実行を試みる
-    Write-Host ""
-    Write-Host "→ Falling back to Web App method..." -ForegroundColor Yellow
+    if ($runFailed) {
+        Write-Host ""
+        Write-Host "→ Falling back to Web App method..." -ForegroundColor Yellow
     
     # ★★★ Deploymentの自動更新 (Auto-Deploy) - フォールバック時にも念のため実施 ★★★
     Write-Host "Updating Web App deployment to ensure latest code is used..." -ForegroundColor Cyan
@@ -353,7 +353,10 @@ if ($runFailed) {
         Write-Host "    3. Then run: git pull" -ForegroundColor Gray
         Write-Host ""
         exit 1
+
     }
+
+    } # End of Web App Fallback Block
 
 } else {
     $duration = (Get-Date) - $startTime
