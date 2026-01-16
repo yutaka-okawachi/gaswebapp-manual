@@ -443,6 +443,21 @@ if ($pullExitCode -ne 0) {
 }
 Write-Host ""
 
+# --- [4.5/5] CIスキップ回避のためのトリガーコミット ---
+# GASからのコミットには [skip ci] が付いているため、ローカル変更がない場合はビルドが走らない可能性があります。
+# そのため、最新のコミットが [skip ci] である場合は、空のコミットを追加してビルドをトリガーします。
+$latestCommitMsg = git log -1 --pretty=%B
+if ($latestCommitMsg -match "\[skip ci\]") {
+    Write-Host "[4.5/5] Skipped commit detected at HEAD." -ForegroundColor Cyan
+    Write-Host "Appending empty trigger commit to ensure GitHub Pages build..." -ForegroundColor Gray
+    
+    git commit --allow-empty -m "Trigger GitHub Pages Build [Auto-generated]"
+    if ($LASTEXITCODE -eq 0) {
+        Write-Host "✓ Trigger commit added." -ForegroundColor Green
+    }
+}
+Write-Host ""
+
 # --- [5/5] 全ての変更を GitHub に公開 (git push) ---
 Write-Host "[5/5] Pushing all changes to GitHub..." -ForegroundColor Yellow
 Write-Host "Pushing to GitHub..." -ForegroundColor Gray
