@@ -95,6 +95,61 @@ const translateScope = (scope, work, type) => {
       return isSingleAct ? "全一幕" : "全場面";
   }
 
+  // --- Scene Code Translation Logic (RS/RW/GM) ---
+  if (type === 'scene') {
+      try {
+          let sheetName = '幕構成'; // Default for GM
+          if (operaNameMap_RS[workKey]) {
+              sheetName = 'RS幕構成';
+          } else if (operaNameMap_RW[workKey]) {
+              sheetName = 'RW幕構成';
+          }
+
+          // Try to get map from global scope (mahler.js)
+          // Using strict try-catch to avoid ReferenceError if not available
+          let sceneMap = null;
+          try {
+             sceneMap = getSceneMap(sheetName);
+          } catch(e) {
+             // Function not found or spreadsheet error
+             Logger.log("getSceneMap not available or failed: " + e.message);
+          }
+
+          if (sceneMap) {
+               const parts = scope.split(',').map(p => p.trim());
+               const resolvedParts = parts.map(part => {
+                   // Handle standard "all" / "-" cases first or let map handle them?
+                   // Map keys are specific scenes.
+                   // "all" is handled above.
+                   
+                   // Construct Lookup Key: workKey-part
+                   // usage of localNormalize ensures matching consistency with mahler.js logic
+                   const key = localNormalize(workKey) + '-' + localNormalize(part);
+                   
+                   if (sceneMap[key]) return sceneMap[key];
+                   
+                   // Retain original functionality for fallback
+                   return null;
+               });
+               
+               // If we found translations for ALL parts, return them. 
+               // (Or even if partial? Better to show readable text if possible)
+               // Strategy: If resolved is not null, use it. Else use part (original).
+               // But we need to fall through to the numeric parsing logic below if null.
+               
+               // Let's modify the 'parts' calculation below.
+               // We can't return early unless we are sure.
+               // But complex mixing is hard.
+               // If ALL parts are found in map, return immediately.
+               if (resolvedParts.every(r => r !== null)) {
+                   return resolvedParts.join(', ');
+               }
+          }
+      } catch (e) {
+          Logger.log("Scene translation error: " + e.toString());
+      }
+  }
+
   const sceneTermMap = { 'einleitung': '導入部', 'vorspiel': '前奏曲', 'introduction': '導入部', 'prelude': '前奏曲', 'finale': 'フィナーレ' };
   const parts = scope.split(',').map(p => p.trim());
 
@@ -381,6 +436,19 @@ function logToSpreadsheet(data, detail) {
   } catch (e) {
     Logger.log("Failed to log to spreadsheet: " + e.toString());
   }
+}
+
+/**
+ * Local helper for string normalization (Matches mahler.js logic)
+ */
+function localNormalize(str) {
+  if (typeof str !== 'string') return '';
+  return str.toLowerCase()
+    .replace(/ä/g, 'ae')
+    .replace(/ö/g, 'oe')
+    .replace(/ü/g, 'ue')
+    .replace(/ß/g, 'ss')
+    .trim();
 }
 
 /**
