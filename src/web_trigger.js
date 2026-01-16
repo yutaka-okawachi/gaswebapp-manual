@@ -122,12 +122,26 @@ const translateScope = (scope, work, type) => {
                    // Map keys are specific scenes.
                    // "all" is handled above.
                    
-                   // Construct Lookup Key: workKey-part
-                   // usage of localNormalize ensures matching consistency with mahler.js logic
-                   const key = localNormalize(workKey) + '-' + localNormalize(part);
+                   let normWork = localNormalize(workKey);
+                   let normPart = localNormalize(part);
                    
+                   // Try 1: Exact Match (e.g. "1-1")
+                   let key = normWork + '-' + normPart;
                    if (sceneMap[key]) return sceneMap[key];
                    
+                   // Try 2: Space to Hyphen (e.g. "V zu Seite" -> "v-zu seite")
+                   // Note: normalize removed extra spaces, but if part was "V zu", it stays "v zu"
+                   // We want "v-zu" ? Or strictly match spreadsheet format.
+                   // Spreadsheet keys are usually "oper-aufzug-szene".
+                   // If "V zu Seite" comes as one string, it might be Auftritt V? No.
+                   // Let's assume input might be "1 1" meant as "1-1".
+                   let key2 = normWork + '-' + normPart.replace(/\s+/g, '-');
+                   if (sceneMap[key2]) return sceneMap[key2];
+
+                   // Try 3: Implicit Act 0 (e.g. "SceneName" -> "0-SceneName")
+                   let key3 = normWork + '-0-' + normPart;
+                   if (sceneMap[key3]) return sceneMap[key3];
+
                    // Retain original functionality for fallback
                    return null;
                });
