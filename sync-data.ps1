@@ -312,7 +312,7 @@ if ($runFailed) {
             $curlOutput = $curlOutputLines -join "`n"
             
             # Save response for debugging
-            $curlOutput | Out-File -FilePath "webapp_response.txt" -Encoding UTF8
+            # $curlOutput | Out-File -FilePath "webapp_response.txt" -Encoding UTF8
             
             $webDuration = (Get-Date) - $webStartTime
             
