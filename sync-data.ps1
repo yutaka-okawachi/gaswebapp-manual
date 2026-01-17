@@ -106,9 +106,17 @@ if (Test-Path ".env") {
 
 # --- [1/5] GAS へのアップロード (clasp push) ---
 Write-Host "[1/5] Checking GAS source changes (src/)..." -ForegroundColor Yellow
-#$gasChanges = git status --porcelain src/
-# Always check/push GAS source to ensure sync
-Write-Host "✓ Uploading GAS source..." -ForegroundColor Gray
+# gitでsrcディレクトリの変更を確認
+$gasChanges = git status --porcelain src/
+
+if ($gasChanges) {
+    Write-Host "⚠ GAS source changes detected." -ForegroundColor Yellow
+    Write-Host "Source files have been modified. Upload (clasp push) is REQUIRED." -ForegroundColor Yellow
+} else {
+    Write-Host "✓ No local GAS source changes detected." -ForegroundColor Gray
+}
+
+Write-Host "Executing clasp push..." -ForegroundColor Gray
 Push-Location "src"
 
 # clasp push を実行（エラー出力をキャプチャ）
@@ -116,43 +124,56 @@ $pushOutput = clasp push -f 2>&1
 $pushExitCode = $LASTEXITCODE
 
 if ($pushExitCode -ne 0) {
-    # 権限エラーを検出
-    if ($pushOutput -match "permission|unauthorized|credentials|not logged in|Insufficient") {
-        Write-Host ""
-        Write-Error "❌ clasp push failed: Authentication error detected."
-        Write-Host "Your Google Apps Script credentials have expired or are missing." -ForegroundColor Yellow
-        Write-Host "Code changes in 'src/' cannot be uploaded without logging in." -ForegroundColor Yellow
-        Write-Host ""
-
-        # ユーザーにログインを促す
-        $loginChoice = Read-Host "Do you want to run 'clasp login' now? (Y to login, N to abort)"
-        if ($loginChoice -match "^[Yy]") {
-            Write-Host "Running 'clasp login'... (A browser tab will open)" -ForegroundColor Cyan
-            clasp login
+    # "No valid files to push" は実質的な成功（変更なし）とみなす
+    if ($pushOutput -match "No valid files to push") {
+         Write-Host "✓ No changes to push to GAS." -ForegroundColor Green
+    } else {
+        # 変更があるのに失敗した場合、または予期せぬエラー
+        if ($gasChanges) {
+            Write-Host ""
+            Write-Error "❌ CRITICAL: clasp push failed while GAS source changes exist."
+            Write-Host "You modified GAS code (logic), but it could not be uploaded." -ForegroundColor Red
+            Write-Host "To prevent sync inconsistency, the script will ABORT now." -ForegroundColor Red
+            Write-Host ""
+            Write-Host "Error details:" -ForegroundColor DarkGray
+            Write-Host ($pushOutput | Out-String) -ForegroundColor DarkGray
+            Write-Host ""
             
-            Write-Host "Retrying clasp push..." -ForegroundColor Cyan
-            # 再試行
-            $pushOutput = clasp push -f 2>&1
-            if ($LASTEXITCODE -eq 0) {
-                Write-Host "✓ GAS source updated successfully (Retry)." -ForegroundColor Green
+            # 認証エラーの場合はログインを促す
+            if ($pushOutput -match "permission|unauthorized|credentials|not logged in|Insufficient") {
+                Write-Host "Action Required: Authentication failed." -ForegroundColor Yellow
+                Write-Host "If you log in now, the script will RETRY the upload and RESUME execution." -ForegroundColor Cyan
+                $loginChoice = Read-Host "Do you want to run 'clasp login' and RESUME? (Y/N)"
+                 if ($loginChoice -match "^[Yy]") {
+                    Write-Host "Running 'clasp login'..." -ForegroundColor Cyan
+                    clasp login
+                    Write-Host "Retrying clasp push..." -ForegroundColor Cyan
+                    $pushOutput = clasp push -f 2>&1
+                    if ($LASTEXITCODE -eq 0) {
+                        Write-Host "✓ GAS source updated successfully (Retry)." -ForegroundColor Green
+                    } else {
+                        Write-Error "❌ Retry failed. Aborting."
+                        Pop-Location
+                        exit 1
+                    }
+                 } else {
+                    Write-Host "Aborting." -ForegroundColor Red
+                    Pop-Location
+                    exit 1
+                 }
             } else {
-                Write-Error "❌ clasp push failed again."
-                Write-Host "Error output: $($pushOutput | Out-String)" -ForegroundColor DarkGray
+                # 認証以外のエラーで、かつ変更がある場合 -> 即死
                 Pop-Location
                 exit 1
             }
         } else {
-            Write-Host "Aborted. Please run 'cd src; clasp login' manually." -ForegroundColor Red
-            Pop-Location
-            exit 1
+            # 変更がない場合は警告のみで続行（データ更新だけしたい場合など）
+            Write-Host ""
+            Write-Warning "⚠ clasp push failed, but no local GAS changes were detected."
+            Write-Host "Since logic hasn't changed, we can proceed with data sync." -ForegroundColor Gray
+            Write-Host "Error summary: $($pushOutput | Select-Object -First 1)" -ForegroundColor DarkGray
+            Write-Host ""
         }
-    } else {
-        # 認証以外のエラー
-        Write-Host ""
-        Write-Warning "⚠ clasp push failed with an unexpected error."
-        Write-Host "Error output: $($pushOutput | Out-String)" -ForegroundColor DarkGray
-        Write-Host ""
-        Write-Host "Continuing with Web App execution..." -ForegroundColor Gray
     }
 } else {
     Write-Host "✓ GAS source updated successfully." -ForegroundColor Green
@@ -205,7 +226,10 @@ if ($runFailed) {
     Write-Host "✗ clasp run failed or unavailable (exit code: $runExitCode)" -ForegroundColor Yellow
     
     # 認証エラーチェックと再ログイン
-    if ($runOutput -match "permission|unauthorized|credentials|not logged in|Insufficient") {
+    # 認証エラーチェックと再ログイン
+    # "Unable to run script function" (API実行権限エラー) はWeb Appフォールバックでカバーできるため、
+    # ここでは純粋な認証切れ（再ログインが必要な状態）とは区別して除外します。
+    if ($runOutput -match "unauthorized|credentials|not logged in" -or ($runOutput -match "permission" -and $runOutput -notmatch "Unable to run script function")) {
         Write-Host ""
         Write-Host "⚠ clasp run failed due to authentication error." -ForegroundColor Yellow
         

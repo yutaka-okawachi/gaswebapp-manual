@@ -135,42 +135,21 @@ start mahler-search-app/dic.html
 
 **原因**: 別のGoogleアカウントでclaspにログインしているため、GASプロジェクトの編集権限がない
 
-**動作**: ✅ **スクリプトは自動的に続行します**
+**動作**:
+- **GASコード（`src/`）に変更がある場合**: ❌ **安全のため停止します**
+  - 「ロジックを変えたのに反映されない」事故を防ぐためです。
+  - 「ログインして再開しますか？」と聞かれるので、`Y` を押してログインすれば、自動的にアップロードを再試行して処理を続行します。
 
-v2024.12.27以降の`sync-data.ps1`は、clasp pushが失敗しても**自動的にスキップして続行**します：
-
-```powershell
-⚠ clasp push failed: Authentication error detected.
-
-This usually means clasp is logged in with a different Google account.
-The script will continue using Web App for GAS function execution.
-```
-
-**v2025.1.12以降の改善**:
-`sync-data.ps1` は `clasp run` で認証エラーを検知した場合、以下のように対話的に再ログインを促します。
+- **GASコードに変更がない場合**: ✅ **警告を出して続行します**
+  - データ更新には影響しないため、エラーを無視して自動的に進みます。
 
 ```powershell
-⚠ clasp run failed due to authentication error.
-Do you want to run 'clasp login' now? (Y to login, N to verify Web App fallback)
-```
-
-ここで `Y` を入力すれば、その場でブラウザが開き再ログインできます。`N` を選べばそのままWeb Appへのフォールバック（自動デプロイ更新付き）が行われます。
-
-> [!IMPORTANT]
-> GASファイル（`src/`内のファイル）をローカルで編集した場合のみ、clasp認証の修正（再ログイン）が必要です。
-> スプレッドシートのデータ更新だけなら、認証エラーは無視して（`N`を選択して）Web Appフォールバックで問題ありません。
-
-**手動で認証を修正する場合**（GASファイルを編集する場合のみ）:
-
-```powershell
-cd src
-clasp logout
-clasp login  # ブラウザで pistares@gmail.com を選択
+⚠ clasp push failed, but no local GAS changes were detected.
+Since logic hasn't changed, we can proceed with data sync.
 ```
 
 > [!TIP]
-> clasp pushの認証エラーは、**Web App経由でのデータ更新には影響しません**。
-> GASファイルの編集が不要なら、エラーを無視して構いません。
+> アカウントの切り替え等で頻繁にログアウトしてしまう場合でも、**GASのコードをいじっていない限り**、エラーは無視されて自動的に同期が完了します。
 
 ### Script function not found エラー
 
