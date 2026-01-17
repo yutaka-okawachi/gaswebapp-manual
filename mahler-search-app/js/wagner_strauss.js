@@ -257,6 +257,11 @@ function searchByScene() {
     const operaValue = selectedOpera.value;
     const sceneCheckboxes = document.querySelectorAll(`input[name="${operaValue}-scene"]:checked`);
     const selectedScenes = Array.from(sceneCheckboxes).map(cb => cb.value);
+    
+    // Display Name取得ロジック追加
+    const selectedSceneLabels = Array.from(sceneCheckboxes).map(cb => cb.parentElement.textContent.trim());
+    const displayScope = selectedSceneLabels.join(', ');
+
     if (selectedScenes.length === 0) {
         setResults('<p class="result-message">場面を選択してください</p>');
         document.querySelectorAll('#scene-selection-container .btn-search').forEach(btn => {
@@ -289,7 +294,7 @@ function searchByScene() {
                 document.querySelectorAll('#scene-selection-container .btn-search').forEach(btn => {
                     btn.disabled = false;
                 });
-            })[funcName](operaValue, selectedScenes);
+            })[funcName](operaValue, selectedScenes, displayScope); // 3rd引数追加
     } else {
         // Local fallback
         setTimeout(() => {
@@ -323,7 +328,7 @@ function searchByScene() {
                 if (typeof sendSearchNotification === 'function') {
                     const details = {
                         work: operaValue,
-                        scope: selectedScenes.join(', '),
+                        scope: displayScope, // Display Nameを使用
                         term: 'Scene Search'
                     };
                     sendSearchNotification(details, composer);

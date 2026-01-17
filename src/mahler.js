@@ -394,7 +394,7 @@ function getRichardWagnerData() {
   return jsonData;
 }
 
-function searchRichardWagnerByScene(operaName, scenes) {
+function searchRichardWagnerByScene(operaName, scenes, displayScope) {
   try {
     const scoreInfoMap = getScoreInfoMap();
     const normalizedOperaName = normalizeString(operaName);
@@ -439,7 +439,7 @@ function searchRichardWagnerByScene(operaName, scenes) {
                "■ 検索内容\n" +
                "【　作品　】 " + operaName + "\n" +
                "【　タイプ　】 場面検索\n" +
-               "【　場面　】 " + scenes.join(', ') + "\n" +
+               "【　場面　】 " + (displayScope || scenes.join(', ')) + "\n" +
                "【　日時　】 " + new Date().toLocaleString('ja-JP') + "\n\n" +
                "■ 検索元\n" +
                "【　機能　】 場面検索 (Server)";

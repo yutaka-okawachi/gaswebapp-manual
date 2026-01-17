@@ -48,7 +48,7 @@ function getRichardStraussData() {
   return jsonData;
 }
 
-function searchRichardStraussByScene(operaName, scenes) {
+function searchRichardStraussByScene(operaName, scenes, displayScope) {
   try {
     const scoreInfoMap = getScoreInfoMap();
     const normalizedOperaName = normalizeString(operaName);
@@ -85,7 +85,7 @@ function searchRichardStraussByScene(operaName, scenes) {
     const emailBody = `
 検索日時: ${new Date().toLocaleString('ja-JP')}
 オペラ: ${operaName}
-選択場面: ${scenes.join(', ')}
+選択場面: ${displayScope || scenes.join(', ')}
     `.trim();
     sendSearchNotification(emailSubject, emailBody);
     // ▲▲▲ メール通知機能を追加 ▲▲▲
