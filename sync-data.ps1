@@ -106,15 +106,11 @@ if (Test-Path ".env") {
 
 # --- [1/5] GAS へのアップロード (clasp push) ---
 Write-Host "[1/5] Checking GAS source changes (src/)..." -ForegroundColor Yellow
-# gitでsrcディレクトリの変更を確認
-$gasChanges = git status --porcelain src/
 
-if ($gasChanges) {
-    Write-Host "⚠ GAS source changes detected." -ForegroundColor Yellow
-    Write-Host "Source files have been modified. Upload (clasp push) is REQUIRED." -ForegroundColor Yellow
-} else {
-    Write-Host "✓ No local GAS source changes detected." -ForegroundColor Gray
-}
+# Gitのステータスにかかわらず、常にアップロードを試行して整合性を保つ
+Write-Host "Forcing checks for GAS source changes..." -ForegroundColor Gray
+$gasChanges = $true 
+
 
 Write-Host "Executing clasp push..." -ForegroundColor Gray
 Push-Location "src"
