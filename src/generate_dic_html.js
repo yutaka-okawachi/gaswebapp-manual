@@ -540,9 +540,9 @@ function generateDicHtml(dicData, abbrData) {
             <li><a href="rs_terms_search.html">用語から検索</a></li>
         </ul>
 
-        <h3>ドイツ語の用語集</h3>
+        <h3>用語集</h3>
         <ul>
-            <li><a href="dic.html">用語集ページ</a></li>
+            <li><a href="dic.html">ドイツ語の音楽用語集</a></li>
         </ul>
 
 
