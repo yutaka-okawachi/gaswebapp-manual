@@ -465,6 +465,14 @@ Write-Host ""
 
 # --- [5/5] 全ての変更を GitHub に公開 (git push) ---
 Write-Host "[5/5] Pushing all changes to GitHub..." -ForegroundColor Yellow
+
+# 最新コミットが [skip ci] (GAS更新) の場合、デプロイ用コミットを追加
+$lastMsg = git log -1 --pretty=%B
+if ($lastMsg -match "\[skip ci\]") {
+    Write-Host "Creating trigger commit to ensure deployment..." -ForegroundColor Cyan
+    git commit --allow-empty -m "Deploy: Update data files"
+}
+
 Write-Host "Pushing to GitHub..." -ForegroundColor Gray
 git push
 if ($LASTEXITCODE -ne 0) {

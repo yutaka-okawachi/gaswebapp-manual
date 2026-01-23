@@ -88,7 +88,7 @@ function pushToGitHub(files, commitMessage) {
     throw new Error('GitHub Tokenが設定されていません。setup_credentials.js を実行してください。');
   }
 
-  const message = commitMessage || `自動更新: スプレッドシートからデータ同期 [${new Date().toLocaleString('ja-JP')}]`;
+  const message = commitMessage || `自動更新: スプレッドシートからデータ同期 [${new Date().toLocaleString('ja-JP')}] [skip ci]`;
   
   Logger.log('=== GitHub Batch Push Start ===');
   Logger.log(`Target: ${config.owner}/${config.repo} [${config.branch}]`);
