@@ -555,7 +555,7 @@ function generateDicHtml(dicData, abbrData) {
             <h1>ドイツ語の音楽用語集</h1>
             <p style="font-size: 0.85rem; color: #555; margin-top: 0.5em; margin-bottom: 1em;">
                 このページは，Richard Wagner (RW)，Gustav Mahler (GM)，Richard Strauss (RS)，Anton Bruckner，Paul Hindemith などで使用されているドイツ語の訳例やコメント集．どの曲で使用されているかの情報は「略記一覧」を参照のこと．<br>
-                各種検索ができるメインのページは<a href="home.html">こちら</a>
+                各種検索ができるメインのページは<a href="home.html" style="font-size: 1.0rem;">こちら</a>
             </p>
             <div id="listContainer">
 ${dicListHtml}
