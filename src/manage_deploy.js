@@ -1,3 +1,17 @@
+/*
+ * manage_deploy.js
+ * 
+ * 役割: Google Apps Script (GAS) のデプロイを管理するスクリプト。
+ * 
+ * 具体的な動作:
+ * 1. .envファイルから現在のデプロイIDを取得します。
+ * 2. `clasp deployments` コマンドを実行し、既存のデプロイ一覧を取得します。
+ * 3. .envのデプロイIDが既存リストに存在する場合、そのデプロイを更新（上書き）します。
+ *    これにより、WebアプリのURLが変わることなく、最新のコードが反映されます。
+ * 4. デプロイIDが見つからない場合は、既存の最新デプロイを更新するか、新規デプロイを作成します。
+ * 
+ * これにより、sync-data実行時に毎回WebアプリURLが変わってしまうのを防いでいます。
+ */
 const { exec } = require('child_process');
 const fs = require('fs');
 const path = require('path');
@@ -37,7 +51,15 @@ exec('clasp deployments', (err, stdout, stderr) => {
         }
     });
 
-    console.log(`Found ${Object.keys(deployments).length} deployments.`);
+    const deploymentsCount = Object.keys(deployments).length;
+    console.log(`Found ${deploymentsCount} deployments.`);
+
+    // Warn if deployments approach the limit (200)
+    if (deploymentsCount > 180) {
+        const warningFile = path.join(__dirname, '../.deploy_warning');
+        fs.writeFileSync(warningFile, deploymentsCount.toString());
+        console.log(`Warning: Deployment count (${deploymentsCount}) is high. Created warning flag.`);
+    }
 
     if (currentId && deployments[currentId] !== undefined) {
         console.log(`Targeting existing deployment: ${currentId}`);

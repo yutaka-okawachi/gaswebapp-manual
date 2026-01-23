@@ -490,3 +490,13 @@ Write-Host "App and Data are now synchronized." -ForegroundColor White
 Write-Host "Check the live site in a few minutes:" -ForegroundColor Gray
 Write-Host "https://yutaka-okawachi.github.io/gaswebapp-manual/mahler-search-app/home.html" -ForegroundColor Blue
 Write-Host ""
+
+# --- [Check for Deployment Warning] ---
+if (Test-Path ".deploy_warning") {
+    $count = Get-Content ".deploy_warning"
+    Write-Host "⚠️  WARNING: Deployment count is high ($count/200)." -ForegroundColor Yellow -BackgroundColor Black
+    Write-Host "If it hits 200, updates may fail. Please clean up deployments using 'clasp undeploy --all' or via the web console." -ForegroundColor Yellow -BackgroundColor Black
+    Remove-Item ".deploy_warning" -ErrorAction SilentlyContinue
+    Write-Host ""
+}
+
