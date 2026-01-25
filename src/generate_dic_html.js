@@ -299,9 +299,13 @@ function generateDicHtml(dicData, abbrData) {
     <title>用語集</title>
     <link rel="icon" href="favicon.png">
     <link rel="apple-touch-icon" href="apple-touch-icon.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bitter:wght@700&family=Lora:wght@400;500;600;700&display=swap" rel="stylesheet">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Richard Wagner, Gustav Mahler, Richard Strauss などの作品で使用されているドイツ語音楽用語の訳例やコメントをまとめた用語集です。">
     <link rel="stylesheet" href="css/common.css">
+    <script src="js/app.js" defer></script>
     <style>
         /* dic.html specific styles */
         .container {

@@ -853,13 +853,18 @@
     }
 
     function updateFloatingBarOffset() {
-      let offset = 16;
-      if (window.visualViewport) {
-        const diff = window.innerHeight - window.visualViewport.height;
-        if (diff > 0) offset += diff;
+      if (!window._throttleTimer) {
+        window._throttleTimer = requestAnimationFrame(() => {
+          let offset = 16;
+          if (window.visualViewport) {
+            const diff = window.innerHeight - window.visualViewport.height;
+            if (diff > 0) offset += diff;
+          }
+          document.documentElement.style.setProperty('--floating-bar-offset', `${offset}px`);
+          adjustFloatingBarSpacing();
+          window._throttleTimer = null;
+        });
       }
-      document.documentElement.style.setProperty('--floating-bar-offset', `${offset}px`);
-      adjustFloatingBarSpacing();
     }
 
 
