@@ -280,7 +280,7 @@ function generateDicHtml(dicData, abbrData) {
   // タイムスタンプをコメントに追加
   const timestamp = new Date().toLocaleString('ja-JP', { timeZone: 'Asia/Tokyo' });
     const html = `<!DOCTYPE html>
-<html>
+<html lang="ja">
 
 <head>
     <!-- Google Search Console Verification -->
@@ -550,7 +550,7 @@ function generateDicHtml(dicData, abbrData) {
 
     </nav>
 
-    <div class="page-wrapper">
+    <div class="page-wrapper" role="main">
         <div class="container">
             <div class="home-link"><a href="home.html">HOME</a></div>
             <h1>ドイツ語の音楽用語集</h1>
