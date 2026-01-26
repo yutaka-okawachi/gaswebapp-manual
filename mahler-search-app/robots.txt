@@ -1,0 +1,6 @@
+# すべての検索エンジンクローラーを許可
+User-agent: *
+Allow: /
+
+# サイトマップの場所を明示
+Sitemap: https://yutaka-okawachi.github.io/gaswebapp-manual/mahler-search-app/sitemap.xml

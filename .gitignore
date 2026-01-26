@@ -11,13 +11,12 @@
 
 # ログファイル
 *.log
-*.txt
 gitlog.txt
 webapp_response.txt
 sync-data_output.log
 sync_execution.log
 
-# その他管理ファイル
+# 管理用テキストファイル（robots.txtは除外しない）
 deployments_list.txt
 clasp_check/
 # manuals/ (Managed by git now)
