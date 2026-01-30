@@ -300,9 +300,14 @@ function generateDicHtml(dicData, abbrData) {
     <title>ドイツ語の音楽用語集</title>
     <link rel="icon" href="favicon.png">
     <link rel="apple-touch-icon" href="apple-touch-icon.png">
+    <!-- Google Fonts 最適化 -->
+    <link rel="dns-prefetch" href="https://fonts.googleapis.com">
+    <link rel="dns-prefetch" href="https://fonts.gstatic.com">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Bitter:wght@700&family=Lora:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Bitter:wght@700&family=Lora:wght@400;700&display=swap&subset=latin,latin-ext">
+    <link href="https://fonts.googleapis.com/css2?family=Bitter:wght@700&family=Lora:wght@400;700&display=swap&subset=latin,latin-ext" rel="stylesheet" media="print" onload="this.media='all'">
+    <noscript><link href="https://fonts.googleapis.com/css2?family=Bitter:wght@700&family=Lora:wght@400;700&display=swap&subset=latin,latin-ext" rel="stylesheet"></noscript>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Richard Wagner, Gustav Mahler, Richard Strauss などの作品で使用されているドイツ語音楽用語の訳例やコメントをまとめた用語集です。">
     <link rel="stylesheet" href="css/common.css">

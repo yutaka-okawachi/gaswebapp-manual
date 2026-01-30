@@ -1,10 +1,17 @@
+<!-- DNS解決を事前に実行 -->
+<link rel="dns-prefetch" href="https://fonts.googleapis.com">
+<link rel="dns-prefetch" href="https://fonts.gstatic.com">
+<!-- 接続を事前に確立 -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bitter:wght@700&family=Lora:wght@400;500;600;700&display=swap" rel="stylesheet">
+<!-- フォントCSSを非同期で読み込み（ウェイト削減: 400と700のみ） -->
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Bitter:wght@700&family=Lora:wght@400;700&display=swap&subset=latin,latin-ext">
+<link href="https://fonts.googleapis.com/css2?family=Bitter:wght@700&family=Lora:wght@400;700&display=swap&subset=latin,latin-ext" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Bitter:wght@700&family=Lora:wght@400;700&display=swap&subset=latin,latin-ext" rel="stylesheet"></noscript>
 <style>
 
 body {
-    font-family: 'Lora', 'Hiragino Kaku Gothic ProN', 'Meiryo', sans-serif;
+    font-family: 'Lora', -apple-system, BlinkMacSystemFont, 'Hiragino Kaku Gothic ProN', 'Yu Gothic', 'Meiryo', sans-serif;
     background-color: var(--primary-bg);
 }
 
