@@ -297,6 +297,7 @@ function generateDicHtml(dicData, abbrData) {
     </script>
     <meta charset="UTF-8">
     <link rel="canonical" href="https://yutaka-okawachi.github.io/gaswebapp-manual/mahler-search-app/dic.html">
+    <meta property="og:url" content="https://yutaka-okawachi.github.io/gaswebapp-manual/mahler-search-app/dic.html">
     <title>用語集</title>
     <link rel="icon" href="favicon.png">
     <link rel="apple-touch-icon" href="apple-touch-icon.png">
