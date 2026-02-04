@@ -1370,6 +1370,11 @@
     "[RW: Oper], [RS: Oper]"
   ],
   [
+    "Fantastische Bilder entschwundener Herrlichkeit, Gefühle der Wehmut und des Schmerzes inmitten sonnigster Gegenwart",
+    "消え去った栄光の幻想的な情景，燦々とした現在のただ中にある，哀愁と苦痛の感情．",
+    "[RS: It]"
+  ],
+  [
     "Fassung",
     "(≒ version, composure, setting / versione, calma, montatura)\n【一般的な意味】\n① 版，バージョン，仕立て．\n② 落ち着き，冷静さ．\n③ （貴金属の）台座，縁取り．",
     "[H: KM3]"
@@ -2150,6 +2155,11 @@
     "[H: KM2]"
   ],
   [
+    "In Ermanglung eines englischen Hornes ist diese Stelle vom 1. F Horn zu blasen bis +)",
+    "イングリッシュ・ホルンがない場合は，この箇所は第1ホルン（F管）が+印まで吹奏すること．",
+    "[RS: It]"
+  ],
+  [
     "In gleicher Stärke, ohne Anschwellung",
     "一定の強さで，クレッシェンドせずに ",
     "[B: 7]"
@@ -2868,6 +2878,11 @@
     "NB: violen et Celli I ohne anschwellung.",
     "注意: ヴィオラとチェロの1stはクレッシェンドなしで",
     "[B: 8-1], [B: 8-2]"
+  ],
+  [
+    "Neapolitanisches Volkslied",
+    "ナポリ民謡",
+    "[RS: It]"
   ],
   [
     "Nebel",
