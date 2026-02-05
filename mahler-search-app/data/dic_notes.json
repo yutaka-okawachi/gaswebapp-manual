@@ -376,7 +376,7 @@
   ],
   [
     "AV",
-    "Allgemeines Verzeichnis der Werke von Richard Strauss：Richard Strauss 作品総合目録\n\n全作品を通し番号で管理するための目録．作曲年代順を基本に全作品に 1 から連番を付与したもの．”TrV” とは違い，冒頭主題 (incipit) は扱わず，改定の区別もしない．年代順に番号を振ったもので，事務的，管理的なもの．研究・同定のためには \"TrV\" ，全集・出版社管理のためには\"AV\"，という二重管理が行われている．\n\n\"TrV\" の項も参照のこと．",
+    "Allgemeines Verzeichnis の略\n\nAllgemeines Verzeichnis der Werke von Richard Strauss：Richard Strauss 作品総合目録\n\n全作品を通し番号で管理するための目録．作曲年代順を基本に全作品に 1 から連番を付与したもの．”TrV” とは違い，冒頭主題 (incipit) は扱わず，改定の区別もしない．年代順に番号を振ったもので，事務的，管理的なもの．研究・同定のためには \"TrV\" ，全集・出版社管理のためには\"AV\"，という二重管理が行われている．\n\n\"TrV\" の項も参照のこと．",
     "[RS]"
   ],
   [
@@ -2710,6 +2710,11 @@
     "[GM], [RS: Oper]"
   ],
   [
+    "mit freiem Vortrage",
+    "自由な表現で，（テンポや抑揚を）演奏者の裁量に任せて",
+    "[RS: Hr1]"
+  ],
+  [
     "mit großem Wurf",
     "壮大なスケールで，大きな勢いをもって．\n\n\"Wurf\"は一般的には「勢い」,「投げること」といった意味． ",
     "[K: Cap]"
@@ -3796,7 +3801,7 @@
   ],
   [
     "TrV",
-    "Trenner-Verzeichnis\n\nRichard Strauss Werke – Thematisches Verzeichnis\n（フランツ・トレンナーによる Richard Strauss 作品主題目録）\n「作品主題目録」とは，単なる「作品目録」とは違い各作品に 冒頭主題（incipit） を付したもの．同名作品・改訂稿・断片の識別が可能で音楽学的同定を目的としている．学術的に最も広く使われている．標準的カタログ番号で作品番号（Op.）を持たない後期作品を整理するためのもの．\n\n例：\nSonatine Nr.1 → TrV 288\nMetamorphosen → TrV 290\nOboe Concerto → TrV 292\n\n\"AV\" も参照のこと．",
+    "Trenner-Verzeichnis の略\n\nRichard Strauss Werke – Thematisches Verzeichnis：Franz Trenner による Richard Strauss 作品主題目録\n\n「作品主題目録」とは，単なる「作品目録」とは違い各作品に 冒頭主題（incipit） を付したもの．同名作品・改訂稿・断片の識別が可能で音楽学的同定を目的としている．学術的に最も広く使われている．標準的カタログ番号で作品番号（Op.）を持たない後期作品を整理するためのもの．\n\n例：\nSonatine Nr.1 → TrV 288\nMetamorphosen → TrV 290\nOboe Concerto → TrV 292\n\n\"AV\" も参照のこと．",
     "[RS]"
   ],
   [
