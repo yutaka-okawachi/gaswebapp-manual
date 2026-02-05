@@ -586,7 +586,7 @@
   ],
   [
     "bisbigliando",
-    "(≒ whispering, murmuring / flüsternd)\nイタリア語 bisbigliare の現在分詞（bispigliando は古風な綴り，または異綴り）\"bisbigliare\" は「ささやく」，「ひそひそ話す」や「つぶやく」，「ぼそぼそ話す」の意味がある．\n【一般的な意味】\n① ささやく，小声で話す，耳打ちする．\n② （葉や水などが）さらさらと鳴る，ざわめく．\n【音楽用語としての訳例】\n「ささやくように」，「（ハープなどで）異名同音を用いた微細なトレモロで」，「ざわめくような音色で」",
+    "(≒ whispering, murmuring / flüsternd)\nイタリア語 bisbigliare の現在分詞（bispigliando は古風な綴り，または異綴り）\"bisbigliare\" は「ささやく」，「ひそひそ話す」や「つぶやく」，「ぼそぼそ話す」の意味がある．\n【一般的な意味】\n① ささやく，小声で話す，耳打ちする．\n② （葉や水などが）さらさらと鳴る，ざわめく．\n【音楽用語としての訳例】\n「ささやくように」，「（ハープなどで）異名同音を用いた微細なトレモロで」，「ざわめくような音色で」\n\n[RS: Duett] には \"bispiglando\" という表記もある．",
     "[GM]"
   ],
   [
@@ -637,7 +637,7 @@
   [
     "breit",
     "(≒ broad, wide, expansive / largo, largamente, ampio)\n【一般的な意味】\n① （幅・面積などが）広い，広大な，幅のある．\n② （話・描写などが）長々とした，詳細な，くどい．\n③ （態度などが）横柄な，ふてぶてしい．\n【音楽用語としての訳例】\n「幅広く」，「ゆったりと（ラルゴ）」，「堂々と」，「（テンポを）遅く」，「重々しく」，「（音を）十分に保って」\n\n「幅広く」とよく訳されているがやや意味不明なので，「ゆったりと」としてる． ”allargando” とニュアンスが似ているか．もっとも，弦楽器に使用される場合は \"breit geschtrichen\" は「幅広く弓を使って」のような意味になる．\"breit\" だけなら「広がりをもって」のような訳でもよいかもしれない．\"nicht breit\" はテンポを引き締める意味もあるだろう．",
-    "[GM], [RW: Oper], [RS: Oper], [H]"
+    "[GM], [RW: Oper], [RS: Oper], [RS: Hr2], [H]"
   ],
   [
     "Breit, majestätische Halbe",
@@ -1632,7 +1632,7 @@
   [
     "gemächlich",
     "(≒ leisurely, unhurried, comfortable / comodo, agiato)\n【一般的な意味】\n① （動作や速度が）ゆったりとした，緩やかな，あくせくしない．\n② （気分や態度が）のんびりした，くつろいだ，気楽な．\n【音楽用語としての訳例】\n「ゆったりと」，「急がずに」，「のんびりと」，「くつろいで」，「悠然と」",
-    "[GM], [RW: Oper], [RS: Oper]"
+    "[GM], [RW: Oper], [RS: Oper], [RS: Hr2]"
   ],
   [
     "gemässigt",
@@ -1762,7 +1762,7 @@
   [
     "getragen",
     "(≒ sustained, solemn, grave / sostenuto, grave)\ntragen の過去分詞\n【一般的な意味】\n① （荷物などが）運ばれた，（衣服などが）着用された．\n② （態度・歩調などが）重々しい，威厳のある，荘重な．\n【音楽用語としての訳例】\n「音を十分に保って」，「荘重に」，「重々しく」，「（テンポを）遅く保って」\n\nGM では「ゆったりと」と訳している．",
-    "[GM],  [RW: Oper], [RS: Oper]"
+    "[GM],  [RW: Oper], [RS: Oper], [RS: Hr2]"
   ],
   [
     "Gewalt",
@@ -3145,6 +3145,11 @@
     "[GM]"
   ],
   [
+    "RONDO\nAllegro ma non troppo (in cominciando un poco esitendo)",
+    "ロンド．節度のあるアレグロで，冒頭は少しためらうように",
+    "[RS: Duett]"
+  ],
+  [
     "Rücksicht",
     "(≒ consideration, regard, deference / riguardo, considerazione)\n【一般的な意味】\n① 考慮，配慮，思いやり，遠慮．\n② （視線や態度が）振り返ること，注意を向けること．\n\nGMでは \"ohne Rücksicht\" という使われ方がほとんどである．これは「無視して」と訳している． ",
     "[GM]"
@@ -3167,7 +3172,7 @@
   [
     "ruhig",
     "(≒ calm, quiet, peaceful / calmo, tranquillo)\n【一般的な意味】\n① 静かな，音のない，無言の．\n② 落ち着いた，平静な，穏やかな．\n③ （天候などが）穏やかな，凪いだ．\n【音楽用語としての訳例】\n「静かに」，「穏やかに」，「落ち着いて」，「平静を保って」",
-    "[GM], [RW: Oper], [RS: Oper]"
+    "[GM], [RW: Oper], [RS: Oper], [RS: Hr2]"
   ],
   [
     "Rundfunk",
@@ -3398,6 +3403,11 @@
     "scioltamente",
     "(≒ fluently, easily, loosely)\nイタリア語\n【一般的な意味】\n① なめらかに，よどみなく，流暢に．\n② 楽々と，気楽に，気負いなく．\n③ 柔軟に，緩やかに．\n【音楽用語としての訳例】\n「なめらかに」，「よどみなく」，「軽快に」，「柔軟に」",
     "[RS: Oper]"
+  ],
+  [
+    "scorrevole",
+    "(≒ flowing, fluent, gliding / fließend)\nイタリア語\nscorre（流れる）の現在分詞形容詞形\n【一般的な意味】\n① （水や液体が）流れるような，淀みのない．\n② （文章や話が）流暢な，スラスラとした，読みやすい．\n③ （カーテンや扉が）滑りの良い，スムーズに動く．\n【音楽用語としての訳例】\n「流れるように」，「淀みなく」，「（テンポが）滞らずに」，「滑らかに」\n\n\"fließend\" とほぼ同義とみてよいだろう．",
+    "[RS: Duett]"
   ],
   [
     "Sechs Spieler",
