@@ -287,7 +287,7 @@ function handleSearchNotification(data) {
     }
 
     const formattedDate = Utilities.formatDate(new Date(), "Asia/Tokyo", "yyyy/MM/dd HH:mm:ss");
-    const subject = "【マーラー検索】検索通知: " + workFull;
+    const subject = "【検索通知】: "+ workFull;
 
     // 表示用ラベルとコンテンツの決定
     let searchTypeDisplay = "曲名・楽器検索";
