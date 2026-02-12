@@ -525,7 +525,7 @@ function generateDicHtml(dicData, abbrData) {
 
     <!-- サイドバーナビゲーション -->
     <nav class="sidebar" id="sidebar">
-        <h3 class="sidebar-home"><a href="home.html">🏠 HOME</a></h3>
+        <h3 class="sidebar-home"><a href="index.html">🏠 HOME</a></h3>
         <h3>Richard Wagner (RW)</h3>
         <ul>
             <li><a href="richard_wagner.html">曲名から検索</a></li>
@@ -534,7 +534,7 @@ function generateDicHtml(dicData, abbrData) {
 
         <h3>Gustav Mahler (GM)</h3>
         <ul>
-            <li><a href="index.html">曲名と楽器等から検索</a></li>
+            <li><a href="mahler.html">曲名と楽器等から検索</a></li>
             <li><a href="terms_search.html">用語から検索</a></li>
         </ul>
 
@@ -554,11 +554,11 @@ function generateDicHtml(dicData, abbrData) {
 
     <div class="page-wrapper">
         <div class="container">
-            <div class="home-link"><a href="home.html">HOME</a></div>
+            <div class="home-link"><a href="index.html">HOME</a></div>
             <h1>ドイツ語の音楽用語集</h1>
             <p style="font-size: 0.85rem; color: #555; margin-top: 0.5em; margin-bottom: 1em;">
                 このページは，Richard Wagner (RW)，Gustav Mahler (GM)，Richard Strauss (RS)，Anton Bruckner，Paul Hindemith などで使用されているドイツ語の訳例やコメント集（ほんの一部だけイタリア語，フランス語等を含む）．どの曲で使用されているかの情報は「略記一覧」を参照のこと．<br>
-                各種検索ができるメインのページは<a href="home.html" style="font-size: 1.0rem;">こちら</a>
+                各種検索ができるメインのページは<a href="index.html" style="font-size: 1.0rem;">こちら</a>
             </p>
             <div id="listContainer">
 ${dicListHtml}

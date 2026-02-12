@@ -11,7 +11,7 @@ const SECRET_TOKEN = PropertiesService.getScriptProperties().getProperty('GAS_SE
 // --- Global Mappings & Helpers ---
 
 const pageNameMap = {
-  'index.html': '曲名と楽器から検索 (GM)',
+  'mahler.html': '曲名と楽器から検索 (GM)',
   'terms_search.html': '用語から検索 (GM)',
   'rs_terms_search.html': '用語から検索 (RS)',
   'rw_terms_search.html': '用語から検索 (RW)',

@@ -970,7 +970,7 @@ function searchData(choice1Arr, choice2Arr, includeOrchestraAll) {
   // userAgent is not available in server-side function unless passed from client
   logToSpreadsheet({
     work: selectedWorks,
-    page: 'index.html',
+    page: 'mahler.html',
     term: '曲名・楽器検索',
     scope: selectedInstruments,
     userAgent: 'N/A', // Client doesn't pass UA to searchData yet
