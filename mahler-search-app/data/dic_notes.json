@@ -920,6 +920,11 @@
     "[H: K49]"
   ],
   [
+    "Diese 3 B-schläge nur für chromatische Pauken, außerdem wegzulassen.",
+    "この3つのB音は，半音階的に調律可能なティンパニを使用する場合のみ演奏し，それ以外は省略する．",
+    "[RS: Bur]"
+  ],
+  [
     "Diese kleinen Tempobezeichnungen sind stets nur als unbedeutende Modifikationen desselben Zeitmasses aufzufassen.",
     "小さな（フォントの）テンポの指示はいつでも，同じテンポの中でのほんのわずかな変更としてのみ解釈される． ",
     "[RS: Dom]"
@@ -3041,7 +3046,7 @@
   ],
   [
     "pompös",
-    "(≒ pompous, grandiose, showy / pomposo, grandioso)\n【一般的な意味】\n① 華麗な，豪華な，壮大な．\n② （態度などが）もったいぶった，仰々しい，尊大な．\n【音楽用語としての訳例】\n「華麗に」，「壮大に」，「仰々しく」\n\n[RS: Oper] では②の意味で使われている．",
+    "(≒ pompous, grandiose, showy / pomposo, grandioso)\n【一般的な意味】\n① 華麗な，豪華な，壮大な．\n② （態度などが）もったいぶった，仰々しい，尊大な．\n【音楽用語としての訳例】\n「華麗に」，「壮大に」，「仰々しく」\n\n[RS: Oper] では②の意味で使われている．[RS: Bur] にもイタリア語で pomposo という指示がある．この場合も②の意味の可能性がある．",
     "[RS: Oper]"
   ],
   [
