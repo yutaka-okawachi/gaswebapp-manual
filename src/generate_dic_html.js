@@ -296,6 +296,22 @@ function generateDicHtml(dicData, abbrData) {
       gtag('config', 'G-ZT6MPW5MNG');
     </script>
     <meta charset="UTF-8">
+
+    <!-- JSON-LD 構造化データ -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "DefinedTermSet",
+      "name": "ドイツ語の音楽用語集",
+      "url": "https://yutaka-okawachi.github.io/gaswebapp-manual/mahler-search-app/dic.html",
+      "description": "Wagner・Mahler・Strauss・Bruckner・Hindemith などのスコアに使われたドイツ語音楽用語と、その日本語訳を収録した専門辞書。",
+      "inLanguage": "de",
+      "isPartOf": {
+        "@type": "WebSite",
+        "url": "https://yutaka-okawachi.github.io/gaswebapp-manual/mahler-search-app/"
+      }
+    }
+    </script>
     <link rel="canonical" href="https://yutaka-okawachi.github.io/gaswebapp-manual/mahler-search-app/dic.html">
     <meta property="og:url" content="https://yutaka-okawachi.github.io/gaswebapp-manual/mahler-search-app/dic.html">
     <title>用語集</title>
