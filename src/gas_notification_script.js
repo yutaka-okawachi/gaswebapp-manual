@@ -275,7 +275,7 @@ function doPost(e) {
     }
     
     var now = new Date();
-    // Use JST for the timestamp
+    // JSTでタイムスタンプを生成
     var formattedDate = Utilities.formatDate(now, "Asia/Tokyo", "yyyy/MM/dd HH:mm:ss");
 
     var subject = "【マーラー検索】検索通知: " + work;
@@ -315,9 +315,17 @@ function doPost(e) {
                "【　ページ　】 " + pageName + "\n\n" +
                "■ ユーザー環境\n" +
                userAgent;
-                
+
+    // メールアドレスはGASのスクリプトプロパティから取得（コードへの直書きを避けるため）
+    // GASエディタ「プロジェクトの設定 → スクリプトプロパティ」に
+    // キー: NOTIFY_EMAIL, 値: 送信先メールアドレス を登録してください
+    var notifyEmail = PropertiesService.getScriptProperties().getProperty('NOTIFY_EMAIL');
+    if (!notifyEmail) {
+      throw new Error('スクリプトプロパティ NOTIFY_EMAIL が設定されていません');
+    }
+
     MailApp.sendEmail({
-      to: 'pistares@ezweb.ne.jp',
+      to: notifyEmail,
       subject: subject,
       body: body
     });
