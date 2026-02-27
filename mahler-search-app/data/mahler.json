@@ -1934,7 +1934,7 @@
   {
     "de": "Anmerk. f. d. Dirigenten: Das cresc. dauert bis zum Eintritt der Streicher und Holzbläser und muss sehr mächtig sein; der Dirigent muss das Tempo so lange zurückhalten, bis die grösste Kraft erreicht ist. - Beim Eintritte der Streicher und Holzbläser treten die Metallinstrumente zurück, um den Eintritt jener nicht zu 'decken'.",
     "de_normalized": "anmerk. f. d. dirigenten: das cresc. dauert bis zum eintritt der streicher und holzblaeser und muss sehr maechtig sein; der dirigent muss das tempo so lange zurueckhalten, bis die groesste kraft erreicht ist. - beim eintritte der streicher und holzblaeser treten die metallinstrumente zurueck, um den eintritt jener nicht zu 'decken'.",
-    "ja": "指揮者への注意：クレッシェンドは弦と木管の入るところまで続き，非常に力強く行われなければならない．指揮者は最強音になるまでテンポを抑えなければならない．弦と木管が入るところでは，金管はその入りを「遮蔽」しないように引っ込むこと",
+    "ja": "指揮者への注意：クレッシェンドは弦と木管の入るところまで続き，非常に力強く行われなければならない．指揮者は最強音になるまでテンポを抑えなければならない．弦と木管が入るところでは，金管はその入りをかき消さないように引っ込むこと",
     "data": "M-2-5-156-dir&"
   },
   {
@@ -3626,7 +3626,7 @@
   {
     "de": "Die Alt-Stimme muß sehr zart sein und das Flöten Solo nicht 'decken'",
     "de_normalized": "die alt-stimme muss sehr zart sein und das floeten solo nicht 'decken'",
-    "ja": "アルトはたいへん繊細に，またフルートソロを「遮蔽」してはならない",
+    "ja": "アルトはたいへん繊細に，またフルートソロをかき消してしてはならない",
     "data": "M-a-6-70-alt&"
   },
   {
@@ -3806,7 +3806,7 @@
   {
     "de": "Die Streicher sollen die tief liegenden Männerstimmen nicht decken",
     "de_normalized": "die streicher sollen die tief liegenden maennerstimmen nicht decken",
-    "ja": "弦楽器は低い男声を覆い隠さないように",
+    "ja": "弦楽器は低い男声をかき消さないように",
     "data": "M-8-t1-21-v2,va,vc,kb&"
   },
   {
@@ -3854,7 +3854,7 @@
   {
     "de": "Die Violinen dürfen die Holzbläser nicht decken",
     "de_normalized": "die violinen duerfen die holzblaeser nicht decken",
-    "ja": "ヴァイオリンが木管を覆い隠してはならない",
+    "ja": "ヴァイオリンが木管をかき消してはならない",
     "data": "M-5-3-120-v1,v2&"
   },
   {
@@ -13508,7 +13508,7 @@
   {
     "de": "Trompete Knabenchor nicht decken.",
     "de_normalized": "trompete knabenchor nicht decken.",
-    "ja": "トランペットは児童合唱を覆い隠さないように",
+    "ja": "トランペットは児童合唱をかき消さないように",
     "data": "M-8-t1-343-tr&"
   },
   {
