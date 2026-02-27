@@ -1106,18 +1106,23 @@
   ],
   [
     "eindringen",
-    "(≒ penetrate, intrude, invade / penetrare, irrompere)\n【一般的な意味】\n① （力ずくで）侵入する，押し入る，（敵などが）攻め込む．\n② （水・光・音などが）入り込む，染み込む，貫通する．\n③ （秘密や本質に）深く立ち入る，食い込む．\n【音楽用語としての訳例】\n「（音が）突き刺さるように」，「（響きが）浸透して」，「（他を圧して）入り込む」，「（鋭く）食い込む」，「（ト書きで）押し入る」",
+    "(≒ penetrate, intrude, invade / penetrare, irrompere)\n【一般的な意味】\n① （力ずくで）侵入する，押し入る，（敵などが）攻め込む．\n② （水・光・音などが）入り込む，染み込む，貫通する．\n③ （秘密や本質に）深く立ち入る，食い込む．",
     "[RS: Oper]"
   ],
   [
     "eindringlich",
-    "(≒ urgent, insistent, forceful / insistente, incisivo, penetrante)\n【一般的な意味】\n① （要求・警告などが）執拗な，しつこい，切実な，熱心な．\n② （印象・声などが）強烈な，心に深く食い入る，胸に迫る，忘れがたい．\n【音楽用語としての訳例】\n「訴えかけるように」，「執拗に」，「切々と」，「強調して」，「（心に）食い入るように」，「説得力を持って」",
+    "(≒ urgent, insistent, forceful / insistente, incisivo, penetrante)\n【一般的な意味】\n① （要求・警告などが）執拗な，しつこい，切実な，熱心な．\n② （印象・声などが）強烈な，心に深く食い入る，胸に迫る，忘れがたい．",
     "[GM], [RW: Oper], [RS: Oper]"
   ],
   [
     "einfach",
     "(≒ simple, plain / semplice)\n【一般的な意味】\n① 単純な，簡素な，手が込んでいない，あっさりした．\n② 質素な，飾り気のない，地味な．\n③ 簡単な，容易な，わかりやすい．\n④ （副詞的に）ただ，単に，まったく．\n【音楽用語としての訳例】\n「単純に（semplice）」，「素朴に」，「飾り気なく」，「（技巧を凝らさず）淡々と」，「無邪気に」，「（感情を込めすぎず）あっさりと」\n\n(≒ in unison)  「ユニゾンで」，「単一の」など．[RS: Juan]で前の divisi の状態から戻るときに使われている．GM にも使用例はあるが GM では「質素な」，「簡素な」，「簡単な」の意味でしか使われていない．一般には前者の意味で使用されることが多い． ",
     "[GM], [RW: Oper], [RS: Oper], [RS: Juan]"
+  ],
+  [
+    "Eingang",
+    "(≒ entrance, entry, introduction / ingresso, entrata)\n【一般的な意味】\n① 入り口，玄関（建物や敷地などの内部へ入るための場所）．\n② 到着，受領（郵便物や書類などが届くこと）．\n③ 導入部，はじめ（物語や説明などの冒頭部分）．\n【音楽用語としての訳例】\n「導入」，「（序奏としての）入り」，「（楽節の）開始部」",
+    "[RW: Oper], [RS: Oper]"
   ],
   [
     "einhalten",
@@ -1213,6 +1218,11 @@
     "endgiltige",
     "(≒ final, definitive, conclusive / finale, definitivo, ultimo)\nendgiltig の格変化形（現代の正書法では endgültig）\n【一般的な意味】\n① 最終的な，最後の，終わりの．\n② 決定的な，確定的な，変更できない．\n【音楽用語としての訳例】\n「最終的な」，「決定稿の」，「（迷いなく）確定した」，「最後の」，「（endgiltige Fassung で）決定版」",
     "[GM]"
+  ],
+  [
+    "endlich",
+    "(≒ final, finite, at last, finally / finalmente, ultimo)\n【一般的な意味】\n① ついに，ようやく，やっと（待ち望んでいたことが起こる様子）．\n② 有限の，終わりのある（無限ではないこと）．",
+    "[RW: Oper], [RS: Oper]"
   ],
   [
     "Engelkonzert",
@@ -1581,7 +1591,7 @@
   ],
   [
     "gebunden",
-    "(≒ bound, tied, slurred / legato, legato)\nbinden の過去分詞\n【一般的な意味】\n① 縛られた，結ばれた，結束された．\n② （規則や義務などに）拘束された，制約された．\n③ （詩や文章が）韻律に従った，整えられた．\n【音楽用語としての訳例】\n「スラーでつながれた」，「legato で」，「なめらかに」",
+    "(≒ bound, tied, slurred / legato, legato)\nbinden の過去分詞\n【一般的な意味】\n① 縛られた，結ばれた，結束された．\n② （規則や義務などに）拘束された，制約された．\n③ （詩や文章が）韻律に従った，整えられた．\n【音楽用語としての訳例】\n「スラーで」，「legato で」，「なめらかに」",
     "[GM], [RW: Oper], [RS: Oper]"
   ],
   [
@@ -1606,8 +1616,13 @@
   ],
   [
     "Geflüster",
-    "(≒ whispering, murmur / sussurro, bisbiglio)\n【一般的な意味】\n① ささやき声，ひそひそ話．\n② （音の）ざわめき，かすかな音．\n【音楽用語としての訳例】\n「ささやき」，「ひそひそ話のように」，「ざわめき」",
+    "(≒ whispering, murmur / sussurro, bisbiglio)\n【一般的な意味】\n① ささやき声，ひそひそ話．\n② （音の）ざわめき，かすかな音．",
     "[GM]"
+  ],
+  [
+    "Gefolge",
+    "(≒ entourage, retinue, followers / seguito, accompagnamento)\n【一般的な意味】\n① 随員，供回り，付き人（主君や重要人物に付き従う人々の集団）．\n② （比喩的に）結果として生じるもの，余波，伴う現象．",
+    "[RW: Oper], [RW: Oper]"
   ],
   [
     "Gefühl",
