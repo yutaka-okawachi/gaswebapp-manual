@@ -28,6 +28,18 @@ npm install -g @google/clasp
 clasp login
 ```
 
+> **注意**: clasp 3.x 系では一部コマンドの構文が変わっています（例: `undeploy` → `delete-deployment`）。
+> バージョンは `clasp --version` で確認できます。
+
 ## 3. 初期設定
 
 初めてプロジェクトをクローンした場合は、`.clasp.json` の設定を確認し、適切なスクリプトIDが設定されていることを確認してください。
+
+## 4. GAS スクリプトプロパティの設定
+
+GASエディタの「プロジェクトの設定 → スクリプトプロパティ」に以下を登録してください。
+
+| キー | 値 | 用途 |
+|---|---|---|
+| `NOTIFY_EMAIL` | 通知先メールアドレス | 検索通知メールの送信先 |
+| `TOKEN` | 任意のランダム文字列 | Web App API の認証トークン（`.env` の `GAS_SECRET_TOKEN` と一致させる） |

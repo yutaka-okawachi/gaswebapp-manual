@@ -29,4 +29,15 @@ PowerShell で以下のコマンドを実行してください。
 
 -   **404 エラー**: ウェブアプリの URL が古い可能性があります。`.env` ファイルの `GAS_DEPLOY_URL` が最新のデプロイを指しているか確認してください。
 -   **認証エラー**: `.env` の `GAS_SECRET_TOKEN` が、GAS のスクリプトプロパティ `TOKEN` と一致しているか確認してください。
--   **デプロイ数警告**: "Deployment count is high" と表示された場合、デプロイ数が上限（200）に近づいています。古いデプロイを削除してください。
+-   **デプロイ数警告**: "Deployment count is high" と表示された場合、デプロイ数が上限（200）に近づいています。以下の手順で古いデプロイを削除してください。
+
+    ```powershell
+    # デプロイ一覧を確認
+    cd src
+    clasp deployments
+
+    # 特定のデプロイを削除（IDは clasp deployments で確認）
+    clasp delete-deployment <DEPLOYMENT_ID>
+    ```
+
+    最新10件を残して古いものを一括削除するには、GASエディタの「デプロイを管理」からも操作できます。
