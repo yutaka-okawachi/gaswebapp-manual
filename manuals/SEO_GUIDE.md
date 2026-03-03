@@ -26,7 +26,8 @@ SNS共有時の正規URLを指定するOGPタグです。
 | ファイル | 説明 |
 |---------|------|
 | home.html | ホームページ |
-| index.html | マーラー検索 |
+| index.html | マーラー検索（旧ページ名） |
+| mahler.html | 曲名と楽器から検索（現メイン） |
 | dic.html | 用語集（自動生成） |
 | terms_search.html | GM用語検索 |
 | rs_terms_search.html | RS用語検索 |
