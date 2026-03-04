@@ -172,6 +172,29 @@ body {
         color: #fff;
     }
     
+    /* トップへ戻るボタンをHOMEボタンと同じデザイン・高さ(右上)に統一 */
+    #scrollToTop {
+        top: 15px !important;
+        right: 15px !important;
+        bottom: auto !important;
+        background-color: #2c3e50 !important;
+        color: #ecf0f1 !important;
+        padding: 5px 12px !important;
+        border-radius: 5px !important;
+        font-size: 0.85rem !important;
+        font-weight: 500 !important;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.3) !important;
+        border: none !important;
+        line-height: normal !important;
+    }
+    
+    #scrollToTop:hover, #scrollToTop:active {
+        background-color: #34495e !important;
+        color: #fff !important;
+        transform: translateY(0) !important;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.3) !important;
+    }
+    
     .sidebar {
         display: none;
     }
