@@ -147,10 +147,10 @@ body {
     display: none;
 }
 
-/* モバイル表示でスクロール後に左上固定表示するスタイル */
+/* モバイル表示で常に左上固定表示するスタイル */
 @media (max-width: 768px) {
-    /* JSによってスタイルが直接 "flex" に変更されることを想定 */
     .mobile-home-btn {
+        display: flex;
         align-items: center;
         justify-content: center;
         position: fixed;

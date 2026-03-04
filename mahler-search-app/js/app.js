@@ -1236,13 +1236,12 @@ function debounce(func, wait) {
 // Optimized scroll event handler with debounce
 const handleScroll = debounce(() => {
     const btn = document.getElementById('scrollToTop');
-    const homeBtn = document.getElementById('mobileHomeBtn');
-    if (window.scrollY > 300) {
-        if (btn) btn.style.display = 'block';
-        if (homeBtn && window.innerWidth <= 768) homeBtn.style.display = 'flex';
-    } else {
-        if (btn) btn.style.display = 'none';
-        if (homeBtn) homeBtn.style.display = 'none';
+    if (btn) {
+        if (window.scrollY > 300) {
+            btn.style.display = 'block';
+        } else {
+            btn.style.display = 'none';
+        }
     }
 }, 100); // Execute at most once every 100ms
 
