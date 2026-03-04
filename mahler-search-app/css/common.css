@@ -149,6 +149,11 @@ body {
 
 /* モバイル表示で常に左上固定表示するスタイル */
 @media (max-width: 768px) {
+    /* 固定ボタン（HOME・トップへ戻る）でアンカーリンク先の要素が隠れないように調整 */
+    :target {
+        scroll-margin-top: 65px;
+    }
+
     .mobile-home-btn {
         display: flex;
         align-items: center;
