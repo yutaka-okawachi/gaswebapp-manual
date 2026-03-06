@@ -750,11 +750,11 @@ function formatGenericResults(data) {
             <div class="result-entry">
                 <div class="result-page">${pageDisplay}</div>
                 <div class="result-content">
-                    <div class="result-de">${de}</div>
-                    <div class="result-ja-loc">
+                    <dt class="result-de">${de}</dt>
+                    <dd class="result-ja-loc">
                         <span>${ja}</span>
                         <span>【${whom}】</span>
-                    </div>
+                    </dd>
                 </div>
             </div>
         `;
@@ -1296,8 +1296,8 @@ window.searchTermsLocal = function (query, sourceFilter) {
     results.forEach(row => {
         const [german, translation, source] = row;
         html += `<div class="row">
-            <div><span class="german">${escapeHtml(german)}</span><span class="source">${escapeHtml(source)}</span></div>
-            <div class="translation">${escapeHtmlWithBreaks(translation)}</div>
+            <dt><dfn class="german">${escapeHtml(german)}</dfn><span class="source">${escapeHtml(source)}</span></dt>
+            <dd class="translation">${escapeHtmlWithBreaks(translation)}</dd>
         </div>`;
     });
 
@@ -1637,12 +1637,12 @@ function searchGenericTermsLocal(query, dataKey, type) {
         }
 
         html += `<div class="search-result-item">`;
-        html += `<div class="result-a">${resultDe}</div>`;
+        html += `<dt class="result-a">${resultDe}</dt>`;
         
         itemsForThisDe.forEach(row => {
             // 各用例ごとに日本語訳を表示（訳語の揺れがわかるように）
             const ja = escapeHtmlWithBreaks(String(row.ja || ''));
-            html += `<div class="result-c">${ja}</div>`;
+            html += `<dd class="result-c">${ja}</dd>`;
             
             const whom = escapeHtml(String(row.whom || ''));
             const operKey = normalizeString(String(row.Oper || ''));
@@ -1660,11 +1660,11 @@ function searchGenericTermsLocal(query, dataKey, type) {
                 locationText += `：${whom}`;
             }
 
-            html += `<div class="result-loc">【${locationText}】</div>`;
+            html += `<dd class="result-loc">【${locationText}】</dd>`;
         });
         
         // 各見出し語の件数を表示
-        html += `<div class="result-loc">(${itemsForThisDe.length}件)</div>`;
+        html += `<dd class="result-loc">(${itemsForThisDe.length}件)</dd>`;
         html += `</div>`;
     });
 

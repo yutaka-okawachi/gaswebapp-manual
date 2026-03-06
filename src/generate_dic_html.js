@@ -222,13 +222,13 @@ function generateDicListHtml(dicData, termsIndex) {
     // translationにリンクを適用
     const linkedTranslation = termsIndex ? linkTermsInTranslation(translation, termsIndex) : escapeHtmlWithBreaks(translation);
     
-    // rowのHTML生成
+    // rowのHTML生成（セマンティックHTMLで辞書構造を明示）
     if (alphabetAnchor) html += alphabetAnchor;
     html += `<div class="row"${termIdAttr}>
-  <div>
-    <span class="german">${escapeHtml(german)}</span><span class="source">${escapeHtml(source)}</span>
-  </div>
-  <div class="translation">${linkedTranslation}</div>
+  <dt>
+    <dfn class="german">${escapeHtml(german)}</dfn><span class="source">${escapeHtml(source)}</span>
+  </dt>
+  <dd class="translation">${linkedTranslation}</dd>
 </div>\n`;
   });
   
@@ -427,6 +427,15 @@ ${structuredDataJSON}
             font-size: 1.0rem;
             display: block;
             font-family: 'Lora', serif;
+        }
+
+        /* セマンティックHTMLタグのリセット（見た目を変えないため） */
+        dt, dd {
+            margin: 0;
+            padding: 0;
+        }
+        dfn {
+            font-style: normal; /* ブラウザデフォルトの斜体を解除 */
         }
 
         .translation {
