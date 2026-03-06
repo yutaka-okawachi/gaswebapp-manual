@@ -276,6 +276,37 @@ function generateDicHtml(dicData, abbrData) {
   
   const dicListHtml = generateDicListHtml(dicData, termsIndex);
   const abbrListHtml = generateAbbrListHtml(abbrData);
+
+  // 構造化データの生成 (SEO対策)
+  const definedTerms = (dicData || [])
+    .filter(row => row[0]) // 有効な行のみ
+    .map(row => {
+      // 翻訳文からHTMLタグを除去してプレーンテキストにする
+      const plainTranslation = String(row[1] || '').replace(/<[^>]*>?/gm, '').trim();
+      return {
+        "@type": "DefinedTerm",
+        "termCode": normalizeForId(row[0]),
+        "name": String(row[0]).trim(),
+        "description": plainTranslation || "ドイツ語の音楽用語"
+      };
+    });
+
+  const structuredDataObj = {
+    "@context": "https://schema.org",
+    "@type": "DefinedTermSet",
+    "name": "ドイツ語の音楽用語集",
+    "url": "https://yutaka-okawachi.github.io/gaswebapp-manual/mahler-search-app/dic.html",
+    "description": "Wagner・Mahler・Strauss・Bruckner・Hindemith などのスコアに使われたドイツ語音楽用語と、その日本語訳を収録した専門辞書。",
+    "inLanguage": "de",
+    "isPartOf": {
+      "@type": "WebSite",
+      "url": "https://yutaka-okawachi.github.io/gaswebapp-manual/mahler-search-app/"
+    },
+    "hasDefinedTerm": definedTerms
+  };
+  
+  // JSON-LDを整形して文字列化
+  const structuredDataJSON = JSON.stringify(structuredDataObj, null, 2);
   
   // タイムスタンプをコメントに追加
   const timestamp = new Date().toLocaleString('ja-JP', { timeZone: 'Asia/Tokyo' });
@@ -299,18 +330,7 @@ function generateDicHtml(dicData, abbrData) {
 
     <!-- JSON-LD 構造化データ -->
     <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "DefinedTermSet",
-      "name": "ドイツ語の音楽用語集",
-      "url": "https://yutaka-okawachi.github.io/gaswebapp-manual/mahler-search-app/dic.html",
-      "description": "Wagner・Mahler・Strauss・Bruckner・Hindemith などのスコアに使われたドイツ語音楽用語と、その日本語訳を収録した専門辞書。",
-      "inLanguage": "de",
-      "isPartOf": {
-        "@type": "WebSite",
-        "url": "https://yutaka-okawachi.github.io/gaswebapp-manual/mahler-search-app/"
-      }
-    }
+${structuredDataJSON}
     </script>
     <link rel="canonical" href="https://yutaka-okawachi.github.io/gaswebapp-manual/mahler-search-app/dic.html">
     <meta property="og:url" content="https://yutaka-okawachi.github.io/gaswebapp-manual/mahler-search-app/dic.html">
