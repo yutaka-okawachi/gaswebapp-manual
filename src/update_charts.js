@@ -63,7 +63,7 @@ function updateSearchHistoryCharts() {
   
   // グラフを横に並べるためのカウンタ
   let chartCount = 0;
-  const maxChartsPerRow = 2; // 1行に並べるグラフの数
+  const maxChartsPerRow = 1; // 1行に1グラフ（幅が広いため）
   
   // ====== 1. 日別検索回数の集計とグラフ化 ======
   // 「日時」列は通常インデックス0
@@ -143,8 +143,8 @@ function updateSearchHistoryCharts() {
       .map(k => [k, counts[k]])
       .sort((a, b) => b[1] - a[1]);
     
-    // グラフが煩雑にならないよう、上位20件に絞る（必要に応じて変更可）
-    const topCounts = sortedCounts.slice(0, 20);
+    // グラフが煩雑にならないよう、上位50件に絞る（必要に応じて変更可）
+    const topCounts = sortedCounts.slice(0, 50);
     
     if (topCounts.length === 0) continue;
     
@@ -157,16 +157,16 @@ function updateSearchHistoryCharts() {
     // グラフのデータ範囲
     const chartDataRange = dataSheet.getRange(currentStartRow, 1, topCounts.length + 1, 2);
     
-    // 現在の配置位置（列）を計算（横の間隔を広げすぎないよう調整）
-    let currentColPos = chartColStart + (chartCount % maxChartsPerRow) * 6; // 横幅450pxに対して約6列分 (適度な間隔)
+    // 現在の配置位置（列）を計算（1行1グラフなので常にchartColStart）
+    let currentColPos = chartColStart;
     
     let chartBuilder = dashboardSheet.newChart()
         .setChartType(colConfig.type)
         .addRange(chartDataRange)
         .setPosition(chartRowStart, currentColPos, 0, 0)
         .setOption('title', `【${colName}】 ${colConfig.titleSuffix}（上位${topCounts.length}件）`)
-        .setOption('width', 450)
-        .setOption('height', 320);
+        .setOption('width', 850)   // 横幅を広げてラベルを見やすく
+        .setOption('height', 700); // 50件の横棒グラフに十分な縦幅
         
     // グラフ種別ごとの個別オプション調整
     if (colConfig.type === Charts.ChartType.COLUMN || colConfig.type === Charts.ChartType.BAR) {
@@ -181,7 +181,7 @@ function updateSearchHistoryCharts() {
     // グラフを配置したのでカウンタを進め、改行判定
     chartCount++;
     if (chartCount % maxChartsPerRow === 0) {
-        chartRowStart += 20; // 320pxの高さに対して約20セル分（縦の余白を多めに）
+        chartRowStart += 42; // 700pxの高さに対して約42セル分（重ならないよう余裕を持たせる）
     }
   }
 }
