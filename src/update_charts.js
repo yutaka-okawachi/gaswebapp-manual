@@ -46,10 +46,10 @@ function updateSearchHistoryCharts() {
   // PIE: 全体の割合を見るのに適している（Work, Page, Instrumentsなど）
   // COLUMN: 項目ごとの絶対的な量や比較を見るのに適している（Term, Szene, Whomなど）
   const targetColumns = [
-    { name: 'Work', type: Charts.ChartType.PIE, titleSuffix: 'の検索割合' },
-    { name: 'Page', type: Charts.ChartType.PIE, titleSuffix: 'の検索割合' },
+    { name: 'Work', type: Charts.ChartType.COLUMN, titleSuffix: 'の検索回数' },
+    { name: 'Page', type: Charts.ChartType.COLUMN, titleSuffix: 'の検索回数' },
     { name: 'Term', type: Charts.ChartType.COLUMN, titleSuffix: 'の検索回数' },
-    { name: 'Instruments', type: Charts.ChartType.PIE, titleSuffix: 'の検索割合' },
+    { name: 'Instruments', type: Charts.ChartType.COLUMN, titleSuffix: 'の検索回数' },
     { name: 'Szene', type: Charts.ChartType.COLUMN, titleSuffix: 'の検索回数' },
     { name: 'Whom', type: Charts.ChartType.COLUMN, titleSuffix: 'の検索回数' }
   ];
@@ -157,8 +157,8 @@ function updateSearchHistoryCharts() {
     // グラフのデータ範囲
     const chartDataRange = dataSheet.getRange(currentStartRow, 1, topCounts.length + 1, 2);
     
-    // 現在の配置位置（列）を計算（横の間隔を広げる）
-    let currentColPos = chartColStart + (chartCount % maxChartsPerRow) * 9; // 横幅450pxに対して約9列分の幅
+    // 現在の配置位置（列）を計算（横の間隔を広げすぎないよう調整）
+    let currentColPos = chartColStart + (chartCount % maxChartsPerRow) * 6; // 横幅450pxに対して約6列分 (適度な間隔)
     
     let chartBuilder = dashboardSheet.newChart()
         .setChartType(colConfig.type)
