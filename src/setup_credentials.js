@@ -177,4 +177,8 @@ function onOpen() {
     .addSeparator()
     .addItem('🗑️ 設定をクリア', 'clearGitHubSettings')
     .addToUi();
+    
+  ui.createMenu('📊 検索履歴グラフ')
+    .addItem('🔄 グラフを最新に更新する', 'updateSearchHistoryCharts')
+    .addToUi();
 }
