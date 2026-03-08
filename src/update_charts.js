@@ -11,15 +11,29 @@ function updateSearchHistoryCharts() {
     return;
   }
   
-  // 「検索履歴まとめ」シートが存在しない場合は作成し、ある場合は初期化する
-  if (!summarySheet) {
-    summarySheet = ss.insertSheet('検索履歴まとめ');
+  // 「検索履歴まとめ（データ用）」シート（非表示推奨）と「検索履歴まとめ」シート（ダッシュボード用）を分ける
+  let dataSheet = ss.getSheetByName('検索履歴まとめ（データ）');
+  let dashboardSheet = ss.getSheetByName('検索履歴まとめ');
+  
+  // データ用シートの準備
+  if (!dataSheet) {
+    dataSheet = ss.insertSheet('検索履歴まとめ（データ）');
+    dataSheet.hideSheet(); // ユーザーからは見えないように隠す
   } else {
-    summarySheet.clear();
-    const charts = summarySheet.getCharts();
+    dataSheet.clear();
+  }
+
+  // ダッシュボード（グラフ専用）シートの準備
+  if (!dashboardSheet) {
+    dashboardSheet = ss.insertSheet('検索履歴まとめ');
+  } else {
+    // 既存のグラフをすべて削除
+    const charts = dashboardSheet.getCharts();
     for (let i = 0; i < charts.length; i++) {
-        summarySheet.removeChart(charts[i]);
+        dashboardSheet.removeChart(charts[i]);
     }
+    // セルの中身も念のためクリアし、背景を白にする等で見やすくできる
+    dashboardSheet.clear();
   }
   
   const data = historySheet.getDataRange().getValues();
@@ -40,11 +54,16 @@ function updateSearchHistoryCharts() {
     { name: 'Whom', type: Charts.ChartType.COLUMN, titleSuffix: 'の検索回数' }
   ];
   
-  // データの出力開始行
+  // データの出力開始行 (データ用シート)
   let currentStartRow = 1;
-  // グラフの配置開始行
-  let chartRowStart = 1;
-  const chartColStart = 4; // グラフはD列から配置
+  
+  // グラフの配置 (ダッシュボード用シート)
+  let chartRowStart = 2; // 少し上部に余白を持たせる
+  let chartColStart = 2; // B列から配置（左端に余白を入れるため）
+  
+  // グラフを横に並べるためのカウンタ
+  let chartCount = 0;
+  const maxChartsPerRow = 2; // 1行に並べるグラフの数
   
   // ====== 1. 日別検索回数の集計とグラフ化 ======
   // 「日時」列は通常インデックス0
@@ -72,28 +91,32 @@ function updateSearchHistoryCharts() {
         // 最近30日分に絞る（長すぎると見づらいため）
         const recentDailyCounts = sortedDailyCounts.slice(-30);
 
-        summarySheet.getRange(currentStartRow, 1).setValue('日付');
-        summarySheet.getRange(currentStartRow, 2).setValue('検索回数');
-        summarySheet.getRange(currentStartRow, 1, 1, 2).setFontWeight("bold");
+        // データシートへ書き込み
+        dataSheet.getRange(currentStartRow, 1).setValue('日付');
+        dataSheet.getRange(currentStartRow, 2).setValue('検索回数');
+        dataSheet.getRange(currentStartRow, 1, 1, 2).setFontWeight("bold");
+        dataSheet.getRange(currentStartRow + 1, 1, recentDailyCounts.length, 2).setValues(recentDailyCounts);
         
-        summarySheet.getRange(currentStartRow + 1, 1, recentDailyCounts.length, 2).setValues(recentDailyCounts);
+        // グラフのデータ範囲はデータシートから取得
+        const chartDataRange = dataSheet.getRange(currentStartRow, 1, recentDailyCounts.length + 1, 2);
         
-        const chartDataRange = summarySheet.getRange(currentStartRow, 1, recentDailyCounts.length + 1, 2);
-        
-        // 日別の推移は折れ線グラフ (LINE) または縦棒グラフ (COLUMN) が適している
-        const chartBuilder = summarySheet.newChart()
+        // ダッシュボードシートにグラフを配置
+        // 日別のグラフは横幅を取りたいので、1段丸々使う
+        const chartBuilder = dashboardSheet.newChart()
             .setChartType(Charts.ChartType.LINE)
             .addRange(chartDataRange)
             .setPosition(chartRowStart, chartColStart, 0, 0)
             .setOption('title', `【日別検索回数】 の推移（直近${recentDailyCounts.length}日）`)
-            .setOption('width', 600)
+            .setOption('width', 900) // 横長にする
             .setOption('height', 350)
-            .setOption('legend', {position: 'none'}) // 凡例は１つしかないので非表示
-            .setOption('pointSize', 5); // 折れ線グラフの点を表示
+            .setOption('legend', {position: 'none'}) 
+            .setOption('pointSize', 5);
             
-        summarySheet.insertChart(chartBuilder.build());
+        dashboardSheet.insertChart(chartBuilder.build());
         
+        // 次のデータ位置
         currentStartRow += recentDailyCounts.length + 3;
+        // 次のグラフ位置（一番上の段を使ったので、次の段へ）
         chartRowStart += 18;
     }
   }
@@ -125,34 +148,40 @@ function updateSearchHistoryCharts() {
     
     if (topCounts.length === 0) continue;
     
-    // 集計データをシートのA～B列に書き込む
-    summarySheet.getRange(currentStartRow, 1).setValue(colName);
-    summarySheet.getRange(currentStartRow, 2).setValue('検索回数');
+    // 集計データをデータ用シートへ書き込む
+    dataSheet.getRange(currentStartRow, 1).setValue(colName);
+    dataSheet.getRange(currentStartRow, 2).setValue('検索回数');
+    dataSheet.getRange(currentStartRow, 1, 1, 2).setFontWeight("bold");
+    dataSheet.getRange(currentStartRow + 1, 1, topCounts.length, 2).setValues(topCounts);
     
-    // 見出しを太字に
-    summarySheet.getRange(currentStartRow, 1, 1, 2).setFontWeight("bold");
+    // グラフのデータ範囲
+    const chartDataRange = dataSheet.getRange(currentStartRow, 1, topCounts.length + 1, 2);
     
-    summarySheet.getRange(currentStartRow + 1, 1, topCounts.length, 2).setValues(topCounts);
+    // 現在の配置位置（列）を計算
+    let currentColPos = chartColStart + (chartCount % maxChartsPerRow) * 6; // 6列ごとに配置 (幅の目安)
     
-    // グラフを作成
-    const chartDataRange = summarySheet.getRange(currentStartRow, 1, topCounts.length + 1, 2);
-    let chartBuilder = summarySheet.newChart()
+    let chartBuilder = dashboardSheet.newChart()
         .setChartType(colConfig.type)
         .addRange(chartDataRange)
-        .setPosition(chartRowStart, chartColStart, 0, 0)
+        .setPosition(chartRowStart, currentColPos, 0, 0)
         .setOption('title', `【${colName}】 ${colConfig.titleSuffix}（上位${topCounts.length}件）`)
-        .setOption('width', 500)
-        .setOption('height', 300);
+        .setOption('width', 450)
+        .setOption('height', 320);
         
     // グラフ種別ごとの個別オプション調整
     if (colConfig.type === Charts.ChartType.COLUMN) {
         chartBuilder = chartBuilder.setOption('legend', {position: 'none'});
     }
     
-    summarySheet.insertChart(chartBuilder.build());
+    dashboardSheet.insertChart(chartBuilder.build());
     
-    // 次の表とグラフの位置をずらす
+    // 次のデータ位置
     currentStartRow += topCounts.length + 3;
-    chartRowStart += 16;
+    
+    // グラフを配置したのでカウンタを進め、改行判定
+    chartCount++;
+    if (chartCount % maxChartsPerRow === 0) {
+        chartRowStart += 16; // 次の段へ下がる
+    }
   }
 }
