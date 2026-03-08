@@ -46,12 +46,12 @@ function updateSearchHistoryCharts() {
   // PIE: 全体の割合を見るのに適している（Work, Page, Instrumentsなど）
   // COLUMN: 項目ごとの絶対的な量や比較を見るのに適している（Term, Szene, Whomなど）
   const targetColumns = [
-    { name: 'Work', type: Charts.ChartType.COLUMN, titleSuffix: 'の検索回数' },
-    { name: 'Page', type: Charts.ChartType.COLUMN, titleSuffix: 'の検索回数' },
-    { name: 'Term', type: Charts.ChartType.COLUMN, titleSuffix: 'の検索回数' },
-    { name: 'Instruments', type: Charts.ChartType.COLUMN, titleSuffix: 'の検索回数' },
-    { name: 'Szene', type: Charts.ChartType.COLUMN, titleSuffix: 'の検索回数' },
-    { name: 'Whom', type: Charts.ChartType.COLUMN, titleSuffix: 'の検索回数' }
+    { name: 'Work', type: Charts.ChartType.BAR, titleSuffix: 'の検索回数' },
+    { name: 'Page', type: Charts.ChartType.BAR, titleSuffix: 'の検索回数' },
+    { name: 'Term', type: Charts.ChartType.BAR, titleSuffix: 'の検索回数' },
+    { name: 'Instruments', type: Charts.ChartType.BAR, titleSuffix: 'の検索回数' },
+    { name: 'Szene', type: Charts.ChartType.BAR, titleSuffix: 'の検索回数' },
+    { name: 'Whom', type: Charts.ChartType.BAR, titleSuffix: 'の検索回数' }
   ];
   
   // データの出力開始行 (データ用シート)
@@ -169,7 +169,7 @@ function updateSearchHistoryCharts() {
         .setOption('height', 320);
         
     // グラフ種別ごとの個別オプション調整
-    if (colConfig.type === Charts.ChartType.COLUMN) {
+    if (colConfig.type === Charts.ChartType.COLUMN || colConfig.type === Charts.ChartType.BAR) {
         chartBuilder = chartBuilder.setOption('legend', {position: 'none'});
     }
     
