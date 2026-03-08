@@ -116,8 +116,8 @@ function updateSearchHistoryCharts() {
         
         // 次のデータ位置
         currentStartRow += recentDailyCounts.length + 3;
-        // 次のグラフ位置（一番上の段を使ったので、次の段へ）
-        chartRowStart += 18;
+        // 次のグラフ位置（一番上の段を使ったので、次の段へ下がる距離を長めに確保）
+        chartRowStart += 22; // 350pxの高さに対して約22セル分
     }
   }
 
@@ -157,8 +157,8 @@ function updateSearchHistoryCharts() {
     // グラフのデータ範囲
     const chartDataRange = dataSheet.getRange(currentStartRow, 1, topCounts.length + 1, 2);
     
-    // 現在の配置位置（列）を計算
-    let currentColPos = chartColStart + (chartCount % maxChartsPerRow) * 6; // 6列ごとに配置 (幅の目安)
+    // 現在の配置位置（列）を計算（横の間隔を広げる）
+    let currentColPos = chartColStart + (chartCount % maxChartsPerRow) * 9; // 横幅450pxに対して約9列分の幅
     
     let chartBuilder = dashboardSheet.newChart()
         .setChartType(colConfig.type)
@@ -181,7 +181,7 @@ function updateSearchHistoryCharts() {
     // グラフを配置したのでカウンタを進め、改行判定
     chartCount++;
     if (chartCount % maxChartsPerRow === 0) {
-        chartRowStart += 16; // 次の段へ下がる
+        chartRowStart += 20; // 320pxの高さに対して約20セル分（縦の余白を多めに）
     }
   }
 }
