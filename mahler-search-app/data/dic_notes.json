@@ -3315,6 +3315,11 @@
     "[RS: Till], [RW: Oper]"
   ],
   [
+    "Schlag",
+    "(≒ beat, stroke, pulse / battito, colpo)\n【一般的な意味】\n① 叩くこと，打撃，衝撃．\n② 鼓動，脈拍．\n③ 稲妻．\n④ （鳥の）さえずり．\n【音楽用語としての訳例】\n「拍子」，「打点」，「（指揮の）一振り」，「（打撃楽器の）一打」\n\n\"Takt\" の項も参照のこと．",
+    ""
+  ],
+  [
     "Schlägelstock",
     "(≒ mallet, drumstick, beater / bacchetta)\n【一般的な意味】\n① （打楽器の）マレット，バチ，打棒．\n② （杖や棒のような）スティック，棒．\n【音楽用語としての訳例】\n「マレット」，「バチ」，「（叩くための）スティック」",
     "[H: Es]"
@@ -3780,6 +3785,11 @@
     "[RS: Dom]"
   ],
   [
+    "Takt",
+    "(≒ beat, time, measure / battuta, tempo)\n【一般的な意味】\n① 小節．\n② 拍子，リズム．\n③ 指揮のタクト，棒の振り方．\n④ （社交上の）機転，配慮．\n【音楽用語としての訳例】\n「小節」，「拍子」，「イン・テンポで（im Takt）」\n\n\"Takt\" は「小節」,「拍子」の意味合いが強いだろう（3/4「拍子」などのニュアンス）．\n\"Schlag\" にも「拍子」という意味があるが，この用語は打撃を語源とするため，物理的に「打つ」瞬間を指すことになる．「1拍子（1拍振り）で」と言うときは In einem Schlag となり，これは「1小節を1回で振る」という動作に基づいた表現．",
+    ""
+  ],
+  [
     "Tal",
     "(≒ valley, dale / valle, vallata)\n【一般的な意味】\n① 谷，谷間，渓谷．\n② （比喩的に）低地，深い場所，苦難．",
     "[H: Sch], [RW: Oper]"
@@ -3851,7 +3861,7 @@
   ],
   [
     "TrV",
-    "Trenner-Verzeichnis の略\n\nRichard Strauss Werke – Thematisches Verzeichnis：Franz Trenner による Richard Strauss 作品主題目録\n\n「作品主題目録」とは，単なる「作品目録」とは違い各作品に 冒頭主題（incipit） を付したもの．同名作品・改訂稿・断片の識別が可能で音楽学的同定を目的としている．学術的に最も広く使われている．標準的カタログ番号で作品番号（Op.）を持たない後期作品を整理するためのもの．\n\n例：\nSonatine Nr.1 → TrV 288\nMetamorphosen → TrV 290\nOboe Concerto → TrV 292\n\n\"AV\" も参照のこと．",
+    "Trenner-Verzeichnis の略\n\nRichard Strauss Werke – Thematisches Verzeichnis：Franz Trenner による Richard Strauss 作品主題目録\n\n「作品主題目録」とは，単なる「作品目録」とは違い各作品に 冒頭主題（incipit） を付したもの．同名作品・改訂稿・断片の識別が可能で音楽学的同定を目的としている．学術的に最も広く使われている．標準的カタログ番号で作品番号（Op.）を持たない後期作品を整理するためのもの．\n\n例：\nSonatine Nr.1 → TrV 288\nMetamorphosen → TrV 290\nOboe Concerto → TrV 292\n\n\"AV\" の項も参照．",
     "[RS]"
   ],
   [
