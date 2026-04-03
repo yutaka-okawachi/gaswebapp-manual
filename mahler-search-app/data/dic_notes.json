@@ -1,30 +1,5 @@
 [
   [
-    "/ bedeutet stets: starkes Portamento!",
-    "\"/\"は常にはっきりとしたポルタメントを意味する！ ",
-    "[RS: Held]"
-  ],
-  [
-    "/ bedeutet: vom einem Ton zum andern schleifen (portamento) ",
-    "\"/\"は2音間のポルタメントを意味する． ",
-    "[RS: Held]"
-  ],
-  [
-    "3 teilig",
-    "（弦楽器は）3つの部分に分かれて",
-    "[B: 6]"
-  ],
-  [
-    "4tel Note im Jagdthema länger",
-    "狩のテーマにおける4分音符は長めに",
-    "[B: 4-2]"
-  ],
-  [
-    "5 volle Takte lang",
-    "5小節間の長さで ",
-    "[RS: Dom]"
-  ],
-  [
     "abdämpfen",
     "(≒ dampen, mute, deaden / smorzare, attutire)\n【一般的な意味】\n① （音・光・衝撃・色などを）弱める，和らげる，鈍くする．\n② （感情や痛みを）抑える，鎮める．\n【音楽用語としての訳例】\n「（振動を）止める」，「（シンバルやティンパニなどの）余韻を手で消す」，「弱音器を付ける」，「音を消す（ミュートする）」，「音色を和らげる」",
     "[GM]"
@@ -4663,5 +4638,30 @@
     "Zwischen Berg und tiefem Tal",
     "山と深い谷とのあいだで",
     "[H: Sch]"
+  ],
+  [
+    "/ bedeutet stets: starkes Portamento!",
+    "\"/\"は常にはっきりとしたポルタメントを意味する！ ",
+    "[RS: Held]"
+  ],
+  [
+    "/ bedeutet: vom einem Ton zum andern schleifen (portamento) ",
+    "\"/\"は2音間のポルタメントを意味する． ",
+    "[RS: Held]"
+  ],
+  [
+    "3 teilig",
+    "（弦楽器は）3つの部分に分かれて",
+    "[B: 6]"
+  ],
+  [
+    "4tel Note im Jagdthema länger",
+    "狩のテーマにおける4分音符は長めに",
+    "[B: 4-2]"
+  ],
+  [
+    "5 volle Takte lang",
+    "5小節間の長さで ",
+    "[RS: Dom]"
   ]
 ]

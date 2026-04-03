@@ -1,9 +1,4 @@
 {
-  "bedeutet-stets-starkes-portamento": "term-bedeutet-stets-starkes-portamento",
-  "bedeutet-vom-einem-ton-zum-andern-schleifen-portamento": "term-bedeutet-vom-einem-ton-zum-andern-schleifen-portamento",
-  "3-teilig": "term-3-teilig",
-  "4tel-note-im-jagdthema-laenger": "term-4tel-note-im-jagdthema-laenger",
-  "5-volle-takte-lang": "term-5-volle-takte-lang",
   "abdaempfen": "term-abdaempfen",
   "abgestimmte": "term-abgestimmte",
   "abnehmen": "term-abnehmen",
@@ -924,5 +919,10 @@
   "zusatz": "term-zusatz",
   "zwei-holztrommeln-von-verschiedener-groesse": "term-zwei-holztrommeln-von-verschiedener-groesse",
   "zweitaktig-zweitaktig": "term-zweitaktig-zweitaktig",
-  "zwischen-berg-und-tiefem-tal": "term-zwischen-berg-und-tiefem-tal"
+  "zwischen-berg-und-tiefem-tal": "term-zwischen-berg-und-tiefem-tal",
+  "bedeutet-stets-starkes-portamento": "term-bedeutet-stets-starkes-portamento",
+  "bedeutet-vom-einem-ton-zum-andern-schleifen-portamento": "term-bedeutet-vom-einem-ton-zum-andern-schleifen-portamento",
+  "3-teilig": "term-3-teilig",
+  "4tel-note-im-jagdthema-laenger": "term-4tel-note-im-jagdthema-laenger",
+  "5-volle-takte-lang": "term-5-volle-takte-lang"
 }
