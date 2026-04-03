@@ -303,7 +303,7 @@ function generateDicHtml(dicData, abbrData) {
     "@type": "DefinedTermSet",
     "name": "ドイツ語の音楽用語集",
     "url": "https://yutaka-okawachi.github.io/gaswebapp-manual/mahler-search-app/dic.html",
-    "description": "Wagner・Mahler・Strauss・Bruckner・Hindemith などのスコアに使われたドイツ語音楽用語と、その日本語訳を収録した専門辞書。",
+    "description": "Wagner・Mahler・Strauss・Bruckner・Hindemith などのスコアに使われたドイツ語音楽用語と、その日本語訳を収録した専門辞書．",
     "inLanguage": "de",
     "isPartOf": {
       "@type": "WebSite",
@@ -345,7 +345,7 @@ ${structuredDataJSON}
     <link rel="icon" href="favicon.png">
     <link rel="apple-touch-icon" href="apple-touch-icon.png">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Richard Wagner, Gustav Mahler, Richard Strauss などの作品で使用されているドイツ語音楽用語の訳例やコメントをまとめた用語集です。">
+    <meta name="description" content="Richard Wagner, Gustav Mahler, Richard Strauss などの作品で使用されているドイツ語音楽用語の訳例やコメントをまとめた用語集．">
     <link rel="stylesheet" href="css/common.css">
     <style>
         /* dic.html specific styles */
@@ -609,7 +609,7 @@ ${structuredDataJSON}
             <div class="home-link"><a href="index.html">HOME</a></div>
             <h1>ドイツ語の音楽用語集</h1>
             <p style="font-size: 0.85rem; color: #555; margin-top: 0.5em; margin-bottom: 1em;">
-                このページは，Richard Wagner (RW)，Gustav Mahler (GM)，Richard Strauss (RS)，Anton Bruckner，Paul Hindemith などで使用されているドイツ語の訳例やコメント集（ほんの一部だけイタリア語，フランス語等を含む）．どの曲で使用されているかの情報は「略記一覧」を参照のこと．<br>
+                このページは，Richard Wagner (RW)，Gustav Mahler (GM)，Richard Strauss (RS)，Anton Bruckner，Paul Hindemith などで使用されているドイツ語の訳例やコメント集（ほんの一部だけイタリア語，フランス語等を含む）．どの曲で使用されているかの情報はサイドバーの「略記一覧」を参照のこと．<br>
                 <span style="font-size: 1.2rem; font-weight: bold;">各種検索用メインページは<a href="index.html" style="font-size: 1.3rem;">こちら</a></span>
             </p>
             <div id="listContainer">
