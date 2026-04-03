@@ -603,7 +603,7 @@ ${structuredDataJSON}
             <h1>ドイツ語の音楽用語集</h1>
             <p style="font-size: 0.85rem; color: #555; margin-top: 0.5em; margin-bottom: 1em;">
                 このページは，Richard Wagner (RW)，Gustav Mahler (GM)，Richard Strauss (RS)，Anton Bruckner，Paul Hindemith などで使用されているドイツ語の訳例やコメント集（ほんの一部だけイタリア語，フランス語等を含む）．どの曲で使用されているかの情報は「略記一覧」を参照のこと．<br>
-                <span style="font-size: 1.2rem; font-weight: bold;">各種検索ができるメインのページは<a href="index.html" style="font-size: 1.5rem;">こちら</a></span>
+                <span style="font-size: 1.2rem; font-weight: bold;">各種検索用メインページは<a href="index.html" style="font-size: 1.3rem;">こちら</a></span>
             </p>
             <div id="listContainer">
 ${dicListHtml}
