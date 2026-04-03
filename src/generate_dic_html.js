@@ -170,10 +170,17 @@ function getSortLetter(str) {
  */
 function sortDicData(data) {
   return data.sort((a, b) => {
+    const letterA = getSortLetter(a[0]);
+    const letterB = getSortLetter(b[0]);
+    
+    // OTHER（数字・記号）を末尾に配置するための重み付け
+    if (letterA === 'OTHER' && letterB !== 'OTHER') return 1;
+    if (letterA !== 'OTHER' && letterB === 'OTHER') return -1;
+    
     const strA = String(a[0] || '').toLowerCase();
     const strB = String(b[0] || '').toLowerCase();
     
-    // ドイツ語の特殊文字を考慮したソート
+    // 同一グループ内（または共にA-Z内）でのドイツ語特殊文字を考慮したソート
     return strA.localeCompare(strB, 'de');
   });
 }
