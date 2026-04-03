@@ -248,8 +248,12 @@ function handleRequest(params) {
     
     let result;
     if (action === "exportDic" || action === "exportAllDataToJson") {
-      exportAllDataToJson();
-      result = { status: "success", message: "Export success" };
+      const exportResult = exportAllDataToJson();
+      result = { 
+        status: exportResult.failed.length === 0 ? "success" : "partial_success", 
+        message: "Export completed",
+        details: exportResult 
+      };
     } else if (action === "ping") {
       result = { status: "success", message: "Pong" };
     } else {
