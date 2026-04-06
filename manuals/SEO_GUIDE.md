@@ -19,7 +19,7 @@ SNS共有時の正規URLを指定するOGPタグです。
 ```
 
 ### 3. sitemap.xml
-`mahler-search-app/sitemap.xml` に全ページのURLと更新日が記載されています。
+`sitemap.xml` に全ページのURLと更新日が記載されています。
 
 ## 対象ファイル一覧
 
