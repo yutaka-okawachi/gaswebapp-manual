@@ -341,7 +341,7 @@ ${structuredDataJSON}
     <link rel="canonical" href="https://yutaka-okawachi.github.io/gaswebapp-manual/mahler-search-app/dic.html">
     <meta property="og:type" content="website">
     <meta property="og:title" content="ドイツ語の音楽用語集 | German Music Terms Dictionary">
-    <meta property="og:description" content="Wagner・Mahler・Strauss などのスコアに使用されているドイツ語音楽用語の専門辞書です。">
+    <meta property="og:description" content="Wagner・Mahler・Strauss などのスコアに使用されているドイツ語音楽用語の専門辞書．">
     <meta property="og:url" content="https://yutaka-okawachi.github.io/gaswebapp-manual/mahler-search-app/dic.html">
     <meta property="og:image" content="https://yutaka-okawachi.github.io/gaswebapp-manual/mahler-search-app/favicon.png">
     <meta name="twitter:card" content="summary">
