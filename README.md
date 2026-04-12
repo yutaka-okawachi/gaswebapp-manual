@@ -19,7 +19,7 @@
 本アプリおよびデータを学術論文・資料等で引用する場合は、以下の形式を推奨します：
 
 ```
-大河内裕太 (2024-2026). RWGMRS Mahler Search App.
+大川内豊 (2024-2026). RWGMRS Mahler Search App.
 https://github.com/yutaka-okawachi/gaswebapp-manual
 ```
 
