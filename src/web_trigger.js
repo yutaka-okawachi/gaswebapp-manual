@@ -266,10 +266,22 @@ function handleRequest(params) {
 }
 
 /**
- * Search Notification Handler
+ * 検索通知ハンドラー（フロントエンドからのPOST）
  */
 function handleSearchNotification(data) {
   try {
+    // --- トークン検証 (案A: NOTIFY_SEC_TOKEN) ---
+    // GASプロジェクト設定 → スクリプトプロパティ に NOTIFY_SEC_TOKEN を設定すること
+    const expectedToken = PropertiesService.getScriptProperties().getProperty('NOTIFY_SEC_TOKEN');
+    if (expectedToken) {
+      if (!data.notifyToken || data.notifyToken !== expectedToken) {
+        Logger.log('handleSearchNotification: 不正なトークン。通知をスキップ。');
+        // 攻撃者にエンドポイントの挙動を知られないよう 200 でサイレントに返す
+        return createJsonResponse({ status: 'success' });
+      }
+    }
+    // --- ここまでトークン検証 ---
+
     const pageRaw = getValue(data.page);
     const pageTitle = pageNameMap[pageRaw] || pageRaw;
     const workFull = translateWork(data.work, pageRaw);
