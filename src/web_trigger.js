@@ -472,7 +472,7 @@ function logToSpreadsheet(data, detail) {
  * 送信が記録されていれば true を返す。エラー時は安全側に倒して false を返す。
  */
 function isRateLimited(userAgent) {
-  const RATE_LIMIT_SECONDS = 30;
+  const RATE_LIMIT_SECONDS = 5;
   try {
     if (!userAgent) return false;
     const ss = SpreadsheetApp.getActiveSpreadsheet();
