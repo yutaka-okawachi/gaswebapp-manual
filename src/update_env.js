@@ -79,43 +79,7 @@ exec('clasp deployments', (err, stdout, stderr) => {
     }
 
     // ================================================================
-    // [2] NOTIFY_SEC_TOKEN の同期（.env → app.js の GAS_NOTIFY_TOKEN）
+    // [2] NOTIFY_SEC_TOKEN の同期は廃止済み
+    // 公開リポジトリの JS にトークンを埋め込めないため、トークン機構を削除しました。
     // ================================================================
-    try {
-        const envPath = path.join(__dirname, '../.env');
-        if (!fs.existsSync(envPath)) {
-            console.warn('.env not found. Skipping NOTIFY_SEC_TOKEN sync.');
-            return;
-        }
-
-        const envContent = fs.readFileSync(envPath, 'utf-8');
-        const tokenMatch = envContent.match(/^NOTIFY_SEC_TOKEN=(.+)$/m);
-
-        if (!tokenMatch || !tokenMatch[1].trim()) {
-            console.warn('NOTIFY_SEC_TOKEN not set in .env. Skipping token sync.');
-            return;
-        }
-
-        const token = tokenMatch[1].trim();
-
-        if (!fs.existsSync(appJsPath)) {
-            console.warn('app.js not found. Skipping NOTIFY_SEC_TOKEN sync.');
-            return;
-        }
-
-        let appJsContent = fs.readFileSync(appJsPath, 'utf-8');
-        const updated = appJsContent.replace(
-            /const GAS_NOTIFY_TOKEN = '.*';/,
-            `const GAS_NOTIFY_TOKEN = '${token}';`
-        );
-
-        if (updated === appJsContent) {
-            console.log('GAS_NOTIFY_TOKEN in app.js: already up to date.');
-        } else {
-            fs.writeFileSync(appJsPath, updated);
-            console.log('app.js updated with NOTIFY_SEC_TOKEN.');
-        }
-    } catch (e) {
-        console.warn('Could not sync NOTIFY_SEC_TOKEN to app.js:', e.message);
-    }
 });

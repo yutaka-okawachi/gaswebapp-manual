@@ -15,8 +15,6 @@ window.appData = window.appData || {
 // --- Configuration ---
 // TODO: Replace with your deployed Web App URL
 const GAS_NOTIFICATION_URL = 'https://script.google.com/macros/s/AKfycbzFD2EDHfECX0yK3cP0toN5zJRpcCNMO9HiEBM7WrD_9fX8N5bjHo9IYtEEXu_fsifO4Q/exec';
-// 通知トークン（.env の NOTIFY_SEC_TOKEN から update_env.js が自動同期）
-const GAS_NOTIFY_TOKEN = 'c31413b6045102189daa4e2f2da19d6b5e295b9630100fdcb670075046fb581b';
 
 /**
  * Sends a search notification to the Google Apps Script Web App.
@@ -42,8 +40,7 @@ async function sendSearchNotification(details, pageName) {
                 term: details.term,
                 page: pageName,
                 userAgent: navigator.userAgent,
-                includeGlobal: details.includeGlobal || false,
-                notifyToken: GAS_NOTIFY_TOKEN
+                includeGlobal: details.includeGlobal || false
             })
         });
         console.log('Search notification sent');

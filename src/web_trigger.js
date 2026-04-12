@@ -270,19 +270,9 @@ function handleRequest(params) {
  */
 function handleSearchNotification(data) {
   try {
-    // --- トークン検証 (案A: NOTIFY_SEC_TOKEN) ---
-    // GASプロジェクト設定 → スクリプトプロパティ に NOTIFY_SEC_TOKEN を設定すること
-    const expectedToken = PropertiesService.getScriptProperties().getProperty('NOTIFY_SEC_TOKEN');
-    if (expectedToken) {
-      if (!data.notifyToken || data.notifyToken !== expectedToken) {
-        Logger.log('handleSearchNotification: 不正なトークン。通知をスキップ。');
-        // 攻撃者にエンドポイントの挙動を知られないよう 200 でサイレントに返す
-        return createJsonResponse({ status: 'success' });
-      }
-    }
-    // --- ここまでトークン検証 ---
-
     // --- レート制限チェック（同一 UserAgent から30秒以内の重複送信を抑制） ---
+    // 注意: トークン検証は廃止済み（公開リポジトリのJSに埋め込めないため）
+    // 代わりにスプレッドシートベースのレート制限を主防御とする
     const userAgentForCheck = String(data.userAgent || '');
     if (isRateLimited(userAgentForCheck)) {
       Logger.log('handleSearchNotification: レート制限により通知をスキップ。');
