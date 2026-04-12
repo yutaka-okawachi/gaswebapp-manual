@@ -282,6 +282,14 @@ function handleSearchNotification(data) {
     }
     // --- ここまでトークン検証 ---
 
+    // --- レート制限チェック（同一 UserAgent から30秒以内の重複送信を抑制） ---
+    const userAgentForCheck = String(data.userAgent || '');
+    if (isRateLimited(userAgentForCheck)) {
+      Logger.log('handleSearchNotification: レート制限により通知をスキップ。');
+      return createJsonResponse({ status: 'success' });
+    }
+    // --- ここまでレート制限 ---
+
     const pageRaw = getValue(data.page);
     const pageTitle = pageNameMap[pageRaw] || pageRaw;
     const workFull = translateWork(data.work, pageRaw);
@@ -465,6 +473,46 @@ function logToSpreadsheet(data, detail) {
     
   } catch (e) {
     Logger.log("Failed to log to spreadsheet: " + e.toString());
+  }
+}
+
+/**
+ * レート制限チェック
+ * 検索履歴シートを参照し、同一 UserAgent から RATE_LIMIT_SECONDS 秒以内に
+ * 送信が記録されていれば true を返す。エラー時は安全側に倒して false を返す。
+ */
+function isRateLimited(userAgent) {
+  const RATE_LIMIT_SECONDS = 30;
+  try {
+    if (!userAgent) return false;
+    const ss = SpreadsheetApp.getActiveSpreadsheet();
+    const sheet = ss.getSheetByName('検索履歴');
+    if (!sheet || sheet.getLastRow() < 2) return false;
+
+    // ヘッダーから 日時・UserAgent 列のインデックスを取得
+    const lastCol = sheet.getLastColumn();
+    const headers = sheet.getRange(1, 1, 1, lastCol).getValues()[0];
+    const dateIdx = headers.indexOf('日時');
+    const uaIdx   = headers.indexOf('UserAgent');
+    if (dateIdx === -1 || uaIdx === -1) return false;
+
+    // 最新 30 行を確認（十分な範囲）
+    const lastRow   = sheet.getLastRow();
+    const checkRows = Math.min(30, lastRow - 1);
+    const values    = sheet.getRange(lastRow - checkRows + 1, 1, checkRows, lastCol).getValues();
+
+    const cutoff = new Date(new Date().getTime() - RATE_LIMIT_SECONDS * 1000);
+    for (const row of values) {
+      const rowDate = row[dateIdx];
+      const rowUA   = row[uaIdx];
+      if (rowDate instanceof Date && rowDate >= cutoff && rowUA === userAgent) {
+        return true; // 重複検出
+      }
+    }
+    return false;
+  } catch (e) {
+    Logger.log('isRateLimited error: ' + e.toString());
+    return false; // エラー時は通過させる（安全側）
   }
 }
 
