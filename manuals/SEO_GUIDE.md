@@ -8,14 +8,14 @@
 各HTMLファイルには `<link rel="canonical">` タグが設定されており、検索エンジンに正規URLを伝えます。
 
 ```html
-<link rel="canonical" href="https://yutaka-okawachi.github.io/gaswebapp-manual/mahler-search-app/xxx.html">
+<link rel="canonical" href="https://yutaka-okawachi.github.io/gaswebapp-manual/">
 ```
 
 ### 2. og:urlメタタグ
 SNS共有時の正規URLを指定するOGPタグです。
 
 ```html
-<meta property="og:url" content="https://yutaka-okawachi.github.io/gaswebapp-manual/mahler-search-app/xxx.html">
+<meta property="og:url" content="https://yutaka-okawachi.github.io/gaswebapp-manual/">
 ```
 
 ### 3. sitemap.xml

@@ -1,98 +1,592 @@
 <!DOCTYPE html>
 <html lang="ja">
+
 <head>
+    <!-- Google Search Console Verification -->
+    <meta name="google-site-verification" content="oMTfhSgc1nOrF9dVnBCR_YGcwCDYlrqNmyYn-UJuBJc" />
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZT6MPW5MNG"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+        gtag('config', 'G-ZT6MPW5MNG');
+    </script>
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="refresh" content="0;url=mahler-search-app/">
-    <title>Redirecting to Mahler Search App...</title>
-    <link rel="canonical" href="https://yutaka-okawachi.github.io/gaswebapp-manual/mahler-search-app/">
+
+    <!-- JSON-LD 構造化データ -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "German Music Terms Dictionary",
+      "alternateName": "ドイツ語の音楽用語",
+      "url": "https://yutaka-okawachi.github.io/gaswebapp-manual/",
+      "description": "Richard Wagner, Gustav Mahler, Richard Strauss などのオーケストラ作品，オペラ等におけるドイツ語の音楽用語を検索できる総合データベース。",
+      "inLanguage": "ja"
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "German Music Terms Dictionary",
+      "url": "https://yutaka-okawachi.github.io/gaswebapp-manual/",
+      "description": "Wagner・Mahler・Strauss のスコアに使われたドイツ語演奏指示を横断検索できる専門データベース。",
+      "applicationCategory": "ReferenceApplication",
+      "operatingSystem": "Any",
+      "inLanguage": "ja",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "JPY"
+      },
+      "about": {
+        "@type": "Thing",
+        "name": "German Classical Music Terminology"
+      }
+    }
+    </script>
+    <link rel="canonical" href="https://yutaka-okawachi.github.io/gaswebapp-manual/">
     <meta property="og:type" content="website">
     <meta property="og:title" content="ドイツ語の音楽用語 | German Music Terms Dictionary">
-    <meta property="og:description" content="Wagner, Mahler, Strauss などの作品で使用されているドイツ語音楽用語を検索できるデータベースです。">
-    <meta property="og:url" content="https://yutaka-okawachi.github.io/gaswebapp-manual/mahler-search-app/">
+    <meta property="og:description" content="Richard Wagner, Gustav Mahler, Richard Strauss などの作品で使用されているドイツ語音楽用語の日本語訳を検索できるデータベース．">
+    <meta property="og:url" content="https://yutaka-okawachi.github.io/gaswebapp-manual/">
     <meta property="og:image" content="https://yutaka-okawachi.github.io/gaswebapp-manual/mahler-search-app/favicon.png">
     <meta name="twitter:card" content="summary">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Richard Wagner（リヒャルト・ワーグナー）, Gustav Mahler（グスタフ・マーラー）, Richard Strauss（リヒャルト・シュトラウス）の作品で使用されているドイツ語音楽用語の日本語訳を検索できるデータベース．">
+    <title>ドイツ語の音楽用語 | German Music Terms Dictionary</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Lora:ital,wght@0,400;0,600;1,400&display=swap"
+        rel="stylesheet">
+    <link rel="icon" href="mahler-search-app/favicon.png">
+
+    <!-- Reset CSS & Common styles -->
+    <link rel="stylesheet" href="mahler-search-app/css/common.css">
+
     <style>
         :root {
+            /* Palette */
             --bg-color: #f0f8ff;
-            --mahler-color: #8b0000;
+            /* AliceBlue to match richard_strauss.html (common.css) */
+
             --text-color: #1a2c42;
-            --font-family: 'Lora', serif;
+            /* Deep Navy */
+            --accent-color: #c44536;
+            /* Subtle geometric red for accents */
+
+            /* Composer Themes */
+            --wagner-color: #d4af37;
+            /* Gold */
+            --mahler-color: #8b0000;
+            /* Dark Red */
+            --strauss-color: #4682b4;
+            /* Steel Blue */
+
+            --card-bg: #ffffff;
+            --border-color: #e0e0e0;
+            --secondary-text: #5e6d7e;
+            --link-color: #2a5bd7;
+            --hover-color: #1a4bb7;
+            --sub-card-bg: #f4f6f8;
+            --sub-card-hover-bg: #ffffff;
         }
 
-        body {
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
+        body.home-page {
+            font-family: 'Lora', serif;
             background-color: var(--bg-color);
             color: var(--text-color);
-            font-family: 'Helvetica Neue', Arial, sans-serif;
-            overflow: hidden;
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
         }
 
-        .container {
+        /* Nav Toggle Override */
+        .nav-toggle {
+            background: var(--text-color);
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            font-family: 'Lora', serif;
+            padding: 10px 15px;
+        }
+
+        /* Container */
+        body.home-page .page-wrapper {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 60px 20px;
+        }
+
+        /* Header */
+        header.main-header {
             text-align: center;
-            animation: fadeIn 0.8s ease-out;
+            margin-bottom: 40px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 20px;
         }
 
-        .loader {
-            border: 3px solid rgba(26, 44, 66, 0.1);
-            border-top: 3px solid var(--mahler-color);
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 20px;
-        }
 
-        h1 {
-            font-size: 1.2rem;
+
+        .subtitle {
+            font-family: 'Lora', serif;
+            font-size: 1rem;
+            color: var(--secondary-text);
+            margin-top: 10px;
             font-weight: 300;
             letter-spacing: 0.05em;
+        }
+
+        /* Grid Layout */
+        .composers-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
             margin-bottom: 20px;
         }
 
-        p {
-            font-size: 0.9rem;
-            opacity: 0.7;
+        /* Main Cards */
+        .home-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            /* border-left: 4px solid var(--accent-color);  Using specific colors below */
+            border-radius: 8px;
+            /* Slightly adjusted to look good with straight left border if needed, or keep rounded */
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+            /* Main card hover effect removed to focus focus on sub-cards */
         }
 
-        a {
-            color: var(--mahler-color);
+        /* Composer Specific Accents */
+        /* Composer Specific Accents */
+        .home-card[data-initial="RW"] {
+            border-left: 5px solid var(--wagner-color);
+        }
+
+        .home-card[data-initial="GM"] {
+            border-left: 5px solid var(--mahler-color);
+        }
+
+        .home-card[data-initial="RS"] {
+            border-left: 5px solid var(--strauss-color);
+        }
+
+        /* Other / Dic Card Accents */
+        .home-card[data-initial="D"],
+        .home-card[data-initial="O"] {
+            border-left: 5px solid var(--secondary-text);
+            /* Gray/Slate */
+        }
+
+        /* Composer Initial Background */
+        .home-card::before {
+            content: attr(data-initial);
+            position: absolute;
+            top: -20px;
+            right: -20px;
+            font-family: 'Lora', serif;
+            font-size: 8rem;
+            color: rgba(0, 0, 0, 0.03);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .home-card h2 {
+            font-family: 'Lora', serif;
+            font-size: 1.3rem;
+            /* Reduced from 1.5rem */
+            font-weight: 600;
+            margin: 0 0 10px 0;
+            color: var(--text-color);
+            z-index: 1;
+            display: inline-block;
+            padding-bottom: 5px;
+            width: fit-content;
+        }
+
+        .composer-fullname {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--secondary-text);
+            margin-bottom: 25px;
+            z-index: 1;
+        }
+
+        /* Link Cards (New Sub-cards) */
+        .links-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            z-index: 1;
+            width: 100%;
+        }
+
+        .link-card {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 16px;
+            /* Reduced padding */
+            background: #3b5275;
+            /* Lighter navy as requested */
+            border: 1px solid transparent;
+            /* Hidden border by default */
+            border-radius: 6px;
             text-decoration: none;
-            border-bottom: 1px solid var(--mahler-color);
-            transition: opacity 0.2s;
+            color: #fff;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+            font-family: 'Lora', serif;
         }
 
-        a:hover {
-            opacity: 0.7;
+        .link-card:hover {
+            background: #4b6a96;
+            /* Even lighter for hover */
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+            /* Lift effect */
+            transform: translateY(-2px);
+            color: #fff;
+            /* Keep text white */
+            text-decoration: none;
         }
 
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+        .link-card .content-wrapper {
+            display: flex;
+            align-items: center;
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+        .link-card .icon {
+            font-size: 1.1rem;
+            /* Reduced from 1.2rem */
+            margin-right: 12px;
+            color: #fff;
+            opacity: 0.9;
+        }
+
+        .link-card:hover .icon {
+            opacity: 1;
+        }
+
+        .link-card .text {
+            font-weight: 500;
+            /* Slightly reduced weight for better readability on dark bg */
+            font-size: 0.9rem;
+            /* Reduced from 1rem */
+            font-family: 'Lora', serif;
+        }
+
+        .link-card .arrow {
+            opacity: 0;
+            transform: translateX(-10px);
+            transition: all 0.2s ease;
+            color: #fff;
+            font-weight: bold;
+        }
+
+        .link-card:hover .arrow {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        /* Note Block */
+        .global-note {
+            background-color: #fff;
+            border: 1px solid #e0e6ed;
+            border-left: 4px solid var(--accent-color);
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+            color: var(--secondary-text);
+            font-size: 0.9rem;
+            line-height: 1.7;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.02);
+            font-family: 'Lora', serif;
+        }
+
+        .global-note p {
+            margin: 5px 0;
+        }
+
+        /* Full Width Sections */
+        .full-width-section {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 30px;
+            margin-bottom: 30px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .full-width-section.dic-section {
+            border-left: 5px solid var(--text-color);
+        }
+
+        .full-width-section .content {
+            flex: 1;
+            min-width: 300px;
+            padding-right: 20px;
+        }
+
+        .full-width-section h2 {
+            font-family: 'Lora', serif;
+            font-size: 1.4rem;
+            margin: 0 0 10px 0;
+            color: var(--text-color);
+        }
+
+        .full-width-section p {
+            color: var(--secondary-text);
+            font-size: 0.95rem;
+            margin: 0;
+        }
+
+        .full-width-section .action {
+            margin-top: 20px;
+        }
+
+        .btn-primary {
+            display: inline-block;
+            background-color: #3b5275;
+            /* Lighter navy as requested */
+            color: #fff;
+            padding: 10px 20px;
+            /* Reduced padding */
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: background-color 0.2s;
+            font-family: 'Lora', serif;
+            font-size: 0.95rem;
+            /* Slightly smaller font */
+        }
+
+        .btn-primary:hover {
+            background-color: #4b6a96;
+            /* Even lighter for hover */
+            text-decoration: none;
+        }
+
+
+
+        /* Footer */
+        footer {
+            text-align: center;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border-color);
+            color: var(--secondary-text);
+            font-size: 0.8rem;
+            font-family: 'Lora', serif;
+        }
+
+        @media (max-width: 768px) {
+            .page-wrapper {
+                padding: 30px 15px;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            .full-width-section {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .full-width-section .action {
+                margin-top: 20px;
+                width: 100%;
+            }
+
+            .btn-primary {
+                display: block;
+                text-align: center;
+            }
         }
     </style>
-    <script>
-        // JavaScript Fallback Redirect
-        setTimeout(function() {
-            window.location.replace("mahler-search-app/");
-        }, 100);
-    </script>
 </head>
-<body>
-    <div class="container">
-        <div class="loader"></div>
-        <h1>Redirecting to Mahler Search App...</h1>
-        <p>自動的に移動しない場合は、<a href="mahler-search-app/">こちらをクリックしてください</a>。</p>
+
+<body class="home-page">
+    <button class="nav-toggle" onclick="toggleNav()">☰ メニュー</button>
+
+    <nav class="sidebar" id="sidebar">
+        <!-- Sidebar content -->
+        <h3>Richard Wagner</h3>
+        <ul>
+            <li><a href="mahler-search-app/richard_wagner.html">曲名から検索</a></li>
+            <li><a href="mahler-search-app/rw_terms_search.html">用語から検索</a></li>
+        </ul>
+        <h3>Gustav Mahler</h3>
+        <ul>
+            <li><a href="mahler-search-app/mahler.html">曲名と楽器等から検索</a></li>
+            <li><a href="mahler-search-app/terms_search.html">用語から検索</a></li>
+        </ul>
+        <h3>Richard Strauss</h3>
+        <ul>
+            <li><a href="mahler-search-app/richard_strauss.html">曲名から検索</a></li>
+            <li><a href="mahler-search-app/rs_terms_search.html">用語から検索</a></li>
+        </ul>
+        <h3>Dictionary</h3>
+        <ul>
+            <li><a href="mahler-search-app/dic.html">ドイツ語の音楽用語集</a></li>
+        </ul>
+
+    </nav>
+
+    <div class="page-wrapper">
+        <header class="main-header">
+            <h1>ドイツ語の音楽用語</h1>
+            <div class="subtitle"
+                style="max-width: 800px; margin: 20px auto 0; line-height: 1.8; text-align: left; font-size: 0.95rem;">
+                <p>Richard Wagner（リヒャルト・ワーグナー），Gustav Mahler（グスタフ・マーラー），Richard Strauss（リヒャルト・シュトラウス）などのスコアに記されたドイツ語の音楽用語（演奏指示・舞台指示・歌唱指示など）を検索できるデータベース．検索結果のリンクからは，訳例やコメントをまとめた「ドイツ語の音楽用語集」ページにおいて詳細な意味，訳例を確認できる．</p>
+            </div>
+        </header>
+
+        <div class="composers-grid">
+            <!-- Wagner Card -->
+            <div class="home-card" data-initial="RW">
+                <h2>Richard Wagner (RW)</h2>
+                <p style="margin: 10px 0 15px; font-size: 0.9rem; color: #555; line-height: 1.5;">主要な楽劇等において，「曲名」，「場面」，「指示対象（登場人物）」，「スコアのページ」から歌唱指示，舞台指示等を検索可能．</p>
+                <div class="links-container">
+                    <a href="mahler-search-app/richard_wagner.html" class="link-card">
+                        <div class="content-wrapper">
+                            <span class="icon">🪈</span>
+                                <span class="text">曲名から検索</span>
+                        </div>
+                        <span class="arrow">&rarr;</span>
+                    </a>
+                    <a href="mahler-search-app/rw_terms_search.html" class="link-card">
+                        <div class="content-wrapper">
+                            <span class="icon">📑</span>
+                            <span class="text">用語から検索</span>
+                        </div>
+                        <span class="arrow">&rarr;</span>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Mahler Card -->
+            <div class="home-card" data-initial="GM">
+                <h2>Gustav Mahler (GM)</h2>
+                <p style="margin: 10px 0 15px; font-size: 0.9rem; color: #555; line-height: 1.5;">全交響曲および主要な管弦楽作品において「曲名」，「楽器」から演奏指示を小節番号まで検索可能．</p>
+                <div class="links-container">
+                    <a href="mahler-search-app/mahler.html" class="link-card">
+                        <div class="content-wrapper">
+                            <span class="icon">🪈</span>
+                            <span class="text">曲名と楽器から検索</span>
+                        </div>
+                        <span class="arrow">&rarr;</span>
+                    </a>
+                    <a href="mahler-search-app/terms_search.html" class="link-card">
+                        <div class="content-wrapper">
+                            <span class="icon">📑</span>
+                            <span class="text">用語から検索</span>
+                        </div>
+                        <span class="arrow">&rarr;</span>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Strauss Card -->
+            <div class="home-card" data-initial="RS">
+                <h2>Richard Strauss (RS)</h2>
+                <p style="margin: 10px 0 15px; font-size: 0.9rem; color: #555; line-height: 1.5;">主要なオペラにおいて「曲名」，「場面」，「指示対象（登場人物）」，「スコアのページ」から歌唱指示，舞台指示等を検索可能．</p>
+                <div class="links-container">
+                    <a href="mahler-search-app/richard_strauss.html" class="link-card">
+                        <div class="content-wrapper">
+                            <span class="icon">🪈</span>
+                            <span class="text">曲名から検索</span>
+                        </div>
+                        <span class="arrow">&rarr;</span>
+                    </a>
+                    <a href="mahler-search-app/rs_terms_search.html" class="link-card">
+                        <div class="content-wrapper">
+                            <span class="icon">📑</span>
+                            <span class="text">用語から検索</span>
+                        </div>
+                        <span class="arrow">&rarr;</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Dictionary Section -->
+        <div class="home-card dic-section" data-initial="D" style="margin-bottom: 20px;">
+            <div class="content" style="width: 100%;">
+                <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+                    <div>
+                        <h2 style="margin: 0;">用語集</h2>
+                    </div>
+                    <div class="action">
+                        <a href="mahler-search-app/dic.html" class="btn-primary">👉 ドイツ語の音楽用語集</a>
+                    </div>
+                </div>
+                <p style="margin: 15px 0; line-height: 1.6;">
+                    収録されているドイツ語についての「一般的な意味」および「音楽用語としての訳例」を収録した簡易辞書．気になった用語を集めただけであり，採用している用語，出典は網羅的ではないが，必要に応じて随時追加．収録している作曲家は以下の通り．
+                </p>
+                <div style="margin-top: 10px;">
+                    <ul style="list-style: disc; margin-left: 20px; background: none; border: none; padding: 0;">
+                        <li>RW, GM, RS（RSについては管弦楽曲も含む）</li>
+                        <li>Anton Bruckner</li>
+                        <li>Paul Hindemith</li>
+                        <li>Sigfrid Karg-Elert</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Warning Note -->
+        <div class="global-note">
+            <p>⚠️ RW．RS のページにおいては，主に歌唱指示および舞台指示を収録しているので，オーケストラに対する指示で GM のページでの検索で代替できるものには基本的に対応していない．また，イタリア語・フランス語の用語は原則として扱っていない．</p>
+            <p style="margin-top: 10px;">⚠️ 歌詞には対応していない．既存の優れた日本語訳を参照のこと．</p>
+        </div>
+
+        <!-- Other Section -->
+        <div class="home-card other-card" data-initial="O">
+            <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+                <div>
+                    <h2>その他</h2>
+                    <!-- <p>Information about scores and data sources.</p> -->
+                </div>
+                <div class="action">
+                    <a href="mahler-search-app/other.html" class="btn-primary">👉 使用楽譜など</a>
+                </div>
+            </div>
+        </div>
     </div>
+
+    <script>
+        function toggleNav() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('active');
+        }
+
+        // サイドバー外をクリックしたら閉じる（スマホのみ）
+        document.addEventListener('click', function (event) {
+            if (window.innerWidth <= 768) {
+                const sidebar = document.getElementById('sidebar');
+                const toggle = document.querySelector('.nav-toggle');
+                if (!sidebar.contains(event.target) && !toggle.contains(event.target)) {
+                    sidebar.classList.remove('active');
+                }
+            }
+        });
+    </script>
 </body>
+
 </html>

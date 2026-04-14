@@ -1,4 +1,4 @@
-﻿param([string]$message = "automated sync update")
+param([string]$message = "automated sync update")
 
 # ========================================
 # 統合データ同期スクリプト (Enhanced v4)
@@ -488,7 +488,7 @@ Write-Host "================================" -ForegroundColor Cyan
 Write-Host ""
 Write-Host "App and Data are now synchronized." -ForegroundColor White
 Write-Host "Check the live site in a few minutes:" -ForegroundColor Gray
-Write-Host "https://yutaka-okawachi.github.io/gaswebapp-manual/mahler-search-app/index.html" -ForegroundColor Blue
+Write-Host "https://yutaka-okawachi.github.io/gaswebapp-manual/" -ForegroundColor Blue
 Write-Host ""
 
 # --- [Check for Deployment Warning] ---
