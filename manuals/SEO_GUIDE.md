@@ -12,7 +12,7 @@
 ```
 
 ### 2. og:urlメタタグ
-SNS共有時の正規URLを指定するOGPタグです。
+SNS共有時の正規URLを指定するOGPタグです。SEO上の優先度が高いため、Headセクションの上部に記述します。
 
 ```html
 <meta property="og:url" content="https://yutaka-okawachi.github.io/gaswebapp-manual/">
@@ -23,19 +23,19 @@ SNS共有時の正規URLを指定するOGPタグです。
 
 ## 対象ファイル一覧
 
-| ファイル | 説明 |
+| ファイル | 内容・役割 |
 |---------|------|
-| home.html | ホームページ |
-| index.html | マーラー検索（旧ページ名） |
-| mahler.html | 曲名と楽器から検索（現メイン） |
-| dic.html | 用語集（自動生成） |
+| index.html | **現在のトップページ（ルートに配置）** |
+| mahler-search-app/index.html | 旧トップページ（ルートへ自動転送＋canonical設定あり） |
+| src/mahler.html | 曲名と楽器から検索（現メインツール） |
+| dic.html | 用語集（`src/generate_dic_html.js` により自動生成） |
 | terms_search.html | GM用語検索 |
 | rs_terms_search.html | RS用語検索 |
 | rw_terms_search.html | RW用語検索 |
 | richard_strauss.html | RS曲名検索 |
 | richard_wagner.html | RW曲名検索 |
-| notes.html | 翻訳ノート |
-| other.html | 参考資料 |
+| notes.html | 翻訳ノート（訳出についての覚書） |
+| other.html | 参考資料（使用楽譜など） |
 
 ## 新規HTMLファイル追加時の対応
 
@@ -57,12 +57,23 @@ SNS共有時の正規URLを指定するOGPタグです。
    </url>
    ```
 
+## サイト構造変更時の対応（2026/04 実施済み）
+
+トップページをサブリダクトリ (`/mahler-search-app/`) からルート (`/`) へ移動した際のSEO対策は以下の通りです：
+
+1. **旧ページ (`/mahler-search-app/index.html`) のリダイレクト**:
+   - ユーザーを自動的にルートへ転送するスクリプトを追加。
+   - `canonical` タグおよび `og:url` をルートURLに設定し、検索エンジンの評価を新トップページへ集約。
+
+2. **Google Search Console (GSC) での操作**:
+   - `sitemap.xml` の再送信を実施し、最新の構造をGoogleに通知。
+   - URL検査ツールを使用して、新しいルートURLのインデックス登録をリクエスト。
+
 ## 旧Google Sitesとの関係
 
 - 旧サイト（sites.google.com）と新サイト（GitHub Pages）は並行運用
 - canonicalタグにより、Googleは徐々にGitHub Pagesを正規版として認識
-- **旧サイトへの対応は不要**（noindex設定やリダイレクトは不要）
-- Google Search Console (GSC) への追加設定も不要
+- **旧サイト側での特別な対応は不要**
 
 ## 注意事項
 
