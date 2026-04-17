@@ -2,7 +2,7 @@
 Add-Type -AssemblyName System.Drawing
 
 $sourcePath = "c:\Users\okawa\.gemini\antigravity\brain\92443775-8526-432b-8bca-5c1a7d461708\favicon_refined_transparent_1769006632869.png"
-$targetDir = "c:\Users\okawa\gaswebapp-manual\mahler-search-app"
+$targetDir = "c:\Users\okawa\gaswebapp-manual"
 $faviconPath = Join-Path $targetDir "favicon.png"
 $appleIconPath = Join-Path $targetDir "apple-touch-icon.png"
 

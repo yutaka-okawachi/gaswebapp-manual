@@ -1,7 +1,7 @@
 
 # 1. 選択された画像を読み込む (Option F-3)
 $sourceImagePath = "c:\Users\okawa\.gemini\antigravity\brain\92443775-8526-432b-8bca-5c1a7d461708\favicon_stained_glass_initials_1769078867700.png"
-$webAppDir = "c:\Users\okawa\gaswebapp-manual\mahler-search-app"
+$webAppDir = "c:\Users\okawa\gaswebapp-manual"
 
 # System.Drawingのアセンブリをロード
 Add-Type -AssemblyName System.Drawing
