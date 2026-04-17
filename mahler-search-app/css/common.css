@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Lora:wght@400;500;600;700&family=Noto+Serif+JP:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Lora:wght@400;500;600;700&family=Noto+Serif+JP:wght@400;700&display=swap');
 
 body {
     font-family: 'Lora', 'Hiragino Kaku Gothic ProN', 'Meiryo', sans-serif;
@@ -85,7 +85,7 @@ body {
     text-align: left;
     background: none;
     border-radius: 0;
-    font-family: 'Libre Baskerville', 'Noto Serif JP', serif;
+    font-family: 'Playfair Display', 'Noto Serif JP', serif;
     font-weight: 700;
 }
 
@@ -237,7 +237,7 @@ h1 {
     font-size: 2.0rem;
     position: relative;
     padding-bottom: 15px;
-    font-family: 'Libre Baskerville', 'Noto Serif JP', serif;
+    font-family: 'Playfair Display', 'Noto Serif JP', serif;
     font-weight: 700;
     letter-spacing: 0.05em;
     max-width: fit-content;
@@ -276,7 +276,7 @@ h1::after {
     margin-bottom: 15px;
     border-bottom: 2px solid #f0f4f8;
     padding-bottom: 10px;
-    font-family: 'Libre Baskerville', 'Noto Serif JP', serif;
+    font-family: 'Playfair Display', 'Noto Serif JP', serif;
     font-weight: 700;
     display: flex;
     align-items: center;

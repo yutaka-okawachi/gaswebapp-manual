@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Lora:wght@400;700&family=Noto+Serif+JP:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Lora:wght@400;700&family=Noto+Serif+JP:wght@400;700&display=swap');
 
 /*
  * common_terms_styles.html
@@ -52,7 +52,7 @@ h1 {
     background-color: var(--title-bg);
     border-bottom: 6px solid var(--title-border);
     border-radius: 6px;
-    font-family: 'Libre Baskerville', 'Noto Serif JP', serif;
+    font-family: 'Playfair Display', 'Noto Serif JP', serif;
     font-weight: bold;
     margin-top: 0;
 }
