@@ -370,7 +370,7 @@ ${structuredDataJSON}
             padding: 8px;
             margin-bottom: 0.5em;
             border-radius: 5px;
-            font-family: 'Lora', serif;
+            font-family: 'Montserrat', 'Noto Sans JP', sans-serif;
         }
 
         .abbr-row {
@@ -383,14 +383,14 @@ ${structuredDataJSON}
         .abbr-short {
             flex: 0 0 20%;
             font-weight: bold;
-            font-family: 'Lora', serif;
+            font-family: 'Montserrat', 'Noto Sans JP', sans-serif;
             font-size: 0.9rem;
         }
 
         .abbr-long {
             flex: 1;
             margin-left: 1em;
-            font-family: 'Lora', serif;
+            font-family: 'Montserrat', 'Noto Sans JP', sans-serif;
             font-size: 0.8rem;
         }
 
@@ -436,7 +436,7 @@ ${structuredDataJSON}
             font-weight: bold;
             font-size: 1.0rem;
             display: block;
-            font-family: 'Lora', serif;
+            font-family: 'Montserrat', 'Noto Sans JP', sans-serif;
         }
 
         /* セマンティックHTMLタグのリセット（見た目を変えないため） */
@@ -450,7 +450,7 @@ ${structuredDataJSON}
 
         .translation {
             margin-left: 1em;
-            font-family: 'Lora', serif;
+            font-family: 'Montserrat', 'Noto Sans JP', sans-serif;
             font-size: 0.85rem;
         }
 
@@ -458,7 +458,7 @@ ${structuredDataJSON}
             font-size: 0.75rem;
             color: #555;
             margin-left: 0.5em;
-            font-family: 'Lora', serif;
+            font-family: 'Montserrat', 'Noto Sans JP', sans-serif;
         }
 
         @media (max-width: 600px) {
