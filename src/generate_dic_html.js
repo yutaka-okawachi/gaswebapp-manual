@@ -334,13 +334,6 @@ function generateDicHtml(dicData, abbrData) {
       gtag('config', 'G-ZT6MPW5MNG');
     </script>
     <meta charset="UTF-8">
-
-    <!-- Performance Optimization: Preconnect & Preload -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preconnect" href="https://www.googletagmanager.com">
-    <link rel="preload" href="css/common.css" as="style">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&family=Lora:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
     <link rel="canonical" href="https://yutaka-okawachi.github.io/gaswebapp-manual/mahler-search-app/dic.html">
     <script type="application/ld+json">
 ${structuredDataJSON}
@@ -587,7 +580,7 @@ ${structuredDataJSON}
 
     <!-- サイドバーナビゲーション -->
     <nav class="sidebar" id="sidebar">
-        <h3 class="sidebar-home"><a href="../index.html">🏠 HOME</a></h3>
+        <h3 class="sidebar-home"><a href="index.html">🏠 HOME</a></h3>
         <h3>Richard Wagner (RW)</h3>
         <ul>
             <li><a href="richard_wagner.html">曲名から検索</a></li>
@@ -616,11 +609,11 @@ ${structuredDataJSON}
 
     <div class="page-wrapper">
         <div class="container">
-            <div class="home-link"><a href="../index.html">HOME</a></div>
+            <div class="home-link"><a href="index.html">HOME</a></div>
             <h1>ドイツ語の音楽用語集</h1>
             <p style="font-size: 0.85rem; color: #555; margin-top: 0.5em; margin-bottom: 1em;">
                 このページは，Richard Wagner (RW)，Gustav Mahler (GM)，Richard Strauss (RS)，Anton Bruckner，Paul Hindemith などで使用されているドイツ語の訳例やコメント集（ほんの一部だけイタリア語，フランス語等を含む）．[GM]などの略記については「<a href="#abbrListContainer">略記一覧</a>」を参照のこと．<br>
-                <span style="font-size: 1.2rem; font-weight: bold;">各種検索用メインページは<a href="../index.html" style="font-size: 1.3rem;">こちら</a></span>
+                <span style="font-size: 1.2rem; font-weight: bold;">各種検索用メインページは<a href="index.html" style="font-size: 1.3rem;">こちら</a></span>
             </p>
             <div id="listContainer">
 ${dicListHtml}
