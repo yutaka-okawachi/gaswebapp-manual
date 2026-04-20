@@ -303,7 +303,7 @@ function generateDicHtml(dicData, abbrData) {
     "@type": "DefinedTermSet",
     "name": "ドイツ語の音楽用語集",
     "url": "https://yutaka-okawachi.github.io/gaswebapp-manual/mahler-search-app/dic.html",
-    "description": "Wagner，Mahler，Strauss，Bruckner，Hindemith などのスコアに使われたドイツ語音楽用語と，その日本語訳を収録した専門辞書．",
+    "description": "Wagner・Mahler・Strauss・Bruckner・Hindemith などのスコアに使われたドイツ語音楽用語と、その日本語訳を収録した専門辞書．",
     "inLanguage": "de",
     "isPartOf": {
       "@type": "WebSite",
@@ -340,7 +340,7 @@ ${structuredDataJSON}
     </script>
     <meta property="og:type" content="website">
     <meta property="og:title" content="ドイツ語の音楽用語集 | German Music Terms Dictionary">
-    <meta property="og:description" content="Wagner，Mahler，Strauss などのスコアに使用されているドイツ語音楽用語の専門辞書．">
+    <meta property="og:description" content="Wagner・Mahler・Strauss などのスコアに使用されているドイツ語音楽用語の専門辞書．">
     <meta property="og:url" content="https://yutaka-okawachi.github.io/gaswebapp-manual/mahler-search-app/dic.html">
     <meta property="og:image" content="https://yutaka-okawachi.github.io/gaswebapp-manual/mahler-search-app/favicon.png">
     <meta name="twitter:card" content="summary">
@@ -348,7 +348,7 @@ ${structuredDataJSON}
     <link rel="icon" href="favicon.png">
     <link rel="apple-touch-icon" href="apple-touch-icon.png">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Richard Wagner，Gustav Mahler，Richard Strauss などの作品で使用されているドイツ語音楽用語の訳例や解釈，詳細なコメントをまとめた専門辞書．スコア解釈に必須の情報を網羅．">
+    <meta name="description" content="Richard Wagner, Gustav Mahler, Richard Strauss などの作品で使用されているドイツ語音楽用語の訳例やコメントをまとめた用語集．">
     <link rel="stylesheet" href="css/common.css">
     <style>
         /* dic.html specific styles */
@@ -370,7 +370,7 @@ ${structuredDataJSON}
             padding: 8px;
             margin-bottom: 0.5em;
             border-radius: 5px;
-            font-family: 'Montserrat', 'Noto Sans JP', sans-serif;
+            font-family: 'Lora', serif;
         }
 
         .abbr-row {
@@ -383,14 +383,14 @@ ${structuredDataJSON}
         .abbr-short {
             flex: 0 0 20%;
             font-weight: bold;
-            font-family: 'Montserrat', 'Noto Sans JP', sans-serif;
+            font-family: 'Lora', serif;
             font-size: 0.9rem;
         }
 
         .abbr-long {
             flex: 1;
             margin-left: 1em;
-            font-family: 'Montserrat', 'Noto Sans JP', sans-serif;
+            font-family: 'Lora', serif;
             font-size: 0.8rem;
         }
 
@@ -436,7 +436,7 @@ ${structuredDataJSON}
             font-weight: bold;
             font-size: 1.0rem;
             display: block;
-            font-family: 'Montserrat', 'Noto Sans JP', sans-serif;
+            font-family: 'Lora', serif;
         }
 
         /* セマンティックHTMLタグのリセット（見た目を変えないため） */
@@ -450,7 +450,7 @@ ${structuredDataJSON}
 
         .translation {
             margin-left: 1em;
-            font-family: 'Montserrat', 'Noto Sans JP', sans-serif;
+            font-family: 'Lora', serif;
             font-size: 0.85rem;
         }
 
@@ -458,7 +458,7 @@ ${structuredDataJSON}
             font-size: 0.75rem;
             color: #555;
             margin-left: 0.5em;
-            font-family: 'Montserrat', 'Noto Sans JP', sans-serif;
+            font-family: 'Lora', serif;
         }
 
         @media (max-width: 600px) {
@@ -609,11 +609,11 @@ ${structuredDataJSON}
 
     <div class="page-wrapper">
         <div class="container">
-            <div class="home-link"><a href="index.html">HOME</a></div>
+            <div class="home-link"><a href="../index.html">HOME</a></div>
             <h1>ドイツ語の音楽用語集</h1>
             <p style="font-size: 0.85rem; color: #555; margin-top: 0.5em; margin-bottom: 1em;">
                 このページは，Richard Wagner (RW)，Gustav Mahler (GM)，Richard Strauss (RS)，Anton Bruckner，Paul Hindemith などで使用されているドイツ語の訳例やコメント集（ほんの一部だけイタリア語，フランス語等を含む）．[GM]などの略記については「<a href="#abbrListContainer">略記一覧</a>」を参照のこと．<br>
-                <span style="font-size: 1.2rem; font-weight: bold;">各種検索用メインページは<a href="index.html" style="font-size: 1.3rem;">こちら</a></span>
+                <span style="font-size: 1.2rem; font-weight: bold;">各種検索用メインページは<a href="../index.html" style="font-size: 1.3rem;">こちら</a></span>
             </p>
             <div id="listContainer">
 ${dicListHtml}

@@ -1,7 +1,7 @@
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&family=Lora:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Bitter:wght@700&family=Lora:wght@400;500;600;700&display=swap');
 
 body {
-    font-family: 'Montserrat', 'Noto Sans JP', sans-serif;
+    font-family: 'Lora', 'Hiragino Kaku Gothic ProN', 'Meiryo', sans-serif;
     background-color: var(--primary-bg);
 }
 
@@ -85,7 +85,7 @@ body {
     text-align: left;
     background: none;
     border-radius: 0;
-    font-family: 'Montserrat', 'Noto Sans JP', sans-serif;
+    font-family: 'Bitter', serif;
     font-weight: 700;
 }
 
@@ -237,7 +237,7 @@ h1 {
     font-size: 2.0rem;
     position: relative;
     padding-bottom: 15px;
-    font-family: 'Montserrat', 'Noto Sans JP', sans-serif;
+    font-family: 'Bitter', serif;
     font-weight: 700;
     letter-spacing: 0.05em;
     max-width: fit-content;
@@ -276,7 +276,7 @@ h1::after {
     margin-bottom: 15px;
     border-bottom: 2px solid #f0f4f8;
     padding-bottom: 10px;
-    font-family: 'Montserrat', 'Noto Sans JP', sans-serif;
+    font-family: 'Bitter', serif;
     font-weight: 700;
     display: flex;
     align-items: center;
@@ -437,7 +437,7 @@ ul {
         font-size: 1.2em;
         line-height: 1.45;
         display: block;
-        font-family: 'Montserrat', 'Noto Sans JP', sans-serif;
+        font-family: 'Lora', serif;
     }
 
     border: 1px solid #ccc;
@@ -644,7 +644,7 @@ button.clear-input-btn:hover {
 
 .loading,
 .result-message {
-    font-family: 'Montserrat', 'Noto Sans JP', sans-serif;
+    font-family: 'Lora', serif;
     font-size: 1.0em;
     font-weight: bold;
     text-align: center;
@@ -659,7 +659,7 @@ button.clear-input-btn:hover {
     min-height: 150px;
     line-height: 1.5;
     white-space: normal;
-    font-family: 'Montserrat', 'Noto Sans JP', sans-serif;
+    font-family: 'Lora', serif;
     font-size: 0.92em;
 }
 
@@ -700,7 +700,7 @@ button.clear-input-btn:hover {
     font-size: 1.0rem;
     line-height: 1.45;
     display: block;
-    font-family: 'Montserrat', 'Noto Sans JP', sans-serif;
+    font-family: 'Lora', serif;
 }
 
 .result-ja-loc {
