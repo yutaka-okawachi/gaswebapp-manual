@@ -2,6 +2,13 @@
 <html>
 
 <head>
+    <!-- Performance Optimization: Preconnect & Preload -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://www.googletagmanager.com">
+    <link rel="preload" href="css/common.css" as="style">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&family=Lora:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
+
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZT6MPW5MNG"></script>
     <script>
@@ -43,7 +50,7 @@
     <link rel="icon" href="../favicon.png">
     <link rel="apple-touch-icon" href="../apple-touch-icon.png">
     <link rel="stylesheet" href="css/common.css">
-    <script src="js/app.js?v=8"></script>
+    <script defer src="js/app.js?v=8"></script>
 
     <script>
         /*******************************************************************
