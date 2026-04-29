@@ -187,6 +187,26 @@ try {
 Pop-Location
 Write-Host ""
 
+# --- [1.5/5] sitemap.xml の <lastmod> 自動更新 ---
+Write-Host "[1.5/5] Updating sitemap.xml <lastmod>..." -ForegroundColor Yellow
+$today = (Get-Date).ToString("yyyy-MM-dd")
+if (Test-Path "sitemap.xml") {
+    $sitemapContent = Get-Content "sitemap.xml" -Raw
+    $sitemapUpdated = $sitemapContent -replace "<lastmod>\d{4}-\d{2}-\d{2}</lastmod>", "<lastmod>$today</lastmod>"
+    
+    # Write only if changed to avoid unnecessary git noise
+    if ($sitemapContent -ne $sitemapUpdated) {
+        # UTF8 No BOM avoids issues
+        [System.IO.File]::WriteAllText((Resolve-Path "sitemap.xml").Path, $sitemapUpdated, (New-Object System.Text.UTF8Encoding $false))
+        Write-Host "✓ Updated sitemap.xml with <lastmod>$today</lastmod>" -ForegroundColor Green
+    } else {
+        Write-Host "✓ sitemap.xml <lastmod> is already up to date." -ForegroundColor Gray
+    }
+} else {
+    Write-Host "⚠ sitemap.xml not found, skipping." -ForegroundColor Yellow
+}
+Write-Host ""
+
 # --- [2/5] ローカル変更のコミット (Git Commit) ---
 Write-Host "[2/5] Committing local changes..." -ForegroundColor Yellow
 $appChanges = git status --porcelain
