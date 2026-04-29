@@ -191,7 +191,7 @@ Write-Host ""
 Write-Host "[1.5/5] Updating sitemap.xml <lastmod>..." -ForegroundColor Yellow
 $today = (Get-Date).ToString("yyyy-MM-dd")
 if (Test-Path "sitemap.xml") {
-    $sitemapContent = Get-Content "sitemap.xml" -Raw
+    $sitemapContent = Get-Content "sitemap.xml" -Raw -Encoding UTF8
     $sitemapUpdated = $sitemapContent -replace "<lastmod>\d{4}-\d{2}-\d{2}</lastmod>", "<lastmod>$today</lastmod>"
     
     # Write only if changed to avoid unnecessary git noise
