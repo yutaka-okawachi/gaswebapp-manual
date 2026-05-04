@@ -81,10 +81,30 @@ GASエディタの「プロジェクトの設定 → スクリプトプロパテ
 |---|---|---|
 | `NOTIFY_EMAIL` | 通知先メールアドレス | 検索通知メールの送信先 |
 | `TOKEN` | 任意のランダム文字列 | Web App API の認証トークン（`.env` の `GAS_SECRET_TOKEN` と一致させる） |
+| `GITHUB_TOKEN` | GitHub Personal Access Token | GASからGitHubへデータをプッシュするための権限 |
 
 ---
 
-## 6. 動作確認 (初回同期)
+## 6. GitHub 連携の設定 (初回およびトークン更新時)
+
+GASがスプレッドシートのデータをGitHubに書き出すために、GitHubの「Personal Access Token (PAT)」の設定が必要です。
+
+### 6-1. GitHub でトークンを発行する
+1.  GitHub の [Settings > Developer settings](https://github.com/settings/tokens?type=beta) にアクセス。
+2.  **Fine-grained tokens** で「Generate new token」をクリック。
+3.  **Repository access**: `gaswebapp-manual` を選択。
+4.  **Permissions**: `Contents` を **Read and Write** に設定。
+5.  発行されたトークン（`github_pat_...`）をコピーします。
+
+### 6-2. スプレッドシートに登録する
+1.  Google スプレッドシートを開きます。
+2.  メニューの **「🔧 GitHub同期」** -> **「📝 GitHub設定を行う」** をクリック。
+3.  表示されるダイアログに、コピーしたトークンを貼り付けて進めます。
+4.  最後にブランチ名を聞かれたら **「main」** と入力してください。
+
+---
+
+## 7. 動作確認 (初回同期)
 
 すべての準備が整ったら、同期スクリプトを実行して環境が正しく動作するか確認します。
 PowerShellで以下のコマンドを実行します：
