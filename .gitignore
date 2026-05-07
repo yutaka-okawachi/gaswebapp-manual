@@ -1,4 +1,4 @@
-﻿**/node_modules/**
+**/node_modules/**
 **/.git/**
 
 # clasp認証情報
@@ -20,4 +20,5 @@ sync_execution.log
 # その他管理ファイル
 deployments_list.txt
 clasp_check/
-# manuals/ (Managed by git now)
+# manuals/ (Managed by git now, but excluding specific guide)
+manuals/SEO_GUIDE.md
