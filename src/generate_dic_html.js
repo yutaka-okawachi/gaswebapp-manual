@@ -591,7 +591,7 @@ ${structuredDataJSON}
 
     <!-- サイドバーナビゲーション -->
     <nav class="sidebar" id="sidebar">
-        <h3 class="sidebar-home"><a href="index.html">🏠 HOME</a></h3>
+        <h3 class="sidebar-home"><a href="../index.html">🏠 HOME</a></h3>
         <h3>Richard Wagner (RW)</h3>
         <ul>
             <li><a href="richard_wagner.html">曲名から検索</a></li>
