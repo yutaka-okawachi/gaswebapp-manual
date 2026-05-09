@@ -315,6 +315,27 @@ function generateDicHtml(dicData, abbrData) {
   // JSON-LDを整形して文字列化
   const structuredDataJSON = JSON.stringify(structuredDataObj, null, 2);
   
+  // パンくずリストの生成
+  const breadcrumbObj = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "HOME",
+        "item": "https://yutaka-okawachi.github.io/gaswebapp-manual/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "ドイツ語の音楽用語集",
+        "item": "https://yutaka-okawachi.github.io/gaswebapp-manual/mahler-search-app/dic.html"
+      }
+    ]
+  };
+  const breadcrumbJSON = JSON.stringify(breadcrumbObj, null, 2);
+
   // タイムスタンプをコメントに追加
   const timestamp = new Date().toLocaleString('ja-JP', { timeZone: 'Asia/Tokyo' });
     const html = `<!DOCTYPE html>
@@ -337,6 +358,9 @@ function generateDicHtml(dicData, abbrData) {
     <link rel="canonical" href="https://yutaka-okawachi.github.io/gaswebapp-manual/mahler-search-app/dic.html">
     <script type="application/ld+json">
 ${structuredDataJSON}
+    </script>
+    <script type="application/ld+json">
+${breadcrumbJSON}
     </script>
     <meta property="og:type" content="website">
     <meta property="og:title" content="ドイツ語の音楽用語集 | German Music Terms Dictionary">
