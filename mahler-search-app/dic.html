@@ -16,21 +16,6 @@
     </script>
     <meta charset="UTF-8">
     <link rel="canonical" href="https://yutaka-okawachi.github.io/gaswebapp-manual/mahler-search-app/dic.html">
-    
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Lora:wght@400;700&display=swap">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lora:wght@400;700&display=swap" media="print" onload="this.media='all'">
-    <noscript>
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lora:wght@400;700&display=swap">
-    </noscript>
-
-    <link rel="icon" href="../favicon.png">
-    <link rel="apple-touch-icon" href="../apple-touch-icon.png">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="preload" href="css/common.css" as="style">
-    <link rel="stylesheet" href="css/common.css">
     <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -5651,6 +5636,26 @@
   ]
 }
     </script>
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "HOME",
+      "item": "https://yutaka-okawachi.github.io/gaswebapp-manual/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "ドイツ語の音楽用語集",
+      "item": "https://yutaka-okawachi.github.io/gaswebapp-manual/mahler-search-app/dic.html"
+    }
+  ]
+}
+    </script>
     <meta property="og:type" content="website">
     <meta property="og:title" content="ドイツ語の音楽用語集 | German Music Terms Dictionary">
     <meta property="og:description" content="ワーグナー，マーラー，R.シュトラウス，ブルックナー等の作品に登場するドイツ語音楽用語を900語以上収録．専門的な訳例や詳細な解釈をまとめた，楽譜の指示を正確に理解するための網羅的な用語集・辞書一覧．">
@@ -5662,7 +5667,19 @@
     <link rel="apple-touch-icon" href="../apple-touch-icon.png">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="ワーグナー，マーラー，R.シュトラウス，ブルックナー等の作品に登場するドイツ語音楽用語を900語以上収録．専門的な訳例や詳細な解釈をまとめた，楽譜の指示を正確に理解するための網羅的な用語集・辞書一覧．">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Lora:wght@400;700&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lora:wght@400;700&display=swap" media="print" onload="this.media='all'">
+    <noscript>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lora:wght@400;700&display=swap">
+    </noscript>
+
+    <link rel="preload" href="css/common.css" as="style">
     <link rel="stylesheet" href="css/common.css">
+
     <style>
         /* dic.html specific styles */
         .container {
@@ -5791,7 +5808,139 @@
                 margin-left: 0;
             }
         }
+
+        /* Info Notice Box */
+        .info-notice {
+            background-color: #f0f7ff;
+            border-left: 4px solid #3b5275;
+            padding: 1rem 1.5rem;
+            margin-bottom: 2rem;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+        }
+
+        .info-notice-content p {
+            margin: 0;
+            font-size: 0.9rem;
+            color: #333;
+            line-height: 1.5;
+        }
+
+        .info-notice-action {
+            flex-shrink: 0;
+        }
+
+        .btn-notice {
+            display: inline-block;
+            background-color: #3b5275;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 4px;
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-family: 'Lora', serif;
+            transition: background 0.2s;
+        }
+
+        .btn-notice:hover {
+            background-color: #1a2c42;
+            color: white;
+            text-decoration: none;
+        }
+
+        /* Floating Home Button */
+        #floating-home-btn {
+            position: fixed;
+            left: 20px;
+            bottom: 30px;
+            z-index: 9999;
+            background-color: #c44536; /* Accent Red */
+            color: white;
+            padding: 10px 20px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: bold;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s ease;
+            font-size: 0.9rem;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(20px);
+        }
+
+        #floating-home-btn.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        #floating-home-btn:hover {
+            background-color: #d64d3d;
+            transform: scale(1.05);
+            color: #fff;
+        }
+
+        /* Footer Promo */
+        .footer-promo {
+            background: #f8fafd;
+            border: 2px solid #e1e8f0;
+            border-radius: 12px;
+            padding: 2rem;
+            text-align: center;
+            margin: 3rem 0;
+        }
+
+        .footer-promo h3 {
+            margin: 0 0 15px 0;
+            color: #1a2c42;
+            font-size: 1.3rem;
+        }
+
+        .footer-promo p {
+            margin-bottom: 20px;
+            color: #5e6d7e;
+        }
+
+        /* Sidebar Home Enhancement */
+        .sidebar-home a {
+            background: rgba(255,255,255,0.1);
+            padding: 10px !important;
+            border-radius: 6px;
+            transition: background 0.2s;
+        }
+
+        .sidebar-home a:hover {
+            background: rgba(255,255,255,0.2);
+        }
+
+        @media (max-width: 768px) {
+            .info-notice {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .info-notice-action {
+                width: 100%;
+                margin-top: 10px;
+            }
+            .btn-notice {
+                display: block;
+                text-align: center;
+            }
+            #floating-home-btn {
+                bottom: 20px;
+                left: 15px;
+                padding: 8px 16px;
+                font-size: 0.8rem;
+            }
+        }
     </style>
+
     <script>
         // Debounce function to limit the rate at which a function can fire
         function debounce(func, wait) {
@@ -5856,17 +6005,28 @@
             });
         }
 
-        // Optimized scroll event handler with debounce for scrollToTop button
+        // Optimized scroll event handler with debounce for buttons
         const handleScroll = debounce(() => {
-            const btn = document.getElementById('scrollToTop');
-            if (btn) {
-                if (window.scrollY > 300) {
-                    btn.style.display = 'block';
+            const topBtn = document.getElementById('scrollToTop');
+            const homeBtn = document.getElementById('floating-home-btn');
+            const scrollPos = window.scrollY;
+
+            if (topBtn) {
+                if (scrollPos > 300) {
+                    topBtn.style.display = 'block';
                 } else {
-                    btn.style.display = 'none';
+                    topBtn.style.display = 'none';
                 }
             }
-        }, 100); // Execute at most once every 100ms
+
+            if (homeBtn) {
+                if (scrollPos > 500) {
+                    homeBtn.classList.add('show');
+                } else {
+                    homeBtn.classList.remove('show');
+                }
+            }
+        }, 100);
 
         window.addEventListener('scroll', handleScroll);
 
@@ -5924,9 +6084,19 @@
         <div class="container">
             <div class="home-link"><a href="../index.html">HOME</a></div>
             <h1>ドイツ語の音楽用語集</h1>
+
+            <!-- Info Notice Section -->
+            <div class="info-notice">
+                <div class="info-notice-content">
+                    <p>💡 <strong>より詳細な検索：</strong>Richard Wagner（リヒャルト・ワーグナー），Gustav Mahler（グスタフ・マーラー），Richard Strauss（リヒャルト・シュトラウス）のスコアに記された指示を，作品名や楽器，ページ番号，指示対象などから直接検索可能．実際の使用箇所を確認したい場合はメイン検索へ．</p>
+                </div>
+                <div class="info-notice-action">
+                    <a href="../index.html" class="btn-notice">🔍 メイン検索</a>
+                </div>
+            </div>
+
             <p style="font-size: 0.85rem; color: #555; margin-top: 0.5em; margin-bottom: 1em;">
-                このページは，Richard Wagner (RW)，Gustav Mahler (GM)，Richard Strauss (RS)，Anton Bruckner，Paul Hindemith などで使用されているドイツ語の訳例やコメント集（ほんの一部だけイタリア語，フランス語等を含む）．[GM]などの略記については「<a href="#abbrListContainer">略記一覧</a>」を参照のこと．<br>
-                <span style="font-size: 1.2rem; font-weight: bold;">各種検索用メインページは<a href="../index.html" style="font-size: 1.3rem;">こちら</a></span>
+                このページは，Richard Wagner (RW)，Gustav Mahler (GM)，Richard Strauss (RS)，Anton Bruckner，Paul Hindemith などで使用されているドイツ語の訳例やコメント集（ほんの一部だけイタリア語，フランス語等を含む）．[GM]などの略記については「<a href="#abbrListContainer">略記一覧</a>」を参照のこと．
             </p>
             <div id="listContainer">
 <div id="letter-A"></div>
@@ -11562,6 +11732,13 @@ Allegro ma non troppo (in cominciando un poco esitendo)</dfn><span class="source
 
             </div>
 
+            <!-- Footer Promo Section -->
+            <div class="footer-promo">
+                <h3>見つからない場合</h3>
+                <p>作曲家別の詳細検索はこちら．</p>
+                <a href="../index.html" class="btn-cta">🔍 作品別データベースで検索</a>
+            </div>
+
             <hr class="section-divider">
 
             <div id="abbrListContainer">
@@ -11861,6 +12038,7 @@ Allegro ma non troppo (in cominciando un poco esitendo)</dfn><span class="source
     </div>
 
     <div id="scrollToTop" onclick="scrollToTop()">▲ ページのトップへ戻る</div>
+    <a href="../index.html" id="floating-home-btn">🏠 メイン検索へ</a>
 
     <script>
         // Dynamic Floating Bar Position Adjustment
@@ -11908,4 +12086,4 @@ Allegro ma non troppo (in cominciando un poco esitendo)</dfn><span class="source
 </body>
 
 </html>
-<!-- Generated: 2026/5/7 20:20:23 -->
+<!-- Generated: 2026/5/10 22:50:03 -->
