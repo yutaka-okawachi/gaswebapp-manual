@@ -791,6 +791,10 @@ ${breadcrumbJSON}
             <div class="home-link"><a href="../index.html">HOME</a></div>
             <h1>ドイツ語の音楽用語集</h1>
 
+            <p style="font-size: 0.85rem; color: #555; margin-top: 0.5em; margin-bottom: 1em;">
+                このページは，Richard Wagner (RW)，Gustav Mahler (GM)，Richard Strauss (RS)，Anton Bruckner，Paul Hindemith などで使用されているドイツ語の訳例やコメント集（ほんの一部だけイタリア語，フランス語等を含む）．[GM]などの略記については「<a href="#abbrListContainer">略記一覧</a>」を参照のこと．
+            </p>
+
             <!-- Info Notice Section -->
             <div class="info-notice">
                 <div class="info-notice-content">
@@ -800,10 +804,6 @@ ${breadcrumbJSON}
                     <a href="../index.html" class="btn-notice">🔍 メイン検索</a>
                 </div>
             </div>
-
-            <p style="font-size: 0.85rem; color: #555; margin-top: 0.5em; margin-bottom: 1em;">
-                このページは，Richard Wagner (RW)，Gustav Mahler (GM)，Richard Strauss (RS)，Anton Bruckner，Paul Hindemith などで使用されているドイツ語の訳例やコメント集（ほんの一部だけイタリア語，フランス語等を含む）．[GM]などの略記については「<a href="#abbrListContainer">略記一覧</a>」を参照のこと．
-            </p>
             <div id="listContainer">
 ${dicListHtml}
             </div>
