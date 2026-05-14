@@ -129,7 +129,7 @@ const SCORE_METADATA = {
         "title": "ニュルンベルクのマイスタージンガー (Die Meistersinger von Nürnberg)",
         "workNo": "WWV 96",
         "publisher": "B. Schott's Söhne",
-        "plate": "27107.275",
+        "plate": "27107.27500",
         "edition": "Full Score (ca. 1903). (Prelude: 18469)",
         "imslp": "https://imslp.org/wiki/Die_Meistersinger_von_N%C3%BCrnberg,_WWV_96_(Wagner,_Richard)"
     },
