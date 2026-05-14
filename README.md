@@ -4,6 +4,15 @@
 
 ---
 
+## 運用・保守マニュアル
+プロジェクトの継続的な運用のために、以下のマニュアルを整備しています。
+
+- [セットアップガイド](./manuals/SETUP_GUIDE.md): 開発環境の構築手順
+- [データ同期ワークフロー](./manuals/SYNC_WORKFLOW.md): 日常的な更新手順
+- [**長期保守・継承マニュアル**](./manuals/LEGACY_MAINTENANCE_GUIDE.md): **重要。将来、他の方に運用を引き継ぐ際の手順書**
+
+---
+
 ## ライセンス・利用許諾
 
 本リポジトリのコード・データ・ドキュメントは **[Creative Commons 表示-非営利 4.0 国際（CC BY-NC 4.0）](https://creativecommons.org/licenses/by-nc/4.0/deed.ja)** ライセンスのもとで公開されています。
