@@ -1,0 +1,9 @@
+# GitHub Pages Configuration
+# Exclude specific sensitive/internal files from being served on the public site.
+
+exclude:
+  - manuals/LEGACY_MAINTENANCE_GUIDE.md
+  - .agent
+  - .venv
+  - scratch
+  - manuals/SEO_GUIDE.md # Also exclude since it's already in .gitignore but just in case
