@@ -425,7 +425,7 @@ function searchRichardWagnerByScene(operaName, scenes, displayScope) {
 
     let finalHtml = '';
     if (scoreInfo) {
-      finalHtml += `<div class="score-info-banner">楽譜情報: ${escapeHtml(scoreInfo)}</div>`;
+      finalHtml += getScoreInfoHtml(normalizedOperaName, scoreInfo);
     }
     // 対象オペラの場合、注釈を追加
     if (mottlOperas.includes(normalizedOperaName)) {
@@ -482,7 +482,7 @@ function searchRichardWagnerByPage(operaName, pageInput) {
 
     let finalHtml = '';
     if (scoreInfo) {
-      finalHtml += `<div class="score-info-banner">楽譜情報: ${escapeHtml(scoreInfo)}</div>`;
+      finalHtml += getScoreInfoHtml(normalizedOperaName, scoreInfo);
     }
     // 対象オペラの場合、注釈を追加
     if (mottlOperas.includes(normalizedOperaName)) {
@@ -547,7 +547,7 @@ function searchRichardWagnerByPage(operaName, pageInput) {
 
       let finalHtml = '';
       if (scoreInfo) {
-        finalHtml += `<div class="score-info-banner">楽譜情報: ${escapeHtml(scoreInfo)}</div>`;
+        finalHtml += getScoreInfoHtml(normalizedOperaName, scoreInfo);
       }
       if (mottlOperas.includes(normalizedOperaName)) {
         finalHtml += `<div class="mottl-info" style="font-weight: bold; font-size: 0.9em;">Felix Mottl による指示も含む</div>`;
@@ -1115,6 +1115,31 @@ function formatMovementNumber(a, b) {
 /**
  * HTML特殊文字をエスケープする
  */
+/**
+ * 楽譜情報バナーのHTMLを生成（詳細情報・IMSLPリンク対応）
+ */
+function getScoreInfoHtml(operaName, defaultInfo) {
+  if (typeof SCORE_METADATA === 'undefined') return `<div class="score-info-banner">楽譜情報: ${escapeHtml(defaultInfo)}</div>`;
+  
+  const operKey = normalizeString(operaName || "");
+  const meta = SCORE_METADATA[operKey] || SCORE_METADATA[operaName];
+  
+  if (!meta) return `<div class="score-info-banner">楽譜情報: ${escapeHtml(defaultInfo)}</div>`;
+  
+  let html = `<div class="score-info-banner" style="text-align: left; padding: 12px; font-size: 0.85em; line-height: 1.6;">`;
+  html += `<div style="font-weight: bold; border-bottom: 1px solid #ccc; margin-bottom: 8px; padding-bottom: 4px;">楽譜情報 (Score Information)</div>`;
+  html += `<div><strong>Publisher:</strong> ${escapeHtml(meta.publisher)}</div>`;
+  html += `<div><strong>Plate No.:</strong> ${escapeHtml(meta.plate)}</div>`;
+  if (meta.edition) {
+    html += `<div style="margin-top: 4px; font-style: italic; color: #555;">${escapeHtml(meta.edition)}</div>`;
+  }
+  if (meta.imslp) {
+    html += `<div style="margin-top: 8px;"><a href="${meta.imslp}" target="_blank" style="color: #0066cc; text-decoration: underline; font-weight: bold;">IMSLP Project Page ↗</a></div>`;
+  }
+  html += `</div>`;
+  return html;
+}
+
 function escapeHtml(str) {
   const value = (str === null || str === undefined) ? '' : String(str);
   return value

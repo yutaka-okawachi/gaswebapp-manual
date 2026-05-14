@@ -710,7 +710,24 @@ function formatGenericResults(data) {
     let html = '';
 
     if (data[0] && data[0].hasOwnProperty('楽譜情報') && data[0]['楽譜情報']) {
-        html += `<div class="score-info-banner">楽譜情報: ${escapeHtml(data[0]['楽譜情報'])}</div>`;
+        const operKey = normalizeString(data[0].Oper || "");
+        const meta = (typeof SCORE_METADATA !== 'undefined') ? (SCORE_METADATA[operKey] || SCORE_METADATA[data[0].Oper]) : null;
+        
+        if (meta) {
+            html += `<div class="score-info-banner" style="text-align: left; padding: 12px; font-size: 0.85em; line-height: 1.6;">`;
+            html += `<div style="font-weight: bold; border-bottom: 1px solid #ccc; margin-bottom: 8px; padding-bottom: 4px;">楽譜情報 (Score Information)</div>`;
+            html += `<div><strong>Publisher:</strong> ${escapeHtml(meta.publisher)}</div>`;
+            html += `<div><strong>Plate No.:</strong> ${escapeHtml(meta.plate)}</div>`;
+            if (meta.edition) {
+                html += `<div style="margin-top: 4px; font-style: italic; color: #555;">${escapeHtml(meta.edition)}</div>`;
+            }
+            if (meta.imslp) {
+                html += `<div style="margin-top: 8px;"><a href="${meta.imslp}" target="_blank" style="color: #0066cc; text-decoration: underline; font-weight: bold;">IMSLP Project Page ↗</a></div>`;
+            }
+            html += `</div>`;
+        } else {
+            html += `<div class="score-info-banner">楽譜情報: ${escapeHtml(data[0]['楽譜情報'])}</div>`;
+        }
     }
 
     let prevAufzug = null;

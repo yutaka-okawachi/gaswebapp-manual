@@ -76,7 +76,7 @@ function searchRichardStraussByScene(operaName, scenes, displayScope) {
 
     let finalHtml = '';
     if (scoreInfo) {
-      finalHtml += `<div class="score-info-banner">楽譜情報: ${escapeHtml(scoreInfo)}</div>`;
+      finalHtml += getScoreInfoHtml(normalizedOperaName, scoreInfo);
     }
     finalHtml += resultsHtml;
 
@@ -123,7 +123,7 @@ function searchRichardStraussByPage(operaName, pageInput) {
 
     let finalHtml = '';
     if (scoreInfo) {
-      finalHtml += `<div class="score-info-banner">楽譜情報: ${escapeHtml(scoreInfo)}</div>`;
+      finalHtml += getScoreInfoHtml(normalizedOperaName, scoreInfo);
     }
     finalHtml += resultsHtml;
 
@@ -179,7 +179,7 @@ function searchRichardStraussByPage(operaName, pageInput) {
 
       let finalHtml = '';
       if (scoreInfo) {
-        finalHtml += `<div class="score-info-banner">楽譜情報: ${escapeHtml(scoreInfo)}</div>`;
+        finalHtml += getScoreInfoHtml(normalizedOperaName, scoreInfo);
       }
       finalHtml += resultsHtml;
 
