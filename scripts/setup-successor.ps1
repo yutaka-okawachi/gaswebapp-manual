@@ -112,7 +112,7 @@ function Write-EnvFile {
 # Google Apps Script Web App URL
 GAS_DEPLOY_URL=$GasDeployUrl
 
-# Same value as GAS script property TOKEN
+# Same value as GAS script property GAS_SECRET_TOKEN
 GAS_SECRET_TOKEN=$GasSecretToken
 "@
 
