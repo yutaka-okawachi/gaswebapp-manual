@@ -7,6 +7,7 @@
 ## 運用・保守マニュアル
 プロジェクトの継続的な運用のために、以下のマニュアルを整備しています。
 
+- [**継承者の方へ - 最初に読むページ**](./manuals/SUCCESSOR_START_HERE.md): PCに詳しくない後継者向けの入口
 - [セットアップガイド](./manuals/SETUP_GUIDE.md): 開発環境の構築手順
 - [データ同期ワークフロー](./manuals/SYNC_WORKFLOW.md): 日常的な更新手順
 - [**長期保守・継承マニュアル**](./manuals/LEGACY_MAINTENANCE_GUIDE.md): **重要。将来、他の方に運用を引き継ぐ際の手順書**

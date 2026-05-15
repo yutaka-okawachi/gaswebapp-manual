@@ -1165,7 +1165,7 @@ function escapeHtmlWithBreaks(str) {
  * @param {string} body - メールの本文
  */
 function sendSearchNotification(subject, body) {
-  const recipient = 'pistares@ezweb.ne.jp';
+  const recipient = PropertiesService.getScriptProperties().getProperty('NOTIFY_EMAIL') || 'pistares@ezweb.ne.jp';
   try {
     MailApp.sendEmail(recipient, subject, body);
   } catch (e) {

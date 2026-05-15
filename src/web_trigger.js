@@ -348,7 +348,7 @@ function handleSearchNotification(data) {
             "■ ユーザー環境\n" +
             getValue(data.userAgent);
                 
-    const recipient = 'pistares@ezweb.ne.jp';
+    const recipient = PropertiesService.getScriptProperties().getProperty('NOTIFY_EMAIL') || 'pistares@ezweb.ne.jp';
     try {
       MailApp.sendEmail(recipient, subject, body);
     } catch (e) {
