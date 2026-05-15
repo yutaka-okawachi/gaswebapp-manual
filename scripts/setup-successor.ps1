@@ -205,17 +205,17 @@ Write-Section "5. 動作確認"
 if ($SkipSyncTest) {
     Write-Host "-SkipSyncTest が指定されているため、同期テストをスキップしました。" -ForegroundColor Yellow
 } elseif (Test-Path (Join-Path $repoRoot "sync-data.ps1")) {
-    if (Ask-YesNo "最後に .\sync-data.ps1 を実行して同期テストを行いますか？" $false) {
+    if (Ask-YesNo "最後に同期テストを行いますか？" $false) {
         & (Join-Path $repoRoot "sync-data.ps1")
     } else {
-        Write-Host "同期テストはスキップしました。必要になったら .\sync-data.ps1 を実行してください。" -ForegroundColor Yellow
+        Write-Host "同期テストはスキップしました。必要になったら 02_RUN_SYNC.bat をダブルクリックしてください。" -ForegroundColor Yellow
     }
 } else {
     Write-Host "sync-data.ps1 が見つかりません。" -ForegroundColor Yellow
 }
 
 Write-Section "完了"
-Write-Host "セットアップ確認が完了しました。通常の更新では .\sync-data.ps1 を使います。"
+Write-Host "セットアップ確認が完了しました。通常の更新では 02_RUN_SYNC.bat をダブルクリックします。"
 Write-Host "説明を確認する場合は manuals\SUCCESSOR_START_HERE.md を開いてください。"
 
 

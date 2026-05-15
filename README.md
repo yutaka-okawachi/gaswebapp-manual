@@ -44,22 +44,27 @@ https://github.com/yutaka-okawachi/gaswebapp-manual
 `dic.html`（用語集）の更新手順は、変更内容によって異なります。
 以下のスクリプトを実行することで、自動的に「GASへの反映 → 生成 → GitHubへの同期」が行われます。
 
+PC操作に詳しくない後継者は、PowerShell を開く必要はありません。
+初回セットアップは `01_START_SUCCESSOR_SETUP.bat`、日常同期は `02_RUN_SYNC.bat` をダブルクリックしてください。
+
 ### 1. ローカルでファイルを編集した場合
 フォントサイズやレイアウト（`generate_dic_html.js`）や、スタイルシート（`common.css`）などを編集した後の更新手順です。
 
-1. **PowerShellを開く**
-   作業フォルダ（`c:\Users\okawa\gaswebapp-manual`）でPowerShellを開きます。
+1. **同期用ファイルをダブルクリック**
+   プロジェクトフォルダ直下の `02_RUN_SYNC.bat` をダブルクリックします。
 
-2. **更新スクリプトを実行**
-   以下のコマンドを実行します。
+2. **画面の表示を確認**
+   黒い画面が開き、自動的に同期処理が進みます。途中で質問が出た場合は、内容が分からなければ止めて前任者または管理者に確認してください。
+
+3. **完了**
+   数分後に [GitHub Pages](https://yutaka-okawachi.github.io/gaswebapp-manual/) に反映されます。
+
+PowerShellで直接実行する場合は、以下のコマンドを使います。
+
    ```powershell
    .\sync-data.ps1 -message "変更内容のメモ"
    ```
    *例: `.\sync-data.ps1 -message "フォントサイズを0.85remに変更"`*
-
-3. **完了**
-   スクリプトが自動的に ローカル変更のCommit, GAS Push, **Web Appデプロイの更新, フロントエンド設定の同期**, GAS実行, Git Pull (Rebase), Git Push を行います。
-   数分後に [GitHub Pages](https://yutaka-okawachi.github.io/gaswebapp-manual/) に反映されます。
 
 ---
 
@@ -71,8 +76,9 @@ https://github.com/yutaka-okawachi/gaswebapp-manual
    - `src/export_json.js` を開き、関数 `exportAllDataToJson` を選択して「実行」を押します。
    - これだけで `dic.html` が再生成され、GitHubへプッシュされます。
 
-2. **PowerShellから行う場合**
-   ローカルのファイル変更がなくても、上記と同じスクリプトで更新可能です。
+2. **ローカルPCから行う場合**
+   プロジェクトフォルダ直下の `02_RUN_SYNC.bat` をダブルクリックします。
+   PowerShellで直接実行する場合は、以下のコマンドでも更新可能です。
    ```powershell
    .\sync-data.ps1
    ```

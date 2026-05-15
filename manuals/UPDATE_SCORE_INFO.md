@@ -45,6 +45,10 @@ copy src\score_metadata.js mahler-search-app\js\score_metadata.js
 ### 3. 同期とデプロイ
 変更を保存したら、プロジェクトルートにある同期スクリプトを実行して、GASおよびGitHub Pagesへ反映させます。
 
+非IT向けには、プロジェクトフォルダ直下の `02_RUN_SYNC.bat` をダブルクリックします。
+
+PowerShellで直接実行する場合は、以下を使います。
+
 ```powershell
 .\sync-data.ps1
 ```

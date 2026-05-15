@@ -17,7 +17,7 @@
 | `GAS_DEPLOY_URL` を控える | 必須 | 後継者の `.env` 作成に必要 |
 | `GAS_SECRET_TOKEN` を安全な方法で渡す | 必須 | GAS スクリプトプロパティ `GAS_SECRET_TOKEN` と同じ値 |
 | GitHub PAT の発行手順を伝える | 必須 | 原則として後継者本人が発行 |
-| 後継者の PC でセットアップを一緒に確認する | 推奨 | `scripts/setup-successor.ps1` を実行 |
+| 後継者の PC でセットアップを一緒に確認する | 推奨 | `01_START_SUCCESSOR_SETUP.bat` をダブルクリック |
 | 後継者の作業フォルダを決める | 推奨 | 例: `ドキュメント\gaswebapp-manual` |
 | プロジェクトのフォルダ一式を渡す | 推奨 | GitHub から取得できる人なら clone でも可 |
 | `sync-data.ps1` の成功を確認する | 推奨 | 初回だけ一緒に確認すると安全 |
@@ -34,7 +34,7 @@
 | 公開サイト URL | `https://yutaka-okawachi.github.io/gaswebapp-manual/` |
 | GitHub リポジトリ | `https://github.com/yutaka-okawachi/gaswebapp-manual` |
 | 主な用途 | 音楽用語検索アプリの公開、更新、長期保守 |
-| 通常の更新方法 | Google スプレッドシート編集後、必要に応じて `.\sync-data.ps1` を実行 |
+| 通常の更新方法 | Google スプレッドシート編集後、必要に応じて `02_RUN_SYNC.bat` をダブルクリック |
 
 ## 2. Google 関連
 
@@ -129,19 +129,22 @@ GitHub アカウント:
 ここに後継者のGitHubユーザー名を書く
 
 最初に実行するもの:
-scripts\start-successor-setup.bat
+01_START_SUCCESSOR_SETUP.bat
+
+日常更新で実行するもの:
+02_RUN_SYNC.bat
 ```
 
 ## 5. 後継者の PC で確認すること
 
 | 確認項目 | 結果 |
 |---|---|
-| `.\scripts\setup-successor.ps1` を実行できた | 未確認 |
+| `01_START_SUCCESSOR_SETUP.bat` を実行できた | 未確認 |
 | Node.js が使える | 未確認 |
 | Git が使える | 未確認 |
 | `clasp login` が完了した | 未確認 |
 | `.env` が作成された | 未確認 |
-| `.\sync-data.ps1` が成功した | 未確認 |
+| `02_RUN_SYNC.bat` または `sync-data.ps1` が成功した | 未確認 |
 
 ## 6. 緊急時に伝える短い説明
 
@@ -149,5 +152,5 @@ scripts\start-successor-setup.bat
 
 > データ本体は Google スプレッドシートにあります。  
 > 公開サイトは GitHub Pages で表示されています。  
-> 通常はスプレッドシートを直し、必要に応じて `sync-data.ps1` を実行するとサイトへ反映されます。  
-> 最初のセットアップは `scripts/setup-successor.ps1` を実行してください。
+> 通常はスプレッドシートを直し、必要に応じて `02_RUN_SYNC.bat` をダブルクリックするとサイトへ反映されます。  
+> 最初のセットアップは `01_START_SUCCESSOR_SETUP.bat` をダブルクリックしてください。
