@@ -366,7 +366,7 @@ ${breadcrumbJSON}
     <meta property="og:title" content="ドイツ語の音楽用語集 | German Music Terms Dictionary">
     <meta property="og:description" content="ワーグナー，マーラー，R.シュトラウス，ブルックナー等の作品に登場するドイツ語音楽用語を900語以上収録．専門的な訳例や詳細な解釈をまとめた，楽譜の指示を正確に理解するための網羅的な用語集・辞書一覧．">
     <meta property="og:url" content="https://yutaka-okawachi.github.io/gaswebapp-manual/mahler-search-app/dic.html">
-    <meta property="og:image" content="https://yutaka-okawachi.github.io/gaswebapp-manual/favicon.png">
+    <meta property="og:image" content="https://yutaka-okawachi.github.io/gaswebapp-manual/ogp.png">
     <meta name="twitter:card" content="summary">
     <title>用語集</title>
     <link rel="icon" href="../favicon.png">
