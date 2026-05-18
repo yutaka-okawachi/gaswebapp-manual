@@ -88,8 +88,8 @@ function updateSearchHistoryCharts() {
       .map(k => [k, dailyCounts[k]]);
       
     if (sortedDailyCounts.length > 0) {
-        // 最近90日分（約3か月）に絞る
-        const recentDailyCounts = sortedDailyCounts.slice(-90);
+        // 最近180日分（約6か月）に絞る
+        const recentDailyCounts = sortedDailyCounts.slice(-180);
 
         // データシートへ書き込み
         dataSheet.getRange(currentStartRow, 1).setValue('日付');
