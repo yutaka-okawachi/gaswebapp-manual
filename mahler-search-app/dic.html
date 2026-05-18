@@ -6035,6 +6035,34 @@
             sidebar.classList.toggle('active');
         }
 
+        document.addEventListener('DOMContentLoaded', function () {
+            const alphaBar = document.getElementById('alpha-floating-bar');
+            if (!alphaBar) {
+                return;
+            }
+
+            alphaBar.addEventListener('click', function (event) {
+                const link = event.target.closest('a[href^="#letter-"]');
+                if (!link || !alphaBar.contains(link)) {
+                    return;
+                }
+
+                const targetId = link.getAttribute('href').slice(1);
+                if (!/^letter-[A-Z]$/.test(targetId)) {
+                    return;
+                }
+
+                const letter = targetId.replace(/^letter-/, '');
+
+                if (typeof window.gtag === 'function') {
+                    window.gtag('event', 'dictionary_jump', {
+                        letter: letter,
+                        page_path: location.pathname
+                    });
+                }
+            });
+        });
+
         // サイドバー外をクリックしたら閉じる（スマホのみ）
         document.addEventListener('click', function (event) {
             if (window.innerWidth <= 768) {
