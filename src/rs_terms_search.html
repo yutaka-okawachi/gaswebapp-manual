@@ -83,7 +83,47 @@
         option.value = entry.normalized;
         datalist.appendChild(option);
       });
+      updateDropdown(suggestions);
     }
+
+    // Mobile/Touch fallback: simple dropdown list under the input
+    function updateDropdown(suggestions) {
+      const dd = document.getElementById('termDropdown');
+      if (!dd) return;
+      dd.innerHTML = '';
+      if (!Array.isArray(suggestions) || suggestions.length === 0) {
+        dd.setAttribute('aria-hidden', 'true');
+        return;
+      }
+      const list = document.createElement('div');
+      list.className = 'term-dropdown-list';
+      suggestions.slice(0, 50).forEach(entry => {
+        const item = document.createElement('div');
+        item.className = 'term-item';
+        item.tabIndex = 0;
+        const label = document.createElement('span'); label.className = 'label'; label.textContent = entry.original || entry.normalized;
+        const meta = document.createElement('span'); meta.className = 'meta'; meta.textContent = entry.normalized;
+        item.appendChild(label);
+        item.appendChild(meta);
+        item.addEventListener('click', () => selectSuggestion(entry.normalized));
+        item.addEventListener('keydown', (e) => { if (e.key === 'Enter') selectSuggestion(entry.normalized); });
+        list.appendChild(item);
+      });
+      dd.appendChild(list);
+      dd.setAttribute('aria-hidden', 'false');
+    }
+
+    function hideDropdown() { const dd = document.getElementById('termDropdown'); if (dd) { dd.innerHTML=''; dd.setAttribute('aria-hidden','true'); } }
+    function selectSuggestion(val) { const input = document.getElementById('termInput'); if (input) { input.value = val; input.focus(); } hideDropdown(); }
+
+    // Hide dropdown on outside click
+    document.addEventListener('click', (e) => {
+      const dd = document.getElementById('termDropdown');
+      const input = document.getElementById('termInput');
+      if (!dd || !input) return;
+      if (dd.contains(e.target) || input.contains(e.target)) return;
+      hideDropdown();
+    });
     function search() {
       const query = document.getElementById('termInput').value.trim();
       const resultsDiv = document.getElementById('results');
@@ -157,6 +197,7 @@
   
       <input type="text" id="termInput" list="termSuggestions" placeholder="用語を入力">
       <datalist id="termSuggestions"></datalist>
+      <div id="termDropdown" class="term-dropdown" aria-hidden="true"></div>
   
       <div style="text-align: center;">
         <button type="button" onclick="search()" class="btn-search">検索</button>
