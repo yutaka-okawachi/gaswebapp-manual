@@ -332,6 +332,31 @@ button.clear-input-btn:hover { background-color: var(--clear-button-hover-bg); }
     outline: none;
 }
 
+@media (max-width: 600px) {
+    .term-suggestions-panel {
+        max-height: 176px;
+        margin-bottom: 8px;
+        overflow-y: auto;
+    }
+
+    .term-suggestions-panel + div {
+        display: flex;
+        justify-content: center;
+        gap: 6px;
+        flex-wrap: nowrap;
+    }
+
+    .term-suggestions-panel + div button {
+        flex: 1 1 0;
+        min-width: 0;
+        max-width: 112px;
+        margin: 4px 0;
+        padding: 7px 8px;
+        font-size: 0.86rem;
+        white-space: nowrap;
+    }
+}
+
 @media (max-width: 768px) {
     .nav-toggle { display: block; }
     .sidebar {
