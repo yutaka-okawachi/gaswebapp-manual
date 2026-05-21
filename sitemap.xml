@@ -27,7 +27,7 @@
   <!-- 検索ページ -->
   <url>
     <loc>https://yutaka-okawachi.github.io/gaswebapp-manual/mahler-search-app/terms_search.html</loc>
-    <lastmod>2026-04-29</lastmod>
+    <lastmod>2026-05-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -35,7 +35,7 @@
   <!-- Richard Strauss検索 -->
   <url>
     <loc>https://yutaka-okawachi.github.io/gaswebapp-manual/mahler-search-app/rs_terms_search.html</loc>
-    <lastmod>2026-04-29</lastmod>
+    <lastmod>2026-05-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -43,7 +43,7 @@
   <!-- Richard Wagner検索 -->
   <url>
     <loc>https://yutaka-okawachi.github.io/gaswebapp-manual/mahler-search-app/rw_terms_search.html</loc>
-    <lastmod>2026-04-29</lastmod>
+    <lastmod>2026-05-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
