@@ -475,14 +475,42 @@ if (Test-Path $sitemapPath) {
     $sitemapUpdated = $sitemapContent
     $hasSitemapUpdates = $false
 
+    $pathMappings = @{
+        'src/index.html' = '/'
+        'index.html' = '/'
+        'src/mahler.html' = 'mahler-search-app/mahler.html'
+        'src/dic.html' = 'mahler-search-app/dic.html'
+        'src/terms_search.html' = 'mahler-search-app/terms_search.html'
+        'src/rs_terms_search.html' = 'mahler-search-app/rs_terms_search.html'
+        'src/rw_terms_search.html' = 'mahler-search-app/rw_terms_search.html'
+        'src/richard_strauss.html' = 'mahler-search-app/richard_strauss.html'
+        'src/richard_wagner.html' = 'mahler-search-app/richard_wagner.html'
+        'src/notes.html' = 'mahler-search-app/notes.html'
+        'src/other.html' = 'mahler-search-app/other.html'
+        'mahler-search-app/mahler.html' = 'mahler-search-app/mahler.html'
+        'mahler-search-app/dic.html' = 'mahler-search-app/dic.html'
+        'mahler-search-app/terms_search.html' = 'mahler-search-app/terms_search.html'
+        'mahler-search-app/rs_terms_search.html' = 'mahler-search-app/rs_terms_search.html'
+        'mahler-search-app/rw_terms_search.html' = 'mahler-search-app/rw_terms_search.html'
+        'mahler-search-app/richard_strauss.html' = 'mahler-search-app/richard_strauss.html'
+        'mahler-search-app/richard_wagner.html' = 'mahler-search-app/richard_wagner.html'
+        'mahler-search-app/notes.html' = 'mahler-search-app/notes.html'
+        'mahler-search-app/other.html' = 'mahler-search-app/other.html'
+    }
+
     foreach ($file in $changedFiles) {
         if ($file -match "\.html$") {
-            $escapedFile = [regex]::Escape($file.Replace("\", "/"))
+            $targetPath = if ($pathMappings.ContainsKey($file)) { $pathMappings[$file] } else { $file.Replace("\", "/") }
+            if ($targetPath -eq '/') {
+                $escapedFile = '/'
+            } else {
+                $escapedFile = [regex]::Escape($targetPath)
+            }
             $pattern = "(?i)(<loc>[^<]*?$escapedFile</loc>\s*<lastmod>)\d{4}-\d{2}-\d{2}(</lastmod>)"
             
             if ($sitemapUpdated -match $pattern) {
                 $sitemapUpdated = $sitemapUpdated -replace $pattern, "`${1}$today`${2}"
-                Write-Host "  • Updated <lastmod> for: $file" -ForegroundColor Gray
+                Write-Host "  • Updated <lastmod> for: $file -> $targetPath" -ForegroundColor Gray
                 $hasSitemapUpdates = $true
             }
         }
