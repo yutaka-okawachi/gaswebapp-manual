@@ -105,49 +105,9 @@
       (suggestions || []).forEach(entry => {
         const option = document.createElement('option');
         option.value = entry.normalized; // 入力欄は英字のまま
-        option.label = entry.original;   // ユーザーには de 列の文字列を表示
-        option.textContent = entry.original;
         datalist.appendChild(option);
       });
-      updateDropdown(suggestions);
     }
-
-    // Mobile/Touch fallback dropdown
-    function updateDropdown(suggestions) {
-      const dd = document.getElementById('termDropdown');
-      if (!dd) return;
-      dd.innerHTML = '';
-      if (!Array.isArray(suggestions) || suggestions.length === 0) {
-        dd.setAttribute('aria-hidden', 'true');
-        return;
-      }
-      const list = document.createElement('div');
-      list.className = 'term-dropdown-list';
-      suggestions.slice(0,50).forEach(entry => {
-        const item = document.createElement('div');
-        item.className = 'term-item';
-        item.tabIndex = 0;
-        const label = document.createElement('span'); label.className = 'label'; label.textContent = entry.original || entry.normalized;
-        const meta = document.createElement('span'); meta.className = 'meta'; meta.textContent = entry.normalized;
-        item.appendChild(label);
-        item.appendChild(meta);
-        item.addEventListener('click', () => selectSuggestion(entry.normalized));
-        item.addEventListener('keydown', (e) => { if (e.key === 'Enter') selectSuggestion(entry.normalized); });
-        list.appendChild(item);
-      });
-      dd.appendChild(list);
-      dd.setAttribute('aria-hidden', 'false');
-    }
-
-    function hideDropdown() { const dd = document.getElementById('termDropdown'); if (dd) { dd.innerHTML=''; dd.setAttribute('aria-hidden','true'); } }
-    function selectSuggestion(val) { const input = document.getElementById('termInput'); if (input) { input.value = val; input.focus(); } hideDropdown(); }
-    document.addEventListener('click', (e) => {
-      const dd = document.getElementById('termDropdown');
-      const input = document.getElementById('termInput');
-      if (!dd || !input) return;
-      if (dd.contains(e.target) || input.contains(e.target)) return;
-      hideDropdown();
-    });
 
     // 「検索」ボタン押下時
     function search() {
@@ -244,7 +204,6 @@
       <!-- 検索入力欄 -->
       <input type="text" id="termInput" list="termSuggestions" placeholder="検索する用語を入力">
       <datalist id="termSuggestions"></datalist>
-      <div id="termDropdown" class="term-dropdown" aria-hidden="true"></div>
   
       <!-- ボタン類 -->
       <div style="text-align: center;">
