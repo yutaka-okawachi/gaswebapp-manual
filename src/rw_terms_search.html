@@ -47,6 +47,14 @@
     window.addEventListener('DOMContentLoaded', () => {
       const inputField = document.getElementById('termInput');
       inputField.addEventListener('input', debouncedOnTermInput);
+      inputField.addEventListener('focus', () => debouncedOnTermInput({ target: inputField }));
+      inputField.addEventListener('blur', () => {
+        setTimeout(() => {
+          if (typeof hideTermSuggestions === 'function') {
+            hideTermSuggestions('termSuggestions');
+          }
+        }, 120);
+      });
 
       // ページ読み込み時に全用語リストを取得し、以降はクライアント側でサジェスト
       google.script.run
@@ -55,6 +63,7 @@
             .map(term => normalizeTermEntry(term))
             .filter(Boolean);
           console.log(`${termEntries.length}件のRW用語を読み込みました。`);
+          debouncedOnTermInput({ target: inputField });
         })
         .withFailureHandler(err => {
           console.error('RW用語の取得に失敗しました:', err);
@@ -75,6 +84,9 @@
       updateDatalist(matches);
     }, 300);
     function updateDatalist(suggestions) {
+      if (typeof renderTermSuggestions === 'function' && renderTermSuggestions('termInput', 'termSuggestions', suggestions)) {
+        return;
+      }
       const datalist = document.getElementById('termSuggestions');
       datalist.innerHTML = '';
       (suggestions || []).forEach(entry => {

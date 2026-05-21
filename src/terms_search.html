@@ -64,6 +64,14 @@
       const inputField = document.getElementById('termInput');
       // 入力フィールドに文字を入力するたびにイベント発火
       inputField.addEventListener('input', debouncedOnTermInput);
+      inputField.addEventListener('focus', () => debouncedOnTermInput({ target: inputField }));
+      inputField.addEventListener('blur', () => {
+        setTimeout(() => {
+          if (typeof hideTermSuggestions === 'function') {
+            hideTermSuggestions('termSuggestions');
+          }
+        }, 120);
+      });
 
       // ページ読み込み時に全用語リストを取得
       google.script.run
@@ -72,6 +80,7 @@
             .map(term => normalizeTermEntry(term))
             .filter(Boolean);
           console.log(`${termEntries.length}件のGM用語を読み込みました。`);
+          debouncedOnTermInput({ target: inputField });
         })
         .withFailureHandler(err => {
           console.error('GM用語の取得に失敗しました:', err);
@@ -100,6 +109,9 @@
 
     // datalist に候補を表示する
     function updateDatalist(suggestions) {
+      if (typeof renderTermSuggestions === 'function' && renderTermSuggestions('termInput', 'termSuggestions', suggestions)) {
+        return;
+      }
       const datalist = document.getElementById('termSuggestions');
       datalist.innerHTML = '';
       (suggestions || []).forEach(entry => {

@@ -292,6 +292,46 @@ button.clear-input-btn:hover { background-color: var(--clear-button-hover-bg); }
     font-size: 0.9rem;
 }
 
+.term-suggestions-panel {
+    width: 100%;
+    max-width: 520px;
+    margin: -8px auto 16px;
+    border: 1px solid #d7dee8;
+    border-radius: 6px;
+    background: #fff;
+    box-shadow: 0 8px 18px rgba(15, 23, 42, 0.12);
+    overflow: hidden;
+    position: relative;
+    z-index: 20;
+}
+
+.term-suggestions-panel[hidden] {
+    display: none;
+}
+
+.term-suggestion-item {
+    display: block;
+    width: 100%;
+    padding: 10px 12px;
+    border: 0;
+    border-bottom: 1px solid #edf1f5;
+    background: #fff;
+    color: #1f2937;
+    font: inherit;
+    text-align: left;
+    cursor: pointer;
+}
+
+.term-suggestion-item:last-child {
+    border-bottom: 0;
+}
+
+.term-suggestion-item:hover,
+.term-suggestion-item:focus {
+    background: #f3f6fa;
+    outline: none;
+}
+
 @media (max-width: 768px) {
     .nav-toggle { display: block; }
     .sidebar {

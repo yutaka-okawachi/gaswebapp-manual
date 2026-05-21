@@ -116,6 +116,14 @@
             const inputField = document.getElementById('termInput');
             // 入力フィールドに文字を入力するたびにイベント発火
             inputField.addEventListener('input', debouncedOnTermInput);
+            inputField.addEventListener('focus', () => debouncedOnTermInput({ target: inputField }));
+            inputField.addEventListener('blur', () => {
+                setTimeout(() => {
+                    if (typeof hideTermSuggestions === 'function') {
+                        hideTermSuggestions('termSuggestions');
+                    }
+                }, 120);
+            });
 
             // Load data locally
             if (typeof loadData === 'function') {
@@ -126,6 +134,7 @@
             if (typeof getGenericTermsListLocal === 'function') {
                 termEntries = getGenericTermsListLocal('richard_wagner');
                 console.log(`Loaded ${termEntries.length} terms locally for RW.`);
+                debouncedOnTermInput({ target: inputField });
             } else {
                 console.error('getGenericTermsListLocal is missing');
             }
@@ -159,6 +168,9 @@
 
         // datalist に候補を表示する
         function updateDatalist(suggestions) {
+            if (typeof renderTermSuggestions === 'function' && renderTermSuggestions('termInput', 'termSuggestions', suggestions)) {
+                return;
+            }
             const datalist = document.getElementById('termSuggestions');
             datalist.innerHTML = '';
             suggestions.forEach(entry => {
