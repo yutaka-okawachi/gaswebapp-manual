@@ -195,6 +195,7 @@ window.renderTermSuggestions = function(inputId, datalistId, suggestions) {
     const input = document.getElementById(inputId);
     const datalist = document.getElementById(datalistId);
     if (!input || !datalist) return false;
+    const useCustomPanel = window.matchMedia('(max-width: 600px)').matches;
 
     datalist.innerHTML = '';
     (suggestions || []).forEach(entry => {
@@ -212,6 +213,14 @@ window.renderTermSuggestions = function(inputId, datalistId, suggestions) {
         datalist.insertAdjacentElement('afterend', panel);
     }
 
+    if (!useCustomPanel) {
+        input.setAttribute('list', datalistId);
+        panel.hidden = true;
+        panel.innerHTML = '';
+        return true;
+    }
+
+    input.removeAttribute('list');
     panel.innerHTML = '';
     const items = (suggestions || []).slice(0, 20);
     if (!items.length || document.activeElement !== input) {
