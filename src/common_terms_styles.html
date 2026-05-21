@@ -300,7 +300,10 @@ button.clear-input-btn:hover { background-color: var(--clear-button-hover-bg); }
     border-radius: 6px;
     background: #fff;
     box-shadow: 0 8px 18px rgba(15, 23, 42, 0.12);
-    overflow: hidden;
+    max-height: 176px;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    touch-action: pan-y;
     position: relative;
     z-index: 20;
 }
@@ -334,9 +337,7 @@ button.clear-input-btn:hover { background-color: var(--clear-button-hover-bg); }
 
 @media (max-width: 600px) {
     .term-suggestions-panel {
-        max-height: 176px;
         margin-bottom: 8px;
-        overflow-y: auto;
     }
 
     .term-suggestions-panel + div {

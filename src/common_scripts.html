@@ -206,10 +206,18 @@
       input.setAttribute('list', datalistId);
       panel.hidden = true;
       panel.innerHTML = '';
+      panel.style.maxHeight = '';
+      panel.style.overflowY = '';
+      panel.style.webkitOverflowScrolling = '';
+      panel.style.touchAction = '';
       return true;
     }
 
     input.removeAttribute('list');
+    panel.style.maxHeight = '176px';
+    panel.style.overflowY = 'auto';
+    panel.style.webkitOverflowScrolling = 'touch';
+    panel.style.touchAction = 'pan-y';
     panel.innerHTML = '';
     const items = (suggestions || []).slice(0, 20);
     if (!items.length || document.activeElement !== input) {
