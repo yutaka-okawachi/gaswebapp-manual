@@ -84,6 +84,23 @@
     }
     window.focusResultsPanel = focusResultsPanel;
 
+    function trackSearchEvent(composer, searchType, params) {
+      const eventNames = {
+        RW: { work: 'rw_work_search', term: 'rw_term_search' },
+        GM: { work: 'gm_work_search', term: 'gm_term_search' },
+        RS: { work: 'rs_work_search', term: 'rs_term_search' }
+      };
+      const eventName = eventNames[composer] && eventNames[composer][searchType];
+      if (!eventName || typeof window.gtag !== 'function') return;
+
+      const payload = Object.assign({
+        composer: composer,
+        search_type: searchType
+      }, params || {});
+      window.gtag('event', eventName, payload);
+    }
+    window.trackSearchEvent = trackSearchEvent;
+
     function setResults(html) {
       const resultsDiv = document.getElementById('results');
       if (!resultsDiv) return;

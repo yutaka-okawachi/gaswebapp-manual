@@ -169,6 +169,12 @@
     setResults('<p class="loading">検索中・・・</p>');
     currentSearchId++;
     const thisSearchId = currentSearchId;
+    if (typeof window.trackSearchEvent === 'function') {
+      window.trackSearchEvent(document.title.includes('Wagner') ? 'RW' : 'RS', 'work', {
+        work_search_method: 'scene',
+        scene_count: selectedScenes.length
+      });
+    }
 
     const funcName = document.title.includes('Wagner')
       ? 'searchRichardWagnerByScene'
@@ -218,6 +224,11 @@
     setResults('<p class="loading">検索中・・・</p>');
     currentSearchId++;
     const thisSearchId = currentSearchId;
+    if (typeof window.trackSearchEvent === 'function') {
+      window.trackSearchEvent(document.title.includes('Wagner') ? 'RW' : 'RS', 'work', {
+        work_search_method: 'page'
+      });
+    }
 
     const funcName = document.title.includes('Wagner')
       ? 'searchRichardWagnerByPage'
@@ -314,6 +325,12 @@
     setResults('<p class="loading">検索中・・・</p>');
     currentSearchId++;
     const thisSearchId = currentSearchId;
+    if (typeof window.trackSearchEvent === 'function') {
+      window.trackSearchEvent(document.title.includes('Wagner') ? 'RW' : 'RS', 'work', {
+        work_search_method: 'whom',
+        whom_count: selected.length
+      });
+    }
 
     const funcName = document.title.includes('Wagner') ? 'searchRichardWagnerByWhom' : 'searchRichardStraussByWhom';
 

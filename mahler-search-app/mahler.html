@@ -853,6 +853,13 @@
       searchButton.disabled = true;
       currentSearchId++;
       const thisSearchId = currentSearchId;
+      if (typeof window.trackSearchEvent === 'function') {
+        window.trackSearchEvent('GM', 'work', {
+          work_count: works.length,
+          instrument_count: instruments.length,
+          include_orchestra_all: includeOrchestraAll
+        });
+      }
 
       setTimeout(async () => {
           try {

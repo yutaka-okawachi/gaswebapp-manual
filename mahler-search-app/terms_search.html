@@ -350,6 +350,11 @@
 
             currentSearchId++;
             const thisSearchId = currentSearchId;
+            if (typeof window.trackSearchEvent === 'function') {
+                window.trackSearchEvent('GM', 'term', {
+                    query_length: query.length
+                });
+            }
 
             // Execute search (Local)
             setTimeout(() => {

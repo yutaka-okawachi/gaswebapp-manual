@@ -3,6 +3,7 @@
 
 <head>
   <meta charset="UTF-8">
+  <?!= include('gtag.html') ?>
   <link rel="canonical" href="https://yutaka-okawachi.github.io/gaswebapp-manual/mahler-search-app/mahler.html">
   <!-- レスポンシブ対応 -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -676,6 +677,13 @@
       // 検索IDを更新（キャンセル制御用）
       currentSearchId++;
       const thisSearchId = currentSearchId;
+      if (typeof window.trackSearchEvent === 'function') {
+        window.trackSearchEvent('GM', 'work', {
+          work_count: works.length,
+          instrument_count: instruments.length,
+          include_orchestra_all: includeOrchestraAll
+        });
+      }
 
       // Google Apps Script側の searchData() を呼び出し
       google.script.run

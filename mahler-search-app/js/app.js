@@ -16,6 +16,23 @@ window.appData = window.appData || {
 // TODO: Replace with your deployed Web App URL
 const GAS_NOTIFICATION_URL = 'https://script.google.com/macros/s/AKfycbzFD2EDHfECX0yK3cP0toN5zJRpcCNMO9HiEBM7WrD_9fX8N5bjHo9IYtEEXu_fsifO4Q/exec';
 
+function trackSearchEvent(composer, searchType, params) {
+    const eventNames = {
+        RW: { work: 'rw_work_search', term: 'rw_term_search' },
+        GM: { work: 'gm_work_search', term: 'gm_term_search' },
+        RS: { work: 'rs_work_search', term: 'rs_term_search' }
+    };
+    const eventName = eventNames[composer] && eventNames[composer][searchType];
+    if (!eventName || typeof window.gtag !== 'function') return;
+
+    const payload = Object.assign({
+        composer: composer,
+        search_type: searchType
+    }, params || {});
+    window.gtag('event', eventName, payload);
+}
+window.trackSearchEvent = trackSearchEvent;
+
 /**
  * Sends a search notification to the Google Apps Script Web App.
  * @param {Object} details - The search details { work, scope, term }.

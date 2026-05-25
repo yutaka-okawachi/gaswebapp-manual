@@ -275,6 +275,12 @@ function searchByScene() {
     const thisSearchId = currentSearchId;
 
     const composer = (document.title.includes('Wagner') || document.title.includes('RW')) ? 'richard_wagner' : 'richard_strauss';
+    if (typeof window.trackSearchEvent === 'function') {
+        window.trackSearchEvent(composer === 'richard_wagner' ? 'RW' : 'RS', 'work', {
+            work_search_method: 'scene',
+            scene_count: selectedScenes.length
+        });
+    }
     const funcName = composer === 'richard_wagner'
         ? 'searchRichardWagnerByScene'
         : 'searchRichardStraussByScene';
@@ -372,6 +378,11 @@ function searchByPage() {
     const thisSearchId = currentSearchId;
 
     const composer = (document.title.includes('Wagner') || document.title.includes('RW')) ? 'richard_wagner' : 'richard_strauss';
+    if (typeof window.trackSearchEvent === 'function') {
+        window.trackSearchEvent(composer === 'richard_wagner' ? 'RW' : 'RS', 'work', {
+            work_search_method: 'page'
+        });
+    }
     const funcName = composer === 'richard_wagner'
         ? 'searchRichardWagnerByPage'
         : 'searchRichardStraussByPage';
@@ -565,6 +576,12 @@ function searchByWhom() {
     const thisSearchId = currentSearchId;
 
     const composer = (document.title.includes('Wagner') || document.title.includes('RW')) ? 'richard_wagner' : 'richard_strauss';
+    if (typeof window.trackSearchEvent === 'function') {
+        window.trackSearchEvent(composer === 'richard_wagner' ? 'RW' : 'RS', 'work', {
+            work_search_method: 'whom',
+            whom_count: selected.length
+        });
+    }
     
     // Local processing
     setTimeout(() => {

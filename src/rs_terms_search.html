@@ -3,6 +3,7 @@
 
 <head>
   <meta charset="UTF-8">
+  <?!= include('gtag.html') ?>
   <link rel="canonical" href="https://yutaka-okawachi.github.io/gaswebapp-manual/mahler-search-app/rs_terms_search.html">
   <meta property="og:type" content="website">
   <meta property="og:title" content="用語から検索（RS） | German Music Terms Dictionary">
@@ -108,6 +109,11 @@
         return;
       }
       currentSearchId++; const thisSearchId = currentSearchId;
+      if (typeof window.trackSearchEvent === 'function') {
+        window.trackSearchEvent('RS', 'term', {
+          query_length: query.length
+        });
+      }
       google.script.run.withSuccessHandler(html => {
         if (thisSearchId === currentSearchId) {
           resultsDiv.innerHTML = html;
