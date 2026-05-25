@@ -1,5 +1,53 @@
 param([string]$message = "automated sync update")
 
+function Get-GitHubRepoSlug {
+    $remoteUrl = git remote get-url origin 2>$null
+    if (-not $remoteUrl) { return $null }
+
+    if ($remoteUrl -match "github\.com[:/](?<owner>[^/]+)/(?<repo>[^/.]+)(?:\.git)?$") {
+        return "$($matches.owner)/$($matches.repo)"
+    }
+
+    return $null
+}
+
+function Wait-GitHubPagesChecks {
+    param(
+        [string]$RepoSlug,
+        [string]$CommitSha,
+        [int]$TimeoutSeconds = 180
+    )
+
+    if (-not $RepoSlug -or -not $CommitSha) { return }
+
+    Write-Host "Waiting for intermediate GitHub Pages checks to finish..." -ForegroundColor Gray
+    $deadline = (Get-Date).AddSeconds($TimeoutSeconds)
+    $apiUrl = "https://api.github.com/repos/$RepoSlug/commits/$CommitSha/check-runs"
+
+    while ((Get-Date) -lt $deadline) {
+        try {
+            $response = Invoke-RestMethod -Headers @{ Accept = "application/vnd.github+json" } -Uri $apiUrl
+            $checks = @($response.check_runs | Where-Object {
+                $_.app.slug -eq "github-actions" -and
+                ($_.name -eq "build" -or $_.name -eq "deploy" -or $_.name -eq "report-build-status")
+            })
+
+            if ($checks.Count -gt 0 -and -not ($checks | Where-Object { $_.status -ne "completed" })) {
+                Write-Host "✓ Intermediate GitHub Pages checks completed." -ForegroundColor Green
+                return
+            }
+        } catch {
+            Write-Host "Could not query GitHub Pages checks. Falling back to a fixed wait." -ForegroundColor Yellow
+            Start-Sleep -Seconds 90
+            return
+        }
+
+        Start-Sleep -Seconds 5
+    }
+
+    Write-Warning "GitHub Pages checks did not finish within $TimeoutSeconds seconds. Continuing with final push."
+}
+
 # ========================================
 # 統合データ同期スクリプト (Enhanced v4)
 # ========================================
@@ -530,6 +578,13 @@ Write-Host ""
 
 # --- [5/5] 全ての変更を GitHub に公開 (git push) ---
 Write-Host "[5/5] Pushing all changes to GitHub..." -ForegroundColor Yellow
+
+$remoteHead = git rev-parse origin/main 2>$null
+$localHead = git rev-parse HEAD 2>$null
+$remoteHeadMsg = if ($remoteHead) { git log -1 --pretty=%B origin/main } else { "" }
+if ($remoteHead -and $localHead -and $remoteHead -ne $localHead -and $remoteHeadMsg -match "\[skip ci\]") {
+    Wait-GitHubPagesChecks -RepoSlug (Get-GitHubRepoSlug) -CommitSha $remoteHead
+}
 
 # 最新コミットが [skip ci] (GAS更新) の場合、デプロイ用コミットを追加
 $lastMsg = git log -1 --pretty=%B
