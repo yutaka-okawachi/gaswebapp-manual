@@ -369,8 +369,8 @@ ${breadcrumbJSON}
     <meta property="og:image" content="https://yutaka-okawachi.github.io/gaswebapp-manual/ogp.png">
     <meta name="twitter:card" content="summary">
     <title>用語集</title>
-    <link rel="icon" href="../favicon.png">
-    <link rel="apple-touch-icon" href="../apple-touch-icon.png">
+    <link rel="icon" href="https://yutaka-okawachi.github.io/gaswebapp-manual/favicon.png">
+    <link rel="apple-touch-icon" href="https://yutaka-okawachi.github.io/gaswebapp-manual/apple-touch-icon.png">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="ワーグナー，マーラー，R.シュトラウス，ブルックナー等の作品に登場するドイツ語音楽用語を900語以上収録．専門的な訳例や詳細な解釈をまとめた，楽譜の指示を正確に理解するための網羅的な用語集・辞書一覧．">
     
