@@ -579,7 +579,7 @@ function searchByWhom() {
     if (typeof window.trackSearchEvent === 'function') {
         window.trackSearchEvent(composer === 'richard_wagner' ? 'RW' : 'RS', 'work', {
             work_search_method: 'whom',
-            whom_count: selected.length
+            whom_count: selectedWhoms.length
         });
     }
     
