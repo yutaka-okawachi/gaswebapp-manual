@@ -86,43 +86,11 @@
     <link rel="icon" href="https://yutaka-okawachi.github.io/gaswebapp-manual/favicon.png">
     <link rel="apple-touch-icon" href="https://yutaka-okawachi.github.io/gaswebapp-manual/apple-touch-icon.png">
 
+    <!-- Reset CSS & Common styles -->
+    <link rel="preload" href="mahler-search-app/css/common.css" as="style">
+    <link rel="stylesheet" href="mahler-search-app/css/common.css">
+
     <style>
-        * {
-            box-sizing: border-box;
-        }
-
-        .sidebar,
-        .nav-toggle {
-            display: none;
-        }
-
-        .page-wrapper {
-            margin-left: 0;
-        }
-
-        h1 {
-            text-align: center;
-            margin: 30px auto 40px;
-            color: var(--text-color);
-            font-size: 2.0rem;
-            position: relative;
-            padding-bottom: 15px;
-            font-family: 'Bitter', serif;
-            font-weight: 700;
-            letter-spacing: 0.05em;
-            max-width: fit-content;
-        }
-
-        h1::after {
-            content: "";
-            position: absolute;
-            bottom: 0;
-            left: 10%;
-            right: 10%;
-            height: 3px;
-            background: linear-gradient(to right, transparent, #1a73e8, transparent);
-        }
-
         :root {
             /* Palette */
             --bg-color: #f0f8ff;
