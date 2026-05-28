@@ -44,6 +44,8 @@ PowerShell で直接実行する場合は、以下のコマンドを実行して
 -   **404 エラー**: ウェブアプリの URL が古い可能性があります。`.env` ファイルの `GAS_DEPLOY_URL` が最新のデプロイを指しているか確認してください。
 -   **認証エラー (GAS側)**: `.env` の `GAS_SECRET_TOKEN` が、GAS のスクリプトプロパティ `GAS_SECRET_TOKEN` と一致しているか確認してください。
 -   **GitHub API Error (401)**: GitHub のトークンが期限切れ、または無効です。「[セットアップガイド](./SETUP_GUIDE.md#6-github-連携の設定-初回およびトークン更新時)」の手順に従って、トークンを再発行・再設定してください。
+-   **Web App execution failed / partial_success / GitHub API Error (500)**: Web App 経由のデータ書き出し中に、GAS 側から GitHub API への書き込みが失敗した状態です。まず `git status --short --branch` を確認してください。ローカルが `origin/main` より ahead で作業ツリーが clean の場合は、同期を繰り返さず、先に `git push` だけで未反映コミットを公開します。push 後もデータ同期が必要な場合のみ、改めて `sync-data.ps1` を実行してください。
+-   **git pull --rebase のコンフリクト**: `[4/5] Pulling latest data from GitHub...` で `CONFLICT` が出た場合は、rebase を途中で放置しないでください。解決後に `git status --short --branch` で rebase 中でないことを確認します。`main...origin/main [ahead N]` かつ作業ツリーが clean なら、通常は `git push` で公開できます。
 -   **デプロイ数警告**: "Deployment count is high" と表示された場合、デプロイ数が上限（200）に近づいています。以下の手順で古いデプロイを削除してください。
 
     ```powershell

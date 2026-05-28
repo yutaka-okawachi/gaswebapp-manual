@@ -18,3 +18,4 @@
 
 ## サイト運用
 -   [**SEO運用ガイド (SEO_GUIDE.md)**](SEO_GUIDE.md): SEO設定（canonical、og:url、sitemap）の説明と新規ページ追加時の対応手順。
+-   [**パフォーマンス改善ガイド (PERFORMANCE_GUIDE.md)**](PERFORMANCE_GUIDE.md): PageSpeed Insights の見方、LCP/TBT 改善時の注意点、Google Tag・フォント・CSSの運用方針。
