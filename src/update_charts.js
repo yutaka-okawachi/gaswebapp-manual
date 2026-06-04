@@ -138,6 +138,16 @@ function updateSearchHistoryCharts() {
       counts[val] = (counts[val] || 0) + 1;
     }
     
+    // 「Work」列の場合、「全作品」の検索回数を別枠で保持し、集計から除外する
+    let allWorksCountText = '';
+    if (colName === 'Work') {
+      const allWorksCount = counts['全作品'] || 0;
+      if (allWorksCount > 0) {
+        allWorksCountText = ` 全作品の検索回数は${allWorksCount}回`;
+        delete counts['全作品'];
+      }
+    }
+    
     // 配列に変換してカウントの降順でソート
     const sortedCounts = Object.keys(counts)
       .map(k => [k, counts[k]])
@@ -164,7 +174,7 @@ function updateSearchHistoryCharts() {
         .setChartType(colConfig.type)
         .addRange(chartDataRange)
         .setPosition(chartRowStart, currentColPos, 0, 0)
-        .setOption('title', `【${colName}】 ${colConfig.titleSuffix}（上位${topCounts.length}件）`)
+        .setOption('title', `【${colName}】 ${colConfig.titleSuffix}（上位${topCounts.length}件）${allWorksCountText}`)
         .setOption('width', 850)   // 横幅を広げてラベルを見やすく
         .setOption('height', 700); // 50件の横棒グラフに十分な縦幅
         
