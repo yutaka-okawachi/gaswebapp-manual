@@ -46,12 +46,12 @@ function updateSearchHistoryCharts() {
   // PIE: 全体の割合を見るのに適している（Work, Page, Instrumentsなど）
   // COLUMN: 項目ごとの絶対的な量や比較を見るのに適している（Term, Szene, Whomなど）
   const targetColumns = [
-    { name: 'Work', type: Charts.ChartType.BAR, titleSuffix: 'の検索回数' },
-    { name: 'Page', type: Charts.ChartType.BAR, titleSuffix: 'の検索回数' },
-    { name: 'Term', type: Charts.ChartType.BAR, titleSuffix: 'の検索回数' },
-    { name: 'Instruments', type: Charts.ChartType.BAR, titleSuffix: 'の検索回数' },
-    { name: 'Szene', type: Charts.ChartType.BAR, titleSuffix: 'の検索回数' },
-    { name: 'Whom', type: Charts.ChartType.BAR, titleSuffix: 'の検索回数' }
+    { name: 'Work', type: Charts.ChartType.BAR, titleSuffix: 'の検索回数', limit: 25 },
+    { name: 'Page', type: Charts.ChartType.BAR, titleSuffix: 'の検索回数', limit: 20 },
+    { name: 'Term', type: Charts.ChartType.BAR, titleSuffix: 'の検索回数', limit: 25 },
+    { name: 'Instruments', type: Charts.ChartType.BAR, titleSuffix: 'の検索回数', limit: 20 },
+    { name: 'Szene', type: Charts.ChartType.BAR, titleSuffix: 'の検索回数', limit: 20 },
+    { name: 'Whom', type: Charts.ChartType.BAR, titleSuffix: 'の検索回数', limit: 20 }
   ];
   
   // データの出力開始行 (データ用シート)
@@ -153,8 +153,9 @@ function updateSearchHistoryCharts() {
       .map(k => [k, counts[k]])
       .sort((a, b) => b[1] - a[1]);
     
-    // グラフが煩雑にならないよう、上位50件に絞る（必要に応じて変更可）
-    const topCounts = sortedCounts.slice(0, 50);
+    // グラフが煩雑にならないよう、設定された上限件数（デフォルト50件）に絞る
+    const limit = colConfig.limit || 50;
+    const topCounts = sortedCounts.slice(0, limit);
     
     if (topCounts.length === 0) continue;
     
