@@ -454,6 +454,8 @@ Write-Host "[4/5] Pulling latest data from GitHub..." -ForegroundColor Yellow
 Write-Host "Waiting for GAS to push data to GitHub (15s)..." -ForegroundColor Gray
 Start-Sleep -Seconds 15
 
+$beforePullHead = git rev-parse HEAD
+
 # git pullを実行（出力をキャプチャ）
 $pullOutput = git pull --rebase 2>&1
 $pullExitCode = $LASTEXITCODE
@@ -514,7 +516,9 @@ Write-Host ""
 # --- [4.5/5] 動的 sitemap.xml 更新 ---
 Write-Host "[4.5/5] Updating sitemap.xml for modified files..." -ForegroundColor Yellow
 # 未プッシュのコミット（ローカル変更＋GASからのPull分）で変更されたファイルを取得
-$changedFiles = git diff origin/main HEAD --name-only
+$pulledFiles = git diff --name-only $beforePullHead HEAD
+$unpushedFiles = git diff --name-only origin/main HEAD
+$changedFiles = @($pulledFiles + $unpushedFiles) | Where-Object { $_ } | Sort-Object -Unique
 $today = (Get-Date).ToString("yyyy-MM-dd")
 $sitemapPath = "sitemap.xml"
 
