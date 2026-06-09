@@ -465,7 +465,7 @@ while (((Get-Date) - $pollStartTime).TotalSeconds -lt $timeoutSeconds) {
     $currentRemoteSha = git rev-parse origin/main 2>$null
     if ($currentRemoteSha -and $currentRemoteSha -ne $initialRemoteSha) {
         $commitMsg = git log -1 --pretty=%B origin/main
-        if ($commitMsg -match "自動更新|スプレッドシート") {
+        if ($commitMsg -match "自動更新|スプレッドシート|skip ci") {
             Write-Host "New GAS commit detected on remote: $currentRemoteSha" -ForegroundColor Green
             $gasCommitDetected = $true
             break
