@@ -1,4 +1,4 @@
-param([string]$message = "automated sync update")
+﻿param([string]$message = "automated sync update")
 
 function Get-GitHubRepoSlug {
     $remoteUrl = git remote get-url origin 2>$null
@@ -251,6 +251,10 @@ if ($appChanges) {
 }
 Write-Host ""
 
+# 事前に最新のリモートコミットを取得しておく
+git fetch origin -q
+$initialRemoteSha = git rev-parse origin/main 2>$null
+
 # --- [3/5] GAS 関数の実行 (最新データ生成) ---
 Write-Host "[3/5] Triggering GAS function (exportAllDataToJson)..." -ForegroundColor Yellow
 Write-Host "This will update data files and dic.html on GitHub..." -ForegroundColor Gray
@@ -450,9 +454,29 @@ if ($localStatusStart) {
 # --- [4/5] 最新データのローカル同期 (git pull) ---
 Write-Host "[4/5] Pulling latest data from GitHub..." -ForegroundColor Yellow
 
-# GASからのGitHubプッシュが完了するまで少し待機
-Write-Host "Waiting for GAS to push data to GitHub (15s)..." -ForegroundColor Gray
-Start-Sleep -Seconds 15
+# GASからのGitHubプッシュが完了するまでダイナミックに待機
+Write-Host "Waiting for GAS to push data to GitHub (polling remote)..." -ForegroundColor Gray
+$pollStartTime = Get-Date
+$timeoutSeconds = 180 # 3分タイムアウト
+$gasCommitDetected = $false
+
+while (((Get-Date) - $pollStartTime).TotalSeconds -lt $timeoutSeconds) {
+    git fetch origin -q
+    $currentRemoteSha = git rev-parse origin/main 2>$null
+    if ($currentRemoteSha -and $currentRemoteSha -ne $initialRemoteSha) {
+        $commitMsg = git log -1 --pretty=%B origin/main
+        if ($commitMsg -match "自動更新|スプレッドシート") {
+            Write-Host "New GAS commit detected on remote: $currentRemoteSha" -ForegroundColor Green
+            $gasCommitDetected = $true
+            break
+        }
+    }
+    Start-Sleep -Seconds 5
+}
+
+if (-not $gasCommitDetected) {
+    Write-Warning "Timed out waiting for new GAS commit on remote. Proceeding with pull anyway."
+}
 
 $beforePullHead = git rev-parse HEAD
 
