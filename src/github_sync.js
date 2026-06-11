@@ -25,7 +25,9 @@ function githubRequest(method, endpoint, payload, config) {
     headers: {
       'Authorization': `token ${config.token}`,
       'Accept': 'application/vnd.github.v3+json',
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+      'Cache-Control': 'no-cache',
+      'Pragma': 'no-cache'
     },
     muteHttpExceptions: true
   };
@@ -49,7 +51,8 @@ function githubRequest(method, endpoint, payload, config) {
  * ブランチの最新コミットSHAを取得
  */
 function getLatestCommitSha(config) {
-  const ref = githubRequest('get', `/git/ref/heads/${config.branch}`, null, config);
+  // キャッシュ回避のためのクエリパラメータを付与
+  const ref = githubRequest('get', `/git/ref/heads/${config.branch}?t=${new Date().getTime()}`, null, config);
   return ref.object.sha;
 }
 
