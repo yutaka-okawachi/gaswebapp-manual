@@ -295,6 +295,13 @@
   },
   {
     "Oper": "intermezzo",
+    "Aufzug": 1,
+    "Szene": 8,
+    "日本語": "第1幕第8場",
+    "作品名": "Intermezzo, Op.72 (1919-23)"
+  },
+  {
+    "Oper": "intermezzo",
     "Aufzug": 2,
     "Szene": 1,
     "日本語": "第2幕第1場",
