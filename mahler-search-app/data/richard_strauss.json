@@ -37121,8 +37121,8 @@
     "Szene": 7,
     "page": 196,
     "whom": "舞台指示",
-    "de": "Eßzimmer der Frau. Draußen starkes Schneegestöber.\r\n",
-    "de_normalized": "esszimmer der frau. draussen starkes schneegestoeber.\r\n",
+    "de": "Eßzimmer der Frau. Draußen starkes Schneegestöber.",
+    "de_normalized": "esszimmer der frau. draussen starkes schneegestoeber.",
     "ja": "夫人の食堂．外は激しい吹雪．",
     "楽譜情報": "Adolph Fürstner",
     "場面タイトル": "第1幕第7場"
@@ -37502,110 +37502,110 @@
   {
     "Oper": "intermezzo",
     "Aufzug": 1,
-    "Szene": 7,
+    "Szene": 8,
     "page": 214,
     "whom": "舞台指示",
     "de": "Vorhang auf",
     "de_normalized": "vorhang auf",
     "ja": "幕が上がる．",
     "楽譜情報": "Adolph Fürstner",
-    "場面タイトル": "第1幕第7場"
+    "場面タイトル": ""
   },
   {
     "Oper": "intermezzo",
     "Aufzug": 1,
-    "Szene": 7,
+    "Szene": 8,
     "page": 214,
     "whom": "舞台指示",
     "de": "Das Schlafzimmer des Kindes, nur mit einer Kerze erleuchtet",
     "de_normalized": "das schlafzimmer des kindes, nur mit einer kerze erleuchtet",
     "ja": "子供の寝室．一本のろうそくに照らされているだけ",
     "楽譜情報": "Adolph Fürstner",
-    "場面タイトル": "第1幕第7場"
+    "場面タイトル": ""
   },
   {
     "Oper": "intermezzo",
     "Aufzug": 1,
-    "Szene": 7,
+    "Szene": 8,
     "page": 215,
     "whom": "Christine",
     "de": "am Bett des Kindes sitzend",
     "de_normalized": "am bett des kindes sitzend",
     "ja": "子供のベッドのそばに座って",
     "楽譜情報": "Adolph Fürstner",
-    "場面タイトル": "第1幕第7場"
+    "場面タイトル": ""
   },
   {
     "Oper": "intermezzo",
     "Aufzug": 1,
-    "Szene": 7,
+    "Szene": 8,
     "page": 215,
     "whom": "Franzl（息子）",
     "de": "gespr.",
     "de_normalized": "gespr.",
     "ja": "台詞で",
     "楽譜情報": "Adolph Fürstner",
-    "場面タイトル": "第1幕第7場"
+    "場面タイトル": ""
   },
   {
     "Oper": "intermezzo",
     "Aufzug": 1,
-    "Szene": 7,
+    "Szene": 8,
     "page": 217,
     "whom": "Franzl（息子）",
     "de": "fängt zu heulen an",
     "de_normalized": "faengt zu heulen an",
     "ja": "泣きじゃくり始める",
     "楽譜情報": "Adolph Fürstner",
-    "場面タイトル": "第1幕第7場"
+    "場面タイトル": ""
   },
   {
     "Oper": "intermezzo",
     "Aufzug": 1,
-    "Szene": 7,
+    "Szene": 8,
     "page": 219,
     "whom": "Christine",
     "de": "sie weint",
     "de_normalized": "sie weint",
     "ja": "彼女は涙を流す",
     "楽譜情報": "Adolph Fürstner",
-    "場面タイトル": "第1幕第7場"
+    "場面タイトル": ""
   },
   {
     "Oper": "intermezzo",
     "Aufzug": 1,
-    "Szene": 7,
+    "Szene": 8,
     "page": 223,
     "whom": "Christine",
     "de": "Sie kniet betend am Bett des Kindes nieder",
     "de_normalized": "sie kniet betend am bett des kindes nieder",
     "ja": "彼女は子供のベッドのそばに跪き，祈る．",
     "楽譜情報": "Adolph Fürstner",
-    "場面タイトル": "第1幕第7場"
+    "場面タイトル": ""
   },
   {
     "Oper": "intermezzo",
     "Aufzug": 1,
-    "Szene": 7,
+    "Szene": 8,
     "page": 225,
     "whom": "舞台指示",
     "de": "Vorhang",
     "de_normalized": "vorhang",
     "ja": "幕が下りる．",
     "楽譜情報": "Adolph Fürstner",
-    "場面タイトル": "第1幕第7場"
+    "場面タイトル": ""
   },
   {
     "Oper": "intermezzo",
     "Aufzug": 1,
-    "Szene": 7,
+    "Szene": 8,
     "page": 225,
     "whom": "舞台指示",
     "de": "Schluß des ersten Aufzuges",
     "de_normalized": "schluss des ersten aufzuges",
     "ja": "第1幕終わり",
     "楽譜情報": "Adolph Fürstner",
-    "場面タイトル": "第1幕第7場"
+    "場面タイトル": ""
   },
   {
     "Oper": "intermezzo",
