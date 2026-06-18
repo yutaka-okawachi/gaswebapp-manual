@@ -131,11 +131,8 @@
     "Bacchus",
     "Brighella",
     "Dorantes",
-    "Dryade",
-    "Echo",
     "Harlekin",
     "Jourdain",
-    "Najade",
     "Orchester",
     "Scaramuccio",
     "Truffaldin",
@@ -148,8 +145,11 @@
     "士官",
     "執事長",
     "従僕",
+    "水の精",
     "舞台指示",
-    "舞踏教師"
+    "舞踏教師",
+    "木の精",
+    "木霊の精"
   ],
   "schatten": [
     "3人の夜警たちの声",
