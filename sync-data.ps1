@@ -1,4 +1,4 @@
-﻿param([string]$message = "automated sync update")
+param([string]$message = "automated sync update")
 
 function Get-GitHubRepoSlug {
     $remoteUrl = git remote get-url origin 2>$null
@@ -570,6 +570,8 @@ if (Test-Path $sitemapPath) {
         'mahler-search-app/rw_terms_search.html' = 'mahler-search-app/rw_terms_search.html'
         'mahler-search-app/richard_strauss.html' = 'mahler-search-app/richard_strauss.html'
         'mahler-search-app/richard_wagner.html' = 'mahler-search-app/richard_wagner.html'
+        'mahler-search-app/rs_synopsis.html' = 'mahler-search-app/rs_synopsis.html'
+        'mahler-search-app/rw_synopsis.html' = 'mahler-search-app/rw_synopsis.html'
         'mahler-search-app/notes.html' = 'mahler-search-app/notes.html'
         'mahler-search-app/other.html' = 'mahler-search-app/other.html'
     }
