@@ -792,6 +792,7 @@ ${breadcrumbJSON}
         <ul>
             <li><a href="richard_wagner.html">曲名から検索</a></li>
             <li><a href="rw_terms_search.html">用語から検索</a></li>
+            <li><a href="rw_synopsis.html">あらすじ集</a></li>
         </ul>
 
         <h3>Gustav Mahler (GM)</h3>
@@ -804,6 +805,7 @@ ${breadcrumbJSON}
         <ul>
             <li><a href="richard_strauss.html">曲名から検索</a></li>
             <li><a href="rs_terms_search.html">用語から検索</a></li>
+            <li><a href="rs_synopsis.html">あらすじ集</a></li>
         </ul>
 
         <h3>用語集</h3>

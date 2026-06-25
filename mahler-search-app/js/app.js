@@ -809,6 +809,9 @@ function formatGenericResults(data) {
             if (meta.imslp) {
                 html += `<div style="margin-top: 8px;"><a href="${meta.imslp}" target="_blank" style="color: #0066cc; text-decoration: underline; font-weight: bold;">IMSLP Project Page ↗</a></div>`;
             }
+            if (meta.synopsis) {
+                html += `<div style="margin-top: 8px;"><a href="${meta.synopsis}" target="_blank" style="color: #0066cc; text-decoration: underline; font-weight: bold;">あらすじ ↗</a></div>`;
+            }
             html += `</div>`;
         } else {
             html += `<div class="score-info-banner">楽譜情報: ${escapeHtml(data[0]['楽譜情報'])}</div>`;

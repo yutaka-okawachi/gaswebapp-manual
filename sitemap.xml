@@ -64,6 +64,22 @@
     <priority>0.8</priority>
   </url>
   
+  <!-- Richard Straussあらすじ集 -->
+  <url>
+    <loc>https://yutaka-okawachi.github.io/gaswebapp-manual/mahler-search-app/rs_synopsis.html</loc>
+    <lastmod>2026-06-25</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  
+  <!-- Richard Wagnerあらすじ集 -->
+  <url>
+    <loc>https://yutaka-okawachi.github.io/gaswebapp-manual/mahler-search-app/rw_synopsis.html</loc>
+    <lastmod>2026-06-25</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  
   <!-- 訳出についての覚書 -->
   <url>
     <loc>https://yutaka-okawachi.github.io/gaswebapp-manual/mahler-search-app/notes.html</loc>
