@@ -9264,7 +9264,7 @@
     "場面タイトル": "第1幕第4場"
   },
   {
-    "Oper": "今や谷全体が，さらに膨れ上がった狩りの一行でごった返している．",
+    "Oper": "tann_dresden",
     "Aufzug": 1,
     "Szene": 4,
     "page": 149,
@@ -9272,8 +9272,8 @@
     "de": "Das ganze Tal wimmelt jetzt vom immer noch stärker angewachsenen Jagdtroß.",
     "de_normalized": "das ganze tal wimmelt jetzt vom immer noch staerker angewachsenen jagdtross.",
     "ja": "今や谷全体が，さらに膨れ上がった狩りの一行でごった返している．",
-    "楽譜情報": "",
-    "場面タイトル": ""
+    "楽譜情報": "C.F. Peters",
+    "場面タイトル": "第1幕第4場"
   },
   {
     "Oper": "tann_dresden",
