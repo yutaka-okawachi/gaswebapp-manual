@@ -1,4 +1,4 @@
-﻿param(
+param(
     [switch]$SkipSyncTest
 )
 
@@ -216,7 +216,7 @@ if ($SkipSyncTest) {
 
 Write-Section "完了"
 Write-Host "セットアップ確認が完了しました。通常の更新では 02_RUN_SYNC.bat をダブルクリックします。"
-Write-Host "説明を確認する場合は manuals\SUCCESSOR_START_HERE.md を開いてください。"
+Write-Host "説明を確認する場合は manuals\SUCCESSOR_GUIDE.md を開いてください。"
 
 
 
