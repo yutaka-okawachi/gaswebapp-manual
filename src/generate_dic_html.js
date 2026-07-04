@@ -507,12 +507,16 @@ ${breadcrumbJSON}
             align-items: center;
             justify-content: space-between;
             width: 100%;
+            flex-wrap: wrap;
+            gap: 10px;
         }
 
         .example-wrapper {
             display: inline-flex;
             align-items: center;
             margin-left: auto;
+            white-space: nowrap;
+            flex-shrink: 0;
         }
 
         .example-toggle {
