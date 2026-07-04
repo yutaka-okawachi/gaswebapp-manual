@@ -191,6 +191,57 @@
       word-break: break-word;
     }
 
+    .dt-main {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+    }
+
+    .example-wrapper {
+      display: inline-flex;
+      align-items: center;
+      margin-left: auto;
+    }
+
+    .example-toggle {
+      font-size: 0.85rem;
+      color: #1a73e8;
+      cursor: pointer;
+      user-select: none;
+      font-family: sans-serif;
+      white-space: nowrap;
+    }
+
+    .example-toggle:hover {
+      text-decoration: underline;
+    }
+
+    .example-content {
+      margin-right: 12px;
+      font-size: 0.9rem;
+      font-family: 'Lora', serif;
+    }
+
+    .composer-link {
+      color: #c44536;
+      text-decoration: underline;
+      font-weight: bold;
+      margin-right: 5px;
+    }
+
+    .composer-link:hover {
+      color: #d64d3d;
+    }
+
+    dt {
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
     /* Make German headings match search-result typography: bold and slightly larger */
     .german {
       font-weight: bold;
@@ -415,21 +466,65 @@
         }
 
         // ドイツ語
-        const germanWrapper = document.createElement("div");
+        const dt = document.createElement("dt");
+        const dtMain = document.createElement("div");
+        dtMain.classList.add("dt-main");
+
         const germanSpan = document.createElement("span");
         germanSpan.classList.add("german");
         germanSpan.textContent = german;
+        dtMain.appendChild(germanSpan);
 
         const sourceSpan = document.createElement("span");
         sourceSpan.classList.add("source");
         sourceSpan.textContent = source;
 
-        germanWrapper.appendChild(germanSpan);
-        germanWrapper.appendChild(sourceSpan);
-        rowDiv.appendChild(germanWrapper);
+        const hasGM = source && source.includes('[GM]');
+        const hasRW = source && source.includes('[RW: Oper]');
+        const hasRS = source && source.includes('[RS: Oper]');
+        const hasExample = hasGM || hasRW || hasRS;
+
+        if (hasExample) {
+          const wrapper = document.createElement("div");
+          wrapper.classList.add("example-wrapper");
+
+          const contentSpan = document.createElement("span");
+          contentSpan.classList.add("example-content");
+          contentSpan.style.display = 'none';
+
+          const links = [];
+          const queryParam = encodeURIComponent(german);
+          if (hasRW) {
+            links.push(`<a href="rw_terms_search.html?q=${queryParam}" class="composer-link" target="_self">Wagner</a>`);
+          }
+          if (hasGM) {
+            links.push(`<a href="terms_search.html?q=${queryParam}" class="composer-link" target="_self">Mahler</a>`);
+          }
+          if (hasRS) {
+            links.push(`<a href="rs_terms_search.html?q=${queryParam}" class="composer-link" target="_self">R.Strauss</a>`);
+          }
+          contentSpan.innerHTML = links.join(' / ');
+          wrapper.appendChild(contentSpan);
+
+          const toggleSpan = document.createElement("span");
+          toggleSpan.classList.add("example-toggle");
+          toggleSpan.innerHTML = '<span class="arrow">◂</span> 実例を見る';
+          toggleSpan.onclick = function() { toggleExample(this); };
+          wrapper.appendChild(toggleSpan);
+
+          dtMain.appendChild(wrapper);
+          
+          dt.appendChild(dtMain);
+          dt.appendChild(sourceSpan);
+          rowDiv.appendChild(dt);
+        } else {
+          dt.appendChild(dtMain);
+          dt.appendChild(sourceSpan);
+          rowDiv.appendChild(dt);
+        }
 
         // 日本語
-        const translationDiv = document.createElement("div");
+        const translationDiv = document.createElement("dd");
         translationDiv.classList.add("translation");
         translationDiv.textContent = translation;
 
@@ -512,6 +607,18 @@
       });
     });
 
+    function toggleExample(element) {
+      const wrapper = element.closest('.example-wrapper');
+      const content = wrapper.querySelector('.example-content');
+      const arrow = element.querySelector('.arrow');
+      if (content.style.display === 'none') {
+        content.style.display = 'inline-block';
+        arrow.textContent = '▾';
+      } else {
+        content.style.display = 'none';
+        arrow.textContent = '◂';
+      }
+    }
   </script>
 </head>
 

@@ -42,6 +42,7 @@
   <?!= include('common_terms_styles.html') ?>
 
   <script>
+    window.GAS_QUERY_VAL = "<?= typeof query !== 'undefined' ? query : '' ?>";
     /*******************************************************************
      * クライアントサイドスクリプト（用語から検索ページ）
      * 
@@ -84,6 +85,13 @@
             .filter(Boolean);
           console.log(`${termEntries.length}件のGM用語を読み込みました。`);
           debouncedOnTermInput({ target: inputField });
+
+          const urlParams = new URLSearchParams(window.location.search);
+          const rawQuery = urlParams.get('q') || window.GAS_QUERY_VAL;
+          if (rawQuery) {
+            inputField.value = typeof normalizeString === 'function' ? normalizeString(rawQuery) : rawQuery;
+            if (typeof search === 'function') search();
+          }
         })
         .withFailureHandler(err => {
           console.error('GM用語の取得に失敗しました:', err);

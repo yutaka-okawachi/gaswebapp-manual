@@ -139,8 +139,18 @@
                 termEntries = getGenericTermsListLocal('richard_strauss');
                 console.log(`Loaded ${termEntries.length} terms locally for RS.`);
                 debouncedOnTermInput({ target: inputField });
+                checkQueryAndSearch(inputField);
             } else {
                 console.error('getGenericTermsListLocal is missing');
+            }
+
+            function checkQueryAndSearch(inputField) {
+                const urlParams = new URLSearchParams(window.location.search);
+                const rawQuery = urlParams.get('q');
+                if (rawQuery) {
+                    inputField.value = typeof normalizeString === 'function' ? normalizeString(rawQuery) : rawQuery;
+                    if (typeof search === 'function') search();
+                }
             }
         });
 

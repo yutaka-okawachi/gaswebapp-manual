@@ -170,6 +170,7 @@ function doGet(e) {
   const name = validPages.includes(page) ? page : 'index';
 
   const template = HtmlService.createTemplateFromFile(name);
+  template.query = (e && e.parameter && e.parameter.q) ? e.parameter.q : '';
 
   // すべてのテンプレートで include 関数を使えるようにする
   template.include = include;

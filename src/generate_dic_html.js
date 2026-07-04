@@ -229,11 +229,38 @@ function generateDicListHtml(dicData, termsIndex) {
     // translationにリンクを適用
     const linkedTranslation = termsIndex ? linkTermsInTranslation(translation, termsIndex) : escapeHtmlWithBreaks(translation);
     
+    // 略記から対象作曲家を判定し、トグルリンクを生成
+    const hasGM = source && source.includes('[GM]');
+    const hasRW = source && source.includes('[RW: Oper]');
+    const hasRS = source && source.includes('[RS: Oper]');
+    const hasExample = hasGM || hasRW || hasRS;
+
+    let toggleArea = '';
+
+    if (hasExample) {
+      const links = [];
+      const queryParam = encodeURIComponent(german);
+      if (hasRW) {
+        links.push(`<a href="rw_terms_search.html?q=${queryParam}" class="composer-link" target="_self">Wagner</a>`);
+      }
+      if (hasGM) {
+        links.push(`<a href="terms_search.html?q=${queryParam}" class="composer-link" target="_self">Mahler</a>`);
+      }
+      if (hasRS) {
+        links.push(`<a href="rs_terms_search.html?q=${queryParam}" class="composer-link" target="_self">R.Strauss</a>`);
+      }
+      toggleArea = `\n    <div class="example-wrapper">\n      <span class="example-content" style="display: none;">${links.join(' / ')}</span>\n      <span class="example-toggle" onclick="toggleExample(this)"><span class="arrow">◂</span> 実例を見る</span>\n    </div>`;
+    }
+
     // rowのHTML生成（セマンティックHTMLで辞書構造を明示）
     if (alphabetAnchor) html += alphabetAnchor;
     html += `<div class="row"${termIdAttr}>
   <dt>
-    <dfn class="german">${escapeHtml(german)}</dfn><span class="source">${escapeHtml(source)}</span>
+    <div class="dt-main">
+      <dfn class="german">${escapeHtml(german)}</dfn>
+      ${toggleArea}
+    </div>
+    <span class="source">${escapeHtml(source)}</span>
   </dt>
   <dd class="translation">${linkedTranslation}</dd>
 </div>\n`;
@@ -475,8 +502,57 @@ ${breadcrumbJSON}
             font-family: 'Lora', serif;
         }
 
+        .dt-main {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+        }
+
+        .example-wrapper {
+            display: inline-flex;
+            align-items: center;
+            margin-left: auto;
+        }
+
+        .example-toggle {
+            font-size: 0.85rem;
+            color: #1a73e8;
+            cursor: pointer;
+            user-select: none;
+            font-family: sans-serif;
+            white-space: nowrap;
+        }
+
+        .example-toggle:hover {
+            text-decoration: underline;
+        }
+
+        .example-content {
+            margin-right: 12px;
+            font-size: 0.9rem;
+            font-family: 'Lora', serif;
+        }
+
+        .composer-link {
+            color: #c44536;
+            text-decoration: underline;
+            font-weight: bold;
+        }
+
+        .composer-link:hover {
+            color: #d64d3d;
+        }
+
         /* セマンティックHTMLタグのリセット（見た目を変えないため） */
-        dt, dd {
+        dt {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        dd {
             margin: 0;
             padding: 0;
         }
@@ -779,6 +855,19 @@ ${breadcrumbJSON}
                 }
             }
         });
+
+        function toggleExample(element) {
+            const wrapper = element.closest('.example-wrapper');
+            const content = wrapper.querySelector('.example-content');
+            const arrow = element.querySelector('.arrow');
+            if (content.style.display === 'none') {
+                content.style.display = 'inline-block';
+                arrow.textContent = '▾';
+            } else {
+                content.style.display = 'none';
+                arrow.textContent = '◂';
+            }
+        }
     </script>
 </head>
 

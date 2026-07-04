@@ -274,6 +274,7 @@
                             .filter(Boolean);
                         console.log(`${termEntries.length}件のGM用語を読み込みました。`);
                         debouncedOnTermInput({ target: inputField });
+                        checkQueryAndSearch(inputField);
                     })
                     .withFailureHandler(err => {
                         console.error('GM用語の取得に失敗しました:', err);
@@ -285,6 +286,16 @@
                 termEntries = getMahlerTermsListLocal();
                 console.log(`Loaded ${termEntries.length} terms locally.`);
                 debouncedOnTermInput({ target: inputField });
+                checkQueryAndSearch(inputField);
+            }
+
+            function checkQueryAndSearch(inputField) {
+                const urlParams = new URLSearchParams(window.location.search);
+                const rawQuery = urlParams.get('q');
+                if (rawQuery) {
+                    inputField.value = typeof normalizeString === 'function' ? normalizeString(rawQuery) : rawQuery;
+                    if (typeof search === 'function') search();
+                }
             }
         });
 
