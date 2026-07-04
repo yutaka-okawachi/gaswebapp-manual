@@ -504,11 +504,12 @@ ${breadcrumbJSON}
 
         .dt-main {
             display: flex;
-            align-items: center;
+            align-items: baseline;
             justify-content: space-between;
             width: 100%;
             flex-wrap: wrap;
-            gap: 10px;
+            row-gap: 2px;
+            column-gap: 10px;
         }
 
         .example-wrapper {
