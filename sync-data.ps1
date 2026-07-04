@@ -242,10 +242,19 @@ $appChanges = git status --porcelain
 if ($appChanges) {
     Write-Host "✓ Detected local changes. Committing to ensure clean rebase..." -ForegroundColor Gray
     git add .
-    # ユーザー指定のメッセージがない場合は自動生成
-    $commitMsg = if ($message -eq "automated sync update") { "Sync: App update and data refresh [$([DateTime]::Now.ToString('yyyy-MM-dd HH:mm'))]" } else { $message }
-    git commit -m $commitMsg -q
-    Write-Host "✓ Local changes committed." -ForegroundColor Green
+    # 自動生成ファイルはローカルでコミットしない（競合防止のためアンステージする）
+    git restore --staged mahler-search-app/dic.html 2>$null
+    git restore --staged mahler-search-app/data/ 2>$null
+    
+    # コミットすべきステージされた変更があるか確認
+    $stagedChanges = git diff --name-only --cached
+    if ($stagedChanges) {
+        $commitMsg = if ($message -eq "automated sync update") { "Sync: App update and data refresh [$([DateTime]::Now.ToString('yyyy-MM-dd HH:mm'))]" } else { $message }
+        git commit -m $commitMsg -q
+        Write-Host "✓ Local changes committed." -ForegroundColor Green
+    } else {
+        Write-Host "✓ No source code changes to commit (staged files were ignored)." -ForegroundColor Gray
+    }
 } else {
     Write-Host "✓ No local changes to commit." -ForegroundColor Gray
 }
