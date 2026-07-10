@@ -395,7 +395,7 @@ ${breadcrumbJSON}
     <meta property="og:url" content="https://yutaka-okawachi.github.io/gaswebapp-manual/mahler-search-app/dic.html">
     <meta property="og:image" content="https://yutaka-okawachi.github.io/gaswebapp-manual/ogp.png">
     <meta name="twitter:card" content="summary">
-    <title>用語集</title>
+    <title>ドイツ語の音楽用語集</title>
     <link rel="icon" href="https://yutaka-okawachi.github.io/gaswebapp-manual/favicon.png">
     <link rel="apple-touch-icon" href="https://yutaka-okawachi.github.io/gaswebapp-manual/apple-touch-icon.png">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -916,7 +916,7 @@ ${breadcrumbJSON}
             <h1>ドイツ語の音楽用語集</h1>
 
             <p style="font-size: 0.85rem; color: #555; margin-top: 0.5em; margin-bottom: 1em;">
-                このページは，Richard Wagner (RW)，Gustav Mahler (GM)，Richard Strauss (RS)，Anton Bruckner，Paul Hindemith などで使用されているドイツ語の訳例やコメント集（ほんの一部だけイタリア語，フランス語等を含む）．[GM]などの略記については「<a href="#abbrListContainer">略記一覧</a>」を参照のこと．
+                このページは，Richard Wagner (RW)，Gustav Mahler (GM)，Richard Strauss (RS)，Anton Bruckner，Paul Hindemith などで使用されているドイツ語の訳例やコメント集（ほんの一部だけイタリア語，フランス語等を含む）．[GM]などの略記については「<a href="#abbrListContainer">略記一覧</a>」を参照のこと．ただし，”実例を見る”ではRichard Straussの場合，オペラのみに対応しているので注意．
             </p>
 
             <!-- Info Notice Section -->
