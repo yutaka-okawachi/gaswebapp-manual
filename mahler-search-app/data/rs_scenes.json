@@ -442,6 +442,13 @@
   },
   {
     "Oper": "schweigsame",
+    "Aufzug": 1,
+    "Szene": "finale",
+    "日本語": "第1幕フィナーレ",
+    "作品名": "Die schweigsame Frau, Op.80 (1932-35)"
+  },
+  {
+    "Oper": "schweigsame",
     "Aufzug": 2,
     "Szene": 1,
     "日本語": "第2幕第1場",
@@ -597,8 +604,15 @@
   {
     "Oper": "schweigsame",
     "Aufzug": 3,
+    "Szene": "finale",
+    "日本語": "第3幕フィナーレ",
+    "作品名": "Die schweigsame Frau, Op.80 (1932-35)"
+  },
+  {
+    "Oper": "schweigsame",
+    "Aufzug": 3,
     "Szene": 10,
-    "日本語": "第3幕第10場",
+    "日本語": "第3幕最終場",
     "作品名": "Die schweigsame Frau, Op.80 (1932-35)"
   },
   {
