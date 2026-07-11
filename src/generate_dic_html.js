@@ -673,26 +673,7 @@ ${breadcrumbJSON}
             color: #fff;
         }
 
-        /* Footer Promo */
-        .footer-promo {
-            background: #f8fafd;
-            border: 2px solid #e1e8f0;
-            border-radius: 12px;
-            padding: 2rem;
-            text-align: center;
-            margin: 3rem 0;
-        }
 
-        .footer-promo h3 {
-            margin: 0 0 15px 0;
-            color: #1a2c42;
-            font-size: 1.3rem;
-        }
-
-        .footer-promo p {
-            margin-bottom: 20px;
-            color: #5e6d7e;
-        }
 
         /* Sidebar Home Enhancement */
         .sidebar-home a {
@@ -932,12 +913,7 @@ ${breadcrumbJSON}
 ${dicListHtml}
             </div>
 
-            <!-- Footer Promo Section -->
-            <div class="footer-promo">
-                <h3>見つからない場合</h3>
-                <p>作曲家別の詳細検索はこちら．</p>
-                <a href="../index.html" class="btn-cta">🔍 作品別データベースで検索</a>
-            </div>
+
 
             <hr class="section-divider">
 
