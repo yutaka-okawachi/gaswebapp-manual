@@ -986,12 +986,12 @@
   ],
   [
     "duftig",
-    "(≒ airy, hazy, delicate, fragrant / vaporoso, leggero)\n【一般的な意味】\n① （織物・衣装などが）薄く透き通るような，ふわっとした，空気のように軽い．\n② （花などが）よい香りのする，芳しい．\n③ （雰囲気などが）霞んだ，ぼんやりとした．\n【音楽用語としての訳例】\n「空気のように軽く」，「霞んだように（vaporoso）」，「ふわっと」，「繊細に」，「（香り立つように）優美に」\n\n交響曲第2番第5楽章に\"leicht und duftig gespielt\"とあり，\"leicht\"を「軽やかに」と訳しているので\"duftig\"は「繊細に」と訳した．",
+    "(≒ airy, hazy, delicate, fragrant / vaporoso, leggero)\n【一般的な意味】\n① （織物・衣装などが）薄く透き通るような，ふわっとした，空気のように軽い．\n② （花などが）よい香りのする，芳しい．\n③ （雰囲気などが）霞んだ，ぼんやりとした．\n【音楽用語としての訳例】\n「空気のように軽く」，「霞んだように（vaporoso）」，「ふわっと」，「繊細に」，「（香り立つように）優美に」\n\n交響曲第2番第5楽章に\"leicht und duftig gespielt\"とあり，\"duftig\"は「ふんわりと」と訳した．",
     "[GM]"
   ],
   [
     "dumpf",
-    "(≒ dull, muffled, hollow, gloomy / cupo, sordo, soffocato)\n【一般的な意味】\n① （音・声などが）こもった，鈍い，重苦しい，澄んでいない．\n② （光・雰囲気などが）どんよりした，薄暗い，陰気な，鬱屈した．\n③ （感覚・痛みなどが）鈍い，ぼんやりした．\n【音楽用語としての訳例】\n「くぐもった」，「（音が）こもった」，「鈍く」，「（響きを）止めて」，「（ティンパニなどで）余韻を消して」，「陰鬱に（cupo）」，「（音色を）暗く」",
+    "(≒ dull, muffled, hollow, gloomy / cupo, sordo, soffocato)\n【一般的な意味】\n① （音・声などが）こもった，鈍い，重苦しい，澄んでいない．\n② （光・雰囲気などが）どんよりした，薄暗い，陰気な，鬱屈した．\n③ （感覚・痛みなどが）鈍い，ぼんやりした．\n【音楽用語としての訳例】\n「くぐもらせて」，「（音が）こもった」，「鈍く」，「（響きを）止めて」，「（ティンパニなどで）余韻を消して」，「陰鬱に（cupo）」，「（音色を）暗く」",
     "[GM], [RW: Oper], [RS: Oper]"
   ],
   [
@@ -1001,7 +1001,7 @@
   ],
   [
     "durch",
-    "(≒ through, by means of, throughout / attraverso, per, mediante)\n【一般的な意味】\n① （空間的に）～を通って，～を通り抜けて，～の向こう側へ．\n② （手段・原因として）～によって，～を通じて，～のおかげで．\n③ （時間的に）～の間中ずっと，～を通して．\n【音楽用語としての訳例】\n「～を通して」，「～によって」，「（durch ... gedämpft などで）～で」，「（時間的に）ずっと」，「（響きが）突き抜けて」，「（音が）通る」",
+    "(≒ through, by means of, throughout / attraverso, per, mediante)\n【一般的な意味】\n① （空間的に）～を通って，～を通り抜けて，～の向こう側へ．\n② （手段・原因として）～によって，～を通じて，～のおかげで．\n③ （時間的に）～の間中ずっと，～を通して．",
     "[GM], [RW: Oper], [RS: Oper]"
   ],
   [
@@ -1011,7 +1011,7 @@
   ],
   [
     "durchaus",
-    "(≒ absolutely, thoroughly, throughout / assolutamente, interamente)\n【一般的な意味】\n① 全く，完全に，徹底的に，断じて．\n② どうしても，ぜひとも．\n③ （肯定文で）なるほど，もっともだ．\n【音楽用語としての訳例】\n「あくまでも」，「徹底的に」，「終始」，「どこまでも」，「（修飾語を強めて）断固として」，「（否定語と共に）決して（～ない）」\n\nちなみに ”durchwegs” (または \"durchweg\" ) もほぼ同じ意味だが， 微妙なニュアンスの違いがあるようだ．\n●durchaus:\n「あくまでも」「断じて（絶対に）」という，意志の強さや程度の徹底さを強調するニュアンス．\n●durchwegs (または durchweg):\n「終始一貫して」「例外なく」という，時間的・空間的にずっとそうである（ムラがない）ことを強調するニュアンス．",
+    "durchaus (≒ absolutely, thoroughly, throughout / assolutamente, interamente)\n【一般的な意味】\n① 全く，完全に，徹底的に，断じて．\n② どうしても，ぜひとも．\n③ （肯定文で）なるほど，もっともだ．\n【音楽用語としての訳例】\n「あくまでも」，「徹底的に」，「終始」，「どこまでも」，「（修飾語を強めて）断固として」，「（否定語と共に）決して（～ない）」\n\nちなみに \"durchwegs\"（または \"durchweg\"）もほぼ同じ意味だが，微妙なニュアンスの違いがあるようだ．\n●durchaus：\n「あくまでも」「断じて（絶対に）」という，意志の強さや程度の徹底さを強調するニュアンス．\n●durchwegs（または durchweg）：\n「終始一貫して」「例外なく」という，時間的・空間的にずっとそうである（ムラがない）ことを強調するニュアンス．",
     "[GM], [RW: Oper], [RS: Oper]"
   ],
   [
@@ -1051,7 +1051,7 @@
   ],
   [
     "edlen",
-    "\"edel\" の格変化形",
+    "\"edel\" の格変化形．\"edel\" の項を参照．",
     "[GM], [RW: Oper]"
   ],
   [
@@ -4663,6 +4663,11 @@
     "Zwischen Berg und tiefem Tal",
     "山と深い谷とのあいだで",
     "[H: Sch]"
+  ],
+  [
+    "\"Fuchstanz\" vom Wilm Wilm mit Genehmigung des Verlegers Fritz Schuberth jun. Leipzig",
+    "LeipzigのFritz Schuberth jun.出版社の許可を得たWilm Wilm (Wilm Wieninger)  による\"foxtrot\" ",
+    "[H: KM1-1]"
   ],
   [
     "/ bedeutet stets: starkes Portamento!",
