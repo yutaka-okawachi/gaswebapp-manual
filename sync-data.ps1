@@ -548,10 +548,15 @@ if ($pullExitCode -ne 0) {
 Write-Host ""
 # --- [4.5/5] 動的 sitemap.xml 更新 ---
 Write-Host "[4.5/5] Updating sitemap.xml for modified files..." -ForegroundColor Yellow
-# 未プッシュのコミット（ローカル変更＋GASからのPull分）で変更されたファイルを取得
-$pulledFiles = git diff --name-only $beforePullHead HEAD
-$unpushedFiles = git diff --name-only origin/main HEAD
-$changedFiles = @($pulledFiles + $unpushedFiles) | Where-Object { $_ } | Sort-Object -Unique
+# 同期開始前のリモートコミット（$initialRemoteSha）と現在のHEADとの差分ファイルを変更検知対象とする
+$changedFiles = @()
+if ($initialRemoteSha) {
+    $changedFiles = git diff --name-only $initialRemoteSha HEAD 2>$null
+} else {
+    # フォールバック: 直前のコミットとの差分
+    $changedFiles = git diff --name-only HEAD~1 HEAD 2>$null
+}
+$changedFiles = $changedFiles | Where-Object { $_ } | Sort-Object -Unique
 $today = (Get-Date).ToString("yyyy-MM-dd")
 $sitemapPath = "sitemap.xml"
 
