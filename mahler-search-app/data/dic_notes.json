@@ -1101,7 +1101,7 @@
   ],
   [
     "einhalten",
-    "(≒ observe, maintain, stop / osservare, mantenere, fermare)\n【一般的な意味】\n① （規則・約束・期限などを）守る，順守する，履行する．\n② （進行などを）止める，中断する，休止する．\n③ （感情などを）抑制する，食い止める．\n【音楽用語としての訳例】\n「（テンポやリズムを）正確に守る」，「（厳格に）保つ」，「（指定を）順守する」，「（動きを）止める」，「（一時）休止する」\n\nただ，GM では②の意味では使われていないようである．③のニュアンスで「テンポを落として」としている．",
+    "(≒ observe, maintain, stop / osservare, mantenere, fermare)\n【一般的な意味】\n① （規則・約束・期限などを）守る，順守する，履行する．\n② （進行などを）止める，中断する，休止する．\n③ （感情などを）抑制する，食い止める．\n【音楽用語としての訳例】\n「（テンポやリズムを）正確に守る」，「（厳格に）保つ」，「（指定を）順守する」\n\nただ，GM では②の意味では使われていないようである．③のニュアンスで「テンポを落として」としている．内側からコントロールして，「自制する，踏みとどまる」イメージ．\"anhalten\" のような物理的な「ストップ」ではない．",
     "[GM], [RW: Oper]"
   ],
   [
@@ -1207,7 +1207,7 @@
   [
     "Entfernung",
     "(≒ distance, removal, remoteness / distanza, lontananza)\n【一般的な意味】\n① 距離，隔たり，間隔，遠方．\n② 除去，取り外し，排除．\n③ 解雇，免職．\n【音楽用語としての訳例】\n「遠くで」，「（舞台裏などの）離れた場所で」，「（音の）距離感」，「（aus der Entfernung で）遠くから（da lontano）」，「（in der Entfernung で）遠くで」",
-    "[GM]"
+    "[GM], [RW: Oper]"
   ],
   [
     "entrüstet",
@@ -1261,7 +1261,7 @@
   ],
   [
     "Erleichterung",
-    "(≒ relief, alleviation / sollievo, alleggerimento)\n【一般的な意味】\n① （苦痛・負担・心配などが）軽くなること，軽減，除去．\n② 安堵，安心，ほっとすること．\n【音楽用語としての訳例】\n「安堵」，「救い」，「慰め」，「（緊張の）緩和」\n\n演奏を簡単にするための代案の譜例が記されている． ",
+    "(≒ relief, alleviation, facilitation / sollievo, alleggerimento, facilitazione)\n【一般的な意味】\n① （苦痛・負担・心配などの）軽減，緩和，除去．\n② 安堵，安心，ほっとすること．\n③ 容易にすること，平易化，簡素化．\n【音楽用語としての訳例】\n「（緊張の）緩和」，「安堵をもって」，「（負担を）軽減して」，「（演奏を容易にした）Ossia（代案）」\n\n演奏を簡単にするための代案の譜例が記されている．",
     "[RS: Dom]"
   ],
   [
@@ -1272,7 +1272,7 @@
   [
     "ermattend",
     "(≒ tiring, weakening, flagging / languendo, smorzando)\nermatten の現在分詞\n【一般的な意味】\n疲れ果てていく，衰弱していく，勢いを失っていく．\n【音楽用語としての訳例】\n「力が衰えるように」，「弱り果てて」，「次第に弱く（遅く）」，「疲れを見せて」",
-    "[RS: Zara]"
+    "[RW: Oper], [RS: Zara]"
   ],
   [
     "ermüdet",
@@ -1286,7 +1286,7 @@
   ],
   [
     "erregt",
-    "(≒ excited, agitated / agitato, eccitato)\nerregen の過去分詞\n【一般的な意味】\n① （感情が）高ぶった，興奮した，激した．\n② （神経などが）刺激された．\n【音楽用語としての訳例】\n「激して」，「興奮して」，「（感情が）高ぶって」，「焦燥感を持って」，「荒々しく」",
+    "(≒ excited, agitated / agitato, eccitato)\nerregen の過去分詞\n【一般的な意味】\n① （感情が）高ぶった，興奮した，激した．\n② （神経などが）刺激された．\n【音楽用語としての訳例】\n「激して」，「興奮して」，「（感情が）高ぶって」，「焦燥感を持って」",
     "[RW: Oper], [RS: Oper], [H: Welt], [K: Cap], [K: App]"
   ],
   [
@@ -2806,7 +2806,7 @@
   ],
   [
     "munter",
-    "( ≒ lively) ，元気のよい，活発な，快活な",
+    "(≒ cheerful, lively, brisk / allegro, vivace)\n【一般的な意味】\n① 元気な，活発な，生き生きとした．\n② 陽気な，快活な，機嫌のよい．\n③ （目が）覚めている，眠くない．\n【音楽用語としての訳例】\n「元気に」，「活発に」，「快活に」",
     "[GM], [RW: Oper], [RS: Oper]"
   ],
   [
@@ -4406,8 +4406,8 @@
   ],
   [
     "weiter",
-    "(≒ further, onward, continued / avanti, più oltre)\n【一般的な意味】\n① さらに遠くへ，もっと先へ．\n② （時間的に）その後，引き続き．\n③ （比較として）さらに〜，もっと〜．\n【音楽用語としての訳例】\n「さらに先へ」，「続けて」，「前進して」\n\nGMには使用例はないが，\"gleich weiter\"や\"sofort weiter\"は\"attacca\"のこと．",
-    "[GM]"
+    "(≒ further, onward, continued / avanti, più oltre)\n【一般的な意味】\n① さらに遠くへ，もっと先へ．\n② （時間的に）その後，引き続き．\n③ （比較として）さらに〜，もっと〜．\n【音楽用語としての訳例】\n「さらに先へ」，「続けて」，「前進して」\n\n\"gleich weiter\"や\"sofort weiter\" という使用例は GM にはないが，これは\"attacca\"のこと．",
+    "[GM], [H]"
   ],
   [
     "Wenn der Sprung gemacht wird, so sind die Takte 520 bis 527 in beiden Violinen acht Töne tiefer zu spielen, erst von den beiden letzten Noten Takt 527, an in der höheren Oktavlage. Der Herausgeber",
@@ -4536,12 +4536,12 @@
   ],
   [
     "zart",
-    "(≒ tender, delicate, soft / tenero, delicato, dolce)\n【一般的な意味】\n① 柔らかな，繊細な，デリケートな．\n② 優美な，か弱い，傷つきやすい．\n③ （味や色が）淡い，優しい．\n【音楽用語としての訳例】\n「優しく」，「繊細に」，「か細く」，「柔らかな音色で」\n\nGM では「柔らかく」と訳そうかとも思ったが，大地の歌第6楽章第245小節に \"zart und weich\" の記述があるので，\"zart\" は「優しく」，\"weich\" は「柔らかく」とした．「優しく」ではなく「繊細に」あるいは「優美に」でも良いかもしれない．それにしても \"sanft\"，”weich”，\"zart\" は訳し分けが難しい．",
+    "(≒ tender, delicate, soft / tenero, delicato, dolce)\n【一般的な意味】\n① 柔らかな，繊細な，デリケートな．\n② 優美な，か弱い，傷つきやすい．\n③ （味や色が）淡い，優しい．\n【音楽用語としての訳例】\n「優しく」，「繊細に」，「か細く」，「柔らかな音色で」\n\nGM では「柔らかく」と訳そうかとも思ったが，大地の歌第6楽章第245小節に \"zart und weich\" の記述があるので，\"zart\" は「繊細に」，\"weich\" は「柔らかく」とした．「繊細に」ではなく「優しく」あるいは「優美に」でも良いかもしれない．それにしても \"sanft\"，”weich”，\"zart\" は訳し分けが難しい．",
     "[GM], [RW: Oper], [RS: Oper]"
   ],
   [
     "zärtlich",
-    "(≒ tenderly, affectionately, delicately / teneramente, con tenerezza)\n【一般的な意味】\n① 優しく，愛情を込めて，優しく扱う．\n② 繊細に，細やかに．\n【音楽用語としての訳例】\n「優しく」，「愛情を込めて」，「繊細に」",
+    "(≒ tenderly, affectionately, delicately / teneramente, con tenerezza)\n形容詞 zart の派生形\n【一般的な意味】\n① 優しく，愛情を込めて，優しく扱う．\n② 繊細に，細やかに．\n【音楽用語としての訳例】\n「優しく」，「愛情を込めて」，「繊細に」",
     "[GM], [RW: Oper], [RS: Oper]"
   ],
   [
@@ -4606,7 +4606,7 @@
   ],
   [
     "zu",
-    "（≒ to, at, too, closed / a, da, troppo, chiuso）\n【一般的な意味】\n①（前置詞として）～へ，～に，～において．\n②（副詞として）あまりに～すぎる．\n③（副詞として）閉じて，閉まって．\n【音楽用語としての訳例】 「～の状態で」，「あまりに～すぎる」，「～に（対して）」\n\n音楽の指示において zu は，その後に続く言葉によって役割が大きく変わる．\n\n1. 程度を表す（too / troppo）\n形容詞の前に置かれ，否定的なニュアンスを含んだ「～すぎる」という意味で使われる．\n\"Nicht zu schnell\"：速すぎないように（Non troppo allegro）．\n\"Nicht zu mäßig\"：控えめになりすぎないように．\n\n2. 人数や楽器の数を指定する\n\"Zu 2 (Zu zwei)\"： 2つの楽器で（ユニゾンで），あるいは2人で．（イタリア語の a 2 に相当）．\n\"Zu 3 (Zu drei)\"： 3つの楽器で．\n\n3. 状態や方法を指定する\n\"Zu Ende\"：終わりまで．\n\"Mund zu\"：口を閉じて（ハミングなどで）．\n\n4. 特定の奏法への指示\n\"Dämpfer zu\"：弱音器（ミュート）を付けて（③の意味）．この場合，対義語は \"Dämpfer auf\" となるのであるがこれが GM の場合ややこしくなる．\"Dämpfer auf\" の項を参照．",
+    "（≒ to, at, too, closed / a, da, troppo, chiuso）\n【一般的な意味】\n①（前置詞として）～へ，～に，～において．\n②（副詞として）あまりに～すぎる．\n③（副詞として）閉じて，閉まって．\n【音楽用語としての訳例】 「～の状態で」，「あまりに～すぎる」，「～に（対して）」\n\n音楽の指示において zu は，その後に続く言葉によって役割が大きく変わる．\n\n1. 程度を表す（too / troppo）\n形容詞の前に置かれ，否定的なニュアンスを含んだ「～すぎる」という意味で使われる．\n\"Nicht zu schnell\"：速すぎないように（Non troppo allegro）．\n\"Nicht zu mäßig\"：控えめになりすぎないように．\n\n2. 人数や楽器の数を指定する\n\"zu 2 (zu zwei)\"： 2つの楽器で（ユニゾンで），あるいは2人で．（イタリア語の a 2 に相当）．\n\"zu 3 (zu drei)\"： 3つの楽器で．\n\n3. 状態や方法を指定する\n\"zu Ende\"：終わりまで．\n\"Mund zu\"：口を閉じて（ハミングなどで）．\n\n4. 特定の奏法への指示\n\"Dämpfer zu\"：弱音器（ミュート）を付けて（③の意味）．この場合，対義語は \"Dämpfer auf\" となるのであるがこれが GM の場合ややこしくなる．\"Dämpfer auf\" の項を参照．",
     "[GM]"
   ],
   [
@@ -4627,7 +4627,7 @@
   [
     "zurück～",
     "(≒ back, backward, return, retro- / indietro, ritorno, retro-)\n分離動詞の接頭辞\n【一般的な意味】\n① 元へ戻って，後ろへ，後方へ．\n② 返して，逆に，報いて．\n③ 引きこもって，控えて．",
-    "[GM]"
+    ""
   ],
   [
     "zurückhaltend",
