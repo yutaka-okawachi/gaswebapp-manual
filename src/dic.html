@@ -493,27 +493,16 @@
           const wrapper = document.createElement("div");
           wrapper.classList.add("example-wrapper");
 
-          const contentSpan = document.createElement("span");
-          contentSpan.classList.add("example-content");
-          contentSpan.style.display = 'none';
-
-          const links = [];
-          const queryParam = encodeURIComponent(german);
-          if (hasRW) {
-            links.push(`<a href="rw_terms_search.html?q=${queryParam}" class="composer-link" target="_self">Wagner</a>`);
-          }
-          if (hasGM) {
-            links.push(`<a href="terms_search.html?q=${queryParam}" class="composer-link" target="_self">Mahler</a>`);
-          }
-          if (hasRS) {
-            links.push(`<a href="rs_terms_search.html?q=${queryParam}" class="composer-link" target="_self">R.Strauss</a>`);
-          }
-          contentSpan.innerHTML = links.join(' / ');
-          wrapper.appendChild(contentSpan);
-
           const toggleSpan = document.createElement("span");
           toggleSpan.classList.add("example-toggle");
           toggleSpan.innerHTML = '<span class="arrow">◂</span> 実例を見る';
+          
+          // data属性に必要な情報を格納
+          toggleSpan.dataset.german = german;
+          if (hasRW) toggleSpan.dataset.rw = "1";
+          if (hasGM) toggleSpan.dataset.gm = "1";
+          if (hasRS) toggleSpan.dataset.rs = "1";
+
           toggleSpan.onclick = function() { toggleExample(this); };
           wrapper.appendChild(toggleSpan);
 
@@ -614,11 +603,46 @@
 
     function toggleExample(element) {
       const wrapper = element.closest('.example-wrapper');
-      const content = wrapper.querySelector('.example-content');
+      let content = wrapper.querySelector('.example-content');
       const arrow = element.querySelector('.arrow');
+      
+      if (!content) {
+        content = document.createElement("span");
+        content.classList.add("example-content");
+        content.style.display = 'none';
+
+        const german = element.dataset.german;
+        const hasRW = !!element.dataset.rw;
+        const hasGM = !!element.dataset.gm;
+        const hasRS = !!element.dataset.rs;
+        const queryParam = encodeURIComponent(german);
+
+        const links = [];
+        if (hasRW) {
+          links.push(`<a href="rw_terms_search.html?q=${queryParam}" class="composer-link" target="_self">Wagner</a>`);
+        }
+        if (hasGM) {
+          links.push(`<a href="terms_search.html?q=${queryParam}" class="composer-link" target="_self">Mahler</a>`);
+        }
+        if (hasRS) {
+          links.push(`<a href="rs_terms_search.html?q=${queryParam}" class="composer-link" target="_self">R.Strauss</a>`);
+        }
+        content.innerHTML = links.join(' / ');
+        wrapper.insertBefore(content, element);
+      }
+
       if (content.style.display === 'none') {
         content.style.display = 'inline-block';
         arrow.textContent = '▾';
+        
+        // GA4イベント送信
+        if (typeof window.gtag === 'function') {
+          const german = element.dataset.german || 'unknown';
+          window.gtag('event', 'click_view_example', {
+            'term': german.trim(),
+            'page_path': window.location.pathname
+          });
+        }
       } else {
         content.style.display = 'none';
         arrow.textContent = '◂';
