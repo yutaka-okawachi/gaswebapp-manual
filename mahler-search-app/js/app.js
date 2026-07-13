@@ -202,13 +202,24 @@ async function fetchJson(path) {
     // console.log(`Fetching ${path}...`);
     // GitHub Pages の ETag/ブラウザキャッシュを利用する。時刻パラメータを
     // 毎回付けると数MBの検索データまで遷移のたびに再取得されてしまう。
-    const response = await fetch(path, { cache: 'default' });
-    if (!response.ok) {
-        throw new Error(`Failed to load ${path}: ${response.statusText}`);
+    try {
+        const response = await fetch(path, { cache: 'default' });
+        if (!response.ok) {
+            throw new Error(`Failed to load ${path}: HTTP ${response.status}`);
+        }
+        return await response.json();
+    } catch (firstError) {
+        // Pagesの更新直後やEdgeのHTTPキャッシュに一時的な失敗が残った場合は、
+        // キャッシュを使わない別URLで一度だけ再試行する。
+        console.warn(`Retrying ${path} without cache:`, firstError);
+        const separator = path.includes('?') ? '&' : '?';
+        const retryUrl = `${path}${separator}retry=${Date.now()}`;
+        const retryResponse = await fetch(retryUrl, { cache: 'no-store' });
+        if (!retryResponse.ok) {
+            throw new Error(`Failed to load ${path}: HTTP ${retryResponse.status}`);
+        }
+        return await retryResponse.json();
     }
-    const data = await response.json();
-    // console.log(`Fetched ${path}, size: ${Array.isArray(data) ? data.length : Object.keys(data).length}`);
-    return data;
 }
 
 window.renderTermSuggestions = function(inputId, datalistId, suggestions) {
