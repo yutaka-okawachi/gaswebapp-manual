@@ -202,23 +202,33 @@ async function fetchJson(path) {
     // console.log(`Fetching ${path}...`);
     // GitHub Pages の ETag/ブラウザキャッシュを利用する。時刻パラメータを
     // 毎回付けると数MBの検索データまで遷移のたびに再取得されてしまう。
-    try {
-        const response = await fetch(path, { cache: 'default' });
+    const loadJson = async (url, cacheMode) => {
+        const response = await fetch(url, { cache: cacheMode });
         if (!response.ok) {
-            throw new Error(`Failed to load ${path}: HTTP ${response.status}`);
+            throw new Error(`Failed to load ${url}: HTTP ${response.status}`);
         }
-        return await response.json();
+        return response.json();
+    };
+
+    try {
+        return await loadJson(path, 'default');
     } catch (firstError) {
         // Pagesの更新直後やEdgeのHTTPキャッシュに一時的な失敗が残った場合は、
         // キャッシュを使わない別URLで一度だけ再試行する。
         console.warn(`Retrying ${path} without cache:`, firstError);
         const separator = path.includes('?') ? '&' : '?';
         const retryUrl = `${path}${separator}retry=${Date.now()}`;
-        const retryResponse = await fetch(retryUrl, { cache: 'no-store' });
-        if (!retryResponse.ok) {
-            throw new Error(`Failed to load ${path}: HTTP ${retryResponse.status}`);
+
+        try {
+            return await loadJson(retryUrl, 'no-store');
+        } catch (retryError) {
+            // 同一オリジンのPages配信がEdge側で失敗し続ける場合は、同じ
+            // GitHubリポジトリのraw配信を最終フォールバックとして使う。
+            console.warn(`Retry failed for ${path}; using GitHub raw:`, retryError);
+            const cleanPath = path.replace(/^\.\//, '').replace(/^\//, '');
+            const rawUrl = `https://raw.githubusercontent.com/yutaka-okawachi/gaswebapp-manual/main/mahler-search-app/${cleanPath}`;
+            return await loadJson(rawUrl, 'no-store');
         }
-        return await retryResponse.json();
     }
 }
 
