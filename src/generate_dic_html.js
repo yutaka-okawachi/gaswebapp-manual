@@ -241,7 +241,21 @@ function generateDicListHtml(dicData, termsIndex) {
       const hasRwAttr = hasRW ? ' data-rw="1"' : '';
       const hasGmAttr = hasGM ? ' data-gm="1"' : '';
       const hasRsAttr = hasRS ? ' data-rs="1"' : '';
-      toggleArea = `\n    <div class="example-wrapper">\n      <span class="example-toggle" onclick="toggleExample(this)" data-german="${escapeHtml(german)}"${hasRwAttr}${hasGmAttr}${hasRsAttr}><span class="arrow">◂</span> 実例を見る</span>\n    </div>`;
+      
+      const queryParam = encodeURIComponent(german);
+      const links = [];
+      if (hasRW) {
+        links.push(`<a href="rw_terms_search.html?q=${queryParam}" class="composer-link" target="_self">Wagner</a>`);
+      }
+      if (hasGM) {
+        links.push(`<a href="terms_search.html?q=${queryParam}" class="composer-link" target="_self">Mahler</a>`);
+      }
+      if (hasRS) {
+        links.push(`<a href="rs_terms_search.html?q=${queryParam}" class="composer-link" target="_self">R.Strauss</a>`);
+      }
+      const linksHtml = links.join(' / ');
+      
+      toggleArea = `\n    <div class="example-wrapper">\n      <span class="example-content" style="display: none;">${linksHtml}</span>\n      <span class="example-toggle" onclick="toggleExample(this)" data-german="${escapeHtml(german)}"${hasRwAttr}${hasGmAttr}${hasRsAttr}><span class="arrow">◂</span> 実例を見る</span>\n    </div>`;
     }
 
     // rowのHTML生成（セマンティックHTMLで辞書構造を明示）
@@ -836,44 +850,25 @@ ${breadcrumbJSON}
 
         function toggleExample(element) {
             const wrapper = element.closest('.example-wrapper');
-            let content = wrapper.querySelector('.example-content');
+            const content = wrapper.querySelector('.example-content');
             const arrow = element.querySelector('.arrow');
             
-            if (!content) {
-                content = document.createElement('span');
-                content.className = 'example-content';
-                content.style.display = 'none';
-                
-                const german = element.getAttribute('data-german');
-                const hasRW = element.getAttribute('data-rw') === '1';
-                const hasGM = element.getAttribute('data-gm') === '1';
-                const hasRS = element.getAttribute('data-rs') === '1';
-                const queryParam = encodeURIComponent(german);
-                
-                const links = [];
-                if (hasRW) {
-                    links.push('<a href="rw_terms_search.html?q=' + queryParam + '" class="composer-link" target="_self">Wagner</a>');
-                }
-                if (hasGM) {
-                    links.push('<a href="terms_search.html?q=' + queryParam + '" class="composer-link" target="_self">Mahler</a>');
-                }
-                if (hasRS) {
-                    links.push('<a href="rs_terms_search.html?q=' + queryParam + '" class="composer-link" target="_self">R.Strauss</a>');
-                }
-                content.innerHTML = links.join(' / ');
-                wrapper.insertBefore(content, element);
-            }
+            if (!content) return;
 
             if (content.style.display === 'none') {
                 content.style.display = 'inline-block';
                 arrow.textContent = '▾';
                 
                 if (typeof window.gtag === 'function') {
-                    const german = element.getAttribute('data-german') || 'unknown';
-                    window.gtag('event', 'click_view_example', {
-                        term: german.trim(),
-                        page_path: location.pathname
-                    });
+                    try {
+                        const german = element.getAttribute('data-german') || 'unknown';
+                        window.gtag('event', 'click_view_example', {
+                            term: german.trim(),
+                            page_path: location.pathname
+                        });
+                    } catch (e) {
+                        console.error('GA4 Event Error:', e);
+                    }
                 }
             } else {
                 content.style.display = 'none';

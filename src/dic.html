@@ -603,33 +603,10 @@
 
     function toggleExample(element) {
       const wrapper = element.closest('.example-wrapper');
-      let content = wrapper.querySelector('.example-content');
+      const content = wrapper.querySelector('.example-content');
       const arrow = element.querySelector('.arrow');
       
-      if (!content) {
-        content = document.createElement("span");
-        content.classList.add("example-content");
-        content.style.display = 'none';
-
-        const german = element.dataset.german;
-        const hasRW = !!element.dataset.rw;
-        const hasGM = !!element.dataset.gm;
-        const hasRS = !!element.dataset.rs;
-        const queryParam = encodeURIComponent(german);
-
-        const links = [];
-        if (hasRW) {
-          links.push(`<a href="rw_terms_search.html?q=${queryParam}" class="composer-link" target="_self">Wagner</a>`);
-        }
-        if (hasGM) {
-          links.push(`<a href="terms_search.html?q=${queryParam}" class="composer-link" target="_self">Mahler</a>`);
-        }
-        if (hasRS) {
-          links.push(`<a href="rs_terms_search.html?q=${queryParam}" class="composer-link" target="_self">R.Strauss</a>`);
-        }
-        content.innerHTML = links.join(' / ');
-        wrapper.insertBefore(content, element);
-      }
+      if (!content) return;
 
       if (content.style.display === 'none') {
         content.style.display = 'inline-block';
@@ -637,11 +614,15 @@
         
         // GA4イベント送信
         if (typeof window.gtag === 'function') {
-          const german = element.dataset.german || 'unknown';
-          window.gtag('event', 'click_view_example', {
-            'term': german.trim(),
-            'page_path': window.location.pathname
-          });
+          try {
+            const german = element.dataset.german || 'unknown';
+            window.gtag('event', 'click_view_example', {
+              'term': german.trim(),
+              'page_path': window.location.pathname
+            });
+          } catch (e) {
+            console.error('GA4 Event Error:', e);
+          }
         }
       } else {
         content.style.display = 'none';
