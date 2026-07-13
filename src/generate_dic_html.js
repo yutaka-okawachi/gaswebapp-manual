@@ -484,6 +484,16 @@ ${breadcrumbJSON}
             transition: background-color 0.3s;
         }
 
+        /*
+         * 辞書は900項目を超えるため、項目内の表示切替による再レイアウトを
+         * 画面外の全項目へ波及させない。Edgeで「実例を見る」を押した際の
+         * 長いメインスレッド停止を防ぐ。
+         */
+        .row {
+            content-visibility: auto;
+            contain-intrinsic-size: auto 110px;
+        }
+
         div[id^="letter-"] {
             border-bottom: none;
             padding-bottom: 0;
@@ -860,14 +870,23 @@ ${breadcrumbJSON}
                 arrow.textContent = '▾';
                 
                 if (typeof window.gtag === 'function') {
-                    try {
-                        const german = element.getAttribute('data-german') || 'unknown';
-                        window.gtag('event', 'click_view_example', {
-                            term: german.trim(),
-                            page_path: location.pathname
-                        });
-                    } catch (e) {
-                        console.error('GA4 Event Error:', e);
+                    const german = element.getAttribute('data-german') || 'unknown';
+                    const sendAnalytics = () => {
+                        try {
+                            window.gtag('event', 'click_view_example', {
+                                term: german.trim(),
+                                page_path: location.pathname
+                            });
+                        } catch (e) {
+                            console.error('GA4 Event Error:', e);
+                        }
+                    };
+
+                    // 表示更新を優先し、GA4の処理をクリックのクリティカルパスから外す。
+                    if ('requestIdleCallback' in window) {
+                        window.requestIdleCallback(sendAnalytics, { timeout: 1000 });
+                    } else {
+                        window.setTimeout(sendAnalytics, 0);
                     }
                 }
             } else {

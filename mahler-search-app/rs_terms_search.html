@@ -74,7 +74,7 @@
     <link rel="apple-touch-icon" href="https://yutaka-okawachi.github.io/gaswebapp-manual/apple-touch-icon.png">
     <link rel="preload" href="css/common.css" as="style">
     <link rel="stylesheet" href="css/common.css">
-    <script src="js/app.js?v=8"></script>
+    <script src="js/app.js?v=9"></script>
 
     <script>
         /*******************************************************************
@@ -118,6 +118,12 @@
         // DOM構築後に動作をセット
         window.addEventListener('DOMContentLoaded', async () => {
             const inputField = document.getElementById('termInput');
+            const resultsDiv = document.getElementById('results');
+            const rawQuery = new URLSearchParams(window.location.search).get('q');
+            if (rawQuery) {
+                inputField.value = typeof normalizeString === 'function' ? normalizeString(rawQuery) : rawQuery;
+                resultsDiv.innerHTML = '<p class="loading">検索データを読み込んでいます・・・</p>';
+            }
             // 入力フィールドに文字を入力するたびにイベント発火
             inputField.addEventListener('input', debouncedOnTermInput);
             inputField.addEventListener('focus', () => debouncedOnTermInput({ target: inputField }));
@@ -131,7 +137,13 @@
 
             // Load data locally
             if (typeof loadData === 'function') {
-                await loadData('richard_strauss');
+                try {
+                    await loadData('rs_terms_search');
+                } catch (error) {
+                    console.error('RS検索データの読み込みに失敗しました:', error);
+                    resultsDiv.innerHTML = '<p class="result-message">検索データを読み込めませんでした。ページを再読み込みしてください。</p>';
+                    return;
+                }
             }
 
             // ページ読み込み時に全用語リストを取得
@@ -145,10 +157,7 @@
             }
 
             function checkQueryAndSearch(inputField) {
-                const urlParams = new URLSearchParams(window.location.search);
-                const rawQuery = urlParams.get('q');
                 if (rawQuery) {
-                    inputField.value = typeof normalizeString === 'function' ? normalizeString(rawQuery) : rawQuery;
                     if (typeof search === 'function') search();
                 }
             }

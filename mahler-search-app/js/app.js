@@ -140,7 +140,9 @@ async function loadData(key) {
     }
 
     if (key === 'rw_terms_search' || key === 'rs_terms_search') {
-        if (!window.appData.dic_notes) window.appData.dic_notes = await fetchJson('data/dic_notes.json');
+        const composerKey = key === 'rw_terms_search' ? 'richard_wagner' : 'richard_strauss';
+        const composerFile = key === 'rw_terms_search' ? 'richard_wagner.json' : 'richard_strauss.json';
+        if (!window.appData[composerKey]) window.appData[composerKey] = await fetchJson(`data/${composerFile}`);
         if (!window.appData.dic_terms_index) window.appData.dic_terms_index = await fetchJson('data/dic_terms_index.json');
         return;
     }
@@ -198,8 +200,9 @@ async function loadData(key) {
 
 async function fetchJson(path) {
     // console.log(`Fetching ${path}...`);
-    const url = `${path}?v=${new Date().getTime()}`;
-    const response = await fetch(url);
+    // GitHub Pages の ETag/ブラウザキャッシュを利用する。時刻パラメータを
+    // 毎回付けると数MBの検索データまで遷移のたびに再取得されてしまう。
+    const response = await fetch(path, { cache: 'default' });
     if (!response.ok) {
         throw new Error(`Failed to load ${path}: ${response.statusText}`);
     }
