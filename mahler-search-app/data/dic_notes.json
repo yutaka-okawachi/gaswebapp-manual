@@ -1301,8 +1301,8 @@
   ],
   [
     "Erscheinung",
-    "(≒ appearance, apparition, phenomenon / apparizione, fenomeno)\n【一般的な意味】\n① 現れること，出現，登場．\n② 現象，出来事．\n③ 亡霊，幻影．\n④ 外見，風采．\n\n[RS: Alpen] では③の意味であろう．RS のDer Rosenkavalier の 第2幕の Octavian の登場シーンでの \"Erscheinung\" は，単なる「出現」というよりは，「（高貴で輝かしい人物の）姿，立ち居振る舞い，威容」といったニュアンス．",
-    "[RS: Alpen]"
+    "(≒ appearance, apparition, phenomenon / apparizione, fenomeno)\n【一般的な意味】\n① 現れること，出現，登場．\n② 現象，出来事．\n③ 亡霊，幻影．\n④ 姿，外見，風采，身なり．\n\n[RS: Alpen] では③の意味であろう．",
+    "[RS: Alpen], [RW: Oper], [RS: Oper]"
   ],
   [
     "erschöpft",
@@ -1332,7 +1332,7 @@
   [
     "erst",
     "(≒ only, not until, first / solo, non prima di)\n【一般的な意味】\n① （時間）やっと，ようやく，〜になって初めて．\n② （順序）最初の，第一の．\n③ （程度）たったの，ほんの．",
-    "[B: 2]"
+    "[B: 2], [RW: Oper], [RS: Oper]"
   ],
   [
     "ersterbend",
@@ -1348,6 +1348,11 @@
     "erzählen",
     "(≒ tell, narrate, recount / raccontare, narrare)\n【一般的な意味】\n① 語る，話す，物語る．\n② （〜について）知らせる．\n【音楽用語としての訳例】\n「語るように」，「物語調で」，「叙述的に」\n\nGM の大地の歌第6楽章にのみ使用例がある．",
     "[GM]"
+  ],
+  [
+    "Erzählung",
+    "(≒ narrative, story, tale / racconto, narrazione)\r\n【一般的な意味】\r\n① 物語，話，談話，小説\r\n② 語ること，叙述，朗読\r\n【音楽用語としての訳例】\r\n「（オペラなどの劇中における）物語」，「（叙事的な）語りのアリア」，「エピソード」",
+    "[RW: Oper], [RS: Oper]"
   ],
   [
     "etwas deutlicher u. allmälich ausdrucksvoller",
@@ -1371,7 +1376,7 @@
   ],
   [
     "Fantastische Bilder entschwundener Herrlichkeit, Gefühle der Wehmut und des Schmerzes inmitten sonnigster Gegenwart",
-    "消え去った栄光の幻想的な情景，燦々とした現在のただ中にある，哀愁と苦痛の感情．",
+    "消え去った栄光の幻想的な幻影，この上なく陽光あふれる現在のただ中における，哀愁と苦痛の感情．",
     "[RS: It]"
   ],
   [
@@ -1383,11 +1388,6 @@
     "fast",
     "(≒ almost, nearly / quasi)\n【一般的な意味】\nほとんど，もう少しで，危うく．\n【音楽用語としての訳例】\n「ほとんど」，「まもなく」",
     "[GM], [RW: Oper], [RS: Oper]"
-  ],
-  [
-    "fehlen",
-    "(≒ be missing, lack, be absent / mancare, essere assente)\n【一般的な意味】\n① 欠けている，不足している，存在しない．\n② 失敗する，間違える．\n【音楽用語としての訳例】\n「（〜が）欠けている」，「（編成が）不足している」\n\n\"Druckfehler\"は「誤植」",
-    "[GM]"
   ],
   [
     "feierlich",
