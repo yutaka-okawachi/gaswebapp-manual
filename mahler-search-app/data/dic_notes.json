@@ -1381,7 +1381,7 @@
   ],
   [
     "Fassung",
-    "(≒ version, composure, setting / versione, calma, montatura)\n【一般的な意味】\n① 版，バージョン，仕立て．\n② 落ち着き，冷静さ．\n③ （貴金属の）台座，縁取り．",
+    "(≒ version, edition, draft / versione, redazione)\n【一般的な意味】\n① （文章や作品などの）決定版，版，テキスト，（法律の）文面\n② （宝石などの）台座，（電球の）ソケット，（眼鏡の）フレーム\n③ 落ち着き，平静，自制心\n④ 収容力，容量\n【音楽用語としての訳例】\n「（楽曲の）版（〜稿）」，「（オペラなどの）改訂版」，「（歌詞の）翻訳版」\n\n本来「改訂版」は \"revidierte Fassung\" であるが，\"Fassung\" 単独でも「特定の改訂版（稿）」を指すことが非常に多い．",
     "[H: KM3]"
   ],
   [
@@ -1396,7 +1396,7 @@
   ],
   [
     "ferne",
-    "(≒ far, distant / lontano)\nfernの格変化形\n【一般的な意味】\n遠い，遠く離れた．\n【音楽用語としての訳例】\n「遠くから」，「遙かに」，「（響きが）遠い感じ」",
+    "(≒ far, distant / lontano)\nfernの格変化形\n【一般的な意味】\n遠い，遠く離れた．\n【音楽用語としての訳例】\n「遠くから」，「遙かに」，「（響きが）遠い感じで」",
     "[GM], [RW: Oper], [RS: Oper]"
   ],
   [
@@ -1405,14 +1405,19 @@
     "[GM]"
   ],
   [
+    "fest",
+    "(≒ firm, secure, tight / fermo, saldo)\n【一般的な意味】\n① 固い，しっかりした，固定された\n② 確定した，決まった，（意思などが）強固な\n③ （お祭りなどの）祝祭の，おめでたい\n【音楽用語としての訳例】\n「しっかりと」，「厳格に」，「イン・テンポで」，「（テンポを）崩さずに」",
+    "[RS: Zara], [RS: Held], [RS: Alpen], [RW: Oper], [RS: Oper]"
+  ],
+  [
     "fest im gewonnenen, lebhaften Zeitmaß",
     "到達した生き生きとしたテンポをしっかりと保つ",
     "[RS: Held]"
   ],
   [
-    "fest, festes",
-    "(≒ firm, steady, fixed / fermo, saldo)\n【一般的な意味】\n① しっかりした，堅固な，不動の．\n② （時間が）固定した，一定の．\n【音楽用語としての訳例】\n「堅固に」，「確固たる」，「しっかりした」，「不動の」",
-    "[RS: Zara], [RS: Held], [RS: Alpen], [RW: Oper], [RS: Oper]"
+    "festes",
+    "\"fest\" の形容詞としての格変化形．\"fest\" の項を参照．\n\nRW の Das Rheingold では「固い」の意味で用いられている．",
+    "[RW: Oper]"
   ],
   [
     "Festes Zeitmaß (mäßig langsam )",
@@ -1431,7 +1436,7 @@
   ],
   [
     "ff.",
-    "(＝folgende Seiten)  以降のページ ",
+    "(＝folgende Seiten)  以降の（複数）ページ．ちなみに \"f.\"（1つの f）は直後の1ページだけを表す．（例：「S. 15 f.」＝15ページと16ページ） ",
     "[H: KM4]"
   ],
   [
