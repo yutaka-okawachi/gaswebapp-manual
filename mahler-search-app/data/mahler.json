@@ -2138,7 +2138,7 @@
   {
     "de": "Anmerkung für den Dirigenten: In diesem Motiv ist das Achtel stets etwas flüchtig = nachlässig auszuführen, in welches Instrument es auch gelegt ist; also ungefähr so:譜例",
     "de_normalized": "anmerkung fuer den dirigenten: in diesem motiv ist das achtel stets etwas fluechtig = nachlaessig auszufuehren, in welches instrument es auch gelegt ist; also ungefaehr so:譜例",
-    "ja": "指揮者への注意：この動機における 8 分音符は，どの楽器が演奏する場合でも，常にやや軽やかに＝ ぞんざいに演奏されるべきである，つまり，おおよそ次のように：譜例",
+    "ja": "指揮者への注意：この動機における 8 分音符は，どの楽器が演奏する場合でも，常にやや素早く＝ ぞんざいに演奏されるべきである，つまり，おおよそ次のように：譜例",
     "data": "M-5-3-136-dir&"
   },
   {
@@ -2306,7 +2306,7 @@
   {
     "de": "Auch hier die Achtel flüchtig, ungefähr:譜例",
     "de_normalized": "auch hier die achtel fluechtig, ungefaehr:譜例",
-    "ja": "ここでも8分音符はだいたい譜例のように軽やかに",
+    "ja": "ここでも8分音符はだいたい譜例のように素早く",
     "data": "M-5-3-283-all&"
   },
   {
@@ -3656,7 +3656,7 @@
   {
     "de": "Die Auftakt-Triolen dieses Themas müssen stets etwas flüchtig (quasi accel. ) nach Art der Militärfanfaren vorgetragen werden",
     "de_normalized": "die auftakt-triolen dieses themas muessen stets etwas fluechtig (quasi accel. ) nach art der militaerfanfaren vorgetragen werden",
-    "ja": "アウフタクトではじまるテーマの3連符は常に軍隊式ファンファーレのようにいくらか軽やかに（アッチェレランドのように）奏さなければならない．",
+    "ja": "アウフタクトではじまるテーマの3連符は常に軍隊式ファンファーレのようにいくらか素早く（アッチェレランドのように）奏さなければならない．",
     "data": "M-5-1-1-tr&"
   },
   {
@@ -3818,7 +3818,7 @@
   {
     "de": "Die Triole immer flüchtig",
     "de_normalized": "die triole immer fluechtig",
-    "ja": "3連符は変わらず軽やかに",
+    "ja": "3連符は変わらず素早く",
     "data": "M-5-1-402-tr&"
   },
   {
@@ -5192,7 +5192,7 @@
   {
     "de": "flüchtig",
     "de_normalized": "fluechtig",
-    "ja": "軽やかに",
+    "ja": "素早く",
     "data": "M-7-2-213-fl&M-7-2-215-fl&M-7-2-216-fl&"
   },
   {
@@ -9338,7 +9338,7 @@
   {
     "de": "N.B. In diese beiden Takten die mit pp bezeichneten Noten sehr flüchtig.",
     "de_normalized": "n.b. in diese beiden takten die mit pp bezeichneten noten sehr fluechtig.",
-    "ja": "注意：この2小節ではppのついた音はたいへん軽やかに",
+    "ja": "注意：この2小節ではppのついた音はたいへん素早く",
     "data": "M-7-5-333-all&"
   },
   {
@@ -12308,7 +12308,7 @@
   {
     "de": "Sehr fließend, beinahe flüchtig",
     "de_normalized": "sehr fliessend, beinahe fluechtig",
-    "ja": "たいへん流れるように，ほとんど軽やかに",
+    "ja": "たいへん流れるように，ほとんど素早く",
     "data": "M-8-t2-1017-all&"
   },
   {
@@ -13166,7 +13166,7 @@
   {
     "de": "stets etwas flüchtig",
     "de_normalized": "stets etwas fluechtig",
-    "ja": "変わらずいくらか軽やかに",
+    "ja": "変わらずいくらか素早く",
     "data": "M-8-t1-148-sv&"
   },
   {
@@ -13478,7 +13478,7 @@
   {
     "de": "Triole: flüchtig",
     "de_normalized": "triole: fluechtig",
-    "ja": "3連符：軽やかに",
+    "ja": "3連符：素早く",
     "data": "M-5-1-11-tr&M-5-1-71-tr&"
   },
   {
