@@ -2286,7 +2286,7 @@
   ],
   [
     "jedes",
-    "(≒ every, each / ogni, ciascuno)\njeder の格変化形（中性名詞の主格・対格など）\n【一般的な意味】\n① 各々の，一つ一つ全ての．\n② （時間などが）〜ごとに．",
+    "(≒ every, each / ogni, ciascuno)\njeder の格変化形\n【一般的な意味】\n① 各々の，一つ一つ全ての．\n② （時間などが）〜ごとに．",
     "[H: Con]"
   ],
   [
@@ -2296,7 +2296,7 @@
   ],
   [
     "Kammerdiener",
-    "(≒ valet, personal servant / cameriere personale, valletto)\n【一般的な意味】\n① 侍僕，近侍（きんじ）の侍者，従僕，従者．\n② （古い用法で）上流階級の身の回りの世話をする男の召使．\n\nDer Rosenkavalier の使用人たちについては \"Haushofmeister\" の項を参照． ",
+    "(≒ valet, personal servant / cameriere personale, valletto)\n【一般的な意味】\n① 侍僕，従僕，従者．\n② （古い用法で）上流階級の身の回りの世話をする男の召使．\n\nDer Rosenkavalier の使用人たちについては \"Haushofmeister\" の項を参照． ",
     "[RS: Oper]"
   ],
   [
@@ -2316,7 +2316,7 @@
   ],
   [
     "keck",
-    "(≒ bold, cheeky, sassy / ardito, sfacciato, vivace)\n【一般的な意味】\n① 大胆な，向こう見ずな，きっぱりした．\n② 生意気な，ずうずうしい，ちゃっかりした．\n③ 活発な，元気のいい．\n【音楽用語としての訳例】\n「活発に」，「大胆に」，「生意気に」，「ちゃっかりと」，「きっぱりと」\n\nいろいろあって訳出が難しい．GM では最大公約数的に「活発に」としているが，場所によっては「茶目っ気をもって」がよさそうなところもあるし，「自由奔放に」がよさそうなところもある．軽やかで遊び心のある表現が求められていそう．ちなみにこの用語は RW，RS にはない．",
+    "(≒ bold, cheeky, sassy / ardito, sfacciato, vivace)\n【一般的な意味】\n① 大胆な，向こう見ずな，きっぱりした．\n② 生意気な，ずうずうしい，ちゃっかりした．\n③ 活発な，元気のいい．\n【音楽用語としての訳例】\n「活発に」，「大胆に」，「生意気に」，「ちゃっかりと」，「きっぱりと」\n\nいろいろあって訳出が難しい．GM では最大公約数的に「活発に」としているが，場所によっては「茶目っ気をもって」がよさそうなところもあるし，「自由奔放に」がよさそうなところもある．軽やかで遊び心のある表現が求められていそう．ちなみにこの用語は [RW: Oper]，[RS: Oper] にはない．",
     "[GM]"
   ],
   [
@@ -2342,7 +2342,7 @@
   [
     "kläglich",
     "(≒ pitiful, pathetic, miserable / pietoso, patetico)\n【一般的な意味】\n① 哀れを誘うような，痛ましい，嘆かわしい．\n② （程度が）惨めな，みすぼらしい，ひどい．\n【音楽用語としての訳例】\n「哀れに」，「哀れっぽく」，「嘆くように」，「みすぼらしく」，「頼りなく」",
-    "[GM]"
+    "[GM], [RW: Oper], [RS: Oper]"
   ],
   [
     "Klammern",
@@ -2352,7 +2352,7 @@
   [
     "klangvoll",
     "(≒ sonorous, resonant, full-toned / sonoro, risonante)\n【一般的な意味】\n① 響きの豊かな，よく響く，共鳴する．\n② （言葉などが）音調の美しい，響きの良い．\n【音楽用語としての訳例】\n「豊かな響きで」，「豊かな音色で」，「よく響かせて」\n\nGM の子供の死の歌 \"Nun will die Sonn' so hell aufgeh'n\" にのみ使用例がある．「よく響かせて」と訳している．",
-    "[GM]"
+    "[GM], [RS: Oper]"
   ],
   [
     "Klappe",
@@ -2366,7 +2366,7 @@
   ],
   [
     "kleiner Neger",
-    "黒人の小姓\n\n現代では \"Neger\" は差別的用語であり，注意が必要である．有名な例では，Claude Debussy の『Golliwogg's Cake-walk』 が，ドイツ語圏の古い楽譜で 『Der kleine Neger』 と訳されていたことがあるが，現在は原題に近い表記や，別の適切な表現に差し替えられている．\nDer Rosenkavalier の使用人たちについては \"Haushofmeister\" の項を参照． ",
+    "黒人の小姓\n\n現代では \"Neger\" は差別的用語であり，注意が必要である．有名な例では，Claude Debussy の『Golliwogg's Cake-walk』 が，ドイツ語圏の古い楽譜で 『Der kleine Neger』 と訳されていたことがあるが，現在は原題に近い表記や，別の適切な表現に差し替えられている．\n\nDer Rosenkavalier の使用人たちについては \"Haushofmeister\" の項を参照． ",
     "[RS: Oper]"
   ],
   [
@@ -2532,11 +2532,11 @@
   [
     "leichtfertig",
     "(≒ frivolous, reckless, careless / frivolo, sconsiderato)\n【一般的な意味】\n① 軽率な，軽薄な，思慮に欠ける．\n② 不注意な，無謀な，向こう見ずな．\n【音楽用語としての訳例】\n「軽率に」，「軽薄に」，「無謀に」",
-    "[RS: Till], [RS: Held], [RS: Oper]"
+    "[RS: Oper], [RS: Till], [RS: Held]"
   ],
   [
     "leichthin",
-    "(≒ lightly, casually, nonchalantly / facilmente, con noncuranza)\n【一般的な意味】\n① 軽々しく，軽薄に，いい加減に．\n② さりげなく，そっけなく，ぞんざいに．\n③ 簡単に，苦もなく．\n【音楽用語としての訳例】\n「con leggerezza」，「facilmente」，「軽やかに」，「さりげなく」，「ぞんざいに」，「簡単そうに」",
+    "(≒ lightly, casually, nonchalantly / facilmente, con noncuranza)\n【一般的な意味】\n① 軽々しく，軽薄に，いい加減に．\n② さりげなく，そっけなく，ぞんざいに．\n③ 簡単に，苦もなく．\n【音楽用語としての訳例】\n「con leggerezza」，「軽やかに」，「さりげなく」，「ぞんざいに」，「簡単そうに」",
     "[K: Cap], [RS: Oper]"
   ],
   [
