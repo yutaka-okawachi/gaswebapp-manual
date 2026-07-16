@@ -1798,6 +1798,8 @@ window.getGenericTermsListLocal = function(dataKey) {
     
     // Extract unique 'de' terms
     const terms = data
+        // ページ番号（D列）が空欄のものを予測変換候補から除外
+        .filter(row => row.page !== null && row.page !== undefined && String(row.page).trim() !== '')
         .map(row => ({ original: row.de, normalized: row.de_normalized || normalizeString(row.de) }))
         .filter(item => item.original && item.normalized);
 

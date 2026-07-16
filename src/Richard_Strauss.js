@@ -201,7 +201,7 @@ function searchRichardStraussByPage(operaName, pageInput) {
  ***********************************************************/
 
 function getRichardStraussDeTerms() {
-  const cacheKey = 'rs_de_terms_cache_v2';
+  const cacheKey = 'rs_de_terms_cache_v3';
   const cached = getChunkedCache(cacheKey);
   if (cached) {
     return cached;
@@ -209,6 +209,8 @@ function getRichardStraussDeTerms() {
 
   const allData = getRichardStraussData();
   const terms = allData
+    // ページ番号（D列）が空欄のものを予測変換候補から除外
+    .filter(row => row.page !== null && row.page !== undefined && String(row.page).trim() !== '')
     .map(row => ({ original: row.de, normalized: row.de_normalized }))
     .filter(item => item.original && item.normalized);
 

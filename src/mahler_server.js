@@ -579,7 +579,7 @@ function searchRichardWagnerByPage(operaName, pageInput) {
  ***********************************************************/
 
 function getRichardWagnerDeTerms() {
-  const cacheKey = 'rw_de_terms_cache_v2';
+  const cacheKey = 'rw_de_terms_cache_v3';
   const cached = getChunkedCache(cacheKey);
   if (cached) {
     return cached;
@@ -587,6 +587,8 @@ function getRichardWagnerDeTerms() {
 
   const allData = getRichardWagnerData();
   const terms = allData
+    // ページ番号（D列）が空欄のものを予測変換候補から除外
+    .filter(row => row.page !== null && row.page !== undefined && String(row.page).trim() !== '')
     .map(row => ({ original: row.de, normalized: row.de_normalized }))
     .filter(item => item.original && item.normalized);
 
