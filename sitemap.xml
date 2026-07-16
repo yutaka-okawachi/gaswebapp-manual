@@ -11,7 +11,7 @@
   <!-- メインページ (Mahler) -->
   <url>
     <loc>https://yutaka-okawachi.github.io/gaswebapp-manual/mahler-search-app/mahler.html</loc>
-    <lastmod>2026-07-15</lastmod>
+    <lastmod>2026-07-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
@@ -27,7 +27,7 @@
   <!-- 検索ページ -->
   <url>
     <loc>https://yutaka-okawachi.github.io/gaswebapp-manual/mahler-search-app/terms_search.html</loc>
-    <lastmod>2026-07-15</lastmod>
+    <lastmod>2026-07-16</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
