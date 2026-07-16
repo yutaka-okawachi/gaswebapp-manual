@@ -2582,7 +2582,7 @@
   [
     "liebevoll",
     "(≒ loving, affectionate, tender / affettuoso, dolce, tenero)\n【一般的な意味】\n① 愛情のこもった，愛に満ちた．\n② 優しい，思いやりのある，親切な．\n③ 心を込めた，丁寧な．\n【音楽用語としての訳例】\n「愛情を込めて」，「優しく」，「心を込めて」",
-    "[RS: Held], [RW: Oper], [RS: Oper]"
+    "[RW: Oper], [RS: Oper], [RS: Held]"
   ],
   [
     "lieblich",
@@ -2611,7 +2611,7 @@
   ],
   [
     "Luftpause",
-    "(≒ breath pause, caesura / pausa, respiro)\n【一般的な意味】\n① 息継ぎのための短い休止，一息．\n② （比喩的に）短い中断．\n【音楽用語としての訳例】\n「ブレス（息継ぎ）」，「短い休止（リズムを乱さずに）」，「句読点の休止」",
+    "(≒ breath pause, caesura / pausa, respiro)\n【一般的な意味】\n① 息継ぎのための短い休止，一息．\n② （比喩的に）短い中断．\n【音楽用語としての訳例】\n「ブレス（息継ぎ）」，「短い休止」",
     "[GM]"
   ],
   [
@@ -2691,13 +2691,13 @@
   ],
   [
     "mäßigen",
-    "(≒ moderate, temperate, restrained / moderato, temperato)\n【一般的な意味】\n① 適度の，中庸の，穏やかな．\n② （程度が）そこそこの，控えめな．\n③ （形容詞として）抑制された．\n【音楽用語としての訳例】\n「moderato」，「適度な」，「中くらいの（速さで）」，「穏やかな」\n\nGM では「抑えて」と訳している．",
+    "(≒ moderate, temperate, restrained / moderato, temperato)\n【一般的な意味】\n① 適度の，中庸の，穏やかな．\n② （程度が）そこそこの，控えめな．\n③ （形容詞として）抑制された．\n【音楽用語としての訳例】\n「適度な」，「中くらいの（速さで）」，「穏やかな」\n\nGM では「抑えて」と訳している．",
     "[GM], [RW: Oper]"
   ],
   [
     "matt",
     "(≒ dull, matt, faint, weak / fioco, smorto)\n【一般的な意味】\n① （光沢がなく）つや消しの，マットな，くすんだ．\n② （音や光が）弱い，かすかな，ぼんやりした．\n③ （人が）疲れた，活気のない，ぐったりした．\n【音楽用語としての訳例】\n「つやのない」，「くすんだ音色で」，「弱々しく」，「精彩なく」\n\n[RS: Dom] では「弱々しく」くらいの意味であろう．",
-    "[RS: Dom], [RW: Oper], [RS: Oper]"
+    "[RW: Oper], [RS: Oper], [RS: Dom]"
   ],
   [
     "Mediator",
@@ -2707,7 +2707,7 @@
   [
     "mehr",
     "(≒ more, several / più, maggiore)\n【一般的な意味】\n① より多く，もっと多く，一層．\n② （形容詞として）数多くの，いくつかの．\n③ （否定文で）もはや〜ない．",
-    "[GM]"
+    "[GM], [RW: Oper], [RS: Oper]"
   ],
   [
     "Mehr langsam, Misterioso",
@@ -2722,7 +2722,7 @@
   [
     "mehrfach",
     "(≒ multiple, manifold, repeated / molteplice, ripetuto)\n【一般的な意味】\n① 数回の，繰り返された，再三の．\n② 多重の，何倍もの，複数の要素から成る．\n【音楽用語としての訳例】\n「複数の奏者で」，「（パートが）複数に分かれた」，「divisi で」，「数回繰り返して」\n\n[GM] では \"mehrfach besetzt\" で「複数の奏者で」，「複数配置で」などとなる．",
-    "[RW: Oper], [GM]"
+    "[GM], [RW: Oper]"
   ],
   [
     "merklich",
@@ -2816,7 +2816,7 @@
   ],
   [
     "mühelos",
-    "たやすい，苦労のない ",
+    "(≒ effortless, easy, untroubled / senza sforzo, agevole)\nmühelos の代替表記（ウムラウトの代用表記 \"ue\"）\n【一般的な意味】\n骨の折れない，容易な，苦労のない，たやすくできる\n【音楽用語としての訳例】\n「難なく」，「苦も無く」，「力みを排して滑らかに」，「きわめて容易に」",
     "[RS: Qui]"
   ],
   [
@@ -2871,12 +2871,12 @@
   ],
   [
     "nachlassen",
-    "(≒ slacken, diminish, abate, decrease / diminuire, allentare, calando)\n【一般的な意味】\n① （強度・速度・痛みなどが）弱まる，低下する，緩む．\n② （努力などを）怠る，手を抜く．\n【音楽用語としての訳例】\n「diminuendo」，「calando」，「弱める」，「勢いを失う」，「テンポを緩める」",
+    "(≒ slacken, diminish, abate, decrease / diminuire, allentare, calando)\n【一般的な意味】\n① （強度・速度・痛みなどが）弱まる，低下する，緩む．\n② （努力などを）怠る，手を抜く．\n【音楽用語としての訳例】\n「弱める」，「勢いを失う」，「テンポを緩める」",
     "[GM], [RW: Oper]"
   ],
   [
     "Nachschlag",
-    "(≒ after-note, grace note / nota di risoluzione, completamento)\n\n【一般的な意味】\n① 後から追いかけて支払うこと，追徴金，追加注文．\n② （ボクシングなどの）追い打ち，（一般的に）後から付け加えること．\n③ 食後のデザート，お代わり．\n【音楽用語としての訳例】\n「後打音（トリルの終わりに付けられる装飾音など）」\n\n対義語は \"Vorschlag\"． \"o. Nachschalg\" は \"ohne Nachschlag\" の略で「後打音なしで」．ちなみにドイツ語の日常生活で \"Nachschlag\" とは「食事のお代わり」を指すことが多いようだ． ",
+    "(≒ after-note, grace note / nota di risoluzione, completamento)\n\n【一般的な意味】\n① 後から追いかけて支払うこと，追徴金，追加注文．\n② （ボクシングなどの）追い打ち，（一般的に）後から付け加えること．\n③ 食後のデザート，お代わり．\n【音楽用語としての訳例】\n「後打音（トリルの終わりに付けられる装飾音など）」\n\n対義語は \"Vorschlag\" （前打音）． \"o. Nachschalg\" は \"ohne Nachschlag\" の略で「後打音なしで」．ちなみにドイツ語の日常生活で \"Nachschlag\" とは「食事のお代わり」を指すことが多いようだ． ",
     "[GM]"
   ],
   [
@@ -3022,7 +3022,7 @@
   [
     "nun",
     "(≒ now, well then / ora, ebbene)\n【一般的な意味】\n① （時間的に）今，現在，もはや．\n② （接続的な副詞として）さて，ところで，それでは．\n③ （心態詞として）いったい，さて，まさか．",
-    "[GM]"
+    "[GM], [RW: Oper], [RS: Oper]"
   ],
   [
     "Nun laube, Lindlein, laube!",
@@ -3031,7 +3031,7 @@
   ],
   [
     "nur ruhig bewegt",
-    "ただ穏やかに動きをもって",
+    "落ち着きを保ちつつ，緩やかに動かして",
     "[B: 7]"
   ],
   [
@@ -3041,7 +3041,7 @@
   ],
   [
     "ohnmächtig",
-    "(≒ unconscious, faint, powerless / svenuto, impotente)\n【一般的な意味】\n① 意識を失った，気絶した． ② 無力な，力のない，（感情などに）抗いようのない．\n【音楽用語としての訳例】\n「気を失ったように」，「無力に」，「（息が絶え絶えになるほど）弱々しく」，「抗いようのないほど激しく」\n\n「（息が絶え絶えになるほど）弱々しく」，「抗いようのないほど激しく」は矛盾しているようにも読み取れるが，\"ohnmächtig\" という用語に「コントロールを失っている」というニュアンスが中心にあると考えるとそれほど矛盾しているわけでもない．ただ，RW でも RS でも①の意味でしか用いられていない．",
+    "(≒ unconscious, faint, powerless / svenuto, impotente)\n【一般的な意味】\n① 意識を失った，気絶した．\n② 無力な，力のない，（感情などに）抗いようのない．\n【音楽用語としての訳例】\n「気を失ったように」，「無力に」，「（息が絶え絶えになるほど）弱々しく」，「抗いようのないほど激しく」\n\n「（息が絶え絶えになるほど）弱々しく」，「抗いようのないほど激しく」は矛盾しているようにも読み取れるが，\"ohnmächtig\" という用語に「コントロールを失っている」というニュアンスが中心にあると考えるとそれほど矛盾しているわけでもない．ただ，RW でも RS でも①の意味でしか用いられていない．",
     "[RW: Oper], [RS: Oper]"
   ],
   [
@@ -3052,7 +3052,7 @@
   [
     "Paar",
     "(≒ pair, couple / paio, coppia)\n【一般的な意味】\n① 一対，一組，ペア，二人連れ．\n② （男女の）カップル，夫婦．\n③ わずか二つ，少数．\n\nGM では交響曲第6番に \"2 Paar Pauken\"「2組のティンパニ」という使われ方をしている．",
-    "[GM]"
+    "[GM], [RW: Oper], [RS: Oper]"
   ],
   [
     "pastos",
@@ -3072,11 +3072,11 @@
   [
     "plötzlich",
     "(≒ suddenly, abruptly / improvvisamente, di colpo)\n【一般的な意味】\n① 突然の，急な，不意の．\n② （予期せぬ変化が）だしぬけに起こる様子．\n【音楽用語としての訳例】\n「突然」，「急に」，「（前触れなくテンポやダイナミクスを）一変させて」",
-    "[RW: oper], [GM], [RS: Oper]"
+    "[GM], [RW: oper], [RS: Oper]"
   ],
   [
     "plötzlich leidenschaftlich anschlagend",
-    "突然情熱的に始める ",
+    "突然情熱的に始めて（フレーズを明確に開始して）",
     "[K: App]"
   ],
   [
