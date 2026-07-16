@@ -224,7 +224,7 @@
   {
     "de": "1. Tromp. zart hervortretend!",
     "de_normalized": "1. tromp. zart hervortretend!",
-    "ja": "1st トランペットは繊細に，目立って！",
+    "ja": "1st トランペットは繊細に，目立たせて！",
     "data": "M-3-6-251-tr&"
   },
   {
@@ -278,7 +278,7 @@
   {
     "de": "1. Viol. etwas hervortretend",
     "de_normalized": "1. viol. etwas hervortretend",
-    "ja": "1stヴァイオリンはいくらか目立って",
+    "ja": "1stヴァイオリンはいくらか目立たせて",
     "data": "M-2-3-67-v1&"
   },
   {
@@ -2432,13 +2432,13 @@
   {
     "de": "ausdrucksvoll gesangvoll hervortretend!",
     "de_normalized": "ausdrucksvoll gesangvoll hervortretend!",
-    "ja": "表情豊かに歌い，目立って！",
+    "ja": "表情豊かに歌い，目立たせて！",
     "data": "M-1-1-372-hr&"
   },
   {
     "de": "ausdrucksvoll hervortretend",
     "de_normalized": "ausdrucksvoll hervortretend",
-    "ja": "表情豊かに，目立って",
+    "ja": "表情豊かに，目立たせて",
     "data": "M-3-6-24-v2&M-b2-t1-435-alt&"
   },
   {
@@ -2684,7 +2684,7 @@
   {
     "de": "Beginn der Steigern. Celli, Bässe, Fg. 3. Pos. u. Tuba etwas hervortretend",
     "de_normalized": "beginn der steigern. celli, baesse, fg. 3. pos. u. tuba etwas hervortretend",
-    "ja": "盛り上がり（高まり）の始まり．チェロ，コントラバス，ファゴット3rd，トロンボーン，テューバはいくらか目立って",
+    "ja": "盛り上がり（高まり）の始まり．チェロ，コントラバス，ファゴット3rd，トロンボーン，テューバはいくらか目立たせて",
     "data": "M-1-1-338-all&"
   },
   {
@@ -3980,7 +3980,7 @@
   {
     "de": "doch hervortretend",
     "de_normalized": "doch hervortretend",
-    "ja": "しかし目立って",
+    "ja": "しかし目立たせて",
     "data": "M-3-1-488-tr&"
   },
   {
@@ -4118,7 +4118,7 @@
   {
     "de": "durchaus etwas hervortretend",
     "de_normalized": "durchaus etwas hervortretend",
-    "ja": "一貫していくらか目立って",
+    "ja": "一貫していくらか目立たせて",
     "data": "M-a-5-62-ob&"
   },
   {
@@ -4466,7 +4466,7 @@
   {
     "de": "espress. hervortretend",
     "de_normalized": "espress. hervortretend",
-    "ja": "表情豊かに，目立って",
+    "ja": "表情豊かに，目立たせて",
     "data": "M-2-3-287-fl,ob,cl&"
   },
   {
@@ -4712,19 +4712,19 @@
   {
     "de": "etwas hervortr.",
     "de_normalized": "etwas hervortr.",
-    "ja": "いくらか目立って",
+    "ja": "いくらか目立たせて",
     "data": "M-b2-t1-222-ob&"
   },
   {
     "de": "etwas hervortretend",
     "de_normalized": "etwas hervortretend",
-    "ja": "いくらか目立って",
+    "ja": "いくらか目立たせて",
     "data": "M-1-1-203-cl&M-1-1-205-fl&M-1-3-19-all&M-1-3-29-ob,escl&M-1-3-124-tr&M-1-3-131-cl&M-2-3-371-v1&M-2-5-34-v1&M-2-5-37-v1&M-3-1-728-vc&M-3-2-245-ob,hr&M-3-3-347-fl&M-3-6-124-hr&M-3-6-151-hr&M-3-6-157-tr&M-4-2-221-cl&M-4-2-254-cl&M-5-2-87-cl&M-5-5-389-hr&M-5-5-416-ob&M-5-5-418-fg&M-6-4-670-tr&M-7-1-257-tr&M-7-1-315-tr&M-7-2-280-hr&M-8-t2-837-chor1&M-8-t2-1478-chor1&M-b2-t1-12-fl&M-d-d01-38-hr&M-d-d04-80-v1&M-e-e5-107-v1&M-e-e5-112-fl&"
   },
   {
     "de": "etwas hervortretend (fliessend)",
     "de_normalized": "etwas hervortretend (fliessend)",
-    "ja": "いくから目立って（流れるように）",
+    "ja": "いくから目立たせて（流れるように）",
     "data": "M-6-4-554-hr&"
   },
   {
@@ -5522,7 +5522,7 @@
   {
     "de": "gegen die 2. Violinen zart hervortretend",
     "de_normalized": "gegen die 2. violinen zart hervortretend",
-    "ja": "2ndヴァイオリンに比べて（に対して）繊細に，目立って",
+    "ja": "2ndヴァイオリンに比べて（に対して）繊細に，目立たせて",
     "data": "M-a-1-211-v1&"
   },
   {
@@ -5654,7 +5654,7 @@
   {
     "de": "gesangvoll hervortretend",
     "de_normalized": "gesangvoll hervortretend",
-    "ja": "たっぷり歌って，目立って",
+    "ja": "たっぷり歌って，目立たせて",
     "data": "M-3-6-108-v1&"
   },
   {
@@ -5684,7 +5684,7 @@
   {
     "de": "gestimmt in A, E, H, Fis immer stark hervortretend und ohne Dämpfer",
     "de_normalized": "gestimmt in a, e, h, fis immer stark hervortretend und ohne daempfer",
-    "ja": "A，E，H，Fis に調弦しておく．きわめて目立って，ミュートをつけずに",
+    "ja": "A，E，H，Fis に調弦しておく．きわめて目立たせて，ミュートをつけずに",
     "data": "M-4-2-0-sv&"
   },
   {
@@ -5918,7 +5918,7 @@
   {
     "de": "gut hervortretend",
     "de_normalized": "gut hervortretend",
-    "ja": "十分に目立って",
+    "ja": "十分に目立たせて",
     "data": "M-1-1-290-hr&M-1-1-308-tr&M-1-3-45-escl&M-1-4-266-hr&M-2-2-44-hp&M-2-2-158-fl,ob&M-2-3-238-cl&M-2-5-688-pos&M-3-1-831-hr&M-3-3-121-fl&M-8-t1-467-sop1,alt1&"
   },
   {
@@ -6128,31 +6128,31 @@
   {
     "de": "hervortr.",
     "de_normalized": "hervortr.",
-    "ja": "目立って",
+    "ja": "目立たせて",
     "data": "M-2-5-489-sop&M-3-2-243-ob,cl&M-9-4-81-ob&M-b1-t2-326-v2&M-b1-t2-327-va&M-b1-t2-328-vc&"
   },
   {
     "de": "hervortret.",
     "de_normalized": "hervortret.",
-    "ja": "目立って",
+    "ja": "目立たせて",
     "data": "M-7-5-72-fl&"
   },
   {
     "de": "hervortretend",
     "de_normalized": "hervortretend",
-    "ja": "目立って",
+    "ja": "目立たせて",
     "data": "M-1-1-201-cl&M-1-1-245-fg&M-1-3-66-ob&M-1-3-71-fg&M-1-3-138-tr&M-1-3-155-cl&M-2-1-208-fl&M-2-1-370-fl&M-2-2-179-fl,ob&M-2-3-136-fl,ob&M-2-3-140-cl&M-2-3-168-cl&M-2-3-357-cl&M-2-3-416-ob&M-2-5-532-sop&M-3-1-132-pic&M-3-1-364-tr&M-3-1-811-tr&M-3-1-814-tr&M-3-2-245-tr&M-3-5-43-ob&M-3-6-55-hr&M-3-6-149-ob&M-4-2-225-v1&M-4-2-275-hr&M-4-3-137-cl,fg&M-4-3-141-cl&M-5-2-91-cl&M-5-2-355-v1&M-5-2-364-hr&M-5-3-99-hr&M-5-3-403-fl&M-5-3-622-tr,pos&M-6-3-56-ob&M-6-3-76-hr&M-6-3-86-tr&M-6-3-89-fl,ob&M-6-4-357-tr&M-6-4-359-tr&M-6-4-441-hr&M-7-1-12-thr&M-7-1-278-eh&M-7-1-503-tr&M-7-2-111-vc&M-7-4-357-fg&M-7-4-358-hr&M-7-4-359-ob&M-7-5-60-hr&M-7-5-70-fl&M-7-5-300-tr&M-8-t1-70-sop1&M-8-t1-100-bar&M-8-t1-137-pos,bt&M-8-t1-156-cl&M-8-t1-232-alt1&M-8-t1-238-alt2&M-8-t1-239-ob&M-8-t1-445-alt2&M-8-t2-283-hr&M-8-t2-284-pos&M-8-t2-553-va&M-8-t2-536-sv&M-8-t2-745-ten&M-8-t2-978-sv&M-8-t2-1206-sop2&M-8-t2-1219-v1&M-8-t2-1223-cl&M-8-t2-1243-cel&M-8-t2-1471-sop1&M-8-t2-1494-tr&M-9-1-266-hr&M-9-1-269-sv&M-9-1-270-sv&M-9-1-285-tr&M-9-3-287-hr&M-9-3-360-fl,ob,cl&M-9-4-76-v1&M-101-a-53-hr&M-101-a-99-fg&M-101-a-235-fg&M-102-1-54-hr&M-102-1-235-fg&M-102-2-142-hr&M-102-3-25-ob&M-102-4-35-hr&M-102-4-135-ob&M-102-4-138-cl&M-102-5-163-tr&M-a-1-59-sv&M-a-6-101-ob&M-b1-t1-80-v2,va&M-b1-t1-155-vc&M-b1-t1-348-cl&M-b1-t1-457-v2,va&M-b1-t1-511-cl&M-b1-t1-520-va&M-b1-t1-560-fl&M-b1-t1-579-cl&M-b1-t1-582-hr&M-b1-t1-585-ob,eh&M-b1-t2-119-fl&M-b1-t2-100-ob&M-b1-t2-212-bcl&M-b1-t2-232-bcl&M-b1-t2-233-eh&M-b1-t2-286-fl&M-b1-t2-328-hr&M-b1-t2-345-fl&M-b1-t2-353-vc&M-b1-t2-395-ob&M-b1-t2-405-v2&M-b1-t2-412-sv&M-b1-t2-420-fl,cl&M-b1-t2-428-ob&M-b1-t2-430-chor&M-b1-t2-443-fg&M-b1-t2-492-vc&M-b1-t3-29-fl,ob,cl&M-b1-t3-33-tr&M-b1-t3-41-tr&M-b1-t3-58-fl,ob&M-b1-t3-60-va,vc&M-b1-t3-61-ob,cl&M-b1-t3-63-hr&M-b1-t3-81-ob,cl&M-b1-t3-83-hr,chor&M-b1-t3-97-cl&M-b1-t3-118-fhr&M-b1-t3-120-fhr&M-b1-t3-121-pis&M-b1-t3-122-hr&M-b1-t3-149-hr&M-b1-t3-152-ob&M-b1-t3-168-hr&M-b1-t3-207-fg&M-b1-t3-217-ob&M-b1-t3-224-ob,eh&M-b1-t3-229-ob&M-b1-t3-237-tr&M-b1-t3-269-fl&M-b1-t3-285-ob,cl&M-b1-t3-304-ob&M-b1-t3-370-fl&M-b1-t3-376-va,vc&M-b1-t3-380-va&M-b1-t3-432-fg&M-b1-t3-508-fl&M-b1-t3-518-ob&M-b1-t3-519-eh&M-b2-t1-226-ten&M-b2-t1-278-fl&M-b2-t1-340-ob&M-b2-t2-151-ob&M-b2-t2-161-hr&M-b2-t2-263-cl&M-b2-t2-377-cl&M-d-d04-4-cl&M-d-d04-140-v1&M-d-d05-20-ob&M-e-e5-128-vc&M-h-h-29-v1,v2&M-h-h-93-v1&M-h-h-240-cl&M-h-h-296-va&M-h-h-388-v1&M-h-h-396-fl&"
   },
   {
     "de": "hervortretend sehr gesangvoll",
     "de_normalized": "hervortretend sehr gesangvoll",
-    "ja": "目立って，たいへんたっぷり歌って",
+    "ja": "目立たせて，たいへんたっぷり歌って",
     "data": "M-2-3-308-tr&"
   },
   {
     "de": "hervortretend!",
     "de_normalized": "hervortretend!",
-    "ja": "目立って！",
+    "ja": "目立たせて！",
     "data": "M-3-1-253-cl&"
   },
   {
@@ -6338,7 +6338,7 @@
   {
     "de": "Holzinstrumente sehr hervortretend",
     "de_normalized": "holzinstrumente sehr hervortretend",
-    "ja": "木管楽器はたいへん目立って",
+    "ja": "木管楽器はたいへん目立たせて",
     "data": "M-2-2-142-fl,ob,cl,escl,fg&"
   },
   {
@@ -6818,7 +6818,7 @@
   {
     "de": "immer etwas hervortretend",
     "de_normalized": "immer etwas hervortretend",
-    "ja": "変わらずいくらか目立って",
+    "ja": "変わらずいくらか目立たせて",
     "data": "M-4-2-159-sv&"
   },
   {
@@ -8192,7 +8192,7 @@
   {
     "de": "leidenschaftlich hervortretend",
     "de_normalized": "leidenschaftlich hervortretend",
-    "ja": "情熱的に，目立って",
+    "ja": "情熱的に，目立たせて",
     "data": "M-b1-t1-427-vc&"
   },
   {
@@ -8288,7 +8288,7 @@
   {
     "de": "lustig hervortretend",
     "de_normalized": "lustig hervortretend",
-    "ja": "陽気に，目立って",
+    "ja": "陽気に，目立たせて",
     "data": "M-4-2-128-hr&"
   },
   {
@@ -9194,7 +9194,7 @@
   {
     "de": "mit voller Stimme, plötzlich hervortretend",
     "de_normalized": "mit voller stimme, ploetzlich hervortretend",
-    "ja": "十分な声量で，突然目立って",
+    "ja": "十分な声量で，突然目立たせて",
     "data": "M-8-t2-639-ten&"
   },
   {
@@ -9266,7 +9266,7 @@
   {
     "de": "molto espress, sehr hervortretend",
     "de_normalized": "molto espress, sehr hervortretend",
-    "ja": "たいへん表情豊かに，たいへん目立って",
+    "ja": "たいへん表情豊かに，たいへん目立たせて",
     "data": "M-a-6-71-fl&"
   },
   {
@@ -10982,13 +10982,13 @@
   {
     "de": "Oberstimme etwas hervortretend",
     "de_normalized": "oberstimme etwas hervortretend",
-    "ja": "上声部はいくらか目立って",
+    "ja": "上声部はいくらか目立たせて",
     "data": "M-d-d01-29-v2&M-d-d01-66-hr&"
   },
   {
     "de": "Oberstimme gut hervortreten",
     "de_normalized": "oberstimme gut hervortreten",
-    "ja": "上声部は十分に目立って",
+    "ja": "上声部は十分に目立たせて",
     "data": "M-d-d01-84-hr&"
   },
   {
@@ -11246,7 +11246,7 @@
   {
     "de": "p aber hervortretend",
     "de_normalized": "p aber hervortretend",
-    "ja": "pだが目立って",
+    "ja": "pだが目立たせて",
     "data": "M-7-1-267-sv&M-b2-t1-353-hr&"
   },
   {
@@ -12176,7 +12176,7 @@
   {
     "de": "sehr ausducksvoll u. hervortretend",
     "de_normalized": "sehr ausducksvoll u. hervortretend",
-    "ja": "たいへん表情豊かに，そして目立って",
+    "ja": "たいへん表情豊かに，そして目立たせて",
     "data": "M-7-2-164-ob&"
   },
   {
@@ -12392,7 +12392,7 @@
   {
     "de": "sehr gesangvoll (zart hervortretend)",
     "de_normalized": "sehr gesangvoll (zart hervortretend)",
-    "ja": "たっぷりと歌って（繊細に，目立って）",
+    "ja": "たっぷりと歌って（繊細に，目立たせて）",
     "data": "M-3-6-20-vc&"
   },
   {
@@ -12434,7 +12434,7 @@
   {
     "de": "sehr hervortretend",
     "de_normalized": "sehr hervortretend",
-    "ja": "たいへん目立って",
+    "ja": "たいへん目立たせて",
     "data": "M-2-3-271-tr&M-2-5-82-hr&M-3-5-51-alt&M-3-6-154-fl&M-4-2-8-sv&M-4-2-118-hr&M-4-4-58-ob&M-5-1-195-tr&M-5-5-659-vc&M-6-3-22-eh&M-8-t1-58-fl,ob&M-8-t1-157-alt1&M-8-t1-249-sv&M-8-t2-1132-vc&M-9-1-365-tr&M-a-1-199-ob&M-a-2-47-ob&M-e-e1-41-ob&"
   },
   {
@@ -12704,7 +12704,7 @@
   {
     "de": "sehr weich und hervortretend",
     "de_normalized": "sehr weich und hervortretend",
-    "ja": "たいへん柔らかく，目立って",
+    "ja": "たいへん柔らかく，目立たせて",
     "data": "M-9-1-408-hr&"
   },
   {
@@ -13094,7 +13094,7 @@
   {
     "de": "stark hervortretend",
     "de_normalized": "stark hervortretend",
-    "ja": "きわめて目立って",
+    "ja": "きわめて目立たせて",
     "data": "M-3-1-868-tr&M-7-1-27-pos&M-7-1-495-tr&M-7-4-23-sv&M-7-4-367-hr&M-8-t1-73-alt1&M-8-t1-136-hr&M-8-t1-437-ten&M-8-t2-346-hr&M-8-t2-576-alt1&M-8-t2-937-sv&M-8-t2-1480-chor1&M-9-3-484-sva&M-9-4-17-hr&M-9-4-44-sv&M-9-4-49-hr&M-102-1-63-hr&M-102-5-205-hr&"
   },
   {
@@ -13172,7 +13172,7 @@
   {
     "de": "stets etwas hervortretend",
     "de_normalized": "stets etwas hervortretend",
-    "ja": "常にいくらか目立って",
+    "ja": "常にいくらか目立たせて",
     "data": "M-7-3-192-fg&M-8-t2-726-sv&"
   },
   {
@@ -13184,7 +13184,7 @@
   {
     "de": "stets hervortretend",
     "de_normalized": "stets hervortretend",
-    "ja": "常に目立って",
+    "ja": "常に目立たせて",
     "data": "M-a-5-19-ob&"
   },
   {
@@ -14180,7 +14180,7 @@
   {
     "de": "weich und ausdrucksvoll hervortretend",
     "de_normalized": "weich und ausdrucksvoll hervortretend",
-    "ja": "柔らかく，表情豊かに目立って",
+    "ja": "柔らかく，表情豊かに目立たせて",
     "data": "M-3-1-492-hr&"
   },
   {
@@ -15104,19 +15104,19 @@
   {
     "de": "zart gesungen, aber sehr hervortretend",
     "de_normalized": "zart gesungen, aber sehr hervortretend",
-    "ja": "繊細に歌って，しかしたいへん目立って",
+    "ja": "繊細に歌って，しかしたいへん目立たせて",
     "data": "M-9-1-151-hr&"
   },
   {
     "de": "zart hervortreten",
     "de_normalized": "zart hervortreten",
-    "ja": "繊細に，目立って",
+    "ja": "繊細に，目立たせて",
     "data": "M-4-1-96-ob&"
   },
   {
     "de": "zart hervortretend",
     "de_normalized": "zart hervortretend",
-    "ja": "繊細に，目立って",
+    "ja": "繊細に，目立たせて",
     "data": "M-1-1-231-fl&M-1-1-247-hr&M-1-2-207-ob&M-2-1-131-ob&M-3-1-505-ob&M-3-2-246-vc&M-5-2-214-hr&M-7-4-7-hr&M-8-t2-861-sv&M-8-t2-1161-tr&M-9-1-436-cl&M-a-5-31-sv&M-d-d09-85-fl&M-h-h-131-ob&"
   },
   {
@@ -15326,7 +15326,7 @@
   {
     "de": "zurückhalten hervortretend",
     "de_normalized": "zurueckhalten hervortretend",
-    "ja": "速度を緩めて，目立って",
+    "ja": "速度を緩めて，目立たせて",
     "data": "M-2-5-637-alt&"
   },
   {
