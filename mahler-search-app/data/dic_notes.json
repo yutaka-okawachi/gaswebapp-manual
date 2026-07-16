@@ -1806,7 +1806,7 @@
   ],
   [
     "gewichtig",
-    "(≒ weighty, important, significant / pesante, grave, importante)\n【一般的な意味】\n① 相当の重さがある，重みのある，分厚い．\n② （事柄・態度などが）重要な，意義深い，権威ある，重々しい．\n【音楽用語としての訳例】\n「重々しく」，「威厳をもって」，「（響きに）重みをつけて」，「重要な意味合いで」",
+    "(≒ weighty, important, significant / pesante, grave, importante)\n【一般的な意味】\n① 相当の重さがある，重みのある，分厚い．\n② （事柄・態度などが）重要な，意義深い，権威ある，重々しい．\n【音楽用語としての訳例】\n「重々しく」，「威厳をもって」，「（響きに）重みをつけて」",
     "[GM],  [RW: Oper], [RS: Oper], [H: Welt]"
   ],
   [
@@ -1817,11 +1817,11 @@
   [
     "gewinnen",
     "(≒ win, gain, acquire / vincere, ottenere)\n【一般的な意味】\n① （競争・戦いなどに）勝つ，勝利を得る．\n② （利益・物・地位などを）得る，手に入れる．\n③ （時間・支持・確信などを）獲得する，増す．\n\nGM では使用例は1か所しかなく，交響曲第9番第1楽章に \"Allmählich an Ton gewinnend\" とある．これは前の \"Schattenhaft\" （影のように）から元の状態に戻っていくことを指していると思われるので「（存在感を） 取り戻す」とした．",
-    "[GM],  [RW: Oper]"
+    "[GM],  [RW: Oper], [RS: Oper]"
   ],
   [
     "gewirbelt",
-    "(≒ swirled, whirled, rolled / rullato, turbinato)\nwirbeln の過去分詞\n【一般的な意味】\n① 渦巻いた，旋回した，回転した．\n② （砂や雪などが）舞い上がった．\n③ （太鼓などが）ロールされた，連打された．\n【音楽用語としての訳例】\n「（太鼓の）ロールで」，「連打で」，「渦巻くように」，「急速な連続音で」\n\nシンバルを（ティンパニの撥で） ロールする，という意味．実際にはティンパニの撥ではなくサスペンドシンバル用の撥で叩いたりもするようだ．",
+    "(≒ swirled, whirled, rolled / rullato, turbinato)\nwirbeln の過去分詞\n【一般的な意味】\n① 渦巻いた，旋回した，回転した．\n② （砂や雪などが）舞い上がった．\n③ （太鼓などが）ロールされた，連打された．\n【音楽用語としての訳例】\n「（太鼓の）ロールで」，「連打で」\n\nシンバルを（ティンパニの撥で） ロールする，という意味．実際にはティンパニの撥ではなくサスペンドシンバル用の撥で叩いたりもするようだ．",
     "[GM]"
   ],
   [
@@ -1832,32 +1832,37 @@
   [
     "gewöhnlich",
     "(≒ usual, ordinary, common / usuale, ordinario, comune)\n【一般的な意味】\n① いつもの，普段の，通常の．\n② ありふれた，平凡な，並の．\n③ （副詞として）たいてい，通常は．\n【音楽用語としての訳例】\n「通常通りに」，「平常のテンポで」\n\n特殊な奏法から通常の奏法に戻る場合に使われている．",
-    "[GM]"
+    "[GM], [RW: Oper], [RS: Oper]"
+  ],
+  [
+    "gewonnen",
+    "(≒ won, gained, acquired / vinto, acquisito)\ngewinnen の過去分詞\n【一般的な意味】\n① （競争・戦いなどに）勝った，勝利を得た．\n② （利益・物・時間などを）獲得した，手に入れた，確立した．\n【音楽用語としての訳例】\n「獲得した」，「（テンポなどが）確立された」，「（店舗などを）取り戻した」\n\n\"gewinnen\" の項を参照．RW の Tannhäuser では「打ち勝った」としている． ",
+    "[RW: Oper], [RS: Oper]"
   ],
   [
     "gewonnenen",
-    "(≒ won, gained, acquired / vinto, acquisito)\ngewinnen の過去分詞 gewonnen の格変化形\n【一般的な意味】\n① （競争・戦いなどに）勝った，勝利を得た．\n② （利益・物・時間などを）獲得した，手に入れた，確立した．\n【音楽用語としての訳例】\n「獲得した」，「手に入れた」，「（テンポなどが）確立された」\n\n\"gewinnen\" ならば GM の交響曲第9番にもある．\"accelerando bis --- fest im gewonnenen，lebhaften Zeitmaß\" は，「いきいきとしたテンポになるまでアッチェレランドし，一定のテンポになる」，くらいの意味であろう． ",
+    "\"gewinnen\" の過去分詞 \"gewonnen\" の格変化形\n\n\"accelerando bis --- fest im gewonnenen，lebhaften Zeitmaß\" は，「いきいきとしたテンポになるまでアッチェレランドし，（その到達したテンポを崩さずに）一定のテンポになる」，くらいの意味であろう． ",
     "[RS: Held]"
   ],
   [
     "geziert",
-    "(≒ affected, mannered, unnatural / affettato, lezioso)\n\n【一般的な意味】\n① 気取った，もったいぶった，見え張った．\n② （装飾などが）飾りの多い，不自然な．\n\n【音楽用語としての訳例】\n「気取って」，「もったいぶって」，「わざとらしく」，「不自然に飾った」",
+    "(≒ affected, mannered, unnatural / affettato, lezioso)\n\n【一般的な意味】\n① 気取った，もったいぶった，見栄を張った．\n② （装飾などが）飾りの多い，不自然な．\n\n【音楽用語としての訳例】\n「気取って」，「もったいぶって」，「わざとらしく」，「不自然に飾った」",
     "[RW: Oper]"
   ],
   [
     "gezogen",
-    "(≒ drawn, pulled, sustained / tenuto, trascinato)\n 動詞 ziehen（引く、引きずる）の過去分詞形．\n【一般的な意味】\n① 引かれた、引き出された． ② （線などが）引かれた．\n【音楽用語としての訳例】\n「tenuto」，「portamento」，「音を十分に保って」，「引き伸ばして」\n\n\"gestrichen\"の項を参照．",
+    "(≒ drawn, pulled, sustained / tenuto, trascinato)\n ziehen（引く、引きずる）の過去分詞形．\n【一般的な意味】\n① 引かれた、引き出された． ② （線などが）引かれた．\n【音楽用語としての訳例】\n「tenuto」，「portamento」，「音を十分に保って」，「引き伸ばして」\n\n\"gestrichen\"の項を参照．",
     "[B], [GM]"
   ],
   [
     "glänzend",
     "(≒ shining, brilliant, splendid / brillante, sfolgorante)\nglänzen の現在分詞\n【一般的な意味】\n① 光っている，輝いている，きらめく．\n② （成績・結果などが）華々しい，見事な，素晴らしい．\n③ （色彩が）鮮やかな，際立った．\n【音楽用語としての訳例】\n「華々しく」，「きらびやかに」，「輝かしい音色で」，「鮮やかに」",
-    "[K: Cap], [RW: Oper]"
+    "[K: Cap], [RW: Oper], [RS: Oper]"
   ],
   [
     "gleich",
     "(≒ equal, same, immediately / uguale, medesimo, subito)\n【一般的な意味】\n① 同一の，等しい，同じ．\n② すぐに，間もなく，即座に．\n③ （形容詞の格変化形として）ちょうど，まさに．\n【音楽用語としての訳例】\n「直ちに」，「すぐに」，「同様に」，「同度の」\n\n \"gleich weiter\" ＝ \"attacca\"",
-    "[GM]"
+    "[GM], [RW: Oper], [RS: Oper]"
   ],
   [
     "gleich weiter",
@@ -1871,7 +1876,7 @@
   ],
   [
     "gleichmässig",
-    "(≒ uniform, even, regular / uniforme, regolare)\nGleichmaß の格変化形と形容詞の複合形\n【一般的な意味】\n① 均等な，均一な，むらのない．\n② 一様な，規則正しい，均整のとれた．\n【音楽用語としての訳例】\n「均一に」，「一様に」，「規則正しく」，「一定のテンポで」",
+    "(≒ uniform, even, regular / uniforme, regolare)\nGleichmaß の格変化形と形容詞の複合形\n【一般的な意味】\n① 均等な，均一な，むらのない．\n② 一様な，規則正しい，均整のとれた．\n【音楽用語としての訳例】\n「均一に」，「一様に」，「規則正しく」，「一定の（テンポで）」",
     "[GM]"
   ],
   [
