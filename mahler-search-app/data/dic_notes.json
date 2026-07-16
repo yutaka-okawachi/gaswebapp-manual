@@ -1656,7 +1656,7 @@
   ],
   [
     "gemein",
-    "(≒ common, vulgar, mean / comune, volgare, ordinario)\n【一般的な意味】\n① 卑俗な，下品な，粗野な．\n② （現代語として）意地悪な，ひどい，卑劣な．\n③ 一般の，共通の，通常の，普通の．\n\nGM では子供の魔法の角笛 \"Der Schildwache Nachlied” にのみ使用例があり，ここでは③の意味で用いられている．",
+    "(≒ common, vulgar, mean / comune, volgare, ordinario)\n【一般的な意味】\n① 卑俗な，下品な，粗野な．\n② （現代語として）意地悪な，ひどい，卑劣な．\n③ 一般の，共通の，通常の，普通の．\n\nGM では子供の魔法の角笛 \"Der Schildwache Nachlied” にのみ使用例があり，③の意味で，RS の Ariadne auf Naxos では①の意味で用いられている．",
     "[GM], [RW: Oper], [RS: Oper]"
   ],
   [
@@ -1716,7 +1716,7 @@
   ],
   [
     "geschliffen",
-    "(≒ polished, sharpened, refined / levigato, raffinato)\nschleifen の過去分詞\n【一般的な意味】\n① （刃物や宝石などが）研がれた，磨かれた，カットされた．\n② （言葉・態度・芸術などが）洗練された，磨き抜かれた，あか抜けた．\n【音楽用語としての訳例】\n「（音と音を）滑らかにつなげて」，「レガートで」，「（装飾音などが）滑らかに滑るように演奏された」\n\nGM では交響曲第5番第3楽章にのみ使用例がある．「鋭く」と訳している．\"legato\" や \"portamento\" に非常に近い．",
+    "(≒ polished, refined, smooth / levigato, rifinito)\nschleifen の過去分詞\n【一般的な意味】\n① 磨かれた，研磨された，（刃物などが）研がれた\n② （態度・言動などが）洗練された，垢抜けた，上品な\n【音楽用語としての訳例】\n「（音と音を）滑らかにつなげて」，「レガートで」，「（装飾音などが）滑らかに滑るように演奏された」\n\n\"legato\"（音を滑らかにつなげる）や \"portamento\"（音から音へ滑るように移行する）に近いニュアンスをもつ．GM では交響曲第5番第3楽章にのみ使用例があり，「滑らかにつなげて」と訳している．",
     "[GM]"
   ],
   [
@@ -1926,7 +1926,7 @@
   ],
   [
     "grell",
-    "(≒ shrill, harsh, glaring / stridulo, aspro)\n\n【一般的な意味】\n① （音が）甲高い，耳障りな，金切り声の．\n② （色が）けばけばしい，目に痛い，どぎつい．\n③ （照明が）まぶしい，きつすぎる．\n\n【音楽用語としての訳例】\n「耳障りな」，「甲高い（音で）」，「きつく」\n\n「けたたましく」「甲高く」と訳している．RW，RSのオペラでは「金切り声で」でもよいだろう．",
+    "(≒ shrill, harsh, glaring / stridulo, aspro)\n\n【一般的な意味】\n① （音が）甲高い，耳障りな，金切り声の．\n② （色が）けばけばしい，目に痛い，どぎつい．\n③ （照明が）まぶしい，きつすぎる．\n\n【音楽用語としての訳例】\n「耳障りな」，「甲高い（音で）」，「きつく」\n\nGM では「けたたましく」「甲高く」などと訳している．RW，RS では「金切り声で」でもよいだろう．",
     "[GM],  [RW: Oper], [RS: Oper]"
   ],
   [
@@ -1952,7 +1952,7 @@
   [
     "Grund",
     "(≒ ground, reason, base, bottom, foundation / ragione, base, fondamento)\n【一般的な意味】\n① 地面，土地，基礎，土台．\n② 根拠，理由，原因．\n③ 底部，奥．\n\n「（和声の）根音」の意味もある．",
-    "[RS: Qui]"
+    ""
   ],
   [
     "Hab lumbedruwwel mit me lumbeschatz",
@@ -1965,8 +1965,8 @@
     "[GM],  [RW: Oper], [RS: Oper]"
   ],
   [
-    "hallen",
-    "(≒ resonate, echo, boom / risuonare, echeggiare)\n【一般的な意味】\n① （音などが）響く，反響する，こだま（谺）する．\n② （場所が）響きわたる，鳴り響く．\n③ （比喩的に）（言葉などが）心に響く．\n【音楽用語としての訳例】\n「響きわたるように」，「共鳴させて」\n\nGM では \"langhallenden\" は「長く響く」とした．",
+    "hallend",
+    "(≒ resonate, echo, boom / risuonare, echeggiare)\n【一般的な意味】\n① （音などが）響く，反響する，こだま（谺）する．\n② （場所が）響きわたる，鳴り響く．\n③ （比喩的に）（言葉などが）心に響く．\n【音楽用語としての訳例】\n「響き渡るように」，「残響を伴って」，「反響させて」\n\nGM では \"langhallenden\" は「長く響く」とした．",
     "[GM]"
   ],
   [
@@ -1981,8 +1981,8 @@
   ],
   [
     "hart",
-    "(≒ hard, harsh, severe / duro, aspro, severo)\n【一般的な意味】\n① 硬い，堅固な，頑丈な．\n② （音・態度・味などが）厳しい，厳しい，荒々しい，耳障りな．\n③ （運命・状況などが）つらい，厳しい，過酷な．\n【音楽用語としての訳例】\n「硬く」，「厳しく」，「激しい態度で」，「荒々しく」，「（音を）際立たせて」\n\nGM では打楽器に対する指示で①の意味で使われている．",
-    "[GM]"
+    "(≒ hard, harsh, severe / duro, aspro, severo)\n【一般的な意味】\n① 硬い，堅固な，頑丈な．\n② （音・態度・味などが）厳しい，厳しい，荒々しい，耳障りな．\n③ （運命・状況などが）つらい，厳しい，過酷な．\n【音楽用語としての訳例】\n「硬く」，「厳しく」，「荒々しく」\n\nGM では打楽器に対する指示で①の意味で使われている．",
+    "[GM, [RW: Oper], [RS: Oper]"
   ],
   [
     "hässlich",
@@ -1991,7 +1991,7 @@
   ],
   [
     "Hauch",
-    "(≒ breath, whiff, trace / soffio, alito, traccia)\n【一般的な意味】\n① 息，呼気，吐息（といき）．\n② （風などの）そよぎ，微風．\n③ かすかな気配，ほんのわずかなもの，気味．\n【音楽用語としての訳例】\n「息づかい」，「かすかに」，「極めて弱く」，「微かに」\n\nGMでは「かすかな気配のように」と訳している．",
+    "(≒ breath, whiff, trace / soffio, alito, traccia)\n【一般的な意味】\n① 息，呼気，吐息（といき）．\n② （風などの）そよぎ，微風．\n③ かすかな気配，ほんのわずかなもの，気味．\n【音楽用語としての訳例】\n「息づかい」，「かすかに」，「極めて弱く」，「微かに」\n\nGMでは \" wie ein Hauch\" は「かすかな気配のように」と訳している．",
     "[GM], [RS: Oper]"
   ],
   [
@@ -2017,11 +2017,11 @@
   [
     "Heiligen",
     "(≒ saint, holy one / santo)\nheilig の名詞化形 Heilige(r) の格変化形（複数形など）\n【一般的な意味】\n① キリスト教などの宗教における聖人，聖者．\n② （比喩的に）崇拝の対象となる人．",
-    "[H: Mat]"
+    "[RW: Oper], [H: Mat]"
   ],
   [
     "heimlich",
-    "(≒ secret, clandestine, mysterious / segreto, misterioso)\n【一般的な意味】\n① 秘密の，内密の，隠された．\n② （動作が）こっそりとした，人目を忍んだ，ひそかな．\n【音楽用語としての訳例】\n「misterioso」，「segreto」，「ひそかに」，「内密に」，「秘密めいた響きで」，「人目を忍んで」",
+    "(≒ secret, clandestine, mysterious / segreto, misterioso)\n【一般的な意味】\n① 秘密の，内密の，隠された．\n② （動作が）こっそりとした，人目を忍んだ，ひそかな．\n【音楽用語としての訳例】\n「ひそかに」，「内密に」，「秘密めいた響きで」，「人目を忍んで」",
     "[RW: Oper], [RS: Oper], [K: App]"
   ],
   [
@@ -3837,7 +3837,7 @@
   [
     "träumend",
     "(≒ dreaming, dreamy, musing / sognante, fantasticando)\nträumen の現在分詞\n【一般的な意味】 夢を見ている，夢見心地の，ぼんやりとした，空想にふけっている．\n【音楽用語としての訳例】 「夢見るように」，「夢想的に」，「うっとりと」",
-    "[GM], [RW: Oper], [RS: Oper], [RS: Held]"
+    "[GM], [RW: Oper], [RS: Oper], [RS: Held], [RS: Qui]"
   ],
   [
     "traurig",
@@ -4058,6 +4058,11 @@
     "Verfügung",
     "(≒ disposal, availability, order, decree / disposizione, ordine)\nverfügen の名詞化\n【一般的な意味】\n① 自由な使用，利用，処分，自由裁量．\n② 命令，指示，決定，裁定．\n\n\"zur Verfügung stehen\" は「利用可能である」，「意のままにできる」",
     "[GM]"
+  ],
+  [
+    "verhallend",
+    "(≒ fading, dying away, decaying / sfumando, morendo)\nverhallen の現在分詞\n【一般的な意味】\n（響きや音などが）次第に消えていく，消え入るような，響きが薄れていく\n【音楽用語としての訳例】\n「消え入るように」，「響きを減衰させて」，「次第に消えゆくように」\n\n\"morend\", \"perdendosi\" に近いが「響きが消え去る」というニュアンスをもつ．",
+    "[GM], [RW: Oper]"
   ],
   [
     "verhallend, doch straff im Tempo",
