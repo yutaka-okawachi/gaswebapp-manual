@@ -3140,8 +3140,8 @@
     "[H: Con]"
   ],
   [
-    "rasend, rasender",
-    "(≒ raging, frantic, extremely fast / furioso, frenetico, velocissimo)\nrasend は rasen の現在分詞，rasender は rasen の格変化形\n【一般的な意味】\n① 激怒している，狂乱した，熱狂した．\n② 猛スピードで走っている，突進している．\n③ （副詞として）ものすごく，非常に．\n【音楽用語としての訳例】\n「狂乱して」，「激怒して」，「猛スピードで」",
+    "rasend",
+    "(≒ raging, frantic, extremely fast / furioso, frenetico, velocissimo)\nrasend は rasen の現在分詞．\n【一般的な意味】\n① 激怒している，狂乱した，熱狂した．\n② 猛スピードで走っている，突進している．\n③ （副詞として）ものすごく，非常に．\n【音楽用語としての訳例】\n「狂乱して」，「激怒して」，「猛スピードで」",
     "[RS: Held], [RW: Oper], [RS: Oper]"
   ],
   [
@@ -3152,7 +3152,7 @@
   [
     "recht",
     "(≒ right, correct, quite, rather / giusto, corretto, piuttosto)\n【一般的な意味】\n① 正しい，正当な，適切な．\n② （程度が）かなり，相当に，なかなか．\n③ 右の，右側の．\n④ （副詞的に）ちょうど，まさに．",
-    "[GM]"
+    "[GM], [RW: Oper], [RS: Oper]"
   ],
   [
     "Reich",
@@ -3172,7 +3172,7 @@
   [
     "rein",
     "(≒ pure, clean, absolute, accurate / puro, assoluto, preciso)\n形容詞／副詞（または herein の短縮形）\n【一般的な意味】\n① 純粋な，混じりけのない，清らかな．\n② （比喩的に）全くの，絶対的な，それ自体で．\n③ （口語・副詞として）中へ，中に入れて．\n【音楽用語としての訳例】\n「純粋に」，「清らかに」，「（音程が）正確に」，「完全に」，「完璧に」\n\nGM では \"rein stimmen\"，\"rein gestimmt\" は「正確に調律して」と訳している． ",
-    "[GM]"
+    "[GM], [RS: Oper]"
   ],
   [
     "rep.",
@@ -3191,18 +3191,18 @@
   ],
   [
     "Riesen",
-    "① 巨人\n② 非常に大きなもの，巨大な存在\n③ （比喩）大物，重要人物\n④ riesen- の形で「ものすごく〜」「非常に〜」（口語強調）\n名詞として「巨人」の意味で用いられているのは Das Rheingold にしかない．",
-    "[RW: Oper]"
+    "≒ giants, colossal, enormous / gigante, colossale)\nRiese（巨人）の複数形または格変化形\n【一般的な意味】\n① 巨人\n② 非常に大きなもの，巨大な存在\n③ （比喩）大物，重要人物\n④ riesen- の形で「ものすごく〜」「非常に〜」（口語強調）\n\n名詞として「巨人」の意味で用いられているのは Das Rheingold にしかない．",
+    "[RW: Oper], [RS: Oper]"
   ],
   [
     "riesenhaft",
     "(≒ gigantic, colossal, immense / gigantesco, colossale)\n【一般的な意味】\n① 巨人なみの，巨大な，莫大な．\n② （比喩的に）途方もない，驚くべき，並外れた．\n【音楽用語としての訳例】\n「巨大な（響きで）」，「圧倒的なスケールで」，「怪物的に」，「威圧的に」",
-    "[RW: Oper]"
+    "[RW: Oper], [RS: Oper]"
   ],
   [
     "Ritter",
     "(≒ knight, cavalier / cavaliere)\n【一般的な意味】\n① 騎士，騎兵．\n② （歴史的な）特定の勲章や騎士団の団員．\n③ （比喩的に）勇敢な人物，紳士．",
-    "[RS: Qui], [RW: Oper]"
+    "[RW: Oper], [RS: Qui]"
   ],
   [
     "ritterlich",
@@ -3211,8 +3211,8 @@
   ],
   [
     "roh",
-    "(≒ raw, crude, rough, coarse / rozzo, crudo)\n【一般的な意味】\n① 生の，未加工の，未熟な．\n② 粗野な，ぞんざいな，乱暴な，ぶっきらぼうな．\n③ （材料などが）荒削りの，粗悪な．\n【音楽用語としての訳例】\n「粗野に」，「荒々しく」，「生々しく」，「洗練されずに」，「（音色を）硬く」\n\nGM では②の意味で使われている．「荒っぽく」と訳している．",
-    "[GM]"
+    "(≒ raw, crude, rough, coarse / rozzo, crudo)\n【一般的な意味】\n① 生の，未加工の，未熟な．\n② 粗野な，ぞんざいな，乱暴な，ぶっきらぼうな．\n③ （材料などが）荒削りの，粗悪な．\n【音楽用語としての訳例】\n「粗野に」，「荒々しく」，「生々しく」，「野卑に」，「（音色を）硬く」\n\nGM では②の意味で使われている．「荒っぽく」と訳している．",
+    "[GM], [RW: Oper], [RS: Oper]"
   ],
   [
     "RONDO\nAllegro ma non troppo (in cominciando un poco esitendo)",
@@ -3227,11 +3227,11 @@
   [
     "Ruf",
     "(≒ call, shout, cry / chiamata, grido)\n【一般的な意味】\n① 叫び声，呼ぶ声，鳴き声．\n② 評判，声望，世評．\n③ （比喩的に）召集，要求．\n\nGM の交響曲第1番第1楽章では「鳴き声」と訳している．",
-    "[GM], [RS: Oper]"
+    "[GM], [RW: Oper], [RS: Oper]"
   ],
   [
     "rufen",
-    "(≒ call, shout, cry, summon / chiamare, gridare)\n【一般的な意味】\n① （人間や動物が）呼ぶ，大声で叫ぶ，（鳥などが）鳴く．\n② 召集する，招集する，要求する．\n③ （比喩的に）～と呼ばれる．\n【音楽用語としての訳例】\n「叫ぶように」，「呼びかける」，「（トランペットなどで）信号を鳴らす」，「強調して演奏する」",
+    "(≒ call, shout, cry, summon / chiamare, gridare)\n【一般的な意味】\n① （人間や動物が）呼ぶ，大声で叫ぶ，（鳥などが）鳴く．\n② 召集する，招集する，要求する．\n③ （比喩的に）～と呼ばれる．\n【音楽用語としての訳例】\n「叫ぶように」，「呼びかける」，「（トランペットなどで）信号を鳴らす」",
     "[GM], [RW: Oper], [RS: Oper]"
   ],
   [
@@ -3301,18 +3301,18 @@
   ],
   [
     "schaudernd",
-    "(≒ shuddering, trembling, horrifying / rabbrividendo, orrido)\nschaudern の現在分詞\n【一般的な意味】\n① （恐怖・嫌悪・寒さなどで）身震いしている，ぞっとしている．\n② 恐ろしい，ぞっとするような，戦慄すべき．\n【音楽用語としての訳例】\n「ぞっとして」，「戦慄して」，「身震いするように」，「恐ろしい響きで」",
+    "(≒ shuddering, trembling, horrifying / rabbrividendo, orrido)\nschaudern の現在分詞\n【一般的な意味】\n① （恐怖・嫌悪・寒さなどで）身震いしている，ぞっとしている．\n② 恐ろしい，ぞっとするような，戦慄するような．\n【音楽用語としての訳例】\n「ぞっとして」，「戦慄して」，「身震いするように」，「恐ろしい響きで」",
     "[RW: Oper], [RS: Oper]"
   ],
   [
     "schauerlich",
-    "(≒ terrifying, horrifying, gruesome / spaventoso, orrido)\n【一般的な意味】\n① 恐ろしい，ぞっとする，身の毛のよだつ．\n② 惨たらしい，おぞましい，ひどい．\n【音楽用語としての訳例】\n「恐ろしく」，「ぞっとするほどに」，「不気味に」，「戦慄的に」",
+    "(≒ terrifying, horrifying, gruesome / spaventoso, orrido)\n【一般的な意味】\n① 恐ろしい，ぞっとする，身の毛のよだつ．\n② 惨たらしい，おぞましい，ひどい．\n【音楽用語としての訳例】\n「恐ろしく」，「ぞっとするほどに」，「不気味に」，「戦慄して」",
     "[RW: Oper], [RS: Oper]"
   ],
   [
     "schauern",
     "(≒ to shudder, to shiver, to rain / rabbrividire, piovere)\n【一般的な意味】\n① （雨や霰が）降る，（非人称で）にわか雨が降る．\n② （恐怖や嫌悪で）身震いする，ぞっとする．\n③ （比喩的に）降り注ぐ，降りかかる．\n【音楽用語としての訳例】\n「ぞっとする」，「身震いする」，「（音が）降り注ぐように」",
-    "[GM]"
+    "[GM], [RS: Oper]"
   ],
   [
     "schäumend",
@@ -3321,13 +3321,13 @@
   ],
   [
     "schelmisch",
-    "(≒ roguish, mischievous, impish / birichino, malizioso)\n【一般的な意味】\n① いたずらな，悪戯っぽい，わんぱくな．\n② ずる賢い，悪知恵の働く．\n【音楽用語としての訳例】\n「scherzoso」，「birichino」，「いたずらっぽく」，「悪戯的に」，「おどけて」",
+    "(≒ roguish, mischievous, impish / birichino, malizioso)\n【一般的な意味】\n① いたずらな，悪戯っぽい，わんぱくな．\n② ずる賢い，悪知恵の働く．\n【音楽用語としての訳例】\n「scherzoso」，「いたずらっぽく」，「悪戯的に」，「おどけて」",
     "[RS: Till], [RW: Oper]"
   ],
   [
     "Schlag",
     "(≒ beat, stroke, pulse / battito, colpo)\n【一般的な意味】\n① 叩くこと，打撃，衝撃．\n② 鼓動，脈拍．\n③ 稲妻．\n④ （鳥の）さえずり．\n【音楽用語としての訳例】\n「拍子」，「打点」，「（指揮の）一振り」，「（打撃楽器の）一打」\n\n\"Takt\" の項も参照のこと．",
-    ""
+    "[RW: Oper], [RS: Oper]"
   ],
   [
     "Schlägelstock",
@@ -4666,7 +4666,7 @@
   ],
   [
     "Zusatz",
-    "(≒ addition, supplement, appendix / aggiunta, supplemento)\n【一般的な意味】\n① 付加物，追加，補遺，サプリメント．\n② 添え書き，追伸．\n\n【音楽用語としての訳例】\n「付記」，「補遺」，「付加的な（指示や楽器）」",
+    "(≒ addition, supplement, appendix / aggiunta, supplemento)\n【一般的な意味】\n① 付加物，追加，補遺．\n② 添え書き，追伸．\n\n【音楽用語としての訳例】\n「付記」，「補遺」，「付加的な（指示や楽器）」",
     "[B: 8-2]"
   ],
   [
