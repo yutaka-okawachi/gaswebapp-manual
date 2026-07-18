@@ -19,7 +19,7 @@
   <!-- 用語集（静的HTML） -->
   <url>
     <loc>https://yutaka-okawachi.github.io/gaswebapp-manual/mahler-search-app/dic.html</loc>
-    <lastmod>2026-07-17</lastmod>
+    <lastmod>2026-07-18</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
@@ -43,7 +43,7 @@
   <!-- Richard Wagner検索 -->
   <url>
     <loc>https://yutaka-okawachi.github.io/gaswebapp-manual/mahler-search-app/rw_terms_search.html</loc>
-    <lastmod>2026-07-14</lastmod>
+    <lastmod>2026-07-18</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -59,7 +59,7 @@
   <!-- Richard Wagner曲名検索 -->
   <url>
     <loc>https://yutaka-okawachi.github.io/gaswebapp-manual/mahler-search-app/richard_wagner.html</loc>
-    <lastmod>2026-06-25</lastmod>
+    <lastmod>2026-07-18</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
