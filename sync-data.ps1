@@ -33,7 +33,7 @@ function Wait-GitHubPagesChecks {
             })
 
             if ($checks.Count -gt 0 -and -not ($checks | Where-Object { $_.status -ne "completed" })) {
-                Write-Host "✓ Intermediate GitHub Pages checks completed." -ForegroundColor Green
+                Write-Host "[OK] Intermediate GitHub Pages checks completed." -ForegroundColor Green
                 return
             }
         } catch {
@@ -75,13 +75,13 @@ $env:NODE_OPTIONS = "--dns-result-order=ipv4first"
 Write-Host "Checking git status..." -ForegroundColor Gray
 $currentBranch = git branch --show-current
 if (-not $currentBranch) {
-    Write-Error "❌ Error: Git is in a detached HEAD state (e.g., rebase in progress)."
+    Write-Error "[ERROR] Error: Git is in a detached HEAD state (e.g., rebase in progress)."
     Write-Host "Please run 'git status' and resolve the current state (e.g., git rebase --abort) before running this script." -ForegroundColor Yellow
     exit 1
 }
 
 if ($currentBranch -ne "main") {
-    Write-Host "⚠ Currently on branch '$currentBranch'." -ForegroundColor Yellow
+    Write-Host "[WARNING] Currently on branch '$currentBranch'." -ForegroundColor Yellow
     $status = git status --porcelain
 
     if ($status) {
@@ -97,7 +97,7 @@ if ($currentBranch -ne "main") {
             git checkout main
             git merge $currentBranch
             if ($LASTEXITCODE -ne 0) {
-                Write-Error "❌ Merge failed (Conflict?). Please resolve manually."
+                Write-Error "[ERROR] Merge failed (Conflict?). Please resolve manually."
                 exit 1
             }
         } else {
@@ -107,7 +107,7 @@ if ($currentBranch -ne "main") {
                  git stash push -u -m "Auto-stash by sync-data"
                  git checkout main
              } else {
-                 Write-Error "❌ Aborted. Please handle uncommitted changes manually."
+                 Write-Error "[ERROR] Aborted. Please handle uncommitted changes manually."
                  exit 1
              }
         }
@@ -127,10 +127,10 @@ if ($currentBranch -ne "main") {
     # Ensure we are on main now
     $newBranch = git branch --show-current
     if ($newBranch -ne "main") {
-         Write-Error "❌ Failed to switch to main branch."
+         Write-Error "[ERROR] Failed to switch to main branch."
          exit 1
     }
-    Write-Host "✓ Switched to main." -ForegroundColor Green
+    Write-Host "[OK] Switched to main." -ForegroundColor Green
 }
 
 # --- [0.5] 環境変数のロード (.env) ---
@@ -170,12 +170,12 @@ $pushExitCode = $LASTEXITCODE
 if ($pushExitCode -ne 0) {
     # "No valid files to push" は実質的な成功（変更なし）とみなす
     if ($pushOutput -match "No valid files to push") {
-         Write-Host "✓ No changes to push to GAS." -ForegroundColor Green
+         Write-Host "[OK] No changes to push to GAS." -ForegroundColor Green
     } else {
         # 変更があるのに失敗した場合、または予期せぬエラー
         if ($gasChanges) {
             Write-Host ""
-            Write-Error "❌ CRITICAL: clasp push failed while GAS source changes exist."
+            Write-Error "[ERROR] CRITICAL: clasp push failed while GAS source changes exist."
             Write-Host "You modified GAS code (logic), but it could not be uploaded." -ForegroundColor Red
             Write-Host "To prevent sync inconsistency, the script will ABORT now." -ForegroundColor Red
             Write-Host ""
@@ -194,9 +194,9 @@ if ($pushExitCode -ne 0) {
                     Write-Host "Retrying clasp push..." -ForegroundColor Cyan
                     $pushOutput = clasp push -f 2>&1
                     if ($LASTEXITCODE -eq 0) {
-                        Write-Host "✓ GAS source updated successfully (Retry)." -ForegroundColor Green
+                        Write-Host "[OK] GAS source updated successfully (Retry)." -ForegroundColor Green
                     } else {
-                        Write-Error "❌ Retry failed. Aborting."
+                        Write-Error "[ERROR] Retry failed. Aborting."
                         Pop-Location
                         exit 1
                     }
@@ -213,14 +213,14 @@ if ($pushExitCode -ne 0) {
         } else {
             # 変更がない場合は警告のみで続行（データ更新だけしたい場合など）
             Write-Host ""
-            Write-Warning "⚠ clasp push failed, but no local GAS changes were detected."
+            Write-Warning "[WARNING] clasp push failed, but no local GAS changes were detected."
             Write-Host "Since logic hasn't changed, we can proceed with data sync." -ForegroundColor Gray
             Write-Host "Error summary: $($pushOutput | Select-Object -First 1)" -ForegroundColor DarkGray
             Write-Host ""
         }
     }
 } else {
-    Write-Host "✓ GAS source updated successfully." -ForegroundColor Green
+    Write-Host "[OK] GAS source updated successfully." -ForegroundColor Green
 }
 
 # ★★★ Deploymentの自動更新 (Auto-Deploy) - Always run ★★★
@@ -240,7 +240,7 @@ Write-Host ""
 Write-Host "[2/5] Committing local changes..." -ForegroundColor Yellow
 $appChanges = git status --porcelain
 if ($appChanges) {
-    Write-Host "✓ Detected local changes. Committing to ensure clean rebase..." -ForegroundColor Gray
+    Write-Host "[OK] Detected local changes. Committing to ensure clean rebase..." -ForegroundColor Gray
     git add .
     # 自動生成ファイルはローカルでコミットしない（競合防止のためアンステージする）
     git restore --staged mahler-search-app/dic.html 2>$null
@@ -251,12 +251,12 @@ if ($appChanges) {
     if ($stagedChanges) {
         $commitMsg = if ($message -eq "automated sync update") { "Sync: App update and data refresh [$([DateTime]::Now.ToString('yyyy-MM-dd HH:mm'))]" } else { $message }
         git commit -m $commitMsg -q
-        Write-Host "✓ Local changes committed." -ForegroundColor Green
+        Write-Host "[OK] Local changes committed." -ForegroundColor Green
     } else {
-        Write-Host "✓ No source code changes to commit (staged files were ignored)." -ForegroundColor Gray
+        Write-Host "[OK] No source code changes to commit (staged files were ignored)." -ForegroundColor Gray
     }
 } else {
-    Write-Host "✓ No local changes to commit." -ForegroundColor Gray
+    Write-Host "[OK] No local changes to commit." -ForegroundColor Gray
 }
 Write-Host ""
 
@@ -281,7 +281,7 @@ $runExitCode = $LASTEXITCODE
 $runFailed = ($runExitCode -ne 0) -or ($runOutput -match "Unable to run|function not found|Script function not found")
 
 if ($runFailed) {
-    Write-Host "✗ clasp run failed or unavailable (exit code: $runExitCode)" -ForegroundColor Yellow
+    Write-Host "[ERROR] clasp run failed or unavailable (exit code: $runExitCode)" -ForegroundColor Yellow
     
     # 認証エラーチェックと再ログイン
     # 認証エラーチェックと再ログイン
@@ -289,7 +289,7 @@ if ($runFailed) {
     # ここでは純粋な認証切れ（再ログインが必要な状態）とは区別して除外します。
     if ($runOutput -match "unauthorized|credentials|not logged in" -or ($runOutput -match "permission" -and $runOutput -notmatch "Unable to run script function")) {
         Write-Host ""
-        Write-Host "⚠ clasp run failed due to authentication error." -ForegroundColor Yellow
+        Write-Host "[WARNING] clasp run failed due to authentication error." -ForegroundColor Yellow
         
         $loginChoice = Read-Host "Do you want to run 'clasp login' now? (Y to login, N to verify Web App fallback)"
         if ($loginChoice -match "^[Yy]") {
@@ -304,7 +304,7 @@ if ($runFailed) {
             $runFailed = ($runExitCode -ne 0) -or ($runOutput -match "Unable to run|function not found|Script function not found")
             
             if (-not $runFailed) {
-                Write-Host "✓ GAS function executed successfully (Retry)." -ForegroundColor Green
+                Write-Host "[OK] GAS function executed successfully (Retry)." -ForegroundColor Green
                 $runFailed = $false
             }
         }
@@ -376,11 +376,11 @@ if ($runFailed) {
             
             # Check if output looks like success JSON
             if ($curlOutput -match '"status":\s*"success"') {
-                Write-Host "✓ GAS function executed successfully via Web App." -ForegroundColor Green
+                Write-Host "[OK] GAS function executed successfully via Web App." -ForegroundColor Green
                 Write-Host "  Execution time: $([math]::Round($webDuration.TotalSeconds, 1)) seconds" -ForegroundColor Gray
             } else {
                 Write-Host ""
-                Write-Error "❌ Web App execution failed or returned unexpected format."
+                Write-Error "[ERROR] Web App execution failed or returned unexpected format."
                 $outputSummary = if ($curlOutput -and $curlOutput.Length -gt 0) { 
                     $curlOutput.Substring(0, [math]::Min(500, $curlOutput.Length)) 
                 } else { 
@@ -403,7 +403,7 @@ if ($runFailed) {
             }
         } catch {
             Write-Host "" 
-            Write-Error "❌ Web App request failed: $($_.Exception.Message)"
+            Write-Error "[ERROR] Web App request failed: $($_.Exception.Message)"
             Write-Host "Error details: $($_.Exception.GetType().FullName)" -ForegroundColor DarkGray
             if ($_.Exception.Response) {
                 Write-Host "Status Code: $($_.Exception.Response.StatusCode.value__)" -ForegroundColor DarkGray
@@ -419,15 +419,15 @@ if ($runFailed) {
     } else {
         # Web App未設定の場合
         Write-Host ""
-        Write-Warning "⚠ Web App is not configured. clasp run requires Apps Script API."
+        Write-Warning "[WARNING] Web App is not configured. clasp run requires Apps Script API."
         Write-Host ""
         Write-Host "To fix this issue:" -ForegroundColor Cyan
         Write-Host "  Option 1: Enable Apps Script API" -ForegroundColor White
-        Write-Host "    • Visit: https://script.google.com/home/usersettings" -ForegroundColor Gray
-        Write-Host "    • Enable 'Google Apps Script API'" -ForegroundColor Gray
+        Write-Host "    - Visit: https://script.google.com/home/usersettings" -ForegroundColor Gray
+        Write-Host "    - Enable 'Google Apps Script API'" -ForegroundColor Gray
         Write-Host ""
         Write-Host "  Option 2: Setup Web App (recommended)" -ForegroundColor White
-        Write-Host "    • Run: .\setup-web-trigger.ps1" -ForegroundColor Gray
+        Write-Host "    - Run: .\setup-web-trigger.ps1" -ForegroundColor Gray
         Write-Host ""
         Write-Host "  Option 3: Manual execution" -ForegroundColor White
         Write-Host "    1. Open GAS editor: https://script.google.com" -ForegroundColor Gray
@@ -442,11 +442,11 @@ if ($runFailed) {
 
 } else {
     $duration = (Get-Date) - $startTime
-    Write-Host "✓ GAS function executed successfully via clasp run." -ForegroundColor Green
+    Write-Host "[OK] GAS function executed successfully via clasp run." -ForegroundColor Green
     Write-Host "  Execution time: $([math]::Round($duration.TotalSeconds, 1)) seconds" -ForegroundColor Gray
 }
 
-Write-Host "✓ GAS function completed. Files should be pushed to GitHub." -ForegroundColor Green
+Write-Host "[OK] GAS function completed. Files should be pushed to GitHub." -ForegroundColor Green
 Write-Host ""
 
 # --- [3.5/5] 中間コミット (Intermediate Commit) ---
@@ -456,7 +456,7 @@ if ($localStatusStart) {
     Write-Host "[3.5/5] Committing app.js updates..." -ForegroundColor Cyan
     git add .
     git commit -m "Update Web App URL in app.js (Auto-sync)"
-    Write-Host "✓ Local changes committed." -ForegroundColor Green
+    Write-Host "[OK] Local changes committed." -ForegroundColor Green
     Write-Host ""
 }
 
@@ -495,7 +495,7 @@ $pullExitCode = $LASTEXITCODE
 
 if ($pullExitCode -ne 0) {
     Write-Host ""
-    Write-Warning "⚠ git pull failed."
+    Write-Warning "[WARNING] git pull failed."
     Write-Host "Pull output:" -ForegroundColor DarkGray
     Write-Host ($pullOutput | Out-String) -ForegroundColor DarkGray
     Write-Host ""
@@ -519,30 +519,30 @@ if ($pullExitCode -ne 0) {
         $pullExitCode2 = $LASTEXITCODE
         
         if ($pullExitCode2 -ne 0) {
-            Write-Error "❌ git pull failed after retry."
+            Write-Error "[ERROR] git pull failed after retry."
             Write-Host "Pull output:" -ForegroundColor DarkGray
             Write-Host ($pullOutput2 | Out-String) -ForegroundColor DarkGray
             Write-Host ""
             Write-Host "Please run manually: git pull --rebase" -ForegroundColor Yellow
             exit 1
         } else {
-            Write-Host "✓ Pull succeeded on retry." -ForegroundColor Green
+            Write-Host "[OK] Pull succeeded on retry." -ForegroundColor Green
         }
     }
 } else {
     # git pullの詳細を表示
     if ($pullOutput -match "Fast-forward|Updating|Already up to date") {
-        Write-Host "✓ Local repository is now up to date." -ForegroundColor Green
+        Write-Host "[OK] Local repository is now up to date." -ForegroundColor Green
         
         # 更新されたファイルを表示（情報提供）
         if ($pullOutput -match "mahler-search-app/dic.html") {
-            Write-Host "  • dic.html updated from GitHub" -ForegroundColor Gray
+            Write-Host "  - dic.html updated from GitHub" -ForegroundColor Gray
         }
         if ($pullOutput -match "mahler-search-app/data/") {
-            Write-Host "  • Data files updated from GitHub" -ForegroundColor Gray
+            Write-Host "  - Data files updated from GitHub" -ForegroundColor Gray
         }
     } else {
-        Write-Host "✓ Local repository is now up to date." -ForegroundColor Green
+        Write-Host "[OK] Local repository is now up to date." -ForegroundColor Green
     }
 }
 Write-Host ""
@@ -608,7 +608,7 @@ if (Test-Path $sitemapPath) {
                 
                 if ($sitemapUpdated -match $pattern) {
                     $sitemapUpdated = $sitemapUpdated -replace $pattern, "`${1}$today`${2}"
-                    Write-Host "  • Updated <lastmod> for: $file -> $targetPath" -ForegroundColor Gray
+                    Write-Host "  - Updated <lastmod> for: $file -> $targetPath" -ForegroundColor Gray
                     $hasSitemapUpdates = $true
                 }
             }
@@ -617,12 +617,12 @@ if (Test-Path $sitemapPath) {
 
     if ($hasSitemapUpdates) {
         [System.IO.File]::WriteAllText((Resolve-Path $sitemapPath).Path, $sitemapUpdated, (New-Object System.Text.UTF8Encoding $false))
-        Write-Host "✓ sitemap.xml updated with new <lastmod> dates." -ForegroundColor Green
+        Write-Host "[OK] sitemap.xml updated with new <lastmod> dates." -ForegroundColor Green
         
         git add $sitemapPath
         git commit -m "chore: auto-update sitemap lastmod for modified files" -q
     } else {
-        Write-Host "✓ No HTML files required sitemap <lastmod> updates." -ForegroundColor Gray
+        Write-Host "[OK] No HTML files required sitemap <lastmod> updates." -ForegroundColor Gray
     }
 }
 Write-Host ""
@@ -647,14 +647,14 @@ if ($lastMsg -match "\[skip ci\]") {
 Write-Host "Pushing to GitHub..." -ForegroundColor Gray
 git push
 if ($LASTEXITCODE -ne 0) {
-    Write-Error "❌ git push failed."
+    Write-Error "[ERROR] git push failed."
     exit 1
 }
-Write-Host "✓ All changes published to GitHub Pages!" -ForegroundColor Green
+Write-Host "[OK] All changes published to GitHub Pages!" -ForegroundColor Green
 
 Write-Host ""
 Write-Host "================================" -ForegroundColor Cyan
-Write-Host "✓ COMPLETED SUCCESSFULLY" -ForegroundColor Green
+Write-Host "[OK] COMPLETED SUCCESSFULLY" -ForegroundColor Green
 Write-Host "================================" -ForegroundColor Cyan
 Write-Host ""
 Write-Host "App and Data are now synchronized." -ForegroundColor White
@@ -665,7 +665,7 @@ Write-Host ""
 # --- [Check for Deployment Warning] ---
 if (Test-Path ".deploy_warning") {
     $count = Get-Content ".deploy_warning"
-    Write-Host "⚠️  WARNING: Deployment count is high ($count/200)." -ForegroundColor Yellow -BackgroundColor Black
+    Write-Host "[WARNING] WARNING: Deployment count is high ($count/200)." -ForegroundColor Yellow -BackgroundColor Black
     Write-Host "If it hits 200, updates may fail. Please clean up deployments using 'clasp undeploy --all' or via the web console." -ForegroundColor Yellow -BackgroundColor Black
     Remove-Item ".deploy_warning" -ErrorAction SilentlyContinue
     Write-Host ""
