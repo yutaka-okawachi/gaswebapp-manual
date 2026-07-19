@@ -8,6 +8,7 @@
 
 # 環境変数
 .env
+.deploy_warning
 
 # ログファイル
 *.log

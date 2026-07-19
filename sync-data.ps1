@@ -238,25 +238,60 @@ Write-Host ""
 
 # --- [2/5] ローカル変更のコミット (Git Commit) ---
 Write-Host "[2/5] Committing local changes..." -ForegroundColor Yellow
+$generatedOutputPaths = @(
+    "mahler-search-app/dic.html",
+    "mahler-search-app/data/"
+)
 $appChanges = git status --porcelain
 if ($appChanges) {
     Write-Host "[OK] Detected local changes. Committing to ensure clean rebase..." -ForegroundColor Gray
     git add .
-    # 自動生成ファイルはローカルでコミットしない（競合防止のためアンステージする）
-    git restore --staged mahler-search-app/dic.html 2>$null
-    git restore --staged mahler-search-app/data/ 2>$null
+    if ($LASTEXITCODE -ne 0) {
+        Write-Error "[ERROR] Failed to stage local changes. Aborting before sync."
+        exit 1
+    }
+
+    # 自動生成ファイルはGASから取得するため、ローカルコミットには含めない。
+    # アンステージするだけでは後続の `git add .` で再度コミットされるため、
+    # ソース側の変更をコミットした後に作業ツリーもHEADへ戻す。
+    git restore --staged -- $generatedOutputPaths 2>$null
     
     # コミットすべきステージされた変更があるか確認
     $stagedChanges = git diff --name-only --cached
     if ($stagedChanges) {
         $commitMsg = if ($message -eq "automated sync update") { "Sync: App update and data refresh [$([DateTime]::Now.ToString('yyyy-MM-dd HH:mm'))]" } else { $message }
         git commit -m $commitMsg -q
+        if ($LASTEXITCODE -ne 0) {
+            Write-Error "[ERROR] Failed to commit local source changes. Aborting before GAS export."
+            exit 1
+        }
         Write-Host "[OK] Local changes committed." -ForegroundColor Green
     } else {
         Write-Host "[OK] No source code changes to commit (staged files were ignored)." -ForegroundColor Gray
     }
 } else {
     Write-Host "[OK] No local changes to commit." -ForegroundColor Gray
+}
+
+# GASが同じファイルを生成してGitHubへプッシュするため、ローカル生成物を残すと
+# pull --rebase時に競合する。追跡済み生成物だけを明示的に復元し、
+# 未追跡ファイルなどが残る場合は削除せず安全停止する。
+$generatedOutputChanges = git status --porcelain -- $generatedOutputPaths
+if ($generatedOutputChanges) {
+    Write-Host "Resetting local generated outputs before GAS export..." -ForegroundColor Gray
+    git restore --worktree -- $generatedOutputPaths
+    if ($LASTEXITCODE -ne 0) {
+        Write-Error "[ERROR] Failed to restore generated output files. Aborting to avoid a rebase conflict."
+        exit 1
+    }
+
+    $remainingGeneratedChanges = git status --porcelain -- $generatedOutputPaths
+    if ($remainingGeneratedChanges) {
+        Write-Error "[ERROR] Untracked or unresolved generated files remain. Aborting before GAS export."
+        Write-Host ($remainingGeneratedChanges | Out-String) -ForegroundColor DarkGray
+        exit 1
+    }
+    Write-Host "[OK] Local generated outputs reset; GAS will provide the authoritative versions." -ForegroundColor Green
 }
 Write-Host ""
 
@@ -450,14 +485,33 @@ Write-Host "[OK] GAS function completed. Files should be pushed to GitHub." -For
 Write-Host ""
 
 # --- [3.5/5] 中間コミット (Intermediate Commit) ---
-# Step 3 (Web Appフォールバック) で app.js 等が更新された場合、git pull --rebase が失敗するため、ここでコミットする
-$localStatusStart = git status --porcelain
-if ($localStatusStart) {
+# Deployment更新で変更され得る追跡対象はapp.jsだけ。
+# `git add .` は自動生成dic.htmlまで巻き込むため使用しない。
+$autoDeployPaths = @("mahler-search-app/js/app.js")
+$autoDeployChanges = git status --porcelain -- $autoDeployPaths
+if ($autoDeployChanges) {
     Write-Host "[3.5/5] Committing app.js updates..." -ForegroundColor Cyan
-    git add .
+    git add -- $autoDeployPaths
+    if ($LASTEXITCODE -ne 0) {
+        Write-Error "[ERROR] Failed to stage app.js. Aborting before pull."
+        exit 1
+    }
     git commit -m "Update Web App URL in app.js (Auto-sync)"
+    if ($LASTEXITCODE -ne 0) {
+        Write-Error "[ERROR] Failed to commit app.js. Aborting before pull."
+        exit 1
+    }
     Write-Host "[OK] Local changes committed." -ForegroundColor Green
     Write-Host ""
+}
+
+# ここで想定外の変更が残っているとpull --rebaseが失敗する。
+# 勝手にコミット・破棄せず、内容を表示して安全停止する。
+$unexpectedChanges = git status --porcelain
+if ($unexpectedChanges) {
+    Write-Error "[ERROR] Unexpected local changes remain before pull --rebase. Aborting safely."
+    Write-Host ($unexpectedChanges | Out-String) -ForegroundColor DarkGray
+    exit 1
 }
 
 # --- [4/5] 最新データのローカル同期 (git pull) ---
