@@ -29,6 +29,23 @@
     }
   }
   </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [{
+      "@type": "ListItem",
+      "position": 1,
+      "name": "HOME",
+      "item": "https://yutaka-okawachi.github.io/gaswebapp-manual/"
+    }, {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "用語から検索 (RS)",
+      "item": "https://yutaka-okawachi.github.io/gaswebapp-manual/mahler-search-app/rs_terms_search.html"
+    }]
+  }
+  </script>
   <title>用語から検索 (RS)</title>
   <link rel="icon" href="https://yutaka-okawachi.github.io/gaswebapp-manual/favicon.png">
   <link rel="apple-touch-icon" href="https://yutaka-okawachi.github.io/gaswebapp-manual/apple-touch-icon.png">
@@ -170,7 +187,12 @@
 
   <div class="page-wrapper">
     <div class="container">
-      <div class="home-link"><a href="../index.html">HOME</a></div>
+      <nav class="breadcrumb" aria-label="パンくずリスト">
+        <ol>
+          <li><a href="../index.html">HOME</a></li>
+          <li aria-current="page">用語から検索 (RS)</li>
+        </ol>
+      </nav>
       <h1>用語から検索 (RS)</h1>
       <p class="glossary-link"><b>Richard Strauss の管弦楽曲については<a
             href="dic.html"

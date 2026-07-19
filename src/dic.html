@@ -21,6 +21,23 @@
     }
   }
   </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [{
+      "@type": "ListItem",
+      "position": 1,
+      "name": "HOME",
+      "item": "https://yutaka-okawachi.github.io/gaswebapp-manual/"
+    }, {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "ドイツ語の音楽用語集",
+      "item": "https://yutaka-okawachi.github.io/gaswebapp-manual/mahler-search-app/dic.html"
+    }]
+  }
+  </script>
   <meta property="og:description" content="Wagner，Mahler，Strauss などのスコアに使用されているドイツ語音楽用語の専門辞書．">
   <meta property="og:url" content="https://yutaka-okawachi.github.io/gaswebapp-manual/mahler-search-app/dic.html">
   <meta property="og:image" content="https://yutaka-okawachi.github.io/gaswebapp-manual/ogp.png">
@@ -637,7 +654,12 @@
 
   <div class="page-wrapper">
     <div id="fixedHeader">
-      <div class="home-link" style="margin: 5px 10px 0;"><a href="../index.html">HOME</a></div>
+      <nav class="breadcrumb" aria-label="パンくずリスト" style="margin: 5px 10px 0;">
+        <ol>
+          <li><a href="../index.html">HOME</a></li>
+          <li aria-current="page">ドイツ語の音楽用語集</li>
+        </ol>
+      </nav>
       <h1>ドイツ語の音楽用語集</h1>
     <div id="navbar">
       <!-- alphabet links removed; floating bar at bottom replaces them -->

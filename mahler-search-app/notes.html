@@ -92,6 +92,16 @@
             margin-bottom: 80px;
         }
 
+        @media (max-width: 768px) {
+            #fixedHeader .breadcrumb {
+                margin-top: 55px !important;
+            }
+
+            .container {
+                margin-top: 135px;
+            }
+        }
+
         .row {
             border-bottom: 1px solid #ccc;
             padding-bottom: 10px;
@@ -204,7 +214,12 @@
 
     <div class="page-wrapper">
         <div id="fixedHeader">
-            <div class="home-link" style="padding: 5px 10px; margin-bottom: 0;"><a href="../index.html">HOME</a></div>
+            <nav class="breadcrumb" aria-label="パンくずリスト" style="padding: 5px 10px; margin-bottom: 0;">
+                <ol>
+                    <li><a href="../index.html">HOME</a></li>
+                    <li aria-current="page">訳出についての覚書</li>
+                </ol>
+            </nav>
             <h1>各用語についてのコメント</h1>
         </div>
 

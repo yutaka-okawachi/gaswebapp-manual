@@ -25,6 +25,23 @@
     }
   }
   </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [{
+      "@type": "ListItem",
+      "position": 1,
+      "name": "HOME",
+      "item": "https://yutaka-okawachi.github.io/gaswebapp-manual/"
+    }, {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "訳出についての覚書",
+      "item": "https://yutaka-okawachi.github.io/gaswebapp-manual/mahler-search-app/notes.html"
+    }]
+  }
+  </script>
   <meta name="description" content="音楽用語の訳出方針や，スコア解釈に基づく詳細なコメントを記録．Mahler，Wagner，Strauss などの独語指示を日本語へ翻訳する際の意図を解説．">
   <title>訳出についての覚書</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -59,6 +76,16 @@
     #fixedHeader h1 {
       font-size: 1.5rem;
       margin: 0;
+    }
+
+    @media (max-width: 768px) {
+      #fixedHeader .breadcrumb {
+        margin-top: 55px !important;
+      }
+
+      .container {
+        margin-top: 135px;
+      }
     }
 
     #navbar {
@@ -302,7 +329,12 @@
 
   <div class="page-wrapper">
     <div id="fixedHeader">
-      <div class="home-link" style="margin: 5px 10px 0;"><a href="../index.html">HOME</a></div>
+      <nav class="breadcrumb" aria-label="パンくずリスト" style="margin: 5px 10px 0;">
+        <ol>
+          <li><a href="../index.html">HOME</a></li>
+          <li aria-current="page">訳出についての覚書</li>
+        </ol>
+      </nav>
       <h1>各用語についてのコメント</h1>
     </div>
 

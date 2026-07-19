@@ -933,7 +933,12 @@ ${breadcrumbJSON}
 
     <div class="page-wrapper">
         <div class="container">
-            <div class="home-link"><a href="../index.html">HOME</a></div>
+            <nav class="breadcrumb" aria-label="パンくずリスト">
+                <ol>
+                    <li><a href="../index.html">HOME</a></li>
+                    <li aria-current="page">ドイツ語の音楽用語集</li>
+                </ol>
+            </nav>
             <h1>ドイツ語の音楽用語集</h1>
 
             <p style="font-size: 0.85rem; color: #555; margin-top: 0.5em; margin-bottom: 1em;">

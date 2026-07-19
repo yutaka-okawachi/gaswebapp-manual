@@ -113,6 +113,43 @@ body {
     transition: margin-left 0.3s ease;
 }
 
+/* 表示用パンくずリスト */
+.breadcrumb {
+    margin: 0 0 14px;
+    color: #5f6368;
+    font-size: 0.85rem;
+}
+
+.breadcrumb ol {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.breadcrumb li + li::before {
+    content: "›";
+    margin: 0 0.55em;
+    color: #7a7a7a;
+}
+
+.breadcrumb a {
+    color: var(--button-bg);
+    text-decoration: none;
+}
+
+.breadcrumb a:hover,
+.breadcrumb a:focus {
+    text-decoration: underline;
+}
+
+.breadcrumb [aria-current="page"] {
+    color: var(--text-color);
+    font-weight: 600;
+}
+
 /* ホームリンク */.home-link {
     display: none; /* デフォルト（PC）では非表示 */
     margin-bottom: 10px;
@@ -135,6 +172,10 @@ body {
 }
 
 @media (max-width: 768px) {
+    .container > .breadcrumb {
+        margin-top: 45px;
+    }
+
     .sidebar {
         display: none;
     }
