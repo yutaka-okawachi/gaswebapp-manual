@@ -370,6 +370,11 @@
 
             currentSearchId++;
             const thisSearchId = currentSearchId;
+            if (typeof window.trackSearchEvent === 'function') {
+                window.trackSearchEvent('GM', 'term', {
+                    query_length: query.length
+                });
+            }
 
             // Execute search (Local)
             setTimeout(() => {
@@ -385,12 +390,6 @@
                 resultsDiv.innerHTML = html;
                 if (typeof focusResultsPanel === 'function') {
                     focusResultsPanel({ instant: true });
-                }
-                if (typeof window.trackSearchEvent === 'function') {
-                    window.trackSearchEvent('GM', 'term', {
-                        search_term: query,
-                        query_length: query.length
-                    });
                 }
 
                 // Send notification
