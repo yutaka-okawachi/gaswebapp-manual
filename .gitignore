@@ -21,3 +21,6 @@ sync_execution.log
 # その他管理ファイル
 deployments_list.txt
 clasp_check/
+
+# ローカル確認用テストページ
+mahler-search-app/*_test.html
