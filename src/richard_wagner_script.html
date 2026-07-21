@@ -169,12 +169,6 @@
     setResults('<p class="loading">検索中・・・</p>');
     currentSearchId++;
     const thisSearchId = currentSearchId;
-    if (typeof window.trackSearchEvent === 'function') {
-      window.trackSearchEvent(document.title.includes('Wagner') ? 'RW' : 'RS', 'work', {
-        work_search_method: 'scene',
-        scene_count: selectedScenes.length
-      });
-    }
 
     const funcName = document.title.includes('Wagner')
       ? 'searchRichardWagnerByScene'
@@ -182,7 +176,16 @@
 
     google.script.run
       .withSuccessHandler(html => {
-        if (thisSearchId === currentSearchId) setResults(html);
+        if (thisSearchId === currentSearchId) {
+          setResults(html);
+          if (typeof window.trackSearchEvent === 'function') {
+            window.trackSearchEvent(document.title.includes('Wagner') ? 'RW' : 'RS', 'work', {
+              search_term: `${operaValue}|scenes:${selectedScenes.join(',')}`,
+              work_search_method: 'scene',
+              scene_count: selectedScenes.length
+            });
+          }
+        }
         document.querySelectorAll('#scene-selection-container .btn-search').forEach(btn => {
           btn.disabled = false;
         });
@@ -224,11 +227,6 @@
     setResults('<p class="loading">検索中・・・</p>');
     currentSearchId++;
     const thisSearchId = currentSearchId;
-    if (typeof window.trackSearchEvent === 'function') {
-      window.trackSearchEvent(document.title.includes('Wagner') ? 'RW' : 'RS', 'work', {
-        work_search_method: 'page'
-      });
-    }
 
     const funcName = document.title.includes('Wagner')
       ? 'searchRichardWagnerByPage'
@@ -236,7 +234,15 @@
 
     google.script.run
       .withSuccessHandler(html => {
-        if (thisSearchId === currentSearchId) setResults(html);
+        if (thisSearchId === currentSearchId) {
+          setResults(html);
+          if (typeof window.trackSearchEvent === 'function') {
+            window.trackSearchEvent(document.title.includes('Wagner') ? 'RW' : 'RS', 'work', {
+              search_term: `${operaValue}|pages:${pageInput}`,
+              work_search_method: 'page'
+            });
+          }
+        }
         document.querySelectorAll('#page-selection-container .btn-search').forEach(btn => {
           btn.disabled = false;
         });
@@ -325,17 +331,22 @@
     setResults('<p class="loading">検索中・・・</p>');
     currentSearchId++;
     const thisSearchId = currentSearchId;
-    if (typeof window.trackSearchEvent === 'function') {
-      window.trackSearchEvent(document.title.includes('Wagner') ? 'RW' : 'RS', 'work', {
-        work_search_method: 'whom',
-        whom_count: selected.length
-      });
-    }
 
     const funcName = document.title.includes('Wagner') ? 'searchRichardWagnerByWhom' : 'searchRichardStraussByWhom';
 
     google.script.run
-      .withSuccessHandler(html => { if (thisSearchId === currentSearchId) setResults(html); })
+      .withSuccessHandler(html => {
+        if (thisSearchId === currentSearchId) {
+          setResults(html);
+          if (typeof window.trackSearchEvent === 'function') {
+            window.trackSearchEvent(document.title.includes('Wagner') ? 'RW' : 'RS', 'work', {
+              search_term: `${operaValue}|whom:${selected.join(',')}`,
+              work_search_method: 'whom',
+              whom_count: selected.length
+            });
+          }
+        }
+      })
       .withFailureHandler(err => { setResults(`<p class="result-message">検索に失敗しました: ${err.message}</p>`); })[funcName](operaValue, selected);
   }
 

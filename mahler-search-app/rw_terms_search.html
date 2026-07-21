@@ -221,11 +221,6 @@
 
             currentSearchId++;
             const thisSearchId = currentSearchId;
-            if (typeof window.trackSearchEvent === 'function') {
-                window.trackSearchEvent('RW', 'term', {
-                    query_length: query.length
-                });
-            }
 
             // Execute search (Local)
             setTimeout(() => {
@@ -239,6 +234,12 @@
                         html = '<div class="result-message">検索機能が見つかりません (searchRWTermsLocal missing)</div>';
                     }
                     resultsDiv.innerHTML = html;
+                    if (typeof window.trackSearchEvent === 'function') {
+                        window.trackSearchEvent('RW', 'term', {
+                            search_term: query,
+                            query_length: query.length
+                        });
+                    }
                 } catch (e) {
                     console.error(e);
                     resultsDiv.innerHTML = `<div class="result-message" style="color:red;">エラーが発生しました: ${e.message}<br>${e.stack}</div>`;
