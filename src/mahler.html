@@ -696,6 +696,13 @@
       // 検索IDを更新（キャンセル制御用）
       currentSearchId++;
       const thisSearchId = currentSearchId;
+      if (typeof window.trackSearchEvent === 'function') {
+        window.trackSearchEvent('GM', 'work', {
+          work_count: works.length,
+          instrument_count: instruments.length,
+          include_orchestra_all: includeOrchestraAll
+        });
+      }
 
       // Google Apps Script側の searchData() を呼び出し
       google.script.run
@@ -704,14 +711,6 @@
           if (thisSearchId === currentSearchId) {
             resultsDiv.innerHTML = html;
             focusResultsPanel({ instant: true });
-            if (typeof window.trackSearchEvent === 'function') {
-              window.trackSearchEvent('GM', 'work', {
-                search_term: `works:${works.join(',')}|instruments:${instruments.join(',')}`,
-                work_count: works.length,
-                instrument_count: instruments.length,
-                include_orchestra_all: includeOrchestraAll
-              });
-            }
             // 検索完了後、ボタンを有効に戻す
             searchButton.disabled = false;
           }

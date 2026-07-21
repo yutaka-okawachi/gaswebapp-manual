@@ -166,6 +166,11 @@
 
       currentSearchId++;
       const thisSearchId = currentSearchId;
+      if (typeof window.trackSearchEvent === 'function') {
+        window.trackSearchEvent('GM', 'term', {
+          query_length: query.length
+        });
+      }
 
       // サーバー searchByTerm() を呼んで結果を受け取る
       google.script.run
@@ -173,12 +178,6 @@
           if (thisSearchId === currentSearchId) {
             resultsDiv.innerHTML = html;
             focusResultsPanel({ instant: true });
-            if (typeof window.trackSearchEvent === 'function') {
-              window.trackSearchEvent('GM', 'term', {
-                search_term: query,
-                query_length: query.length
-              });
-            }
           } else {
             console.log('古い検索結果を無視');
           }

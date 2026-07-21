@@ -275,6 +275,12 @@ function searchByScene() {
     const thisSearchId = currentSearchId;
 
     const composer = (document.title.includes('Wagner') || document.title.includes('RW')) ? 'richard_wagner' : 'richard_strauss';
+    if (typeof window.trackSearchEvent === 'function') {
+        window.trackSearchEvent(composer === 'richard_wagner' ? 'RW' : 'RS', 'work', {
+            work_search_method: 'scene',
+            scene_count: selectedScenes.length
+        });
+    }
     const funcName = composer === 'richard_wagner'
         ? 'searchRichardWagnerByScene'
         : 'searchRichardStraussByScene';
@@ -282,16 +288,7 @@ function searchByScene() {
     if (typeof google !== 'undefined' && google.script && google.script.run) {
         google.script.run
             .withSuccessHandler(html => {
-                if (thisSearchId === currentSearchId) {
-                    setResults(html);
-                    if (typeof window.trackSearchEvent === 'function') {
-                        window.trackSearchEvent(composer === 'richard_wagner' ? 'RW' : 'RS', 'work', {
-                            search_term: `${operaValue}|scenes:${selectedScenes.join(',')}`,
-                            work_search_method: 'scene',
-                            scene_count: selectedScenes.length
-                        });
-                    }
-                }
+                if (thisSearchId === currentSearchId) setResults(html);
                 document.querySelectorAll('#scene-selection-container .btn-search').forEach(btn => {
                     btn.disabled = false;
                 });
@@ -332,14 +329,6 @@ function searchByScene() {
                 const html = formatGenericResults(filteredData);
                 const finalHtml = injectMottlNote(html, operaValue);
                 setResults(finalHtml);
-                if (typeof window.trackSearchEvent === 'function') {
-                    window.trackSearchEvent(composer === 'richard_wagner' ? 'RW' : 'RS', 'work', {
-                        search_term: `${operaValue}|scenes:${selectedScenes.join(',')}`,
-                        work_search_method: 'scene',
-                        scene_count: selectedScenes.length,
-                        result_count: filteredData.length
-                    });
-                }
 
                 // Send notification
                 if (typeof sendSearchNotification === 'function') {
@@ -389,6 +378,11 @@ function searchByPage() {
     const thisSearchId = currentSearchId;
 
     const composer = (document.title.includes('Wagner') || document.title.includes('RW')) ? 'richard_wagner' : 'richard_strauss';
+    if (typeof window.trackSearchEvent === 'function') {
+        window.trackSearchEvent(composer === 'richard_wagner' ? 'RW' : 'RS', 'work', {
+            work_search_method: 'page'
+        });
+    }
     const funcName = composer === 'richard_wagner'
         ? 'searchRichardWagnerByPage'
         : 'searchRichardStraussByPage';
@@ -396,15 +390,7 @@ function searchByPage() {
     if (typeof google !== 'undefined' && google.script && google.script.run) {
         google.script.run
             .withSuccessHandler(html => {
-                if (thisSearchId === currentSearchId) {
-                    setResults(html);
-                    if (typeof window.trackSearchEvent === 'function') {
-                        window.trackSearchEvent(composer === 'richard_wagner' ? 'RW' : 'RS', 'work', {
-                            search_term: `${operaValue}|pages:${pageInput}`,
-                            work_search_method: 'page'
-                        });
-                    }
-                }
+                if (thisSearchId === currentSearchId) setResults(html);
                 document.querySelectorAll('#page-selection-container .btn-search').forEach(btn => {
                     btn.disabled = false;
                 });
@@ -444,13 +430,6 @@ function searchByPage() {
                 const html = formatGenericResults(filteredData);
                 const finalHtml = injectMottlNote(html, operaValue);
                 setResults(finalHtml);
-                if (typeof window.trackSearchEvent === 'function') {
-                    window.trackSearchEvent(composer === 'richard_wagner' ? 'RW' : 'RS', 'work', {
-                        search_term: `${operaValue}|pages:${pageInput}`,
-                        work_search_method: 'page',
-                        result_count: filteredData.length
-                    });
-                }
 
                 // Send notification
                 if (typeof sendSearchNotification === 'function') {
@@ -597,6 +576,12 @@ function searchByWhom() {
     const thisSearchId = currentSearchId;
 
     const composer = (document.title.includes('Wagner') || document.title.includes('RW')) ? 'richard_wagner' : 'richard_strauss';
+    if (typeof window.trackSearchEvent === 'function') {
+        window.trackSearchEvent(composer === 'richard_wagner' ? 'RW' : 'RS', 'work', {
+            work_search_method: 'whom',
+            whom_count: selectedWhoms.length
+        });
+    }
     
     // Local processing
     setTimeout(() => {
@@ -636,14 +621,6 @@ function searchByWhom() {
             const html = formatGenericResults(filteredData);
             const finalHtml = injectMottlNote(html, operaValue);
             setResults(finalHtml);
-            if (typeof window.trackSearchEvent === 'function') {
-                window.trackSearchEvent(composer === 'richard_wagner' ? 'RW' : 'RS', 'work', {
-                    search_term: `${operaValue}|whom:${selectedWhoms.join(',')}`,
-                    work_search_method: 'whom',
-                    whom_count: selectedWhoms.length,
-                    result_count: filteredData.length
-                });
-            }
 
             // Send notification
             if (typeof sendSearchNotification === 'function') {

@@ -85,41 +85,19 @@
     window.focusResultsPanel = focusResultsPanel;
 
     function trackSearchEvent(composer, searchType, params) {
-      if (typeof window.gtag !== 'function') return;
+      const eventNames = {
+        RW: { work: 'rw_work_search', term: 'rw_term_search' },
+        GM: { work: 'gm_work_search', term: 'gm_term_search' },
+        RS: { work: 'rs_work_search', term: 'rs_term_search' }
+      };
+      const eventName = eventNames[composer] && eventNames[composer][searchType];
+      if (!eventName || typeof window.gtag !== 'function') return;
 
-      const resultsDiv = document.getElementById('results');
-      if (!resultsDiv) return;
-
-      let resultCount = Number.isFinite(params && params.result_count)
-        ? params.result_count
-        : null;
-      if (resultCount === null) {
-        const preferredSelectors = ['.result-entry', '.search-result-item', '.result-a'];
-        for (const selector of preferredSelectors) {
-          const count = resultsDiv.querySelectorAll(selector).length;
-          if (count > 0) {
-            resultCount = count;
-            break;
-          }
-        }
-      }
-      if (resultCount === null) {
-        const countMatch = resultsDiv.textContent.match(/(\d+)件(?:見つかりました|ありました|該当しました)/);
-        if (countMatch) resultCount = Number(countMatch[1]);
-      }
-      if (resultCount === null && /該当するデータが見つかりませんでした/.test(resultsDiv.textContent)) {
-        resultCount = 0;
-      }
-      if (resultCount === null) return;
-
-      const method = params && params.work_search_method;
-      const payload = Object.assign({}, params || {}, {
+      const payload = Object.assign({
         composer: composer,
-        search_type: [composer.toLowerCase(), searchType, method].filter(Boolean).join('_'),
-        result_count: resultCount
-      });
-      delete payload.work_search_method;
-      window.gtag('event', resultCount > 0 ? 'view_search_results' : 'search_no_results', payload);
+        search_type: searchType
+      }, params || {});
+      window.gtag('event', eventName, payload);
     }
     window.trackSearchEvent = trackSearchEvent;
 

@@ -853,21 +853,19 @@
       searchButton.disabled = true;
       currentSearchId++;
       const thisSearchId = currentSearchId;
+      if (typeof window.trackSearchEvent === 'function') {
+        window.trackSearchEvent('GM', 'work', {
+          work_count: works.length,
+          instrument_count: instruments.length,
+          include_orchestra_all: includeOrchestraAll
+        });
+      }
 
       setTimeout(async () => {
           try {
               if (typeof window.searchMahlerDataLocal === 'function') {
                   const results = await window.searchMahlerDataLocal(works, instruments, includeOrchestraAll);
                   renderSearchResults(results);
-                  if (typeof window.trackSearchEvent === 'function') {
-                    window.trackSearchEvent('GM', 'work', {
-                      search_term: `works:${works.join(',')}|instruments:${instruments.join(',')}`,
-                      work_count: works.length,
-                      instrument_count: instruments.length,
-                      include_orchestra_all: includeOrchestraAll,
-                      result_count: results.length
-                    });
-                  }
                   searchButton.disabled = false;
 
                       // Send notification
