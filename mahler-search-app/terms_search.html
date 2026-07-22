@@ -156,7 +156,7 @@
         }
 
         // Override/Define searchMahlerTermsLocal to handle object data correctly
-        window.searchMahlerTermsLocal = function (query) {
+        window.searchMahlerTermsLocal = function (query, resultMeta) {
             const data = window.appData.mahler;
             if (!data) return '<div class="result-message">データが読み込まれていません。</div>';
 
@@ -168,6 +168,7 @@
             });
 
             if (results.length === 0) {
+                if (resultMeta) resultMeta.resultCount = 0;
                 return '<div class="result-message">該当するデータが見つかりませんでした。</div>';
             }
 
@@ -243,6 +244,7 @@
                 return '<div class="result-message">検索中にエラーが発生しました。</div>';
             }
 
+            if (resultMeta) resultMeta.resultCount = results.length;
             return `<div class="result-message">${results.length}件ありました。</div>${resultHTML}`;
         };
 
@@ -370,19 +372,15 @@
 
             currentSearchId++;
             const thisSearchId = currentSearchId;
-            if (typeof window.trackSearchEvent === 'function') {
-                window.trackSearchEvent('GM', 'term', {
-                    query_length: query.length
-                });
-            }
 
             // Execute search (Local)
             setTimeout(() => {
                 if (thisSearchId !== currentSearchId) return;
                 
                 let html = '';
+                const resultMeta = {};
                 if (typeof searchMahlerTermsLocal === 'function') {
-                    html = searchMahlerTermsLocal(query);
+                    html = searchMahlerTermsLocal(query, resultMeta);
                 } else {
                     html = '<div class="result-message">検索機能が見つかりません (searchMahlerTermsLocal missing)</div>';
                 }
@@ -390,6 +388,15 @@
                 resultsDiv.innerHTML = html;
                 if (typeof focusResultsPanel === 'function') {
                     focusResultsPanel({ instant: true });
+                }
+                if (typeof window.trackSearchResults === 'function') {
+                    window.trackSearchResults({
+                        searchTerm: query,
+                        searchType: 'gm_term',
+                        resultCount: resultMeta.resultCount,
+                        resultRoot: resultsDiv,
+                        params: { composer: 'GM', query_length: query.length }
+                    });
                 }
 
                 // Send notification

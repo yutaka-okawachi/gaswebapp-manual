@@ -853,19 +853,26 @@
       searchButton.disabled = true;
       currentSearchId++;
       const thisSearchId = currentSearchId;
-      if (typeof window.trackSearchEvent === 'function') {
-        window.trackSearchEvent('GM', 'work', {
-          work_count: works.length,
-          instrument_count: instruments.length,
-          include_orchestra_all: includeOrchestraAll
-        });
-      }
 
       setTimeout(async () => {
           try {
               if (typeof window.searchMahlerDataLocal === 'function') {
                   const results = await window.searchMahlerDataLocal(works, instruments, includeOrchestraAll);
+                  if (thisSearchId !== currentSearchId) return;
                   renderSearchResults(results);
+                  if (typeof window.trackSearchResults === 'function') {
+                    window.trackSearchResults({
+                      searchTerm: `works:${works.join(',')}|instruments:${instruments.join(',')}`,
+                      searchType: 'gm_work',
+                      resultCount: results.length,
+                      params: {
+                        composer: 'GM',
+                        work_count: works.length,
+                        instrument_count: instruments.length,
+                        include_orchestra_all: includeOrchestraAll
+                      }
+                    });
+                  }
                   searchButton.disabled = false;
 
                       // Send notification

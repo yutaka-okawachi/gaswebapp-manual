@@ -225,11 +225,6 @@
 
             currentSearchId++;
             const thisSearchId = currentSearchId;
-            if (typeof window.trackSearchEvent === 'function') {
-                window.trackSearchEvent('RS', 'term', {
-                    query_length: query.length
-                });
-            }
 
             // Execute search (Local)
             setTimeout(() => {
@@ -237,12 +232,22 @@
                 
                 try {
                     let html = '';
+                    const resultMeta = {};
                     if (typeof searchRSTermsLocal === 'function') {
-                        html = searchRSTermsLocal(query);
+                        html = searchRSTermsLocal(query, resultMeta);
                     } else {
                         html = '<div class="result-message">検索機能が見つかりません (searchRSTermsLocal missing)</div>';
                     }
                     resultsDiv.innerHTML = html;
+                    if (typeof window.trackSearchResults === 'function') {
+                        window.trackSearchResults({
+                            searchTerm: query,
+                            searchType: 'rs_term',
+                            resultCount: resultMeta.resultCount,
+                            resultRoot: resultsDiv,
+                            params: { composer: 'RS', query_length: query.length }
+                        });
+                    }
                 } catch (e) {
                     console.error(e);
                     resultsDiv.innerHTML = `<div class="result-message" style="color:red;">エラーが発生しました: ${e.message}<br>${e.stack}</div>`;

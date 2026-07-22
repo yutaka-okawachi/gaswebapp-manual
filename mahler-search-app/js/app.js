@@ -16,22 +16,50 @@ window.appData = window.appData || {
 // TODO: Replace with your deployed Web App URL
 const GAS_NOTIFICATION_URL = 'https://script.google.com/macros/s/AKfycbzFD2EDHfECX0yK3cP0toN5zJRpcCNMO9HiEBM7WrD_9fX8N5bjHo9IYtEEXu_fsifO4Q/exec';
 
-function trackSearchEvent(composer, searchType, params) {
-    const eventNames = {
-        RW: { work: 'rw_work_search', term: 'rw_term_search' },
-        GM: { work: 'gm_work_search', term: 'gm_term_search' },
-        RS: { work: 'rs_work_search', term: 'rs_term_search' }
-    };
-    const eventName = eventNames[composer] && eventNames[composer][searchType];
-    if (!eventName || typeof window.gtag !== 'function') return;
+function getSearchResultCount(options) {
+    if (options && Number.isInteger(options.resultCount) && options.resultCount >= 0) {
+        return options.resultCount;
+    }
 
-    const payload = Object.assign({
-        composer: composer,
-        search_type: searchType
-    }, params || {});
-    window.gtag('event', eventName, payload);
+    const root = options && options.resultRoot;
+    if (!root || typeof root.querySelectorAll !== 'function') return null;
+
+    const text = (root.textContent || '').replace(/\s+/g, ' ').trim();
+    const countMatch = text.match(/(\d[\d,]*)\s*件\s*(?:見つかりました|ありました|該当しました)/);
+    if (countMatch) return Number(countMatch[1].replace(/,/g, ''));
+
+    const entryCount = Math.max(
+        root.querySelectorAll('.result-entry').length,
+        root.querySelectorAll('.search-result-item').length
+    );
+    if (entryCount > 0) return entryCount;
+
+    if (/(?:該当する[^。]*?(?:見つかりません|ありません)|検索結果[^。]*?(?:見つかりません|ありません)|0\s*件)/.test(text)) {
+        return 0;
+    }
+    return null;
 }
-window.trackSearchEvent = trackSearchEvent;
+window.getSearchResultCount = getSearchResultCount;
+
+function trackSearchResults(options) {
+    if (typeof window.gtag !== 'function' || !options) return false;
+
+    const searchTerm = String(options.searchTerm || '').trim();
+    const searchType = String(options.searchType || '').trim();
+    if (!searchTerm || !searchType) return false;
+
+    const resultCount = getSearchResultCount(options);
+    if (resultCount === null) return false;
+
+    const payload = Object.assign({}, options.params || {}, {
+        search_term: searchTerm,
+        search_type: searchType,
+        result_count: resultCount
+    });
+    window.gtag('event', resultCount > 0 ? 'view_search_results' : 'search_no_results', payload);
+    return true;
+}
+window.trackSearchResults = trackSearchResults;
 
 /**
  * Sends a search notification to the Google Apps Script Web App.
@@ -1611,7 +1639,7 @@ window.getMahlerTermsListLocal = function () {
     return mapped;
 };
 
-window.searchMahlerTermsLocal = function (query) {
+window.searchMahlerTermsLocal = function (query, resultMeta) {
     const data = window.appData.mahler;
     if (!data) return '<div class="result-message">データが読み込まれていません。</div>';
 
@@ -1622,6 +1650,7 @@ window.searchMahlerTermsLocal = function (query) {
     });
 
     if (results.length === 0) {
+        if (resultMeta) resultMeta.resultCount = 0;
         return '<div class="result-message">該当するデータが見つかりませんでした。</div>';
     }
 
@@ -1671,22 +1700,23 @@ window.searchMahlerTermsLocal = function (query) {
         return `<div class="result-message">検索中にエラーが発生しました: ${e.message}</div>`;
     }
 
+    if (resultMeta) resultMeta.resultCount = totalMatches;
     return totalMatches === 0 ? '<div class="result-message">該当するデータが見つかりませんでした。</div>' : `<div>${totalMatches}件ありました。</div>${resultHTML}`;
 };
 
 // RS Terms Search Local
-window.searchRSTermsLocal = function (query) {
-    return searchGenericTermsLocal(query, 'richard_strauss', 'RS');
+window.searchRSTermsLocal = function (query, resultMeta) {
+    return searchGenericTermsLocal(query, 'richard_strauss', 'RS', resultMeta);
 };
 
 // RW Terms Search Local
-window.searchRWTermsLocal = function (query) {
-    return searchGenericTermsLocal(query, 'richard_wagner', 'RW');
+window.searchRWTermsLocal = function (query, resultMeta) {
+    return searchGenericTermsLocal(query, 'richard_wagner', 'RW', resultMeta);
 };
 
 // Generic Terms Search Local for RS/RW
 // Generic Terms Search Local for RS/RW
-function searchGenericTermsLocal(query, dataKey, type) {
+function searchGenericTermsLocal(query, dataKey, type, resultMeta) {
     const data = window.appData[dataKey];
     if (!data) return '<div class="result-message">データが読み込まれていません。</div>';
 
@@ -1701,6 +1731,7 @@ function searchGenericTermsLocal(query, dataKey, type) {
     });
 
     if (filteredData.length === 0) {
+        if (resultMeta) resultMeta.resultCount = 0;
         return '<div class="result-message">該当するデータが見つかりませんでした。</div>';
     }
 
@@ -1725,6 +1756,7 @@ function searchGenericTermsLocal(query, dataKey, type) {
 
     // 見出し語の件数を表示
     const headwordCount = Object.keys(groupedByDe).length;
+    if (resultMeta) resultMeta.resultCount = headwordCount;
     let html = `<div class="result-message">${headwordCount}件ありました。</div>`;
     
     const sortedDeKeys = Object.keys(groupedByDe).sort((a, b) => a.localeCompare(b, 'de'));

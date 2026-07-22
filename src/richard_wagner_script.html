@@ -169,12 +169,7 @@
     setResults('<p class="loading">検索中・・・</p>');
     currentSearchId++;
     const thisSearchId = currentSearchId;
-    if (typeof window.trackSearchEvent === 'function') {
-      window.trackSearchEvent(document.title.includes('Wagner') ? 'RW' : 'RS', 'work', {
-        work_search_method: 'scene',
-        scene_count: selectedScenes.length
-      });
-    }
+    const composerCode = document.title.includes('Wagner') ? 'RW' : 'RS';
 
     const funcName = document.title.includes('Wagner')
       ? 'searchRichardWagnerByScene'
@@ -182,7 +177,17 @@
 
     google.script.run
       .withSuccessHandler(html => {
-        if (thisSearchId === currentSearchId) setResults(html);
+        if (thisSearchId === currentSearchId) {
+          setResults(html);
+          if (typeof window.trackSearchResults === 'function') {
+            window.trackSearchResults({
+              searchTerm: `${operaValue}|scenes:${selectedScenes.join(',')}`,
+              searchType: composerCode === 'RW' ? 'rw_work_scene' : 'rs_work_scene',
+              resultRoot: document.getElementById('results'),
+              params: { composer: composerCode, scene_count: selectedScenes.length }
+            });
+          }
+        }
         document.querySelectorAll('#scene-selection-container .btn-search').forEach(btn => {
           btn.disabled = false;
         });
@@ -224,11 +229,7 @@
     setResults('<p class="loading">検索中・・・</p>');
     currentSearchId++;
     const thisSearchId = currentSearchId;
-    if (typeof window.trackSearchEvent === 'function') {
-      window.trackSearchEvent(document.title.includes('Wagner') ? 'RW' : 'RS', 'work', {
-        work_search_method: 'page'
-      });
-    }
+    const composerCode = document.title.includes('Wagner') ? 'RW' : 'RS';
 
     const funcName = document.title.includes('Wagner')
       ? 'searchRichardWagnerByPage'
@@ -236,7 +237,17 @@
 
     google.script.run
       .withSuccessHandler(html => {
-        if (thisSearchId === currentSearchId) setResults(html);
+        if (thisSearchId === currentSearchId) {
+          setResults(html);
+          if (typeof window.trackSearchResults === 'function') {
+            window.trackSearchResults({
+              searchTerm: `${operaValue}|pages:${pageInput}`,
+              searchType: composerCode === 'RW' ? 'rw_work_page' : 'rs_work_page',
+              resultRoot: document.getElementById('results'),
+              params: { composer: composerCode }
+            });
+          }
+        }
         document.querySelectorAll('#page-selection-container .btn-search').forEach(btn => {
           btn.disabled = false;
         });
@@ -325,18 +336,29 @@
     setResults('<p class="loading">検索中・・・</p>');
     currentSearchId++;
     const thisSearchId = currentSearchId;
-    if (typeof window.trackSearchEvent === 'function') {
-      window.trackSearchEvent(document.title.includes('Wagner') ? 'RW' : 'RS', 'work', {
-        work_search_method: 'whom',
-        whom_count: selected.length
-      });
-    }
+    const composerCode = document.title.includes('Wagner') ? 'RW' : 'RS';
 
     const funcName = document.title.includes('Wagner') ? 'searchRichardWagnerByWhom' : 'searchRichardStraussByWhom';
 
     google.script.run
-      .withSuccessHandler(html => { if (thisSearchId === currentSearchId) setResults(html); })
-      .withFailureHandler(err => { setResults(`<p class="result-message">検索に失敗しました: ${err.message}</p>`); })[funcName](operaValue, selected);
+      .withSuccessHandler(html => {
+        if (thisSearchId === currentSearchId) {
+          setResults(html);
+          if (typeof window.trackSearchResults === 'function') {
+            window.trackSearchResults({
+              searchTerm: `${operaValue}|whom:${selected.join(',')}`,
+              searchType: composerCode === 'RW' ? 'rw_work_whom' : 'rs_work_whom',
+              resultRoot: document.getElementById('results'),
+              params: { composer: composerCode, whom_count: selected.length }
+            });
+          }
+        }
+      })
+      .withFailureHandler(err => {
+        if (thisSearchId === currentSearchId) {
+          setResults(`<p class="result-message">検索に失敗しました: ${err.message}</p>`);
+        }
+      })[funcName](operaValue, selected);
   }
 
   function clearWhomSelection() {
