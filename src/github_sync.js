@@ -51,7 +51,18 @@ function githubRequest(method, endpoint, payload, config) {
  * ブランチの最新コミットSHAを取得
  */
 function getLatestCommitSha(config) {
-  // キャッシュ回避のためのクエリパラメータを付与
+  // /git/ref/heads/ はGitHub APIのキャッシュにより古いコミットを返すことがあるため、
+  // 最新のコミットを確実に取得するために /commits エンドポイントを優先して使用します。
+  try {
+    const commits = githubRequest('get', `/commits?sha=${config.branch}&per_page=1&t=${new Date().getTime()}`, null, config);
+    if (commits && commits.length > 0) {
+      return commits[0].sha;
+    }
+  } catch (e) {
+    Logger.log('Warning in getLatestCommitSha (/commits): ' + e.message);
+  }
+  
+  // フォールバック: 元のエンドポイントを使用
   const ref = githubRequest('get', `/git/ref/heads/${config.branch}?t=${new Date().getTime()}`, null, config);
   return ref.object.sha;
 }
