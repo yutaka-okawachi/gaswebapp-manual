@@ -4525,6 +4525,11 @@
     "[RS: Qui]"
   ],
   [
+    "WoO",
+    "(= Werke ohne Opuszahl)  作品番号（Op.）のない作品\n\nWoO の番号は作曲順を直接表すとは限らない．後世の研究者が作品を分類し，目録上の番号として付けたもの．",
+    ""
+  ],
+  [
     "wuchtig",
     "(≒ weighty, massive, powerful, forceful / massiccio, pesante, robusto)\n【一般的な意味】\n① 巨大な，かさばった，重い．\n② 力強い，猛烈な，勢いのある．\n③ （動きが）鈍重な，ぶざまな．\n【音楽用語としての訳例】\n「重々しく」，「強烈な衝撃をもって」，「巨大な力で」\n\n GM では「重々しく」と訳している",
     "[GM]"
@@ -4546,7 +4551,7 @@
   ],
   [
     "z. B.",
-    "(＝zum Beispiel)  例えば ",
+    "(＝zum Beispiel) 例えば ",
     "[RS: Juan]"
   ],
   [
