@@ -602,10 +602,11 @@ if ($pullExitCode -ne 0) {
 Write-Host ""
 # --- [4.5/5] 動的 sitemap.xml 更新 ---
 Write-Host "[4.5/5] Updating sitemap.xml for modified files..." -ForegroundColor Yellow
-# 未プッシュのコミット（ローカル変更＋GASからのPull分）で変更されたファイルを取得
+# 未プッシュのコミット（ローカル変更＋GASからのPull分＋直近コミット）で変更されたファイルを取得
 $pulledFiles = git diff --name-only $beforePullHead HEAD
 $unpushedFiles = git diff --name-only origin/main HEAD
-$changedFiles = @($pulledFiles + $unpushedFiles) | Where-Object { $_ } | Sort-Object -Unique
+$recentCommitFiles = git log -n 5 --name-only --format="" 2>$null
+$changedFiles = @($pulledFiles + $unpushedFiles + $recentCommitFiles) | Where-Object { $_ } | Sort-Object -Unique
 $today = (Get-Date).ToString("yyyy-MM-dd")
 $sitemapPath = "sitemap.xml"
 
