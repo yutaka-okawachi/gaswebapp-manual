@@ -51,20 +51,22 @@ function githubRequest(method, endpoint, payload, config) {
  * ブランチの最新コミットSHAを取得
  */
 function getLatestCommitSha(config) {
-  // /git/ref/heads/ はGitHub APIのキャッシュにより古いコミットを返すことがあるため、
-  // 最新のコミットを確実に取得するために /commits エンドポイントを優先して使用します。
+  // /git/ref/heads/ または /commits エンドポイントを使用して最新のコミットSHAを取得します。
+  // キャッシュ回避のためタイムスタンプクエリパラメータを付与します。
   try {
-    const commits = githubRequest('get', `/commits?sha=${config.branch}&per_page=1&t=${new Date().getTime()}`, null, config);
-    if (commits && commits.length > 0) {
-      return commits[0].sha;
+    const ref = githubRequest('get', `/git/ref/heads/${config.branch}?t=${new Date().getTime()}`, null, config);
+    if (ref && ref.object && ref.object.sha) {
+      return ref.object.sha;
     }
   } catch (e) {
-    Logger.log('Warning in getLatestCommitSha (/commits): ' + e.message);
+    Logger.log('Warning in getLatestCommitSha (/git/ref): ' + e.message);
   }
   
-  // フォールバック: 元のエンドポイントを使用
-  const ref = githubRequest('get', `/git/ref/heads/${config.branch}?t=${new Date().getTime()}`, null, config);
-  return ref.object.sha;
+  const commits = githubRequest('get', `/commits?sha=${config.branch}&per_page=1&t=${new Date().getTime()}`, null, config);
+  if (commits && commits.length > 0) {
+    return commits[0].sha;
+  }
+  throw new Error('Could not fetch latest commit SHA from GitHub');
 }
 
 /**
@@ -108,16 +110,8 @@ function pushToGitHub(files, commitMessage) {
   Logger.log(`Target: ${config.owner}/${config.repo} [${config.branch}]`);
 
   try {
-    // 1. 最新のコミットSHAを取得
-    Logger.log('[1/5] Getting latest commit SHA...');
-    const latestCommitSha = getLatestCommitSha(config);
-    
-    // 2. Base Tree SHAを取得
-    Logger.log('[2/5] Getting base tree SHA...');
-    const baseTreeSha = getBaseTreeSha(latestCommitSha, config);
-
-    // 3. 各ファイルのBlobを作成し、Treeアイテムを準備
-    Logger.log(`[3/5] Creating blobs for ${Object.keys(files).length} files...`);
+    // 1. 各ファイルのBlobを事前に作成（時間がかかるためループ外で一括処理）
+    Logger.log(`[1/3] Creating blobs for ${Object.keys(files).length} files...`);
     const treeItems = [];
     
     for (const [path, content] of Object.entries(files)) {
@@ -141,40 +135,59 @@ function pushToGitHub(files, commitMessage) {
       if (treeItems.length % 5 === 0) Utilities.sleep(500);
     }
 
-    // 4. 新しいTreeを作成
-    Logger.log('[4/5] Creating new tree...');
-    const treePayload = {
-      base_tree: baseTreeSha,
-      tree: treeItems
-    };
-    const newTree = githubRequest('post', '/git/trees', treePayload, config);
-    const newTreeSha = newTree.sha;
+    // 2. 最新HEADの取得、Tree作成、Commit作成、Ref更新（競合時は最新HEADで自動リトライ）
+    const maxRetries = 3;
+    let lastError = null;
+    
+    for (let attempt = 1; attempt <= maxRetries; attempt++) {
+      try {
+        Logger.log(`[2/3] Getting latest commit SHA (Attempt ${attempt}/${maxRetries})...`);
+        const latestCommitSha = getLatestCommitSha(config);
+        
+        Logger.log(`[3/3] Getting base tree SHA for ${latestCommitSha.substring(0, 7)}...`);
+        const baseTreeSha = getBaseTreeSha(latestCommitSha, config);
 
-    // 5. 新しいCommitを作成
-    Logger.log('[5/5] Creating commit...');
-    const commitPayload = {
-      message: message,
-      tree: newTreeSha,
-      parents: [latestCommitSha]
-    };
-    const newCommit = githubRequest('post', '/git/commits', commitPayload, config);
-    const newCommitSha = newCommit.sha;
+        // 新しいTreeを作成
+        const treePayload = {
+          base_tree: baseTreeSha,
+          tree: treeItems
+        };
+        const newTree = githubRequest('post', '/git/trees', treePayload, config);
+        const newTreeSha = newTree.sha;
 
-    // 6. 参照（HEAD）を更新
-    Logger.log('Updating reference...');
-    githubRequest('patch', `/git/refs/heads/${config.branch}`, { sha: newCommitSha }, config);
+        // 新しいCommitを作成
+        const commitPayload = {
+          message: message,
+          tree: newTreeSha,
+          parents: [latestCommitSha]
+        };
+        const newCommit = githubRequest('post', '/git/commits', commitPayload, config);
+        const newCommitSha = newCommit.sha;
 
-    Logger.log('✓ Batch push completed successfully!');
-    Logger.log(`New Commit: ${newCommitSha}`);
+        // 参照（HEAD）を更新
+        Logger.log(`Updating reference to ${newCommitSha.substring(0, 7)}...`);
+        githubRequest('patch', `/git/refs/heads/${config.branch}`, { sha: newCommitSha }, config);
 
-    // 既存のレスポンス形式に合わせて成功結果を返す
-    // 呼び出し元の export_json.js が result.success, result.failed を期待しているため
-    return {
-      success: Object.keys(files), // 全ファイル成功とみなす
-      failed: [],
-      total: Object.keys(files).length,
-      commitSha: newCommitSha
-    };
+        Logger.log('✓ Batch push completed successfully!');
+        Logger.log(`New Commit: ${newCommitSha}`);
+
+        return {
+          success: Object.keys(files),
+          failed: [],
+          total: Object.keys(files).length,
+          commitSha: newCommitSha
+        };
+      } catch (e) {
+        lastError = e;
+        if ((e.message.includes('fast forward') || e.message.includes('422')) && attempt < maxRetries) {
+          Logger.log(`⚠ Fast-forward collision on attempt ${attempt}. Waiting 1.5s and retrying with fresh HEAD...`);
+          Utilities.sleep(1500);
+          continue;
+        }
+        throw e;
+      }
+    }
+    throw lastError;
 
   } catch (e) {
     Logger.log('✗ Critical Error in batch push: ' + e.message);
