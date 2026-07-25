@@ -329,37 +329,43 @@ function renderRichardStraussSearch(container) {
             <h1>曲名から検索 (RS)</h1>
             <p><b>Richard Strauss の管弦楽曲については<a href="dic.html" target="_blank">ドイツ語の音楽用語集</a>のページを参照</b></p>
             <p>オーケストラに対する指示で Gustav Mahler の用語検索ページで何とかなりそうなものは基本的に不記載．</p>
-            <div class="big-label">曲を選択</div>
-            <fieldset>
-                <legend>オペラ</legend>
-                <div class="radio-group" id="opera-selection">
-                    <label><input type="radio" name="opera" value="guntram"> Guntram, Op.25 (1888-93, revised 1934–39)</label>
-                    <label><input type="radio" name="opera" value="feuersnot"> Feuersnot, Op.50 (1900-01)</label>
-                    <label><input type="radio" name="opera" value="salome"> Salome, Op.54 (1903-05)</label>
-                    <label><input type="radio" name="opera" value="elektra"> Elektra, Op.58 (1906-08)</label>
-                    <label><input type="radio" name="opera" value="rosenkavalier"> Der Rosenkavalier, Op.59 (1909-10)</label>
-                    <label><input type="radio" name="opera" value="ariadne"> Ariadne auf Naxos, Op.60 (1912, revised 1916)</label>
-                    <label><input type="radio" name="opera" value="schatten"> Die Frau ohne Schatten, Op.65 (1914-17)</label>
-                    <label><input type="radio" name="opera" value="intermezzo"> Intermezzo, Op.72 (1919-23)</label>
-                    <label><input type="radio" name="opera" value="helena"> Die ägyptische Helena, Op.75 (1924-27)</label>
-                    <label><input type="radio" name="opera" value="arabella"> Arabella, Op.79 (1930-32)</label>
-                    <label><input type="radio" name="opera" value="schweigsame"> Die schweigsame Frau, Op.80 (1932-35)</label>
-                    <label><input type="radio" name="opera" value="tag"> Friedenstag, Op.81 (1935-36)</label>
-                    <label><input type="radio" name="opera" value="daphne"> Daphne, Op.82 (1936-37)</label>
-                    <label><input type="radio" name="opera" value="danae"> Die Liebe der Danae, Op.83 (1938-40)</label>
-                    <label><input type="radio" name="opera" value="cap"> Capriccio, Op.85 (1940-41)</label>
-                </div>
-            </fieldset>
+            <div class="big-label">曲名を選択</div>
+            <details class="instrument-group" id="works-group">
+                <summary>曲名</summary>
+                <fieldset>
+                    <legend>オペラ</legend>
+                    <div class="radio-group" id="opera-selection">
+                        <label><input type="radio" name="opera" value="guntram"> Guntram, Op.25 (1888-93, revised 1934–39)</label>
+                        <label><input type="radio" name="opera" value="feuersnot"> Feuersnot, Op.50 (1900-01)</label>
+                        <label><input type="radio" name="opera" value="salome"> Salome, Op.54 (1903-05)</label>
+                        <label><input type="radio" name="opera" value="elektra"> Elektra, Op.58 (1906-08)</label>
+                        <label><input type="radio" name="opera" value="rosenkavalier"> Der Rosenkavalier, Op.59 (1909-10)</label>
+                        <label><input type="radio" name="opera" value="ariadne"> Ariadne auf Naxos, Op.60 (1912, revised 1916)</label>
+                        <label><input type="radio" name="opera" value="schatten"> Die Frau ohne Schatten, Op.65 (1914-17)</label>
+                        <label><input type="radio" name="opera" value="intermezzo"> Intermezzo, Op.72 (1919-23)</label>
+                        <label><input type="radio" name="opera" value="helena"> Die ägyptische Helena, Op.75 (1924-27)</label>
+                        <label><input type="radio" name="opera" value="arabella"> Arabella, Op.79 (1930-32)</label>
+                        <label><input type="radio" name="opera" value="schweigsame"> Die schweigsame Frau, Op.80 (1932-35)</label>
+                        <label><input type="radio" name="opera" value="tag"> Friedenstag, Op.81 (1935-36)</label>
+                        <label><input type="radio" name="opera" value="daphne"> Daphne, Op.82 (1936-37)</label>
+                        <label><input type="radio" name="opera" value="danae"> Die Liebe der Danae, Op.83 (1938-40)</label>
+                        <label><input type="radio" name="opera" value="cap"> Capriccio, Op.85 (1940-41)</label>
+                    </div>
+                </fieldset>
+            </details>
 
             <div id="search-method-container" style="display: none;">
                 <div class="big-label">検索方法を選択</div>
-                <fieldset>
-                    <legend>方法</legend>
-                    <div class="radio-group">
-                        <label><input type="radio" name="search-type" value="scene"> 場面から検索</label>
-                        <label><input type="radio" name="search-type" value="page"> ページから検索</label>
-                    </div>
-                </fieldset>
+                <details class="instrument-group" id="search-method-group">
+                    <summary>検索方法</summary>
+                    <fieldset>
+                        <legend>方法</legend>
+                        <div class="radio-group">
+                            <label><input type="radio" name="search-type" value="scene"> 場面から検索</label>
+                            <label><input type="radio" name="search-type" value="page"> ページから検索</label>
+                        </div>
+                    </fieldset>
+                </details>
             </div>
 
             <div id="scene-selection-container" class="accordion-content" style="display: none;">
@@ -916,36 +922,42 @@ function renderRichardWagnerSearch(container) {
         <div id="rw-search-container">
             <h1>曲名から検索 (RW)</h1>
             <p><b>Richard Wagner の管弦楽曲については<a href="dic.html" target="_blank">ドイツ語の音楽用語集</a>のページを参照</b></p>
-            <div class="big-label">曲を選択</div>
-            <fieldset>
-                <legend>オペラ</legend>
-                <div class="radio-group" id="wagner-opera-selection">
-                    <label><input type="radio" name="wagner-opera" value="feen"> Die Feen, WWV 32 (1833-34)</label>
-                    <label><input type="radio" name="wagner-opera" value="liebes"> Das Liebesverbot, WWV 38 (1834)</label>
-                    <label><input type="radio" name="wagner-opera" value="rienzi"> Rienzi, WWV 49 (1840)</label>
-                    <label><input type="radio" name="wagner-opera" value="holländer"> Der fliegende Holländer, WWV 63 (1840-41)</label>
-                    <label><input type="radio" name="wagner-opera" value="tann_dresden"> Tannhäuser, WWV 70 (1845, revised 1860 Dresden)</label>
-                    <label><input type="radio" name="wagner-opera" value="tann_paris"> Tannhäuser, WWV 70 (1860-61, revised 1875 Paris)</label>
-                    <label><input type="radio" name="wagner-opera" value="lohengrin"> Lohengrin, WWV 75 (1846-48)</label>
-                    <label><input type="radio" name="wagner-opera" value="rheingold"> Das Rheingold, WWV 86A (1854)</label>
-                    <label><input type="radio" name="wagner-opera" value="walküre"> Die Walküre, WWV 86B (1856-70)</label>
-                    <label><input type="radio" name="wagner-opera" value="siegfried"> Siegfried, WWV 86C (1871)</label>
-                    <label><input type="radio" name="wagner-opera" value="götter"> Götterdämmerung, WWV 86D (1848-74)</label>
-                    <label><input type="radio" name="wagner-opera" value="tristan"> Tristan und Isolde, WWV 90 (1857-59)</label>
-                    <label><input type="radio" name="wagner-opera" value="meister"> Die Meistersinger von Nürnberg, WWV 96 (1862-67)</label>
-                    <label><input type="radio" name="wagner-opera" value="parsifal"> Parsifal, WWV 111 (1857-82)</label>
-                </div>
-            </fieldset>
+            <div class="big-label">曲名を選択</div>
+            <details class="instrument-group" id="wagner-works-group">
+                <summary>曲名</summary>
+                <fieldset>
+                    <legend>オペラ</legend>
+                    <div class="radio-group" id="wagner-opera-selection">
+                        <label><input type="radio" name="wagner-opera" value="feen"> Die Feen, WWV 32 (1833-34)</label>
+                        <label><input type="radio" name="wagner-opera" value="liebes"> Das Liebesverbot, WWV 38 (1834)</label>
+                        <label><input type="radio" name="wagner-opera" value="rienzi"> Rienzi, WWV 49 (1840)</label>
+                        <label><input type="radio" name="wagner-opera" value="holländer"> Der fliegende Holländer, WWV 63 (1840-41)</label>
+                        <label><input type="radio" name="wagner-opera" value="tann_dresden"> Tannhäuser, WWV 70 (1845, revised 1860 Dresden)</label>
+                        <label><input type="radio" name="wagner-opera" value="tann_paris"> Tannhäuser, WWV 70 (1860-61, revised 1875 Paris)</label>
+                        <label><input type="radio" name="wagner-opera" value="lohengrin"> Lohengrin, WWV 75 (1846-48)</label>
+                        <label><input type="radio" name="wagner-opera" value="rheingold"> Das Rheingold, WWV 86A (1854)</label>
+                        <label><input type="radio" name="wagner-opera" value="walküre"> Die Walküre, WWV 86B (1856-70)</label>
+                        <label><input type="radio" name="wagner-opera" value="siegfried"> Siegfried, WWV 86C (1871)</label>
+                        <label><input type="radio" name="wagner-opera" value="götter"> Götterdämmerung, WWV 86D (1848-74)</label>
+                        <label><input type="radio" name="wagner-opera" value="tristan"> Tristan und Isolde, WWV 90 (1857-59)</label>
+                        <label><input type="radio" name="wagner-opera" value="meister"> Die Meistersinger von Nürnberg, WWV 96 (1862-67)</label>
+                        <label><input type="radio" name="wagner-opera" value="parsifal"> Parsifal, WWV 111 (1857-82)</label>
+                    </div>
+                </fieldset>
+            </details>
 
             <div id="wagner-search-method-container" style="display: none;">
                 <div class="big-label">検索方法を選択</div>
-                <fieldset>
-                    <legend>方法</legend>
-                    <div class="radio-group">
-                        <label><input type="radio" name="wagner-search-type" value="scene"> 場面から検索</label>
-                        <label><input type="radio" name="wagner-search-type" value="page"> ページから検索</label>
-                    </div>
-                </fieldset>
+                <details class="instrument-group" id="wagner-search-method-group">
+                    <summary>検索方法</summary>
+                    <fieldset>
+                        <legend>方法</legend>
+                        <div class="radio-group">
+                            <label><input type="radio" name="wagner-search-type" value="scene"> 場面から検索</label>
+                            <label><input type="radio" name="wagner-search-type" value="page"> ページから検索</label>
+                        </div>
+                    </fieldset>
+                </details>
             </div>
 
             <div id="wagner-scene-selection-container" class="accordion-content" style="display: none;">

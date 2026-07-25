@@ -202,7 +202,7 @@
 
         <h3>Gustav Mahler (GM)</h3>
         <ul>
-            <li><a href="mahler.html">曲名と楽器等から検索</a></li>
+            <li><a href="mahler.html">曲名と楽器等から選択</a></li>
             <li><a href="terms_search.html">用語から検索</a></li>
         </ul>
 
@@ -233,42 +233,48 @@
         <p><span style="font-size: 0.9rem;">Richard Strauss の管弦楽曲については</span><a href="dic.html" target="_blank" style="font-size: 1.2rem; font-weight: bold; color: var(--button-bg); text-decoration: none; border-bottom: 2px solid transparent; transition: all 0.2s ease;">ドイツ語の音楽用語集</a><span style="font-size: 0.9rem;">のページを参照</span></p>
         <p>オーケストラに対する指示で Gustav Mahler の用語検索ページで何とかなりそうなものは基本的に不記載．</p>
         <div class="big-label">曲名を選択</div>
-        <fieldset>
-            <legend>オペラ</legend>
-            <div class="radio-group" id="opera-selection">
-                <label><input type="radio" name="opera" value="guntram"> Guntram, Op.25 (1888-93, revised
-                    1934–39)</label>
-                <label><input type="radio" name="opera" value="feuersnot"> Feuersnot, Op.50 (1900-01)</label>
-                <label><input type="radio" name="opera" value="salome"> Salome, Op.54 (1903-05)</label>
-                <label><input type="radio" name="opera" value="elektra"> Elektra, Op.58 (1906-08)</label>
-                <label><input type="radio" name="opera" value="rosenkavalier"> Der Rosenkavalier, Op.59
-                    (1909-10)</label>
-                <label><input type="radio" name="opera" value="ariadne"> Ariadne auf Naxos, Op.60 (1912, revised
-                    1916)</label>
-                <label><input type="radio" name="opera" value="schatten"> Die Frau ohne Schatten, Op.65
-                    (1914-17)</label>
-                <label><input type="radio" name="opera" value="intermezzo"> Intermezzo, Op.72 (1919-23)</label>
-                <label><input type="radio" name="opera" value="helena"> Die ägyptische Helena, Op.75 (1924-27)</label>
-                <label><input type="radio" name="opera" value="arabella"> Arabella, Op.79 (1930-32)</label>
-                <label><input type="radio" name="opera" value="schweigsame"> Die schweigsame Frau, Op.80
-                    (1932-35)</label>
-                <label><input type="radio" name="opera" value="tag"> Friedenstag, Op.81 (1935-36)</label>
-                <label><input type="radio" name="opera" value="daphne"> Daphne, Op.82 (1936-37)</label>
-                <label><input type="radio" name="opera" value="danae"> Die Liebe der Danae, Op.83 (1938-40)</label>
-                <label><input type="radio" name="opera" value="cap"> Capriccio, Op.85 (1940-41)</label>
-            </div>
-        </fieldset>
+        <details class="instrument-group" id="works-group">
+            <summary>曲名</summary>
+            <fieldset>
+                <legend>オペラ</legend>
+                <div class="radio-group" id="opera-selection">
+                    <label><input type="radio" name="opera" value="guntram"> Guntram, Op.25 (1888-93, revised
+                        1934–39)</label>
+                    <label><input type="radio" name="opera" value="feuersnot"> Feuersnot, Op.50 (1900-01)</label>
+                    <label><input type="radio" name="opera" value="salome"> Salome, Op.54 (1903-05)</label>
+                    <label><input type="radio" name="opera" value="elektra"> Elektra, Op.58 (1906-08)</label>
+                    <label><input type="radio" name="opera" value="rosenkavalier"> Der Rosenkavalier, Op.59
+                        (1909-10)</label>
+                    <label><input type="radio" name="opera" value="ariadne"> Ariadne auf Naxos, Op.60 (1912, revised
+                        1916)</label>
+                    <label><input type="radio" name="opera" value="schatten"> Die Frau ohne Schatten, Op.65
+                        (1914-17)</label>
+                    <label><input type="radio" name="opera" value="intermezzo"> Intermezzo, Op.72 (1919-23)</label>
+                    <label><input type="radio" name="opera" value="helena"> Die ägyptische Helena, Op.75 (1924-27)</label>
+                    <label><input type="radio" name="opera" value="arabella"> Arabella, Op.79 (1930-32)</label>
+                    <label><input type="radio" name="opera" value="schweigsame"> Die schweigsame Frau, Op.80
+                        (1932-35)</label>
+                    <label><input type="radio" name="opera" value="tag"> Friedenstag, Op.81 (1935-36)</label>
+                    <label><input type="radio" name="opera" value="daphne"> Daphne, Op.82 (1936-37)</label>
+                    <label><input type="radio" name="opera" value="danae"> Die Liebe der Danae, Op.83 (1938-40)</label>
+                    <label><input type="radio" name="opera" value="cap"> Capriccio, Op.85 (1940-41)</label>
+                </div>
+            </fieldset>
+        </details>
 
         <div id="search-method-container">
             <div class="big-label">検索方法を選択</div>
-            <fieldset>
-                <legend>方法</legend>
-                <div class="radio-group">
-                    <label><input type="radio" name="search-type" value="scene"> 場面から検索</label>
-                    <label><input type="radio" name="search-type" value="page"> ページから検索</label>
-                    <label><input type="radio" name="search-type" value="whom"> 指示対象から検索</label>
-                </div>
-            </fieldset>
+            <details class="instrument-group" id="search-method-group">
+                <summary>検索方法</summary>
+                <fieldset>
+                    <legend>方法</legend>
+                    <div class="radio-group">
+                        <label><input type="radio" name="search-type" value="scene"> 場面から検索</label>
+                        <label><input type="radio" name="search-type" value="page"> ページから検索</label>
+                        <label><input type="radio" name="search-type" value="whom"> 指示対象から検索</label>
+                    </div>
+                </fieldset>
+            </details>
         </div>
 
         <div id="scene-selection-container" class="accordion-content">

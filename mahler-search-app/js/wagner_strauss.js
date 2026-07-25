@@ -81,12 +81,12 @@ async function handleOperaSelection(event) {
     const composer = (document.title.includes('Wagner') || document.title.includes('RW')) ? 'richard_wagner' : 'richard_strauss';
 
     // 曲名を選んだ際のスクロール挙動（自動スクロール）は廃止
-    /*
     const searchMethodContainer = document.getElementById('search-method-container');
     if (searchMethodContainer) {
-        searchMethodContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        searchMethodContainer.style.display = 'block';
+        const searchMethodGroup = document.getElementById('search-method-group');
+        if (searchMethodGroup) searchMethodGroup.open = true;
     }
-    */
 
     setResults('');
 

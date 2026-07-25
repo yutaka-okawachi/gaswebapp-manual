@@ -76,34 +76,40 @@
   
       <p>オーケストラに対する指示で Gustav Mahler の用語検索ページで何とかなりそうなものは基本的に不記載</p>
       <div class="big-label">曲を選択</div>
-      <fieldset>
-        <legend>作品</legend>
-        <div class="radio-group" id="opera-selection">
-          <label><input type="radio" name="opera" value="salome"> Salome, Op. 54 (1905)</label>
-          <label><input type="radio" name="opera" value="elektra"> Elektra, Op. 58 (1906-08)</label>
-          <label><input type="radio" name="opera" value="rosenkavalier"> Der Rosenkavalier, Op. 59 (1909-10)</label>
-          <label><input type="radio" name="opera" value="frau"> Die Frau ohne Schatten, Op. 65 (1914-17)</label>
-          <label><input type="radio" name="opera" value="don_juan"> Don Juan, Op. 20 (1888-89)</label>
-          <label><input type="radio" name="opera" value="tod"> Tod und Verklärung, Op. 24 (1888-89)</label>
-          <label><input type="radio" name="opera" value="till"> Till Eulenspiegels lustige Streiche, Op. 28 (1894-95)</label>
-          <label><input type="radio" name="opera" value="zara"> Also sprach Zarathustra, Op. 30 (1896)</label>
-          <label><input type="radio" name="opera" value="quixote"> Don Quixote, Op. 35 (1897)</label>
-          <label><input type="radio" name="opera" value="helden"> Ein Heldenleben, Op. 40 (1898)</label>
-          <label><input type="radio" name="opera" value="domestica"> Symphonia domestica, Op. 53 (1902-03)</label>
-          <label><input type="radio" name="opera" value="alpen"> Eine Alpensinfonie, Op. 64 (1911-15)</label>
-        </div>
-      </fieldset>
-  
-      <div id="search-method-container" style="display: none;">
-        <div class="big-label">検索方法を選択</div>
+      <details class="instrument-group" id="works-group">
+        <summary>曲名</summary>
         <fieldset>
-          <legend>方法</legend>
-          <div class="radio-group">
-            <label><input type="radio" name="search-type" value="scene"> 場面から検索</label>
-            <label><input type="radio" name="search-type" value="page"> ページから検索</label>
-            <label><input type="checkbox" id="whom-checkbox"> 指示対象から選択</label>
+          <legend>作品</legend>
+          <div class="radio-group" id="opera-selection">
+            <label><input type="radio" name="opera" value="salome"> Salome, Op. 54 (1905)</label>
+            <label><input type="radio" name="opera" value="elektra"> Elektra, Op. 58 (1906-08)</label>
+            <label><input type="radio" name="opera" value="rosenkavalier"> Der Rosenkavalier, Op. 59 (1909-10)</label>
+            <label><input type="radio" name="opera" value="frau"> Die Frau ohne Schatten, Op. 65 (1914-17)</label>
+            <label><input type="radio" name="opera" value="don_juan"> Don Juan, Op. 20 (1888-89)</label>
+            <label><input type="radio" name="opera" value="tod"> Tod und Verklärung, Op. 24 (1888-89)</label>
+            <label><input type="radio" name="opera" value="till"> Till Eulenspiegels lustige Streiche, Op. 28 (1894-95)</label>
+            <label><input type="radio" name="opera" value="zara"> Also sprach Zarathustra, Op. 30 (1896)</label>
+            <label><input type="radio" name="opera" value="quixote"> Don Quixote, Op. 35 (1897)</label>
+            <label><input type="radio" name="opera" value="helden"> Ein Heldenleben, Op. 40 (1898)</label>
+            <label><input type="radio" name="opera" value="domestica"> Symphonia domestica, Op. 53 (1902-03)</label>
+            <label><input type="radio" name="opera" value="alpen"> Eine Alpensinfonie, Op. 64 (1911-15)</label>
           </div>
         </fieldset>
+      </details>
+
+      <div id="search-method-container" style="display: none;">
+        <div class="big-label">検索方法を選択</div>
+        <details class="instrument-group" id="search-method-group">
+          <summary>検索方法</summary>
+          <fieldset>
+            <legend>方法</legend>
+            <div class="radio-group">
+              <label><input type="radio" name="search-type" value="scene"> 場面から検索</label>
+              <label><input type="radio" name="search-type" value="page"> ページから検索</label>
+              <label><input type="checkbox" id="whom-checkbox"> 指示対象から選択</label>
+            </div>
+          </fieldset>
+        </details>
       </div>
   
       <div id="scene-selection-container" class="accordion-content">

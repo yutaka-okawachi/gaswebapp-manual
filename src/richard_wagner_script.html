@@ -1,4 +1,4 @@
-﻿<script>
+<script>
   /*
    * richard_wagner_script.html
    * 共通JS: リヒャルト・ワーグナー／リヒャルト・シュトラウス「曲名から検索」ページで
@@ -36,7 +36,10 @@
     const composer = document.title.includes('Wagner') ? 'richard_wagner' : 'richard_strauss';
 
     // 検索方法セクションを表示し初期化
-    document.getElementById('search-method-container').style.display = 'block';
+    const smc = document.getElementById('search-method-container');
+    if (smc) smc.style.display = 'block';
+    const smg = document.getElementById('search-method-group');
+    if (smg) smg.open = true;
     resetSearchType();
 
     const sceneOptionsWrapper = document.getElementById('scene-options-wrapper');
