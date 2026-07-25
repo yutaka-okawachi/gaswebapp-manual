@@ -42,7 +42,7 @@ PC操作に詳しくない後継者でも、以下の手順に沿って実行す
 ### 3-1. 権限の共有
 * [ ] **Google スプレッドシートの共有**: 後継者の Google アカウントに「編集者」権限を付与する。
 * [ ] **GAS プロジェクトのアクセス権**: スプレッドシート共有により、後継者が「拡張機能 > Apps Script」からエディタを開けることを確認する。
-* [ ] **GitHub リポジトリ of Collaborator 追加**: `Settings > Collaborators` から招待し、Write（書き込み）権限以上を付与する。
+* [ ] **GitHub リポジトリの Collaborator 追加**: `Settings > Collaborators` から招待し、Write（書き込み）権限以上を付与する。
 
 ### 3-2. 安全に引き渡すパラメータ
 * [ ] **GAS Web App URL**:
@@ -79,4 +79,4 @@ Richard Strauss (RS) および Richard Wagner (RW) のあらすじ集ページ�
 `dic.html` はスプレッドシートから自動生成されるため、ローカルの `mahler-search-app/dic.html` を直接書き換えても同期実行時に上書きされて消えてしまいます。必ず以下のファイルを同期して修正してください。
 
 1. **静的HTML**: `mahler-search-app/` 配下の全HTML (12ファイル) および ルートの `index.html`
-2. **GAS関連ファイル**: `src/sidebar.html`、`src/index.html`、および `src/generate_dic_html.js` 内のサイドバーHTML埋め込み箇所（790行目付近）
+2. **GAS関連ファイル**: `src/sidebar.html`、`src/index.html`、および `src/generate_dic_html.js` 内のサイドバーHTML埋め込み箇所

@@ -164,9 +164,8 @@ A. しばらくデプロイを更新していなかったり、大幅な変更�
 ## 更新履歴
 
 ### 2026/05/15 - 継承マニュアルの整備
-- **継承者向け入口の追加**: PCに詳しくない後継者向けに `manuals/SUCCESSOR_START_HERE.md` を追加。
-- **継承情報チェックリストの追加**: 前任者が渡す情報と GAS スクリプトプロパティを `manuals/SUCCESSOR_INFO_CHECKLIST.md` に整理。
-- **manuals 配下の公開方針変更**: `manuals` 配下の Markdown ファイルはいったん GitHub 上で閲覧可能に整理。
+- **継承者向けガイドの統合・整理**: 後継者・初心者向けに `manuals/SUCCESSOR_GUIDE.md` を作成・整理。
+- **manuals 配下の公開方針変更**: `manuals` 配下の Markdown ファイルを GitHub 上で閲覧可能に整理。
 
 ### 2026/04/16 - SEO・サイト構造最適化
 - **トップページのルート移行**: `mahler-search-app/index.html` をルートディレクトリ (`/`) に移動し、サイトのメインエントリーポイントとして整理
