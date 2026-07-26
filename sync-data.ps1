@@ -847,7 +847,18 @@ Write-Host ""
 Write-Host "[5.5/5] Verifying dashboard aggregate API..." -ForegroundColor Yellow
 $dashboardApiResults = @()
 foreach ($period in @(7, 30, 90, 180)) {
-    $result = Invoke-DashboardApiCheck -BaseUrl $env:GAS_DEPLOY_URL -Period $period
+    $result = $null
+    for ($attempt = 1; $attempt -le 3; $attempt++) {
+        $result = Invoke-DashboardApiCheck -BaseUrl $env:GAS_DEPLOY_URL -Period $period
+        if ($result.Success) {
+            break
+        }
+        if ($attempt -lt 3) {
+            $retryDelaySeconds = 5 * $attempt
+            Write-Host "  [RETRY] period=$period attempt=$attempt - $($result.Message)" -ForegroundColor Yellow
+            Start-Sleep -Seconds $retryDelaySeconds
+        }
+    }
     $dashboardApiResults += $result
     if ($result.Success) {
         Write-Host "  [OK] period=$period" -ForegroundColor Green
