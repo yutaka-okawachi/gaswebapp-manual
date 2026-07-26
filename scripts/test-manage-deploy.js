@@ -27,6 +27,7 @@ assert.strictEqual(deployments.has('AKfycb_other'), false);
 
 assert.strictEqual(parseCreatedVersion('Created version 1515.'), 1515);
 assert.strictEqual(parseCreatedVersion('Created version 1516'), 1516);
+assert.strictEqual(parseCreatedVersion('Created version 1,517'), 1517);
 assert.strictEqual(parseCreatedVersion('No version was created'), null);
 
 console.log('manage deployment tests: OK');

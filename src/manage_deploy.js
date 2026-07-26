@@ -32,8 +32,8 @@ function parseDeployments(output) {
 }
 
 function parseCreatedVersion(output) {
-    const match = String(output || '').match(/Created version\s+([0-9]+)/i);
-    return match ? Number.parseInt(match[1], 10) : null;
+    const match = String(output || '').match(/Created version\s+([0-9][0-9,]*)/i);
+    return match ? Number.parseInt(match[1].replace(/,/g, ''), 10) : null;
 }
 
 function maskDeploymentId(id) {
