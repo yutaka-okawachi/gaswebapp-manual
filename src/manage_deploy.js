@@ -90,7 +90,7 @@ function run() {
     console.log('Creating an immutable Apps Script version from the verified HEAD...');
     const versionOutput = runClasp([
         'version',
-        'Auto-update via sync-data'
+        'sync-data'
     ]);
     const versionNumber = parseCreatedVersion(versionOutput);
     if (!versionNumber) {
@@ -105,7 +105,7 @@ function run() {
         '-V',
         String(versionNumber),
         '-d',
-        'Auto-update via sync-data'
+        'sync-data'
     ]);
     if (deployOutput.trim()) {
         console.log(deployOutput.trim());
