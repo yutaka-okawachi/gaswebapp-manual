@@ -59,25 +59,28 @@
 
 ### 確認ゲート B
 
-- [ ] 変更差分と安全停止条件を管理者が確認
-- [ ] 確認完了まで `sync-data.ps1` を実運用モードで実行しない
+- [x] 変更差分と安全停止条件を管理者が確認（2026-07-26）
+- [x] 確認完了まで `sync-data.ps1` を実運用モードで実行しなかった
 
 ## 3. GA4イベント計測
 
-- [ ] 現在の `view_search_results` / `search_no_results` の送信箇所をテストで固定
-- [ ] 検索イベントへ `source_page` を追加
-- [ ] `search_page_move` イベントを追加
-- [ ] `search_page_move` に `source_page` を追加
-- [ ] `search_page_move` に `destination_page` を追加
-- [ ] `?q=` がある移動では `search_term` を追加
-- [ ] リンク種別を区別する `link_type` を追加
-- [ ] `click_view_example` の現行動作を維持
-- [ ] 必要なら `click_view_example` へ `source_page` を追加
-- [ ] 無効入力・中止・失敗検索ではイベントを送らない
-- [ ] 0件検索では `search_no_results` を残す
-- [ ] 静的ページとGASテンプレートの双方を整合させる
-- [ ] 用語集の変更は `src/generate_dic_html.js` に入れる
-- [ ] イベント送信失敗が検索・リンク移動を妨げないことを確認
+- 計測仕様: [GA4_EVENT_SPEC.md](GA4_EVENT_SPEC.md)
+- [x] 現在の `view_search_results` / `search_no_results` の送信箇所をテストで固定
+- [x] 検索イベントへ `source_page` を追加
+- [x] `search_page_move` イベントを追加
+- [x] `search_page_move` に `source_page` を追加
+- [x] `search_page_move` に `destination_page` を追加
+- [x] `?q=` がある移動では、`search_page_move` のパラメータとしてだけ `search_term` を追加
+- [x] リンククリック時には `view_search_results` / `search_no_results` を送らない
+- [ ] 拡張計測の「サイト内検索」を無効化してから、`?q=` 到着時の自動 `view_search_results` との二重計測を防ぐ
+- [x] リンク種別を区別する `link_type` を追加
+- [x] `click_view_example` の現行動作を維持
+- [x] `click_view_example` へ `source_page` を追加
+- [x] 無効入力・中止・失敗検索ではイベントを送らない
+- [x] 0件検索では `search_no_results` を残す
+- [x] 静的ページとGASテンプレートの双方を整合させる
+- [x] 用語集の変更は `src/generate_dic_html.js` に入れる
+- [x] イベント送信失敗が検索・リンク移動を妨げないことを確認
 
 ### 確認ゲート C
 

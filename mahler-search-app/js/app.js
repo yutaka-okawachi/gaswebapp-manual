@@ -54,7 +54,10 @@ function trackSearchResults(options) {
     const payload = Object.assign({}, options.params || {}, {
         search_term: searchTerm,
         search_type: searchType,
-        result_count: resultCount
+        result_count: resultCount,
+        source_page: typeof window.getAnalyticsPagePath === 'function'
+            ? window.getAnalyticsPagePath()
+            : window.location.pathname
     });
     window.gtag('event', resultCount > 0 ? 'view_search_results' : 'search_no_results', payload);
     return true;

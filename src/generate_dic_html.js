@@ -387,6 +387,7 @@ function generateDicHtml(dicData, abbrData) {
 
       gtag('config', 'G-ZT6MPW5MNG');
     </script>
+    <script src="js/analytics.js"></script>
     <meta charset="UTF-8">
     <link rel="canonical" href="https://yutaka-okawachi.github.io/gaswebapp-manual/mahler-search-app/dic.html">
     <script type="application/ld+json">
@@ -875,7 +876,10 @@ ${breadcrumbJSON}
                         try {
                             window.gtag('event', 'click_view_example', {
                                 term: german.trim(),
-                                page_path: location.pathname
+                                page_path: location.pathname,
+                                source_page: typeof window.getAnalyticsPagePath === 'function'
+                                    ? window.getAnalyticsPagePath()
+                                    : location.pathname
                             });
                         } catch (e) {
                             console.error('GA4 Event Error:', e);

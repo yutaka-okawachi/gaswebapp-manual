@@ -13,6 +13,7 @@ $syncAllowedExactPaths = @(
     "02_RUN_SYNC.bat",
     "ADMIN_DASHBOARD_API_SPEC.md",
     "ADMIN_DASHBOARD_TASKS.md",
+    "GA4_EVENT_SPEC.md",
     "apple-touch-icon.png",
     "favicon.png",
     "favicon_original.png",

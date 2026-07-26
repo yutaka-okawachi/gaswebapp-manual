@@ -635,7 +635,10 @@
             const german = element.dataset.german || 'unknown';
             window.gtag('event', 'click_view_example', {
               'term': german.trim(),
-              'page_path': window.location.pathname
+              'page_path': window.location.pathname,
+              'source_page': typeof window.getAnalyticsPagePath === 'function'
+                ? window.getAnalyticsPagePath()
+                : window.location.pathname
             });
           } catch (e) {
             console.error('GA4 Event Error:', e);
