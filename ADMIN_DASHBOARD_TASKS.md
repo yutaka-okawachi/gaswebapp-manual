@@ -72,7 +72,7 @@
 - [x] `search_page_move` に `destination_page` を追加
 - [x] `?q=` がある移動では、`search_page_move` のパラメータとしてだけ `search_term` を追加
 - [x] リンククリック時には `view_search_results` / `search_no_results` を送らない
-- [ ] 拡張計測の「サイト内検索」を無効化してから、`?q=` 到着時の自動 `view_search_results` との二重計測を防ぐ
+- [x] 拡張計測の「サイト内検索」を無効化し、設定を保存（2026-07-26）
 - [x] リンク種別を区別する `link_type` を追加
 - [x] `click_view_example` の現行動作を維持
 - [x] `click_view_example` へ `source_page` を追加
@@ -84,8 +84,8 @@
 
 ### 確認ゲート C
 
-- [ ] コード差分とイベント一覧を管理者が確認
-- [ ] 確認完了までGAS・GitHub Pagesへ公開しない
+- [x] コード差分とイベント一覧を管理者が確認（2026-07-26）
+- [x] 確認完了までGAS・GitHub Pagesへ公開しなかった
 
 ## 4. GA4管理画面の手動設定
 
