@@ -1,5 +1,118 @@
 param([string]$message = "automated sync update")
 
+$generatedOutputPaths = @(
+    "mahler-search-app/dic.html",
+    "mahler-search-app/data/"
+)
+
+$syncAllowedExactPaths = @(
+    ".claspignore",
+    ".gitignore",
+    "_config.yml",
+    "01_START_SUCCESSOR_SETUP.bat",
+    "02_RUN_SYNC.bat",
+    "ADMIN_DASHBOARD_API_SPEC.md",
+    "ADMIN_DASHBOARD_TASKS.md",
+    "apple-touch-icon.png",
+    "favicon.png",
+    "favicon_original.png",
+    "google34b939d4db375916.html",
+    "index.html",
+    "LICENSE",
+    "ogp.png",
+    "README.md",
+    "robots.txt",
+    "sitemap.xml",
+    "sync-data.ps1"
+)
+
+$syncAllowedPathPrefixes = @(
+    ".agent/workflows/",
+    "mahler-search-app/",
+    "manuals/",
+    "scripts/",
+    "src/"
+)
+
+function Get-ChangedPathFromStatusLine {
+    param([string]$StatusLine)
+
+    if (-not $StatusLine -or $StatusLine.Length -lt 4) { return $null }
+    $path = $StatusLine.Substring(3).Trim()
+    if ($path -match " -> ") {
+        $path = ($path -split " -> ", 2)[1]
+    }
+    return $path.Trim('"').Replace("\", "/")
+}
+
+function Test-IsGeneratedOutputPath {
+    param([string]$Path)
+
+    return (
+        $Path -eq "mahler-search-app/dic.html" -or
+        $Path -eq "mahler-search-app/data" -or
+        $Path.StartsWith("mahler-search-app/data/")
+    )
+}
+
+function Test-IsAllowedSyncSourcePath {
+    param([string]$Path)
+
+    if ($syncAllowedExactPaths -contains $Path) { return $true }
+    foreach ($prefix in $syncAllowedPathPrefixes) {
+        if ($Path.StartsWith($prefix)) { return $true }
+    }
+    return $false
+}
+
+function Get-ApprovedSyncSourcePaths {
+    $changedPaths = @(
+        git status --porcelain | ForEach-Object {
+            Get-ChangedPathFromStatusLine -StatusLine $_
+        } | Where-Object { $_ } | Sort-Object -Unique
+    )
+
+    $unexpectedPaths = @(
+        $changedPaths | Where-Object {
+            -not (Test-IsGeneratedOutputPath -Path $_) -and
+            -not (Test-IsAllowedSyncSourcePath -Path $_)
+        }
+    )
+    if ($unexpectedPaths.Count -gt 0) {
+        $details = $unexpectedPaths -join ", "
+        throw "Changes outside the sync allowlist were found: $details"
+    }
+
+    return @(
+        $changedPaths | Where-Object {
+            -not (Test-IsGeneratedOutputPath -Path $_)
+        }
+    )
+}
+
+function Add-ApprovedSyncSourceChanges {
+    $sourcePaths = @(Get-ApprovedSyncSourcePaths)
+    if ($sourcePaths.Count -eq 0) { return }
+
+    Write-Host "Staging approved source paths only:" -ForegroundColor Gray
+    $sourcePaths | ForEach-Object {
+        Write-Host "  - $_" -ForegroundColor DarkGray
+    }
+    git add -- $sourcePaths
+    if ($LASTEXITCODE -ne 0) {
+        throw "Failed to stage the approved source changes."
+    }
+}
+
+function Invoke-NodeScriptStrict {
+    param([string]$ScriptPath)
+
+    & node $ScriptPath
+    if ($LASTEXITCODE -ne 0) {
+        throw "$ScriptPath failed with exit code $LASTEXITCODE"
+    }
+}
+
 function Get-GitHubRepoSlug {
     $remoteUrl = git remote get-url origin 2>$null
     if (-not $remoteUrl) { return $null }
@@ -85,13 +198,29 @@ if ($currentBranch -ne "main") {
     $status = git status --porcelain
 
     if ($status) {
+        $branchGeneratedChanges = git status --porcelain -- $generatedOutputPaths
+        if ($branchGeneratedChanges) {
+            Write-Error "[ERROR] Generated outputs are modified on a non-main branch. Aborting before merge."
+            Write-Host ($branchGeneratedChanges | Out-String) -ForegroundColor DarkGray
+            exit 1
+        }
+
         Write-Host "Uncommitted changes detected." -ForegroundColor Yellow
         $resp = Read-Host "Do you want to COMMIT these changes and MERGE '$currentBranch' into 'main'? (Y/N)"
         
         if ($resp -match "^[Yy]") {
             Write-Host "Committing changes..." -ForegroundColor Gray
-            git add .
+            try {
+                Add-ApprovedSyncSourceChanges
+            } catch {
+                Write-Error "[ERROR] $($_.Exception.Message)"
+                exit 1
+            }
             git commit -m "Auto-commit/merge via sync-data from $currentBranch"
+            if ($LASTEXITCODE -ne 0) {
+                Write-Error "[ERROR] Failed to commit branch changes."
+                exit 1
+            }
             
             Write-Host "Switching to main and merging..." -ForegroundColor Gray
             git checkout main
@@ -226,10 +355,12 @@ if ($pushExitCode -ne 0) {
 # ★★★ Deploymentの自動更新 (Auto-Deploy) - Always run ★★★
 Write-Host "Updating Web App deployment..." -ForegroundColor Cyan
 try {
-    cmd /c "node manage_deploy.js"
-    cmd /c "node update_env.js"
+    Invoke-NodeScriptStrict -ScriptPath "manage_deploy.js"
+    Invoke-NodeScriptStrict -ScriptPath "update_env.js"
 } catch {
-    Write-Warning "Failed to update deployment: $_"
+    Write-Error "[ERROR] Failed to update the fixed Web App deployment: $($_.Exception.Message)"
+    Pop-Location
+    exit 1
 }
 
 Pop-Location
@@ -238,16 +369,13 @@ Write-Host ""
 
 # --- [2/5] ローカル変更のコミット (Git Commit) ---
 Write-Host "[2/5] Committing local changes..." -ForegroundColor Yellow
-$generatedOutputPaths = @(
-    "mahler-search-app/dic.html",
-    "mahler-search-app/data/"
-)
 $appChanges = git status --porcelain
 if ($appChanges) {
     Write-Host "[OK] Detected local changes. Committing to ensure clean rebase..." -ForegroundColor Gray
-    git add .
-    if ($LASTEXITCODE -ne 0) {
-        Write-Error "[ERROR] Failed to stage local changes. Aborting before sync."
+    try {
+        Add-ApprovedSyncSourceChanges
+    } catch {
+        Write-Error "[ERROR] $($_.Exception.Message)"
         exit 1
     }
 
@@ -361,11 +489,11 @@ if ($runFailed) {
     Write-Host "Updating Web App deployment to ensure latest code is used..." -ForegroundColor Cyan
     Push-Location "src"
     try {
-        # nodeコマンドの出力を表示しながら実行
-        cmd /c "node manage_deploy.js"
-        cmd /c "node update_env.js"
+        Invoke-NodeScriptStrict -ScriptPath "manage_deploy.js"
+        Invoke-NodeScriptStrict -ScriptPath "update_env.js"
     } catch {
-        Write-Warning "Failed to update deployment: $_"
+        Write-Error "[ERROR] Failed to update the fixed Web App deployment: $($_.Exception.Message)"
+        exit 1
     } finally {
         Pop-Location
     }

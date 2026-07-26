@@ -1,85 +1,66 @@
-const { exec } = require('child_process');
+/*
+ * .env の固定 GAS_DEPLOY_URL を公開側 app.js に同期する。
+ *
+ * デプロイ一覧から「最新版」を選ぶ処理は行わない。
+ * 固定URLが不正、app.js がない、置換対象がない場合は終了コード1を返す。
+ */
 const fs = require('fs');
 const path = require('path');
 
-const appJsPath = path.join(__dirname, '../mahler-search-app/js/app.js');
+const ENV_PATH = path.join(__dirname, '../.env');
+const APP_JS_PATH = path.join(__dirname, '../mahler-search-app/js/app.js');
 
-// ================================================================
-// [1] GAS_NOTIFICATION_URL の更新（デプロイURLの最新化）
-// ================================================================
-console.log('Fetching deployments to find the latest one...');
-exec('clasp deployments', (err, stdout, stderr) => {
-    if (err) {
-        console.error('Error fetching deployments:', stderr);
-        // URLの更新に失敗してもトークン同期は続行する
-    } else {
-        const lines = stdout.split('\n');
-        const list = [];
-        lines.forEach(l => {
-            const m = l.match(/- ([A-Za-z0-9_-]+) @([0-9]+)/);
-            if(m) {
-                list.push({ id: m[1].trim(), ver: parseInt(m[2], 10) });
-            }
-        });
+function getFixedDeploymentUrl(envContent) {
+    const match = envContent.match(
+        /^\s*GAS_DEPLOY_URL\s*=\s*(https:\/\/script\.google\.com\/macros\/s\/[A-Za-z0-9_-]+\/exec)\s*$/m
+    );
+    return match ? match[1] : null;
+}
 
-        list.sort((a, b) => b.ver - a.ver); // Descending
-
-        if (list.length > 0) {
-            const latest = list[0];
-            console.log(`Latest deployment: ${latest.id} (@${latest.ver})`);
-            
-            const newUrl = `https://script.google.com/macros/s/${latest.id}/exec`;
-            console.log(`New URL: ${newUrl}`);
-
-            // .env を更新
-            try {
-                const envPath = path.join(__dirname, '../.env');
-                let envContent = fs.readFileSync(envPath, 'utf-8');
-                
-                const newEnvContent = envContent.replace(/GAS_DEPLOY_URL=.+/, `GAS_DEPLOY_URL=${newUrl}`);
-                
-                if (envContent === newEnvContent) {
-                    console.log('.env was not updated (regex match failed or already same).');
-                } else {
-                    fs.writeFileSync(envPath, newEnvContent);
-                    console.log('.env updated successfully.');
-                }
-
-            } catch (e) {
-                console.error('Error updating .env:', e);
-            }
-
-            // app.js の GAS_NOTIFICATION_URL を更新
-            try {
-                console.log('Target app.js path:', appJsPath);
-                
-                if (fs.existsSync(appJsPath)) {
-                    let appJsContent = fs.readFileSync(appJsPath, 'utf-8');
-                    const appJsNewContent = appJsContent.replace(
-                        /const GAS_NOTIFICATION_URL = '.*';/, 
-                        `const GAS_NOTIFICATION_URL = '${newUrl}';`
-                    );
-                    
-                    if (appJsContent === appJsNewContent) {
-                         console.log('app.js was not updated (regex match failed or already same).');
-                    } else {
-                        fs.writeFileSync(appJsPath, appJsNewContent);
-                        console.log('app.js updated successfully with new URL.');
-                    }
-                } else {
-                    console.warn('app.js not found at expected path:', appJsPath);
-                }
-            } catch (e) {
-                console.error('Error updating app.js:', e);
-            }
-
-        } else {
-            console.error('No deployments found!');
-        }
+function run() {
+    if (!fs.existsSync(ENV_PATH)) {
+        throw new Error('.env が見つかりません。処理を中止します。');
     }
 
-    // ================================================================
-    // [2] NOTIFY_SEC_TOKEN の同期は廃止済み
-    // 公開リポジトリの JS にトークンを埋め込めないため、トークン機構を削除しました。
-    // ================================================================
-});
+    const envContent = fs.readFileSync(ENV_PATH, 'utf8');
+    const fixedUrl = getFixedDeploymentUrl(envContent);
+    if (!fixedUrl) {
+        throw new Error('.env の GAS_DEPLOY_URL が有効な固定WebアプリURLではありません。');
+    }
+
+    if (!fs.existsSync(APP_JS_PATH)) {
+        throw new Error(`app.js が見つかりません: ${APP_JS_PATH}`);
+    }
+
+    const appJsContent = fs.readFileSync(APP_JS_PATH, 'utf8');
+    const targetPattern = /const GAS_NOTIFICATION_URL = '.*';/;
+    if (!targetPattern.test(appJsContent)) {
+        throw new Error('app.js に GAS_NOTIFICATION_URL の置換対象が見つかりません。');
+    }
+
+    const updatedContent = appJsContent.replace(
+        targetPattern,
+        `const GAS_NOTIFICATION_URL = '${fixedUrl}';`
+    );
+
+    if (updatedContent === appJsContent) {
+        console.log('[OK] app.js already uses the fixed Web App URL.');
+        return;
+    }
+
+    fs.writeFileSync(APP_JS_PATH, updatedContent, 'utf8');
+    console.log('[OK] app.js updated with the fixed Web App URL.');
+}
+
+if (require.main === module) {
+    try {
+        run();
+    } catch (error) {
+        console.error(`[ERROR] ${error.message}`);
+        process.exitCode = 1;
+    }
+}
+
+module.exports = {
+    getFixedDeploymentUrl
+};

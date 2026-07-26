@@ -1,92 +1,114 @@
 /*
- * manage_deploy.js
- * 
- * 役割: Google Apps Script (GAS) のデプロイを管理するスクリプト。
- * 
- * 具体的な動作:
- * 1. .envファイルから現在のデプロイIDを取得します。
- * 2. `clasp deployments` コマンドを実行し、既存のデプロイ一覧を取得します。
- * 3. .envのデプロイIDが既存リストに存在する場合、そのデプロイを更新（上書き）します。
- *    これにより、WebアプリのURLが変わることなく、最新のコードが反映されます。
- * 4. デプロイIDが見つからない場合は、既存の最新デプロイを更新するか、新規デプロイを作成します。
- * 
- * これにより、sync-data実行時に毎回WebアプリURLが変わってしまうのを防いでいます。
+ * .env に記録された既存の Web アプリデプロイだけを更新する。
+ *
+ * 安全上の規則:
+ * - 別のデプロイへのフォールバックはしない。
+ * - 新規デプロイは作成しない。
+ * - 対象IDが取得できない、存在しない、更新に失敗した場合は終了コード1を返す。
  */
-const { exec } = require('child_process');
+const { spawnSync } = require('child_process');
 const fs = require('fs');
 const path = require('path');
 
-// Helper to get current deployment ID from .env
-function getCurrentDeploymentId() {
+const ENV_PATH = path.join(__dirname, '../.env');
+const WARNING_PATH = path.join(__dirname, '../.deploy_warning');
+
+function getDeploymentIdFromEnv(envContent) {
+    const match = envContent.match(
+        /^\s*GAS_DEPLOY_URL\s*=\s*https:\/\/script\.google\.com\/macros\/s\/([A-Za-z0-9_-]+)\/exec\s*$/m
+    );
+    return match ? match[1] : null;
+}
+
+function parseDeployments(output) {
+    const deployments = new Map();
+    output.split(/\r?\n/).forEach((line) => {
+        const match = line.match(/- ([A-Za-z0-9_-]+) @([0-9]+)/);
+        if (match) {
+            deployments.set(match[1], Number.parseInt(match[2], 10));
+        }
+    });
+    return deployments;
+}
+
+function maskDeploymentId(id) {
+    if (id.length <= 8) return '********';
+    return `${id.slice(0, 4)}...${id.slice(-4)}`;
+}
+
+function runClasp(args) {
+    const result = spawnSync('clasp', args, {
+        cwd: __dirname,
+        encoding: 'utf8',
+        shell: process.platform === 'win32',
+        windowsHide: true
+    });
+    if (result.error) throw result.error;
+    if (result.status !== 0) {
+        const error = new Error(`clasp ${args[0]} failed with exit code ${result.status}`);
+        error.stderr = result.stderr;
+        throw error;
+    }
+    return result.stdout || '';
+}
+
+function run() {
+    if (!fs.existsSync(ENV_PATH)) {
+        throw new Error('.env が見つかりません。固定の GAS_DEPLOY_URL を設定してください。');
+    }
+
+    const envContent = fs.readFileSync(ENV_PATH, 'utf8');
+    const deploymentId = getDeploymentIdFromEnv(envContent);
+    if (!deploymentId) {
+        throw new Error(
+            '.env の GAS_DEPLOY_URL から有効なデプロイIDを取得できません。処理を中止します。'
+        );
+    }
+
+    console.log(`Fixed deployment: ${maskDeploymentId(deploymentId)}`);
+    console.log('Fetching existing deployments...');
+    const deploymentsOutput = runClasp(['deployments']);
+    const deployments = parseDeployments(deploymentsOutput);
+    console.log(`Found ${deployments.size} deployments.`);
+
+    if (deployments.size > 180) {
+        fs.writeFileSync(WARNING_PATH, String(deployments.size), 'utf8');
+        console.warn(`Deployment count is high (${deployments.size}/200).`);
+    }
+
+    if (!deployments.has(deploymentId)) {
+        throw new Error(
+            '固定デプロイIDが現在のGASデプロイ一覧にありません。別IDは選択せず処理を中止します。'
+        );
+    }
+
+    console.log('Updating the fixed Web App deployment...');
+    const deployOutput = runClasp([
+        'deploy',
+        '-i',
+        deploymentId,
+        '-d',
+        'Auto-update via sync-data'
+    ]);
+    if (deployOutput.trim()) {
+        console.log(deployOutput.trim());
+    }
+    console.log('[OK] Fixed Web App deployment updated.');
+}
+
+if (require.main === module) {
     try {
-        const envPath = path.join(__dirname, '../.env');
-        if (!fs.existsSync(envPath)) return null;
-        
-        const envContent = fs.readFileSync(envPath, 'utf-8');
-        // GAS_DEPLOY_URL=https://script.google.com/macros/s/DEPLOY_ID/exec
-        const match = envContent.match(/GAS_DEPLOY_URL=https:\/\/script\.google\.com\/macros\/s\/([A-Za-z0-9_-]+)\/exec/);
-        return match ? match[1] : null;
-    } catch (e) {
-        console.error('Error reading .env:', e);
-        return null;
+        run();
+    } catch (error) {
+        const detail = error.stderr ? String(error.stderr).trim() : '';
+        console.error(`[ERROR] ${error.message}`);
+        if (detail) console.error(detail);
+        process.exitCode = 1;
     }
 }
 
-const currentId = getCurrentDeploymentId();
-console.log('Current Deployment ID from .env:', currentId || 'None');
-
-console.log('Fetching deployments...');
-exec('clasp deployments', (err, stdout, stderr) => {
-    if (err) {
-        console.error('Error fetching deployments:', stderr);
-        return;
-    }
-
-    const lines = stdout.split('\n');
-    const deployments = {};
-    lines.forEach(l => {
-        const m = l.match(/- ([A-Za-z0-9_-]+) @([0-9]+)/);
-        if(m) {
-            deployments[m[1].trim()] = parseInt(m[2], 10);
-        }
-    });
-
-    const deploymentsCount = Object.keys(deployments).length;
-    console.log(`Found ${deploymentsCount} deployments.`);
-
-    // Warn if deployments approach the limit (200)
-    if (deploymentsCount > 180) {
-        const warningFile = path.join(__dirname, '../.deploy_warning');
-        fs.writeFileSync(warningFile, deploymentsCount.toString());
-        console.log(`Warning: Deployment count (${deploymentsCount}) is high. Created warning flag.`);
-    }
-
-    if (currentId && deployments[currentId] !== undefined) {
-        console.log(`Targeting existing deployment: ${currentId}`);
-        // Update existing deployment
-        exec(`clasp deploy -i "${currentId}" -d "Auto-update via sync-data"`, (e, out, er) => {
-            console.log('Deploy (Update) stdout:', out);
-            if(er) console.error('Deploy (Update) stderr:', er);
-        });
-    } else {
-        console.log('Current deployment ID not found or invalid. Finding latest...');
-        // Fallback: Use the latest version deployment if .env mismatches
-        const keys = Object.keys(deployments);
-        if (keys.length > 0) {
-            const latestId = keys[0]; // Just pick one if we can't sort reliability without more parsing
-            console.log(`Falling back to updating: ${latestId}`);
-             exec(`clasp deploy -i "${latestId}" -d "Auto-update via sync-data"`, (e, out, er) => {
-                console.log('Deploy (Update fallback) stdout:', out);
-                if(er) console.error('Deploy (Update fallback) stderr:', er);
-            });
-        } else {
-             console.log('No deployments found. Creating new...');
-            // Create new deployment
-            exec('clasp deploy -d "New Deployment via sync-data"', (e, out, er) => {
-                console.log('Deploy (New) stdout:', out);
-                if(er) console.error('Deploy (New) stderr:', er);
-                // update_env.js will handle updating .env with the new ID
-            });
-        }
-    }
-});
+module.exports = {
+    getDeploymentIdFromEnv,
+    parseDeployments,
+    runClasp
+};
