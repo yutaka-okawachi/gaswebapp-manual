@@ -107,7 +107,7 @@
 - [x] Analytics Data 高度なサービスをマニフェストへ追加
 - [x] 必要な読み取り専用OAuthスコープを追加
 - [x] Script Properties の `GA4_PROPERTY_ID` を利用する
-- [ ] GAS管理画面のScript Propertiesに `GA4_PROPERTY_ID=471296729` を設定
+- [x] GAS管理画面のScript Propertiesに `GA4_PROPERTY_ID=471296729` を設定（2026-07-26）
 - [x] `period=7/30/90/180` だけを許可
 - [x] ダッシュボードAPI用GETルートを追加
 - [x] ダッシュボードAPI用POSTルートを追加
