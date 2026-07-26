@@ -28,14 +28,15 @@
 
 ## 1. 指標とJSON仕様の確定
 
-- [ ] `daily.views` を「用語集 `dic.html` の閲覧数」とするか最終確認
-- [ ] 実例クリック率を `click_view_example / dic.htmlの閲覧数` と定義
-- [ ] `source_page` を「検索を実行したページ」と定義
-- [ ] 検索ページへ移動する前のページは、移動イベント側の `source_page` として分離
-- [ ] 検索総数を `view_search_results + search_no_results` と定義
-- [ ] ページ名と実在パスの対応表を確定
-- [ ] `translation` が見つからない検索語の返却方法を確定
-- [ ] JSONの件数上限と並び順を確定
+- 仕様書案: [ADMIN_DASHBOARD_API_SPEC.md](ADMIN_DASHBOARD_API_SPEC.md)
+- [x] `daily.views` を「用語集 `dic.html` の閲覧数」とする仕様案を作成
+- [x] 実例クリック率を `click_view_example / dic.htmlの閲覧数` と定義
+- [x] `source_page` を「検索を実行したページ」と定義
+- [x] 検索ページへ移動する前のページは、移動イベント側の `source_page` として分離
+- [x] 検索総数を `view_search_results + search_no_results` と定義
+- [x] ページ名と実在パスの対応表を確定
+- [x] `translation` が見つからない検索語は空文字とする仕様案を作成
+- [x] JSONの件数上限と並び順を確定
 
 ### 確認ゲート A
 
