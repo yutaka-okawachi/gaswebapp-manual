@@ -108,6 +108,33 @@ function getDashboardAnalytics(period) {
   return result;
 }
 
+/**
+ * Performs a minimal read-only request so the deployer can authorize and
+ * verify Analytics Data API access from the Apps Script editor.
+ * @returns {string}
+ */
+function verifyDashboardAnalyticsAccess() {
+  ScriptApp.requireScopes(ScriptApp.AuthMode.FULL, [
+    'https://www.googleapis.com/auth/analytics.readonly'
+  ]);
+
+  const propertyId = String(
+    PropertiesService.getScriptProperties().getProperty('GA4_PROPERTY_ID') || ''
+  ).trim();
+  if (!/^\d+$/.test(propertyId)) {
+    throw new Error('GA4_PROPERTY_ID is missing or invalid');
+  }
+
+  AnalyticsData.Properties.runReport({
+    dateRanges: [{ startDate: 'today', endDate: 'today' }],
+    metrics: [{ name: 'eventCount' }],
+    limit: '1'
+  }, 'properties/' + propertyId);
+
+  Logger.log('Analytics Data API access: OK');
+  return 'Analytics Data API access: OK';
+}
+
 function parseDashboardPeriod(value) {
   const text = String(value == null ? '' : value).trim();
   if (!/^\d+$/.test(text)) return null;

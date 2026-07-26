@@ -90,6 +90,16 @@ const context = {
   console,
   URL,
   Logger: { log() {} },
+  ScriptApp: {
+    AuthMode: { FULL: 'FULL' },
+    requireScopes(authMode, scopes) {
+      assert.strictEqual(authMode, 'FULL');
+      assert.deepStrictEqual(
+        JSON.parse(JSON.stringify(scopes)),
+        ['https://www.googleapis.com/auth/analytics.readonly']
+      );
+    }
+  },
   Utilities: {
     formatDate(date, timeZone, format) {
       assert.strictEqual(timeZone, 'Asia/Tokyo');
@@ -153,6 +163,17 @@ const context = {
       runReport(request, propertyName) {
         analyticsCallCount += 1;
         assert.strictEqual(propertyName, 'properties/471296729');
+        if (!request.dimensions) {
+          assert.deepStrictEqual(
+            JSON.parse(JSON.stringify(request)),
+            {
+              dateRanges: [{ startDate: 'today', endDate: 'today' }],
+              metrics: [{ name: 'eventCount' }],
+              limit: '1'
+            }
+          );
+          return {};
+        }
         assert.deepStrictEqual(
           JSON.parse(JSON.stringify(request.dateRanges)),
           [{
@@ -191,6 +212,11 @@ assert.strictEqual(context.parseDashboardPeriod('7'), 7);
 assert.strictEqual(context.parseDashboardPeriod(180), 180);
 assert.strictEqual(context.parseDashboardPeriod('14'), null);
 assert.strictEqual(context.parseDashboardPeriod('7days'), null);
+assert.strictEqual(
+  context.verifyDashboardAnalyticsAccess(),
+  'Analytics Data API access: OK'
+);
+assert.strictEqual(analyticsCallCount, 1);
 
 const invalid = context.handleDashboardAnalyticsRequest({ period: '14' });
 assert.deepStrictEqual(
@@ -202,10 +228,10 @@ assert.deepStrictEqual(
     }
   }
 );
-assert.strictEqual(analyticsCallCount, 0);
+assert.strictEqual(analyticsCallCount, 1);
 
 const result = context.getDashboardAnalytics(7);
-assert.strictEqual(analyticsCallCount, 3);
+assert.strictEqual(analyticsCallCount, 4);
 assert.strictEqual(result.schemaVersion, 1);
 assert.strictEqual(result.period, 7);
 assert.deepStrictEqual(
@@ -239,7 +265,7 @@ assert.deepStrictEqual(
 );
 
 const cachedResult = context.getDashboardAnalytics(7);
-assert.strictEqual(analyticsCallCount, 3);
+assert.strictEqual(analyticsCallCount, 4);
 assert.deepStrictEqual(
   JSON.parse(JSON.stringify(cachedResult)),
   JSON.parse(JSON.stringify(result))
