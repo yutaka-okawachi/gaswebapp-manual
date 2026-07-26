@@ -157,13 +157,13 @@
 
 ## 8. GA4受信検証
 
-- [ ] オプトアウト拡張機能の影響を受けない環境を使用
-- [ ] `view_search_results` をRealtimeで確認
-- [ ] `search_no_results` をRealtimeで確認
-- [ ] `click_view_example` をRealtimeで確認
-- [ ] `search_page_move` をRealtimeで確認
+- [x] オプトアウト拡張機能の影響を受けない環境を使用
+- [x] `view_search_results` をRealtimeで確認
+- [x] `search_no_results` をRealtimeで確認
+- [x] `click_view_example` をRealtimeで確認
+- [x] `search_page_move` をRealtimeで確認
 - [ ] `source_page` と `destination_page` の値を確認
-- [ ] 二重計測がないことを確認
+- [x] 二重計測がないことを確認
 - [ ] 24～48時間後に通常レポート／Data APIで確認
 
 ## 9. `sync-data.ps1` のダッシュボードAPI検査
@@ -242,3 +242,10 @@
 - 公開: GAS固定URLとGitHub Pagesへ公開済み
 - 未確認: GA4 Realtimeでの各イベント受信、24～48時間後の通常レポート、ダッシュボード側の実データ表示
 - 復元先: 公開前承認コミット `2767b4f`、同期後コミット `a5753ff`
+
+### 2026-07-26 フェーズ8（Realtime確認）
+
+- 完了: `view_search_results`、`search_no_results`、`click_view_example`、`search_page_move` のRealtime受信
+- 検証: 各テスト操作に対するイベント数が1であり、テスト範囲で二重計測なし
+- 公開: 追加公開なし
+- 未確認: `source_page`・`destination_page` の値、24～48時間後の通常レポート／Data API
