@@ -1,5 +1,11 @@
 param([string]$message = "automated sync update")
 
+$dashboardApiCheckScript = Join-Path $PSScriptRoot "scripts/dashboard-api-check.ps1"
+if (-not (Test-Path -LiteralPath $dashboardApiCheckScript)) {
+    throw "Dashboard API check helper was not found: $dashboardApiCheckScript"
+}
+. $dashboardApiCheckScript
+
 $generatedOutputPaths = @(
     "mahler-search-app/dic.html",
     "mahler-search-app/data/"
@@ -836,11 +842,35 @@ if ($LASTEXITCODE -ne 0) {
 Write-Host "[OK] All changes published to GitHub Pages!" -ForegroundColor Green
 
 Write-Host ""
-Write-Host "================================" -ForegroundColor Cyan
-Write-Host "[OK] COMPLETED SUCCESSFULLY" -ForegroundColor Green
-Write-Host "================================" -ForegroundColor Cyan
+
+# --- [5.5/5] Dashboard aggregate API verification ---
+Write-Host "[5.5/5] Verifying dashboard aggregate API..." -ForegroundColor Yellow
+$dashboardApiResults = @()
+foreach ($period in @(7, 30, 90, 180)) {
+    $result = Invoke-DashboardApiCheck -BaseUrl $env:GAS_DEPLOY_URL -Period $period
+    $dashboardApiResults += $result
+    if ($result.Success) {
+        Write-Host "  [OK] period=$period" -ForegroundColor Green
+    } else {
+        Write-Host "  [FAILED] period=$period - $($result.Message)" -ForegroundColor Red
+    }
+}
+$dashboardApiHealthy = -not ($dashboardApiResults | Where-Object { -not $_.Success })
 Write-Host ""
-Write-Host "App and Data are now synchronized." -ForegroundColor White
+
+if ($dashboardApiHealthy) {
+    Write-Host "================================" -ForegroundColor Cyan
+    Write-Host "[OK] COMPLETED SUCCESSFULLY" -ForegroundColor Green
+    Write-Host "================================" -ForegroundColor Cyan
+    Write-Host ""
+    Write-Host "App, generated data, and dashboard API are synchronized." -ForegroundColor White
+} else {
+    Write-Host "================================" -ForegroundColor Yellow
+    Write-Host "[PARTIAL] SITE SYNC SUCCEEDED; DASHBOARD API CHECK FAILED" -ForegroundColor Yellow
+    Write-Host "================================" -ForegroundColor Yellow
+    Write-Host ""
+    Write-Host "GitHub Pages was updated, but the dashboard API is not verified." -ForegroundColor Yellow
+}
 Write-Host "Check the live site in a few minutes:" -ForegroundColor Gray
 Write-Host "https://yutaka-okawachi.github.io/gaswebapp-manual/" -ForegroundColor Blue
 Write-Host ""
@@ -852,5 +882,9 @@ if (Test-Path ".deploy_warning") {
     Write-Host "If it hits 200, updates may fail. Please clean up deployments using 'clasp undeploy --all' or via the web console." -ForegroundColor Yellow -BackgroundColor Black
     Remove-Item ".deploy_warning" -ErrorAction SilentlyContinue
     Write-Host ""
+}
+
+if (-not $dashboardApiHealthy) {
+    exit 1
 }
 
