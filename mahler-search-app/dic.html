@@ -14,6 +14,7 @@
 
       gtag('config', 'G-ZT6MPW5MNG');
     </script>
+    <script src="js/analytics.js"></script>
     <meta charset="UTF-8">
     <link rel="canonical" href="https://yutaka-okawachi.github.io/gaswebapp-manual/mahler-search-app/dic.html">
     <script type="application/ld+json">
@@ -6202,7 +6203,10 @@
                         try {
                             window.gtag('event', 'click_view_example', {
                                 term: german.trim(),
-                                page_path: location.pathname
+                                page_path: location.pathname,
+                                source_page: typeof window.getAnalyticsPagePath === 'function'
+                                    ? window.getAnalyticsPagePath()
+                                    : location.pathname
                             });
                         } catch (e) {
                             console.error('GA4 Event Error:', e);
@@ -18578,4 +18582,4 @@ Allegro ma non troppo (in cominciando un poco esitendo)</dfn>
 </body>
 
 </html>
-<!-- Generated: 2026/7/26 21:30:22 -->
+<!-- Generated: 2026/7/26 22:21:29 -->
