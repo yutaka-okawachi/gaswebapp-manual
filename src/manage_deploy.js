@@ -31,6 +31,11 @@ function parseDeployments(output) {
     return deployments;
 }
 
+function parseCreatedVersion(output) {
+    const match = String(output || '').match(/Created version\s+([0-9]+)/i);
+    return match ? Number.parseInt(match[1], 10) : null;
+}
+
 function maskDeploymentId(id) {
     if (id.length <= 8) return '********';
     return `${id.slice(0, 4)}...${id.slice(-4)}`;
@@ -82,18 +87,37 @@ function run() {
         );
     }
 
-    console.log('Updating the fixed Web App deployment...');
+    console.log('Creating an immutable Apps Script version from the verified HEAD...');
+    const versionOutput = runClasp([
+        'version',
+        'Auto-update via sync-data'
+    ]);
+    const versionNumber = parseCreatedVersion(versionOutput);
+    if (!versionNumber) {
+        throw new Error('作成されたApps Scriptバージョン番号を取得できません。');
+    }
+
+    console.log(`Updating the fixed Web App deployment to version ${versionNumber}...`);
     const deployOutput = runClasp([
         'deploy',
         '-i',
         deploymentId,
+        '-V',
+        String(versionNumber),
         '-d',
         'Auto-update via sync-data'
     ]);
     if (deployOutput.trim()) {
         console.log(deployOutput.trim());
     }
-    console.log('[OK] Fixed Web App deployment updated.');
+    const verifiedDeployments = parseDeployments(runClasp(['deployments']));
+    if (verifiedDeployments.get(deploymentId) !== versionNumber) {
+        throw new Error(
+            '固定デプロイIDの更新後バージョンが、作成したバージョンと一致しません。'
+        );
+    }
+
+    console.log(`[OK] Fixed Web App deployment updated to version ${versionNumber}.`);
 }
 
 if (require.main === module) {
@@ -110,5 +134,6 @@ if (require.main === module) {
 module.exports = {
     getDeploymentIdFromEnv,
     parseDeployments,
+    parseCreatedVersion,
     runClasp
 };
