@@ -152,6 +152,13 @@ function doGet(e) {
     Logger.log("e.parameter: " + JSON.stringify(e.parameter));
     Logger.log("token parameter: " + e.parameter.token);
   }
+
+  // Public dashboard API. It returns aggregate values only and never exposes
+  // tokens, user identifiers, UserAgent values, or raw search-history rows.
+  if (e && e.parameter && e.parameter.api === 'dashboard') {
+    Logger.log("Routing to dashboard analytics API");
+    return handleDashboardAnalyticsRequest(e.parameter);
+  }
   
   // web_trigger.js の管理API機能との統合
   // tokenパラメータがある場合は、管理APIリクエストとして web_trigger.js の handleRequest に委譲

@@ -66,6 +66,8 @@
 
 - 検索総数にはすべての検索形式を含める。
 - `terms` と `topTerms` には、用語入力による検索だけを含める。
+- `terms` と `topTerms` は `view_search_results` だけを対象とし、
+  `search_no_results` だけだった検索語は含めない。
 - 対象となる `search_type` は `gm_term`、`rs_term`、`rw_term` とする。
 - 作品、楽器、場面、人物などを連結した内部検索条件は用語として表示しない。
 - 同じ用語の表記ゆれは、集計キー作成時に次を適用してまとめる。
@@ -111,6 +113,8 @@
 - `searches`: そのパスを `source_page` とする検索イベント
 - `exampleClicks`: そのパスを `source_page` とする `click_view_example`
 - `topTerms`: そのパスで実行された用語検索の上位3件
+- `source_page` 導入前の既存イベントは、GA4標準の `pagePath` が上記12パスの
+  いずれかに完全一致する場合だけ、その値を検索元ページとして補完する。
 
 ## 6. 並び順と件数上限
 

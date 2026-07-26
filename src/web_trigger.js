@@ -216,6 +216,11 @@ function doPost(e) {
   Logger.log("doPost triggered");
   try {
     const data = JSON.parse(e.postData.contents);
+
+    // Public aggregate dashboard API (POST variant).
+    if (data.api === 'dashboard') {
+        return handleDashboardAnalyticsRequest(data);
+    }
     
     // Route 1: Search Notification
     if (data.work && data.page && !data.token && !data.action) {
