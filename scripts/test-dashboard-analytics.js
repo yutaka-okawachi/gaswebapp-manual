@@ -264,6 +264,24 @@ assert.deepStrictEqual(
   [{ name: '用語から検索 (GM)', count: 4 }]
 );
 
+const manyTermsReport = {
+  rows: Array.from({ length: 55 }, (_, index) => reportRow([
+    `term-${String(index + 1).padStart(2, '0')}`,
+    '/gaswebapp-manual/mahler-search-app/terms_search.html',
+    '/gaswebapp-manual/mahler-search-app/terms_search.html'
+  ], index + 1))
+};
+const limitedTermsResult = context.buildDashboardAnalyticsResponse(
+  7,
+  context.createDashboardDateRange(7),
+  { pageViews: {}, activity: {}, terms: manyTermsReport }
+);
+assert.strictEqual(limitedTermsResult.terms.length, 50);
+assert.strictEqual(limitedTermsResult.terms[0].term, 'term-55');
+assert.strictEqual(limitedTermsResult.terms[0].searches, 55);
+assert.strictEqual(limitedTermsResult.terms[49].term, 'term-06');
+assert.strictEqual(limitedTermsResult.terms[49].searches, 6);
+
 const cachedResult = context.getDashboardAnalytics(7);
 assert.strictEqual(analyticsCallCount, 4);
 assert.deepStrictEqual(

@@ -10,6 +10,7 @@ const DASHBOARD_SCHEMA_VERSION = 1;
 const DASHBOARD_TIME_ZONE = 'Asia/Tokyo';
 const DASHBOARD_ALLOWED_PERIODS = Object.freeze([7, 30, 90, 180]);
 const DASHBOARD_CACHE_SECONDS = 300;
+const DASHBOARD_TERM_LIMIT = 50;
 const DASHBOARD_SEARCH_EVENTS = Object.freeze([
   'view_search_results',
   'search_no_results'
@@ -353,7 +354,7 @@ function buildDashboardAnalyticsResponse(period, range, reports) {
       .map(item => displayTermByKey[item.key] || item.key);
   });
 
-  const terms = allTermEntries.slice(0, 100).map(item => ({
+  const terms = allTermEntries.slice(0, DASHBOARD_TERM_LIMIT).map(item => ({
     term: item.term,
     translation: translationMap[item.key] || '',
     searches: item.searches,
