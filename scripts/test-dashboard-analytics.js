@@ -30,6 +30,12 @@ const pageViewsReport = {
   ]
 };
 
+const previousPageViewsReport = {
+  rows: [
+    reportRow(['20260719', '/gaswebapp-manual/mahler-search-app/dic.html'], 8)
+  ]
+};
+
 const activityReport = {
   rows: [
     reportRow([
@@ -56,6 +62,29 @@ const activityReport = {
       '/gaswebapp-manual/mahler-search-app/dic.html',
       '/gaswebapp-manual/mahler-search-app/dic.html'
     ], 2)
+  ]
+};
+
+const previousActivityReport = {
+  rows: [
+    reportRow([
+      '20260719',
+      'view_search_results',
+      '/gaswebapp-manual/mahler-search-app/terms_search.html',
+      '/gaswebapp-manual/mahler-search-app/terms_search.html'
+    ], 3),
+    reportRow([
+      '20260719',
+      'search_no_results',
+      '/gaswebapp-manual/mahler-search-app/terms_search.html',
+      '/gaswebapp-manual/mahler-search-app/terms_search.html'
+    ], 1),
+    reportRow([
+      '20260719',
+      'click_view_example',
+      '/gaswebapp-manual/mahler-search-app/dic.html',
+      '/gaswebapp-manual/mahler-search-app/dic.html'
+    ], 1)
   ]
 };
 
@@ -203,17 +232,23 @@ const context = {
           );
           return {};
         }
-        assert.deepStrictEqual(
-          JSON.parse(JSON.stringify(request.dateRanges)),
-          [{
-            startDate: '2026-07-20',
-            endDate: '2026-07-26'
-          }]
+        const requestedRange = JSON.parse(JSON.stringify(request.dateRanges[0]));
+        const isPreviousRange =
+          requestedRange.startDate === '2026-07-13' &&
+          requestedRange.endDate === '2026-07-19';
+        assert.ok(
+          isPreviousRange ||
+          (
+            requestedRange.startDate === '2026-07-20' &&
+            requestedRange.endDate === '2026-07-26'
+          )
         );
         const dimensionNames = request.dimensions.map(item => item.name).join(',');
-        if (dimensionNames === 'date,pagePath') return pageViewsReport;
+        if (dimensionNames === 'date,pagePath') {
+          return isPreviousRange ? previousPageViewsReport : pageViewsReport;
+        }
         if (dimensionNames === 'date,eventName,customEvent:source_page,pagePath') {
-          return activityReport;
+          return isPreviousRange ? previousActivityReport : activityReport;
         }
         if (
           dimensionNames ===
@@ -270,17 +305,26 @@ assert.deepStrictEqual(
 assert.strictEqual(analyticsCallCount, 1);
 
 const result = context.getDashboardAnalytics(7);
-assert.strictEqual(analyticsCallCount, 5);
+assert.strictEqual(analyticsCallCount, 7);
 assert.strictEqual(result.schemaVersion, 1);
 assert.strictEqual(result.period, 7);
 assert.deepStrictEqual(
   JSON.parse(JSON.stringify(result.range)),
   { startDate: '2026-07-20', endDate: '2026-07-26' }
 );
+assert.deepStrictEqual(
+  JSON.parse(JSON.stringify(result.previous.range)),
+  { startDate: '2026-07-13', endDate: '2026-07-19' }
+);
 assert.strictEqual(result.daily.length, 7);
+assert.strictEqual(result.previous.daily.length, 7);
 assert.deepStrictEqual(
   JSON.parse(JSON.stringify(result.daily[result.daily.length - 1])),
   { date: '7/26', searches: 6, views: 10, exampleClicks: 2 }
+);
+assert.deepStrictEqual(
+  JSON.parse(JSON.stringify(result.previous.daily[result.previous.daily.length - 1])),
+  { date: '7/19', searches: 4, views: 8, exampleClicks: 1 }
 );
 
 const home = result.pages.find(page => page.page === 'HOME');
@@ -334,7 +378,15 @@ const manyTermsReport = {
 const limitedTermsResult = context.buildDashboardAnalyticsResponse(
   7,
   context.createDashboardDateRange(7),
-  { pageViews: {}, activity: {}, searchMoves: {}, terms: manyTermsReport }
+  {
+    pageViews: {},
+    activity: {},
+    searchMoves: {},
+    terms: manyTermsReport,
+    previousRange: { startDate: '2026-07-13', endDate: '2026-07-19' },
+    previousPageViews: {},
+    previousActivity: {}
+  }
 );
 assert.strictEqual(limitedTermsResult.terms.length, 50);
 assert.strictEqual(limitedTermsResult.terms[0].term, 'term-55');
@@ -343,7 +395,7 @@ assert.strictEqual(limitedTermsResult.terms[49].term, 'term-06');
 assert.strictEqual(limitedTermsResult.terms[49].searches, 6);
 
 const cachedResult = context.getDashboardAnalytics(7);
-assert.strictEqual(analyticsCallCount, 5);
+assert.strictEqual(analyticsCallCount, 7);
 assert.deepStrictEqual(
   JSON.parse(JSON.stringify(cachedResult)),
   JSON.parse(JSON.stringify(result))
@@ -356,19 +408,36 @@ assert.deepStrictEqual(
   { period: 180, startDate: '2026-01-28' }
 ].forEach(testCase => {
   const range = context.createDashboardDateRange(testCase.period);
+  const previousRange = context.createDashboardPreviousDateRange(
+    range,
+    testCase.period
+  );
   assert.deepStrictEqual(
     JSON.parse(JSON.stringify(range)),
     { startDate: testCase.startDate, endDate: '2026-07-26' }
   );
+  assert.strictEqual(previousRange.endDate, context.shiftDashboardIsoDate(range.startDate, -1));
   const emptyResponse = context.buildDashboardAnalyticsResponse(
     testCase.period,
     range,
-    { pageViews: {}, activity: {}, searchMoves: {}, terms: {} }
+    {
+      pageViews: {},
+      activity: {},
+      searchMoves: {},
+      terms: {},
+      previousRange: previousRange,
+      previousPageViews: {},
+      previousActivity: {}
+    }
   );
   assert.strictEqual(emptyResponse.daily.length, testCase.period);
   assert.strictEqual(emptyResponse.daily[0].searches, 0);
   assert.strictEqual(emptyResponse.daily[0].views, 0);
   assert.strictEqual(emptyResponse.daily[0].exampleClicks, 0);
+  assert.strictEqual(emptyResponse.previous.daily.length, testCase.period);
+  assert.strictEqual(emptyResponse.previous.daily[0].searches, 0);
+  assert.strictEqual(emptyResponse.previous.daily[0].views, 0);
+  assert.strictEqual(emptyResponse.previous.daily[0].exampleClicks, 0);
   assert.strictEqual(emptyResponse.pages.length, 12);
 });
 

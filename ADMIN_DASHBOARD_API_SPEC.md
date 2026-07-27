@@ -123,6 +123,8 @@
 ## 6. 並び順と件数上限
 
 - `daily`: 日付昇順、件数は必ず `period` と同じ。
+- `previous.daily`: 選択期間の直前に連続する同日数期間の日付昇順。
+  件数は必ず `period` と同じ。
 - `pages`: 上記ページ対応表の固定順、件数は12件。
 - `pages[].topTerms`: 検索数降順、同数は正規化済み用語の昇順、最大3件。
 - `dictionaryExampleMoves`: Wagner、Mahler、R. Straussの固定順、3件。
@@ -152,6 +154,20 @@
       "exampleClicks": 61
     }
   ],
+  "previous": {
+    "range": {
+      "startDate": "2026-05-28",
+      "endDate": "2026-06-26"
+    },
+    "daily": [
+      {
+        "date": "6/26",
+        "searches": 104,
+        "views": 401,
+        "exampleClicks": 48
+      }
+    ]
+  },
   "pages": [
     {
       "page": "用語から検索 (GM)",
@@ -202,6 +218,8 @@
 - `updatedAt` はGASが応答を生成した日本時間とする。
 - `range.startDate` と `range.endDate` は `YYYY-MM-DD` とする。
 - `daily[].date` はダッシュボード表示用の `M/D` とする。
+- `previous.range` は選択期間の直前に連続する同日数期間とし、
+  `previous.daily[]` は同じ並び位置の日を比較できるよう日付昇順で返す。
 - クリック率と1日平均はJSONへ重複格納せず、合計値からダッシュボード側で算出する。
 - 0件だった検索語の一覧、User Agent、クライアントID、個別利用者を識別できる値は返さない。
 

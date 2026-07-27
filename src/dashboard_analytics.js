@@ -96,7 +96,7 @@ function getDashboardAnalytics(period) {
   }
 
   const cache = CacheService.getScriptCache();
-  const cacheKey = 'admin_dashboard_analytics_v2_' + propertyId + '_' + period;
+  const cacheKey = 'admin_dashboard_analytics_v3_' + propertyId + '_' + period;
   const cached = cache.get(cacheKey);
   if (cached) {
     try {
@@ -107,12 +107,16 @@ function getDashboardAnalytics(period) {
   }
 
   const range = createDashboardDateRange(period);
+  const previousRange = createDashboardPreviousDateRange(range, period);
   const propertyName = 'properties/' + propertyId;
   const reports = {
     pageViews: runDashboardPageViewsReport(propertyName, range),
     activity: runDashboardActivityReport(propertyName, range),
     searchMoves: runDashboardSearchMovesReport(propertyName, range),
-    terms: runDashboardTermsReport(propertyName, range)
+    terms: runDashboardTermsReport(propertyName, range),
+    previousRange: previousRange,
+    previousPageViews: runDashboardPageViewsReport(propertyName, previousRange),
+    previousActivity: runDashboardActivityReport(propertyName, previousRange)
   };
   const result = buildDashboardAnalyticsResponse(period, range, reports);
 
@@ -209,6 +213,14 @@ function runDashboardActivityReport(propertyName, range) {
     ]),
     limit: '100000'
   }, propertyName);
+}
+
+function createDashboardPreviousDateRange(range, period) {
+  const endDate = shiftDashboardIsoDate(range.startDate, -1);
+  return {
+    startDate: shiftDashboardIsoDate(endDate, -(period - 1)),
+    endDate: endDate
+  };
 }
 
 function runDashboardSearchMovesReport(propertyName, range) {
@@ -328,6 +340,13 @@ function buildDashboardAnalyticsResponse(period, range, reports) {
     }
   });
 
+  const previousDaily = buildDashboardDailySeries(
+    period,
+    reports.previousRange || createDashboardPreviousDateRange(range, period),
+    reports.previousPageViews,
+    reports.previousActivity
+  );
+
   const dictionaryExampleMoveCounts = {};
   DASHBOARD_DICTIONARY_EXAMPLE_DESTINATIONS.forEach(item => {
     dictionaryExampleMoveCounts[item.path] = 0;
@@ -424,6 +443,17 @@ function buildDashboardAnalyticsResponse(period, range, reports) {
     updatedAt: Utilities.formatDate(new Date(), DASHBOARD_TIME_ZONE, 'yyyy年M月d日 HH:mm'),
     range: { startDate: range.startDate, endDate: range.endDate },
     daily: Object.keys(dailyByIso).sort().map(date => dailyByIso[date]),
+    previous: {
+      range: {
+        startDate: reports.previousRange
+          ? reports.previousRange.startDate
+          : createDashboardPreviousDateRange(range, period).startDate,
+        endDate: reports.previousRange
+          ? reports.previousRange.endDate
+          : createDashboardPreviousDateRange(range, period).endDate
+      },
+      daily: previousDaily
+    },
     pages: DASHBOARD_PAGES.map(item => pageByPath[item.path]),
     dictionaryExampleMoves: DASHBOARD_DICTIONARY_EXAMPLE_DESTINATIONS.map(item => ({
       composer: item.composer,
@@ -432,6 +462,40 @@ function buildDashboardAnalyticsResponse(period, range, reports) {
     })),
     terms: terms
   };
+}
+
+function buildDashboardDailySeries(period, range, pageViewsReport, activityReport) {
+  const dailyByIso = {};
+  enumerateDashboardDates(range.startDate, period).forEach(isoDate => {
+    dailyByIso[isoDate] = {
+      date: dashboardDisplayDate(isoDate),
+      searches: 0,
+      views: 0,
+      exampleClicks: 0
+    };
+  });
+
+  dashboardReportRows(pageViewsReport, 2).forEach(row => {
+    const isoDate = dashboardGaDateToIso(row.dimensions[0]);
+    const path = normalizeDashboardPagePath(row.dimensions[1]);
+    if (path === DASHBOARD_DICTIONARY_PATH && dailyByIso[isoDate]) {
+      dailyByIso[isoDate].views += dashboardCount(row.metrics[0]);
+    }
+  });
+
+  dashboardReportRows(activityReport, 4).forEach(row => {
+    const isoDate = dashboardGaDateToIso(row.dimensions[0]);
+    const eventName = row.dimensions[1];
+    const count = dashboardCount(row.metrics[0]);
+    if (!dailyByIso[isoDate]) return;
+    if (DASHBOARD_SEARCH_EVENTS.indexOf(eventName) >= 0) {
+      dailyByIso[isoDate].searches += count;
+    } else if (eventName === 'click_view_example') {
+      dailyByIso[isoDate].exampleClicks += count;
+    }
+  });
+
+  return Object.keys(dailyByIso).sort().map(date => dailyByIso[date]);
 }
 
 function dashboardReportRows(report, dimensionCount) {
