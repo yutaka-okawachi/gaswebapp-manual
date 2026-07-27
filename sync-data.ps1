@@ -492,18 +492,9 @@ if ($runFailed) {
         Write-Host ""
         Write-Host "→ Falling back to Web App method..." -ForegroundColor Yellow
     
-    # ★★★ Deploymentの自動更新 (Auto-Deploy) - フォールバック時にも念のため実施 ★★★
-    Write-Host "Updating Web App deployment to ensure latest code is used..." -ForegroundColor Cyan
-    Push-Location "src"
-    try {
-        Invoke-NodeScriptStrict -ScriptPath "manage_deploy.js"
-        Invoke-NodeScriptStrict -ScriptPath "update_env.js"
-    } catch {
-        Write-Error "[ERROR] Failed to update the fixed Web App deployment: $($_.Exception.Message)"
-        exit 1
-    } finally {
-        Pop-Location
-    }
+    # 固定Web Appは[1/5]で更新・検証済み。同じ同期処理内で再更新すると、
+    # 不要なApps Scriptバージョンが増え、並行実行時の確認競合も起きるため再利用する。
+    Write-Host "[OK] Reusing the fixed Web App deployment verified in step [1/5]." -ForegroundColor Green
     
     # .envの再読み込み (新しいURLを反映するため)
     if (Test-Path ".env") {

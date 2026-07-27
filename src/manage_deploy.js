@@ -12,6 +12,7 @@ const path = require('path');
 
 const ENV_PATH = path.join(__dirname, '../.env');
 const WARNING_PATH = path.join(__dirname, '../.deploy_warning');
+const DEPLOYMENT_VERIFY_DELAYS_MS = [0, 2000, 5000, 10000];
 
 function getDeploymentIdFromEnv(envContent) {
     const match = envContent.match(
@@ -55,6 +56,62 @@ function runClasp(args) {
         throw error;
     }
     return result.stdout || '';
+}
+
+function sleep(milliseconds) {
+    if (milliseconds <= 0) return;
+    Atomics.wait(
+        new Int32Array(new SharedArrayBuffer(4)),
+        0,
+        0,
+        milliseconds
+    );
+}
+
+function verifyDeploymentVersion(deploymentId, expectedVersion, options = {}) {
+    const fetchDeployments = options.fetchDeployments ||
+        (() => runClasp(['deployments']));
+    const wait = options.sleep || sleep;
+    const delays = options.delays || DEPLOYMENT_VERIFY_DELAYS_MS;
+    let observedVersion = null;
+
+    for (let attempt = 0; attempt < delays.length; attempt += 1) {
+        wait(delays[attempt]);
+        observedVersion = parseDeployments(fetchDeployments()).get(deploymentId);
+
+        if (observedVersion === expectedVersion) {
+            return {
+                status: 'matched',
+                observedVersion
+            };
+        }
+
+        // 別の同期処理が先に進めた固定デプロイを古い版へ戻さない。
+        if (Number.isInteger(observedVersion) && observedVersion > expectedVersion) {
+            return {
+                status: 'superseded',
+                observedVersion
+            };
+        }
+
+        if (attempt < delays.length - 1) {
+            const displayVersion = Number.isInteger(observedVersion)
+                ? observedVersion
+                : 'not found';
+            console.warn(
+                `Deployment verification ${attempt + 1}/${delays.length}: ` +
+                `observed ${displayVersion}; waiting for version ${expectedVersion}.`
+            );
+        }
+    }
+
+    const displayVersion = Number.isInteger(observedVersion)
+        ? observedVersion
+        : 'not found';
+    throw new Error(
+        `固定デプロイIDの更新後バージョンを確認できません。` +
+        `期待値: ${expectedVersion}、確認値: ${displayVersion}`
+    );
 }
 
 function run() {
@@ -110,14 +167,17 @@ function run() {
     if (deployOutput.trim()) {
         console.log(deployOutput.trim());
     }
-    const verifiedDeployments = parseDeployments(runClasp(['deployments']));
-    if (verifiedDeployments.get(deploymentId) !== versionNumber) {
-        throw new Error(
-            '固定デプロイIDの更新後バージョンが、作成したバージョンと一致しません。'
+    const verification = verifyDeploymentVersion(deploymentId, versionNumber);
+    if (verification.status === 'superseded') {
+        console.warn(
+            `Fixed deployment was advanced concurrently to version ` +
+            `${verification.observedVersion}; keeping the newer version.`
         );
+    } else {
+        console.log(`[OK] Fixed Web App deployment verified at version ${versionNumber}.`);
     }
 
-    console.log(`[OK] Fixed Web App deployment updated to version ${versionNumber}.`);
+    console.log('[OK] Fixed Web App deployment update completed.');
 }
 
 if (require.main === module) {
@@ -135,5 +195,6 @@ module.exports = {
     getDeploymentIdFromEnv,
     parseDeployments,
     parseCreatedVersion,
-    runClasp
+    runClasp,
+    verifyDeploymentVersion
 };
