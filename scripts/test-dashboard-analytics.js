@@ -55,13 +55,42 @@ const activityReport = {
       'click_view_example',
       '/gaswebapp-manual/mahler-search-app/dic.html',
       '/gaswebapp-manual/mahler-search-app/dic.html'
+    ], 2)
+  ]
+};
+
+const searchMovesReport = {
+  rows: [
+    reportRow([
+      '/gaswebapp-manual/',
+      '/gaswebapp-manual/mahler-search-app/terms_search.html',
+      'search_navigation',
+      '/gaswebapp-manual/'
+    ], 4),
+    reportRow([
+      '/gaswebapp-manual/mahler-search-app/dic.html',
+      '/gaswebapp-manual/mahler-search-app/rw_terms_search.html',
+      'example_search',
+      '/gaswebapp-manual/mahler-search-app/dic.html'
+    ], 3),
+    reportRow([
+      '/gaswebapp-manual/mahler-search-app/dic.html',
+      '/gaswebapp-manual/mahler-search-app/terms_search.html',
+      'example_search',
+      '/gaswebapp-manual/mahler-search-app/dic.html'
+    ], 5),
+    reportRow([
+      '/gaswebapp-manual/mahler-search-app/dic.html',
+      '/gaswebapp-manual/mahler-search-app/rs_terms_search.html',
+      'example_search',
+      '/gaswebapp-manual/mahler-search-app/dic.html'
     ], 2),
     reportRow([
-      '20260725',
-      'search_page_move',
-      '/gaswebapp-manual/',
-      '/gaswebapp-manual/'
-    ], 4)
+      '/gaswebapp-manual/mahler-search-app/dic.html',
+      '/gaswebapp-manual/mahler-search-app/terms_search.html',
+      'search_navigation',
+      '/gaswebapp-manual/mahler-search-app/dic.html'
+    ], 7)
   ]
 };
 
@@ -186,6 +215,16 @@ const context = {
         if (dimensionNames === 'date,eventName,customEvent:source_page,pagePath') {
           return activityReport;
         }
+        if (
+          dimensionNames ===
+          'customEvent:source_page,customEvent:destination_page,customEvent:link_type,pagePath'
+        ) {
+          assert.strictEqual(
+            request.dimensionFilter.filter.stringFilter.value,
+            'search_page_move'
+          );
+          return searchMovesReport;
+        }
         if (dimensionNames === 'searchTerm,customEvent:source_page,pagePath') {
           const eventFilter = request.dimensionFilter.andGroup.expressions[0];
           assert.strictEqual(
@@ -231,7 +270,7 @@ assert.deepStrictEqual(
 assert.strictEqual(analyticsCallCount, 1);
 
 const result = context.getDashboardAnalytics(7);
-assert.strictEqual(analyticsCallCount, 4);
+assert.strictEqual(analyticsCallCount, 5);
 assert.strictEqual(result.schemaVersion, 1);
 assert.strictEqual(result.period, 7);
 assert.deepStrictEqual(
@@ -251,6 +290,7 @@ assert.strictEqual(result.pages.length, 12);
 assert.strictEqual(home.views, 5);
 assert.strictEqual(home.searchMoves, 4);
 assert.strictEqual(dictionary.views, 10);
+assert.strictEqual(dictionary.searchMoves, 17);
 assert.strictEqual(dictionary.exampleClicks, 2);
 assert.strictEqual(gmTerms.searches, 6);
 assert.deepStrictEqual(Array.from(gmTerms.topTerms), ['innig']);
@@ -263,6 +303,26 @@ assert.deepStrictEqual(
   JSON.parse(JSON.stringify(result.terms[0].pages)),
   [{ name: '用語から検索 (GM)', count: 4 }]
 );
+assert.deepStrictEqual(
+  JSON.parse(JSON.stringify(result.dictionaryExampleMoves)),
+  [
+    {
+      composer: 'Wagner',
+      path: '/gaswebapp-manual/mahler-search-app/rw_terms_search.html',
+      count: 3
+    },
+    {
+      composer: 'Mahler',
+      path: '/gaswebapp-manual/mahler-search-app/terms_search.html',
+      count: 5
+    },
+    {
+      composer: 'R. Strauss',
+      path: '/gaswebapp-manual/mahler-search-app/rs_terms_search.html',
+      count: 2
+    }
+  ]
+);
 
 const manyTermsReport = {
   rows: Array.from({ length: 55 }, (_, index) => reportRow([
@@ -274,7 +334,7 @@ const manyTermsReport = {
 const limitedTermsResult = context.buildDashboardAnalyticsResponse(
   7,
   context.createDashboardDateRange(7),
-  { pageViews: {}, activity: {}, terms: manyTermsReport }
+  { pageViews: {}, activity: {}, searchMoves: {}, terms: manyTermsReport }
 );
 assert.strictEqual(limitedTermsResult.terms.length, 50);
 assert.strictEqual(limitedTermsResult.terms[0].term, 'term-55');
@@ -283,7 +343,7 @@ assert.strictEqual(limitedTermsResult.terms[49].term, 'term-06');
 assert.strictEqual(limitedTermsResult.terms[49].searches, 6);
 
 const cachedResult = context.getDashboardAnalytics(7);
-assert.strictEqual(analyticsCallCount, 4);
+assert.strictEqual(analyticsCallCount, 5);
 assert.deepStrictEqual(
   JSON.parse(JSON.stringify(cachedResult)),
   JSON.parse(JSON.stringify(result))
@@ -303,7 +363,7 @@ assert.deepStrictEqual(
   const emptyResponse = context.buildDashboardAnalyticsResponse(
     testCase.period,
     range,
-    { pageViews: {}, activity: {}, terms: {} }
+    { pageViews: {}, activity: {}, searchMoves: {}, terms: {} }
   );
   assert.strictEqual(emptyResponse.daily.length, testCase.period);
   assert.strictEqual(emptyResponse.daily[0].searches, 0);

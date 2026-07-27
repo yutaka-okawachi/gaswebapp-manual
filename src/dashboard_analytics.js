@@ -20,6 +20,20 @@ const DASHBOARD_TERM_SEARCH_TYPES = Object.freeze([
   'rs_term',
   'rw_term'
 ]);
+const DASHBOARD_DICTIONARY_EXAMPLE_DESTINATIONS = Object.freeze([
+  {
+    composer: 'Wagner',
+    path: '/gaswebapp-manual/mahler-search-app/rw_terms_search.html'
+  },
+  {
+    composer: 'Mahler',
+    path: '/gaswebapp-manual/mahler-search-app/terms_search.html'
+  },
+  {
+    composer: 'R. Strauss',
+    path: '/gaswebapp-manual/mahler-search-app/rs_terms_search.html'
+  }
+]);
 
 const DASHBOARD_PAGES = Object.freeze([
   { page: 'HOME', path: '/gaswebapp-manual/' },
@@ -82,7 +96,7 @@ function getDashboardAnalytics(period) {
   }
 
   const cache = CacheService.getScriptCache();
-  const cacheKey = 'admin_dashboard_analytics_v1_' + propertyId + '_' + period;
+  const cacheKey = 'admin_dashboard_analytics_v2_' + propertyId + '_' + period;
   const cached = cache.get(cacheKey);
   if (cached) {
     try {
@@ -97,6 +111,7 @@ function getDashboardAnalytics(period) {
   const reports = {
     pageViews: runDashboardPageViewsReport(propertyName, range),
     activity: runDashboardActivityReport(propertyName, range),
+    searchMoves: runDashboardSearchMovesReport(propertyName, range),
     terms: runDashboardTermsReport(propertyName, range)
   };
   const result = buildDashboardAnalyticsResponse(period, range, reports);
@@ -190,9 +205,23 @@ function runDashboardActivityReport(propertyName, range) {
     dimensionFilter: dashboardInListFilter('eventName', [
       'view_search_results',
       'search_no_results',
-      'click_view_example',
-      'search_page_move'
+      'click_view_example'
     ]),
+    limit: '100000'
+  }, propertyName);
+}
+
+function runDashboardSearchMovesReport(propertyName, range) {
+  return AnalyticsData.Properties.runReport({
+    dateRanges: [range],
+    dimensions: [
+      { name: 'customEvent:source_page' },
+      { name: 'customEvent:destination_page' },
+      { name: 'customEvent:link_type' },
+      { name: 'pagePath' }
+    ],
+    metrics: [{ name: 'eventCount' }],
+    dimensionFilter: dashboardExactFilter('eventName', 'search_page_move'),
     limit: '100000'
   }, propertyName);
 }
@@ -296,8 +325,29 @@ function buildDashboardAnalyticsResponse(period, range, reports) {
       pageByPath[sourcePath].searches += count;
     } else if (eventName === 'click_view_example') {
       pageByPath[sourcePath].exampleClicks += count;
-    } else if (eventName === 'search_page_move') {
+    }
+  });
+
+  const dictionaryExampleMoveCounts = {};
+  DASHBOARD_DICTIONARY_EXAMPLE_DESTINATIONS.forEach(item => {
+    dictionaryExampleMoveCounts[item.path] = 0;
+  });
+
+  dashboardReportRows(reports.searchMoves, 4).forEach(row => {
+    const sourcePath = chooseDashboardSourcePath(row.dimensions[0], row.dimensions[3]);
+    const destinationPath = normalizeDashboardPagePath(row.dimensions[1]);
+    const linkType = String(row.dimensions[2] || '').trim();
+    const count = dashboardCount(row.metrics[0]);
+
+    if (pageByPath[sourcePath]) {
       pageByPath[sourcePath].searchMoves += count;
+    }
+    if (
+      sourcePath === DASHBOARD_DICTIONARY_PATH &&
+      linkType === 'example_search' &&
+      Object.prototype.hasOwnProperty.call(dictionaryExampleMoveCounts, destinationPath)
+    ) {
+      dictionaryExampleMoveCounts[destinationPath] += count;
     }
   });
 
@@ -375,6 +425,11 @@ function buildDashboardAnalyticsResponse(period, range, reports) {
     range: { startDate: range.startDate, endDate: range.endDate },
     daily: Object.keys(dailyByIso).sort().map(date => dailyByIso[date]),
     pages: DASHBOARD_PAGES.map(item => pageByPath[item.path]),
+    dictionaryExampleMoves: DASHBOARD_DICTIONARY_EXAMPLE_DESTINATIONS.map(item => ({
+      composer: item.composer,
+      path: item.path,
+      count: dictionaryExampleMoveCounts[item.path]
+    })),
     terms: terms
   };
 }

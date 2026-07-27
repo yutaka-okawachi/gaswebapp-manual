@@ -48,6 +48,10 @@
 
 - `search_page_move` のイベント数を数える。
 - `pages[].searchMoves` はリンクが置かれていた移動元ページへ帰属させる。
+- `dictionaryExampleMoves` は用語集の「実例を見る」で表示された作曲家リンクから、
+  Wagner・Mahler・R. Straussの各「用語から検索」ページへ移動した回数を返す。
+  `source_page` が用語集、かつ `link_type` が `example_search` の
+  `search_page_move` だけを対象とし、通常のメニュー移動は含めない。
 - 移動先ページの閲覧数とは別の指標として扱う。
 
 ## 3. `source_page` の定義
@@ -121,9 +125,10 @@
 - `daily`: 日付昇順、件数は必ず `period` と同じ。
 - `pages`: 上記ページ対応表の固定順、件数は12件。
 - `pages[].topTerms`: 検索数降順、同数は正規化済み用語の昇順、最大3件。
-- `terms`: 検索数降順、同数は正規化済み用語の昇順、最大100件。
+- `dictionaryExampleMoves`: Wagner、Mahler、R. Straussの固定順、3件。
+- `terms`: 検索数降順、同数は正規化済み用語の昇順、最大50件。
 - `terms[].pages`: 検索数が1件以上のページだけを対象とし、検索数降順、同数はページ対応表の順。
-- `terms` が100件を超える場合も、検索総数や日別・ページ別の合計値は切り詰めない。
+- `terms` が50件を超える場合も、検索総数や日別・ページ別の合計値は切り詰めない。
 
 ## 7. 正常時JSON
 
@@ -156,6 +161,23 @@
       "searches": 398,
       "exampleClicks": 211,
       "topTerms": ["innig", "bewegt", "zart"]
+    }
+  ],
+  "dictionaryExampleMoves": [
+    {
+      "composer": "Wagner",
+      "path": "/gaswebapp-manual/mahler-search-app/rw_terms_search.html",
+      "count": 21
+    },
+    {
+      "composer": "Mahler",
+      "path": "/gaswebapp-manual/mahler-search-app/terms_search.html",
+      "count": 34
+    },
+    {
+      "composer": "R. Strauss",
+      "path": "/gaswebapp-manual/mahler-search-app/rs_terms_search.html",
+      "count": 14
     }
   ],
   "terms": [
