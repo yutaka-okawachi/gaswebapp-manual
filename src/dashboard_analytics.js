@@ -108,7 +108,7 @@ function getDashboardAnalytics(period) {
   }
 
   const cache = CacheService.getScriptCache();
-  const cacheKey = 'admin_dashboard_analytics_v6_' + propertyId + '_' + period;
+  const cacheKey = 'admin_dashboard_analytics_v7_' + propertyId + '_' + period;
   const cached = cache.get(cacheKey);
   if (cached) {
     try {
@@ -220,16 +220,10 @@ function runDashboardActivityReport(propertyName, range) {
       { name: 'customEvent:destination_page' }
     ],
     metrics: [{ name: 'eventCount' }],
-    dimensionFilter: dashboardAndFilter([
-      dashboardInListFilter('eventName', [
-        'view_search_results',
-        'search_no_results',
-        'view_example_search_results'
-      ]),
-      dashboardInListFilter(
-        'customEvent:search_type',
-        Object.keys(DASHBOARD_SEARCH_TYPE_PAGE_PATHS)
-      )
+    dimensionFilter: dashboardInListFilter('eventName', [
+      'view_search_results',
+      'search_no_results',
+      'view_example_search_results'
     ]),
     limit: '100000'
   }, propertyName);
@@ -351,7 +345,7 @@ function buildDashboardAnalyticsResponse(period, range, reports) {
 
     if (dailyByIso[isoDate]) {
       if (DASHBOARD_SEARCH_EVENTS.indexOf(eventName) >= 0) {
-        dailyByIso[isoDate].searches += count;
+        if (sourcePath) dailyByIso[isoDate].searches += count;
       } else if (eventName === 'view_example_search_results') {
         dailyByIso[isoDate].exampleClicks += count;
       }
@@ -520,7 +514,12 @@ function buildDashboardDailySeries(period, range, pageViewsReport, activityRepor
     const count = dashboardCount(row.metrics[0]);
     if (!dailyByIso[isoDate]) return;
     if (DASHBOARD_SEARCH_EVENTS.indexOf(eventName) >= 0) {
-      dailyByIso[isoDate].searches += count;
+      const sourcePath = chooseDashboardSearchSourcePath(
+        row.dimensions[2],
+        row.dimensions[3],
+        row.dimensions[4]
+      );
+      if (sourcePath) dailyByIso[isoDate].searches += count;
     } else if (eventName === 'view_example_search_results') {
       dailyByIso[isoDate].exampleClicks += count;
     }
