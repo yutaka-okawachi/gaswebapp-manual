@@ -209,7 +209,7 @@ function runDashboardActivityReport(propertyName, range) {
     dimensionFilter: dashboardInListFilter('eventName', [
       'view_search_results',
       'search_no_results',
-      'click_view_example'
+      'view_example_search_results'
     ]),
     limit: '100000'
   }, propertyName);
@@ -327,7 +327,7 @@ function buildDashboardAnalyticsResponse(period, range, reports) {
     if (dailyByIso[isoDate]) {
       if (DASHBOARD_SEARCH_EVENTS.indexOf(eventName) >= 0) {
         dailyByIso[isoDate].searches += count;
-      } else if (eventName === 'click_view_example') {
+      } else if (eventName === 'view_example_search_results') {
         dailyByIso[isoDate].exampleClicks += count;
       }
     }
@@ -335,7 +335,7 @@ function buildDashboardAnalyticsResponse(period, range, reports) {
     if (!pageByPath[sourcePath]) return;
     if (DASHBOARD_SEARCH_EVENTS.indexOf(eventName) >= 0) {
       pageByPath[sourcePath].searches += count;
-    } else if (eventName === 'click_view_example') {
+    } else if (eventName === 'view_example_search_results') {
       pageByPath[sourcePath].exampleClicks += count;
     }
   });
@@ -490,7 +490,7 @@ function buildDashboardDailySeries(period, range, pageViewsReport, activityRepor
     if (!dailyByIso[isoDate]) return;
     if (DASHBOARD_SEARCH_EVENTS.indexOf(eventName) >= 0) {
       dailyByIso[isoDate].searches += count;
-    } else if (eventName === 'click_view_example') {
+    } else if (eventName === 'view_example_search_results') {
       dailyByIso[isoDate].exampleClicks += count;
     }
   });

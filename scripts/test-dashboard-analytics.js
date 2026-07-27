@@ -8,6 +8,8 @@ const sourcePath = path.join(repositoryRoot, 'src', 'dashboard_analytics.js');
 const manifestPath = path.join(repositoryRoot, 'src', 'appsscript.json');
 const getRouterPath = path.join(repositoryRoot, 'src', 'mahler_server.js');
 const postRouterPath = path.join(repositoryRoot, 'src', 'web_trigger.js');
+const commonScriptsPath = path.join(repositoryRoot, 'src', 'common_scripts.html');
+const dictionaryGeneratorPath = path.join(repositoryRoot, 'src', 'generate_dic_html.js');
 
 let analyticsCallCount = 0;
 const cacheValues = new Map();
@@ -58,7 +60,7 @@ const activityReport = {
     ], 2),
     reportRow([
       '20260726',
-      'click_view_example',
+      'view_example_search_results',
       '/gaswebapp-manual/mahler-search-app/dic.html',
       '/gaswebapp-manual/mahler-search-app/dic.html'
     ], 2)
@@ -81,7 +83,7 @@ const previousActivityReport = {
     ], 1),
     reportRow([
       '20260719',
-      'click_view_example',
+      'view_example_search_results',
       '/gaswebapp-manual/mahler-search-app/dic.html',
       '/gaswebapp-manual/mahler-search-app/dic.html'
     ], 1)
@@ -487,7 +489,18 @@ assert.deepStrictEqual(manifest.dependencies.enabledAdvancedServices, [{
 
 const getRouterSource = fs.readFileSync(getRouterPath, 'utf8');
 const postRouterSource = fs.readFileSync(postRouterPath, 'utf8');
+const commonScriptsSource = fs.readFileSync(commonScriptsPath, 'utf8');
+const dictionaryGeneratorSource = fs.readFileSync(dictionaryGeneratorPath, 'utf8');
 assert.ok(getRouterSource.includes("e.parameter.api === 'dashboard'"));
 assert.ok(postRouterSource.includes("data.api === 'dashboard'"));
+assert.ok(dictionaryGeneratorSource.includes('&source=dictionary_example'));
+assert.strictEqual(dictionaryGeneratorSource.includes("'click_view_example'"), false);
+assert.ok(commonScriptsSource.includes("resultCount > 0"));
+assert.ok(commonScriptsSource.includes("urlParams.get('source') === 'dictionary_example'"));
+assert.ok(commonScriptsSource.includes("'view_example_search_results'"));
+assert.strictEqual(
+  fs.readFileSync(sourcePath, 'utf8').includes("'click_view_example'"),
+  false
+);
 
 console.log('dashboard analytics tests: OK');

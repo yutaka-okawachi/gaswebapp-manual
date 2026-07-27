@@ -245,13 +245,13 @@ function generateDicListHtml(dicData, termsIndex) {
       const queryParam = encodeURIComponent(german);
       const links = [];
       if (hasRW) {
-        links.push(`<a href="rw_terms_search.html?q=${queryParam}" class="composer-link" target="_self">Wagner</a>`);
+        links.push(`<a href="rw_terms_search.html?q=${queryParam}&source=dictionary_example" class="composer-link" target="_self">Wagner</a>`);
       }
       if (hasGM) {
-        links.push(`<a href="terms_search.html?q=${queryParam}" class="composer-link" target="_self">Mahler</a>`);
+        links.push(`<a href="terms_search.html?q=${queryParam}&source=dictionary_example" class="composer-link" target="_self">Mahler</a>`);
       }
       if (hasRS) {
-        links.push(`<a href="rs_terms_search.html?q=${queryParam}" class="composer-link" target="_self">R.Strauss</a>`);
+        links.push(`<a href="rs_terms_search.html?q=${queryParam}&source=dictionary_example" class="composer-link" target="_self">R.Strauss</a>`);
       }
       const linksHtml = links.join(' / ');
       
@@ -869,30 +869,6 @@ ${breadcrumbJSON}
             if (content.style.display === 'none') {
                 content.style.display = 'inline-block';
                 arrow.textContent = '▾';
-                
-                if (typeof window.gtag === 'function') {
-                    const german = element.getAttribute('data-german') || 'unknown';
-                    const sendAnalytics = () => {
-                        try {
-                            window.gtag('event', 'click_view_example', {
-                                term: german.trim(),
-                                page_path: location.pathname,
-                                source_page: typeof window.getAnalyticsPagePath === 'function'
-                                    ? window.getAnalyticsPagePath()
-                                    : location.pathname
-                            });
-                        } catch (e) {
-                            console.error('GA4 Event Error:', e);
-                        }
-                    };
-
-                    // 表示更新を優先し、GA4の処理をクリックのクリティカルパスから外す。
-                    if ('requestIdleCallback' in window) {
-                        window.requestIdleCallback(sendAnalytics, { timeout: 1000 });
-                    } else {
-                        window.setTimeout(sendAnalytics, 0);
-                    }
-                }
             } else {
                 content.style.display = 'none';
                 arrow.textContent = '◂';

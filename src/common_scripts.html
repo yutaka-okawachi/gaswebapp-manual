@@ -128,6 +128,22 @@
           : window.location.pathname
       });
       window.gtag('event', resultCount > 0 ? 'view_search_results' : 'search_no_results', payload);
+
+      const urlParams = new URLSearchParams(window.location.search);
+      if (
+        resultCount > 0 &&
+        urlParams.get('source') === 'dictionary_example' &&
+        !window.__dictionaryExampleResultTracked
+      ) {
+        window.__dictionaryExampleResultTracked = true;
+        window.gtag('event', 'view_example_search_results', Object.assign({}, payload, {
+          term: searchTerm,
+          source_page: '/gaswebapp-manual/mahler-search-app/dic.html',
+          destination_page: typeof window.getAnalyticsPagePath === 'function'
+            ? window.getAnalyticsPagePath()
+            : window.location.pathname
+        }));
+      }
       return true;
     }
     window.trackSearchResults = trackSearchResults;
