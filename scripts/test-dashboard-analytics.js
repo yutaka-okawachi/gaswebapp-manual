@@ -44,25 +44,29 @@ const activityReport = {
       '20260726',
       'view_search_results',
       '/gaswebapp-manual/mahler-search-app/terms_search.html',
-      '/gaswebapp-manual/mahler-search-app/terms_search.html'
+      '/gaswebapp-manual/mahler-search-app/terms_search.html',
+      'gm_term'
     ], 3),
     reportRow([
       '20260726',
       'search_no_results',
       '/gaswebapp-manual/mahler-search-app/terms_search.html',
-      '/gaswebapp-manual/mahler-search-app/terms_search.html'
+      '/gaswebapp-manual/mahler-search-app/terms_search.html',
+      'gm_term'
     ], 1),
     reportRow([
       '20260726',
       'view_search_results',
       '(not set)',
-      '/gaswebapp-manual/mahler-search-app/terms_search.html'
+      '/macros/s/test/exec',
+      'gm_term'
     ], 2),
     reportRow([
       '20260726',
       'view_example_search_results',
       '/gaswebapp-manual/mahler-search-app/dic.html',
-      '/gaswebapp-manual/mahler-search-app/dic.html'
+      '/gaswebapp-manual/mahler-search-app/dic.html',
+      'gm_term'
     ], 2)
   ]
 };
@@ -73,19 +77,22 @@ const previousActivityReport = {
       '20260719',
       'view_search_results',
       '/gaswebapp-manual/mahler-search-app/terms_search.html',
-      '/gaswebapp-manual/mahler-search-app/terms_search.html'
+      '/gaswebapp-manual/mahler-search-app/terms_search.html',
+      'gm_term'
     ], 3),
     reportRow([
       '20260719',
       'search_no_results',
       '/gaswebapp-manual/mahler-search-app/terms_search.html',
-      '/gaswebapp-manual/mahler-search-app/terms_search.html'
+      '/gaswebapp-manual/mahler-search-app/terms_search.html',
+      'gm_term'
     ], 1),
     reportRow([
       '20260719',
       'view_example_search_results',
       '/gaswebapp-manual/mahler-search-app/dic.html',
-      '/gaswebapp-manual/mahler-search-app/dic.html'
+      '/gaswebapp-manual/mahler-search-app/dic.html',
+      'gm_term'
     ], 1)
   ]
 };
@@ -130,19 +137,22 @@ const termsReport = {
     reportRow([
       'innig',
       '/gaswebapp-manual/mahler-search-app/terms_search.html',
-      '/gaswebapp-manual/mahler-search-app/terms_search.html'
+      '/gaswebapp-manual/mahler-search-app/terms_search.html',
+      'gm_term'
     ], 3),
     reportRow([
       'Innig',
       '/gaswebapp-manual/mahler-search-app/terms_search.html',
-      '/gaswebapp-manual/mahler-search-app/terms_search.html'
+      '/gaswebapp-manual/mahler-search-app/terms_search.html',
+      'gm_term'
     ], 1),
     reportRow([
       'bewegt',
       '/gaswebapp-manual/mahler-search-app/rs_terms_search.html',
-      '/gaswebapp-manual/mahler-search-app/rs_terms_search.html'
+      '/gaswebapp-manual/mahler-search-app/rs_terms_search.html',
+      'rs_term'
     ], 2),
-    reportRow(['(not set)', '(not set)', '(not set)'], 9)
+    reportRow(['(not set)', '(not set)', '(not set)', '(not set)'], 9)
   ]
 };
 
@@ -249,7 +259,10 @@ const context = {
         if (dimensionNames === 'date,pagePath') {
           return isPreviousRange ? previousPageViewsReport : pageViewsReport;
         }
-        if (dimensionNames === 'date,eventName,customEvent:source_page,pagePath') {
+        if (
+          dimensionNames ===
+          'date,eventName,customEvent:source_page,pagePath,customEvent:search_type'
+        ) {
           return isPreviousRange ? previousActivityReport : activityReport;
         }
         if (
@@ -262,7 +275,10 @@ const context = {
           );
           return searchMovesReport;
         }
-        if (dimensionNames === 'searchTerm,customEvent:source_page,pagePath') {
+        if (
+          dimensionNames ===
+          'searchTerm,customEvent:source_page,pagePath,customEvent:search_type'
+        ) {
           const eventFilter = request.dimensionFilter.andGroup.expressions[0];
           assert.strictEqual(
             eventFilter.filter.stringFilter.value,
@@ -374,7 +390,8 @@ const manyTermsReport = {
   rows: Array.from({ length: 55 }, (_, index) => reportRow([
     `term-${String(index + 1).padStart(2, '0')}`,
     '/gaswebapp-manual/mahler-search-app/terms_search.html',
-    '/gaswebapp-manual/mahler-search-app/terms_search.html'
+    '/gaswebapp-manual/mahler-search-app/terms_search.html',
+    'gm_term'
   ], index + 1))
 };
 const limitedTermsResult = context.buildDashboardAnalyticsResponse(

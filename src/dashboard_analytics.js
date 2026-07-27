@@ -51,6 +51,18 @@ const DASHBOARD_PAGES = Object.freeze([
 ]);
 
 const DASHBOARD_DICTIONARY_PATH = '/gaswebapp-manual/mahler-search-app/dic.html';
+const DASHBOARD_SEARCH_TYPE_PAGE_PATHS = Object.freeze({
+  gm_term: '/gaswebapp-manual/mahler-search-app/terms_search.html',
+  rs_term: '/gaswebapp-manual/mahler-search-app/rs_terms_search.html',
+  rw_term: '/gaswebapp-manual/mahler-search-app/rw_terms_search.html',
+  gm_work: '/gaswebapp-manual/mahler-search-app/mahler.html',
+  rs_work_scene: '/gaswebapp-manual/mahler-search-app/richard_strauss.html',
+  rs_work_page: '/gaswebapp-manual/mahler-search-app/richard_strauss.html',
+  rs_work_whom: '/gaswebapp-manual/mahler-search-app/richard_strauss.html',
+  rw_work_scene: '/gaswebapp-manual/mahler-search-app/richard_wagner.html',
+  rw_work_page: '/gaswebapp-manual/mahler-search-app/richard_wagner.html',
+  rw_work_whom: '/gaswebapp-manual/mahler-search-app/richard_wagner.html'
+});
 
 /**
  * GET/POST route entrypoint.
@@ -96,7 +108,7 @@ function getDashboardAnalytics(period) {
   }
 
   const cache = CacheService.getScriptCache();
-  const cacheKey = 'admin_dashboard_analytics_v3_' + propertyId + '_' + period;
+  const cacheKey = 'admin_dashboard_analytics_v4_' + propertyId + '_' + period;
   const cached = cache.get(cacheKey);
   if (cached) {
     try {
@@ -203,7 +215,8 @@ function runDashboardActivityReport(propertyName, range) {
       { name: 'date' },
       { name: 'eventName' },
       { name: 'customEvent:source_page' },
-      { name: 'pagePath' }
+      { name: 'pagePath' },
+      { name: 'customEvent:search_type' }
     ],
     metrics: [{ name: 'eventCount' }],
     dimensionFilter: dashboardInListFilter('eventName', [
@@ -244,7 +257,8 @@ function runDashboardTermsReport(propertyName, range) {
     dimensions: [
       { name: 'searchTerm' },
       { name: 'customEvent:source_page' },
-      { name: 'pagePath' }
+      { name: 'pagePath' },
+      { name: 'customEvent:search_type' }
     ],
     metrics: [{ name: 'eventCount' }],
     dimensionFilter: dashboardAndFilter([
@@ -318,10 +332,14 @@ function buildDashboardAnalyticsResponse(period, range, reports) {
     }
   });
 
-  dashboardReportRows(reports.activity, 4).forEach(row => {
+  dashboardReportRows(reports.activity, 5).forEach(row => {
     const isoDate = dashboardGaDateToIso(row.dimensions[0]);
     const eventName = row.dimensions[1];
-    const sourcePath = chooseDashboardSourcePath(row.dimensions[2], row.dimensions[3]);
+    const sourcePath = chooseDashboardSearchSourcePath(
+      row.dimensions[2],
+      row.dimensions[3],
+      row.dimensions[4]
+    );
     const count = dashboardCount(row.metrics[0]);
 
     if (dailyByIso[isoDate]) {
@@ -372,10 +390,14 @@ function buildDashboardAnalyticsResponse(period, range, reports) {
 
   const termAggregates = {};
   const pageTermCounts = {};
-  dashboardReportRows(reports.terms, 3).forEach(row => {
+  dashboardReportRows(reports.terms, 4).forEach(row => {
     const rawTerm = String(row.dimensions[0] || '').trim();
     const normalizedTerm = normalizeDashboardTerm(rawTerm);
-    const sourcePath = chooseDashboardSourcePath(row.dimensions[1], row.dimensions[2]);
+    const sourcePath = chooseDashboardSearchSourcePath(
+      row.dimensions[1],
+      row.dimensions[2],
+      row.dimensions[3]
+    );
     const count = dashboardCount(row.metrics[0]);
     if (!normalizedTerm || rawTerm === '(not set)' || count < 1) return;
 
@@ -483,7 +505,7 @@ function buildDashboardDailySeries(period, range, pageViewsReport, activityRepor
     }
   });
 
-  dashboardReportRows(activityReport, 4).forEach(row => {
+  dashboardReportRows(activityReport, 5).forEach(row => {
     const isoDate = dashboardGaDateToIso(row.dimensions[0]);
     const eventName = row.dimensions[1];
     const count = dashboardCount(row.metrics[0]);
@@ -560,6 +582,12 @@ function chooseDashboardSourcePath(sourcePage, pagePath) {
   return DASHBOARD_PAGES.some(item => item.path === standardPagePath)
     ? standardPagePath
     : '';
+}
+
+function chooseDashboardSearchSourcePath(sourcePage, pagePath, searchType) {
+  const attributedPath = chooseDashboardSourcePath(sourcePage, pagePath);
+  if (attributedPath) return attributedPath;
+  return DASHBOARD_SEARCH_TYPE_PAGE_PATHS[String(searchType || '').trim()] || '';
 }
 
 function normalizeDashboardTerm(value) {
