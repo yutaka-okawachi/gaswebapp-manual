@@ -108,7 +108,7 @@ function getDashboardAnalytics(period) {
   }
 
   const cache = CacheService.getScriptCache();
-  const cacheKey = 'admin_dashboard_analytics_v4_' + propertyId + '_' + period;
+  const cacheKey = 'admin_dashboard_analytics_v5_' + propertyId + '_' + period;
   const cached = cache.get(cacheKey);
   if (cached) {
     try {
@@ -216,7 +216,8 @@ function runDashboardActivityReport(propertyName, range) {
       { name: 'eventName' },
       { name: 'customEvent:source_page' },
       { name: 'pagePath' },
-      { name: 'customEvent:search_type' }
+      { name: 'customEvent:search_type' },
+      { name: 'customEvent:destination_page' }
     ],
     metrics: [{ name: 'eventCount' }],
     dimensionFilter: dashboardInListFilter('eventName', [
@@ -332,7 +333,7 @@ function buildDashboardAnalyticsResponse(period, range, reports) {
     }
   });
 
-  dashboardReportRows(reports.activity, 5).forEach(row => {
+  dashboardReportRows(reports.activity, 6).forEach(row => {
     const isoDate = dashboardGaDateToIso(row.dimensions[0]);
     const eventName = row.dimensions[1];
     const sourcePath = chooseDashboardSearchSourcePath(
@@ -370,21 +371,23 @@ function buildDashboardAnalyticsResponse(period, range, reports) {
     dictionaryExampleMoveCounts[item.path] = 0;
   });
 
+  dashboardReportRows(reports.activity, 6).forEach(row => {
+    if (row.dimensions[1] !== 'view_example_search_results') return;
+    const destinationPath =
+      normalizeDashboardPagePath(row.dimensions[5]) ||
+      DASHBOARD_SEARCH_TYPE_PAGE_PATHS[String(row.dimensions[4] || '').trim()] ||
+      '';
+    if (Object.prototype.hasOwnProperty.call(dictionaryExampleMoveCounts, destinationPath)) {
+      dictionaryExampleMoveCounts[destinationPath] += dashboardCount(row.metrics[0]);
+    }
+  });
+
   dashboardReportRows(reports.searchMoves, 4).forEach(row => {
     const sourcePath = chooseDashboardSourcePath(row.dimensions[0], row.dimensions[3]);
-    const destinationPath = normalizeDashboardPagePath(row.dimensions[1]);
-    const linkType = String(row.dimensions[2] || '').trim();
     const count = dashboardCount(row.metrics[0]);
 
     if (pageByPath[sourcePath]) {
       pageByPath[sourcePath].searchMoves += count;
-    }
-    if (
-      sourcePath === DASHBOARD_DICTIONARY_PATH &&
-      linkType === 'example_search' &&
-      Object.prototype.hasOwnProperty.call(dictionaryExampleMoveCounts, destinationPath)
-    ) {
-      dictionaryExampleMoveCounts[destinationPath] += count;
     }
   });
 
@@ -505,7 +508,7 @@ function buildDashboardDailySeries(period, range, pageViewsReport, activityRepor
     }
   });
 
-  dashboardReportRows(activityReport, 5).forEach(row => {
+  dashboardReportRows(activityReport, 6).forEach(row => {
     const isoDate = dashboardGaDateToIso(row.dimensions[0]);
     const eventName = row.dimensions[1];
     const count = dashboardCount(row.metrics[0]);

@@ -45,28 +45,32 @@ const activityReport = {
       'view_search_results',
       '/gaswebapp-manual/mahler-search-app/terms_search.html',
       '/gaswebapp-manual/mahler-search-app/terms_search.html',
-      'gm_term'
+      'gm_term',
+      '(not set)'
     ], 3),
     reportRow([
       '20260726',
       'search_no_results',
       '/gaswebapp-manual/mahler-search-app/terms_search.html',
       '/gaswebapp-manual/mahler-search-app/terms_search.html',
-      'gm_term'
+      'gm_term',
+      '(not set)'
     ], 1),
     reportRow([
       '20260726',
       'view_search_results',
       '(not set)',
       '/macros/s/test/exec',
-      'gm_term'
+      'gm_term',
+      '(not set)'
     ], 2),
     reportRow([
       '20260726',
       'view_example_search_results',
       '/gaswebapp-manual/mahler-search-app/dic.html',
       '/gaswebapp-manual/mahler-search-app/dic.html',
-      'gm_term'
+      'gm_term',
+      '/gaswebapp-manual/mahler-search-app/terms_search.html'
     ], 2)
   ]
 };
@@ -78,21 +82,24 @@ const previousActivityReport = {
       'view_search_results',
       '/gaswebapp-manual/mahler-search-app/terms_search.html',
       '/gaswebapp-manual/mahler-search-app/terms_search.html',
-      'gm_term'
+      'gm_term',
+      '(not set)'
     ], 3),
     reportRow([
       '20260719',
       'search_no_results',
       '/gaswebapp-manual/mahler-search-app/terms_search.html',
       '/gaswebapp-manual/mahler-search-app/terms_search.html',
-      'gm_term'
+      'gm_term',
+      '(not set)'
     ], 1),
     reportRow([
       '20260719',
       'view_example_search_results',
       '/gaswebapp-manual/mahler-search-app/dic.html',
       '/gaswebapp-manual/mahler-search-app/dic.html',
-      'gm_term'
+      'gm_term',
+      '/gaswebapp-manual/mahler-search-app/terms_search.html'
     ], 1)
   ]
 };
@@ -261,7 +268,7 @@ const context = {
         }
         if (
           dimensionNames ===
-          'date,eventName,customEvent:source_page,pagePath,customEvent:search_type'
+          'date,eventName,customEvent:source_page,pagePath,customEvent:search_type,customEvent:destination_page'
         ) {
           return isPreviousRange ? previousActivityReport : activityReport;
         }
@@ -371,17 +378,17 @@ assert.deepStrictEqual(
     {
       composer: 'Wagner',
       path: '/gaswebapp-manual/mahler-search-app/rw_terms_search.html',
-      count: 3
+      count: 0
     },
     {
       composer: 'Mahler',
       path: '/gaswebapp-manual/mahler-search-app/terms_search.html',
-      count: 5
+      count: 2
     },
     {
       composer: 'R. Strauss',
       path: '/gaswebapp-manual/mahler-search-app/rs_terms_search.html',
-      count: 2
+      count: 0
     }
   ]
 );

@@ -51,10 +51,11 @@
 
 - `search_page_move` のイベント数を数える。
 - `pages[].searchMoves` はリンクが置かれていた移動元ページへ帰属させる。
-- `dictionaryExampleMoves` は用語集の「実例を見る」で表示された作曲家リンクから、
-  Wagner・Mahler・R. Straussの各「用語から検索」ページへ移動した回数を返す。
-  `source_page` が用語集、かつ `link_type` が `example_search` の
-  `search_page_move` だけを対象とし、通常のメニュー移動は含めない。
+- `dictionaryExampleMoves` は用語集の作曲家リンクから、
+  Wagner・Mahler・R. Straussの各「用語から検索」ページへ移動し、
+  1件以上の検索結果が表示された回数を返す。
+- `view_example_search_results` の `destination_page` ごとに集計し、
+  3作曲家の合計は同期間の `exampleClicks` 合計と一致させる。
 - 移動先ページの閲覧数とは別の指標として扱う。
 
 ## 3. `source_page` の定義
