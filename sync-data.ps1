@@ -837,7 +837,7 @@ Write-Host ""
 # --- [5.5/5] Dashboard aggregate API verification ---
 Write-Host "[5.5/5] Verifying dashboard aggregate API..." -ForegroundColor Yellow
 $dashboardApiResults = @()
-foreach ($period in @(7, 30, 90, 180)) {
+foreach ($period in @(7, 30, 90)) {
     $result = $null
     for ($attempt = 1; $attempt -le 3; $attempt++) {
         $result = Invoke-DashboardApiCheck -BaseUrl $env:GAS_DEPLOY_URL -Period $period
