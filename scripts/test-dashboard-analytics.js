@@ -525,6 +525,27 @@ assert.deepStrictEqual(
   JSON.parse(JSON.stringify(searchMethodResult.searchSummary)),
   { withResults: 4, noResults: 2, successRate: 66.7 }
 );
+assert.strictEqual(
+  context.chooseDashboardSearchMethodKey(
+    '/gaswebapp-manual/mahler-search-app/rs_terms_search.html',
+    '(not set)'
+  ),
+  'term'
+);
+assert.strictEqual(
+  context.chooseDashboardSearchMethodKey(
+    '/gaswebapp-manual/mahler-search-app/mahler.html',
+    '(not set)'
+  ),
+  'mahler_work'
+);
+assert.strictEqual(
+  context.chooseDashboardSearchMethodKey(
+    '/gaswebapp-manual/mahler-search-app/richard_wagner.html',
+    '(not set)'
+  ),
+  'opera_work'
+);
 
 const cachedResult = context.getDashboardAnalytics(7);
 assert.strictEqual(analyticsCallCount, 7);

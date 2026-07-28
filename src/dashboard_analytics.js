@@ -138,7 +138,7 @@ function getDashboardAnalytics(period) {
   }
 
   const cache = CacheService.getScriptCache();
-  const cacheKey = 'admin_dashboard_analytics_v10_' + propertyId + '_' + period;
+  const cacheKey = 'admin_dashboard_analytics_v11_' + propertyId + '_' + period;
   const cachedResult = readDashboardCachedResult(cache, cacheKey);
   if (cachedResult) return cachedResult;
 
@@ -594,10 +594,7 @@ function buildDashboardSearchMethods(activityReport) {
     );
     if (!sourcePath) return;
     const searchType = String(row.dimensions[4] || '').trim();
-    const method = DASHBOARD_SEARCH_METHODS.find(item =>
-      item.searchTypes.indexOf(searchType) >= 0
-    );
-    const methodKey = method ? method.key : 'unclassified';
+    const methodKey = chooseDashboardSearchMethodKey(sourcePath, searchType);
     counts[methodKey] += dashboardCount(row.metrics[0]);
   });
 
@@ -606,6 +603,31 @@ function buildDashboardSearchMethods(activityReport) {
     label: method.label,
     count: counts[method.key]
   }));
+}
+
+function chooseDashboardSearchMethodKey(sourcePath, searchType) {
+  const normalizedPath = normalizeDashboardPagePath(sourcePath);
+  if ([
+    DASHBOARD_SEARCH_TYPE_PAGE_PATHS.gm_term,
+    DASHBOARD_SEARCH_TYPE_PAGE_PATHS.rs_term,
+    DASHBOARD_SEARCH_TYPE_PAGE_PATHS.rw_term
+  ].indexOf(normalizedPath) >= 0) {
+    return 'term';
+  }
+  if (normalizedPath === DASHBOARD_SEARCH_TYPE_PAGE_PATHS.gm_work) {
+    return 'mahler_work';
+  }
+  if ([
+    DASHBOARD_SEARCH_TYPE_PAGE_PATHS.rs_work_scene,
+    DASHBOARD_SEARCH_TYPE_PAGE_PATHS.rw_work_scene
+  ].indexOf(normalizedPath) >= 0) {
+    return 'opera_work';
+  }
+
+  const method = DASHBOARD_SEARCH_METHODS.find(item =>
+    item.searchTypes.indexOf(String(searchType || '').trim()) >= 0
+  );
+  return method ? method.key : 'unclassified';
 }
 
 function buildDashboardDailySeries(period, range, pageViewsReport, activityReport) {
