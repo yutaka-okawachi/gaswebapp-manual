@@ -42,6 +42,23 @@ function Test-DashboardNonNegativeInteger {
     )
 }
 
+function Test-DashboardRate {
+    param($Value)
+
+    try {
+        $number = [double]$Value
+    } catch {
+        return $false
+    }
+
+    return (
+        -not [double]::IsNaN($number) -and
+        -not [double]::IsInfinity($number) -and
+        $number -ge 0 -and
+        $number -le 100
+    )
+}
+
 function Test-DashboardApiPayload {
     param(
         [string]$Payload,
@@ -63,14 +80,26 @@ function Test-DashboardApiPayload {
         return New-DashboardApiCheckResult -Success $false -Period $ExpectedPeriod -Message "API error: $errorCode"
     }
 
-    $requiredTopLevel = @("schemaVersion", "period", "updatedAt", "range", "daily", "pages", "terms")
+    $requiredTopLevel = @(
+        "schemaVersion",
+        "period",
+        "updatedAt",
+        "range",
+        "daily",
+        "previous",
+        "searchSummary",
+        "searchMethods",
+        "pages",
+        "dictionaryExampleMoves",
+        "terms"
+    )
     foreach ($key in $requiredTopLevel) {
         if (-not (Test-DashboardHasProperty -Object $data -Name $key)) {
             return New-DashboardApiCheckResult -Success $false -Period $ExpectedPeriod -Message "Missing top-level key: $key"
         }
     }
 
-    if ([int]$data.schemaVersion -ne 1) {
+    if ([int]$data.schemaVersion -ne 2) {
         return New-DashboardApiCheckResult -Success $false -Period $ExpectedPeriod -Message "Unexpected schemaVersion"
     }
     if ([int]$data.period -ne $ExpectedPeriod) {
@@ -87,13 +116,25 @@ function Test-DashboardApiPayload {
     }
 
     $daily = @($data.daily)
+    $previousDaily = @($data.previous.daily)
+    $searchMethods = @($data.searchMethods)
     $pages = @($data.pages)
+    $dictionaryExampleMoves = @($data.dictionaryExampleMoves)
     $terms = @($data.terms)
     if ($daily.Count -ne $ExpectedPeriod) {
         return New-DashboardApiCheckResult -Success $false -Period $ExpectedPeriod -Message "daily length mismatch"
     }
     if ($pages.Count -ne 12) {
         return New-DashboardApiCheckResult -Success $false -Period $ExpectedPeriod -Message "pages length mismatch"
+    }
+    if ($previousDaily.Count -ne $ExpectedPeriod) {
+        return New-DashboardApiCheckResult -Success $false -Period $ExpectedPeriod -Message "previous daily length mismatch"
+    }
+    if ($searchMethods.Count -ne 3) {
+        return New-DashboardApiCheckResult -Success $false -Period $ExpectedPeriod -Message "searchMethods length mismatch"
+    }
+    if ($dictionaryExampleMoves.Count -ne 3) {
+        return New-DashboardApiCheckResult -Success $false -Period $ExpectedPeriod -Message "dictionaryExampleMoves length mismatch"
     }
 
     foreach ($day in $daily) {
@@ -106,6 +147,33 @@ function Test-DashboardApiPayload {
             if (-not (Test-DashboardNonNegativeInteger -Value $day.$key)) {
                 return New-DashboardApiCheckResult -Success $false -Period $ExpectedPeriod -Message "Invalid daily count"
             }
+        }
+    }
+
+    foreach ($summary in @($data.searchSummary, $data.previous.searchSummary)) {
+        foreach ($key in @("withResults", "noResults", "successRate")) {
+            if (-not (Test-DashboardHasProperty -Object $summary -Name $key)) {
+                return New-DashboardApiCheckResult -Success $false -Period $ExpectedPeriod -Message "Invalid search summary"
+            }
+        }
+        foreach ($key in @("withResults", "noResults")) {
+            if (-not (Test-DashboardNonNegativeInteger -Value $summary.$key)) {
+                return New-DashboardApiCheckResult -Success $false -Period $ExpectedPeriod -Message "Invalid search summary count"
+            }
+        }
+        if (-not (Test-DashboardRate -Value $summary.successRate)) {
+            return New-DashboardApiCheckResult -Success $false -Period $ExpectedPeriod -Message "Invalid search success rate"
+        }
+    }
+
+    foreach ($method in $searchMethods) {
+        foreach ($key in @("key", "label", "count")) {
+            if (-not (Test-DashboardHasProperty -Object $method -Name $key)) {
+                return New-DashboardApiCheckResult -Success $false -Period $ExpectedPeriod -Message "Invalid search method"
+            }
+        }
+        if (-not (Test-DashboardNonNegativeInteger -Value $method.count)) {
+            return New-DashboardApiCheckResult -Success $false -Period $ExpectedPeriod -Message "Invalid search method count"
         }
     }
 

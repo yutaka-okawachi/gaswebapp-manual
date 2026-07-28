@@ -13,7 +13,7 @@ function Assert-True {
     }
 }
 
-foreach ($period in @(7, 30, 90, 180)) {
+foreach ($period in @(7, 30, 90)) {
     $daily = @()
     for ($i = 0; $i -lt $period; $i++) {
         $daily += @{
@@ -38,7 +38,7 @@ foreach ($period in @(7, 30, 90, 180)) {
     }
 
     $payload = @{
-        schemaVersion = 1
+        schemaVersion = 2
         period = $period
         updatedAt = "2026年7月26日 14:05"
         range = @{
@@ -46,7 +46,34 @@ foreach ($period in @(7, 30, 90, 180)) {
             endDate = "2026-07-26"
         }
         daily = $daily
+        previous = @{
+            range = @{
+                startDate = "2026-07-13"
+                endDate = "2026-07-19"
+            }
+            daily = $daily
+            searchSummary = @{
+                withResults = 0
+                noResults = 0
+                successRate = 0
+            }
+        }
+        searchSummary = @{
+            withResults = 1
+            noResults = 0
+            successRate = 100
+        }
+        searchMethods = @(
+            @{ key = "term"; label = "Term search"; count = 1 },
+            @{ key = "mahler_work"; label = "Mahler work search"; count = 0 },
+            @{ key = "opera_work"; label = "Opera work search"; count = 0 }
+        )
         pages = $pages
+        dictionaryExampleMoves = @(
+            @{ composer = "Wagner"; path = "/rw_terms_search.html"; count = 0 },
+            @{ composer = "Mahler"; path = "/terms_search.html"; count = 0 },
+            @{ composer = "R. Strauss"; path = "/rs_terms_search.html"; count = 0 }
+        )
         terms = @(
             @{
                 term = "innig"
