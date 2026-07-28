@@ -6,7 +6,7 @@
  * read or returned here.
  */
 
-const DASHBOARD_SCHEMA_VERSION = 1;
+const DASHBOARD_SCHEMA_VERSION = 2;
 const DASHBOARD_TIME_ZONE = 'Asia/Tokyo';
 const DASHBOARD_ALLOWED_PERIODS = Object.freeze([7, 30, 90]);
 const DASHBOARD_CACHE_SECONDS = 900;
@@ -20,6 +20,30 @@ const DASHBOARD_TERM_SEARCH_TYPES = Object.freeze([
   'gm_term',
   'rs_term',
   'rw_term'
+]);
+const DASHBOARD_SEARCH_METHODS = Object.freeze([
+  {
+    key: 'term',
+    label: '用語から検索',
+    searchTypes: ['gm_term', 'rs_term', 'rw_term']
+  },
+  {
+    key: 'mahler_work',
+    label: '曲名・楽器等から検索（Mahler）',
+    searchTypes: ['gm_work']
+  },
+  {
+    key: 'opera_work',
+    label: '曲名・場面等から検索（Wagner / R. Strauss）',
+    searchTypes: [
+      'rs_work_scene',
+      'rs_work_page',
+      'rs_work_whom',
+      'rw_work_scene',
+      'rw_work_page',
+      'rw_work_whom'
+    ]
+  }
 ]);
 const DASHBOARD_DICTIONARY_EXAMPLE_DESTINATIONS = Object.freeze([
   {
@@ -109,7 +133,7 @@ function getDashboardAnalytics(period) {
   }
 
   const cache = CacheService.getScriptCache();
-  const cacheKey = 'admin_dashboard_analytics_v8_' + propertyId + '_' + period;
+  const cacheKey = 'admin_dashboard_analytics_v9_' + propertyId + '_' + period;
   const cachedResult = readDashboardCachedResult(cache, cacheKey);
   if (cachedResult) return cachedResult;
 
@@ -387,6 +411,11 @@ function buildDashboardAnalyticsResponse(period, range, reports) {
     reports.previousPageViews,
     reports.previousActivity
   );
+  const searchSummary = buildDashboardSearchSummary(reports.activity);
+  const previousSearchSummary = buildDashboardSearchSummary(
+    reports.previousActivity
+  );
+  const searchMethods = buildDashboardSearchMethods(reports.activity);
 
   const dictionaryExampleMoveCounts = {};
   DASHBOARD_DICTIONARY_EXAMPLE_DESTINATIONS.forEach(item => {
@@ -499,8 +528,11 @@ function buildDashboardAnalyticsResponse(period, range, reports) {
           ? reports.previousRange.endDate
           : createDashboardPreviousDateRange(range, period).endDate
       },
-      daily: previousDaily
+      daily: previousDaily,
+      searchSummary: previousSearchSummary
     },
+    searchSummary: searchSummary,
+    searchMethods: searchMethods,
     pages: DASHBOARD_PAGES.map(item => pageByPath[item.path]),
     dictionaryExampleMoves: DASHBOARD_DICTIONARY_EXAMPLE_DESTINATIONS.map(item => ({
       composer: item.composer,
@@ -509,6 +541,65 @@ function buildDashboardAnalyticsResponse(period, range, reports) {
     })),
     terms: terms
   };
+}
+
+function buildDashboardSearchSummary(activityReport) {
+  const summary = {
+    withResults: 0,
+    noResults: 0,
+    successRate: 0
+  };
+
+  dashboardReportRows(activityReport, 6).forEach(row => {
+    const eventName = row.dimensions[1];
+    if (DASHBOARD_SEARCH_EVENTS.indexOf(eventName) < 0) return;
+    const sourcePath = chooseDashboardSearchSourcePath(
+      row.dimensions[2],
+      row.dimensions[3],
+      row.dimensions[4]
+    );
+    if (!sourcePath) return;
+    const count = dashboardCount(row.metrics[0]);
+    if (eventName === 'view_search_results') {
+      summary.withResults += count;
+    } else {
+      summary.noResults += count;
+    }
+  });
+
+  const total = summary.withResults + summary.noResults;
+  summary.successRate = total > 0
+    ? Math.round((summary.withResults / total) * 1000) / 10
+    : 0;
+  return summary;
+}
+
+function buildDashboardSearchMethods(activityReport) {
+  const counts = {};
+  DASHBOARD_SEARCH_METHODS.forEach(method => {
+    counts[method.key] = 0;
+  });
+
+  dashboardReportRows(activityReport, 6).forEach(row => {
+    if (DASHBOARD_SEARCH_EVENTS.indexOf(row.dimensions[1]) < 0) return;
+    const sourcePath = chooseDashboardSearchSourcePath(
+      row.dimensions[2],
+      row.dimensions[3],
+      row.dimensions[4]
+    );
+    if (!sourcePath) return;
+    const searchType = String(row.dimensions[4] || '').trim();
+    const method = DASHBOARD_SEARCH_METHODS.find(item =>
+      item.searchTypes.indexOf(searchType) >= 0
+    );
+    if (method) counts[method.key] += dashboardCount(row.metrics[0]);
+  });
+
+  return DASHBOARD_SEARCH_METHODS.map(method => ({
+    key: method.key,
+    label: method.label,
+    count: counts[method.key]
+  }));
 }
 
 function buildDashboardDailySeries(period, range, pageViewsReport, activityReport) {

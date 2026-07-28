@@ -350,7 +350,7 @@ const result = context.getDashboardAnalytics(7);
 assert.strictEqual(analyticsCallCount, 7);
 assert.strictEqual(lockAcquireCount, 1);
 assert.strictEqual(lockReleaseCount, 1);
-assert.strictEqual(result.schemaVersion, 1);
+assert.strictEqual(result.schemaVersion, 2);
 assert.strictEqual(result.period, 7);
 assert.deepStrictEqual(
   JSON.parse(JSON.stringify(result.range)),
@@ -359,6 +359,30 @@ assert.deepStrictEqual(
 assert.deepStrictEqual(
   JSON.parse(JSON.stringify(result.previous.range)),
   { startDate: '2026-07-13', endDate: '2026-07-19' }
+);
+assert.deepStrictEqual(
+  JSON.parse(JSON.stringify(result.searchSummary)),
+  { withResults: 5, noResults: 1, successRate: 83.3 }
+);
+assert.deepStrictEqual(
+  JSON.parse(JSON.stringify(result.previous.searchSummary)),
+  { withResults: 3, noResults: 1, successRate: 75 }
+);
+assert.deepStrictEqual(
+  JSON.parse(JSON.stringify(result.searchMethods)),
+  [
+    { key: 'term', label: '用語から検索', count: 6 },
+    {
+      key: 'mahler_work',
+      label: '曲名・楽器等から検索（Mahler）',
+      count: 0
+    },
+    {
+      key: 'opera_work',
+      label: '曲名・場面等から検索（Wagner / R. Strauss）',
+      count: 0
+    }
+  ]
 );
 assert.strictEqual(result.daily.length, 7);
 assert.strictEqual(result.previous.daily.length, 7);
@@ -438,6 +462,59 @@ assert.strictEqual(limitedTermsResult.terms[0].term, 'term-55');
 assert.strictEqual(limitedTermsResult.terms[0].searches, 55);
 assert.strictEqual(limitedTermsResult.terms[49].term, 'term-06');
 assert.strictEqual(limitedTermsResult.terms[49].searches, 6);
+
+const searchMethodResult = context.buildDashboardAnalyticsResponse(
+  7,
+  context.createDashboardDateRange(7),
+  {
+    pageViews: {},
+    activity: {
+      rows: [
+        reportRow([
+          '20260726',
+          'view_search_results',
+          '/gaswebapp-manual/mahler-search-app/mahler.html',
+          '/gaswebapp-manual/mahler-search-app/mahler.html',
+          'gm_work',
+          '(not set)'
+        ], 4),
+        reportRow([
+          '20260726',
+          'search_no_results',
+          '/gaswebapp-manual/mahler-search-app/richard_wagner.html',
+          '/gaswebapp-manual/mahler-search-app/richard_wagner.html',
+          'rw_work_scene',
+          '(not set)'
+        ], 2)
+      ]
+    },
+    searchMoves: {},
+    terms: {},
+    previousRange: { startDate: '2026-07-13', endDate: '2026-07-19' },
+    previousPageViews: {},
+    previousActivity: {}
+  }
+);
+assert.deepStrictEqual(
+  JSON.parse(JSON.stringify(searchMethodResult.searchMethods)),
+  [
+    { key: 'term', label: '用語から検索', count: 0 },
+    {
+      key: 'mahler_work',
+      label: '曲名・楽器等から検索（Mahler）',
+      count: 4
+    },
+    {
+      key: 'opera_work',
+      label: '曲名・場面等から検索（Wagner / R. Strauss）',
+      count: 2
+    }
+  ]
+);
+assert.deepStrictEqual(
+  JSON.parse(JSON.stringify(searchMethodResult.searchSummary)),
+  { withResults: 4, noResults: 2, successRate: 66.7 }
+);
 
 const cachedResult = context.getDashboardAnalytics(7);
 assert.strictEqual(analyticsCallCount, 7);
