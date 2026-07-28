@@ -130,7 +130,7 @@ function Test-DashboardApiPayload {
     if ($previousDaily.Count -ne $ExpectedPeriod) {
         return New-DashboardApiCheckResult -Success $false -Period $ExpectedPeriod -Message "previous daily length mismatch"
     }
-    if ($searchMethods.Count -ne 3) {
+    if ($searchMethods.Count -ne 4) {
         return New-DashboardApiCheckResult -Success $false -Period $ExpectedPeriod -Message "searchMethods length mismatch"
     }
     if ($dictionaryExampleMoves.Count -ne 3) {

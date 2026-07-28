@@ -381,6 +381,11 @@ assert.deepStrictEqual(
       key: 'opera_work',
       label: '曲名・場面等から検索（Wagner / R. Strauss）',
       count: 0
+    },
+    {
+      key: 'unclassified',
+      label: '分類情報なし（過去データ等）',
+      count: 0
     }
   ]
 );
@@ -508,6 +513,11 @@ assert.deepStrictEqual(
       key: 'opera_work',
       label: '曲名・場面等から検索（Wagner / R. Strauss）',
       count: 2
+    },
+    {
+      key: 'unclassified',
+      label: '分類情報なし（過去データ等）',
+      count: 0
     }
   ]
 );

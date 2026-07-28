@@ -66,7 +66,8 @@ foreach ($period in @(7, 30, 90)) {
         searchMethods = @(
             @{ key = "term"; label = "Term search"; count = 1 },
             @{ key = "mahler_work"; label = "Mahler work search"; count = 0 },
-            @{ key = "opera_work"; label = "Opera work search"; count = 0 }
+            @{ key = "opera_work"; label = "Opera work search"; count = 0 },
+            @{ key = "unclassified"; label = "Unclassified"; count = 0 }
         )
         pages = $pages
         dictionaryExampleMoves = @(

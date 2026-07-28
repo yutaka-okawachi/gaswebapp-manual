@@ -43,6 +43,11 @@ const DASHBOARD_SEARCH_METHODS = Object.freeze([
       'rw_work_page',
       'rw_work_whom'
     ]
+  },
+  {
+    key: 'unclassified',
+    label: '分類情報なし（過去データ等）',
+    searchTypes: []
   }
 ]);
 const DASHBOARD_DICTIONARY_EXAMPLE_DESTINATIONS = Object.freeze([
@@ -592,7 +597,8 @@ function buildDashboardSearchMethods(activityReport) {
     const method = DASHBOARD_SEARCH_METHODS.find(item =>
       item.searchTypes.indexOf(searchType) >= 0
     );
-    if (method) counts[method.key] += dashboardCount(row.metrics[0]);
+    const methodKey = method ? method.key : 'unclassified';
+    counts[methodKey] += dashboardCount(row.metrics[0]);
   });
 
   return DASHBOARD_SEARCH_METHODS.map(method => ({
