@@ -12,6 +12,8 @@ const commonScriptsPath = path.join(repositoryRoot, 'src', 'common_scripts.html'
 const dictionaryGeneratorPath = path.join(repositoryRoot, 'src', 'generate_dic_html.js');
 
 let analyticsCallCount = 0;
+let lockAcquireCount = 0;
+let lockReleaseCount = 0;
 const cacheValues = new Map();
 const scriptProperties = {
   GA4_PROPERTY_ID: '471296729',
@@ -209,6 +211,20 @@ const context = {
       };
     }
   },
+  LockService: {
+    getScriptLock() {
+      return {
+        tryLock(waitMilliseconds) {
+          assert.strictEqual(waitMilliseconds, 30000);
+          lockAcquireCount += 1;
+          return true;
+        },
+        releaseLock() {
+          lockReleaseCount += 1;
+        }
+      };
+    }
+  },
   SpreadsheetApp: {
     openById(id) {
       assert.strictEqual(id, 'spreadsheet-test-id');
@@ -308,7 +324,8 @@ vm.runInContext(fs.readFileSync(sourcePath, 'utf8'), context, {
 });
 
 assert.strictEqual(context.parseDashboardPeriod('7'), 7);
-assert.strictEqual(context.parseDashboardPeriod(180), 180);
+assert.strictEqual(context.parseDashboardPeriod(90), 90);
+assert.strictEqual(context.parseDashboardPeriod(180), null);
 assert.strictEqual(context.parseDashboardPeriod('14'), null);
 assert.strictEqual(context.parseDashboardPeriod('7days'), null);
 assert.strictEqual(
@@ -323,7 +340,7 @@ assert.deepStrictEqual(
   {
     error: {
       code: 'INVALID_PERIOD',
-      message: 'period must be one of 7, 30, 90, 180'
+      message: 'period must be one of 7, 30, 90'
     }
   }
 );
@@ -331,6 +348,8 @@ assert.strictEqual(analyticsCallCount, 1);
 
 const result = context.getDashboardAnalytics(7);
 assert.strictEqual(analyticsCallCount, 7);
+assert.strictEqual(lockAcquireCount, 1);
+assert.strictEqual(lockReleaseCount, 1);
 assert.strictEqual(result.schemaVersion, 1);
 assert.strictEqual(result.period, 7);
 assert.deepStrictEqual(
@@ -422,6 +441,8 @@ assert.strictEqual(limitedTermsResult.terms[49].searches, 6);
 
 const cachedResult = context.getDashboardAnalytics(7);
 assert.strictEqual(analyticsCallCount, 7);
+assert.strictEqual(lockAcquireCount, 1);
+assert.strictEqual(lockReleaseCount, 1);
 assert.deepStrictEqual(
   JSON.parse(JSON.stringify(cachedResult)),
   JSON.parse(JSON.stringify(result))
@@ -430,8 +451,7 @@ assert.deepStrictEqual(
 [
   { period: 7, startDate: '2026-07-20' },
   { period: 30, startDate: '2026-06-27' },
-  { period: 90, startDate: '2026-04-28' },
-  { period: 180, startDate: '2026-01-28' }
+  { period: 90, startDate: '2026-04-28' }
 ].forEach(testCase => {
   const range = context.createDashboardDateRange(testCase.period);
   const previousRange = context.createDashboardPreviousDateRange(

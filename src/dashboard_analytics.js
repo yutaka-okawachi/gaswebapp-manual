@@ -8,8 +8,9 @@
 
 const DASHBOARD_SCHEMA_VERSION = 1;
 const DASHBOARD_TIME_ZONE = 'Asia/Tokyo';
-const DASHBOARD_ALLOWED_PERIODS = Object.freeze([7, 30, 90, 180]);
-const DASHBOARD_CACHE_SECONDS = 300;
+const DASHBOARD_ALLOWED_PERIODS = Object.freeze([7, 30, 90]);
+const DASHBOARD_CACHE_SECONDS = 900;
+const DASHBOARD_LOCK_WAIT_MILLISECONDS = 30000;
 const DASHBOARD_TERM_LIMIT = 50;
 const DASHBOARD_SEARCH_EVENTS = Object.freeze([
   'view_search_results',
@@ -75,7 +76,7 @@ function handleDashboardAnalyticsRequest(params) {
     return createJsonResponse({
       error: {
         code: 'INVALID_PERIOD',
-        message: 'period must be one of 7, 30, 90, 180'
+        message: 'period must be one of 7, 30, 90'
       }
     });
   }
@@ -108,36 +109,57 @@ function getDashboardAnalytics(period) {
   }
 
   const cache = CacheService.getScriptCache();
-  const cacheKey = 'admin_dashboard_analytics_v7_' + propertyId + '_' + period;
-  const cached = cache.get(cacheKey);
-  if (cached) {
-    try {
-      return JSON.parse(cached);
-    } catch (error) {
-      cache.remove(cacheKey);
-    }
-  }
+  const cacheKey = 'admin_dashboard_analytics_v8_' + propertyId + '_' + period;
+  const cachedResult = readDashboardCachedResult(cache, cacheKey);
+  if (cachedResult) return cachedResult;
 
-  const range = createDashboardDateRange(period);
-  const previousRange = createDashboardPreviousDateRange(range, period);
-  const propertyName = 'properties/' + propertyId;
-  const reports = {
-    pageViews: runDashboardPageViewsReport(propertyName, range),
-    activity: runDashboardActivityReport(propertyName, range),
-    searchMoves: runDashboardSearchMovesReport(propertyName, range),
-    terms: runDashboardTermsReport(propertyName, range),
-    previousRange: previousRange,
-    previousPageViews: runDashboardPageViewsReport(propertyName, previousRange),
-    previousActivity: runDashboardActivityReport(propertyName, previousRange)
-  };
-  const result = buildDashboardAnalyticsResponse(period, range, reports);
-
+  const lock = typeof LockService !== 'undefined'
+    ? LockService.getScriptLock()
+    : null;
+  let lockAcquired = false;
   try {
-    cache.put(cacheKey, JSON.stringify(result), DASHBOARD_CACHE_SECONDS);
-  } catch (error) {
-    Logger.log('Dashboard cache write skipped: ' + String(error));
+    if (lock) {
+      lockAcquired = lock.tryLock(DASHBOARD_LOCK_WAIT_MILLISECONDS);
+      if (lockAcquired) {
+        const resultAfterWait = readDashboardCachedResult(cache, cacheKey);
+        if (resultAfterWait) return resultAfterWait;
+      }
+    }
+
+    const range = createDashboardDateRange(period);
+    const previousRange = createDashboardPreviousDateRange(range, period);
+    const propertyName = 'properties/' + propertyId;
+    const reports = {
+      pageViews: runDashboardPageViewsReport(propertyName, range),
+      activity: runDashboardActivityReport(propertyName, range),
+      searchMoves: runDashboardSearchMovesReport(propertyName, range),
+      terms: runDashboardTermsReport(propertyName, range),
+      previousRange: previousRange,
+      previousPageViews: runDashboardPageViewsReport(propertyName, previousRange),
+      previousActivity: runDashboardActivityReport(propertyName, previousRange)
+    };
+    const result = buildDashboardAnalyticsResponse(period, range, reports);
+
+    try {
+      cache.put(cacheKey, JSON.stringify(result), DASHBOARD_CACHE_SECONDS);
+    } catch (error) {
+      Logger.log('Dashboard cache write skipped: ' + String(error));
+    }
+    return result;
+  } finally {
+    if (lock && lockAcquired) lock.releaseLock();
   }
-  return result;
+}
+
+function readDashboardCachedResult(cache, cacheKey) {
+  const cached = cache.get(cacheKey);
+  if (!cached) return null;
+  try {
+    return JSON.parse(cached);
+  } catch (error) {
+    cache.remove(cacheKey);
+    return null;
+  }
 }
 
 /**
