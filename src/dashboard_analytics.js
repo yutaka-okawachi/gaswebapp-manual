@@ -138,7 +138,7 @@ function getDashboardAnalytics(period) {
   }
 
   const cache = CacheService.getScriptCache();
-  const cacheKey = 'admin_dashboard_analytics_v11_' + propertyId + '_' + period;
+  const cacheKey = 'admin_dashboard_analytics_v12_' + propertyId + '_' + period;
   const cachedResult = readDashboardCachedResult(cache, cacheKey);
   if (cachedResult) return cachedResult;
 
@@ -378,8 +378,10 @@ function buildDashboardAnalyticsResponse(period, range, reports) {
     const isoDate = dashboardGaDateToIso(row.dimensions[0]);
     const path = normalizeDashboardPagePath(row.dimensions[1]);
     const count = dashboardCount(row.metrics[0]);
-    if (pageByPath[path]) pageByPath[path].views += count;
-    if (path === DASHBOARD_DICTIONARY_PATH && dailyByIso[isoDate]) {
+    if (pageByPath[path]) {
+      pageByPath[path].views += count;
+    }
+    if (pageByPath[path] && dailyByIso[isoDate]) {
       dailyByIso[isoDate].views += count;
     }
   });
@@ -644,7 +646,7 @@ function buildDashboardDailySeries(period, range, pageViewsReport, activityRepor
   dashboardReportRows(pageViewsReport, 2).forEach(row => {
     const isoDate = dashboardGaDateToIso(row.dimensions[0]);
     const path = normalizeDashboardPagePath(row.dimensions[1]);
-    if (path === DASHBOARD_DICTIONARY_PATH && dailyByIso[isoDate]) {
+    if (DASHBOARD_PAGES.some(item => item.path === path) && dailyByIso[isoDate]) {
       dailyByIso[isoDate].views += dashboardCount(row.metrics[0]);
     }
   });

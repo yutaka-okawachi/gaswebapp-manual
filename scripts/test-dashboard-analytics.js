@@ -36,7 +36,8 @@ const pageViewsReport = {
 
 const previousPageViewsReport = {
   rows: [
-    reportRow(['20260719', '/gaswebapp-manual/mahler-search-app/dic.html'], 8)
+    reportRow(['20260719', '/gaswebapp-manual/mahler-search-app/dic.html'], 8),
+    reportRow(['20260719', '/gaswebapp-manual/'], 4)
   ]
 };
 
@@ -397,7 +398,11 @@ assert.deepStrictEqual(
 );
 assert.deepStrictEqual(
   JSON.parse(JSON.stringify(result.previous.daily[result.previous.daily.length - 1])),
-  { date: '7/19', searches: 4, views: 8, exampleClicks: 1 }
+  { date: '7/19', searches: 4, views: 12, exampleClicks: 1 }
+);
+assert.strictEqual(
+  result.daily.reduce((sum, day) => sum + day.views, 0),
+  15
 );
 
 const home = result.pages.find(page => page.page === 'HOME');
