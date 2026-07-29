@@ -10,6 +10,12 @@ const getRouterPath = path.join(repositoryRoot, 'src', 'mahler_server.js');
 const postRouterPath = path.join(repositoryRoot, 'src', 'web_trigger.js');
 const commonScriptsPath = path.join(repositoryRoot, 'src', 'common_scripts.html');
 const dictionaryGeneratorPath = path.join(repositoryRoot, 'src', 'generate_dic_html.js');
+const publicAppScriptPath = path.join(repositoryRoot, 'mahler-search-app', 'js', 'app.js');
+const publicTermSearchPages = [
+  'terms_search.html',
+  'rs_terms_search.html',
+  'rw_terms_search.html'
+].map(fileName => path.join(repositoryRoot, 'mahler-search-app', fileName));
 
 let analyticsCallCount = 0;
 let lockAcquireCount = 0;
@@ -648,6 +654,7 @@ const getRouterSource = fs.readFileSync(getRouterPath, 'utf8');
 const postRouterSource = fs.readFileSync(postRouterPath, 'utf8');
 const commonScriptsSource = fs.readFileSync(commonScriptsPath, 'utf8');
 const dictionaryGeneratorSource = fs.readFileSync(dictionaryGeneratorPath, 'utf8');
+const publicAppScriptSource = fs.readFileSync(publicAppScriptPath, 'utf8');
 assert.ok(getRouterSource.includes("e.parameter.api === 'dashboard'"));
 assert.ok(postRouterSource.includes("data.api === 'dashboard'"));
 assert.ok(dictionaryGeneratorSource.includes('&source=dictionary_example'));
@@ -655,6 +662,12 @@ assert.strictEqual(dictionaryGeneratorSource.includes("'click_view_example'"), f
 assert.ok(commonScriptsSource.includes("resultCount > 0"));
 assert.ok(commonScriptsSource.includes("urlParams.get('source') === 'dictionary_example'"));
 assert.ok(commonScriptsSource.includes("'view_example_search_results'"));
+assert.ok(publicAppScriptSource.includes("resultCount > 0"));
+assert.ok(publicAppScriptSource.includes("urlParams.get('source') === 'dictionary_example'"));
+assert.ok(publicAppScriptSource.includes("'view_example_search_results'"));
+publicTermSearchPages.forEach(pagePath => {
+  assert.ok(fs.readFileSync(pagePath, 'utf8').includes('js/app.js?v=11'));
+});
 assert.strictEqual(
   fs.readFileSync(sourcePath, 'utf8').includes("'click_view_example'"),
   false
