@@ -898,9 +898,12 @@ Write-Host ""
 
 # --- [Check for Deployment Warning] ---
 if (Test-Path ".deploy_warning") {
-    $count = Get-Content ".deploy_warning"
-    Write-Host "[WARNING] WARNING: Deployment count is high ($count/200)." -ForegroundColor Yellow -BackgroundColor Black
-    Write-Host "If it hits 200, updates may fail. Please clean up deployments using 'clasp undeploy --all' or via the web console." -ForegroundColor Yellow -BackgroundColor Black
+    $count = [int](Get-Content ".deploy_warning")
+    $remaining = [Math]::Max(0, 200 - $count)
+    $warningColor = if ($count -ge 195) { "Red" } else { "Yellow" }
+    $warningLabel = if ($count -ge 195) { "CRITICAL" } else { "WARNING" }
+    Write-Host "[$warningLabel] Apps Script version count is high ($count/200; $remaining remaining)." -ForegroundColor $warningColor -BackgroundColor Black
+    Write-Host "Please organize unused versions or deployments in the Apps Script management screen before the limit is reached." -ForegroundColor $warningColor -BackgroundColor Black
     Remove-Item ".deploy_warning" -ErrorAction SilentlyContinue
     Write-Host ""
 }

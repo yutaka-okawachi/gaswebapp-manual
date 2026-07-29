@@ -13,6 +13,8 @@ const path = require('path');
 const ENV_PATH = path.join(__dirname, '../.env');
 const WARNING_PATH = path.join(__dirname, '../.deploy_warning');
 const DEPLOYMENT_VERIFY_DELAYS_MS = [0, 2000, 5000, 10000];
+const VERSION_WARNING_THRESHOLD = 180;
+const VERSION_LIMIT = 200;
 
 function getDeploymentIdFromEnv(envContent) {
     const match = envContent.match(
@@ -35,6 +37,32 @@ function parseDeployments(output) {
 function parseCreatedVersion(output) {
     const match = String(output || '').match(/Created version\s+([0-9][0-9,]*)/i);
     return match ? Number.parseInt(match[1].replace(/,/g, ''), 10) : null;
+}
+
+function parseVersionCount(output) {
+    const text = String(output || '');
+    const summaryMatch = text.match(/Found\s+([0-9][0-9,]*)\s+versions?\./i);
+    if (summaryMatch) {
+        return Number.parseInt(summaryMatch[1].replace(/,/g, ''), 10);
+    }
+
+    const versionLines = text
+        .split(/\r?\n/)
+        .filter(line => /^\s*[0-9][0-9,]*\s+-\s+/.test(line));
+    return versionLines.length > 0 ? versionLines.length : null;
+}
+
+function getVersionCapacityState(versionCount) {
+    if (!Number.isInteger(versionCount) || versionCount < 0) {
+        throw new Error('Invalid Apps Script version count.');
+    }
+
+    const projectedVersionCount = versionCount + 1;
+    return {
+        limitReached: versionCount >= VERSION_LIMIT,
+        projectedVersionCount,
+        warning: projectedVersionCount >= VERSION_WARNING_THRESHOLD
+    };
 }
 
 function maskDeploymentId(id) {
@@ -133,14 +161,41 @@ function run() {
     const deployments = parseDeployments(deploymentsOutput);
     console.log(`Found ${deployments.size} deployments.`);
 
-    if (deployments.size > 180) {
-        fs.writeFileSync(WARNING_PATH, String(deployments.size), 'utf8');
-        console.warn(`Deployment count is high (${deployments.size}/200).`);
-    }
-
     if (!deployments.has(deploymentId)) {
         throw new Error(
             '固定デプロイIDが現在のGASデプロイ一覧にありません。別IDは選択せず処理を中止します。'
+        );
+    }
+
+    console.log('Fetching existing Apps Script versions...');
+    if (fs.existsSync(WARNING_PATH)) {
+        fs.unlinkSync(WARNING_PATH);
+    }
+    const versionsOutput = runClasp(['versions']);
+    const versionCount = parseVersionCount(versionsOutput);
+    if (!Number.isInteger(versionCount)) {
+        throw new Error('Could not determine the Apps Script version count.');
+    }
+    console.log(`Found ${versionCount} Apps Script versions.`);
+
+    const versionCapacity = getVersionCapacityState(versionCount);
+    if (versionCapacity.limitReached) {
+        fs.writeFileSync(WARNING_PATH, String(versionCount), 'utf8');
+        throw new Error(
+            `Apps Script version limit reached (${versionCount}/${VERSION_LIMIT}). ` +
+            'Clean up unused versions or deployments before running sync-data again.'
+        );
+    }
+
+    if (versionCapacity.warning) {
+        fs.writeFileSync(
+            WARNING_PATH,
+            String(versionCapacity.projectedVersionCount),
+            'utf8'
+        );
+        console.warn(
+            `Apps Script version count is approaching the limit ` +
+            `(${versionCapacity.projectedVersionCount}/${VERSION_LIMIT} after this update).`
         );
     }
 
@@ -195,6 +250,8 @@ module.exports = {
     getDeploymentIdFromEnv,
     parseDeployments,
     parseCreatedVersion,
+    parseVersionCount,
+    getVersionCapacityState,
     runClasp,
     verifyDeploymentVersion
 };
