@@ -98,4 +98,23 @@ Assert-True -Condition (-not $errorResult.Success) -Message "API error must fail
 $invalidJsonResult = Test-DashboardApiPayload -Payload '{invalid' -ExpectedPeriod 7
 Assert-True -Condition (-not $invalidJsonResult.Success) -Message "invalid JSON must fail"
 
+$dashboardApiHelperSource = Get-Content (Join-Path $PSScriptRoot "dashboard-api-check.ps1") -Raw
+Assert-True `
+    -Condition ($dashboardApiHelperSource -match '-o "\$bodyPath"') `
+    -Message "curl response body must be written to a file"
+Assert-True `
+    -Condition ($dashboardApiHelperSource -match '\[System\.IO\.File\]::ReadAllText\(\$bodyPath, \$utf8\)') `
+    -Message "response body must be decoded explicitly as UTF-8"
+Assert-True `
+    -Condition ($dashboardApiHelperSource -match '%\{http_code\}\|%\{content_type\}') `
+    -Message "HTTP status and content type must be captured"
+
+$syncSource = Get-Content (Join-Path $PSScriptRoot "..\sync-data.ps1") -Raw
+Assert-True `
+    -Condition ($syncSource -match '\$dashboardApiRetryDelays = @\(0, 10, 20, 40, 60\)') `
+    -Message "dashboard API retries must allow propagation time"
+Assert-True `
+    -Condition ($syncSource -match '\$pendingDashboardPeriods = @\(\$dashboardPeriods\)') `
+    -Message "all periods must share one retry schedule"
+
 Write-Output "sync dashboard API checks: OK"

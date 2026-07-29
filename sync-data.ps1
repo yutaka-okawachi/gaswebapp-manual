@@ -836,26 +836,45 @@ Write-Host ""
 
 # --- [5.5/5] Dashboard aggregate API verification ---
 Write-Host "[5.5/5] Verifying dashboard aggregate API..." -ForegroundColor Yellow
-$dashboardApiResults = @()
-foreach ($period in @(7, 30, 90)) {
-    $result = $null
-    for ($attempt = 1; $attempt -le 3; $attempt++) {
+$dashboardPeriods = @(7, 30, 90)
+$dashboardApiRetryDelays = @(0, 10, 20, 40, 60)
+$pendingDashboardPeriods = @($dashboardPeriods)
+$dashboardApiResultByPeriod = @{}
+for (
+    $attemptIndex = 0;
+    $attemptIndex -lt $dashboardApiRetryDelays.Count -and $pendingDashboardPeriods.Count -gt 0;
+    $attemptIndex++
+) {
+    $attempt = $attemptIndex + 1
+    $delaySeconds = $dashboardApiRetryDelays[$attemptIndex]
+    if ($delaySeconds -gt 0) {
+        $pendingLabel = $pendingDashboardPeriods -join ","
+        Write-Host "  [WAIT] period=$pendingLabel - retrying in $delaySeconds seconds..." -ForegroundColor DarkGray
+        Start-Sleep -Seconds $delaySeconds
+    }
+
+    $nextPendingPeriods = @()
+    foreach ($period in $pendingDashboardPeriods) {
         $result = Invoke-DashboardApiCheck -BaseUrl $env:GAS_DEPLOY_URL -Period $period
+        $dashboardApiResultByPeriod[$period] = $result
         if ($result.Success) {
-            break
+            Write-Host "  [OK] period=$period" -ForegroundColor Green
+        } else {
+            $nextPendingPeriods += $period
         }
-        if ($attempt -lt 3) {
-            $retryDelaySeconds = 5 * $attempt
+        if (-not $result.Success -and $attemptIndex -lt $dashboardApiRetryDelays.Count - 1) {
             Write-Host "  [RETRY] period=$period attempt=$attempt - $($result.Message)" -ForegroundColor Yellow
-            Start-Sleep -Seconds $retryDelaySeconds
         }
     }
-    $dashboardApiResults += $result
-    if ($result.Success) {
-        Write-Host "  [OK] period=$period" -ForegroundColor Green
-    } else {
+    $pendingDashboardPeriods = @($nextPendingPeriods)
+}
+
+$dashboardApiResults = foreach ($period in $dashboardPeriods) {
+    $result = $dashboardApiResultByPeriod[$period]
+    if (-not $result.Success) {
         Write-Host "  [FAILED] period=$period - $($result.Message)" -ForegroundColor Red
     }
+    $result
 }
 $dashboardApiHealthy = -not ($dashboardApiResults | Where-Object { -not $_.Success })
 Write-Host ""

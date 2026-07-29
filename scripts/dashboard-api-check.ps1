@@ -225,16 +225,73 @@ function Invoke-DashboardApiCheck {
 
     $separator = if ($BaseUrl.Contains("?")) { "&" } else { "?" }
     $url = "$($BaseUrl.Trim())${separator}api=dashboard&period=$Period"
+    $tempRoot = [System.IO.Path]::GetTempPath()
+    $requestId = [guid]::NewGuid().ToString("N")
+    $bodyPath = Join-Path $tempRoot "dashboard-api-$requestId.json"
+    $errorPath = Join-Path $tempRoot "dashboard-api-$requestId.stderr"
 
     try {
-        $responseLines = & curl.exe -sS -L --max-time 90 "$url" 2>&1
+        # Keep the response body out of PowerShell's native-process text
+        # pipeline. Windows PowerShell may decode UTF-8 JSON using the active
+        # console code page, which can turn a valid response into invalid JSON.
+        $metadataLines = & curl.exe `
+            -sS `
+            -L `
+            --max-time 90 `
+            -o "$bodyPath" `
+            -w "%{http_code}|%{content_type}" `
+            "$url" 2> "$errorPath"
         $curlExitCode = $LASTEXITCODE
         if ($curlExitCode -ne 0) {
             return New-DashboardApiCheckResult -Success $false -Period $Period -Message "HTTP request failed"
         }
-        $payload = $responseLines -join "`n"
-        return Test-DashboardApiPayload -Payload $payload -ExpectedPeriod $Period
+
+        $metadata = @($metadataLines) |
+            Where-Object { $_ -match "^\d{3}\|" } |
+            Select-Object -Last 1
+        $metadataMatch = if ($metadata) {
+            [regex]::Match([string]$metadata, "^(\d{3})\|(.*)$")
+        } else {
+            $null
+        }
+        if (-not $metadataMatch -or -not $metadataMatch.Success) {
+            return New-DashboardApiCheckResult -Success $false -Period $Period -Message "HTTP metadata is missing"
+        }
+
+        $httpStatus = [int]$metadataMatch.Groups[1].Value
+        $contentType = $metadataMatch.Groups[2].Value.Trim()
+        if ($httpStatus -lt 200 -or $httpStatus -ge 300) {
+            $typeLabel = if ($contentType) { ", $contentType" } else { "" }
+            return New-DashboardApiCheckResult `
+                -Success $false `
+                -Period $Period `
+                -Message "HTTP $httpStatus$typeLabel"
+        }
+
+        if (-not (Test-Path -LiteralPath $bodyPath)) {
+            return New-DashboardApiCheckResult -Success $false -Period $Period -Message "Empty response body"
+        }
+
+        try {
+            $utf8 = New-Object System.Text.UTF8Encoding($false, $true)
+            $payload = [System.IO.File]::ReadAllText($bodyPath, $utf8)
+        } catch {
+            return New-DashboardApiCheckResult -Success $false -Period $Period -Message "Invalid UTF-8 response"
+        }
+
+        $result = Test-DashboardApiPayload -Payload $payload -ExpectedPeriod $Period
+        if (-not $result.Success -and $result.Message -in @("Invalid JSON", "HTML or empty response")) {
+            $typeLabel = if ($contentType) { $contentType } else { "unknown content type" }
+            $result.Message = "$($result.Message) (HTTP $httpStatus, $typeLabel)"
+        }
+        return $result
     } catch {
         return New-DashboardApiCheckResult -Success $false -Period $Period -Message "HTTP request failed"
+    } finally {
+        foreach ($path in @($bodyPath, $errorPath)) {
+            if ($path -and (Test-Path -LiteralPath $path)) {
+                Remove-Item -LiteralPath $path -Force -ErrorAction SilentlyContinue
+            }
+        }
     }
 }
