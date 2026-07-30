@@ -127,7 +127,7 @@
   [
     "Anfang",
     "(≒ beginning, start / inizio, principio)\n【一般的な意味】\n① 始まり，開始，冒頭，初期．\n② 起源，発端．\n【音楽用語としての訳例】\n「冒頭」，「開始」，「（wie im Anfang で）冒頭のように（Tempo I）」，「（vom Anfang で）最初から（Da Capo）」",
-    "[GM]"
+    "[GM], [RW: Oper], [RS: Oper]"
   ],
   [
     "Angabe",
@@ -222,7 +222,7 @@
   [
     "atmen",
     "(≒ breathe, respire / respirare)\n【一般的な意味】\n① 呼吸する，息をする，息づく．\n② （雰囲気や精神などを）発散する，漂わせる．\n【音楽用語としての訳例】\n「呼吸をして」，「（管楽器や歌で）ブレスを取って」，「（フレーズの合間で）一呼吸置いて」，「（音楽を）呼吸させて」",
-    "[GM]"
+    "[GM], [RW: Oper], [RS: Oper]"
   ],
   [
     "Auf blumige Wiesen",
@@ -297,7 +297,7 @@
   [
     "ausdrucksvoll",
     "(≒ expressive, full of expression / espressivo)\n【一般的な意味】\n① 表情豊かな，表現力に富んだ，味わい深い．\n② 意味ありげな，意味深長な．\n【音楽用語としての訳例】\n「表情豊かに」，「感情を込めて」，「表情をたっぷりと付けて」，「味わい深く」",
-    "[GM]"
+    "[GM], [RW: Oper], [RS: Oper]"
   ],
   [
     "ausgelassener",
@@ -352,7 +352,7 @@
   [
     "AV",
     "Allgemeines Verzeichnis の略\n\nAllgemeines Verzeichnis der Werke von Richard Strauss：Richard Strauss 作品総合目録\n\n全作品を通し番号で管理するための目録．作曲年代順を基本に全作品に 1 から連番を付与したもの．”TrV” とは違い，冒頭主題 (incipit) は扱わず，改定の区別もしない．年代順に番号を振ったもので，事務的，管理的なもの．研究・同定のためには \"TrV\" ，全集・出版社管理のためには\"AV\"，という二重管理が行われている．\n\n\"TrV\" の項も参照のこと．",
-    "[RS]"
+    ""
   ],
   [
     "Bache",
@@ -437,7 +437,7 @@
   [
     "behäbig",
     "(≒ comfortable, slow-moving, stodgy / comodo, pesante, lento)\n【一般的な意味】\n① （体格が）ずんぐりした，太鼓腹の，肥満した．\n② （動作や思考が）のろい，鈍重な，緩慢な．\n③ 落ち着き払った，悠然とした，（生活などが）安楽な．\n【音楽用語としての訳例】\n「ゆったりと」，「落ち着いて」，「（少し）重々しく」，「鈍重に」，「（レントラーなどで）野暮ったく」，「（テンポを）急がずに」\n\n子供の魔法の角笛 \"Des Antonius von Padua Fischpredigt\" にあり，「のっそりと」と訳している．また，RS の Der Rosenkavalier では「ゆったりと」，Ariadne auf Naxos では「重々しく」と訳しているが，どれも訳出には迷う．",
-    "[GM]"
+    "[GM], [RS: Oper]"
   ],
   [
     "behaglich",
@@ -462,7 +462,7 @@
   [
     "beinahe",
     "(≒ almost, nearly / quasi)\n【一般的な意味】\n① ほとんど，もう少しで，危うく（～するところ），～に近い．\n【音楽用語としての訳例】\n「ほとんど」，「～に近い」，「（beinahe unhörbar で）ほとんど聞こえないほどに」，「（beinahe Adagio で）アダージョに近い速さで」",
-    "[GM], [B: 5]"
+    "[GM], [RS: Oper], [B: 5]"
   ],
   [
     "beinahe doppelt so langsam",
@@ -717,7 +717,7 @@
   [
     "darf",
     "(≒ may, be allowed to / potere, essere permesso)\ndürfen の1人称単数および3人称単数現在形\n【一般的な意味】\n① （～）してもよい，許されている（許可）．\n② （否定語と共に）～してはいけない，～するべからず（禁止）．\n【音楽用語としての訳例】\n「（～しては）いけない」，「（～しては）ならない」，「（～しても）よい」，「（nicht schleppen darf などで）～しないように」，「（～する）ことは許されない」\n\n交響曲第8番第2部に\"Darf vorher unter keinen Umständen auffallen\"（これより前の部分ではいかなる状況にあっても決して目立ってはならない）と強い調子で書いてあるのが面白い．リハのときに独唱者がゴソゴソ動いて GM がブチ切れたに違いない．",
-    "[GM]"
+    "[GM], [RW: Oper], [RS: Oper]"
   ],
   [
     "darstellen",
@@ -797,7 +797,7 @@
   [
     "deutlich",
     "(≒ clear, distinct, articulate / chiaro, distinto, marcato)\n【一般的な意味】\n① （音・姿・輪郭などが）はっきりした，明瞭な，鮮明な，聞き取りやすい．\n② （意味・発言などが）明白な，分かりやすい，露骨な．\n【音楽用語としての訳例】\n「はっきりと」，「明瞭に」，「くっきりと」，「（発音を）明確に」，「（旋律を）際立たせて」，「（アーティキュレーションを）明確に」",
-    "[GM]"
+    "[GM], [RW: Oper], [RS: Oper]"
   ],
   [
     "deutlich phrasiert",
@@ -1047,7 +1047,7 @@
   [
     "ebenso",
     "(≒ just as, equally, likewise / altrettanto, parimenti)\n【一般的な意味】\n① （前のものと）同様に，同じように，その通りに．\n② （形容詞などを伴って）同じくらい，同程度に．\n【音楽用語としての訳例】\n「（～と）同様に」，「同じく」，「（～と）同じくらい」，「（ebenso... wie... で）～と同じくらい...に」，「（ebenso schnell で）同じ速さで（l'istesso tempo）」",
-    "[GM]"
+    "[GM], [RW: Oper], [RS: Oper]"
   ],
   [
     "edel",
