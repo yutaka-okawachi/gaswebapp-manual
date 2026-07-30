@@ -6,7 +6,7 @@
  * read or returned here.
  */
 
-const DASHBOARD_SCHEMA_VERSION = 2;
+const DASHBOARD_SCHEMA_VERSION = 3;
 const DASHBOARD_TIME_ZONE = 'Asia/Tokyo';
 const DASHBOARD_ALLOWED_PERIODS = Object.freeze([7, 30, 90]);
 const DASHBOARD_CACHE_SECONDS = 900;
@@ -138,7 +138,7 @@ function getDashboardAnalytics(period) {
   }
 
   const cache = CacheService.getScriptCache();
-  const cacheKey = 'admin_dashboard_analytics_v12_' + propertyId + '_' + period;
+  const cacheKey = 'admin_dashboard_analytics_v13_' + propertyId + '_' + period;
   const cachedResult = readDashboardCachedResult(cache, cacheKey);
   if (cachedResult) return cachedResult;
 
@@ -160,6 +160,7 @@ function getDashboardAnalytics(period) {
     const propertyName = 'properties/' + propertyId;
     const reports = {
       pageViews: runDashboardPageViewsReport(propertyName, range),
+      pageEngagement: runDashboardPageEngagementReport(propertyName, range),
       activity: runDashboardActivityReport(propertyName, range),
       searchMoves: runDashboardSearchMovesReport(propertyName, range),
       terms: runDashboardTermsReport(propertyName, range),
@@ -255,6 +256,22 @@ function runDashboardPageViewsReport(propertyName, range) {
       dashboardExactFilter('eventName', 'page_view'),
       dashboardInListFilter('pagePath', DASHBOARD_PAGES.map(item => item.path))
     ]),
+    limit: '100000'
+  }, propertyName);
+}
+
+function runDashboardPageEngagementReport(propertyName, range) {
+  return AnalyticsData.Properties.runReport({
+    dateRanges: [range],
+    dimensions: [{ name: 'pagePath' }],
+    metrics: [
+      { name: 'userEngagementDuration' },
+      { name: 'activeUsers' }
+    ],
+    dimensionFilter: dashboardInListFilter(
+      'pagePath',
+      DASHBOARD_PAGES.map(item => item.path)
+    ),
     limit: '100000'
   }, propertyName);
 }
@@ -367,6 +384,7 @@ function buildDashboardAnalyticsResponse(period, range, reports) {
       page: item.page,
       path: item.path,
       views: 0,
+      averageEngagementSeconds: 0,
       searchMoves: 0,
       searches: 0,
       exampleClicks: 0,
@@ -384,6 +402,16 @@ function buildDashboardAnalyticsResponse(period, range, reports) {
     if (pageByPath[path] && dailyByIso[isoDate]) {
       dailyByIso[isoDate].views += count;
     }
+  });
+
+  dashboardReportRows(reports.pageEngagement, 1).forEach(row => {
+    const path = normalizeDashboardPagePath(row.dimensions[0]);
+    if (!pageByPath[path]) return;
+    const engagementSeconds = dashboardNumber(row.metrics[0]);
+    const activeUsers = dashboardCount(row.metrics[1]);
+    pageByPath[path].averageEngagementSeconds = activeUsers > 0
+      ? Math.round((engagementSeconds / activeUsers) * 10) / 10
+      : 0;
   });
 
   dashboardReportRows(reports.activity, 6).forEach(row => {
@@ -678,12 +706,15 @@ function dashboardReportRows(report, dimensionCount) {
         ? String(row.dimensionValues[index].value || '')
         : ''
     ),
-    metrics: [
-      row.metricValues && row.metricValues[0]
-        ? String(row.metricValues[0].value || '0')
-        : '0'
-    ]
+    metrics: row.metricValues && row.metricValues.length
+      ? row.metricValues.map(metric => String(metric.value || '0'))
+      : ['0']
   }));
+}
+
+function dashboardNumber(value) {
+  const number = Number(value);
+  return Number.isFinite(number) && number > 0 ? number : 0;
 }
 
 function dashboardCount(value) {

@@ -30,6 +30,7 @@ foreach ($period in @(7, 30, 90)) {
             page = "Page $i"
             path = "/page-$i"
             views = 0
+            averageEngagementSeconds = 0
             searchMoves = 0
             searches = 0
             exampleClicks = 0
@@ -38,7 +39,7 @@ foreach ($period in @(7, 30, 90)) {
     }
 
     $payload = @{
-        schemaVersion = 2
+        schemaVersion = 3
         period = $period
         updatedAt = "2026年7月26日 14:05"
         range = @{

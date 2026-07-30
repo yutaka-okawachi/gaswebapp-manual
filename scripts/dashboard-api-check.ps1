@@ -42,6 +42,22 @@ function Test-DashboardNonNegativeInteger {
     )
 }
 
+function Test-DashboardNonNegativeNumber {
+    param($Value)
+
+    try {
+        $number = [double]$Value
+    } catch {
+        return $false
+    }
+
+    return (
+        -not [double]::IsNaN($number) -and
+        -not [double]::IsInfinity($number) -and
+        $number -ge 0
+    )
+}
+
 function Test-DashboardRate {
     param($Value)
 
@@ -99,7 +115,7 @@ function Test-DashboardApiPayload {
         }
     }
 
-    if ([int]$data.schemaVersion -ne 2) {
+    if ([int]$data.schemaVersion -ne 3) {
         return New-DashboardApiCheckResult -Success $false -Period $ExpectedPeriod -Message "Unexpected schemaVersion"
     }
     if ([int]$data.period -ne $ExpectedPeriod) {
@@ -178,7 +194,7 @@ function Test-DashboardApiPayload {
     }
 
     foreach ($page in $pages) {
-        foreach ($key in @("page", "path", "views", "searchMoves", "searches", "exampleClicks", "topTerms")) {
+        foreach ($key in @("page", "path", "views", "averageEngagementSeconds", "searchMoves", "searches", "exampleClicks", "topTerms")) {
             if (-not (Test-DashboardHasProperty -Object $page -Name $key)) {
                 return New-DashboardApiCheckResult -Success $false -Period $ExpectedPeriod -Message "Invalid page item"
             }
@@ -187,6 +203,9 @@ function Test-DashboardApiPayload {
             if (-not (Test-DashboardNonNegativeInteger -Value $page.$key)) {
                 return New-DashboardApiCheckResult -Success $false -Period $ExpectedPeriod -Message "Invalid page count"
             }
+        }
+        if (-not (Test-DashboardNonNegativeNumber -Value $page.averageEngagementSeconds)) {
+            return New-DashboardApiCheckResult -Success $false -Period $ExpectedPeriod -Message "Invalid average engagement time"
         }
     }
 

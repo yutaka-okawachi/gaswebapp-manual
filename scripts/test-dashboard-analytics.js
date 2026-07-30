@@ -27,9 +27,10 @@ const scriptProperties = {
 };
 
 function reportRow(dimensions, metric) {
+  const metrics = Array.isArray(metric) ? metric : [metric];
   return {
     dimensionValues: dimensions.map(value => ({ value: String(value) })),
-    metricValues: [{ value: String(metric) }]
+    metricValues: metrics.map(value => ({ value: String(value) }))
   };
 }
 
@@ -44,6 +45,16 @@ const previousPageViewsReport = {
   rows: [
     reportRow(['20260719', '/gaswebapp-manual/mahler-search-app/dic.html'], 8),
     reportRow(['20260719', '/gaswebapp-manual/'], 4)
+  ]
+};
+
+const pageEngagementReport = {
+  rows: [
+    reportRow(
+      ['/gaswebapp-manual/mahler-search-app/dic.html'],
+      [90, 3]
+    ),
+    reportRow(['/gaswebapp-manual/'], [45, 2])
   ]
 };
 
@@ -289,6 +300,16 @@ const context = {
         if (dimensionNames === 'date,pagePath') {
           return isPreviousRange ? previousPageViewsReport : pageViewsReport;
         }
+        if (dimensionNames === 'pagePath') {
+          assert.deepStrictEqual(
+            JSON.parse(JSON.stringify(request.metrics)),
+            [
+              { name: 'userEngagementDuration' },
+              { name: 'activeUsers' }
+            ]
+          );
+          return pageEngagementReport;
+        }
         if (
           dimensionNames ===
           'date,eventName,customEvent:source_page,pagePath,customEvent:search_type,customEvent:destination_page'
@@ -354,10 +375,10 @@ assert.deepStrictEqual(
 assert.strictEqual(analyticsCallCount, 1);
 
 const result = context.getDashboardAnalytics(7);
-assert.strictEqual(analyticsCallCount, 7);
+assert.strictEqual(analyticsCallCount, 8);
 assert.strictEqual(lockAcquireCount, 1);
 assert.strictEqual(lockReleaseCount, 1);
-assert.strictEqual(result.schemaVersion, 2);
+assert.strictEqual(result.schemaVersion, 3);
 assert.strictEqual(result.period, 7);
 assert.deepStrictEqual(
   JSON.parse(JSON.stringify(result.range)),
@@ -416,8 +437,10 @@ const dictionary = result.pages.find(page => page.page === 'ドイツ語の音�
 const gmTerms = result.pages.find(page => page.page === '用語から検索 (GM)');
 assert.strictEqual(result.pages.length, 12);
 assert.strictEqual(home.views, 5);
+assert.strictEqual(home.averageEngagementSeconds, 22.5);
 assert.strictEqual(home.searchMoves, 4);
 assert.strictEqual(dictionary.views, 10);
+assert.strictEqual(dictionary.averageEngagementSeconds, 30);
 assert.strictEqual(dictionary.searchMoves, 17);
 assert.strictEqual(dictionary.exampleClicks, 2);
 assert.strictEqual(gmTerms.searches, 6);
@@ -559,7 +582,7 @@ assert.strictEqual(
 );
 
 const cachedResult = context.getDashboardAnalytics(7);
-assert.strictEqual(analyticsCallCount, 7);
+assert.strictEqual(analyticsCallCount, 8);
 assert.strictEqual(lockAcquireCount, 1);
 assert.strictEqual(lockReleaseCount, 1);
 assert.deepStrictEqual(
@@ -587,6 +610,7 @@ assert.deepStrictEqual(
     range,
     {
       pageViews: {},
+      pageEngagement: {},
       activity: {},
       searchMoves: {},
       terms: {},
@@ -619,6 +643,9 @@ function assertFiniteNonNegativeCounts(value, key) {
     ) {
       assert.strictEqual(Number.isFinite(childValue), true);
       assert.strictEqual(Number.isInteger(childValue), true);
+      assert.ok(childValue >= 0);
+    } else if (childKey === 'averageEngagementSeconds') {
+      assert.strictEqual(Number.isFinite(childValue), true);
       assert.ok(childValue >= 0);
     } else {
       assertFiniteNonNegativeCounts(childValue, childKey);
