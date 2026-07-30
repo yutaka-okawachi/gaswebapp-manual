@@ -492,7 +492,102 @@ ${breadcrumbJSON}
          */
         .row {
             content-visibility: auto;
-            contain-intrinsic-size: auto 110px;
+            contain-intrinsic-size: auto 40px;
+        }
+
+        /* アコーディオン機能のスタイル */
+        .row dt {
+            cursor: pointer;
+            user-select: none;
+            padding: 4px 6px;
+            border-radius: 4px;
+            transition: background-color 0.2s ease;
+            position: relative;
+            width: 100%;
+        }
+
+        .row dt:hover {
+            background-color: rgba(26, 115, 232, 0.08);
+        }
+
+        .row dt .dt-main {
+            padding-left: 22px;
+            position: relative;
+        }
+
+        /* アコーディオン開閉矢印 (▶ / ▼) */
+        .row dt .dt-main::before {
+            content: '▶';
+            position: absolute;
+            left: 4px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 0.7rem;
+            color: #1a73e8;
+            transition: transform 0.2s ease, color 0.2s ease;
+        }
+
+        .row.accordion-open dt .dt-main::before {
+            transform: translateY(-50%) rotate(90deg);
+            color: #d64d3d;
+        }
+
+        /* アコーディオン非表示時 (畳んだ状態) */
+        .row dd.translation {
+            display: none;
+            margin-top: 6px;
+            margin-left: 1.2em;
+            padding-left: 10px;
+            border-left: 3px solid #1a73e8;
+        }
+
+        /* アコーディオン表示時 */
+        .row.accordion-open dd.translation {
+            display: block;
+            animation: accordionSlideDown 0.2s ease-out;
+        }
+
+        @keyframes accordionSlideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-4px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* 一括操作ボタン */
+        .accordion-controls {
+            display: flex;
+            gap: 12px;
+            margin-top: 1rem;
+            margin-bottom: 1.5rem;
+            align-items: center;
+        }
+
+        .btn-accordion {
+            background-color: #ffffff;
+            border: 1.5px solid #1a73e8;
+            color: #1a73e8;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .btn-accordion:hover {
+            background-color: #1a73e8;
+            color: #ffffff;
+            box-shadow: 0 2px 6px rgba(26,115,232,0.25);
+            transform: translateY(-1px);
         }
 
         div[id^="letter-"] {
@@ -740,8 +835,33 @@ ${breadcrumbJSON}
             };
         }
 
-        // ハッシュ変更時のナビゲーション処理
+        // 一括開閉機能
+        function openAllAccordions() {
+            document.querySelectorAll('#listContainer .row').forEach(el => el.classList.add('accordion-open'));
+        }
+
+        function closeAllAccordions() {
+            document.querySelectorAll('#listContainer .row').forEach(el => el.classList.remove('accordion-open'));
+        }
+
+        // アコーディオン開閉 & ハッシュ変更ナビゲーション処理
         window.addEventListener('DOMContentLoaded', () => {
+            const listContainer = document.getElementById('listContainer');
+            if (listContainer) {
+                listContainer.addEventListener('click', (e) => {
+                    // リンクや「実例を見る」トグルボタン自体のクリック時はアコーディオン開閉処理を行わない
+                    if (e.target.closest('a') || e.target.closest('.example-toggle')) {
+                        return;
+                    }
+                    const dt = e.target.closest('dt');
+                    if (dt) {
+                        const row = dt.closest('.row');
+                        if (row) {
+                            row.classList.toggle('accordion-open');
+                        }
+                    }
+                });
+            }
             handleHashChange();
         });
 
@@ -753,33 +873,36 @@ ${breadcrumbJSON}
                 return;
             }
 
-            const targetId = hash.substring(1);
+            const targetId = decodeURIComponent(hash.substring(1));
             
             // Remove previous highlights
             document.querySelectorAll('.row.highlight-active').forEach(el => el.classList.remove('highlight-active'));
 
             let targetElement = document.getElementById(targetId);
 
-            // If not found by ID (happens when it's the first term of an alphabet section), 
-            // check data-term-id attribute.
             if (!targetElement) {
                 return;
             }
 
-            // Highlighting
-            targetElement.scrollIntoView({ behavior: 'auto', block: 'start' });
+            // ターゲット要素またはその親行のアコーディオンを必ず開く
+            const targetRow = targetElement.closest('.row') || (targetElement.classList.contains('row') ? targetElement : null);
+            if (targetRow) {
+                targetRow.classList.add('accordion-open');
+            }
+
+            // Highlighting & Scrolling
+            targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
             
             // Remove previous highlights
             document.querySelectorAll('.row.highlight-active').forEach(el => el.classList.remove('highlight-active'));
             
             // Trigger animation
-            // Use reflow + frame delay to ensure it restarts even if same hash
             targetElement.classList.remove('highlight-active');
             void targetElement.offsetWidth; 
             
             setTimeout(() => {
                 targetElement.classList.add('highlight-active');
-            }, 0);
+            }, 50);
         }
 
         // ページトップへスクロール
@@ -934,6 +1057,13 @@ ${breadcrumbJSON}
                     <a href="../index.html" class="btn-notice">🔍 メイン検索</a>
                 </div>
             </div>
+
+            <!-- Accordion Controls -->
+            <div class="accordion-controls">
+                <button type="button" class="btn-accordion" onclick="openAllAccordions()">📂 すべて開く</button>
+                <button type="button" class="btn-accordion" onclick="closeAllAccordions()">📁 すべて閉じる</button>
+            </div>
+
             <div id="listContainer">
 ${dicListHtml}
             </div>
