@@ -142,7 +142,7 @@
   [
     "angehalten",
     "(≒ held back, stopped, sustained / ritenuto, sostenuto, fermato)\nanhalten の過去分詞\n【一般的な意味】\n① 止められた，停止させられた．\n② 促された，しつけられた．\n【音楽用語としての訳例】\n「（テンポを）抑制して」，「引き止めて（ritenuto）」，など．\n「遅くして」と訳している．\n\n\"anhalten\" の項を参照．",
-    "[RW: Oper], [GM], [RS: Oper]"
+    "[GM], [RW: Oper], [RS: Oper]"
   ],
   [
     "Angst",
@@ -1597,7 +1597,7 @@
   [
     "gedehnt",
     "(≒ lengthened, prolonged, sustained / allungato, prolungato, sostenuto)\ndehnen の過去分詞\n\n【一般的な意味】\n① 引き延ばされた，伸ばされた，拡張された．\n② （時間などが）長引いた，持続した．\n\n【音楽用語としての訳例】\n「引き延ばして」，「遅らせて」，「テンポを保ちつつ音を十分に持続させて」，「ゆったりと」\n\nGM では「引き伸ばして」と訳している．\"allargando\" あるいは \"largamente\" に近い．ドイツ語では \"verbreitern\" とも似ているだろう．",
-    "[GM]"
+    "[GM], [RW: Oper], [RS: Oper]"
   ],
   [
     "Gefahrvolle",
@@ -1861,7 +1861,7 @@
   ],
   [
     "gezogen",
-    "(≒ drawn, pulled, sustained / tenuto, trascinato)\n ziehen（引く、引きずる）の過去分詞形．\n【一般的な意味】\n① 引かれた、引き出された． ② （線などが）引かれた．\n【音楽用語としての訳例】\n「tenuto」，「portamento」，「音を十分に保って」，「引き伸ばして」\n\n\"gestrichen\"の項を参照．",
+    "(≒ drawn, pulled, sustained / tenuto, trascinato)\n ziehen（引く、引きずる）の過去分詞形．\n【一般的な意味】\n① 引かれた，引き出された． \n② （線などが）引かれた．\n【音楽用語としての訳例】\n「tenuto」，「portamento」，「音を十分に保って」，「引き伸ばして」\n\n\"gestrichen\"の項を参照．",
     "[B], [GM]"
   ],
   [
@@ -1942,7 +1942,7 @@
   [
     "Griffbrett",
     "(≒ fingerboard / tastiera)\n【一般的な意味】\n① （弦楽器の）指板，フレットボード．\n② （比喩的に）楽器の演奏技術．\n\n\"am Griffbrett\" 等は「指板の近くで」と訳しているが，もちろん \"sul tasto\" である．",
-    "[GM]"
+    "[GM], [RS: Oper]"
   ],
   [
     "grimmig",
@@ -1997,7 +1997,7 @@
   [
     "hart",
     "(≒ hard, harsh, severe / duro, aspro, severo)\n【一般的な意味】\n① 硬い，堅固な，頑丈な．\n② （音・態度・味などが）厳しい，厳しい，荒々しい，耳障りな．\n③ （運命・状況などが）つらい，厳しい，過酷な．\n【音楽用語としての訳例】\n「硬く」，「厳しく」，「荒々しく」\n\nGM では打楽器に対する指示で①の意味で使われている．",
-    "[GM, [RW: Oper], [RS: Oper]"
+    "[GM], [RW: Oper], [RS: Oper]"
   ],
   [
     "hässlich",
@@ -2012,7 +2012,7 @@
   [
     "Hauptzeitmaß",
     "メインのテンポで，最初のテンポで．\n\nGM で曲の中でテンポが変動した後，その楽章やセクションの「核となる本来の速度」に戻ることを指示するときに使われている．",
-    "[GM]"
+    "[GM], [RS: Oper]"
   ],
   [
     "Haushofmeister",
@@ -2027,7 +2027,7 @@
   [
     "heftig",
     "(≒ vehement, intense, violent / veemente, intenso)\n【一般的な意味】\n① 激しい，猛烈な，強烈な．\n② （性格・感情などが）熱烈な，激しやすい，情熱的な．\n③ （病気などが）重い，酷い．\n【音楽用語としての訳例】\n「激しく」，「猛烈に」，「強烈な感情を込めて」\n\n日本での「ヤバい」に相当するポジティブ・ネガティブ両方の意味を備えているようだ．\"Das Konzert war heftig!\"（あのコンサートはヤバかった！）．",
-    "[GM]"
+    "[GM], [RW: Oper], [RS: Oper]"
   ],
   [
     "Heiligen",
@@ -2137,7 +2137,7 @@
   [
     "hörbar",
     "(≒ audible, perceptible / udibile, percepibile)\n【一般的な意味】\n① 聞こえる，聞こえるほどの．\n② （程度が）知覚できる，はっきりとした．\n【音楽用語としての訳例】\n「聞こえるように」，「はっきりと（際立たせて）」",
-    "[GM], [B: 8-1], [RW: Oper], [RS: Oper]"
+    "[GM], [RW: Oper], [RS: Oper],  [B: 8-1]"
   ],
   [
     "horcht",
@@ -2247,7 +2247,7 @@
   [
     "ins",
     "(≒ into the, to the / nel, nello, nella)\r\n前置詞 in と定冠詞 das の縮約形\r\n【一般的な意味】\r\n① （動作や方向が）〜の中へ，〜のところへ．\r\n② （状態や領域が）〜の状態へ，〜の範囲へ．",
-    "[B: 5], [GM], [RW: Oper], [RS: Oper]"
+    "[GM], [RW: Oper], [RS: Oper],  [B: 8-1]"
   ],
   [
     "inständig",
@@ -2457,7 +2457,7 @@
   [
     "kurz",
     "(≒ short, brief, concise / breve, corto)\n【一般的な意味】\n① 短い（長さ，距離，時間などが不足している，あるいは限定的であること）．\n② 簡潔な，手短な（表現や内容が省略されていること）．\n③ 直前の，間近の（時間的・空間的に非常に近いこと）．\n【音楽用語としての訳例】\n「短く」，「スタッカート気味に」",
-    "[RW: oper], [GM], [RS: Oper]"
+    "[GM], [RW: Oper], [RS: Oper]"
   ],
   [
     "Lady Macbeth. O, eile! Eile her! damit ich meinen Geist in deinen giesse, durch meine tapfere Zunge diese Zweifel und Furchtgespenster aus dem Felde schlage, die dich wegschrecken von dem goldnen Reif, womit das Glück dich gern bekrönen möchte.",
@@ -2512,7 +2512,7 @@
   [
     "lebendig",
     "(≒ lively, spirited, vivid / vivace, animato)\n【一般的な意味】\n① 生きている，生命力のある．\n② 生き生きとした，活発な，元気な．\n③ （表現などが）真に迫った，鮮やかな．\n【音楽用語としての訳例】\n「生き生きと」，「活発に」，「元気に」，「躍動感をもって」",
-    "[H: Con], [RW: Oper], [RS: Oper]"
+    "[RW: Oper], [RS: Oper], [H: Con]"
   ],
   [
     "lebhaft",
@@ -2542,7 +2542,7 @@
   [
     "leicht",
     "(≒ light, easy, slight / leggero, facile)\n【一般的な意味】\n① 軽い，軽量の．\n② 容易な，簡単な，楽な．\n③ わずかな，軽い（病気など），軽い（風など）．\n④ （女性が）軽薄な，貞操観念の薄い．\n【音楽用語としての訳例】\n「軽く」，「軽快に」，「容易に」，「(奏法が)楽に」\n\nGM では「軽やかに」などと訳している．",
-    "[GM], [RS: Tod], [RW: Oper], [RS: Oper]"
+    "[GM], [RW: Oper], [RS: Oper],  [RS: Tod]"
   ],
   [
     "leichtfertig",
@@ -2602,7 +2602,7 @@
   [
     "lieblich",
     "(≒ lovely, sweet, charming, delightful / dolce, amabile, grazioso)\n【一般的な意味】\n① 愛らしい，可愛らしい，魅力的な．\n② （音・香り・味が）心地よい，甘美な，優しい．\n【音楽用語としての訳例】\n「愛らしく」，「優美に」，「甘美な音色で」",
-    "[K: Cap], [RW: Oper], [RS: Oper]"
+    "[RW: Oper], [RS: Oper], [K: Cap]"
   ],
   [
     "Lindlein",
@@ -2971,7 +2971,7 @@
   ],
   [
     "Nebel",
-    "(≒ fog, mist, haze / nebbia, foschia)\n【一般的な意味】\n① 霧，もや，かすみ．\n② （比喩的に）ぼんやりとした状態，混乱．\n\n[RS: Alpen] の\"Nebel steigen auf\"は「霧が立ち昇る」",
+    "(≒ fog, mist, haze / nebbia, foschia)\n【一般的な意味】\n① 霧，もや，かすみ．\n② （比喩的に）ぼんやりとした状態，混乱．\n\n[RS: Alpen] の \"Nebel steigen auf\" は「霧が立ち昇る」",
     "[RS: Alpen], [RW: Oper], [RS: Oper]"
   ],
   [
@@ -3053,6 +3053,11 @@
     "oder 8 bassa",
     "あるいは1オクターブ低く",
     "[B: 6]"
+  ],
+  [
+    "ohne",
+    "(≒ without / senza)\n【一般的な意味】\n…なしに，…を持たずに，…を除いて",
+    "[GM], [RW: Oper], [RS: Oper]"
   ],
   [
     "ohnmächtig",
@@ -3612,12 +3617,12 @@
   [
     "später",
     "(≒ later, subsequently, afterwards / più tardi, dopo, poi)\nspät の比較級（副詞・形容詞）\n【一般的な意味】\n① （時間的に）後で，後に，後ほど．\n② （形容詞として）後の，後続の．",
-    "[GM]"
+    "[GM], [RW: Oper], [RS: Oper]"
   ],
   [
     "spielend",
     "(≒ playing, acting, playfully, easily / suonando, facilmente, scherzando)\nspielen の現在分詞\n【一般的な意味】\n① 遊んでいる，興じている，演技している．\n② （物事が）たやすく，楽々と（できる）．\n【音楽用語としての訳例】\n「遊ぶように」，「軽やかに」，「たやすく（苦もなく）」，「じゃれて」，「ふざけて」，「楽し気に」",
-    "[RS: Held], [K: Cap], [RW: Oper], [RS: Oper]"
+    "[RW: Oper], [RS: Oper], [RS: Held], [K: Cap]"
   ],
   [
     "Spitz",
@@ -3632,7 +3637,7 @@
   [
     "spitzig",
     "形容詞 spitz の変化形．\"spitz\" の項を参照．",
-    ""
+    "[RS: Oper]"
   ],
   [
     "spottend",
@@ -3707,7 +3712,7 @@
   [
     "Stille",
     "(≒ silence, stillness, quietness / silenzio, quiete)\n【一般的な意味】\n① 静けさ，静寂，沈黙．\n② 落ち着き，平静，安穏．\n③ （比喩的に）人知れず，秘密裏に．\n【音楽用語としての訳例】\n「静寂」，「沈黙」，「休み」",
-    "[RS: Alpen], [RW: Oper], [RS: Oper]"
+    "[RW: Oper], [RS: Oper], [RS: Alpen]"
   ],
   [
     "Stöcken",
@@ -3867,7 +3872,7 @@
   [
     "trocken",
     "(≒ dry, arid, crisp / secco, asciutto)\n【一般的な意味】\n① 乾いた，乾燥した，水気のない．\n② （ユーモアなどが）辛口の，そっけない，無味乾燥な．\n③ （ワインなどが）辛口の，ドライな．\n【音楽用語としての訳例】\n「ドライに」，「（音を）短く切って」，「そっけなく」，「無味乾燥に」\n\nGM ではティンパニの指示で使われていて，「乾いた」と訳しているが「ドライに」でも良いかも．もちろんRW，RSのオペラでは歌唱部分に多数の使用例がある．そこでは「そっけなく」，「事務的に」などと訳している．",
-    "[GM]"
+    "[GM], [RW: Oper], [RS: Oper]"
   ],
   [
     "Trommelst., Trommelstöcken",
@@ -3887,7 +3892,7 @@
   [
     "TrV",
     "Trenner-Verzeichnis の略\n\nRichard Strauss Werke – Thematisches Verzeichnis：Franz Trenner による Richard Strauss 作品主題目録\n\n「作品主題目録」とは，単なる「作品目録」とは違い各作品に 冒頭主題（incipit） を付したもの．同名作品・改訂稿・断片の識別が可能で音楽学的同定を目的としている．学術的に最も広く使われている．標準的カタログ番号で作品番号（Op.）を持たない後期作品を整理するためのもの．\n\n例：\nSonatine Nr.1 → TrV 288\nMetamorphosen → TrV 290\nOboe Concerto → TrV 292\n\n\"AV\" の項も参照．",
-    "[RS]"
+    ""
   ],
   [
     "Tumult",
@@ -3977,12 +3982,12 @@
   [
     "ungeheuer",
     "(≒ enormous, monstrous, tremendous / enorme, mostruoso)\n【一般的な意味】\n① 巨大な，恐ろしい，怪物のような．\n② （程度が）ものすごい，途方もない，莫大な．\n③ （副詞として）非常に，ひどく．\n\n[RS: Oper] では②の意味で用いられている．",
-    "[RS: Tod], [RW: Oper], [RS: Oper]"
+    "[RW: Oper], [RS: Oper], [RS: Tod]"
   ],
   [
     "unheimlich",
     "(≒ uncanny, sinister, immense / sinistro, immenso)\n【一般的な意味】\n① 気味の悪い，不気味な，ぞっとする．\n② （口語で）ものすごい，途方もない，莫大な．\n③ （形容詞として）途方もない，ひどい．\n【音楽用語としての訳例】\n「不気味に」，「気味悪く」，「ものすごく（強調として）」\n\nGM では子供の魔法の角笛 \"Das irdische Leben\" にのみ使用例がある．",
-    "[GM]"
+    "[GM], [RW: Oper], [RS: Oper]"
   ],
   [
     "unmerklich",
@@ -4002,7 +4007,7 @@
   [
     "unsichtbar",
     "(≒ invisible, unseen / invisibile)\n【一般的な意味】\n① 目に見えない，不可視の．\n② 隠された，隠れた，姿を消した．\n【音楽用語としての訳例】\n「（舞台裏で）見えないように」，「（音が）聞こえないほどに弱く」，「極めてかすかに」\n\n[RW: Oper]においては\n\"unsichtbar hinter der Scene\" 「舞台裏の見えないところで」\n\"außerhalb, unsichtbar\"「舞台の外で，見えないところから」\n\"draußen, unsichtbar\"「外で，姿は見えない」\nなどとしている．\n",
-    "[RS: Qui], [RW: Oper], [RS: Oper]"
+    "[RW: Oper], [RS: Oper], [RS: Qui]"
   ],
   [
     "unterbrechen",
@@ -4057,7 +4062,7 @@
   [
     "verdüstert",
     "(≒ darkened, gloomy, clouded / oscurato, cupo, tetro)\nverdüstern の過去分詞\n【一般的な意味】\n① 暗くなった，薄暗くなった，曇った．\n② 陰鬱になった，憂鬱になった，沈んだ．\n【音楽用語としての訳例】\n「暗く」，「陰鬱に」，「（音色を）暗く沈ませて」",
-    "[RS: Alpen], [RW: Oper], [RS: Oper]"
+    "[RW: Oper], [RS: Oper], [RS: Alpen]"
   ],
   [
     "verdutzt",
@@ -4117,7 +4122,7 @@
   [
     "vernehmbar",
     "(≒ audible, perceptible, discernible / udibile, percepibile)\n【一般的な意味】\n① 聞こえる，聞き取れる，感知できる．\n② （程度が）はっきりとした，明確な．",
-    "[B: 4-2], [RW: Oper], [RS: Oper]"
+    "[RW: Oper], [RS: Oper], [B: 4-2]"
   ],
   [
     "vernehmlicher",
@@ -4187,7 +4192,7 @@
   [
     "verzweifelt",
     "(≒ desperate, despairing, heartbroken / disperato, affranto)\nverzweifeln の過去分詞\n【一般的な意味】\n① 絶望した，自暴自棄の，悲嘆に暮れた．\n② （必死の）最後の手段の，無謀な．\n【音楽用語としての訳例】\n「絶望して」，「自暴自棄に」，「悲嘆に暮れて」",
-    "[K: App], [RW: Oper], [RS: Oper]"
+    "[RW: Oper], [RS: Oper], [K: App]"
   ],
   [
     "Verzweiflung",
@@ -4222,7 +4227,7 @@
   [
     "Viertel",
     "(≒ quarter, fourth part / quarto)\n【一般的な意味】\n① 四分の一，四分の一の部分．\n② （時間）四半期，四半時（15分）．\n③ （都市の）地区，街区，界隈．\n【音楽用語としての訳例】\n「（音符の）四分音符（semiminima）」\n\n「4拍子で」の意味の場所もある．GM では ”Viertel geschlagen” は「4つ振り」としているが，これは「4分音符を基準にカウントする」を意訳している．",
-    "[GM]"
+    "[GM], [H]"
   ],
   [
     "Viertelnote länger",
@@ -4312,7 +4317,7 @@
   [
     "vorangehen",
     "(≒ to go ahead, to precede, to lead the way / precedere, avanzare)\n【一般的な意味】\n① 先に行く，先行する，道案内をする．\n② （物事が）先に進む，順調に進展する．\n【音楽用語としての訳例】\n「accelerando」，「stringendo」，「先に進む」，「前進する」，「（テンポを）速める」",
-    "[H: KM4], [H: KM5], [H: Tanz], [H: Welt], [RW: Oper]"
+    "[RW: Oper], [H: KM4], [H: KM5], [H: Tanz], [H: Welt]"
   ],
   [
     "Vordergrund",
@@ -4332,7 +4337,7 @@
   [
     "vorigen",
     "(≒ previous, last, former / precedente, scorso)\n(≒ vorherigen)\nvorig の格変化形\n【一般的な意味】\n① 前の，先の，前述の．\n② 先行する，過ぎ去った．\n【音楽用語としての訳例】\n「前の（テンポや指示）」",
-    "[RS: Tod], [RS: Till], [RS: Zara], [RS: Held], [RW: Oper]"
+    "[RW: Oper], [RS: Tod], [RS: Till], [RS: Zara], [RS: Held]"
   ],
   [
     "vorliegenden",
@@ -4362,7 +4367,7 @@
   [
     "vorzutragen",
     "(≒ to be performed, to be presented / da eseguire, da presentare)\n分離動詞 vortragen の zu-不定詞形\n【一般的な意味】\n① 上演する，演奏する，歌う．\n② （意見・報告などを）述べる，提出する．\n③ （病気などを）患っている，抱えている．\n【音楽用語としての訳例】\n「演奏されるべき」，「提示すべき」，「（表情をもって）歌われるべき」",
-    "[B: 2], [RW: Oper]"
+    "[RW: Oper], [B: 2]"
   ],
   [
     "wahnsinn",
@@ -4397,7 +4402,7 @@
   [
     "Wasserfall",
     "(≒ waterfall, cascade / cascata, cateratta)\n【一般的な意味】\n① 滝，瀑布（ばくふ），カスケード．\n② （比喩的に）勢いよく流れ落ちるもの．",
-    "[RS: Alpen], [RW: Oper], [RS: Oper]"
+    "[RW: Oper], [RS: Oper], [RS: Alpen]"
   ],
   [
     "wechseln",
@@ -4407,17 +4412,17 @@
   [
     "weg",
     "(≒ away, gone, vanished / via, andato)\n【一般的な意味】\n① 離れて，去って，遠くへ．\n② なくなって，消えて，終わって．\n③ （接頭辞として）〜し尽くす，〜し去る．\n【音楽用語としての訳例】\n「（弱音器などを）外して（senza sordino）」，「消えて」，「去って」\n\n\"Dämpfer weg\"は「弱音器を外して」(≒ remove mute)",
-    "[H: KM3], [RS: Till], [RS: Zara], [RS: Qui], [RS: Held], [RS: Alpen], [RW: Oper], [RS: Oper]"
+    "[RW: Oper], [RS: Oper], [H: KM3], [RS: Till], [RS: Zara], [RS: Qui], [RS: Held], [RS: Alpen]"
   ],
   [
     "weglassen",
     "(≒ to leave out, to omit, to skip / omettere, tralasciare)\n【一般的な意味】\n① （物や事柄を）省く，省略する，カットする，除外する．\n② （行動などを）控える，やめる．",
-    "[RS: Dom], [RS: Oper]"
+    "[RS: Oper], [RS: Dom]"
   ],
   [
     "wehmütig",
     "(≒ melancholic, wistful, mournful / malinconico, mesto)\n【一般的な意味】\n① 物悲しい，哀愁を帯びた，憂鬱な．\n【音楽用語としての訳例】\n「物悲しく」，「哀愁を帯びて」，「感傷的に」，「切々と」",
-    "[H: Welt], [RW: Oper], [RS: Oper]"
+    "[RW: Oper], [RS: Oper], [H: Welt]"
   ],
   [
     "weich",
@@ -4512,7 +4517,7 @@
   [
     "wirklich",
     "(≒ really, truly, actually / veramente, davvero)\n【一般的な意味】\n① 現実の，本当の，事実の．\n② （副詞として）本当に，実際に．",
-    "[RS: Juan], [RW: Oper], [RS: Oper]"
+    "[RW: Oper], [RS: Oper], [RS: Juan]"
   ],
   [
     "Wissenschaft",
@@ -4612,7 +4617,7 @@
   [
     "zierlich",
     "(≒ graceful, dainty, elegant / grazioso, delicato)\n【一般的な意味】\n① 優美な，繊細な，優雅な．\n② （体が）きゃしゃな，小柄な．\n③ （古い用法で）気取った，もったいぶった．\n【音楽用語としての訳例】\n「優美に」，「繊細に」，「きゃしゃに」，「上品に」",
-    "[H: Welt], [K: Cap], [RW: Oper], [RS: Oper]"
+    "[RW: Oper], [RS: Oper], [H: Welt], [K: Cap]"
   ],
   [
     "Ziffer",
@@ -4642,12 +4647,12 @@
   [
     "zornig",
     "(≒ angry, wrathful, furious / irato, furioso)\n【一般的な意味】\n① 怒っている，激怒している，憤慨した．\n② （比喩的に）猛烈な，荒々しい．\n【音楽用語としての訳例】\n「怒って」，「激怒して」，「荒々しく」",
-    "[RS: Held], [RS: Dom], [RW: Oper], [RS: Oper]"
+    "[RW: Oper], [RS: Oper], [RS: Held], [RS: Dom]"
   ],
   [
     "zu",
     "（≒ to, at, too, closed / a, da, troppo, chiuso）\n【一般的な意味】\n①（前置詞として）～へ，～に，～において．\n②（副詞として）あまりに～すぎる．\n③（副詞として）閉じて，閉まって．\n【音楽用語としての訳例】 「～の状態で」，「あまりに～すぎる」，「～に（対して）」\n\n音楽の指示において zu は，その後に続く言葉によって役割が大きく変わる．\n\n1. 程度を表す（too / troppo）\n形容詞の前に置かれ，否定的なニュアンスを含んだ「～すぎる」という意味で使われる．\n\"Nicht zu schnell\"：速すぎないように（Non troppo allegro）．\n\"Nicht zu mäßig\"：控えめになりすぎないように．\n\n2. 人数や楽器の数を指定する\n\"zu 2 (zu zwei)\"： 2つの楽器で（ユニゾンで），あるいは2人で．（イタリア語の a 2 に相当）．\n\"zu 3 (zu drei)\"： 3つの楽器で．\n\n3. 状態や方法を指定する\n\"zu Ende\"：終わりまで．\n\"Mund zu\"：口を閉じて（ハミングなどで）．\n\n4. 特定の奏法への指示\n\"Dämpfer zu\"：弱音器（ミュート）を付けて（③の意味）．この場合，対義語は \"Dämpfer auf\" となるのであるがこれが GM の場合ややこしくなる．\"Dämpfer auf\" の項を参照．",
-    "[GM]"
+    "[GM], [RW: Oper], [RS: Oper]"
   ],
   [
     "Zug",
