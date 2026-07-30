@@ -6,7 +6,7 @@
  * read or returned here.
  */
 
-const DASHBOARD_SCHEMA_VERSION = 3;
+const DASHBOARD_SCHEMA_VERSION = 2;
 const DASHBOARD_TIME_ZONE = 'Asia/Tokyo';
 const DASHBOARD_ALLOWED_PERIODS = Object.freeze([7, 30, 90]);
 const DASHBOARD_CACHE_SECONDS = 900;

@@ -378,7 +378,7 @@ const result = context.getDashboardAnalytics(7);
 assert.strictEqual(analyticsCallCount, 8);
 assert.strictEqual(lockAcquireCount, 1);
 assert.strictEqual(lockReleaseCount, 1);
-assert.strictEqual(result.schemaVersion, 3);
+assert.strictEqual(result.schemaVersion, 2);
 assert.strictEqual(result.period, 7);
 assert.deepStrictEqual(
   JSON.parse(JSON.stringify(result.range)),

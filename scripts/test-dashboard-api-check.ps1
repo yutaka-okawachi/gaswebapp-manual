@@ -39,7 +39,7 @@ foreach ($period in @(7, 30, 90)) {
     }
 
     $payload = @{
-        schemaVersion = 3
+        schemaVersion = 2
         period = $period
         updatedAt = "2026年7月26日 14:05"
         range = @{
