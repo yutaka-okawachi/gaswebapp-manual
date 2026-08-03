@@ -35,6 +35,11 @@ foreach ($period in @(7, 30, 90)) {
             searches = 0
             exampleClicks = 0
             topTerms = @()
+            previous = @{
+                views = 0
+                averageEngagementSeconds = 0
+                searches = 0
+            }
         }
     }
 

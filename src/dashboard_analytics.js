@@ -138,7 +138,7 @@ function getDashboardAnalytics(period) {
   }
 
   const cache = CacheService.getScriptCache();
-  const cacheKey = 'admin_dashboard_analytics_v14_' + propertyId + '_' + period;
+  const cacheKey = 'admin_dashboard_analytics_v15_' + propertyId + '_' + period;
   const cachedResult = readDashboardCachedResult(cache, cacheKey);
   if (cachedResult) return cachedResult;
 
@@ -166,6 +166,10 @@ function getDashboardAnalytics(period) {
       terms: runDashboardTermsReport(propertyName, range),
       previousRange: previousRange,
       previousPageViews: runDashboardPageViewsReport(propertyName, previousRange),
+      previousPageEngagement: runDashboardPageEngagementReport(
+        propertyName,
+        previousRange
+      ),
       previousActivity: runDashboardActivityReport(propertyName, previousRange)
     };
     const result = buildDashboardAnalyticsResponse(period, range, reports);
@@ -388,7 +392,12 @@ function buildDashboardAnalyticsResponse(period, range, reports) {
       searchMoves: 0,
       searches: 0,
       exampleClicks: 0,
-      topTerms: []
+      topTerms: [],
+      previous: {
+        views: 0,
+        averageEngagementSeconds: 0,
+        searches: 0
+      }
     };
   });
 
@@ -437,6 +446,35 @@ function buildDashboardAnalyticsResponse(period, range, reports) {
       pageByPath[sourcePath].searches += count;
     } else if (eventName === 'view_example_search_results') {
       pageByPath[sourcePath].exampleClicks += count;
+    }
+  });
+
+  dashboardReportRows(reports.previousPageViews, 2).forEach(row => {
+    const path = normalizeDashboardPagePath(row.dimensions[1]);
+    if (pageByPath[path]) {
+      pageByPath[path].previous.views += dashboardCount(row.metrics[0]);
+    }
+  });
+
+  dashboardReportRows(reports.previousPageEngagement, 1).forEach(row => {
+    const path = normalizeDashboardPagePath(row.dimensions[0]);
+    if (!pageByPath[path]) return;
+    const engagementSeconds = dashboardNumber(row.metrics[0]);
+    const activeUsers = dashboardCount(row.metrics[1]);
+    pageByPath[path].previous.averageEngagementSeconds = activeUsers > 0
+      ? Math.round((engagementSeconds / activeUsers) * 10) / 10
+      : 0;
+  });
+
+  dashboardReportRows(reports.previousActivity, 6).forEach(row => {
+    if (DASHBOARD_SEARCH_EVENTS.indexOf(row.dimensions[1]) < 0) return;
+    const sourcePath = chooseDashboardSearchSourcePath(
+      row.dimensions[2],
+      row.dimensions[3],
+      row.dimensions[4]
+    );
+    if (pageByPath[sourcePath]) {
+      pageByPath[sourcePath].previous.searches += dashboardCount(row.metrics[0]);
     }
   });
 

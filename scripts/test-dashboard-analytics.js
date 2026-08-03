@@ -58,6 +58,16 @@ const pageEngagementReport = {
   ]
 };
 
+const previousPageEngagementReport = {
+  rows: [
+    reportRow(
+      ['/gaswebapp-manual/mahler-search-app/dic.html'],
+      [60, 4]
+    ),
+    reportRow(['/gaswebapp-manual/'], [30, 3])
+  ]
+};
+
 const activityReport = {
   rows: [
     reportRow([
@@ -308,7 +318,9 @@ const context = {
               { name: 'activeUsers' }
             ]
           );
-          return pageEngagementReport;
+          return isPreviousRange
+            ? previousPageEngagementReport
+            : pageEngagementReport;
         }
         if (
           dimensionNames ===
@@ -375,7 +387,7 @@ assert.deepStrictEqual(
 assert.strictEqual(analyticsCallCount, 1);
 
 const result = context.getDashboardAnalytics(7);
-assert.strictEqual(analyticsCallCount, 8);
+assert.strictEqual(analyticsCallCount, 9);
 assert.strictEqual(lockAcquireCount, 1);
 assert.strictEqual(lockReleaseCount, 1);
 assert.strictEqual(result.schemaVersion, 2);
@@ -438,12 +450,24 @@ const gmTerms = result.pages.find(page => page.page === '用語から検索 (GM)
 assert.strictEqual(result.pages.length, 12);
 assert.strictEqual(home.views, 5);
 assert.strictEqual(home.averageEngagementSeconds, 22.5);
+assert.deepStrictEqual(
+  JSON.parse(JSON.stringify(home.previous)),
+  { views: 4, averageEngagementSeconds: 10, searches: 0 }
+);
 assert.strictEqual(home.searchMoves, 4);
 assert.strictEqual(dictionary.views, 10);
 assert.strictEqual(dictionary.averageEngagementSeconds, 30);
+assert.deepStrictEqual(
+  JSON.parse(JSON.stringify(dictionary.previous)),
+  { views: 8, averageEngagementSeconds: 15, searches: 0 }
+);
 assert.strictEqual(dictionary.searchMoves, 17);
 assert.strictEqual(dictionary.exampleClicks, 2);
 assert.strictEqual(gmTerms.searches, 6);
+assert.deepStrictEqual(
+  JSON.parse(JSON.stringify(gmTerms.previous)),
+  { views: 0, averageEngagementSeconds: 0, searches: 4 }
+);
 assert.deepStrictEqual(Array.from(gmTerms.topTerms), ['innig']);
 
 assert.strictEqual(result.terms.length, 2);
@@ -582,7 +606,7 @@ assert.strictEqual(
 );
 
 const cachedResult = context.getDashboardAnalytics(7);
-assert.strictEqual(analyticsCallCount, 8);
+assert.strictEqual(analyticsCallCount, 9);
 assert.strictEqual(lockAcquireCount, 1);
 assert.strictEqual(lockReleaseCount, 1);
 assert.deepStrictEqual(

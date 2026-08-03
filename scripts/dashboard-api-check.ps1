@@ -194,7 +194,7 @@ function Test-DashboardApiPayload {
     }
 
     foreach ($page in $pages) {
-        foreach ($key in @("page", "path", "views", "averageEngagementSeconds", "searchMoves", "searches", "exampleClicks", "topTerms")) {
+        foreach ($key in @("page", "path", "views", "averageEngagementSeconds", "searchMoves", "searches", "exampleClicks", "topTerms", "previous")) {
             if (-not (Test-DashboardHasProperty -Object $page -Name $key)) {
                 return New-DashboardApiCheckResult -Success $false -Period $ExpectedPeriod -Message "Invalid page item"
             }
@@ -206,6 +206,14 @@ function Test-DashboardApiPayload {
         }
         if (-not (Test-DashboardNonNegativeNumber -Value $page.averageEngagementSeconds)) {
             return New-DashboardApiCheckResult -Success $false -Period $ExpectedPeriod -Message "Invalid average engagement time"
+        }
+        if (-not (Test-DashboardHasProperty -Object $page.previous -Name "views") -or
+            -not (Test-DashboardHasProperty -Object $page.previous -Name "averageEngagementSeconds") -or
+            -not (Test-DashboardHasProperty -Object $page.previous -Name "searches") -or
+            -not (Test-DashboardNonNegativeInteger -Value $page.previous.views) -or
+            -not (Test-DashboardNonNegativeNumber -Value $page.previous.averageEngagementSeconds) -or
+            -not (Test-DashboardNonNegativeInteger -Value $page.previous.searches)) {
+            return New-DashboardApiCheckResult -Success $false -Period $ExpectedPeriod -Message "Invalid previous page metrics"
         }
     }
 
