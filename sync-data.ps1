@@ -525,10 +525,26 @@ if ($runFailed) {
             Write-Host "Sending request to Web App..." -ForegroundColor Gray
             Write-Host "URL: $($baseUrl.Substring(0, [math]::Min(60, $baseUrl.Length)))..." -ForegroundColor DarkGray
             
-            # Use curl.exe with explicit quoting to handle URL parameters correctly
-            # -L: Follow redirects, -s: Silent
-            $curlOutputLines = & curl.exe -s -L "$webUrl"
-            $curlOutput = $curlOutputLines -join "`n"
+            # A newly updated Apps Script deployment can briefly return an HTML
+            # "page not found" response. Retry the fixed URL before treating it
+            # as a permanent export failure.
+            $webExportRetryDelays = @(0, 10, 20, 30)
+            $curlOutput = ""
+            for ($webAttemptIndex = 0; $webAttemptIndex -lt $webExportRetryDelays.Count; $webAttemptIndex++) {
+                $webDelaySeconds = $webExportRetryDelays[$webAttemptIndex]
+                if ($webDelaySeconds -gt 0) {
+                    Write-Host "  [RETRY] Web App export attempt $($webAttemptIndex + 1)/$($webExportRetryDelays.Count) in $webDelaySeconds seconds..." -ForegroundColor Yellow
+                    Start-Sleep -Seconds $webDelaySeconds
+                }
+
+                # Use curl.exe with explicit quoting to handle URL parameters correctly.
+                # -L: Follow redirects, -s: Silent
+                $curlOutputLines = & curl.exe -s -L "$webUrl"
+                $curlOutput = $curlOutputLines -join "`n"
+                if ($curlOutput -match '"status":\s*"success"') {
+                    break
+                }
+            }
             
             # Save response for debugging
             # $curlOutput | Out-File -FilePath "webapp_response.txt" -Encoding UTF8
