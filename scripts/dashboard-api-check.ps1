@@ -140,7 +140,7 @@ function Test-DashboardApiPayload {
     if ($daily.Count -ne $ExpectedPeriod) {
         return New-DashboardApiCheckResult -Success $false -Period $ExpectedPeriod -Message "daily length mismatch"
     }
-    if ($pages.Count -ne 12) {
+    if ($pages.Count -ne 11) {
         return New-DashboardApiCheckResult -Success $false -Period $ExpectedPeriod -Message "pages length mismatch"
     }
     if ($previousDaily.Count -ne $ExpectedPeriod) {

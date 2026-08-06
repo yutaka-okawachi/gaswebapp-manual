@@ -67,8 +67,8 @@ const DASHBOARD_DICTIONARY_EXAMPLE_DESTINATIONS = Object.freeze([
 
 const DASHBOARD_PAGES = Object.freeze([
   { page: 'HOME', path: '/gaswebapp-manual/' },
-  { page: '曲名と楽器等から検索 (GM)', path: '/gaswebapp-manual/mahler-search-app/mahler.html' },
   { page: 'ドイツ語の音楽用語集', path: '/gaswebapp-manual/mahler-search-app/dic.html' },
+  { page: '曲名と楽器等から検索 (GM)', path: '/gaswebapp-manual/mahler-search-app/mahler.html' },
   { page: '用語から検索 (GM)', path: '/gaswebapp-manual/mahler-search-app/terms_search.html' },
   { page: '用語から検索 (RS)', path: '/gaswebapp-manual/mahler-search-app/rs_terms_search.html' },
   { page: '用語から検索 (RW)', path: '/gaswebapp-manual/mahler-search-app/rw_terms_search.html' },
@@ -76,8 +76,7 @@ const DASHBOARD_PAGES = Object.freeze([
   { page: '曲名から検索 (RW)', path: '/gaswebapp-manual/mahler-search-app/richard_wagner.html' },
   { page: 'あらすじ集 (RS)', path: '/gaswebapp-manual/mahler-search-app/rs_synopsis.html' },
   { page: 'あらすじ集 (RW)', path: '/gaswebapp-manual/mahler-search-app/rw_synopsis.html' },
-  { page: '訳出についての覚書', path: '/gaswebapp-manual/mahler-search-app/notes.html' },
-  { page: '作品・索引など', path: '/gaswebapp-manual/mahler-search-app/other.html' }
+  { page: 'その他', path: '/gaswebapp-manual/mahler-search-app/other.html' }
 ]);
 
 const DASHBOARD_DICTIONARY_PATH = '/gaswebapp-manual/mahler-search-app/dic.html';
@@ -138,7 +137,7 @@ function getDashboardAnalytics(period) {
   }
 
   const cache = CacheService.getScriptCache();
-  const cacheKey = 'admin_dashboard_analytics_v15_' + propertyId + '_' + period;
+  const cacheKey = 'admin_dashboard_analytics_v16_' + propertyId + '_' + period;
   const cachedResult = readDashboardCachedResult(cache, cacheKey);
   if (cachedResult) return cachedResult;
 

@@ -25,7 +25,7 @@ foreach ($period in @(7, 30, 90)) {
     }
 
     $pages = @()
-    for ($i = 0; $i -lt 12; $i++) {
+    for ($i = 0; $i -lt 11; $i++) {
         $pages += @{
             page = "Page $i"
             path = "/page-$i"

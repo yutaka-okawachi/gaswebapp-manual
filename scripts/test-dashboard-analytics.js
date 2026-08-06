@@ -447,7 +447,14 @@ assert.strictEqual(
 const home = result.pages.find(page => page.page === 'HOME');
 const dictionary = result.pages.find(page => page.page === 'ドイツ語の音楽用語集');
 const gmTerms = result.pages.find(page => page.page === '用語から検索 (GM)');
-assert.strictEqual(result.pages.length, 12);
+assert.strictEqual(result.pages.length, 11);
+assert.strictEqual(result.pages[0].page, 'HOME');
+assert.strictEqual(result.pages[1].page, 'ドイツ語の音楽用語集');
+assert.strictEqual(result.pages[result.pages.length - 1].page, 'その他');
+assert.strictEqual(
+  result.pages.some(page => page.path.endsWith('/notes.html')),
+  false
+);
 assert.strictEqual(home.views, 5);
 assert.strictEqual(home.averageEngagementSeconds, 22.5);
 assert.deepStrictEqual(
@@ -651,7 +658,7 @@ assert.deepStrictEqual(
   assert.strictEqual(emptyResponse.previous.daily[0].searches, 0);
   assert.strictEqual(emptyResponse.previous.daily[0].views, 0);
   assert.strictEqual(emptyResponse.previous.daily[0].exampleClicks, 0);
-  assert.strictEqual(emptyResponse.pages.length, 12);
+  assert.strictEqual(emptyResponse.pages.length, 11);
 });
 
 function assertFiniteNonNegativeCounts(value, key) {
