@@ -109,7 +109,7 @@
 | `page` | `path` |
 |---|---|
 | HOME | `/gaswebapp-manual/` |
-| 曲名と楽器等から選択 (GM) | `/gaswebapp-manual/mahler-search-app/mahler.html` |
+| 曲名と楽器等から検索 (GM) | `/gaswebapp-manual/mahler-search-app/mahler.html` |
 | ドイツ語の音楽用語集 | `/gaswebapp-manual/mahler-search-app/dic.html` |
 | 用語から検索 (GM) | `/gaswebapp-manual/mahler-search-app/terms_search.html` |
 | 用語から検索 (RS) | `/gaswebapp-manual/mahler-search-app/rs_terms_search.html` |

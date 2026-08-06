@@ -67,7 +67,7 @@ const DASHBOARD_DICTIONARY_EXAMPLE_DESTINATIONS = Object.freeze([
 
 const DASHBOARD_PAGES = Object.freeze([
   { page: 'HOME', path: '/gaswebapp-manual/' },
-  { page: '曲名と楽器等から選択 (GM)', path: '/gaswebapp-manual/mahler-search-app/mahler.html' },
+  { page: '曲名と楽器等から検索 (GM)', path: '/gaswebapp-manual/mahler-search-app/mahler.html' },
   { page: 'ドイツ語の音楽用語集', path: '/gaswebapp-manual/mahler-search-app/dic.html' },
   { page: '用語から検索 (GM)', path: '/gaswebapp-manual/mahler-search-app/terms_search.html' },
   { page: '用語から検索 (RS)', path: '/gaswebapp-manual/mahler-search-app/rs_terms_search.html' },
