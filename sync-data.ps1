@@ -135,18 +135,22 @@ function Wait-GitHubPagesChecks {
     param(
         [string]$RepoSlug,
         [string]$CommitSha,
-        [int]$TimeoutSeconds = 180
+        [int]$TimeoutSeconds = 30
     )
 
     if (-not $RepoSlug -or -not $CommitSha) { return }
 
-    Write-Host "Waiting for intermediate GitHub Pages checks to finish..." -ForegroundColor Gray
+    Write-Host "Checking intermediate GitHub Pages checks status..." -ForegroundColor Gray
     $deadline = (Get-Date).AddSeconds($TimeoutSeconds)
     $apiUrl = "https://api.github.com/repos/$RepoSlug/commits/$CommitSha/check-runs"
 
+    $headers = @{ Accept = "application/vnd.github+json" }
+    if ($env:GH_TOKEN) { $headers["Authorization"] = "Bearer $env:GH_TOKEN" }
+    elseif ($env:GITHUB_TOKEN) { $headers["Authorization"] = "Bearer $env:GITHUB_TOKEN" }
+
     while ((Get-Date) -lt $deadline) {
         try {
-            $response = Invoke-RestMethod -Headers @{ Accept = "application/vnd.github+json" } -Uri $apiUrl
+            $response = Invoke-RestMethod -Headers $headers -Uri $apiUrl
             $checks = @($response.check_runs | Where-Object {
                 $_.app.slug -eq "github-actions" -and
                 ($_.name -eq "build" -or $_.name -eq "deploy" -or $_.name -eq "report-build-status")
@@ -157,15 +161,14 @@ function Wait-GitHubPagesChecks {
                 return
             }
         } catch {
-            Write-Host "Could not query GitHub Pages checks. Falling back to a fixed wait." -ForegroundColor Yellow
-            Start-Sleep -Seconds 90
+            Write-Host "Could not query GitHub Pages checks. Continuing with push." -ForegroundColor Gray
             return
         }
 
-        Start-Sleep -Seconds 5
+        Start-Sleep -Seconds 3
     }
 
-    Write-Warning "GitHub Pages checks did not finish within $TimeoutSeconds seconds. Continuing with final push."
+    Write-Host "GitHub Pages check is running in background. Continuing with final push." -ForegroundColor Gray
 }
 
 # ========================================
@@ -662,7 +665,7 @@ Write-Host "[4/5] Pulling latest data from GitHub..." -ForegroundColor Yellow
 # GASからのGitHubプッシュが完了するまでダイナミックに待機
 Write-Host "Waiting for GAS to push data to GitHub (polling remote)..." -ForegroundColor Gray
 $pollStartTime = Get-Date
-$timeoutSeconds = 180 # 3分タイムアウト
+$timeoutSeconds = 60 # 60秒タイムアウト
 $gasCommitDetected = $false
 
 while (((Get-Date) - $pollStartTime).TotalSeconds -lt $timeoutSeconds) {
