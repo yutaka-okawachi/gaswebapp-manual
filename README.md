@@ -113,7 +113,7 @@ clasp login  # ブラウザで管理対象のGoogleアカウントを選択
 
 ### git pull失敗（sync-data.ps1実行時）
 
-**症状**: `sync-data.ps1`の`[4/5] Pulling latest data from GitHub...`でエラーが発生
+**症状**: `sync-data.ps1`の`[6/8] GitHub から最新データを取得中 (git pull)...`でエラーが発生
 
 **原因**: ローカルとGitHubで競合が発生、またはネットワークエラー
 

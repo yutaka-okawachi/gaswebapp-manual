@@ -1,8 +1,8 @@
-param([string]$message = "automated sync update")
+﻿param([string]$message = "自動同期アップデート")
 
 $dashboardApiCheckScript = Join-Path $PSScriptRoot "scripts/dashboard-api-check.ps1"
 if (-not (Test-Path -LiteralPath $dashboardApiCheckScript)) {
-    throw "Dashboard API check helper was not found: $dashboardApiCheckScript"
+    throw "ダッシュボード API チェックヘルパーが見つかりません: $dashboardApiCheckScript"
 }
 . $dashboardApiCheckScript
 
@@ -87,7 +87,7 @@ function Get-ApprovedSyncSourcePaths {
     )
     if ($unexpectedPaths.Count -gt 0) {
         $details = $unexpectedPaths -join ", "
-        throw "Changes outside the sync allowlist were found: $details"
+        throw "許可リスト外のファイルの変更が検出されました: $details"
     }
 
     return @(
@@ -101,13 +101,13 @@ function Add-ApprovedSyncSourceChanges {
     $sourcePaths = @(Get-ApprovedSyncSourcePaths)
     if ($sourcePaths.Count -eq 0) { return }
 
-    Write-Host "Staging approved source paths only:" -ForegroundColor Gray
+    Write-Host "許可されたソースパスのみをステージング中:" -ForegroundColor Gray
     $sourcePaths | ForEach-Object {
         Write-Host "  - $_" -ForegroundColor DarkGray
     }
     git add -- $sourcePaths
     if ($LASTEXITCODE -ne 0) {
-        throw "Failed to stage the approved source changes."
+        throw "許可されたソース変更のステージングに失敗しました。"
     }
 }
 
@@ -116,7 +116,7 @@ function Invoke-NodeScriptStrict {
 
     & node $ScriptPath
     if ($LASTEXITCODE -ne 0) {
-        throw "$ScriptPath failed with exit code $LASTEXITCODE"
+        throw "$ScriptPath が終了コード $LASTEXITCODE で失敗しました。"
     }
 }
 
@@ -142,7 +142,7 @@ function Wait-GitHubPagesChecks {
 
     if (-not $RepoSlug -or -not $CommitSha) { return }
 
-    Write-Host "Checking intermediate GitHub Pages checks status..." -ForegroundColor Gray
+    Write-Host "GitHub Pages の中間チェック状態を確認中..." -ForegroundColor Gray
     $deadline = (Get-Date).AddSeconds($TimeoutSeconds)
     $apiUrl = "https://api.github.com/repos/$RepoSlug/commits/$CommitSha/check-runs"
 
@@ -159,108 +159,112 @@ function Wait-GitHubPagesChecks {
             })
 
             if ($checks.Count -gt 0 -and -not ($checks | Where-Object { $_.status -ne "completed" })) {
-                Write-Host "[OK] Intermediate GitHub Pages checks completed." -ForegroundColor Green
+                Write-Host "[OK] GitHub Pages の中間チェックが完了しました。" -ForegroundColor Green
                 return
             }
         } catch {
-            Write-Host "Could not query GitHub Pages checks. Continuing with push." -ForegroundColor Gray
+            Write-Host "GitHub Pages チェックの照会に失敗しました。プッシュを継続します。" -ForegroundColor Gray
             return
         }
 
         Start-Sleep -Seconds 3
     }
 
-    Write-Host "GitHub Pages check is running in background. Continuing with final push." -ForegroundColor Gray
+    Write-Host "GitHub Pages チェックがバックグラウンドで実行中です。最終プッシュを継続します。" -ForegroundColor Gray
 }
 
 # ========================================
-# 統合データ同期スクリプト (Enhanced v4)
+# 統合データ同期・出力スクリプト (Enhanced v5)
 # ========================================
 # 
 # 用途: ローカルの変更 (HTML/JS/GAS) を GAS と GitHub に同期し、
 #       最新のデータを生成して GitHub Pages に反映させます。
 #
 # 実行順序:
-#   1. ローカルの GAS 変更を clasp push (src/ 以下の変更がある場合)
-#   2. ローカルの変更を git commit (clean working directory ensure)
-#   3. GAS 関数 (exportAllDataToJson) を実行して最新データを GitHub にプッシュ
-#   4. GitHub から最新のデータ (dic.html 等) を git pull --rebase で取得
-#   5. 全ての変更を git push で公開
+#   [1/8] 前準備：環境設定と Git 状態の確認 (.env のロード / ブランチ確認)
+#   [2/8] GAS ソースコードのアップロード (clasp push & デプロイ設定更新)
+#   [3/8] ローカル変更のコミット (Git commit)
+#   [4/8] GAS による最新データ生成処理の実行 (exportAllDataToJson)
+#   [5/8] Web App 設定更新のコミット (app.js の変更コミット)
+#   [6/8] 最新データのローカル同期 (git pull --rebase)
+#   [7/8] sitemap.xml の自動更新とコミット
+#   [8/8] GitHub への公開とダッシュボード API 検証 (git push & Dashboard API check)
 # ========================================
 
 Write-Host "================================" -ForegroundColor Cyan
-Write-Host "Unified Sync & Export Script" -ForegroundColor Cyan
+Write-Host "統合データ同期・出力スクリプト" -ForegroundColor Cyan
 Write-Host "================================" -ForegroundColor Cyan
 Write-Host ""
 
 # Node.js接続エラー対策: IPv4を優先
 $env:NODE_OPTIONS = "--dns-result-order=ipv4first"
 
-# --- [0.1] Git状態チェック ---
-Write-Host "Checking git status..." -ForegroundColor Gray
+# --- [1/8] 前準備：環境設定と Git 状態の確認 ---
+Write-Host "[1/8] 前準備：環境設定と Git 状態を確認中..." -ForegroundColor Yellow
+
 $currentBranch = git branch --show-current
 if (-not $currentBranch) {
-    Write-Error "[ERROR] Error: Git is in a detached HEAD state (e.g., rebase in progress)."
-    Write-Host "Please run 'git status' and resolve the current state (e.g., git rebase --abort) before running this script." -ForegroundColor Yellow
+    Write-Error "[エラー] Git が detached HEAD 状態です (rebase 実行中の可能性があります)。"
+    Write-Host "'git status' を実行し、現在の状態を解消 (例: git rebase --abort) してから再実行してください。" -ForegroundColor Yellow
     exit 1
 }
 
 if ($currentBranch -ne "main") {
-    Write-Host "[WARNING] Currently on branch '$currentBranch'." -ForegroundColor Yellow
+    Write-Host "[警告] 現在のブランチは '$currentBranch' です。" -ForegroundColor Yellow
     $status = git status --porcelain
 
     if ($status) {
         $branchGeneratedChanges = git status --porcelain -- $generatedOutputPaths
         if ($branchGeneratedChanges) {
-            Write-Error "[ERROR] Generated outputs are modified on a non-main branch. Aborting before merge."
+            Write-Error "[エラー] main 以外のブランチで生成ファイルが変更されています。マージ前に中止します。"
             Write-Host ($branchGeneratedChanges | Out-String) -ForegroundColor DarkGray
             exit 1
         }
 
-        Write-Host "Uncommitted changes detected." -ForegroundColor Yellow
-        $resp = Read-Host "Do you want to COMMIT these changes and MERGE '$currentBranch' into 'main'? (Y/N)"
+        Write-Host "未コミットの変更が検出されました。" -ForegroundColor Yellow
+        $resp = Read-Host "これらの変更をコミットし、'$currentBranch' を 'main' にマージしますか？ (Y/N)"
         
         if ($resp -match "^[Yy]") {
-            Write-Host "Committing changes..." -ForegroundColor Gray
+            Write-Host "変更をコミット中..." -ForegroundColor Gray
             try {
                 Add-ApprovedSyncSourceChanges
             } catch {
-                Write-Error "[ERROR] $($_.Exception.Message)"
+                Write-Error "[エラー] $($_.Exception.Message)"
                 exit 1
             }
-            git commit -m "Auto-commit/merge via sync-data from $currentBranch"
+            git commit -m "sync-data による $currentBranch からの自動コミット/マージ"
             if ($LASTEXITCODE -ne 0) {
-                Write-Error "[ERROR] Failed to commit branch changes."
+                Write-Error "[エラー] ブランチ変更のコミットに失敗しました。"
                 exit 1
             }
             
-            Write-Host "Switching to main and merging..." -ForegroundColor Gray
+            Write-Host "main ブランチに切り替えてマージ中..." -ForegroundColor Gray
             git checkout main
             git merge $currentBranch
             if ($LASTEXITCODE -ne 0) {
-                Write-Error "[ERROR] Merge failed (Conflict?). Please resolve manually."
+                Write-Error "[エラー] マージに失敗しました (競合が発生した可能性があります)。手動で解決してください。"
                 exit 1
             }
         } else {
-             $stashResp = Read-Host "Do you want to STASH changes and switch to main? (Y/N)"
+             $stashResp = Read-Host "変更を退避 (stash) して main ブランチに切り替えますか？ (Y/N)"
              if ($stashResp -match "^[Yy]") {
-                 Write-Host "Stashing changes..." -ForegroundColor Gray
-                 git stash push -u -m "Auto-stash by sync-data"
+                 Write-Host "変更を退避中..." -ForegroundColor Gray
+                 git stash push -u -m "sync-data による自動退避"
                  git checkout main
              } else {
-                 Write-Error "[ERROR] Aborted. Please handle uncommitted changes manually."
+                 Write-Error "[エラー] 中止しました。未コミットの変更を手動で処理してください。"
                  exit 1
              }
         }
     } else {
         # Clean state
-        $resp = Read-Host "Do you want to MERGE '$currentBranch' into 'main'? (Y=Merge, N=Just Switch)"
+        $resp = Read-Host "'$currentBranch' を 'main' にマージしますか？ (Y=マージする, N=切替のみ)"
         if ($resp -match "^[Yy]") {
-            Write-Host "Switching to main and merging..." -ForegroundColor Gray
+            Write-Host "main ブランチに切り替えてマージ中..." -ForegroundColor Gray
             git checkout main
             git merge $currentBranch
         } else {
-            Write-Host "Switching to main..." -ForegroundColor Gray
+            Write-Host "main ブランチに切り替え中..." -ForegroundColor Gray
             git checkout main
         }
     }
@@ -268,15 +272,15 @@ if ($currentBranch -ne "main") {
     # Ensure we are on main now
     $newBranch = git branch --show-current
     if ($newBranch -ne "main") {
-         Write-Error "[ERROR] Failed to switch to main branch."
+         Write-Error "[エラー] main ブランチへの切り替えに失敗しました。"
          exit 1
     }
-    Write-Host "[OK] Switched to main." -ForegroundColor Green
+    Write-Host "[OK] main ブランチに切り替えました。" -ForegroundColor Green
 }
 
-# --- [0.5] 環境変数のロード (.env) ---
+# --- .env のロード ---
 if (Test-Path ".env") {
-    Write-Host "Loading .env file..." -ForegroundColor Gray
+    Write-Host ".env ファイルを読み込んでいます..." -ForegroundColor Gray
     Get-Content .env | ForEach-Object {
         if ($_ -match "^\s*([^#\s][^=]*)\s*=\s*(.*)$") {
             $name = $matches[1].Trim()
@@ -284,24 +288,23 @@ if (Test-Path ".env") {
             Set-Item -Path "env:$name" -Value $value
         }
     }
-    # Debug: Show loaded env vars (masked for security)
     if ($env:GAS_DEPLOY_URL) {
-        Write-Host "  GAS_DEPLOY_URL loaded (length: $($env:GAS_DEPLOY_URL.Length))" -ForegroundColor DarkGray
+        Write-Host "  GAS_DEPLOY_URL を読み込みました (文字数: $($env:GAS_DEPLOY_URL.Length))" -ForegroundColor DarkGray
     }
     if ($env:GAS_SECRET_TOKEN) {
-        Write-Host "  GAS_SECRET_TOKEN loaded (length: $($env:GAS_SECRET_TOKEN.Length))" -ForegroundColor DarkGray
+        Write-Host "  GAS_SECRET_TOKEN を読み込みました (文字数: $($env:GAS_SECRET_TOKEN.Length))" -ForegroundColor DarkGray
     }
 }
+Write-Host ""
 
-# --- [1/5] GAS へのアップロード (clasp push) ---
-Write-Host "[1/5] Checking GAS source changes (src/)..." -ForegroundColor Yellow
+# --- [2/8] GAS ソースコードのアップロード (clasp push) ---
+Write-Host "[2/8] GASソースコードをアップロード中 (clasp push)..." -ForegroundColor Yellow
 
 # Gitのステータスにかかわらず、常にアップロードを試行して整合性を保つ
-Write-Host "Forcing checks for GAS source changes..." -ForegroundColor Gray
+Write-Host "GASソースコード (src/) の変更チェックを強制実行中..." -ForegroundColor Gray
 $gasChanges = $true 
 
-
-Write-Host "Executing clasp push..." -ForegroundColor Gray
+Write-Host "clasp push を実行中..." -ForegroundColor Gray
 Push-Location "src"
 
 # clasp push を実行（エラー出力をキャプチャ）
@@ -311,66 +314,66 @@ $pushExitCode = $LASTEXITCODE
 if ($pushExitCode -ne 0) {
     # "No valid files to push" は実質的な成功（変更なし）とみなす
     if ($pushOutput -match "No valid files to push") {
-         Write-Host "[OK] No changes to push to GAS." -ForegroundColor Green
+         Write-Host "[OK] GASへアップロードする変更はありません。" -ForegroundColor Green
     } else {
         # 変更があるのに失敗した場合、または予期せぬエラー
         if ($gasChanges) {
             Write-Host ""
-            Write-Error "[ERROR] CRITICAL: clasp push failed while GAS source changes exist."
-            Write-Host "You modified GAS code (logic), but it could not be uploaded." -ForegroundColor Red
-            Write-Host "To prevent sync inconsistency, the script will ABORT now." -ForegroundColor Red
+            Write-Error "[エラー] 致命的: GASソースコードに変更が存在しますが clasp push に失敗しました。"
+            Write-Host "GASコード (ロジック) を変更しましたが、アップロードできませんでした。" -ForegroundColor Red
+            Write-Host "同期の不整合を防ぐため、スクリプトを中止します。" -ForegroundColor Red
             Write-Host ""
-            Write-Host "Error details:" -ForegroundColor DarkGray
+            Write-Host "エラー詳細:" -ForegroundColor DarkGray
             Write-Host ($pushOutput | Out-String) -ForegroundColor DarkGray
             Write-Host ""
             
             # 認証エラーの場合はログインを促す
             if ($pushOutput -match "permission|unauthorized|credentials|not logged in|Insufficient") {
-                Write-Host "Action Required: Authentication failed." -ForegroundColor Yellow
-                Write-Host "If you log in now, the script will RETRY the upload and RESUME execution." -ForegroundColor Cyan
-                $loginChoice = Read-Host "Do you want to run 'clasp login' and RESUME? (Y/N)"
+                Write-Host "要対応: 認証に失敗しました。" -ForegroundColor Yellow
+                Write-Host "今すぐログインを実行すると、アップロードを再試行して処理を再開できます。" -ForegroundColor Cyan
+                $loginChoice = Read-Host "'clasp login' を実行して再開しますか？ (Y/N)"
                  if ($loginChoice -match "^[Yy]") {
-                    Write-Host "Running 'clasp login'..." -ForegroundColor Cyan
+                    Write-Host "'clasp login' を実行中..." -ForegroundColor Cyan
                     clasp login
-                    Write-Host "Retrying clasp push..." -ForegroundColor Cyan
+                    Write-Host "clasp push を再試行中..." -ForegroundColor Cyan
                     $pushOutput = clasp push -f 2>&1
                     if ($LASTEXITCODE -eq 0) {
-                        Write-Host "[OK] GAS source updated successfully (Retry)." -ForegroundColor Green
+                        Write-Host "[OK] GASソースコードの更新が成功しました (再試行)。" -ForegroundColor Green
                     } else {
-                        Write-Error "[ERROR] Retry failed. Aborting."
+                        Write-Error "[エラー] 再試行に失敗しました。中止します。"
                         Pop-Location
                         exit 1
                     }
                  } else {
-                    Write-Host "Aborting." -ForegroundColor Red
+                    Write-Host "中止します。" -ForegroundColor Red
                     Pop-Location
                     exit 1
                  }
             } else {
-                # 認証以外のエラーで、かつ変更がある場合 -> 即死
+                # 認証以外のエラーで、かつ変更がある場合 -> 中止
                 Pop-Location
                 exit 1
             }
         } else {
-            # 変更がない場合は警告のみで続行（データ更新だけしたい場合など）
+            # 変更がない場合は警告のみで続行
             Write-Host ""
-            Write-Warning "[WARNING] clasp push failed, but no local GAS changes were detected."
-            Write-Host "Since logic hasn't changed, we can proceed with data sync." -ForegroundColor Gray
-            Write-Host "Error summary: $($pushOutput | Select-Object -First 1)" -ForegroundColor DarkGray
+            Write-Warning "[警告] clasp push に失敗しましたが、ローカルのGAS変更は検出されませんでした。"
+            Write-Host "ロジックに変更がないため、データ同期を継続します。" -ForegroundColor Gray
+            Write-Host "エラー概要: $($pushOutput | Select-Object -First 1)" -ForegroundColor DarkGray
             Write-Host ""
         }
     }
 } else {
-    Write-Host "[OK] GAS source updated successfully." -ForegroundColor Green
+    Write-Host "[OK] GASソースコードの更新が完了しました。" -ForegroundColor Green
 }
 
-# ★★★ Deploymentの自動更新 (Auto-Deploy) - Always run ★★★
-Write-Host "Updating Web App deployment..." -ForegroundColor Cyan
+# デプロイの自動更新
+Write-Host "Web App デプロイ設定を更新中..." -ForegroundColor Cyan
 try {
     Invoke-NodeScriptStrict -ScriptPath "manage_deploy.js"
     Invoke-NodeScriptStrict -ScriptPath "update_env.js"
 } catch {
-    Write-Error "[ERROR] Failed to update the fixed Web App deployment: $($_.Exception.Message)"
+    Write-Error "[エラー] Web App デプロイ設定の更新に失敗しました: $($_.Exception.Message)"
     Pop-Location
     exit 1
 }
@@ -378,60 +381,55 @@ try {
 Pop-Location
 Write-Host ""
 
-
-# --- [2/5] ローカル変更のコミット (Git Commit) ---
-Write-Host "[2/5] Committing local changes..." -ForegroundColor Yellow
+# --- [3/8] ローカル変更のコミット ---
+Write-Host "[3/8] ローカル変更をコミット中..." -ForegroundColor Yellow
 $appChanges = git status --porcelain
 if ($appChanges) {
-    Write-Host "[OK] Detected local changes. Committing to ensure clean rebase..." -ForegroundColor Gray
+    Write-Host "[OK] ローカルの変更を検出しました。安全なリバース/マージのためコミットします..." -ForegroundColor Gray
     try {
         Add-ApprovedSyncSourceChanges
     } catch {
-        Write-Error "[ERROR] $($_.Exception.Message)"
+        Write-Error "[エラー] $($_.Exception.Message)"
         exit 1
     }
 
     # 自動生成ファイルはGASから取得するため、ローカルコミットには含めない。
-    # アンステージするだけでは後続の `git add .` で再度コミットされるため、
-    # ソース側の変更をコミットした後に作業ツリーもHEADへ戻す。
     git restore --staged -- $generatedOutputPaths 2>$null
     
     # コミットすべきステージされた変更があるか確認
     $stagedChanges = git diff --name-only --cached
     if ($stagedChanges) {
-        $commitMsg = if ($message -eq "automated sync update") { "Sync: App update and data refresh [$([DateTime]::Now.ToString('yyyy-MM-dd HH:mm'))]" } else { $message }
+        $commitMsg = if ($message -eq "自動同期アップデート" -or $message -eq "automated sync update") { "Sync: App update and data refresh [$([DateTime]::Now.ToString('yyyy-MM-dd HH:mm'))]" } else { $message }
         git commit -m $commitMsg -q
         if ($LASTEXITCODE -ne 0) {
-            Write-Error "[ERROR] Failed to commit local source changes. Aborting before GAS export."
+            Write-Error "[エラー] ローカルソースコードのコミットに失敗しました。GAS出力前に中止します。"
             exit 1
         }
-        Write-Host "[OK] Local changes committed." -ForegroundColor Green
+        Write-Host "[OK] ローカルの変更をコミットしました。" -ForegroundColor Green
     } else {
-        Write-Host "[OK] No source code changes to commit (staged files were ignored)." -ForegroundColor Gray
+        Write-Host "[OK] コミット対象のソースコード変更はありません (ステージングされたファイルはスキップされました)。" -ForegroundColor Gray
     }
 } else {
-    Write-Host "[OK] No local changes to commit." -ForegroundColor Gray
+    Write-Host "[OK] コミット対象のローカル変更はありません。" -ForegroundColor Gray
 }
 
-# GASが同じファイルを生成してGitHubへプッシュするため、ローカル生成物を残すと
-# pull --rebase時に競合する。追跡済み生成物だけを明示的に復元し、
-# 未追跡ファイルなどが残る場合は削除せず安全停止する。
+# GASが同じファイルを生成してGitHubへプッシュするため、ローカル生成物をリセット
 $generatedOutputChanges = git status --porcelain -- $generatedOutputPaths
 if ($generatedOutputChanges) {
-    Write-Host "Resetting local generated outputs before GAS export..." -ForegroundColor Gray
+    Write-Host "GAS出力実行前にローカルの生成ファイルをリセット中..." -ForegroundColor Gray
     git restore --worktree -- $generatedOutputPaths
     if ($LASTEXITCODE -ne 0) {
-        Write-Error "[ERROR] Failed to restore generated output files. Aborting to avoid a rebase conflict."
+        Write-Error "[エラー] 生成ファイルのリセットに失敗しました。競合を回避するため中止します。"
         exit 1
     }
 
     $remainingGeneratedChanges = git status --porcelain -- $generatedOutputPaths
     if ($remainingGeneratedChanges) {
-        Write-Error "[ERROR] Untracked or unresolved generated files remain. Aborting before GAS export."
+        Write-Error "[エラー] 未追跡または未解決の生成ファイルが残っています。GAS出力前に中止します。"
         Write-Host ($remainingGeneratedChanges | Out-String) -ForegroundColor DarkGray
         exit 1
     }
-    Write-Host "[OK] Local generated outputs reset; GAS will provide the authoritative versions." -ForegroundColor Green
+    Write-Host "[OK] ローカル生成ファイルをリセットしました（GASから最新版が提供されます）。" -ForegroundColor Green
 }
 Write-Host ""
 
@@ -439,16 +437,16 @@ Write-Host ""
 git fetch origin -q
 $initialRemoteSha = git rev-parse origin/main 2>$null
 
-# --- [3/5] GAS 関数の実行 (最新データ生成) ---
-Write-Host "[3/5] Triggering GAS function (exportAllDataToJson)..." -ForegroundColor Yellow
-Write-Host "This will update data files and dic.html on GitHub..." -ForegroundColor Gray
+# --- [4/8] GAS最新データ生成処理の実行 (exportAllDataToJson) ---
+Write-Host "[4/8] GAS関数 (exportAllDataToJson) を実行中..." -ForegroundColor Yellow
+Write-Host "スプレッドシートから最新データを抽出し、GitHub上のデータファイルと dic.html を更新します..." -ForegroundColor Gray
 Write-Host ""
 
 # 実行時間計測開始
 $startTime = Get-Date
 
 # clasp run を実行（エラー出力をキャプチャ）
-Write-Host "Attempting clasp run..." -ForegroundColor Gray
+Write-Host "clasp run によるダイレクト実行を試行中..." -ForegroundColor Gray
 $runOutput = clasp run exportAllDataToJson 2>&1
 $runExitCode = $LASTEXITCODE
 
@@ -456,220 +454,171 @@ $runExitCode = $LASTEXITCODE
 $runFailed = ($runExitCode -ne 0) -or ($runOutput -match "Unable to run|function not found|Script function not found")
 
 if ($runFailed) {
-    Write-Host "[ERROR] clasp run failed or unavailable (exit code: $runExitCode)" -ForegroundColor Yellow
+    # エラーではなく「切り替え案内」としてマイルドに表示
+    Write-Host "[情報] clasp run (Execution API) が利用できないため、Web App 方式に切り替えます。" -ForegroundColor Cyan
     
-    # 認証エラーチェックと再ログイン
-    # 認証エラーチェックと再ログイン
-    # "Unable to run script function" (API実行権限エラー) はWeb Appフォールバックでカバーできるため、
-    # ここでは純粋な認証切れ（再ログインが必要な状態）とは区別して除外します。
+    # 認証切れの場合の案内
     if ($runOutput -match "unauthorized|credentials|not logged in" -or ($runOutput -match "permission" -and $runOutput -notmatch "Unable to run script function")) {
         Write-Host ""
-        Write-Host "[WARNING] clasp run failed due to authentication error." -ForegroundColor Yellow
+        Write-Host "[警告] clasp run が認証エラーにより失敗しました。" -ForegroundColor Yellow
         
-        $loginChoice = Read-Host "Do you want to run 'clasp login' now? (Y to login, N to verify Web App fallback)"
+        $loginChoice = Read-Host "今すぐ 'clasp login' を実行しますか？ (Y: ログインする / N: Web App フォールバックを試す)"
         if ($loginChoice -match "^[Yy]") {
             Push-Location "src"
-            Write-Host "Running 'clasp login'... (A browser tab will open)" -ForegroundColor Cyan
+            Write-Host "'clasp login' を実行中... (ブラウザが開きます)" -ForegroundColor Cyan
             clasp login
             Pop-Location
             
-            Write-Host "Retrying clasp run..." -ForegroundColor Cyan
+            Write-Host "clasp run を再試行中..." -ForegroundColor Cyan
             $runOutput = clasp run exportAllDataToJson 2>&1
             $runExitCode = $LASTEXITCODE
             $runFailed = ($runExitCode -ne 0) -or ($runOutput -match "Unable to run|function not found|Script function not found")
             
             if (-not $runFailed) {
-                Write-Host "[OK] GAS function executed successfully (Retry)." -ForegroundColor Green
+                Write-Host "[OK] GAS関数が正常に実行されました (再試行)。" -ForegroundColor Green
                 $runFailed = $false
             }
         }
     }
 
-
-    # clasp runの出力を表示（デバッグ用）
-    if ($runOutput) {
-        Write-Host "clasp run output:" -ForegroundColor DarkGray
+    # デバッグ用に clasp run の出力を表示（控えめなグレー）
+    if ($runFailed -and $runOutput) {
+        Write-Host "  (参考) clasp run の出力ログ:" -ForegroundColor DarkGray
         Write-Host ($runOutput | Out-String) -ForegroundColor DarkGray
     }
 
     # Web App経由で実行を試みる
     if ($runFailed) {
-        Write-Host ""
-        Write-Host "→ Falling back to Web App method..." -ForegroundColor Yellow
+        Write-Host "→ Web App 方式でデータ生成を実行中..." -ForegroundColor Yellow
+        Write-Host "[OK] 検証済みの Web App デプロイメントを使用します。" -ForegroundColor Green
     
-    # 固定Web Appは[1/5]で更新・検証済み。同じ同期処理内で再更新すると、
-    # 不要なApps Scriptバージョンが増え、並行実行時の確認競合も起きるため再利用する。
-    Write-Host "[OK] Reusing the fixed Web App deployment verified in step [1/5]." -ForegroundColor Green
-    
-    # .envの再読み込み (新しいURLを反映するため)
-    if (Test-Path ".env") {
-        Write-Host "Reloading .env..." -ForegroundColor Gray
-        Get-Content .env | ForEach-Object {
-            if ($_ -match "^\s*([^#\s][^=]*)\s*=\s*(.*)$") {
-                $envKey = $matches[1].Trim()
-                $envVal = $matches[2].Trim()
-                Set-Item -Path "env:$envKey" -Value $envVal
+        # .envの再読み込み (新しいURLを反映するため)
+        if (Test-Path ".env") {
+            Write-Host ".env ファイルを再読み込み中..." -ForegroundColor Gray
+            Get-Content .env | ForEach-Object {
+                if ($_ -match "^\s*([^#\s][^=]*)\s*=\s*(.*)$") {
+                    $envKey = $matches[1].Trim()
+                    $envVal = $matches[2].Trim()
+                    Set-Item -Path "env:$envKey" -Value $envVal
+                }
             }
         }
-    }
 
-    Write-Host ""
-    
-    # Web App環境変数をチェック
-    if ($env:GAS_DEPLOY_URL -and $env:GAS_SECRET_TOKEN) {
-        $urlDisplay = if ($env:GAS_DEPLOY_URL.Length -gt 60) { $env:GAS_DEPLOY_URL.Substring(0, 60) + "..." } else { $env:GAS_DEPLOY_URL }
-        Write-Host "Using Web App endpoint: $urlDisplay" -ForegroundColor Gray
-        
-        try {
-            $webStartTime = Get-Date
+        # Web App環境変数をチェック
+        if ($env:GAS_DEPLOY_URL -and $env:GAS_SECRET_TOKEN) {
+            $urlDisplay = if ($env:GAS_DEPLOY_URL.Length -gt 60) { $env:GAS_DEPLOY_URL.Substring(0, 60) + "..." } else { $env:GAS_DEPLOY_URL }
+            Write-Host "使用する Web App エンドポイント: $urlDisplay" -ForegroundColor Gray
             
-            # Using curl.exe as requested for robust parameter handling
-            $webAction = "exportAllDataToJson"
-            $baseUrl = $env:GAS_DEPLOY_URL.Trim()
-            $tokenParam = $env:GAS_SECRET_TOKEN.Trim()
-            $webUrl = "${baseUrl}?action=${webAction}&token=${tokenParam}"
-            
-            Write-Host "Sending request to Web App..." -ForegroundColor Gray
-            Write-Host "URL: $($baseUrl.Substring(0, [math]::Min(60, $baseUrl.Length)))..." -ForegroundColor DarkGray
-            
-            # A newly updated Apps Script deployment can briefly return an HTML
-            # "page not found" response. Retry the fixed URL before treating it
-            # as a permanent export failure.
-            $webExportRetryDelays = @(0, 10, 20, 30)
-            $curlOutput = ""
-            for ($webAttemptIndex = 0; $webAttemptIndex -lt $webExportRetryDelays.Count; $webAttemptIndex++) {
-                $webDelaySeconds = $webExportRetryDelays[$webAttemptIndex]
-                if ($webDelaySeconds -gt 0) {
-                    Write-Host "  [RETRY] Web App export attempt $($webAttemptIndex + 1)/$($webExportRetryDelays.Count) in $webDelaySeconds seconds..." -ForegroundColor Yellow
-                    Start-Sleep -Seconds $webDelaySeconds
+            try {
+                $webStartTime = Get-Date
+                
+                $webAction = "exportAllDataToJson"
+                $baseUrl = $env:GAS_DEPLOY_URL.Trim()
+                $tokenParam = $env:GAS_SECRET_TOKEN.Trim()
+                $webUrl = "${baseUrl}?action=${webAction}&token=${tokenParam}"
+                
+                Write-Host "Web App にリクエストを送信中..." -ForegroundColor Gray
+                
+                $webExportRetryDelays = @(0, 10, 20, 30)
+                $curlOutput = ""
+                for ($webAttemptIndex = 0; $webAttemptIndex -lt $webExportRetryDelays.Count; $webAttemptIndex++) {
+                    $webDelaySeconds = $webExportRetryDelays[$webAttemptIndex]
+                    if ($webDelaySeconds -gt 0) {
+                        Write-Host "  [再試行] Web App リクエスト試行 $($webAttemptIndex + 1)/$($webExportRetryDelays.Count) ($webDelaySeconds 秒後)..." -ForegroundColor Yellow
+                        Start-Sleep -Seconds $webDelaySeconds
+                    }
+
+                    $curlOutputLines = & curl.exe -s -L "$webUrl"
+                    $curlOutput = $curlOutputLines -join "`n"
+                    if ($curlOutput -match '"status":\s*"success"') {
+                        break
+                    }
                 }
-
-                # Use curl.exe with explicit quoting to handle URL parameters correctly.
-                # -L: Follow redirects, -s: Silent
-                $curlOutputLines = & curl.exe -s -L "$webUrl"
-                $curlOutput = $curlOutputLines -join "`n"
+                
+                $webDuration = (Get-Date) - $webStartTime
+                
                 if ($curlOutput -match '"status":\s*"success"') {
-                    break
+                    Write-Host "[OK] Web App 経由で GAS 関数の実行に成功しました。" -ForegroundColor Green
+                    Write-Host "  実行時間: $([math]::Round($webDuration.TotalSeconds, 1)) 秒" -ForegroundColor Gray
+                } else {
+                    Write-Host ""
+                    Write-Error "[エラー] Web App の実行に失敗したか、予期せぬ応答が返されました。"
+                    $outputSummary = if ($curlOutput -and $curlOutput.Length -gt 0) { 
+                        $curlOutput.Substring(0, [math]::Min(500, $curlOutput.Length)) 
+                    } else { 
+                        "(空の応答)" 
+                    }
+                    Write-Host "応答概要: $outputSummary" -ForegroundColor DarkGray
+                    Write-Host ""
+                    Write-Host "以下をご確認ください:" -ForegroundColor Yellow
+                    Write-Host "  1. Web App デプロイメントが最新であること" -ForegroundColor White
+                    Write-Host "  2. .env 内の GAS_DEPLOY_URL と GAS_SECRET_TOKEN が正確であること" -ForegroundColor White
+                    Write-Host "  3. Web App のアクセス権限が '全員' (Anyone) に設定されていること" -ForegroundColor White
+                    Write-Host ""
+                    exit 1
                 }
-            }
-            
-            # Save response for debugging
-            # $curlOutput | Out-File -FilePath "webapp_response.txt" -Encoding UTF8
-            
-            $webDuration = (Get-Date) - $webStartTime
-            
-            # Check if output looks like success JSON
-            if ($curlOutput -match '"status":\s*"success"') {
-                Write-Host "[OK] GAS function executed successfully via Web App." -ForegroundColor Green
-                Write-Host "  Execution time: $([math]::Round($webDuration.TotalSeconds, 1)) seconds" -ForegroundColor Gray
-            } else {
-                Write-Host ""
-                Write-Error "[ERROR] Web App execution failed or returned unexpected format."
-                $outputSummary = if ($curlOutput -and $curlOutput.Length -gt 0) { 
-                    $curlOutput.Substring(0, [math]::Min(500, $curlOutput.Length)) 
-                } else { 
-                    "(empty response)" 
-                }
-                Write-Host "Output summary: $outputSummary" -ForegroundColor DarkGray
-                Write-Host "Full response saved to: webapp_response.txt" -ForegroundColor Gray
-                Write-Host ""
-                Write-Host "Please check the following:" -ForegroundColor Yellow
-                Write-Host "  1. Web App deployment is up to date" -ForegroundColor White
-                Write-Host "  2. GAS_DEPLOY_URL and GAS_SECRET_TOKEN are correct in .env" -ForegroundColor White
-                Write-Host "  3. Web App is deployed with 'Anyone' access" -ForegroundColor White
-                Write-Host ""
-                Write-Host "Or try manual execution:" -ForegroundColor Yellow
-                Write-Host "  1. Open GAS editor: https://script.google.com" -ForegroundColor White
-                Write-Host "  2. Run 'exportAllDataToJson' function" -ForegroundColor White
-                Write-Host "  3. Then run: git pull" -ForegroundColor White
-                Write-Host ""
+            } catch {
+                Write-Host "" 
+                Write-Error "[エラー] Web App リクエストに失敗しました: $($_.Exception.Message)"
                 exit 1
             }
-        } catch {
-            Write-Host "" 
-            Write-Error "[ERROR] Web App request failed: $($_.Exception.Message)"
-            Write-Host "Error details: $($_.Exception.GetType().FullName)" -ForegroundColor DarkGray
-            if ($_.Exception.Response) {
-                Write-Host "Status Code: $($_.Exception.Response.StatusCode.value__)" -ForegroundColor DarkGray
-            }
+        } else {
+            # Web App未設定の場合
             Write-Host ""
-            Write-Host "Please try manual execution:" -ForegroundColor Yellow
-            Write-Host "  1. Open GAS editor: https://script.google.com" -ForegroundColor White
-            Write-Host "  2. Run 'exportAllDataToJson' function" -ForegroundColor White
-            Write-Host "  3. Then run: git pull" -ForegroundColor White
+            Write-Warning "[警告] Web App が設定されていません。"
+            Write-Host ""
+            Write-Host "解決方法:" -ForegroundColor Cyan
+            Write-Host "  方法1: Google Apps Script API を有効化する (script.google.com/home/usersettings)" -ForegroundColor White
+            Write-Host "  方法2: Web App トリガーをセットアップする (.\setup-web-trigger.ps1 を実行)" -ForegroundColor White
             Write-Host ""
             exit 1
         }
-    } else {
-        # Web App未設定の場合
-        Write-Host ""
-        Write-Warning "[WARNING] Web App is not configured. clasp run requires Apps Script API."
-        Write-Host ""
-        Write-Host "To fix this issue:" -ForegroundColor Cyan
-        Write-Host "  Option 1: Enable Apps Script API" -ForegroundColor White
-        Write-Host "    - Visit: https://script.google.com/home/usersettings" -ForegroundColor Gray
-        Write-Host "    - Enable 'Google Apps Script API'" -ForegroundColor Gray
-        Write-Host ""
-        Write-Host "  Option 2: Setup Web App (recommended)" -ForegroundColor White
-        Write-Host "    - Run: .\setup-web-trigger.ps1" -ForegroundColor Gray
-        Write-Host ""
-        Write-Host "  Option 3: Manual execution" -ForegroundColor White
-        Write-Host "    1. Open GAS editor: https://script.google.com" -ForegroundColor Gray
-        Write-Host "    2. Run 'exportAllDataToJson' function" -ForegroundColor Gray
-        Write-Host "    3. Then run: git pull" -ForegroundColor Gray
-        Write-Host ""
-        exit 1
-
     }
-
-    } # End of Web App Fallback Block
-
 } else {
     $duration = (Get-Date) - $startTime
-    Write-Host "[OK] GAS function executed successfully via clasp run." -ForegroundColor Green
-    Write-Host "  Execution time: $([math]::Round($duration.TotalSeconds, 1)) seconds" -ForegroundColor Gray
+    Write-Host "[OK] clasp run 経由で GAS 関数を実行完了しました。" -ForegroundColor Green
+    Write-Host "  実行時間: $([math]::Round($duration.TotalSeconds, 1)) 秒" -ForegroundColor Gray
 }
 
-Write-Host "[OK] GAS function completed. Files should be pushed to GitHub." -ForegroundColor Green
+Write-Host "[OK] GAS 関数の実行が完了しました。最新データが GitHub へプッシュされるのを確認します。" -ForegroundColor Green
 Write-Host ""
 
-# --- [3.5/5] 中間コミット (Intermediate Commit) ---
-# Deployment更新で変更され得る追跡対象はapp.jsだけ。
-# `git add .` は自動生成dic.htmlまで巻き込むため使用しない。
+# --- [5/8] Web App 設定更新のコミット ---
 $autoDeployPaths = @("mahler-search-app/js/app.js")
 $autoDeployChanges = git status --porcelain -- $autoDeployPaths
 if ($autoDeployChanges) {
-    Write-Host "[3.5/5] Committing app.js updates..." -ForegroundColor Cyan
+    Write-Host "[5/8] app.js の Web App URL 設定更新をコミット中..." -ForegroundColor Cyan
     git add -- $autoDeployPaths
     if ($LASTEXITCODE -ne 0) {
-        Write-Error "[ERROR] Failed to stage app.js. Aborting before pull."
+        Write-Error "[エラー] app.js のステージングに失敗しました。pull 前に中止します。"
         exit 1
     }
     git commit -m "Update Web App URL in app.js (Auto-sync)"
     if ($LASTEXITCODE -ne 0) {
-        Write-Error "[ERROR] Failed to commit app.js. Aborting before pull."
+        Write-Error "[エラー] app.js のコミットに失敗しました。pull 前に中止します。"
         exit 1
     }
-    Write-Host "[OK] Local changes committed." -ForegroundColor Green
+    Write-Host "[OK] app.js の変更をコミットしました。" -ForegroundColor Green
+    Write-Host ""
+} else {
+    Write-Host "[5/8] Web App 設定更新のコミットチェック: 変更なし" -ForegroundColor Gray
     Write-Host ""
 }
 
-# ここで想定外の変更が残っているとpull --rebaseが失敗する。
-# 勝手にコミット・破棄せず、内容を表示して安全停止する。
+# 想定外の変更が残っているかチェック
 $unexpectedChanges = git status --porcelain
 if ($unexpectedChanges) {
-    Write-Error "[ERROR] Unexpected local changes remain before pull --rebase. Aborting safely."
+    Write-Error "[エラー] git pull --rebase 前に予期せぬローカル変更が残っています。安全のため中止します。"
     Write-Host ($unexpectedChanges | Out-String) -ForegroundColor DarkGray
     exit 1
 }
 
-# --- [4/5] 最新データのローカル同期 (git pull) ---
-Write-Host "[4/5] Pulling latest data from GitHub..." -ForegroundColor Yellow
+# --- [6/8] GitHub からの最新データ取得 (git pull) ---
+Write-Host "[6/8] GitHub から最新データを取得中 (git pull)..." -ForegroundColor Yellow
 
-# GASからのGitHubプッシュが完了するまでダイナミックに待機
-Write-Host "Waiting for GAS to push data to GitHub (polling remote)..." -ForegroundColor Gray
+Write-Host "GAS による GitHub へのデータ出力完了を待機中 (リモートを監視中)..." -ForegroundColor Gray
 $pollStartTime = Get-Date
-$timeoutSeconds = 60 # 60秒タイムアウト
+$timeoutSeconds = 60
 $gasCommitDetected = $false
 
 while (((Get-Date) - $pollStartTime).TotalSeconds -lt $timeoutSeconds) {
@@ -678,7 +627,7 @@ while (((Get-Date) - $pollStartTime).TotalSeconds -lt $timeoutSeconds) {
     if ($currentRemoteSha -and $currentRemoteSha -ne $initialRemoteSha) {
         $commitMsg = git log -1 --pretty=%B origin/main
         if ($commitMsg -match "自動更新|スプレッドシート|skip ci") {
-            Write-Host "New GAS commit detected on remote: $currentRemoteSha" -ForegroundColor Green
+            Write-Host "リモートで GAS による新しいコミットを検出しました: $currentRemoteSha" -ForegroundColor Green
             $gasCommitDetected = $true
             break
         }
@@ -687,71 +636,50 @@ while (((Get-Date) - $pollStartTime).TotalSeconds -lt $timeoutSeconds) {
 }
 
 if (-not $gasCommitDetected) {
-    Write-Warning "Timed out waiting for new GAS commit on remote. Proceeding with pull anyway."
+    Write-Warning "GAS コミットの待機がタイムアウトしました。そのまま pull を続行します。"
 }
 
 $beforePullHead = git rev-parse HEAD
 
-# git pullを実行（出力をキャプチャ）
+# git pull を実行
 $pullOutput = git pull --rebase 2>&1
 $pullExitCode = $LASTEXITCODE
 
 if ($pullExitCode -ne 0) {
     Write-Host ""
-    Write-Warning "[WARNING] git pull failed."
-    Write-Host "Pull output:" -ForegroundColor DarkGray
+    Write-Warning "[警告] git pull に失敗しました。"
+    Write-Host "Pull 出力:" -ForegroundColor DarkGray
     Write-Host ($pullOutput | Out-String) -ForegroundColor DarkGray
     Write-Host ""
     
-    # コンフリクトかその他のエラーかを判定
     if ($pullOutput -match "conflict|CONFLICT") {
-        Write-Host "Conflict detected. Attempting to resolve..." -ForegroundColor Yellow
-        Write-Host ""
-        Write-Host "To resolve manually:" -ForegroundColor Cyan
-        Write-Host "  1. git status  # Check conflicts" -ForegroundColor White
-        Write-Host "  2. git checkout --theirs <file>  # Accept GitHub version" -ForegroundColor White
-        Write-Host "  3. git rebase --continue" -ForegroundColor White
-        Write-Host ""
+        Write-Error "[エラー] 競合 (Conflict) が検出されました。手動で解決してください。"
         exit 1
     } else {
-        # その他のエラー: リトライ
-        Write-Host "Retrying pull in 5 seconds..." -ForegroundColor Yellow
+        Write-Host "5秒後に pull を再試行します..." -ForegroundColor Yellow
         Start-Sleep -Seconds 5
         
         $pullOutput2 = git pull --rebase 2>&1
-        $pullExitCode2 = $LASTEXITCODE
-        
-        if ($pullExitCode2 -ne 0) {
-            Write-Error "[ERROR] git pull failed after retry."
-            Write-Host "Pull output:" -ForegroundColor DarkGray
-            Write-Host ($pullOutput2 | Out-String) -ForegroundColor DarkGray
-            Write-Host ""
-            Write-Host "Please run manually: git pull --rebase" -ForegroundColor Yellow
+        if ($LASTEXITCODE -ne 0) {
+            Write-Error "[エラー] 再試行後も git pull に失敗しました。手動で 'git pull --rebase' を実行してください。"
             exit 1
         } else {
-            Write-Host "[OK] Pull succeeded on retry." -ForegroundColor Green
+            Write-Host "[OK] 再試行で pull が成功しました。" -ForegroundColor Green
         }
     }
 } else {
-    # git pullの詳細を表示
-    if ($pullOutput -match "Fast-forward|Updating|Already up to date") {
-        Write-Host "[OK] Local repository is now up to date." -ForegroundColor Green
-        
-        # 更新されたファイルを表示（情報提供）
-        if ($pullOutput -match "mahler-search-app/dic.html") {
-            Write-Host "  - dic.html updated from GitHub" -ForegroundColor Gray
-        }
-        if ($pullOutput -match "mahler-search-app/data/") {
-            Write-Host "  - Data files updated from GitHub" -ForegroundColor Gray
-        }
-    } else {
-        Write-Host "[OK] Local repository is now up to date." -ForegroundColor Green
+    Write-Host "[OK] ローカルリポジトリが最新の状態になりました。" -ForegroundColor Green
+    if ($pullOutput -match "mahler-search-app/dic.html") {
+        Write-Host "  - dic.html を GitHub から更新しました" -ForegroundColor Gray
+    }
+    if ($pullOutput -match "mahler-search-app/data/") {
+        Write-Host "  - データファイルを GitHub から更新しました" -ForegroundColor Gray
     }
 }
 Write-Host ""
-# --- [4.5/5] 動的 sitemap.xml 更新 ---
-Write-Host "[4.5/5] Updating sitemap.xml for modified files..." -ForegroundColor Yellow
-# 未プッシュのコミット（ローカル変更＋GASからのPull分）で変更されたファイルを取得
+
+# --- [7/8] sitemap.xml の自動更新 ---
+Write-Host "[7/8] 変更されたファイルに対応する sitemap.xml を更新中..." -ForegroundColor Yellow
 $pulledFiles = git diff --name-only $beforePullHead HEAD
 $unpushedFiles = git diff --name-only origin/main HEAD
 $changedFiles = @($pulledFiles + $unpushedFiles) | Where-Object { $_ } | Sort-Object -Unique
@@ -811,7 +739,7 @@ if (Test-Path $sitemapPath) {
                 
                 if ($sitemapUpdated -match $pattern) {
                     $sitemapUpdated = $sitemapUpdated -replace $pattern, "`${1}$today`${2}"
-                    Write-Host "  - Updated <lastmod> for: $file -> $targetPath" -ForegroundColor Gray
+                    Write-Host "  - <lastmod> 更新: $file -> $targetPath" -ForegroundColor Gray
                     $hasSitemapUpdates = $true
                 }
             }
@@ -820,18 +748,18 @@ if (Test-Path $sitemapPath) {
 
     if ($hasSitemapUpdates) {
         [System.IO.File]::WriteAllText((Resolve-Path $sitemapPath).Path, $sitemapUpdated, (New-Object System.Text.UTF8Encoding $false))
-        Write-Host "[OK] sitemap.xml updated with new <lastmod> dates." -ForegroundColor Green
+        Write-Host "[OK] sitemap.xml の最終更新日時 (<lastmod>) を更新しました。" -ForegroundColor Green
         
         git add $sitemapPath
         git commit -m "chore: auto-update sitemap lastmod for modified files" -q
     } else {
-        Write-Host "[OK] No HTML files required sitemap <lastmod> updates." -ForegroundColor Gray
+        Write-Host "[OK] sitemap.xml の更新が必要な HTML ファイルはありません。" -ForegroundColor Gray
     }
 }
 Write-Host ""
 
-# --- [5/5] 全ての変更を GitHub に公開 (git push) ---
-Write-Host "[5/5] Pushing all changes to GitHub..." -ForegroundColor Yellow
+# --- [8/8] GitHub への公開とダッシュボード API 検証 ---
+Write-Host "[8/8] すべての変更を GitHub に公開し、ダッシュボード API を検証中..." -ForegroundColor Yellow
 
 $remoteHead = git rev-parse origin/main 2>$null
 $localHead = git rev-parse HEAD 2>$null
@@ -843,22 +771,21 @@ if ($remoteHead -and $localHead -and $remoteHead -ne $localHead -and $remoteHead
 # 最新コミットが [skip ci] (GAS更新) の場合、デプロイ用コミットを追加
 $lastMsg = git log -1 --pretty=%B
 if ($lastMsg -match "\[skip ci\]") {
-    Write-Host "Creating trigger commit to ensure deployment..." -ForegroundColor Cyan
+    Write-Host "デプロイを確実にするトリガーコミットを作成中..." -ForegroundColor Cyan
     git commit --allow-empty -m "Deploy: Update data files"
 }
 
-Write-Host "Pushing to GitHub..." -ForegroundColor Gray
+Write-Host "GitHub へプッシュ中..." -ForegroundColor Gray
 git push
 if ($LASTEXITCODE -ne 0) {
-    Write-Error "[ERROR] git push failed."
+    Write-Error "[エラー] git push に失敗しました。"
     exit 1
 }
-Write-Host "[OK] All changes published to GitHub Pages!" -ForegroundColor Green
-
+Write-Host "[OK] すべての変更が GitHub Pages に公開されました！" -ForegroundColor Green
 Write-Host ""
 
-# --- [5.5/5] Dashboard aggregate API verification ---
-Write-Host "[5.5/5] Verifying dashboard aggregate API..." -ForegroundColor Yellow
+# ダッシュボード集計 API の検証
+Write-Host "ダッシュボード集計 API の動作用検証を実行中..." -ForegroundColor Yellow
 $dashboardPeriods = @(7, 30, 90)
 $dashboardApiRetryDelays = @(0, 10, 20, 40, 60)
 $pendingDashboardPeriods = @($dashboardPeriods)
@@ -872,7 +799,7 @@ for (
     $delaySeconds = $dashboardApiRetryDelays[$attemptIndex]
     if ($delaySeconds -gt 0) {
         $pendingLabel = $pendingDashboardPeriods -join ","
-        Write-Host "  [WAIT] period=$pendingLabel - retrying in $delaySeconds seconds..." -ForegroundColor DarkGray
+        Write-Host "  [待機中] period=$pendingLabel - $delaySeconds 秒後に再試行..." -ForegroundColor DarkGray
         Start-Sleep -Seconds $delaySeconds
     }
 
@@ -886,7 +813,7 @@ for (
             $nextPendingPeriods += $period
         }
         if (-not $result.Success -and $attemptIndex -lt $dashboardApiRetryDelays.Count - 1) {
-            Write-Host "  [RETRY] period=$period attempt=$attempt - $($result.Message)" -ForegroundColor Yellow
+            Write-Host "  [再試行] period=$period 試行=$attempt - $($result.Message)" -ForegroundColor Yellow
         }
     }
     $pendingDashboardPeriods = @($nextPendingPeriods)
@@ -895,7 +822,7 @@ for (
 $dashboardApiResults = foreach ($period in $dashboardPeriods) {
     $result = $dashboardApiResultByPeriod[$period]
     if (-not $result.Success) {
-        Write-Host "  [FAILED] period=$period - $($result.Message)" -ForegroundColor Red
+        Write-Host "  [失敗] period=$period - $($result.Message)" -ForegroundColor Red
     }
     $result
 }
@@ -904,29 +831,29 @@ Write-Host ""
 
 if ($dashboardApiHealthy) {
     Write-Host "================================" -ForegroundColor Cyan
-    Write-Host "[OK] COMPLETED SUCCESSFULLY" -ForegroundColor Green
+    Write-Host "[OK] 正常に完了しました" -ForegroundColor Green
     Write-Host "================================" -ForegroundColor Cyan
     Write-Host ""
-    Write-Host "App, generated data, and dashboard API are synchronized." -ForegroundColor White
+    Write-Host "アプリ、生成データ、およびダッシュボード API の同期が完了しました。" -ForegroundColor White
 } else {
     Write-Host "================================" -ForegroundColor Yellow
-    Write-Host "[PARTIAL] SITE SYNC SUCCEEDED; DASHBOARD API CHECK FAILED" -ForegroundColor Yellow
+    Write-Host "[一部完了] サイト同期は成功しましたが、ダッシュボード API の検証に失敗しました" -ForegroundColor Yellow
     Write-Host "================================" -ForegroundColor Yellow
     Write-Host ""
-    Write-Host "GitHub Pages was updated, but the dashboard API is not verified." -ForegroundColor Yellow
+    Write-Host "GitHub Pages は更新されましたが、ダッシュボード API の動作が確認できていません。" -ForegroundColor Yellow
 }
-Write-Host "Check the live site in a few minutes:" -ForegroundColor Gray
+Write-Host "数分後に公開サイトをご確認ください:" -ForegroundColor Gray
 Write-Host "https://yutaka-okawachi.github.io/gaswebapp-manual/" -ForegroundColor Blue
 Write-Host ""
 
-# --- [Check for Deployment Warning] ---
+# --- デプロイ警告のチェック ---
 if (Test-Path ".deploy_warning") {
     $count = [int](Get-Content ".deploy_warning")
     $remaining = [Math]::Max(0, 200 - $count)
     $warningColor = if ($count -ge 195) { "Red" } else { "Yellow" }
-    $warningLabel = if ($count -ge 195) { "CRITICAL" } else { "WARNING" }
-    Write-Host "[$warningLabel] Apps Script version count is high ($count/200; $remaining remaining)." -ForegroundColor $warningColor -BackgroundColor Black
-    Write-Host "Please organize unused versions or deployments in the Apps Script management screen before the limit is reached." -ForegroundColor $warningColor -BackgroundColor Black
+    $warningLabel = if ($count -ge 195) { "危険" } else { "警告" }
+    Write-Host "[$warningLabel] Apps Script バージョン数が上限に近づいています ($count/200; 残り $remaining)。" -ForegroundColor $warningColor -BackgroundColor Black
+    Write-Host "上限に達する前に Apps Script 管理画面不要なバージョンやデプロイメントを整理してください。" -ForegroundColor $warningColor -BackgroundColor Black
     Remove-Item ".deploy_warning" -ErrorAction SilentlyContinue
     Write-Host ""
 }
@@ -934,4 +861,3 @@ if (Test-Path ".deploy_warning") {
 if (-not $dashboardApiHealthy) {
     exit 1
 }
-
