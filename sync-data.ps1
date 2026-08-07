@@ -125,7 +125,9 @@ function Get-GitHubRepoSlug {
     if (-not $remoteUrl) { return $null }
 
     if ($remoteUrl -match "github\.com[:/](?<owner>[^/]+)/(?<repo>[^/.]+)(?:\.git)?$") {
-        return "$($matches.owner)/$($matches.repo)"
+        $owner = $matches['owner']
+        $repo = $matches['repo']
+        return "$owner/$repo"
     }
 
     return $null
@@ -504,7 +506,9 @@ if ($runFailed) {
         Write-Host "Reloading .env..." -ForegroundColor Gray
         Get-Content .env | ForEach-Object {
             if ($_ -match "^\s*([^#\s][^=]*)\s*=\s*(.*)$") {
-                Set-Item -Path "env:$($matches[1].Trim())" -Value $matches[2].Trim()
+                $envKey = $matches[1].Trim()
+                $envVal = $matches[2].Trim()
+                Set-Item -Path "env:$envKey" -Value $envVal
             }
         }
     }
