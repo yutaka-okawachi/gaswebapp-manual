@@ -95,6 +95,11 @@
     "[RS: Qui]"
   ],
   [
+    "Allmählich wieder ins schnelle Tempo",
+    "徐々に再び速いテンポへ（戻して）",
+    "[B: 5]"
+  ],
+  [
     "Alm",
     "（夏に利用される）山地の牧草地 ",
     "[RS: Alpen]"
@@ -1560,8 +1565,8 @@
     "[RW: Oper], [RS: Oper]"
   ],
   [
-    "G Saite aufangs breit markig",
-    "G線で始めて，ゆったりと，しっかりと",
+    "G Saite anfangs",
+    "最初はG線で演奏すること",
     "[B: 5]"
   ],
   [
@@ -2840,6 +2845,11 @@
     "[GM]"
   ],
   [
+    "Möglichst auf der G-Saite zu spielen",
+    "できる限りG線で演奏すること",
+    "[B: 5]"
+  ],
+  [
     "möglichst G Saite",
     "できる限りG線で",
     "[B: 8-1]"
@@ -3553,6 +3563,11 @@
     "Sehr dünnen Stahlstab (Stricknadel)  an das Instrument halten und mit einem weichen Paukenschlägel in Schwingung versetzen.",
     "非常に細い鋼鉄製の棒（編み針程度のもの）を楽器に当てがい，柔らかいティンパニ・マレットで振動させること．",
     "[H: Es]"
+  ],
+  [
+    "Sehr kräftig, markig",
+    "非常に力強く，充実した響きで",
+    "[B: 5]"
   ],
   [
     "sehr langsam, frei declamirend, sentimental in Vortrag.",
