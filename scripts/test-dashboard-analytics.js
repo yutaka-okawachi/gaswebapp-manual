@@ -209,6 +209,43 @@ const retentionReport = {
   ]
 };
 
+const monthlyPageViewsReport = {
+  rows: [
+    reportRow(['202506', '/gaswebapp-manual/'], 7),
+    reportRow(['202607', '/gaswebapp-manual/'], 20),
+    reportRow(['202607', '/gaswebapp-manual/mahler-search-app/terms_search.html'], 12)
+  ]
+};
+
+const monthlyPageEngagementReport = {
+  rows: [
+    reportRow(['202607', '/gaswebapp-manual/'], [240, 8]),
+    reportRow(
+      ['202607', '/gaswebapp-manual/mahler-search-app/terms_search.html'],
+      [150, 5]
+    )
+  ]
+};
+
+const monthlyActivityReport = {
+  rows: [
+    reportRow([
+      '202607',
+      'view_search_results',
+      '/gaswebapp-manual/mahler-search-app/terms_search.html',
+      '/gaswebapp-manual/mahler-search-app/terms_search.html',
+      'gm_term'
+    ], 6),
+    reportRow([
+      '202607',
+      'search_no_results',
+      '/gaswebapp-manual/mahler-search-app/terms_search.html',
+      '/gaswebapp-manual/mahler-search-app/terms_search.html',
+      'gm_term'
+    ], 2)
+  ]
+};
+
 const context = {
   console,
   URL,
@@ -314,15 +351,15 @@ const context = {
         const dimensionNames = request.dimensions.map(item => item.name).join(',');
         if (dimensionNames === 'cohort,cohortNthMonth') {
           assert.strictEqual(request.dateRanges, undefined);
-          assert.strictEqual(request.cohortSpec.cohorts.length, 8);
+          assert.strictEqual(request.cohortSpec.cohorts.length, 12);
           assert.deepStrictEqual(
             JSON.parse(JSON.stringify(request.cohortSpec.cohorts[0])),
             {
-              name: 'month_2025_11',
+              name: 'month_2025_07',
               dimension: 'firstSessionDate',
               dateRange: {
-                startDate: '2025-11-01',
-                endDate: '2025-11-30'
+                startDate: '2025-07-01',
+                endDate: '2025-07-31'
               }
             }
           );
@@ -341,6 +378,24 @@ const context = {
           return retentionReport;
         }
         const requestedRange = JSON.parse(JSON.stringify(request.dateRanges[0]));
+        const isMonthlyRange =
+          requestedRange.startDate === '2025-08-01' &&
+          requestedRange.endDate === '2026-07-26';
+        if (isMonthlyRange) {
+          if (dimensionNames === 'yearMonth,pagePath') {
+            const metricNames = request.metrics.map(item => item.name).join(',');
+            return metricNames === 'eventCount'
+              ? monthlyPageViewsReport
+              : monthlyPageEngagementReport;
+          }
+          if (
+            dimensionNames ===
+            'yearMonth,eventName,customEvent:source_page,pagePath,customEvent:search_type'
+          ) {
+            return monthlyActivityReport;
+          }
+          throw new Error(`Unexpected monthly report dimensions: ${dimensionNames}`);
+        }
         const isPreviousRange =
           requestedRange.startDate === '2026-07-13' &&
           requestedRange.endDate === '2026-07-19';
@@ -431,10 +486,10 @@ assert.deepStrictEqual(
 assert.strictEqual(analyticsCallCount, 1);
 
 const result = context.getDashboardAnalytics(7);
-assert.strictEqual(analyticsCallCount, 10);
+assert.strictEqual(analyticsCallCount, 13);
 assert.strictEqual(lockAcquireCount, 1);
 assert.strictEqual(lockReleaseCount, 1);
-assert.strictEqual(result.schemaVersion, 3);
+assert.strictEqual(result.schemaVersion, 4);
 assert.strictEqual(result.period, 7);
 assert.deepStrictEqual(
   JSON.parse(JSON.stringify(result.range)),
@@ -475,7 +530,7 @@ assert.deepStrictEqual(
 );
 assert.strictEqual(result.retention.granularity, 'month');
 assert.strictEqual(result.retention.asOfDate, '2026-07-26');
-assert.strictEqual(result.retention.rows.length, 8);
+assert.strictEqual(result.retention.rows.length, 12);
 assert.deepStrictEqual(
   JSON.parse(JSON.stringify(result.retention.summary)),
   {
@@ -498,6 +553,42 @@ assert.deepStrictEqual(
   JSON.parse(JSON.stringify(juneRetention.periods[1])),
   { offset: 1, returningUsers: 2, rate: 13.3, status: 'collecting' }
 );
+assert.strictEqual(result.pageTrends.granularity, 'month');
+assert.strictEqual(result.pageTrends.asOfDate, '2026-07-26');
+assert.deepStrictEqual(
+  JSON.parse(JSON.stringify(result.pageTrends.range)),
+  { startMonth: '2025-08', endMonth: '2026-07' }
+);
+assert.strictEqual(result.pageTrends.pages.length, 11);
+const homeTrend = result.pageTrends.pages.find(page => page.page === 'HOME');
+const gmTermsTrend = result.pageTrends.pages.find(
+  page => page.page === '用語から検索 (GM)'
+);
+const dictionaryTrend = result.pageTrends.pages.find(
+  page => page.page === 'ドイツ語の音楽用語集'
+);
+assert.strictEqual(homeTrend.months.length, 12);
+assert.deepStrictEqual(
+  JSON.parse(JSON.stringify(homeTrend.months[11])),
+  {
+    month: '2026-07',
+    views: 20,
+    averageEngagementSeconds: 30,
+    searches: null,
+    status: 'collecting'
+  }
+);
+assert.deepStrictEqual(
+  JSON.parse(JSON.stringify(gmTermsTrend.months[11])),
+  {
+    month: '2026-07',
+    views: 12,
+    averageEngagementSeconds: 30,
+    searches: 8,
+    status: 'collecting'
+  }
+);
+assert.strictEqual(dictionaryTrend.months[11].searches, null);
 assert.strictEqual(result.daily.length, 7);
 assert.strictEqual(result.previous.daily.length, 7);
 assert.deepStrictEqual(
@@ -682,7 +773,7 @@ assert.strictEqual(
 );
 
 const cachedResult = context.getDashboardAnalytics(7);
-assert.strictEqual(analyticsCallCount, 10);
+assert.strictEqual(analyticsCallCount, 13);
 assert.strictEqual(lockAcquireCount, 1);
 assert.strictEqual(lockReleaseCount, 1);
 assert.deepStrictEqual(
@@ -741,10 +832,12 @@ function assertFiniteNonNegativeCounts(value, key) {
     if (
       ['searches', 'views', 'exampleClicks', 'searchMoves', 'count'].includes(childKey)
     ) {
+      if (childValue === null && childKey === 'searches') return;
       assert.strictEqual(Number.isFinite(childValue), true);
       assert.strictEqual(Number.isInteger(childValue), true);
       assert.ok(childValue >= 0);
     } else if (childKey === 'averageEngagementSeconds') {
+      if (childValue === null) return;
       assert.strictEqual(Number.isFinite(childValue), true);
       assert.ok(childValue >= 0);
     } else {

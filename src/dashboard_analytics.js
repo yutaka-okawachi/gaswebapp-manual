@@ -6,15 +6,16 @@
  * read or returned here.
  */
 
-const DASHBOARD_SCHEMA_VERSION = 3;
+const DASHBOARD_SCHEMA_VERSION = 4;
 const DASHBOARD_TIME_ZONE = 'Asia/Tokyo';
 const DASHBOARD_ALLOWED_PERIODS = Object.freeze([7, 30, 90]);
 const DASHBOARD_CACHE_SECONDS = 900;
 const DASHBOARD_LOCK_WAIT_MILLISECONDS = 30000;
 const DASHBOARD_TERM_LIMIT = 50;
 const DASHBOARD_HOST_NAME = 'yutaka-okawachi.github.io';
-const DASHBOARD_RETENTION_COHORT_COUNT = 8;
+const DASHBOARD_RETENTION_COHORT_COUNT = 12;
 const DASHBOARD_RETENTION_END_OFFSET = 3;
+const DASHBOARD_PAGE_TREND_MONTH_COUNT = 12;
 const DASHBOARD_SEARCH_EVENTS = Object.freeze([
   'view_search_results',
   'search_no_results'
@@ -95,6 +96,14 @@ const DASHBOARD_SEARCH_TYPE_PAGE_PATHS = Object.freeze({
   rw_work_page: '/gaswebapp-manual/mahler-search-app/richard_wagner.html',
   rw_work_whom: '/gaswebapp-manual/mahler-search-app/richard_wagner.html'
 });
+const DASHBOARD_SEARCH_ENABLED_PATHS = Object.freeze([
+  '/gaswebapp-manual/mahler-search-app/mahler.html',
+  '/gaswebapp-manual/mahler-search-app/terms_search.html',
+  '/gaswebapp-manual/mahler-search-app/rs_terms_search.html',
+  '/gaswebapp-manual/mahler-search-app/rw_terms_search.html',
+  '/gaswebapp-manual/mahler-search-app/richard_strauss.html',
+  '/gaswebapp-manual/mahler-search-app/richard_wagner.html'
+]);
 
 /**
  * GET/POST route entrypoint.
@@ -140,7 +149,7 @@ function getDashboardAnalytics(period) {
   }
 
   const cache = CacheService.getScriptCache();
-  const cacheKey = 'admin_dashboard_analytics_v17_' + propertyId + '_' + period;
+  const cacheKey = 'admin_dashboard_analytics_v18_' + propertyId + '_' + period;
   const cachedResult = readDashboardCachedResult(cache, cacheKey);
   if (cachedResult) return cachedResult;
 
@@ -175,6 +184,11 @@ function getDashboardAnalytics(period) {
       previousActivity: runDashboardActivityReport(propertyName, previousRange)
     };
     reports.retention = getDashboardRetentionAnalytics(
+      propertyName,
+      cache,
+      range.endDate
+    );
+    reports.pageTrends = getDashboardPageTrendAnalytics(
       propertyName,
       cache,
       range.endDate
@@ -350,7 +364,7 @@ function runDashboardTermsReport(propertyName, range) {
 }
 
 function getDashboardRetentionAnalytics(propertyName, cache, asOfDate) {
-  const cacheKey = 'admin_dashboard_retention_v1_' + propertyName.replace('/', '_');
+  const cacheKey = 'admin_dashboard_retention_v2_' + propertyName.replace('/', '_');
   const cachedResult = readDashboardCachedResult(cache, cacheKey);
   if (cachedResult) return cachedResult;
 
@@ -363,6 +377,149 @@ function getDashboardRetentionAnalytics(propertyName, cache, asOfDate) {
     Logger.log('Dashboard retention cache write skipped: ' + String(error));
   }
   return result;
+}
+
+function getDashboardPageTrendAnalytics(propertyName, cache, asOfDate) {
+  const cacheKey = 'admin_dashboard_page_trends_v1_' + propertyName.replace('/', '_');
+  const cachedResult = readDashboardCachedResult(cache, cacheKey);
+  if (cachedResult) return cachedResult;
+
+  const range = createDashboardPageTrendRange(asOfDate);
+  const reports = {
+    pageViews: runDashboardMonthlyPageViewsReport(propertyName, range),
+    pageEngagement: runDashboardMonthlyPageEngagementReport(propertyName, range),
+    activity: runDashboardMonthlyActivityReport(propertyName, range)
+  };
+  const result = buildDashboardPageTrendResponse(asOfDate, range, reports);
+  try {
+    cache.put(cacheKey, JSON.stringify(result), DASHBOARD_CACHE_SECONDS);
+  } catch (error) {
+    Logger.log('Dashboard page trend cache write skipped: ' + String(error));
+  }
+  return result;
+}
+
+function createDashboardPageTrendRange(asOfDate) {
+  return {
+    startDate: dashboardMonthStart(asOfDate, -(DASHBOARD_PAGE_TREND_MONTH_COUNT - 1)),
+    endDate: asOfDate
+  };
+}
+
+function runDashboardMonthlyPageViewsReport(propertyName, range) {
+  return AnalyticsData.Properties.runReport({
+    dateRanges: [range],
+    dimensions: [
+      { name: 'yearMonth' },
+      { name: 'pagePath' }
+    ],
+    metrics: [{ name: 'eventCount' }],
+    dimensionFilter: dashboardAndFilter([
+      dashboardExactFilter('eventName', 'page_view'),
+      dashboardInListFilter('pagePath', DASHBOARD_PAGES.map(item => item.path))
+    ]),
+    limit: '100000'
+  }, propertyName);
+}
+
+function runDashboardMonthlyPageEngagementReport(propertyName, range) {
+  return AnalyticsData.Properties.runReport({
+    dateRanges: [range],
+    dimensions: [
+      { name: 'yearMonth' },
+      { name: 'pagePath' }
+    ],
+    metrics: [
+      { name: 'userEngagementDuration' },
+      { name: 'activeUsers' }
+    ],
+    dimensionFilter: dashboardInListFilter(
+      'pagePath',
+      DASHBOARD_PAGES.map(item => item.path)
+    ),
+    limit: '100000'
+  }, propertyName);
+}
+
+function runDashboardMonthlyActivityReport(propertyName, range) {
+  return AnalyticsData.Properties.runReport({
+    dateRanges: [range],
+    dimensions: [
+      { name: 'yearMonth' },
+      { name: 'eventName' },
+      { name: 'customEvent:source_page' },
+      { name: 'pagePath' },
+      { name: 'customEvent:search_type' }
+    ],
+    metrics: [{ name: 'eventCount' }],
+    dimensionFilter: dashboardInListFilter('eventName', DASHBOARD_SEARCH_EVENTS),
+    limit: '100000'
+  }, propertyName);
+}
+
+function buildDashboardPageTrendResponse(asOfDate, range, reports) {
+  const months = Array.from({ length: DASHBOARD_PAGE_TREND_MONTH_COUNT }, (_, index) =>
+    dashboardMonthStart(range.startDate, index).slice(0, 7)
+  );
+  const pageByPath = {};
+  DASHBOARD_PAGES.forEach(item => {
+    pageByPath[item.path] = {
+      page: item.page,
+      path: item.path,
+      months: months.map(month => ({
+        month: month,
+        views: 0,
+        averageEngagementSeconds: null,
+        searches: DASHBOARD_SEARCH_ENABLED_PATHS.indexOf(item.path) >= 0 ? 0 : null,
+        status: month === asOfDate.slice(0, 7) ? 'collecting' : 'complete'
+      }))
+    };
+  });
+
+  function findMonth(path, gaMonth) {
+    const normalizedPath = normalizeDashboardPagePath(path);
+    const month = dashboardGaMonthToIso(gaMonth);
+    const page = pageByPath[normalizedPath];
+    return page ? page.months.find(item => item.month === month) : null;
+  }
+
+  dashboardReportRows(reports.pageViews, 2).forEach(row => {
+    const target = findMonth(row.dimensions[1], row.dimensions[0]);
+    if (target) target.views += dashboardCount(row.metrics[0]);
+  });
+
+  dashboardReportRows(reports.pageEngagement, 2).forEach(row => {
+    const target = findMonth(row.dimensions[1], row.dimensions[0]);
+    if (!target) return;
+    const engagementSeconds = dashboardNumber(row.metrics[0]);
+    const activeUsers = dashboardCount(row.metrics[1]);
+    target.averageEngagementSeconds = activeUsers > 0
+      ? Math.round((engagementSeconds / activeUsers) * 10) / 10
+      : null;
+  });
+
+  dashboardReportRows(reports.activity, 5).forEach(row => {
+    if (DASHBOARD_SEARCH_EVENTS.indexOf(row.dimensions[1]) < 0) return;
+    const sourcePath = chooseDashboardSearchSourcePath(
+      row.dimensions[2],
+      row.dimensions[3],
+      row.dimensions[4]
+    );
+    const target = findMonth(sourcePath, row.dimensions[0]);
+    if (target && target.searches !== null) {
+      target.searches += dashboardCount(row.metrics[0]);
+    }
+  });
+
+  return {
+    granularity: 'month',
+    asOfDate: asOfDate,
+    range: {
+      startMonth: months[0],
+      endMonth: months[months.length - 1]
+    },
+    pages: DASHBOARD_PAGES.map(item => pageByPath[item.path])
+  };
 }
 
 function createDashboardMonthlyCohorts(asOfDate) {
@@ -788,6 +945,11 @@ function buildDashboardAnalyticsResponse(period, range, reports) {
       createDashboardMonthlyCohorts(range.endDate),
       {}
     ),
+    pageTrends: reports.pageTrends || buildDashboardPageTrendResponse(
+      range.endDate,
+      createDashboardPageTrendRange(range.endDate),
+      {}
+    ),
     pages: DASHBOARD_PAGES.map(item => pageByPath[item.path]),
     dictionaryExampleMoves: DASHBOARD_DICTIONARY_EXAMPLE_DESTINATIONS.map(item => ({
       composer: item.composer,
@@ -952,6 +1114,12 @@ function dashboardGaDateToIso(value) {
   const text = String(value || '');
   if (!/^\d{8}$/.test(text)) return '';
   return text.slice(0, 4) + '-' + text.slice(4, 6) + '-' + text.slice(6, 8);
+}
+
+function dashboardGaMonthToIso(value) {
+  const text = String(value || '');
+  if (!/^\d{6}$/.test(text)) return '';
+  return text.slice(0, 4) + '-' + text.slice(4, 6);
 }
 
 function dashboardDisplayDate(isoDate) {
