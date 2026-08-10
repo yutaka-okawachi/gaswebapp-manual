@@ -6,12 +6,15 @@
  * read or returned here.
  */
 
-const DASHBOARD_SCHEMA_VERSION = 2;
+const DASHBOARD_SCHEMA_VERSION = 3;
 const DASHBOARD_TIME_ZONE = 'Asia/Tokyo';
 const DASHBOARD_ALLOWED_PERIODS = Object.freeze([7, 30, 90]);
 const DASHBOARD_CACHE_SECONDS = 900;
 const DASHBOARD_LOCK_WAIT_MILLISECONDS = 30000;
 const DASHBOARD_TERM_LIMIT = 50;
+const DASHBOARD_HOST_NAME = 'yutaka-okawachi.github.io';
+const DASHBOARD_RETENTION_COHORT_COUNT = 8;
+const DASHBOARD_RETENTION_END_OFFSET = 3;
 const DASHBOARD_SEARCH_EVENTS = Object.freeze([
   'view_search_results',
   'search_no_results'
@@ -137,7 +140,7 @@ function getDashboardAnalytics(period) {
   }
 
   const cache = CacheService.getScriptCache();
-  const cacheKey = 'admin_dashboard_analytics_v16_' + propertyId + '_' + period;
+  const cacheKey = 'admin_dashboard_analytics_v17_' + propertyId + '_' + period;
   const cachedResult = readDashboardCachedResult(cache, cacheKey);
   if (cachedResult) return cachedResult;
 
@@ -171,6 +174,11 @@ function getDashboardAnalytics(period) {
       ),
       previousActivity: runDashboardActivityReport(propertyName, previousRange)
     };
+    reports.retention = getDashboardRetentionAnalytics(
+      propertyName,
+      cache,
+      range.endDate
+    );
     const result = buildDashboardAnalyticsResponse(period, range, reports);
 
     try {
@@ -339,6 +347,176 @@ function runDashboardTermsReport(propertyName, range) {
     ]),
     limit: '100000'
   }, propertyName);
+}
+
+function getDashboardRetentionAnalytics(propertyName, cache, asOfDate) {
+  const cacheKey = 'admin_dashboard_retention_v1_' + propertyName.replace('/', '_');
+  const cachedResult = readDashboardCachedResult(cache, cacheKey);
+  if (cachedResult) return cachedResult;
+
+  const cohorts = createDashboardMonthlyCohorts(asOfDate);
+  const report = runDashboardRetentionReport(propertyName, cohorts);
+  const result = buildDashboardRetentionResponse(asOfDate, cohorts, report);
+  try {
+    cache.put(cacheKey, JSON.stringify(result), DASHBOARD_CACHE_SECONDS);
+  } catch (error) {
+    Logger.log('Dashboard retention cache write skipped: ' + String(error));
+  }
+  return result;
+}
+
+function createDashboardMonthlyCohorts(asOfDate) {
+  const cohorts = [];
+  for (let index = DASHBOARD_RETENTION_COHORT_COUNT; index >= 1; index -= 1) {
+    const startDate = dashboardMonthStart(asOfDate, -index);
+    const month = startDate.slice(0, 7);
+    cohorts.push({
+      name: 'month_' + month.replace('-', '_'),
+      month: month,
+      startDate: startDate,
+      endDate: dashboardMonthEnd(startDate)
+    });
+  }
+  return cohorts;
+}
+
+function runDashboardRetentionReport(propertyName, cohorts) {
+  return AnalyticsData.Properties.runReport({
+    dimensions: [
+      { name: 'cohort' },
+      { name: 'cohortNthMonth' }
+    ],
+    metrics: [
+      { name: 'cohortActiveUsers' },
+      { name: 'cohortTotalUsers' }
+    ],
+    cohortSpec: {
+      cohorts: cohorts.map(item => ({
+        name: item.name,
+        dimension: 'firstSessionDate',
+        dateRange: {
+          startDate: item.startDate,
+          endDate: item.endDate
+        }
+      })),
+      cohortsRange: {
+        granularity: 'MONTHLY',
+        startOffset: 0,
+        endOffset: DASHBOARD_RETENTION_END_OFFSET
+      }
+    },
+    dimensionFilter: dashboardExactFilter('hostName', DASHBOARD_HOST_NAME),
+    keepEmptyRows: true,
+    limit: '100000'
+  }, propertyName);
+}
+
+function buildDashboardRetentionResponse(asOfDate, cohorts, report) {
+  const rowsByName = {};
+  cohorts.forEach(item => {
+    rowsByName[item.name] = {
+      month: item.month,
+      firstVisitUsers: 0,
+      periods: Array.from(
+        { length: DASHBOARD_RETENTION_END_OFFSET + 1 },
+        (_, offset) => {
+          const periodEnd = dashboardMonthEnd(
+            dashboardMonthStart(item.startDate, offset)
+          );
+          return {
+            offset: offset,
+            returningUsers: null,
+            rate: null,
+            status: periodEnd < asOfDate ? 'complete' : 'collecting'
+          };
+        }
+      )
+    };
+  });
+
+  dashboardReportRows(report, 2).forEach(reportRow => {
+    const cohortName = String(reportRow.dimensions[0] || '');
+    const offset = Number(String(reportRow.dimensions[1] || '').replace(/^0+/, '') || 0);
+    const target = rowsByName[cohortName];
+    if (!target || offset < 0 || offset > DASHBOARD_RETENTION_END_OFFSET) return;
+    const activeUsers = dashboardCount(reportRow.metrics[0]);
+    const totalUsers = dashboardCount(reportRow.metrics[1]);
+    target.firstVisitUsers = Math.max(target.firstVisitUsers, totalUsers);
+    target.periods[offset].returningUsers = activeUsers;
+  });
+
+  const rows = cohorts.map(item => {
+    const row = rowsByName[item.name];
+    row.periods.forEach(period => {
+      if (period.status === 'complete' && period.returningUsers == null) {
+        period.returningUsers = 0;
+      }
+      if (period.returningUsers != null && row.firstVisitUsers > 0) {
+        period.rate = dashboardRoundRate(
+          period.returningUsers,
+          row.firstVisitUsers
+        );
+      }
+    });
+    return row;
+  });
+
+  return {
+    granularity: 'month',
+    asOfDate: asOfDate,
+    summary: {
+      nextMonth: summarizeDashboardRetention(rows, 1),
+      thirdMonth: summarizeDashboardRetention(rows, 3),
+      latestFirstVisitUsers: rows.length > 0
+        ? rows[rows.length - 1].firstVisitUsers
+        : 0
+    },
+    rows: rows
+  };
+}
+
+function summarizeDashboardRetention(rows, offset) {
+  let returningUsers = 0;
+  let eligibleUsers = 0;
+  rows.forEach(row => {
+    const period = row.periods[offset];
+    if (!period || period.status !== 'complete' || row.firstVisitUsers < 1) return;
+    eligibleUsers += row.firstVisitUsers;
+    returningUsers += period.returningUsers || 0;
+  });
+  return {
+    returningUsers: returningUsers,
+    eligibleUsers: eligibleUsers,
+    rate: eligibleUsers > 0
+      ? dashboardRoundRate(returningUsers, eligibleUsers)
+      : null
+  };
+}
+
+function dashboardRoundRate(numerator, denominator) {
+  return denominator > 0
+    ? Math.round((numerator / denominator) * 1000) / 10
+    : null;
+}
+
+function dashboardMonthStart(isoDate, monthOffset) {
+  const parts = String(isoDate).split('-').map(Number);
+  const date = new Date(Date.UTC(parts[0], parts[1] - 1 + monthOffset, 1));
+  return [
+    date.getUTCFullYear(),
+    String(date.getUTCMonth() + 1).padStart(2, '0'),
+    '01'
+  ].join('-');
+}
+
+function dashboardMonthEnd(monthStart) {
+  const parts = String(monthStart).split('-').map(Number);
+  const date = new Date(Date.UTC(parts[0], parts[1], 0));
+  return [
+    date.getUTCFullYear(),
+    String(date.getUTCMonth() + 1).padStart(2, '0'),
+    String(date.getUTCDate()).padStart(2, '0')
+  ].join('-');
 }
 
 function dashboardExactFilter(fieldName, value) {
@@ -605,6 +783,11 @@ function buildDashboardAnalyticsResponse(period, range, reports) {
     },
     searchSummary: searchSummary,
     searchMethods: searchMethods,
+    retention: reports.retention || buildDashboardRetentionResponse(
+      range.endDate,
+      createDashboardMonthlyCohorts(range.endDate),
+      {}
+    ),
     pages: DASHBOARD_PAGES.map(item => pageByPath[item.path]),
     dictionaryExampleMoves: DASHBOARD_DICTIONARY_EXAMPLE_DESTINATIONS.map(item => ({
       composer: item.composer,

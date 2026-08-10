@@ -105,6 +105,7 @@ function Test-DashboardApiPayload {
         "previous",
         "searchSummary",
         "searchMethods",
+        "retention",
         "pages",
         "dictionaryExampleMoves",
         "terms"
@@ -115,7 +116,7 @@ function Test-DashboardApiPayload {
         }
     }
 
-    if ([int]$data.schemaVersion -ne 2) {
+    if ([int]$data.schemaVersion -ne 3) {
         return New-DashboardApiCheckResult -Success $false -Period $ExpectedPeriod -Message "Unexpected schemaVersion"
     }
     if ([int]$data.period -ne $ExpectedPeriod) {
@@ -190,6 +191,57 @@ function Test-DashboardApiPayload {
         }
         if (-not (Test-DashboardNonNegativeInteger -Value $method.count)) {
             return New-DashboardApiCheckResult -Success $false -Period $ExpectedPeriod -Message "Invalid search method count"
+        }
+    }
+
+    $retention = $data.retention
+    foreach ($key in @("granularity", "asOfDate", "summary", "rows")) {
+        if (-not (Test-DashboardHasProperty -Object $retention -Name $key)) {
+            return New-DashboardApiCheckResult -Success $false -Period $ExpectedPeriod -Message "Invalid retention data"
+        }
+    }
+    if ($retention.granularity -ne "month" -or @($retention.rows).Count -ne 8) {
+        return New-DashboardApiCheckResult -Success $false -Period $ExpectedPeriod -Message "Invalid retention range"
+    }
+    foreach ($summaryKey in @("nextMonth", "thirdMonth")) {
+        $summary = $retention.summary.$summaryKey
+        if (
+            -not (Test-DashboardHasProperty -Object $summary -Name "returningUsers") -or
+            -not (Test-DashboardHasProperty -Object $summary -Name "eligibleUsers") -or
+            -not (Test-DashboardHasProperty -Object $summary -Name "rate") -or
+            -not (Test-DashboardNonNegativeInteger -Value $summary.returningUsers) -or
+            -not (Test-DashboardNonNegativeInteger -Value $summary.eligibleUsers) -or
+            ($null -ne $summary.rate -and -not (Test-DashboardRate -Value $summary.rate))
+        ) {
+            return New-DashboardApiCheckResult -Success $false -Period $ExpectedPeriod -Message "Invalid retention summary"
+        }
+    }
+    if (-not (Test-DashboardNonNegativeInteger -Value $retention.summary.latestFirstVisitUsers)) {
+        return New-DashboardApiCheckResult -Success $false -Period $ExpectedPeriod -Message "Invalid latest retention count"
+    }
+    foreach ($retentionRow in @($retention.rows)) {
+        if (
+            -not (Test-DashboardHasProperty -Object $retentionRow -Name "month") -or
+            -not (Test-DashboardHasProperty -Object $retentionRow -Name "firstVisitUsers") -or
+            -not (Test-DashboardHasProperty -Object $retentionRow -Name "periods") -or
+            -not (Test-DashboardNonNegativeInteger -Value $retentionRow.firstVisitUsers) -or
+            @($retentionRow.periods).Count -ne 4
+        ) {
+            return New-DashboardApiCheckResult -Success $false -Period $ExpectedPeriod -Message "Invalid retention row"
+        }
+        foreach ($retentionPeriod in @($retentionRow.periods)) {
+            if (
+                -not (Test-DashboardHasProperty -Object $retentionPeriod -Name "offset") -or
+                -not (Test-DashboardHasProperty -Object $retentionPeriod -Name "returningUsers") -or
+                -not (Test-DashboardHasProperty -Object $retentionPeriod -Name "rate") -or
+                -not (Test-DashboardHasProperty -Object $retentionPeriod -Name "status") -or
+                -not (Test-DashboardNonNegativeInteger -Value $retentionPeriod.offset) -or
+                ($null -ne $retentionPeriod.returningUsers -and -not (Test-DashboardNonNegativeInteger -Value $retentionPeriod.returningUsers)) -or
+                ($null -ne $retentionPeriod.rate -and -not (Test-DashboardRate -Value $retentionPeriod.rate)) -or
+                $retentionPeriod.status -notin @("complete", "collecting")
+            ) {
+                return New-DashboardApiCheckResult -Success $false -Period $ExpectedPeriod -Message "Invalid retention period"
+            }
         }
     }
 

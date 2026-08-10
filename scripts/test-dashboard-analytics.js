@@ -193,6 +193,22 @@ const termsReport = {
   ]
 };
 
+const retentionReport = {
+  rows: [
+    reportRow(['month_2026_03', '0000'], [10, 10]),
+    reportRow(['month_2026_03', '0003'], [1, 10]),
+    reportRow(['month_2026_04', '0000'], [10, 10]),
+    reportRow(['month_2026_04', '0001'], [4, 10]),
+    reportRow(['month_2026_04', '0002'], [3, 10]),
+    reportRow(['month_2026_04', '0003'], [2, 10]),
+    reportRow(['month_2026_05', '0000'], [20, 20]),
+    reportRow(['month_2026_05', '0001'], [5, 20]),
+    reportRow(['month_2026_05', '0002'], [2, 20]),
+    reportRow(['month_2026_06', '0000'], [15, 15]),
+    reportRow(['month_2026_06', '0001'], [2, 15])
+  ]
+};
+
 const context = {
   console,
   URL,
@@ -295,6 +311,35 @@ const context = {
           );
           return {};
         }
+        const dimensionNames = request.dimensions.map(item => item.name).join(',');
+        if (dimensionNames === 'cohort,cohortNthMonth') {
+          assert.strictEqual(request.dateRanges, undefined);
+          assert.strictEqual(request.cohortSpec.cohorts.length, 8);
+          assert.deepStrictEqual(
+            JSON.parse(JSON.stringify(request.cohortSpec.cohorts[0])),
+            {
+              name: 'month_2025_11',
+              dimension: 'firstSessionDate',
+              dateRange: {
+                startDate: '2025-11-01',
+                endDate: '2025-11-30'
+              }
+            }
+          );
+          assert.deepStrictEqual(
+            JSON.parse(JSON.stringify(request.cohortSpec.cohortsRange)),
+            { granularity: 'MONTHLY', startOffset: 0, endOffset: 3 }
+          );
+          assert.strictEqual(
+            request.dimensionFilter.filter.fieldName,
+            'hostName'
+          );
+          assert.strictEqual(
+            request.dimensionFilter.filter.stringFilter.value,
+            'yutaka-okawachi.github.io'
+          );
+          return retentionReport;
+        }
         const requestedRange = JSON.parse(JSON.stringify(request.dateRanges[0]));
         const isPreviousRange =
           requestedRange.startDate === '2026-07-13' &&
@@ -306,7 +351,6 @@ const context = {
             requestedRange.endDate === '2026-07-26'
           )
         );
-        const dimensionNames = request.dimensions.map(item => item.name).join(',');
         if (dimensionNames === 'date,pagePath') {
           return isPreviousRange ? previousPageViewsReport : pageViewsReport;
         }
@@ -387,10 +431,10 @@ assert.deepStrictEqual(
 assert.strictEqual(analyticsCallCount, 1);
 
 const result = context.getDashboardAnalytics(7);
-assert.strictEqual(analyticsCallCount, 9);
+assert.strictEqual(analyticsCallCount, 10);
 assert.strictEqual(lockAcquireCount, 1);
 assert.strictEqual(lockReleaseCount, 1);
-assert.strictEqual(result.schemaVersion, 2);
+assert.strictEqual(result.schemaVersion, 3);
 assert.strictEqual(result.period, 7);
 assert.deepStrictEqual(
   JSON.parse(JSON.stringify(result.range)),
@@ -428,6 +472,31 @@ assert.deepStrictEqual(
       count: 0
     }
   ]
+);
+assert.strictEqual(result.retention.granularity, 'month');
+assert.strictEqual(result.retention.asOfDate, '2026-07-26');
+assert.strictEqual(result.retention.rows.length, 8);
+assert.deepStrictEqual(
+  JSON.parse(JSON.stringify(result.retention.summary)),
+  {
+    nextMonth: { returningUsers: 9, eligibleUsers: 40, rate: 22.5 },
+    thirdMonth: { returningUsers: 1, eligibleUsers: 10, rate: 10 },
+    latestFirstVisitUsers: 15
+  }
+);
+const aprilRetention = result.retention.rows.find(row => row.month === '2026-04');
+const juneRetention = result.retention.rows.find(row => row.month === '2026-06');
+assert.deepStrictEqual(
+  JSON.parse(JSON.stringify(aprilRetention.periods[1])),
+  { offset: 1, returningUsers: 4, rate: 40, status: 'complete' }
+);
+assert.deepStrictEqual(
+  JSON.parse(JSON.stringify(aprilRetention.periods[3])),
+  { offset: 3, returningUsers: 2, rate: 20, status: 'collecting' }
+);
+assert.deepStrictEqual(
+  JSON.parse(JSON.stringify(juneRetention.periods[1])),
+  { offset: 1, returningUsers: 2, rate: 13.3, status: 'collecting' }
 );
 assert.strictEqual(result.daily.length, 7);
 assert.strictEqual(result.previous.daily.length, 7);
@@ -613,7 +682,7 @@ assert.strictEqual(
 );
 
 const cachedResult = context.getDashboardAnalytics(7);
-assert.strictEqual(analyticsCallCount, 9);
+assert.strictEqual(analyticsCallCount, 10);
 assert.strictEqual(lockAcquireCount, 1);
 assert.strictEqual(lockReleaseCount, 1);
 assert.deepStrictEqual(

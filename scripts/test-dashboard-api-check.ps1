@@ -44,7 +44,7 @@ foreach ($period in @(7, 30, 90)) {
     }
 
     $payload = @{
-        schemaVersion = 2
+        schemaVersion = 3
         period = $period
         updatedAt = "2026年7月26日 14:05"
         range = @{
@@ -75,6 +75,27 @@ foreach ($period in @(7, 30, 90)) {
             @{ key = "opera_work"; label = "Opera work search"; count = 0 },
             @{ key = "unclassified"; label = "Unclassified"; count = 0 }
         )
+        retention = @{
+            granularity = "month"
+            asOfDate = "2026-07-26"
+            summary = @{
+                nextMonth = @{ returningUsers = 2; eligibleUsers = 10; rate = 20 }
+                thirdMonth = @{ returningUsers = 0; eligibleUsers = 0; rate = $null }
+                latestFirstVisitUsers = 4
+            }
+            rows = @(1..8 | ForEach-Object {
+                @{
+                    month = "2026-0$_"
+                    firstVisitUsers = 4
+                    periods = @(
+                        @{ offset = 0; returningUsers = 4; rate = 100; status = "complete" },
+                        @{ offset = 1; returningUsers = 1; rate = 25; status = "complete" },
+                        @{ offset = 2; returningUsers = $null; rate = $null; status = "collecting" },
+                        @{ offset = 3; returningUsers = $null; rate = $null; status = "collecting" }
+                    )
+                }
+            })
+        }
         pages = $pages
         dictionaryExampleMoves = @(
             @{ composer = "Wagner"; path = "/rw_terms_search.html"; count = 0 },
