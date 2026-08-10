@@ -44,7 +44,7 @@ foreach ($period in @(7, 30, 90)) {
     }
 
     $payload = @{
-        schemaVersion = 3
+        schemaVersion = 4
         period = $period
         updatedAt = "2026年7月26日 14:05"
         range = @{
@@ -83,9 +83,9 @@ foreach ($period in @(7, 30, 90)) {
                 thirdMonth = @{ returningUsers = 0; eligibleUsers = 0; rate = $null }
                 latestFirstVisitUsers = 4
             }
-            rows = @(1..8 | ForEach-Object {
+            rows = @(1..12 | ForEach-Object {
                 @{
-                    month = "2026-0$_"
+                    month = "2025-$('{0:D2}' -f $_)"
                     firstVisitUsers = 4
                     periods = @(
                         @{ offset = 0; returningUsers = 4; rate = 100; status = "complete" },
@@ -93,6 +93,29 @@ foreach ($period in @(7, 30, 90)) {
                         @{ offset = 2; returningUsers = $null; rate = $null; status = "collecting" },
                         @{ offset = 3; returningUsers = $null; rate = $null; status = "collecting" }
                     )
+                }
+            })
+        }
+        pageTrends = @{
+            granularity = "month"
+            asOfDate = "2026-07-26"
+            range = @{
+                startMonth = "2025-08"
+                endMonth = "2026-07"
+            }
+            pages = @(0..10 | ForEach-Object {
+                @{
+                    page = "Page $_"
+                    path = "/page-$_"
+                    months = @(1..12 | ForEach-Object {
+                        @{
+                            month = "2025-$('{0:D2}' -f $_)"
+                            views = 0
+                            averageEngagementSeconds = $null
+                            searches = if ($_ % 2 -eq 0) { 0 } else { $null }
+                            status = if ($_ -eq 12) { "collecting" } else { "complete" }
+                        }
+                    })
                 }
             })
         }

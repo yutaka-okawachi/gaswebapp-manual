@@ -106,6 +106,7 @@ function Test-DashboardApiPayload {
         "searchSummary",
         "searchMethods",
         "retention",
+        "pageTrends",
         "pages",
         "dictionaryExampleMoves",
         "terms"
@@ -116,7 +117,7 @@ function Test-DashboardApiPayload {
         }
     }
 
-    if ([int]$data.schemaVersion -ne 3) {
+    if ([int]$data.schemaVersion -ne 4) {
         return New-DashboardApiCheckResult -Success $false -Period $ExpectedPeriod -Message "Unexpected schemaVersion"
     }
     if ([int]$data.period -ne $ExpectedPeriod) {
@@ -200,7 +201,7 @@ function Test-DashboardApiPayload {
             return New-DashboardApiCheckResult -Success $false -Period $ExpectedPeriod -Message "Invalid retention data"
         }
     }
-    if ($retention.granularity -ne "month" -or @($retention.rows).Count -ne 8) {
+    if ($retention.granularity -ne "month" -or @($retention.rows).Count -ne 12) {
         return New-DashboardApiCheckResult -Success $false -Period $ExpectedPeriod -Message "Invalid retention range"
     }
     foreach ($summaryKey in @("nextMonth", "thirdMonth")) {
@@ -241,6 +242,41 @@ function Test-DashboardApiPayload {
                 $retentionPeriod.status -notin @("complete", "collecting")
             ) {
                 return New-DashboardApiCheckResult -Success $false -Period $ExpectedPeriod -Message "Invalid retention period"
+            }
+        }
+    }
+
+    $pageTrends = $data.pageTrends
+    foreach ($key in @("granularity", "asOfDate", "range", "pages")) {
+        if (-not (Test-DashboardHasProperty -Object $pageTrends -Name $key)) {
+            return New-DashboardApiCheckResult -Success $false -Period $ExpectedPeriod -Message "Invalid page trends"
+        }
+    }
+    if ($pageTrends.granularity -ne "month" -or @($pageTrends.pages).Count -ne 11) {
+        return New-DashboardApiCheckResult -Success $false -Period $ExpectedPeriod -Message "Invalid page trend range"
+    }
+    foreach ($trendPage in @($pageTrends.pages)) {
+        if (
+            -not (Test-DashboardHasProperty -Object $trendPage -Name "page") -or
+            -not (Test-DashboardHasProperty -Object $trendPage -Name "path") -or
+            -not (Test-DashboardHasProperty -Object $trendPage -Name "months") -or
+            @($trendPage.months).Count -ne 12
+        ) {
+            return New-DashboardApiCheckResult -Success $false -Period $ExpectedPeriod -Message "Invalid page trend page"
+        }
+        foreach ($trendMonth in @($trendPage.months)) {
+            if (
+                -not (Test-DashboardHasProperty -Object $trendMonth -Name "month") -or
+                -not (Test-DashboardHasProperty -Object $trendMonth -Name "views") -or
+                -not (Test-DashboardHasProperty -Object $trendMonth -Name "averageEngagementSeconds") -or
+                -not (Test-DashboardHasProperty -Object $trendMonth -Name "searches") -or
+                -not (Test-DashboardHasProperty -Object $trendMonth -Name "status") -or
+                -not (Test-DashboardNonNegativeInteger -Value $trendMonth.views) -or
+                ($null -ne $trendMonth.averageEngagementSeconds -and -not (Test-DashboardNonNegativeNumber -Value $trendMonth.averageEngagementSeconds)) -or
+                ($null -ne $trendMonth.searches -and -not (Test-DashboardNonNegativeInteger -Value $trendMonth.searches)) -or
+                $trendMonth.status -notin @("complete", "collecting")
+            ) {
+                return New-DashboardApiCheckResult -Success $false -Period $ExpectedPeriod -Message "Invalid page trend month"
             }
         }
     }
