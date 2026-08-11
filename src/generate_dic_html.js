@@ -479,8 +479,14 @@ ${breadcrumbJSON}
             border-bottom: 1px solid #ccc;
             padding-bottom: 10px;
             margin-bottom: 10px;
-            scroll-margin-top: 20px;
+            scroll-margin-top: 60px;
             transition: background-color 0.3s;
+        }
+
+        @media (max-width: 768px) {
+            .row, div[id^="letter-"] {
+                scroll-margin-top: 75px;
+            }
         }
 
         /*
@@ -868,24 +874,44 @@ ${breadcrumbJSON}
                 return;
             }
 
-            // ターゲット要素またはその親行のアコーディオンを必ず開く
-            const targetRow = targetElement.closest('.row') || (targetElement.classList.contains('row') ? targetElement : null);
-            if (targetRow) {
+            // ターゲット要素またはその親行・直後行のアコーディオンを必ず開く
+            let targetRow = targetElement.closest('.row') || (targetElement.classList.contains('row') ? targetElement : null);
+            if (!targetRow && targetId.startsWith('letter-')) {
+                let nextEl = targetElement.nextElementSibling;
+                while (nextEl && !nextEl.classList.contains('row')) {
+                    nextEl = nextEl.nextElementSibling;
+                }
+                if (nextEl) {
+                    targetRow = nextEl;
+                }
+            }
+            if (targetRow && targetRow.classList.contains('row')) {
                 targetRow.classList.add('accordion-open');
             }
 
-            // Highlighting & Scrolling
-            targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            
+            // 固定ヘッダー/ナビボタンの高さに応じた動的スクロールオフセット
+            const navToggle = document.querySelector('.nav-toggle');
+            const isMobileNavVisible = navToggle && window.getComputedStyle(navToggle).display !== 'none';
+            const headerOffset = isMobileNavVisible ? 75 : 60;
+
+            const elementPosition = targetElement.getBoundingClientRect().top;
+            const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+
+            window.scrollTo({
+                top: Math.max(0, offsetPosition),
+                behavior: 'smooth'
+            });
+
             // Remove previous highlights
             document.querySelectorAll('.row.highlight-active').forEach(el => el.classList.remove('highlight-active'));
             
             // Trigger animation
-            targetElement.classList.remove('highlight-active');
-            void targetElement.offsetWidth; 
+            const animElement = targetRow || targetElement;
+            animElement.classList.remove('highlight-active');
+            void animElement.offsetWidth; 
             
             setTimeout(() => {
-                targetElement.classList.add('highlight-active');
+                animElement.classList.add('highlight-active');
             }, 50);
         }
 
