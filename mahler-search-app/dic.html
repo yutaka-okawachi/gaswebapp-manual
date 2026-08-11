@@ -5870,17 +5870,22 @@
             scroll-margin-top: 20px;
         }
 
-        .row, div[id^="letter-"] {
+        .row {
             border-bottom: 1px solid #ccc;
             padding-bottom: 10px;
             margin-bottom: 10px;
-            scroll-margin-top: 60px;
             transition: background-color 0.3s;
         }
 
+        [id^="letter-"],
+        .row[id^="term-"] {
+            scroll-margin-top: 16px;
+        }
+
         @media (max-width: 768px) {
-            .row, div[id^="letter-"] {
-                scroll-margin-top: 75px;
+            [id^="letter-"],
+            .row[id^="term-"] {
+                scroll-margin-top: 58px;
             }
         }
 
@@ -5987,12 +5992,6 @@
             color: #ffffff;
             box-shadow: 0 2px 6px rgba(26,115,232,0.25);
             transform: translateY(-1px);
-        }
-
-        div[id^="letter-"] {
-            border-bottom: none;
-            padding-bottom: 0;
-            margin-bottom: 0;
         }
 
         /* Target Highlight Animation */
@@ -6252,6 +6251,46 @@
 
         window.addEventListener('hashchange', handleHashChange);
 
+        let hashScrollSequence = 0;
+
+        function getHashScrollOffset() {
+            const navToggle = document.querySelector('.nav-toggle');
+            if (navToggle && window.getComputedStyle(navToggle).display !== 'none') {
+                return Math.ceil(navToggle.getBoundingClientRect().bottom + 12);
+            }
+
+            // タブレット・スマホでは右上の固定ボタンに隠れない位置にする
+            return window.matchMedia('(max-width: 768px)').matches ? 58 : 16;
+        }
+
+        function alignHashTarget(targetElement) {
+            const elementPosition = targetElement.getBoundingClientRect().top;
+            const offsetPosition = elementPosition + window.pageYOffset - getHashScrollOffset();
+
+            window.scrollTo({
+                top: Math.max(0, offsetPosition),
+                behavior: 'auto'
+            });
+        }
+
+        function scrollToHashTarget(targetElement) {
+            const sequence = ++hashScrollSequence;
+            const realign = function () {
+                if (sequence === hashScrollSequence && document.contains(targetElement)) {
+                    alignHashTarget(targetElement);
+                }
+            };
+
+            // content-visibility による長い一覧の再レイアウト後も同じ単語へ合わせ直す
+            realign();
+            window.requestAnimationFrame(function () {
+                realign();
+                window.requestAnimationFrame(realign);
+            });
+            window.setTimeout(realign, 150);
+            window.setTimeout(realign, 500);
+        }
+
         function handleHashChange() {
             const hash = window.location.hash;
             if (!hash) {
@@ -6277,28 +6316,18 @@
                 }
             }
 
-            // 固定ヘッダー/ナビボタンの高さに応じた動的スクロールオフセット
-            const navToggle = document.querySelector('.nav-toggle');
-            const isMobileNavVisible = navToggle && window.getComputedStyle(navToggle).display !== 'none';
-            const headerOffset = isMobileNavVisible ? 75 : 60;
-
-            const elementPosition = targetElement.getBoundingClientRect().top;
-            const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
-
-            window.scrollTo({
-                top: Math.max(0, offsetPosition),
-                behavior: 'smooth'
-            });
+            scrollToHashTarget(targetElement);
 
             // Remove previous highlights
             document.querySelectorAll('.row.highlight-active').forEach(el => el.classList.remove('highlight-active'));
             
             // Trigger animation
-            targetElement.classList.remove('highlight-active');
-            void targetElement.offsetWidth; 
+            const highlightElement = targetElement.closest('.row') || targetElement;
+            highlightElement.classList.remove('highlight-active');
+            void highlightElement.offsetWidth;
             
             setTimeout(() => {
-                targetElement.classList.add('highlight-active');
+                highlightElement.classList.add('highlight-active');
             }, 50);
         }
 
@@ -6353,9 +6382,11 @@
                 }
 
                 const targetId = link.getAttribute('href').slice(1);
-                if (!/^letter-[A-Z]$/.test(targetId)) {
+                if (!/^letter-(?:[A-Z]|OTHER)$/.test(targetId)) {
                     return;
                 }
+
+                event.preventDefault();
 
                 const letter = targetId.replace(/^letter-/, '');
 
@@ -6365,6 +6396,12 @@
                         page_path: location.pathname
                     });
                 }
+
+                const nextHash = '#' + targetId;
+                if (window.location.hash !== nextHash) {
+                    window.history.pushState(null, '', nextHash);
+                }
+                handleHashChange();
             });
         });
 
@@ -6448,9 +6485,8 @@
             </div>
 
             <div id="listContainer">
-<div id="letter-A"></div>
 <div class="row" id="term-abdaempfen">
-  <dt>
+  <dt id="letter-A">
     <div class="dt-main">
       <dfn class="german">abdämpfen</dfn>
     </div>
@@ -7366,9 +7402,8 @@
   </dt>
   <dd class="translation">Allgemeines Verzeichnis の略<br><br>Allgemeines Verzeichnis der Werke von Richard Strauss：Richard Strauss 作品総合目録<br><br>全作品を通し番号で管理するための目録．作曲年代順を基本に全作品に 1 から連番を付与したもの．”<a href="dic.html#term-trv" class="term-link">TrV</a>” とは違い，冒頭主題 (incipit) は扱わず，改定の区別もしない．年代順に番号を振ったもので，事務的，管理的なもの．研究・同定のためには &quot;<a href="dic.html#term-trv" class="term-link">TrV</a>&quot; ，全集・出版社管理のためには&quot;AV&quot;，という二重管理が行われている．<br><br>&quot;<a href="dic.html#term-trv" class="term-link">TrV</a>&quot; の項も参照のこと．</dd>
 </div>
-<div id="letter-B"></div>
 <div class="row" id="term-bache">
-  <dt>
+  <dt id="letter-B">
     <div class="dt-main">
       <dfn class="german">Bache</dfn>
     </div>
@@ -8101,9 +8136,8 @@
   </dt>
   <dd class="translation">(≒ <a href="dic.html#term-brutal" class="term-link">brutal</a>, violent, savage / brutale, violento)<br>【一般的な意味】<br>① （人や行為が）残忍な，野蛮な，暴力的な，獣のような．<br>② （事実などが）露骨な，赤裸々な，荒削りの，容赦のない．<br>【音楽用語としての訳例】<br>「暴力的に」，「野蛮に」，「荒々しく」，「（音を）叩きつけるように」，「粗暴に」，「容赦なく」<br><br>交響曲第6番第4楽章にのみ使用例がある．「粗暴に」と訳している．</dd>
 </div>
-<div id="letter-C"></div>
 <div class="row" id="term-caesur">
-  <dt>
+  <dt id="letter-C">
     <div class="dt-main">
       <dfn class="german">Cäsur</dfn>
     </div>
@@ -8190,9 +8224,8 @@
   </dt>
   <dd class="translation">これはフランス語．&quot;<a href="dic.html#term-schmetternd" class="term-link">schmetternd</a>&quot; の項を参照</dd>
 </div>
-<div id="letter-D"></div>
 <div class="row" id="term-d-h">
-  <dt>
+  <dt id="letter-D">
     <div class="dt-main">
       <dfn class="german">d.h.</dfn>
     </div>
@@ -9071,9 +9104,8 @@
   </dt>
   <dd class="translation">(≒ gloomy, somber, dark, sinister / cupo, oscuro, tetro)<br>【一般的な意味】<br>① （光がなく）暗い，薄暗い，陰気な，どんよりした．<br>② （気分や表情が）沈んだ，憂鬱な，陰鬱な．<br>③ （未来や雰囲気が）不吉な，険悪な，不気味な．<br>【音楽用語としての訳例】<br>「暗く（cupo）」，「陰鬱に」，「沈鬱に」，「不気味に」，「（音色を）くすませて」，「重苦しく」<br><br>GM では大地の歌第1楽章にのみ使われている．「陰鬱に」と訳している．</dd>
 </div>
-<div id="letter-E"></div>
 <div class="row" id="term-eben">
-  <dt>
+  <dt id="letter-E">
     <div class="dt-main">
       <dfn class="german">eben</dfn>
     </div>
@@ -9939,9 +9971,8 @@
   </dt>
   <dd class="translation">いくらかテンポを緩めて</dd>
 </div>
-<div id="letter-F"></div>
 <div class="row" id="term-fach">
-  <dt>
+  <dt id="letter-F">
     <div class="dt-main">
       <dfn class="german">fach</dfn>
     </div>
@@ -10408,9 +10439,8 @@
   </dt>
   <dd class="translation">（≒ terrible, dreadful / terribile, spaventoso）<br>【一般的な意味】<br>① 恐ろしい，怖い，凄まじい．<br>②（副詞として）ひどく，非常に，ものすごく．<br>【音楽用語としての訳例】<br>「恐ろしく」，「凄まじい勢いで」，「激しく」<br><br>「非常に（<a href="dic.html#term-sehr" class="term-link">sehr</a>）」のさらに上をいく極端な強調として使われたりもする．</dd>
 </div>
-<div id="letter-G"></div>
 <div class="row" id="term-g-saite-anfangs">
-  <dt>
+  <dt id="letter-G">
     <div class="dt-main">
       <dfn class="german">G Saite anfangs</dfn>
     </div>
@@ -11452,9 +11482,8 @@
   </dt>
   <dd class="translation">(≒ ground, reason, base, bottom, foundation / ragione, base, fondamento)<br>【一般的な意味】<br>① 地面，土地，基礎，土台．<br>② 根拠，理由，原因．<br>③ 底部，奥．<br><br>「（和声の）根音」の意味もある．</dd>
 </div>
-<div id="letter-H"></div>
 <div class="row" id="term-hab-lumbedruwwel-mit-me-lumbeschatz">
-  <dt>
+  <dt id="letter-H">
     <div class="dt-main">
       <dfn class="german">Hab lumbedruwwel mit me lumbeschatz</dfn>
     </div>
@@ -11953,9 +11982,8 @@
   </dt>
   <dd class="translation">(≒ humorous, witty, funny / umoristico, spiritoso)<br>【一般的な意味】<br>① ユーモアのある，こっけいな．<br>② 機知に富んだ，気の利いた．<br>【音楽用語としての訳例】<br>「ユーモラスに」，「滑稽に」，「おどけて」</dd>
 </div>
-<div id="letter-I"></div>
 <div class="row" id="term-ii-cello-am-i-pult-mit-dem-v-pult">
-  <dt>
+  <dt id="letter-I">
     <div class="dt-main">
       <dfn class="german">II.Cello am I.Pult mit dem V.Pult</dfn>
     </div>
@@ -12237,9 +12265,8 @@
   </dt>
   <dd class="translation">(≒ false paths, astray, devious ways / via sbagliata, in errore)<br>Irrweg (道に迷うこと，過ち) の複数形<br>【一般的な意味】<br>① 間違った道，迷路，回り道．<br>② （比喩的に）誤り，間違い，過失．<br>【音楽用語としての訳例】<br>[RS: Alpen] において，「道に迷って」</dd>
 </div>
-<div id="letter-J"></div>
 <div class="row" id="term-jagd">
-  <dt>
+  <dt id="letter-J">
     <div class="dt-main">
       <dfn class="german">Jagd</dfn>
     </div>
@@ -12351,9 +12378,8 @@
   </dt>
   <dd class="translation">(≒ however, yet, nevertheless / tuttavia, eppure)<br>【一般的な意味】<br>① しかし，けれども，だが．<br>② （強調として）確かに，まさしく．</dd>
 </div>
-<div id="letter-K"></div>
 <div class="row" id="term-kammerdiener">
-  <dt>
+  <dt id="letter-K">
     <div class="dt-main">
       <dfn class="german">Kammerdiener</dfn>
     </div>
@@ -12736,9 +12762,8 @@
   </dt>
   <dd class="translation">(≒ short, brief, concise / breve, corto)<br>【一般的な意味】<br>① 短い（長さ，距離，時間などが不足している，あるいは限定的であること）．<br>② 簡潔な，手短な（表現や内容が省略されていること）．<br>③ 直前の，間近の（時間的・空間的に非常に近いこと）．<br>【音楽用語としての訳例】<br>「短く」，「スタッカート気味に」</dd>
 </div>
-<div id="letter-L"></div>
 <div class="row" id="term-lady-macbeth-o-eile-eile-her-damit-ich-meinen-geist-in-deinen-giesse-durch-meine-tapfere-zunge-diese-zweifel-und-furchtgespenster-aus-dem-felde-schlage-die-dich-wegschrecken-von-dem-goldnen-reif-womit-das-glueck-dich-gern-bekroenen-moechte">
-  <dt>
+  <dt id="letter-L">
     <div class="dt-main">
       <dfn class="german">Lady Macbeth. O, eile! Eile her! damit ich meinen Geist in deinen giesse, durch meine tapfere Zunge diese Zweifel und Furchtgespenster aus dem Felde schlage, die dich wegschrecken von dem goldnen Reif, womit das Glück dich gern bekrönen möchte.</dfn>
     </div>
@@ -13194,9 +13219,8 @@
   </dt>
   <dd class="translation">(≒ funny, amusing, merry / divertente, allegro, giocoso)<br>【一般的な意味】<br>① おかしい，こっけいな，滑稽な．<br>② 陽気な，快活な，楽しい．<br>③ （古い用法で）粋な，洒脱な．<br>【音楽用語としての訳例】<br>「滑稽に」，「陽気に」，「快活に」，「面白おかしく」</dd>
 </div>
-<div id="letter-M"></div>
 <div class="row" id="term-m-d">
-  <dt>
+  <dt id="letter-M">
     <div class="dt-main">
       <dfn class="german">m.d.</dfn>
     </div>
@@ -13733,9 +13757,8 @@
   </dt>
   <dd class="translation">(≒ grumpy, sullen, morose / scontroso, imbronciato)<br>【一般的な意味】<br>① 不機嫌な，むっつりした，むっつり屋の．<br>② ぶっきらぼうな，気難しい．<br>【音楽用語としての訳例】<br>「不機嫌そうに」，「むっつりと」，「ぶっきらぼうに」</dd>
 </div>
-<div id="letter-N"></div>
 <div class="row" id="term-nach-dem-trio">
-  <dt>
+  <dt id="letter-N">
     <div class="dt-main">
       <dfn class="german">nach dem Trio</dfn>
     </div>
@@ -14234,9 +14257,8 @@
   </dt>
   <dd class="translation">落ち着きを保ちつつ，緩やかに動かして</dd>
 </div>
-<div id="letter-O"></div>
 <div class="row" id="term-oder-8-bassa">
-  <dt>
+  <dt id="letter-O">
     <div class="dt-main">
       <dfn class="german">oder 8 bassa</dfn>
     </div>
@@ -14273,9 +14295,8 @@
   </dt>
   <dd class="translation">(≒ unconscious, faint, powerless / svenuto, impotente)<br>【一般的な意味】<br>① 意識を失った，気絶した．<br>② 無力な，力のない，（感情などに）抗いようのない．<br>【音楽用語としての訳例】<br>「気を失ったように」，「無力に」，「（息が絶え絶えになるほど）弱々しく」，「抗いようのないほど激しく」<br><br>「（息が絶え絶えになるほど）弱々しく」，「抗いようのないほど激しく」は矛盾しているようにも読み取れるが，&quot;<a href="dic.html#term-ohnmaechtig" class="term-link">ohnmächtig</a>&quot; という用語に「コントロールを失っている」というニュアンスが中心にあると考えるとそれほど矛盾しているわけでもない．ただ，RW でも RS でも①の意味でしか用いられていない．</dd>
 </div>
-<div id="letter-P"></div>
 <div class="row" id="term-p-stets-sehr-deutlich-und-knapp">
-  <dt>
+  <dt id="letter-P">
     <div class="dt-main">
       <dfn class="german">p stets sehr deutlich und knapp</dfn>
     </div>
@@ -14488,9 +14509,8 @@
   </dt>
   <dd class="translation">プルトごとに </dd>
 </div>
-<div id="letter-Q"></div>
 <div class="row" id="term-quelle">
-  <dt>
+  <dt id="letter-Q">
     <div class="dt-main">
       <dfn class="german">Quelle</dfn>
     </div>
@@ -14502,9 +14522,8 @@
   </dt>
   <dd class="translation">(≒ source, spring, origin / fonte, origine)<br>【一般的な意味】<br>① （水の）源泉，泉，水源．<br>② （情報・権力・起源などの）源，根源，出所，出典．<br>【音楽用語としての訳例】<br>「（楽譜の）原典資料」，「出所」，「（原典版における）資料源」<br><br>GM の &quot;Anmerkung in der <a href="dic.html#term-quelle" class="term-link">Quelle</a>&quot; は「自筆譜における注意」とした</dd>
 </div>
-<div id="letter-R"></div>
 <div class="row" id="term-rand">
-  <dt>
+  <dt id="letter-R">
     <div class="dt-main">
       <dfn class="german">Rand</dfn>
     </div>
@@ -14809,9 +14828,8 @@ Allegro ma non troppo (in cominciando un poco esitendo)</dfn>
   </dt>
   <dd class="translation">ラジオ放送，ラジオ，放送局 </dd>
 </div>
-<div id="letter-S"></div>
 <div class="row" id="term-saemmtlich">
-  <dt>
+  <dt id="letter-S">
     <div class="dt-main">
       <dfn class="german">sämmtlich</dfn>
     </div>
@@ -16191,9 +16209,8 @@ Allegro ma non troppo (in cominciando un poco esitendo)</dfn>
   </dt>
   <dd class="translation">(≒ humming, buzzing, droning / ronzante, ronzio)<br>summen の現在分詞<br>【一般的な意味】<br>① ハミングしている，鼻歌を歌っている．<br>② （昆虫などが）ブンブンと羽音を立てている，（機械などが）唸っている．<br>【音楽用語としての訳例】<br>「口ずさんて」，「ハミングで」，「鼻歌のように」，「ronzante」，「（ハチの羽音のように）ブンブンと」<br><br>GM では「ハミング」の意味で訳している．</dd>
 </div>
-<div id="letter-T"></div>
 <div class="row" id="term-tactig">
-  <dt>
+  <dt id="letter-T">
     <div class="dt-main">
       <dfn class="german">tactig</dfn>
     </div>
@@ -16448,9 +16465,8 @@ Allegro ma non troppo (in cominciando un poco esitendo)</dfn>
   </dt>
   <dd class="translation">（≒ door / porta）<br>【一般的な意味】 ① 扉，ドア． ②（比喩的に）入り口，道．<br><br>RW，RSに出てくる &quot;<a href="dic.html#term-tuer" class="term-link">Tür</a>&quot; は以下． <br>Ausgangstür：出口の扉<br>Eingangstür：入り口の扉<br>Falltür：落とし戸，跳ね上げ戸<br>Flügeltür：両開き戸，観音開きの扉<br>Haustür：玄関の扉，表戸<br>Hoftür：中庭への扉<br>Kammertür：小部屋の扉，寝室の扉<br>Ladentür：店の扉<br>Mitteltür：中央の扉<br>Schiebtür：引き戸<br>Tapetentür：隠し扉（壁紙を貼って壁に見せかけた扉）</dd>
 </div>
-<div id="letter-U"></div>
 <div class="row" id="term-ueber-hinaus">
-  <dt>
+  <dt id="letter-U">
     <div class="dt-main">
       <dfn class="german">über~hinaus</dfn>
     </div>
@@ -16783,9 +16799,8 @@ Allegro ma non troppo (in cominciando un poco esitendo)</dfn>
   </dt>
   <dd class="translation">(≒ original, initial, fundamental / originale, iniziale)<br>【一般的な意味】<br>① 最初の，元の，初期の，本来の．<br>② 独創的な，根源的な，根本的な．<br>【音楽用語としての訳例】<br>「元の」，「最初の」，「（Tempo につけて）元のテンポで（Tempo primo）」</dd>
 </div>
-<div id="letter-V"></div>
 <div class="row" id="term-variante">
-  <dt>
+  <dt id="letter-V">
     <div class="dt-main">
       <dfn class="german">Variante</dfn>
     </div>
@@ -17630,9 +17645,8 @@ Allegro ma non troppo (in cominciando un poco esitendo)</dfn>
   </dt>
   <dd class="translation">(≒ to be performed, to be presented / da eseguire, da presentare)<br>分離動詞 vortragen の zu-不定詞形<br>【一般的な意味】<br>① 上演する，演奏する，歌う．<br>② （意見・報告などを）述べる，提出する．<br>③ （病気などを）患っている，抱えている．<br>【音楽用語としての訳例】<br>「演奏されるべき」，「提示すべき」，「（表情をもって）歌われるべき」</dd>
 </div>
-<div id="letter-W"></div>
 <div class="row" id="term-wahnsinn">
-  <dt>
+  <dt id="letter-W">
     <div class="dt-main">
       <dfn class="german">wahnsinn</dfn>
     </div>
@@ -18121,9 +18135,8 @@ Allegro ma non troppo (in cominciando un poco esitendo)</dfn>
   </dt>
   <dd class="translation">(≒ furious, enraged, raging / furioso, infuriato)<br>wüten の現在分詞の形容詞用法<br>【一般的な意味】<br>① 激怒した，憤慨した，怒り狂った．<br>② （感情や行動が）猛烈な，激しい．<br>【音楽用語としての訳例】<br>「furioso」，「furente」，「激怒して」，「荒れ狂って」，「猛烈な勢いで」<br><br>GM では交響曲第6番第1楽章にある．「怒り狂って」と訳している．</dd>
 </div>
-<div id="letter-Z"></div>
 <div class="row" id="term-z-b">
-  <dt>
+  <dt id="letter-Z">
     <div class="dt-main">
       <dfn class="german">z. B.</dfn>
     </div>
@@ -18492,9 +18505,8 @@ Allegro ma non troppo (in cominciando un poco esitendo)</dfn>
   </dt>
   <dd class="translation">山と深い谷とのあいだで</dd>
 </div>
-<div id="letter-OTHER"></div>
 <div class="row" id="term-fuchstanz-vom-wilm-wilm-mit-genehmigung-des-verlegers-fritz-schuberth-jun-leipzig">
-  <dt>
+  <dt id="letter-OTHER">
     <div class="dt-main">
       <dfn class="german">&quot;Fuchstanz&quot; vom Wilm Wilm mit Genehmigung des Verlegers Fritz Schuberth jun. Leipzig</dfn>
     </div>
@@ -18917,4 +18929,4 @@ Allegro ma non troppo (in cominciando un poco esitendo)</dfn>
 </body>
 
 </html>
-<!-- Generated: 2026/8/11 21:56:19 -->
+<!-- Generated: 2026/8/11 22:14:57 -->
