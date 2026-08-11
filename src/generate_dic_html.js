@@ -209,17 +209,11 @@ function generateDicListHtml(dicData, termsIndex) {
     
     const currentLetter = getSortLetter(german);
     
-    // 最初の出現時にアルファベットIDを追加
-    let anchorId = '';
+    // 最初の出現時に、その文字で始まる最初の単語へアンカーを付ける
+    let letterAnchorAttr = '';
     if (currentLetter !== prevLetter && (currentLetter === 'OTHER' || (currentLetter >= 'A' && currentLetter <= 'Z'))) {
-      anchorId = ` id="letter-${currentLetter}"`;
+      letterAnchorAttr = ` id="letter-${currentLetter}"`;
       prevLetter = currentLetter;
-    }
-    
-    // Alphabet anchor (if first term of a letter)
-    let alphabetAnchor = '';
-    if (anchorId) {
-      alphabetAnchor = `<div${anchorId}></div>\n`;
     }
     
     // Individual Term ID (Always use id for native browser scrolling)
@@ -255,9 +249,8 @@ function generateDicListHtml(dicData, termsIndex) {
     }
 
     // rowのHTML生成（セマンティックHTMLで辞書構造を明示）
-    if (alphabetAnchor) html += alphabetAnchor;
     html += `<div class="row"${termIdAttr}>
-  <dt>
+  <dt${letterAnchorAttr}>
     <div class="dt-main">
       <dfn class="german">${escapeHtml(german)}</dfn>
     </div>
@@ -475,17 +468,22 @@ ${breadcrumbJSON}
             scroll-margin-top: 20px;
         }
 
-        .row, div[id^="letter-"] {
+        .row {
             border-bottom: 1px solid #ccc;
             padding-bottom: 10px;
             margin-bottom: 10px;
-            scroll-margin-top: 60px;
             transition: background-color 0.3s;
         }
 
+        [id^="letter-"],
+        .row[id^="term-"] {
+            scroll-margin-top: 16px;
+        }
+
         @media (max-width: 768px) {
-            .row, div[id^="letter-"] {
-                scroll-margin-top: 75px;
+            [id^="letter-"],
+            .row[id^="term-"] {
+                scroll-margin-top: 58px;
             }
         }
 
@@ -592,12 +590,6 @@ ${breadcrumbJSON}
             color: #ffffff;
             box-shadow: 0 2px 6px rgba(26,115,232,0.25);
             transform: translateY(-1px);
-        }
-
-        div[id^="letter-"] {
-            border-bottom: none;
-            padding-bottom: 0;
-            margin-bottom: 0;
         }
 
         /* Target Highlight Animation */
@@ -857,6 +849,46 @@ ${breadcrumbJSON}
 
         window.addEventListener('hashchange', handleHashChange);
 
+        let hashScrollSequence = 0;
+
+        function getHashScrollOffset() {
+            const navToggle = document.querySelector('.nav-toggle');
+            if (navToggle && window.getComputedStyle(navToggle).display !== 'none') {
+                return Math.ceil(navToggle.getBoundingClientRect().bottom + 12);
+            }
+
+            // タブレット・スマホでは右上の固定ボタンに隠れない位置にする
+            return window.matchMedia('(max-width: 768px)').matches ? 58 : 16;
+        }
+
+        function alignHashTarget(targetElement) {
+            const elementPosition = targetElement.getBoundingClientRect().top;
+            const offsetPosition = elementPosition + window.pageYOffset - getHashScrollOffset();
+
+            window.scrollTo({
+                top: Math.max(0, offsetPosition),
+                behavior: 'auto'
+            });
+        }
+
+        function scrollToHashTarget(targetElement) {
+            const sequence = ++hashScrollSequence;
+            const realign = function () {
+                if (sequence === hashScrollSequence && document.contains(targetElement)) {
+                    alignHashTarget(targetElement);
+                }
+            };
+
+            // content-visibility による長い一覧の再レイアウト後も同じ単語へ合わせ直す
+            realign();
+            window.requestAnimationFrame(function () {
+                realign();
+                window.requestAnimationFrame(realign);
+            });
+            window.setTimeout(realign, 150);
+            window.setTimeout(realign, 500);
+        }
+
         function handleHashChange() {
             const hash = window.location.hash;
             if (!hash) {
@@ -882,28 +914,18 @@ ${breadcrumbJSON}
                 }
             }
 
-            // 固定ヘッダー/ナビボタンの高さに応じた動的スクロールオフセット
-            const navToggle = document.querySelector('.nav-toggle');
-            const isMobileNavVisible = navToggle && window.getComputedStyle(navToggle).display !== 'none';
-            const headerOffset = isMobileNavVisible ? 75 : 60;
-
-            const elementPosition = targetElement.getBoundingClientRect().top;
-            const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
-
-            window.scrollTo({
-                top: Math.max(0, offsetPosition),
-                behavior: 'smooth'
-            });
+            scrollToHashTarget(targetElement);
 
             // Remove previous highlights
             document.querySelectorAll('.row.highlight-active').forEach(el => el.classList.remove('highlight-active'));
             
             // Trigger animation
-            targetElement.classList.remove('highlight-active');
-            void targetElement.offsetWidth; 
+            const highlightElement = targetElement.closest('.row') || targetElement;
+            highlightElement.classList.remove('highlight-active');
+            void highlightElement.offsetWidth;
             
             setTimeout(() => {
-                targetElement.classList.add('highlight-active');
+                highlightElement.classList.add('highlight-active');
             }, 50);
         }
 
@@ -958,9 +980,11 @@ ${breadcrumbJSON}
                 }
 
                 const targetId = link.getAttribute('href').slice(1);
-                if (!/^letter-[A-Z]$/.test(targetId)) {
+                if (!/^letter-(?:[A-Z]|OTHER)$/.test(targetId)) {
                     return;
                 }
+
+                event.preventDefault();
 
                 const letter = targetId.replace(/^letter-/, '');
 
@@ -970,6 +994,12 @@ ${breadcrumbJSON}
                         page_path: location.pathname
                     });
                 }
+
+                const nextHash = '#' + targetId;
+                if (window.location.hash !== nextHash) {
+                    window.history.pushState(null, '', nextHash);
+                }
+                handleHashChange();
             });
         });
 
