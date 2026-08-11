@@ -208,40 +208,45 @@
       word-break: break-word;
     }
 
-    .dt-main {
-      display: flex;
-      align-items: baseline;
-      justify-content: space-between;
-      width: 100%;
-      flex-wrap: wrap;
-      row-gap: 2px;
-      column-gap: 10px;
+    .dt-details {
+      display: none;
+      margin-left: 22px;
+      margin-top: 2px;
+    }
+
+    .row.accordion-open .dt-details {
+      display: block;
+    }
+
+    .source {
+      font-size: 0.8rem;
+      color: #555;
+      font-family: 'Lora', serif;
+      display: block;
+      margin-bottom: 2px;
     }
 
     .example-wrapper {
-      display: inline-flex;
+      display: flex;
       align-items: center;
-      margin-left: auto;
-      white-space: nowrap;
-      flex-shrink: 0;
-    }
-
-    .example-toggle {
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 2px;
+      margin-bottom: 4px;
       font-size: 0.85rem;
-      color: #1a73e8;
-      cursor: pointer;
-      user-select: none;
-      font-family: sans-serif;
-      white-space: nowrap;
     }
 
-    .example-toggle:hover {
-      text-decoration: underline;
+    .example-label {
+      color: #1a73e8;
+      font-size: 0.85rem;
+      font-weight: 500;
+      user-select: none;
     }
 
     .example-content {
-      margin-right: 12px;
-      font-size: 0.9rem;
+      display: inline-flex;
+      gap: 6px;
+      font-size: 0.85rem;
       font-family: 'Lora', serif;
     }
 
@@ -249,7 +254,6 @@
       color: #c44536;
       text-decoration: underline;
       font-weight: bold;
-      margin-right: 5px;
     }
 
     .composer-link:hover {
@@ -497,9 +501,15 @@
         germanSpan.textContent = german;
         dtMain.appendChild(germanSpan);
 
-        const sourceSpan = document.createElement("span");
-        sourceSpan.classList.add("source");
-        sourceSpan.textContent = source;
+        const dtDetails = document.createElement("div");
+        dtDetails.classList.add("dt-details");
+
+        if (source) {
+          const sourceSpan = document.createElement("span");
+          sourceSpan.classList.add("source");
+          sourceSpan.textContent = source;
+          dtDetails.appendChild(sourceSpan);
+        }
 
         const hasGM = source && source.includes('[GM]');
         const hasRW = source && source.includes('[RW: Oper]');
@@ -510,29 +520,46 @@
           const wrapper = document.createElement("div");
           wrapper.classList.add("example-wrapper");
 
-          const toggleSpan = document.createElement("span");
-          toggleSpan.classList.add("example-toggle");
-          toggleSpan.innerHTML = '<span class="arrow">◂</span> 実例を見る';
-          
-          // data属性に必要な情報を格納
-          toggleSpan.dataset.german = german;
-          if (hasRW) toggleSpan.dataset.rw = "1";
-          if (hasGM) toggleSpan.dataset.gm = "1";
-          if (hasRS) toggleSpan.dataset.rs = "1";
+          const labelSpan = document.createElement("span");
+          labelSpan.classList.add("example-label");
+          labelSpan.textContent = "実例を見る▶";
+          wrapper.appendChild(labelSpan);
 
-          toggleSpan.onclick = function() { toggleExample(this); };
-          wrapper.appendChild(toggleSpan);
+          const contentSpan = document.createElement("span");
+          contentSpan.classList.add("example-content");
 
-          dtMain.appendChild(wrapper);
-          
-          dt.appendChild(dtMain);
-          dt.appendChild(sourceSpan);
-          rowDiv.appendChild(dt);
-        } else {
-          dt.appendChild(dtMain);
-          dt.appendChild(sourceSpan);
-          rowDiv.appendChild(dt);
+          const queryParam = encodeURIComponent(german);
+          if (hasRW) {
+            const a = document.createElement("a");
+            a.href = `rw_terms_search.html?q=${queryParam}&source=dictionary_example`;
+            a.className = "composer-link";
+            a.target = "_self";
+            a.textContent = "Wagner";
+            contentSpan.appendChild(a);
+          }
+          if (hasGM) {
+            const a = document.createElement("a");
+            a.href = `terms_search.html?q=${queryParam}&source=dictionary_example`;
+            a.className = "composer-link";
+            a.target = "_self";
+            a.textContent = "Mahler";
+            contentSpan.appendChild(a);
+          }
+          if (hasRS) {
+            const a = document.createElement("a");
+            a.href = `rs_terms_search.html?q=${queryParam}&source=dictionary_example`;
+            a.className = "composer-link";
+            a.target = "_self";
+            a.textContent = "R.Strauss";
+            contentSpan.appendChild(a);
+          }
+          wrapper.appendChild(contentSpan);
+          dtDetails.appendChild(wrapper);
         }
+
+        dt.appendChild(dtMain);
+        dt.appendChild(dtDetails);
+        rowDiv.appendChild(dt);
 
         // 日本語
         const translationDiv = document.createElement("dd");
@@ -615,40 +642,7 @@
             page_path: location.pathname
           });
         }
-      });
-    });
 
-    function toggleExample(element) {
-      const wrapper = element.closest('.example-wrapper');
-      const content = wrapper.querySelector('.example-content');
-      const arrow = element.querySelector('.arrow');
-      
-      if (!content) return;
-
-      if (content.style.display === 'none') {
-        content.style.display = 'inline-block';
-        arrow.textContent = '▾';
-        
-        // GA4イベント送信
-        if (typeof window.gtag === 'function') {
-          try {
-            const german = element.dataset.german || 'unknown';
-            window.gtag('event', 'click_view_example', {
-              'term': german.trim(),
-              'page_path': window.location.pathname,
-              'source_page': typeof window.getAnalyticsPagePath === 'function'
-                ? window.getAnalyticsPagePath()
-                : window.location.pathname
-            });
-          } catch (e) {
-            console.error('GA4 Event Error:', e);
-          }
-        }
-      } else {
-        content.style.display = 'none';
-        arrow.textContent = '◂';
-      }
-    }
   </script>
 </head>
 

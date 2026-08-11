@@ -229,7 +229,7 @@ function generateDicListHtml(dicData, termsIndex) {
     // translationにリンクを適用
     const linkedTranslation = termsIndex ? linkTermsInTranslation(translation, termsIndex) : escapeHtmlWithBreaks(translation);
     
-    // 略記から対象作曲家を判定し、トグルリンクを生成
+    // 略記から対象作曲家を判定し、実例リンクを生成
     const hasGM = source && source.includes('[GM]');
     const hasRW = source && source.includes('[RW: Oper]');
     const hasRS = source && source.includes('[RS: Oper]');
@@ -238,10 +238,6 @@ function generateDicListHtml(dicData, termsIndex) {
     let toggleArea = '';
 
     if (hasExample) {
-      const hasRwAttr = hasRW ? ' data-rw="1"' : '';
-      const hasGmAttr = hasGM ? ' data-gm="1"' : '';
-      const hasRsAttr = hasRS ? ' data-rs="1"' : '';
-      
       const queryParam = encodeURIComponent(german);
       const links = [];
       if (hasRW) {
@@ -253,9 +249,9 @@ function generateDicListHtml(dicData, termsIndex) {
       if (hasRS) {
         links.push(`<a href="rs_terms_search.html?q=${queryParam}&source=dictionary_example" class="composer-link" target="_self">R.Strauss</a>`);
       }
-      const linksHtml = links.join(' / ');
+      const linksHtml = links.join(' ');
       
-      toggleArea = `\n    <div class="example-wrapper">\n      <span class="example-content" style="display: none;">${linksHtml}</span>\n      <span class="example-toggle" onclick="toggleExample(this)" data-german="${escapeHtml(german)}"${hasRwAttr}${hasGmAttr}${hasRsAttr}><span class="arrow">◂</span> 実例を見る</span>\n    </div>`;
+      toggleArea = `\n      <div class="example-wrapper"><span class="example-label">実例を見る▶</span><span class="example-content">${linksHtml}</span></div>`;
     }
 
     // rowのHTML生成（セマンティックHTMLで辞書構造を明示）
@@ -264,9 +260,11 @@ function generateDicListHtml(dicData, termsIndex) {
   <dt>
     <div class="dt-main">
       <dfn class="german">${escapeHtml(german)}</dfn>
+    </div>
+    <div class="dt-details">
+      ${source ? `<span class="source">${escapeHtml(source)}</span>` : ''}
       ${toggleArea}
     </div>
-    <span class="source">${escapeHtml(source)}</span>
   </dt>
   <dd class="translation">${linkedTranslation}</dd>
 </div>\n`;
@@ -624,30 +622,45 @@ ${breadcrumbJSON}
             column-gap: 10px;
         }
 
+        .dt-details {
+            display: none;
+            margin-left: 22px;
+            margin-top: 2px;
+        }
+
+        .row.accordion-open .dt-details {
+            display: block;
+        }
+
+        .source {
+            font-size: 0.8rem;
+            color: #555;
+            font-family: 'Lora', serif;
+            display: block;
+            margin-bottom: 2px;
+        }
+
         .example-wrapper {
-            display: inline-flex;
+            display: flex;
             align-items: center;
-            margin-left: auto;
-            white-space: nowrap;
-            flex-shrink: 0;
-        }
-
-        .example-toggle {
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 2px;
+            margin-bottom: 4px;
             font-size: 0.85rem;
-            color: #1a73e8;
-            cursor: pointer;
-            user-select: none;
-            font-family: sans-serif;
-            white-space: nowrap;
         }
 
-        .example-toggle:hover {
-            text-decoration: underline;
+        .example-label {
+            color: #1a73e8;
+            font-size: 0.85rem;
+            font-weight: 500;
+            user-select: none;
         }
 
         .example-content {
-            margin-right: 12px;
-            font-size: 0.9rem;
+            display: inline-flex;
+            gap: 6px;
+            font-size: 0.85rem;
             font-family: 'Lora', serif;
         }
 
@@ -659,35 +672,6 @@ ${breadcrumbJSON}
 
         .composer-link:hover {
             color: #d64d3d;
-        }
-
-        /* セマンティックHTMLタグのリセット（見た目を変えないため） */
-        dt {
-            margin: 0;
-            padding: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-        }
-        dd {
-            margin: 0;
-            padding: 0;
-        }
-        dfn {
-            font-style: normal; /* ブラウザデフォルトの斜体を解除 */
-        }
-
-        .translation {
-            margin-left: 1em;
-            font-family: 'Lora', serif;
-            font-size: 0.85rem;
-        }
-
-        .source {
-            font-size: 0.75rem;
-            color: #555;
-            margin-left: 0.5em;
-            font-family: 'Lora', serif;
         }
 
         @media (max-width: 600px) {
@@ -849,8 +833,8 @@ ${breadcrumbJSON}
             const listContainer = document.getElementById('listContainer');
             if (listContainer) {
                 listContainer.addEventListener('click', (e) => {
-                    // リンクや「実例を見る」トグルボタン自体のクリック時はアコーディオン開閉処理を行わない
-                    if (e.target.closest('a') || e.target.closest('.example-toggle')) {
+                    // リンク自体のクリック時はアコーディオン開閉処理を行わない
+                    if (e.target.closest('a')) {
                         return;
                     }
                     const dt = e.target.closest('dt');
@@ -982,21 +966,7 @@ ${breadcrumbJSON}
             }
         });
 
-        function toggleExample(element) {
-            const wrapper = element.closest('.example-wrapper');
-            const content = wrapper.querySelector('.example-content');
-            const arrow = element.querySelector('.arrow');
-            
-            if (!content) return;
 
-            if (content.style.display === 'none') {
-                content.style.display = 'inline-block';
-                arrow.textContent = '▾';
-            } else {
-                content.style.display = 'none';
-                arrow.textContent = '◂';
-            }
-        }
     </script>
 </head>
 
