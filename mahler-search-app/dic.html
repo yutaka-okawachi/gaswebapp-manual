@@ -5874,8 +5874,14 @@
             border-bottom: 1px solid #ccc;
             padding-bottom: 10px;
             margin-bottom: 10px;
-            scroll-margin-top: 20px;
+            scroll-margin-top: 60px;
             transition: background-color 0.3s;
+        }
+
+        @media (max-width: 768px) {
+            .row, div[id^="letter-"] {
+                scroll-margin-top: 75px;
+            }
         }
 
         /*
@@ -6263,15 +6269,27 @@
                 return;
             }
 
-            // ターゲット要素またはその親行のアコーディオンを必ず開く
-            const targetRow = targetElement.closest('.row') || (targetElement.classList.contains('row') ? targetElement : null);
-            if (targetRow) {
-                targetRow.classList.add('accordion-open');
+            // 単語直接指定ジャンプ（term-xxxx）の場合のみ親行のアコーディオンを開く
+            if (!targetId.startsWith('letter-')) {
+                const targetRow = targetElement.closest('.row') || (targetElement.classList.contains('row') ? targetElement : null);
+                if (targetRow) {
+                    targetRow.classList.add('accordion-open');
+                }
             }
 
-            // Highlighting & Scrolling
-            targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            
+            // 固定ヘッダー/ナビボタンの高さに応じた動的スクロールオフセット
+            const navToggle = document.querySelector('.nav-toggle');
+            const isMobileNavVisible = navToggle && window.getComputedStyle(navToggle).display !== 'none';
+            const headerOffset = isMobileNavVisible ? 75 : 60;
+
+            const elementPosition = targetElement.getBoundingClientRect().top;
+            const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+
+            window.scrollTo({
+                top: Math.max(0, offsetPosition),
+                behavior: 'smooth'
+            });
+
             // Remove previous highlights
             document.querySelectorAll('.row.highlight-active').forEach(el => el.classList.remove('highlight-active'));
             
@@ -18899,4 +18917,4 @@ Allegro ma non troppo (in cominciando un poco esitendo)</dfn>
 </body>
 
 </html>
-<!-- Generated: 2026/8/11 21:25:47 -->
+<!-- Generated: 2026/8/11 21:53:28 -->
