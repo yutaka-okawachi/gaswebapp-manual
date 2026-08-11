@@ -874,19 +874,12 @@ ${breadcrumbJSON}
                 return;
             }
 
-            // ターゲット要素またはその親行・直後行のアコーディオンを必ず開く
-            let targetRow = targetElement.closest('.row') || (targetElement.classList.contains('row') ? targetElement : null);
-            if (!targetRow && targetId.startsWith('letter-')) {
-                let nextEl = targetElement.nextElementSibling;
-                while (nextEl && !nextEl.classList.contains('row')) {
-                    nextEl = nextEl.nextElementSibling;
+            // 単語直接指定ジャンプ（term-xxxx）の場合のみ親行のアコーディオンを開く
+            if (!targetId.startsWith('letter-')) {
+                const targetRow = targetElement.closest('.row') || (targetElement.classList.contains('row') ? targetElement : null);
+                if (targetRow) {
+                    targetRow.classList.add('accordion-open');
                 }
-                if (nextEl) {
-                    targetRow = nextEl;
-                }
-            }
-            if (targetRow && targetRow.classList.contains('row')) {
-                targetRow.classList.add('accordion-open');
             }
 
             // 固定ヘッダー/ナビボタンの高さに応じた動的スクロールオフセット
@@ -906,12 +899,11 @@ ${breadcrumbJSON}
             document.querySelectorAll('.row.highlight-active').forEach(el => el.classList.remove('highlight-active'));
             
             // Trigger animation
-            const animElement = targetRow || targetElement;
-            animElement.classList.remove('highlight-active');
-            void animElement.offsetWidth; 
+            targetElement.classList.remove('highlight-active');
+            void targetElement.offsetWidth; 
             
             setTimeout(() => {
-                animElement.classList.add('highlight-active');
+                targetElement.classList.add('highlight-active');
             }, 50);
         }
 
