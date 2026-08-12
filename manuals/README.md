@@ -21,5 +21,6 @@
 * **主な内容**:
   * ローカル開発環境の構築（Node.js, Git, clasp, `.env`）
   * 同期スクリプト (`sync-data.ps1`) の動作仕様とトラブルシューティング
+  * 管理者ダッシュボードの通常確認、API・画面変更、Sites公開、障害復旧
   * 楽譜情報（`score_metadata.js`）の更新手順
   * サイト運用（SEO、canonical設定、PageSpeed Insights パフォーマンス最適化方針）
