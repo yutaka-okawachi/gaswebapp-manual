@@ -246,6 +246,47 @@ const monthlyActivityReport = {
   ]
 };
 
+const monthlyAcquisitionReport = {
+  rows: [
+    reportRow(['202607', 'Referral', 'referral'], 40),
+    reportRow(['202607', 'Organic Search', 'organic'], 30),
+    reportRow(['202607', 'Direct', '(none)'], 20),
+    reportRow(['202607', 'Unassigned', 'qr'], 10),
+    reportRow(['202606', 'Organic Social', 'social'], 15)
+  ]
+};
+
+const acquisitionSourcesReport = {
+  rows: [
+    reportRow(['example.org / referral', 'Referral', 'referral'], [40, 0.75, 80]),
+    reportRow(['google / organic', 'Organic Search', 'organic'], [30, 0.6, 50]),
+    reportRow(['(direct) / (none)', 'Direct', '(none)'], [20, 0.5, 20]),
+    reportRow(['line / social', 'Organic Social', 'social'], [15, 0.7, 65]),
+    reportRow(['concert_program / qr', 'Unassigned', 'qr'], [10, 0.8, 100])
+  ]
+};
+
+const acquisitionLandingPagesReport = {
+  rows: [
+    reportRow(['example.org / referral', '/gaswebapp-manual/mahler-search-app/dic.html'], 35),
+    reportRow(['example.org / referral', '/gaswebapp-manual/'], 5),
+    reportRow(['google / organic', '/gaswebapp-manual/'], 30),
+    reportRow(['(direct) / (none)', '/gaswebapp-manual/'], 20),
+    reportRow(['line / social', '/gaswebapp-manual/mahler-search-app/dic.html'], 15),
+    reportRow(['concert_program / qr', '/gaswebapp-manual/mahler-search-app/dic.html'], 10)
+  ]
+};
+
+const acquisitionSearchesReport = {
+  rows: [
+    reportRow(['example.org / referral'], 8),
+    reportRow(['google / organic'], 12),
+    reportRow(['(direct) / (none)'], 1),
+    reportRow(['line / social'], 3),
+    reportRow(['concert_program / qr'], 2)
+  ]
+};
+
 const context = {
   console,
   URL,
@@ -382,6 +423,24 @@ const context = {
           requestedRange.startDate === '2025-08-01' &&
           requestedRange.endDate === '2026-07-26';
         if (isMonthlyRange) {
+          if (
+            dimensionNames ===
+            'yearMonth,sessionDefaultChannelGroup,sessionMedium'
+          ) {
+            return monthlyAcquisitionReport;
+          }
+          if (
+            dimensionNames ===
+            'sessionSourceMedium,sessionDefaultChannelGroup,sessionMedium'
+          ) {
+            return acquisitionSourcesReport;
+          }
+          if (dimensionNames === 'sessionSourceMedium,landingPage') {
+            return acquisitionLandingPagesReport;
+          }
+          if (dimensionNames === 'sessionSourceMedium') {
+            return acquisitionSearchesReport;
+          }
           if (dimensionNames === 'yearMonth,pagePath') {
             const metricNames = request.metrics.map(item => item.name).join(',');
             return metricNames === 'eventCount'
@@ -486,10 +545,10 @@ assert.deepStrictEqual(
 assert.strictEqual(analyticsCallCount, 1);
 
 const result = context.getDashboardAnalytics(7);
-assert.strictEqual(analyticsCallCount, 13);
+assert.strictEqual(analyticsCallCount, 17);
 assert.strictEqual(lockAcquireCount, 1);
 assert.strictEqual(lockReleaseCount, 1);
-assert.strictEqual(result.schemaVersion, 4);
+assert.strictEqual(result.schemaVersion, 5);
 assert.strictEqual(result.period, 7);
 assert.deepStrictEqual(
   JSON.parse(JSON.stringify(result.range)),
@@ -589,6 +648,45 @@ assert.deepStrictEqual(
   }
 );
 assert.strictEqual(dictionaryTrend.months[11].searches, null);
+assert.strictEqual(result.acquisition.granularity, 'month');
+assert.strictEqual(result.acquisition.totalSessions, 115);
+assert.deepStrictEqual(
+  JSON.parse(JSON.stringify(result.acquisition.summary)),
+  [
+    { key: 'referral', label: '紹介・共有', sessions: 65, share: 56.5 },
+    { key: 'search', label: '検索', sessions: 30, share: 26.1 },
+    { key: 'direct', label: '直接', sessions: 20, share: 17.4 },
+    { key: 'other', label: 'その他', sessions: 0, share: 0 }
+  ]
+);
+assert.deepStrictEqual(
+  JSON.parse(JSON.stringify(result.acquisition.months[11])),
+  {
+    month: '2026-07',
+    totalSessions: 100,
+    status: 'collecting',
+    channels: [
+      { key: 'referral', label: '紹介・共有', sessions: 50, share: 50 },
+      { key: 'search', label: '検索', sessions: 30, share: 30 },
+      { key: 'direct', label: '直接', sessions: 20, share: 20 },
+      { key: 'other', label: 'その他', sessions: 0, share: 0 }
+    ]
+  }
+);
+assert.deepStrictEqual(
+  JSON.parse(JSON.stringify(result.acquisition.sources[0])),
+  {
+    sourceMedium: 'example.org / referral',
+    channel: '紹介・共有',
+    sessions: 40,
+    share: 34.8,
+    engagementRate: 75,
+    averageEngagementSeconds: 80,
+    searches: 8,
+    searchesPerSession: 0.2,
+    landingPage: 'ドイツ語の音楽用語集'
+  }
+);
 assert.strictEqual(result.daily.length, 7);
 assert.strictEqual(result.previous.daily.length, 7);
 assert.deepStrictEqual(
@@ -773,7 +871,7 @@ assert.strictEqual(
 );
 
 const cachedResult = context.getDashboardAnalytics(7);
-assert.strictEqual(analyticsCallCount, 13);
+assert.strictEqual(analyticsCallCount, 17);
 assert.strictEqual(lockAcquireCount, 1);
 assert.strictEqual(lockReleaseCount, 1);
 assert.deepStrictEqual(

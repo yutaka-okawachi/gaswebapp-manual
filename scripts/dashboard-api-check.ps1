@@ -107,6 +107,7 @@ function Test-DashboardApiPayload {
         "searchMethods",
         "retention",
         "pageTrends",
+        "acquisition",
         "pages",
         "dictionaryExampleMoves",
         "terms"
@@ -117,7 +118,7 @@ function Test-DashboardApiPayload {
         }
     }
 
-    if ([int]$data.schemaVersion -ne 4) {
+    if ([int]$data.schemaVersion -ne 5) {
         return New-DashboardApiCheckResult -Success $false -Period $ExpectedPeriod -Message "Unexpected schemaVersion"
     }
     if ([int]$data.period -ne $ExpectedPeriod) {
@@ -278,6 +279,71 @@ function Test-DashboardApiPayload {
             ) {
                 return New-DashboardApiCheckResult -Success $false -Period $ExpectedPeriod -Message "Invalid page trend month"
             }
+        }
+    }
+
+    $acquisition = $data.acquisition
+    foreach ($key in @("granularity", "asOfDate", "range", "totalSessions", "summary", "months", "sources")) {
+        if (-not (Test-DashboardHasProperty -Object $acquisition -Name $key)) {
+            return New-DashboardApiCheckResult -Success $false -Period $ExpectedPeriod -Message "Invalid acquisition data"
+        }
+    }
+    if (
+        $acquisition.granularity -ne "month" -or
+        -not (Test-DashboardNonNegativeInteger -Value $acquisition.totalSessions) -or
+        @($acquisition.summary).Count -ne 4 -or
+        @($acquisition.months).Count -ne 12
+    ) {
+        return New-DashboardApiCheckResult -Success $false -Period $ExpectedPeriod -Message "Invalid acquisition range"
+    }
+    foreach ($channel in @($acquisition.summary)) {
+        if (
+            -not (Test-DashboardHasProperty -Object $channel -Name "key") -or
+            -not (Test-DashboardHasProperty -Object $channel -Name "label") -or
+            -not (Test-DashboardHasProperty -Object $channel -Name "sessions") -or
+            -not (Test-DashboardHasProperty -Object $channel -Name "share") -or
+            -not (Test-DashboardNonNegativeInteger -Value $channel.sessions) -or
+            -not (Test-DashboardRate -Value $channel.share)
+        ) {
+            return New-DashboardApiCheckResult -Success $false -Period $ExpectedPeriod -Message "Invalid acquisition summary"
+        }
+    }
+    foreach ($month in @($acquisition.months)) {
+        if (
+            -not (Test-DashboardHasProperty -Object $month -Name "month") -or
+            -not (Test-DashboardHasProperty -Object $month -Name "totalSessions") -or
+            -not (Test-DashboardHasProperty -Object $month -Name "status") -or
+            -not (Test-DashboardHasProperty -Object $month -Name "channels") -or
+            -not (Test-DashboardNonNegativeInteger -Value $month.totalSessions) -or
+            $month.status -notin @("complete", "collecting") -or
+            @($month.channels).Count -ne 4
+        ) {
+            return New-DashboardApiCheckResult -Success $false -Period $ExpectedPeriod -Message "Invalid acquisition month"
+        }
+        foreach ($channel in @($month.channels)) {
+            if (
+                -not (Test-DashboardNonNegativeInteger -Value $channel.sessions) -or
+                -not (Test-DashboardRate -Value $channel.share)
+            ) {
+                return New-DashboardApiCheckResult -Success $false -Period $ExpectedPeriod -Message "Invalid acquisition monthly channel"
+            }
+        }
+    }
+    foreach ($source in @($acquisition.sources)) {
+        foreach ($key in @("sourceMedium", "channel", "sessions", "share", "engagementRate", "averageEngagementSeconds", "searches", "searchesPerSession", "landingPage")) {
+            if (-not (Test-DashboardHasProperty -Object $source -Name $key)) {
+                return New-DashboardApiCheckResult -Success $false -Period $ExpectedPeriod -Message "Invalid acquisition source"
+            }
+        }
+        if (
+            -not (Test-DashboardNonNegativeInteger -Value $source.sessions) -or
+            -not (Test-DashboardRate -Value $source.share) -or
+            -not (Test-DashboardRate -Value $source.engagementRate) -or
+            -not (Test-DashboardNonNegativeNumber -Value $source.averageEngagementSeconds) -or
+            -not (Test-DashboardNonNegativeInteger -Value $source.searches) -or
+            -not (Test-DashboardNonNegativeNumber -Value $source.searchesPerSession)
+        ) {
+            return New-DashboardApiCheckResult -Success $false -Period $ExpectedPeriod -Message "Invalid acquisition source metrics"
         }
     }
 

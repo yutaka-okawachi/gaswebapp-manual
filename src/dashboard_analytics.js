@@ -6,7 +6,7 @@
  * read or returned here.
  */
 
-const DASHBOARD_SCHEMA_VERSION = 4;
+const DASHBOARD_SCHEMA_VERSION = 5;
 const DASHBOARD_TIME_ZONE = 'Asia/Tokyo';
 const DASHBOARD_ALLOWED_PERIODS = Object.freeze([7, 30, 90]);
 const DASHBOARD_CACHE_SECONDS = 900;
@@ -16,6 +16,8 @@ const DASHBOARD_HOST_NAME = 'yutaka-okawachi.github.io';
 const DASHBOARD_RETENTION_COHORT_COUNT = 12;
 const DASHBOARD_RETENTION_END_OFFSET = 3;
 const DASHBOARD_PAGE_TREND_MONTH_COUNT = 12;
+const DASHBOARD_ACQUISITION_MONTH_COUNT = 12;
+const DASHBOARD_ACQUISITION_SOURCE_LIMIT = 12;
 const DASHBOARD_SEARCH_EVENTS = Object.freeze([
   'view_search_results',
   'search_no_results'
@@ -149,7 +151,7 @@ function getDashboardAnalytics(period) {
   }
 
   const cache = CacheService.getScriptCache();
-  const cacheKey = 'admin_dashboard_analytics_v18_' + propertyId + '_' + period;
+  const cacheKey = 'admin_dashboard_analytics_v19_' + propertyId + '_' + period;
   const cachedResult = readDashboardCachedResult(cache, cacheKey);
   if (cachedResult) return cachedResult;
 
@@ -189,6 +191,11 @@ function getDashboardAnalytics(period) {
       range.endDate
     );
     reports.pageTrends = getDashboardPageTrendAnalytics(
+      propertyName,
+      cache,
+      range.endDate
+    );
+    reports.acquisition = getDashboardAcquisitionAnalytics(
       propertyName,
       cache,
       range.endDate
@@ -403,6 +410,243 @@ function createDashboardPageTrendRange(asOfDate) {
   return {
     startDate: dashboardMonthStart(asOfDate, -(DASHBOARD_PAGE_TREND_MONTH_COUNT - 1)),
     endDate: asOfDate
+  };
+}
+
+function getDashboardAcquisitionAnalytics(propertyName, cache, asOfDate) {
+  const cacheKey = 'admin_dashboard_acquisition_v1_' + propertyName.replace('/', '_');
+  const cachedResult = readDashboardCachedResult(cache, cacheKey);
+  if (cachedResult) return cachedResult;
+
+  const range = createDashboardAcquisitionRange(asOfDate);
+  const reports = {
+    monthly: runDashboardMonthlyAcquisitionReport(propertyName, range),
+    sources: runDashboardAcquisitionSourcesReport(propertyName, range),
+    landingPages: runDashboardAcquisitionLandingPagesReport(propertyName, range),
+    searches: runDashboardAcquisitionSearchesReport(propertyName, range)
+  };
+  const result = buildDashboardAcquisitionResponse(asOfDate, range, reports);
+  try {
+    cache.put(cacheKey, JSON.stringify(result), DASHBOARD_CACHE_SECONDS);
+  } catch (error) {
+    Logger.log('Dashboard acquisition cache write skipped: ' + String(error));
+  }
+  return result;
+}
+
+function createDashboardAcquisitionRange(asOfDate) {
+  return {
+    startDate: dashboardMonthStart(
+      asOfDate,
+      -(DASHBOARD_ACQUISITION_MONTH_COUNT - 1)
+    ),
+    endDate: asOfDate
+  };
+}
+
+function dashboardHostFilter() {
+  return dashboardExactFilter('hostName', DASHBOARD_HOST_NAME);
+}
+
+function runDashboardMonthlyAcquisitionReport(propertyName, range) {
+  return AnalyticsData.Properties.runReport({
+    dateRanges: [range],
+    dimensions: [
+      { name: 'yearMonth' },
+      { name: 'sessionDefaultChannelGroup' },
+      { name: 'sessionMedium' }
+    ],
+    metrics: [{ name: 'sessions' }],
+    dimensionFilter: dashboardHostFilter(),
+    limit: '100000'
+  }, propertyName);
+}
+
+function runDashboardAcquisitionSourcesReport(propertyName, range) {
+  return AnalyticsData.Properties.runReport({
+    dateRanges: [range],
+    dimensions: [
+      { name: 'sessionSourceMedium' },
+      { name: 'sessionDefaultChannelGroup' },
+      { name: 'sessionMedium' }
+    ],
+    metrics: [
+      { name: 'sessions' },
+      { name: 'engagementRate' },
+      { name: 'averageSessionDuration' }
+    ],
+    dimensionFilter: dashboardHostFilter(),
+    limit: '100000'
+  }, propertyName);
+}
+
+function runDashboardAcquisitionLandingPagesReport(propertyName, range) {
+  return AnalyticsData.Properties.runReport({
+    dateRanges: [range],
+    dimensions: [
+      { name: 'sessionSourceMedium' },
+      { name: 'landingPage' }
+    ],
+    metrics: [{ name: 'sessions' }],
+    dimensionFilter: dashboardHostFilter(),
+    limit: '100000'
+  }, propertyName);
+}
+
+function runDashboardAcquisitionSearchesReport(propertyName, range) {
+  return AnalyticsData.Properties.runReport({
+    dateRanges: [range],
+    dimensions: [{ name: 'sessionSourceMedium' }],
+    metrics: [{ name: 'eventCount' }],
+    dimensionFilter: dashboardAndFilter([
+      dashboardHostFilter(),
+      dashboardInListFilter('eventName', DASHBOARD_SEARCH_EVENTS)
+    ]),
+    limit: '100000'
+  }, propertyName);
+}
+
+function dashboardAcquisitionChannel(channel, medium) {
+  const normalizedChannel = String(channel || '').trim().toLowerCase();
+  const normalizedMedium = String(medium || '').trim().toLowerCase();
+  if (normalizedChannel.indexOf('search') >= 0) return 'search';
+  if (normalizedChannel === 'direct') return 'direct';
+  if (
+    ['referral', 'organic social', 'paid social', 'email', 'sms',
+      'mobile push notifications', 'affiliates'].indexOf(normalizedChannel) >= 0 ||
+    ['referral', 'social', 'email', 'sms', 'qr'].indexOf(normalizedMedium) >= 0
+  ) {
+    return 'referral';
+  }
+  return 'other';
+}
+
+function dashboardAcquisitionChannelDefinitions() {
+  return [
+    { key: 'referral', label: '紹介・共有' },
+    { key: 'search', label: '検索' },
+    { key: 'direct', label: '直接' },
+    { key: 'other', label: 'その他' }
+  ];
+}
+
+function dashboardLandingPageLabel(landingPage) {
+  const path = String(landingPage || '').split('?')[0];
+  const normalizedPath = normalizeDashboardPagePath(path);
+  const page = DASHBOARD_PAGES.find(item => item.path === normalizedPath);
+  return page ? page.page : (path && path !== '(not set)' ? path : '不明');
+}
+
+function buildDashboardAcquisitionResponse(asOfDate, range, reports) {
+  const definitions = dashboardAcquisitionChannelDefinitions();
+  const months = Array.from({ length: DASHBOARD_ACQUISITION_MONTH_COUNT }, (_, index) =>
+    dashboardMonthStart(range.startDate, index).slice(0, 7)
+  );
+  const monthlyByMonth = {};
+  months.forEach(month => {
+    monthlyByMonth[month] = {
+      month: month,
+      totalSessions: 0,
+      status: month === asOfDate.slice(0, 7) ? 'collecting' : 'complete',
+      channels: definitions.map(item => ({
+        key: item.key,
+        label: item.label,
+        sessions: 0,
+        share: 0
+      }))
+    };
+  });
+
+  dashboardReportRows(reports.monthly, 3).forEach(row => {
+    const month = dashboardGaMonthToIso(row.dimensions[0]);
+    const target = monthlyByMonth[month];
+    if (!target) return;
+    const key = dashboardAcquisitionChannel(row.dimensions[1], row.dimensions[2]);
+    const channel = target.channels.find(item => item.key === key);
+    const sessions = dashboardCount(row.metrics[0]);
+    if (channel) channel.sessions += sessions;
+    target.totalSessions += sessions;
+  });
+
+  const summaryCounts = { referral: 0, search: 0, direct: 0, other: 0 };
+  months.forEach(month => {
+    const target = monthlyByMonth[month];
+    target.channels.forEach(channel => {
+      summaryCounts[channel.key] += channel.sessions;
+      channel.share = target.totalSessions > 0
+        ? Math.round((channel.sessions / target.totalSessions) * 1000) / 10
+        : 0;
+    });
+  });
+  const totalSessions = Object.keys(summaryCounts)
+    .reduce((sum, key) => sum + summaryCounts[key], 0);
+
+  const landingBySource = {};
+  dashboardReportRows(reports.landingPages, 2).forEach(row => {
+    const sourceMedium = String(row.dimensions[0] || '').trim() || '(not set)';
+    const sessions = dashboardCount(row.metrics[0]);
+    if (!landingBySource[sourceMedium] || sessions > landingBySource[sourceMedium].sessions) {
+      landingBySource[sourceMedium] = {
+        label: dashboardLandingPageLabel(row.dimensions[1]),
+        sessions: sessions
+      };
+    }
+  });
+
+  const searchesBySource = {};
+  dashboardReportRows(reports.searches, 1).forEach(row => {
+    const sourceMedium = String(row.dimensions[0] || '').trim() || '(not set)';
+    searchesBySource[sourceMedium] =
+      (searchesBySource[sourceMedium] || 0) + dashboardCount(row.metrics[0]);
+  });
+
+  const sources = dashboardReportRows(reports.sources, 3)
+    .map(row => {
+      const sourceMedium = String(row.dimensions[0] || '').trim() || '(not set)';
+      const sessions = dashboardCount(row.metrics[0]);
+      const searches = searchesBySource[sourceMedium] || 0;
+      const key = dashboardAcquisitionChannel(row.dimensions[1], row.dimensions[2]);
+      const definition = definitions.find(item => item.key === key);
+      return {
+        sourceMedium: sourceMedium,
+        channel: definition ? definition.label : 'その他',
+        sessions: sessions,
+        share: totalSessions > 0
+          ? Math.round((sessions / totalSessions) * 1000) / 10
+          : 0,
+        engagementRate: Math.round(dashboardNumber(row.metrics[1]) * 1000) / 10,
+        averageEngagementSeconds: Math.round(dashboardNumber(row.metrics[2]) * 10) / 10,
+        searches: searches,
+        searchesPerSession: sessions > 0
+          ? Math.round((searches / sessions) * 100) / 100
+          : 0,
+        landingPage: landingBySource[sourceMedium]
+          ? landingBySource[sourceMedium].label
+          : '不明'
+      };
+    })
+    .filter(item => item.sessions > 0)
+    .sort((a, b) => b.sessions - a.sessions || a.sourceMedium.localeCompare(b.sourceMedium))
+    .slice(0, DASHBOARD_ACQUISITION_SOURCE_LIMIT);
+
+  return {
+    granularity: 'month',
+    asOfDate: asOfDate,
+    range: {
+      startMonth: months[0],
+      endMonth: months[months.length - 1]
+    },
+    totalSessions: totalSessions,
+    summary: definitions.map(item => ({
+      key: item.key,
+      label: item.label,
+      sessions: summaryCounts[item.key],
+      share: totalSessions > 0
+        ? Math.round((summaryCounts[item.key] / totalSessions) * 1000) / 10
+        : 0
+    })),
+    months: months.map(month => monthlyByMonth[month]),
+    sources: sources
   };
 }
 
@@ -948,6 +1192,11 @@ function buildDashboardAnalyticsResponse(period, range, reports) {
     pageTrends: reports.pageTrends || buildDashboardPageTrendResponse(
       range.endDate,
       createDashboardPageTrendRange(range.endDate),
+      {}
+    ),
+    acquisition: reports.acquisition || buildDashboardAcquisitionResponse(
+      range.endDate,
+      createDashboardAcquisitionRange(range.endDate),
       {}
     ),
     pages: DASHBOARD_PAGES.map(item => pageByPath[item.path]),
