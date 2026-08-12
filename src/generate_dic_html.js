@@ -47,6 +47,100 @@ function generateDicTermsIndex(dicData) {
 }
 
 /**
+ * 略記の照合用キーを生成する
+ * @param {string} abbreviation - [GM] などの略記
+ * @return {string} 照合用キー
+ */
+function normalizeAbbreviation(abbreviation) {
+  if (!abbreviation) return '';
+  return String(abbreviation)
+    .trim()
+    .replace(/\[\s+/g, '[')
+    .replace(/\s+\]/g, ']')
+    .replace(/\s+/g, ' ');
+}
+
+/**
+ * 略記のページ内リンクIDを生成する
+ * @param {string} abbreviation - [GM] などの略記
+ * @return {string} ページ内リンクID
+ */
+function generateAbbreviationId(abbreviation) {
+  const normalized = normalizeAbbreviation(abbreviation);
+  if (!/^\[[^\]]+\]$/.test(normalized)) return '';
+  const idBody = normalizeForId(normalized.slice(1, -1));
+  return idBody ? `abbr-${idBody}` : '';
+}
+
+/**
+ * 略記一覧からリンク先インデックスを生成する
+ * @param {Array} abbrData - 略記データ [[colA, colB, colC], ...]
+ * @return {Object} 略記キーからリンク先IDへの対応
+ */
+function generateAbbreviationIndex(abbrData) {
+  const index = {};
+  if (!abbrData || abbrData.length === 0) return index;
+
+  abbrData.forEach(row => {
+    const [colA, colB] = row;
+    const candidates = [];
+
+    if (colA && !isNaN(parseInt(colA))) {
+      const matches = String(colB || '').match(/\[[^\]]+\]/g) || [];
+      matches.forEach(match => candidates.push(match));
+    } else if (colB) {
+      candidates.push(colB);
+    }
+
+    candidates.forEach(candidate => {
+      const normalized = normalizeAbbreviation(candidate);
+      const targetId = generateAbbreviationId(normalized);
+      if (targetId && !index[normalized.toLowerCase()]) {
+        index[normalized.toLowerCase()] = targetId;
+      }
+    });
+  });
+
+  return index;
+}
+
+/**
+ * 見出し語直下の出典略記を略記一覧へのリンクに変換する
+ * @param {string} source - 出典欄
+ * @param {Object} abbreviationIndex - 略記インデックス
+ * @param {string} termId - 戻り先となる用語ID
+ * @return {string} リンク付きHTML
+ */
+function linkAbbreviationsInSource(source, abbreviationIndex, termId) {
+  if (!source) return '';
+
+  const text = String(source);
+  const regex = /\[[^\]]+\]/g;
+  let html = '';
+  let lastIndex = 0;
+  let match;
+
+  while ((match = regex.exec(text)) !== null) {
+    html += escapeHtml(text.slice(lastIndex, match.index));
+
+    const displayText = match[0];
+    const normalized = normalizeAbbreviation(displayText);
+    const targetId = abbreviationIndex && abbreviationIndex[normalized.toLowerCase()];
+
+    if (targetId) {
+      html += `<a href="#${targetId}" class="abbr-link" data-return-target="${escapeHtml(termId)}">${escapeHtml(displayText)}</a>`;
+    } else {
+      html += escapeHtml(displayText);
+    }
+
+    lastIndex = regex.lastIndex;
+  }
+
+  html += escapeHtml(text.slice(lastIndex));
+  return html;
+}
+
+/**
  * 正規化された用語から正規表現パターンを生成
  * @param {string} normalizedTerm - 正規化された用語
  * @return {string} 正規表現パターン
@@ -191,7 +285,7 @@ function sortDicData(data) {
  * @param {Object} termsIndex - 用語インデックス（正規化キー → ID）
  * @return {string} 生成されたHTML
  */
-function generateDicListHtml(dicData, termsIndex) {
+function generateDicListHtml(dicData, termsIndex, abbreviationIndex) {
   if (!dicData || dicData.length === 0) {
     return '<div class="result-message">データが存在しません。</div>';
   }
@@ -255,7 +349,7 @@ function generateDicListHtml(dicData, termsIndex) {
       <dfn class="german">${escapeHtml(german)}</dfn>
     </div>
     <div class="dt-details">
-      ${source ? `<span class="source">${escapeHtml(source)}</span>` : ''}
+      ${source ? `<span class="source">${linkAbbreviationsInSource(source, abbreviationIndex, `term-${termId}`)}</span>` : ''}
       ${toggleArea}
     </div>
   </dt>
@@ -277,16 +371,33 @@ function generateAbbrListHtml(abbrData) {
   }
   
   let html = '';
+  let activeAbbreviationId = '';
   
   abbrData.forEach(row => {
     const [colA, colB, colC] = row;
     
     // colAが数字の場合はタイトル
     if (colA && !isNaN(parseInt(colA))) {
-      html += `<div class="abbr-title">${escapeHtml(colB)}</div>\n`;
+      activeAbbreviationId = '';
+      const titleMatch = String(colB || '').match(/\[[^\]]+\]/);
+      const titleId = titleMatch ? generateAbbreviationId(titleMatch[0]) : '';
+      const titleAttrs = titleId ? ` id="${titleId}" data-abbr-id="${titleId}" tabindex="-1"` : '';
+      html += `<div class="abbr-title"${titleAttrs}>${escapeHtml(colB)}</div>\n`;
     } else if (colB || colC) {
       // 通常の略記エントリー
-      html += `<div class="abbr-row">
+      const normalizedAbbreviation = normalizeAbbreviation(colB);
+      const newAbbreviationId = generateAbbreviationId(normalizedAbbreviation);
+      const isGroupStart = Boolean(newAbbreviationId);
+
+      if (colB) {
+        activeAbbreviationId = newAbbreviationId;
+      }
+
+      const groupAttrs = activeAbbreviationId
+        ? `${isGroupStart ? ` id="${activeAbbreviationId}" tabindex="-1"` : ''} data-abbr-id="${activeAbbreviationId}"`
+        : '';
+
+      html += `<div class="abbr-row"${groupAttrs}>
   <span class="abbr-short">${escapeHtml(colB)}</span><span class="abbr-long">${escapeHtml(colC)}</span>
 </div>\n`;
     }
@@ -304,8 +415,9 @@ function generateAbbrListHtml(abbrData) {
 function generateDicHtml(dicData, abbrData) {
   // 用語インデックスを生成
   const termsIndex = generateDicTermsIndex(dicData);
+  const abbreviationIndex = generateAbbreviationIndex(abbrData);
   
-  const dicListHtml = generateDicListHtml(dicData, termsIndex);
+  const dicListHtml = generateDicListHtml(dicData, termsIndex, abbreviationIndex);
   const abbrListHtml = generateAbbrListHtml(abbrData);
 
   // 構造化データの生成 (SEO対策)
@@ -455,6 +567,77 @@ ${breadcrumbJSON}
             font-size: 0.8rem;
         }
 
+        .abbr-link {
+            color: #0b57d0;
+            font-weight: 700;
+            text-decoration: underline;
+            text-decoration-thickness: 1px;
+            text-underline-offset: 2px;
+        }
+
+        .abbr-link:hover,
+        .abbr-link:focus-visible {
+            color: #b3261e;
+            text-decoration-thickness: 2px;
+        }
+
+        .abbr-title[data-abbr-id],
+        .abbr-row[data-abbr-id] {
+            scroll-margin-top: 16px;
+        }
+
+        .abbr-title.abbr-target-active,
+        .abbr-row.abbr-target-active {
+            background-color: #fff4b8;
+            box-shadow: inset 4px 0 0 #e37400;
+            animation: abbrHighlightIn 0.45s ease-out;
+        }
+
+        .abbr-row.abbr-target-active {
+            margin-left: -8px;
+            margin-right: -8px;
+            padding: 5px 8px;
+            border-radius: 4px;
+        }
+
+        @keyframes abbrHighlightIn {
+            from { background-color: #ffd54f; }
+            to { background-color: #fff4b8; }
+        }
+
+        .abbr-return-panel {
+            margin: 0.25rem 0 0.75rem;
+            padding: 0.55rem 0.7rem;
+            background: #fff;
+            border: 1px solid #e37400;
+            border-radius: 6px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.14);
+            scroll-margin-top: 16px;
+        }
+
+        .abbr-return-panel[hidden] {
+            display: none;
+        }
+
+        .abbr-return-button {
+            appearance: none;
+            padding: 0;
+            border: 0;
+            background: transparent;
+            color: #0b57d0;
+            font: inherit;
+            font-size: 0.88rem;
+            font-weight: 700;
+            text-align: left;
+            cursor: pointer;
+        }
+
+        .abbr-return-button:hover,
+        .abbr-return-button:focus-visible {
+            color: #b3261e;
+            text-decoration: underline;
+        }
+
         .section-divider {
             border: 0;
             border-top: 2px dashed #999;
@@ -484,6 +667,22 @@ ${breadcrumbJSON}
             [id^="letter-"],
             .row[id^="term-"] {
                 scroll-margin-top: 58px;
+            }
+
+            .abbr-title[data-abbr-id],
+            .abbr-row[data-abbr-id] {
+                scroll-margin-top: 58px;
+            }
+
+            .abbr-return-panel {
+                scroll-margin-top: 58px;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .abbr-title.abbr-target-active,
+            .abbr-row.abbr-target-active {
+                animation: none;
             }
         }
 
@@ -537,6 +736,7 @@ ${breadcrumbJSON}
         /* アコーディオン非表示時 (畳んだ状態) */
         .row dd.translation {
             display: none;
+            font-size: 0.94rem;
             margin-top: 6px;
             margin-left: 1.2em;
             padding-left: 10px;
@@ -826,11 +1026,68 @@ ${breadcrumbJSON}
             document.querySelectorAll('#listContainer .row').forEach(el => el.classList.remove('accordion-open'));
         }
 
+        function clearAbbreviationHighlights() {
+            document.querySelectorAll('.abbr-target-active').forEach(el => el.classList.remove('abbr-target-active'));
+        }
+
+        function getAbbreviationTargets(targetId) {
+            return Array.from(document.querySelectorAll('[data-abbr-id]')).filter(function (element) {
+                return element.getAttribute('data-abbr-id') === targetId;
+            });
+        }
+
+        function hideAbbreviationReturnPanel() {
+            const panel = document.getElementById('abbrReturnPanel');
+            if (!panel) return;
+            panel.hidden = true;
+            panel.removeAttribute('data-return-target');
+        }
+
+        function showAbbreviationReturnPanel(targetElement, returnInfo) {
+            const panel = document.getElementById('abbrReturnPanel');
+            const label = document.getElementById('abbrReturnLabel');
+            if (!panel || !label || !returnInfo || !returnInfo.termId) {
+                hideAbbreviationReturnPanel();
+                return null;
+            }
+
+            panel.setAttribute('data-return-target', returnInfo.termId);
+            label.textContent = returnInfo.termLabel
+                ? '「' + returnInfo.termLabel + '」に戻る'
+                : '元の見出し語に戻る';
+            targetElement.parentNode.insertBefore(panel, targetElement);
+            panel.hidden = false;
+            return panel;
+        }
+
+        function navigateToHash(targetId, state) {
+            if (!targetId || !document.getElementById(targetId)) return;
+            window.history.pushState(state || null, '', '#' + encodeURIComponent(targetId));
+            handleHashChange();
+        }
+
         // アコーディオン開閉 & ハッシュ変更ナビゲーション処理
         window.addEventListener('DOMContentLoaded', () => {
             const listContainer = document.getElementById('listContainer');
             if (listContainer) {
                 listContainer.addEventListener('click', (e) => {
+                    const abbreviationLink = e.target.closest('a.abbr-link');
+                    if (abbreviationLink && listContainer.contains(abbreviationLink)) {
+                        e.preventDefault();
+                        const sourceRow = abbreviationLink.closest('.row');
+                        const sourceTerm = sourceRow ? sourceRow.querySelector('.german') : null;
+                        const targetId = decodeURIComponent(abbreviationLink.getAttribute('href').slice(1));
+                        const returnTarget = abbreviationLink.getAttribute('data-return-target') || (sourceRow && sourceRow.id);
+
+                        navigateToHash(targetId, {
+                            dictionaryReturn: {
+                                termId: returnTarget,
+                                termLabel: sourceTerm ? sourceTerm.textContent.trim() : ''
+                            }
+                        });
+                        return;
+                    }
+
                     // リンク自体のクリック時はアコーディオン開閉処理を行わない
                     if (e.target.closest('a')) {
                         return;
@@ -844,6 +1101,18 @@ ${breadcrumbJSON}
                     }
                 });
             }
+
+            const returnButton = document.getElementById('abbrReturnButton');
+            if (returnButton) {
+                returnButton.addEventListener('click', function () {
+                    const panel = document.getElementById('abbrReturnPanel');
+                    const returnTarget = panel && panel.getAttribute('data-return-target');
+                    if (returnTarget) {
+                        navigateToHash(returnTarget, null);
+                    }
+                });
+            }
+
             handleHashChange();
         });
 
@@ -891,42 +1160,65 @@ ${breadcrumbJSON}
 
         function handleHashChange() {
             const hash = window.location.hash;
+
+            document.querySelectorAll('.row.highlight-active').forEach(el => el.classList.remove('highlight-active'));
+            clearAbbreviationHighlights();
+
             if (!hash) {
+                hideAbbreviationReturnPanel();
                 return;
             }
 
             const targetId = decodeURIComponent(hash.substring(1));
-            
-            // Remove previous highlights
-            document.querySelectorAll('.row.highlight-active').forEach(el => el.classList.remove('highlight-active'));
 
             let targetElement = document.getElementById(targetId);
 
             if (!targetElement) {
+                hideAbbreviationReturnPanel();
                 return;
             }
 
+            const isAbbreviationTarget = targetId.startsWith('abbr-');
+            let scrollTargetElement = targetElement;
+
             // 単語直接指定ジャンプ（term-xxxx）の場合のみ親行のアコーディオンを開く
-            if (!targetId.startsWith('letter-')) {
+            if (!targetId.startsWith('letter-') && !isAbbreviationTarget) {
                 const targetRow = targetElement.closest('.row') || (targetElement.classList.contains('row') ? targetElement : null);
                 if (targetRow) {
                     targetRow.classList.add('accordion-open');
                 }
             }
 
-            scrollToHashTarget(targetElement);
+            if (isAbbreviationTarget) {
+                const returnInfo = window.history.state && window.history.state.dictionaryReturn;
+                const returnPanel = showAbbreviationReturnPanel(targetElement, returnInfo);
+                if (returnPanel) {
+                    scrollTargetElement = returnPanel;
+                }
+            } else {
+                hideAbbreviationReturnPanel();
+            }
 
-            // Remove previous highlights
-            document.querySelectorAll('.row.highlight-active').forEach(el => el.classList.remove('highlight-active'));
-            
-            // Trigger animation
-            const highlightElement = targetElement.closest('.row') || targetElement;
-            highlightElement.classList.remove('highlight-active');
-            void highlightElement.offsetWidth;
-            
-            setTimeout(() => {
-                highlightElement.classList.add('highlight-active');
-            }, 50);
+            scrollToHashTarget(scrollTargetElement);
+
+            if (isAbbreviationTarget) {
+                const abbreviationTargets = getAbbreviationTargets(targetId);
+                setTimeout(function () {
+                    abbreviationTargets.forEach(function (element) {
+                        element.classList.add('abbr-target-active');
+                    });
+                    targetElement.focus({ preventScroll: true });
+                }, 50);
+            } else {
+                // Trigger term/letter animation
+                const highlightElement = targetElement.closest('.row') || targetElement;
+                highlightElement.classList.remove('highlight-active');
+                void highlightElement.offsetWidth;
+
+                setTimeout(() => {
+                    highlightElement.classList.add('highlight-active');
+                }, 50);
+            }
         }
 
         // ページトップへスクロール
@@ -1091,6 +1383,9 @@ ${dicListHtml}
             <hr class="section-divider">
 
             <div id="abbrListContainer">
+                <div id="abbrReturnPanel" class="abbr-return-panel" hidden>
+                    <button type="button" id="abbrReturnButton" class="abbr-return-button">← <span id="abbrReturnLabel">元の見出し語に戻る</span></button>
+                </div>
                 <div class="top-message" id="abbrMessage">(*)は特記すべきドイツ語はなし</div>
                 <div id="abbrContent">
 ${abbrListHtml}
