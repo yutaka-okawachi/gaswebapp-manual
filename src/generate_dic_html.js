@@ -349,8 +349,8 @@ function generateDicListHtml(dicData, termsIndex, abbreviationIndex) {
       <dfn class="german">${escapeHtml(german)}</dfn>
     </div>
     <div class="dt-details">
-      ${source ? `<span class="source">${linkAbbreviationsInSource(source, abbreviationIndex, `term-${termId}`)}</span>` : ''}
       ${toggleArea}
+      ${source ? `<span class="source">${linkAbbreviationsInSource(source, abbreviationIndex, `term-${termId}`)}</span>` : ''}
     </div>
   </dt>
   <dd class="translation">${linkedTranslation}</dd>
@@ -736,7 +736,7 @@ ${breadcrumbJSON}
         /* アコーディオン非表示時 (畳んだ状態) */
         .row dd.translation {
             display: none;
-            font-size: 0.94rem;
+            font-size: 0.9rem;
             margin-top: 6px;
             margin-left: 1.2em;
             padding-left: 10px;

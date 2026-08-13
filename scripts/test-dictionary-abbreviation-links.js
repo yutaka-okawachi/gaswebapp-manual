@@ -40,6 +40,9 @@ assert.ok(html.includes("dictionaryReturn"));
 assert.ok(html.includes("targetElement.focus({ preventScroll: true })"));
 assert.strictEqual(/\.abbr-return-panel\s*\{[^}]*position:\s*sticky/s.test(html), false);
 assert.ok(html.includes('scrollTargetElement = returnPanel'));
-assert.ok(html.includes('font-size: 0.94rem;'));
+assert.ok(html.includes('font-size: 0.9rem;'));
+const examplePosition = html.indexOf('<div class="example-wrapper"', html.indexOf('term-zusammen'));
+const sourcePosition = html.indexOf('<span class="source">', html.indexOf('term-zusammen'));
+assert.ok(examplePosition > -1 && sourcePosition > examplePosition);
 
 console.log('dictionary abbreviation link tests: OK');
