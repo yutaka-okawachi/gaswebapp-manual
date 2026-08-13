@@ -1,0 +1,1150 @@
+[
+  {
+    "__exampleOrder": 5,
+    "de": "1. 2. nehmen A-Clarinetten; 3. nimmt Bass-Clarinette in B",
+    "de_normalized": "1. 2. nehmen a-clarinetten; 3. nimmt bass-clarinette in b",
+    "ja": "1st，2ndはA管クラリネットに持ち替える；3rdはB管のバスクラリネットに持ち替える",
+    "data": "M-b2-t1-277-cl&"
+  },
+  {
+    "__exampleOrder": 14,
+    "de": "1. Hälfte",
+    "de_normalized": "1. haelfte",
+    "ja": "divisiの第1グループ",
+    "data": "M-2-2-285-v1&M-3-3-33-v1&M-6-2-321-vc,kb&M-6-2-362-vc,kb&M-6-4-585-vc&M-8-t2-255-va&M-8-t2-472-v1&M-9-1-6-vc&M-9-1-135-vc&M-9-1-137-vc&M-9-1-213-vc&M-9-1-214-vc&M-9-1-219-vc&M-102-5-323-vc&M-102-5-376-v2&M-b1-t1-41-vc,kb&M-b1-t1-47-vc,kb&M-b1-t1-98-vc,kb&M-b2-t1-92-v2&M-d-d07-28-v1&M-h-h-388-v2,va&M-h-h-390-vc,kb&"
+  },
+  {
+    "__exampleOrder": 20,
+    "de": "1. nimmt B-Clarinette",
+    "de_normalized": "1. nimmt b-clarinette",
+    "ja": "1stはB管クラリネットに持ち替える",
+    "data": "M-b2-t2-145-cl&"
+  },
+  {
+    "__exampleOrder": 30,
+    "de": "1. Pult",
+    "de_normalized": "1. pult",
+    "ja": "第1プルトで",
+    "data": "M-102-5-315-vc&M-b1-t1-111-vc,kb&"
+  },
+  {
+    "__exampleOrder": 42,
+    "de": "1. Viol. 3 fach geth.",
+    "de_normalized": "1. viol. 3 fach geth.",
+    "ja": "1stヴァイオリンは3グループにdivisi",
+    "data": "M-3-3-541-v1&M-3-3-581-v1&"
+  },
+  {
+    "__exampleOrder": 48,
+    "de": "1. Viol. in drei gleichen Theilen",
+    "de_normalized": "1. viol. in drei gleichen theilen",
+    "ja": "1st ヴァイオリンは均等に3グループに div",
+    "data": "M-1-3-87-v1&"
+  },
+  {
+    "__exampleOrder": 63,
+    "de": "2 fach getheilt",
+    "de_normalized": "2 fach getheilt",
+    "ja": "2グループにdivisi",
+    "data": "M-3-1-32-va&M-3-1-53-va&"
+  },
+  {
+    "__exampleOrder": 65,
+    "de": "2 Paar Pauken",
+    "de_normalized": "2 paar pauken",
+    "ja": "2組のティンパニ",
+    "data": "M-6-4-1-pau&"
+  },
+  {
+    "__exampleOrder": 82,
+    "de": "2. Hfe. u. alle and. unis.",
+    "de_normalized": "2. hfe. u. alle and. unis.",
+    "ja": "2ndハープと残りすべてのハープがユニゾンで",
+    "data": "M-8-t2-1395-hp&M-8-t2-1413-hp&"
+  },
+  {
+    "__exampleOrder": 99,
+    "de": "2. Tr. mit Dämpfer",
+    "de_normalized": "2. tr. mit daempfer",
+    "ja": "2ndトランペットはミュートをつけて",
+    "data": "M-3-3-23-tr&"
+  },
+  {
+    "__exampleOrder": 104,
+    "de": "2. Violinen ohne crescendo",
+    "de_normalized": "2. violinen ohne crescendo",
+    "ja": "2nd ヴァイオリンはクレッシェンドしない",
+    "data": "M-1-1-339-v2&"
+  },
+  {
+    "__exampleOrder": 107,
+    "de": "2f get.",
+    "de_normalized": "2f get.",
+    "ja": "2グループにdivisi",
+    "data": "M-6-1-340-va&"
+  },
+  {
+    "__exampleOrder": 126,
+    "de": "3. 4. nehmen kl. Flöte",
+    "de_normalized": "3. 4. nehmen kl. floete",
+    "ja": "3rd，4thはピッコロに持ち替える",
+    "data": "M-6-1-414-fl&"
+  },
+  {
+    "__exampleOrder": 132,
+    "de": "3. Clar. nimmt Basscl.",
+    "de_normalized": "3. clar. nimmt basscl.",
+    "ja": "3rd クラリネットはバスクラリネットに持ち替える",
+    "data": "M-2-1-207-cl&"
+  },
+  {
+    "__exampleOrder": 190,
+    "de": "4. Ob. nimmt engl. H.",
+    "de_normalized": "4. ob. nimmt engl. h.",
+    "ja": "4thオーボエはイングリッシュホルンに持ち替える",
+    "data": "M-6-1-50-ob&"
+  },
+  {
+    "__exampleOrder": 193,
+    "de": "4/4 schlagen",
+    "de_normalized": "4/4 schlagen",
+    "ja": "4つ振り",
+    "data": "M-3-1-128-all&"
+  },
+  {
+    "__exampleOrder": 217,
+    "de": "A-Saite",
+    "de_normalized": "a-saite",
+    "ja": "A線で",
+    "data": "M-1-1-398-v2&M-3-6-26-v2&M-3-6-116-v1&M-4-2-254-v2&M-5-4-71-v1&M-6-2-307-v1&M-6-3-159-v1&M-6-4-589-kb&M-6-4-763-v1&M-7-3-68-v2&M-7-3-149-v1&M-8-t2-1164-v1,v2&M-a-6-404-v1&M-b2-t1-198-v1&"
+  },
+  {
+    "__exampleOrder": 219,
+    "de": "aber ausdrucksvoll",
+    "de_normalized": "aber ausdrucksvoll",
+    "ja": "しかし，表情豊かに",
+    "data": "M-1-3-38-ob&M-1-4-443-vc&M-1-4-444-v1&M-1-4-458-vc&M-e-e1-32-va&"
+  },
+  {
+    "__exampleOrder": 224,
+    "de": "aber Halbe",
+    "de_normalized": "aber halbe",
+    "ja": "しかし2拍子で",
+    "data": "M-6-4-598-all&"
+  },
+  {
+    "__exampleOrder": 244,
+    "de": "Alle a 3",
+    "de_normalized": "alle a 3",
+    "ja": "全員で，3グループにdivisi",
+    "data": "M-7-1-291-v1&"
+  },
+  {
+    "__exampleOrder": 263,
+    "de": "Alle übrigen Hfen.",
+    "de_normalized": "alle uebrigen hfen.",
+    "ja": "残り全部のハープ",
+    "data": "M-8-t2-850-hp&"
+  },
+  {
+    "__exampleOrder": 267,
+    "de": "Alles durch Flageolet hervorzubringen",
+    "de_normalized": "alles durch flageolet hervorzubringen",
+    "ja": "全員フラジョレットで音を出す",
+    "data": "M-b2-t2-141-vc&"
+  },
+  {
+    "__exampleOrder": 301,
+    "de": "Allmählich zum I. Tempo zurückkehren",
+    "de_normalized": "allmaehlich zum i. tempo zurueckkehren",
+    "ja": "徐々にTempo I. に戻っていく",
+    "data": "M-h-h-162-all&"
+  },
+  {
+    "__exampleOrder": 325,
+    "de": "Anmerkung f. d. Dirig:'Ausholen' zum Akkord",
+    "de_normalized": "anmerkung f. d. dirig:'ausholen' zum akkord",
+    "ja": "指揮者への注意：和音の前に「身構える」こと",
+    "data": "M-3-1-202-dir&"
+  },
+  {
+    "__exampleOrder": 329,
+    "de": "Anmerkung f. d. Dirigenten: Es ist von höchster Wichtigkeit, daß die Sängerin äußerst diskret begleitet wird",
+    "de_normalized": "anmerkung f. d. dirigenten: es ist von hoechster wichtigkeit, dass die saengerin aeusserst diskret begleitet wird",
+    "ja": "指揮者への注意：極度に控えめに歌手の伴奏をすることが最高に重要である",
+    "data": "M-4-4-1-dir&"
+  },
+  {
+    "__exampleOrder": 334,
+    "de": "Anmerkung Für den Dirigenten : Die フェルマータ記号 am Taktstrich bedeuten hier eine 'Luftpause' und keinen 'Halt'.",
+    "de_normalized": "anmerkung fuer den dirigenten : die フェルマータ記号 am taktstrich bedeuten hier eine 'luftpause' und keinen 'halt'.",
+    "ja": "指揮者への注意：小節線上のフェルマータ記号は，「休止」ではなく「ブレス」を意味する．",
+    "data": "M-1-4-151-dir&"
+  },
+  {
+    "__exampleOrder": 355,
+    "de": "Anmerkung für den Dirigenten: In den Ersten Taktes des Thema's sind die Bassfiguren schnell in heftigem Ansturm ungefähr 四分音符 = 144, die Pausen jedoch im Hauptzeitmass 四分音符 = 84-92 auszuführen. Der Halt im 4. Takte ist kurz - gleichsam ein Aushoren zu neuer Kraft.",
+    "de_normalized": "anmerkung fuer den dirigenten: in den ersten taktes des thema's sind die bassfiguren schnell in heftigem ansturm ungefaehr 四分音符 = 144, die pausen jedoch im hauptzeitmass 四分音符 = 84-92 auszufuehren. der halt im 4. takte ist kurz - gleichsam ein aushoren zu neuer kraft.",
+    "ja": "指揮者への注意：主題の1拍目にある低音弦の音型はおよそ四分音符 = 144 の速さで激しく突進するようにすばやく奏する．しかし休符は四分音符 = 84-92 のテンポで．4小節目のフェルマータは短く---あたかも新しい力へと身構えるかのように",
+    "data": "M-2-1-1-dir&"
+  },
+  {
+    "__exampleOrder": 361,
+    "de": "Anmerkung für den Dirigenten: Um die grösste Intensität des Tones zu erzielen, wechseln die Streicher möglichst oft, aber unmerklich, den Bogen.",
+    "de_normalized": "anmerkung fuer den dirigenten: um die groesste intensitaet des tones zu erzielen, wechseln die streicher moeglichst oft, aber unmerklich, den bogen.",
+    "ja": "指揮者への注意：音の集中度を最大限に高めるために弦楽器はできるだけ頻繁にしかしさりげなく弓をかえす",
+    "data": "M-3-6-184-dir&M-3-6-220-dir&"
+  },
+  {
+    "__exampleOrder": 369,
+    "de": "anschwellend",
+    "de_normalized": "anschwellend",
+    "ja": "大きくなっていく",
+    "data": "M-7-5-483-gl&"
+  },
+  {
+    "__exampleOrder": 389,
+    "de": "Auf der D-Saite",
+    "de_normalized": "auf der d-saite",
+    "ja": "D線で",
+    "data": "M-6-1-124-vc&"
+  },
+  {
+    "__exampleOrder": 395,
+    "de": "auf kleinem Piston",
+    "de_normalized": "auf kleinem piston",
+    "ja": "小さなピストン（トランペット）で\n（訳注：ここでいう Piston は cornet à pistons（コルネット）を指し，klein は高調で小型のコルネット（Es コルネット等）を意味すると考えられる．ただし，現代の演奏では C トランペットでそのまま吹かれることも多い．）",
+    "data": "M-7-5-425-tr&"
+  },
+  {
+    "__exampleOrder": 397,
+    "de": "aufgehob. Schalltr.",
+    "de_normalized": "aufgehob. schalltr.",
+    "ja": "ベルアップ",
+    "data": "M-3-1-387-hr&"
+  },
+  {
+    "__exampleOrder": 417,
+    "de": "B nach D",
+    "de_normalized": "b nach d",
+    "ja": "B を D に",
+    "data": "M-3-1-667-pau&"
+  },
+  {
+    "__exampleOrder": 425,
+    "de": "Bck. freihängend mit Schwammschlägel",
+    "de_normalized": "bck. freihaengend mit schwammschlaegel",
+    "ja": "（スタンド等に固定せず）自由に吊るした状態のシンパルをスポンジのマレットで",
+    "data": "M-d-d01-64-bec&M-d-d01-74-bec&"
+  },
+  {
+    "__exampleOrder": 427,
+    "de": "Beck. (frei)",
+    "de_normalized": "beck. (frei)",
+    "ja": "（スタンド等に固定せず，自由に吊るした状態の）シンバルで",
+    "data": "M-3-1-742-bec&M-3-1-748-bec&M-3-1-754-bec&M-3-6-294-bec&"
+  },
+  {
+    "__exampleOrder": 479,
+    "de": "bleibt f",
+    "de_normalized": "bleibt f",
+    "ja": "fのままで",
+    "data": "M-d-d13-76-tr&"
+  },
+  {
+    "__exampleOrder": 483,
+    "de": "Bogen wechseln",
+    "de_normalized": "bogen wechseln",
+    "ja": "弓をかえして",
+    "data": "M-5-1-189-v2&M-6-3-173-v1,v2&M-7-1-510-v1&M-a-1-102-v1&"
+  },
+  {
+    "__exampleOrder": 496,
+    "de": "brutal",
+    "de_normalized": "brutal",
+    "ja": "粗暴に",
+    "data": "M-6-4-46-hr&"
+  },
+  {
+    "__exampleOrder": 518,
+    "de": "choralmäßig",
+    "de_normalized": "choralmaessig",
+    "ja": "コラール風に",
+    "data": "M-d-d07-1-all&"
+  },
+  {
+    "__exampleOrder": 538,
+    "de": "D nach Es",
+    "de_normalized": "d nach es",
+    "ja": "D を Es に",
+    "data": "M-2-5-248-pau&"
+  },
+  {
+    "__exampleOrder": 541,
+    "de": "D tief nach B, G nach Des, C nach F hoch",
+    "de_normalized": "d tief nach b, g nach des, c nach f hoch",
+    "ja": "下の D を B に，G を Des に，C を上の F に",
+    "data": "M-3-1-606-pau&"
+  },
+  {
+    "__exampleOrder": 555,
+    "de": "Dämpfer schnell ab",
+    "de_normalized": "daempfer schnell ab",
+    "ja": "すばやくミュートをはずす",
+    "data": "M-5-2-500-tr&"
+  },
+  {
+    "__exampleOrder": 556,
+    "de": "Dämpfung ab",
+    "de_normalized": "daempfung ab",
+    "ja": "ミュートをはずす",
+    "data": "M-1-3-141-pau&"
+  },
+  {
+    "__exampleOrder": 588,
+    "de": "Der Tamboursg'sell",
+    "de_normalized": "der tamboursg'sell",
+    "ja": "少年鼓笛兵（少年鼓手）",
+    "data": "M-d-d14-0-all&"
+  },
+  {
+    "__exampleOrder": 603,
+    "de": "Die 3 Tromp. nehmen ihren Platz im Orchester ein",
+    "de_normalized": "die 3 tromp. nehmen ihren platz im orchester ein",
+    "ja": "3人のトランペットはオーケストラの自席につく",
+    "data": "M-1-1-47-tr&"
+  },
+  {
+    "__exampleOrder": 643,
+    "de": "Die vollendeteren Engel",
+    "de_normalized": "die vollendeteren engel",
+    "ja": "成熟した天使たち",
+    "data": "M-8-t2-552-chor2&"
+  },
+  {
+    "__exampleOrder": 657,
+    "de": "Diese Instrumente sollen zu dieser Nummer neben einander, am besten im Hintergrunde des Orchesterraums aufgestellt sein.",
+    "de_normalized": "diese instrumente sollen zu dieser nummer neben einander, am besten im hintergrunde des orchesterraums aufgestellt sein.",
+    "ja": "この楽章におけるこれらの楽器は互いに近い位置で，オーケストラの背後に配置するのがもっともよい．",
+    "data": "M-2-4-0-fg,cfg,hr,tr&"
+  },
+  {
+    "__exampleOrder": 663,
+    "de": "doch hervortretend",
+    "de_normalized": "doch hervortretend",
+    "ja": "しかし目立たせて",
+    "data": "M-3-1-488-tr&"
+  },
+  {
+    "__exampleOrder": 682,
+    "de": "durch Flag. hervorzubringen",
+    "de_normalized": "durch flag. hervorzubringen",
+    "ja": "フラジョレットで音を出す",
+    "data": "M-b2-t2-264-vc&"
+  },
+  {
+    "__exampleOrder": 716,
+    "de": "Einhaltend",
+    "de_normalized": "einhaltend",
+    "ja": "テンポを落として",
+    "data": "M-9-1-316-all&"
+  },
+  {
+    "__exampleOrder": 722,
+    "de": "Energisch",
+    "de_normalized": "energisch",
+    "ja": "力強く",
+    "data": "M-1-4-55-all&"
+  },
+  {
+    "__exampleOrder": 723,
+    "de": "energisch",
+    "de_normalized": "energisch",
+    "ja": "力強く",
+    "data": "M-b1-t2-262-fl,ob&"
+  },
+  {
+    "__exampleOrder": 738,
+    "de": "Es nach Des",
+    "de_normalized": "es nach des",
+    "ja": "Es を Des に",
+    "data": "M-2-5-81-pau&"
+  },
+  {
+    "__exampleOrder": 746,
+    "de": "Etwas (aber unmerklich) gemäßigter, immer sehr fließend",
+    "de_normalized": "etwas (aber unmerklich) gemaessigter, immer sehr fliessend",
+    "ja": "いくらか（しかしさりげなく）穏やかに，常にたいへん流れるように",
+    "data": "M-8-t1-46-all&"
+  },
+  {
+    "__exampleOrder": 783,
+    "de": "Etwas gemessener im Tempo und äusserst rhythmisch",
+    "de_normalized": "etwas gemessener im tempo und aeusserst rhythmisch",
+    "ja": "いくらか落ち着いたテンポで，きわめてリズミカルに",
+    "data": "M-b2-t1-176-all&"
+  },
+  {
+    "__exampleOrder": 792,
+    "de": "etwas leidenschaftlich",
+    "de_normalized": "etwas leidenschaftlich",
+    "ja": "いくらか情熱的に",
+    "data": "M-8-t2-1083-sop1,alt1,alt2&"
+  },
+  {
+    "__exampleOrder": 807,
+    "de": "Etwas zögernd",
+    "de_normalized": "etwas zoegernd",
+    "ja": "いくらかためらって",
+    "data": "M-3-6-67-all&M-8-t1-243-all&M-101-a-184-all&M-102-1-184-all&M-d-d06-111-all&"
+  },
+  {
+    "__exampleOrder": 808,
+    "de": "etwas zögernd",
+    "de_normalized": "etwas zoegernd",
+    "ja": "いくらかためらって",
+    "data": "M-102-4-90-all&"
+  },
+  {
+    "__exampleOrder": 822,
+    "de": "F nach Ges, B nach C",
+    "de_normalized": "f nach ges, b nach c",
+    "ja": "F を Ges に，B を C に ",
+    "data": "M-2-5-323-pau&"
+  },
+  {
+    "__exampleOrder": 830,
+    "de": "Feierlich (Noch etwas mäßiger)",
+    "de_normalized": "feierlich (noch etwas maessiger)",
+    "ja": "荘厳に（さらにいくらか穏やかに）",
+    "data": "M-7-5-506-all&"
+  },
+  {
+    "__exampleOrder": 840,
+    "de": "Flageol.",
+    "de_normalized": "flageol.",
+    "ja": "フラジョレット",
+    "data": "M-b1-t3-149-sv&M-b1-t3-163-sv&M-b1-t3-173-sv&M-b1-t3-367-v1,va&"
+  },
+  {
+    "__exampleOrder": 843,
+    "de": "Flatterz.",
+    "de_normalized": "flatterz.",
+    "ja": "フラッターツンゲ",
+    "data": "M-a-4-83-fl&"
+  },
+  {
+    "__exampleOrder": 900,
+    "de": "Ganz plötzlich gemächlich (Wie im Anfang) Tempo di Menuetto",
+    "de_normalized": "ganz ploetzlich gemaechlich (wie im anfang) tempo di menuetto",
+    "ja": "まったく突然にゆったりとした（最初のような）メヌエットのテンポで",
+    "data": "M-3-2-216-all&"
+  },
+  {
+    "__exampleOrder": 912,
+    "de": "Ganzes Orchester scharf abreissen",
+    "de_normalized": "ganzes orchester scharf abreissen",
+    "ja": "オーケストラ全体で音を鋭く切る",
+    "data": "M-1-2-358-all&"
+  },
+  {
+    "__exampleOrder": 931,
+    "de": "Gemessener",
+    "de_normalized": "gemessener",
+    "ja": "落ち着いて",
+    "data": "M-7-1-257-all&"
+  },
+  {
+    "__exampleOrder": 941,
+    "de": "gesangvoll",
+    "de_normalized": "gesangvoll",
+    "ja": "たっぷり歌って",
+    "data": "M-3-1-762-vc&M-3-1-763-v2&M-3-3-296-hr&"
+  },
+  {
+    "__exampleOrder": 966,
+    "de": "glühend",
+    "de_normalized": "gluehend",
+    "ja": "燃え立つように（輝くように）",
+    "data": "M-a-1-156-ten&"
+  },
+  {
+    "__exampleOrder": 977,
+    "de": "grossen Ton und Wärme",
+    "de_normalized": "grossen ton und waerme",
+    "ja": "豊かな音で，温かく",
+    "data": "M-2-2-267-v1&"
+  },
+  {
+    "__exampleOrder": 986,
+    "de": "gut hervortretend",
+    "de_normalized": "gut hervortretend",
+    "ja": "十分に目立たせて",
+    "data": "M-1-1-290-hr&M-1-1-308-tr&M-1-3-45-escl&M-1-4-266-hr&M-2-2-44-hp&M-2-2-158-fl,ob&M-2-3-238-cl&M-2-5-688-pos&M-3-1-831-hr&M-3-3-121-fl&M-8-t1-467-sop1,alt1&"
+  },
+  {
+    "__exampleOrder": 990,
+    "de": "H nach B",
+    "de_normalized": "h nach b",
+    "ja": "H を B に",
+    "data": "M-2-1-246-pau&"
+  },
+  {
+    "__exampleOrder": 1009,
+    "de": "Heftig , aber markig",
+    "de_normalized": "heftig , aber markig",
+    "ja": "激しさを伴いつつ重厚に",
+    "data": "M-6-1-1-all&"
+  },
+  {
+    "__exampleOrder": 1021,
+    "de": "hervortr.",
+    "de_normalized": "hervortr.",
+    "ja": "目立たせて",
+    "data": "M-2-5-489-sop&M-3-2-243-ob,cl&M-9-4-81-ob&M-b1-t2-326-v2&M-b1-t2-327-va&M-b1-t2-328-vc&"
+  },
+  {
+    "__exampleOrder": 1023,
+    "de": "hervortretend",
+    "de_normalized": "hervortretend",
+    "ja": "目立たせて",
+    "data": "M-1-1-201-cl&M-1-1-245-fg&M-1-3-66-ob&M-1-3-71-fg&M-1-3-138-tr&M-1-3-155-cl&M-2-1-208-fl&M-2-1-370-fl&M-2-2-179-fl,ob&M-2-3-136-fl,ob&M-2-3-140-cl&M-2-3-168-cl&M-2-3-357-cl&M-2-3-416-ob&M-2-5-532-sop&M-3-1-132-pic&M-3-1-364-tr&M-3-1-811-tr&M-3-1-814-tr&M-3-2-245-tr&M-3-5-43-ob&M-3-6-55-hr&M-3-6-149-ob&M-4-2-225-v1&M-4-2-275-hr&M-4-3-137-cl,fg&M-4-3-141-cl&M-5-2-91-cl&M-5-2-355-v1&M-5-2-364-hr&M-5-3-99-hr&M-5-3-403-fl&M-5-3-622-tr,pos&M-6-3-56-ob&M-6-3-76-hr&M-6-3-86-tr&M-6-3-89-fl,ob&M-6-4-357-tr&M-6-4-359-tr&M-6-4-441-hr&M-7-1-12-thr&M-7-1-278-eh&M-7-1-503-tr&M-7-2-111-vc&M-7-4-357-fg&M-7-4-358-hr&M-7-4-359-ob&M-7-5-60-hr&M-7-5-70-fl&M-7-5-300-tr&M-8-t1-70-sop1&M-8-t1-100-bar&M-8-t1-137-pos,bt&M-8-t1-156-cl&M-8-t1-232-alt1&M-8-t1-238-alt2&M-8-t1-239-ob&M-8-t1-445-alt2&M-8-t2-283-hr&M-8-t2-284-pos&M-8-t2-553-va&M-8-t2-536-sv&M-8-t2-745-ten&M-8-t2-978-sv&M-8-t2-1206-sop2&M-8-t2-1219-v1&M-8-t2-1223-cl&M-8-t2-1243-cel&M-8-t2-1471-sop1&M-8-t2-1494-tr&M-9-1-266-hr&M-9-1-269-sv&M-9-1-270-sv&M-9-1-285-tr&M-9-3-287-hr&M-9-3-360-fl,ob,cl&M-9-4-76-v1&M-101-a-53-hr&M-101-a-99-fg&M-101-a-235-fg&M-102-1-54-hr&M-102-1-235-fg&M-102-2-142-hr&M-102-3-25-ob&M-102-4-35-hr&M-102-4-135-ob&M-102-4-138-cl&M-102-5-163-tr&M-a-1-59-sv&M-a-6-101-ob&M-b1-t1-80-v2,va&M-b1-t1-155-vc&M-b1-t1-348-cl&M-b1-t1-457-v2,va&M-b1-t1-511-cl&M-b1-t1-520-va&M-b1-t1-560-fl&M-b1-t1-579-cl&M-b1-t1-582-hr&M-b1-t1-585-ob,eh&M-b1-t2-119-fl&M-b1-t2-100-ob&M-b1-t2-212-bcl&M-b1-t2-232-bcl&M-b1-t2-233-eh&M-b1-t2-286-fl&M-b1-t2-328-hr&M-b1-t2-345-fl&M-b1-t2-353-vc&M-b1-t2-395-ob&M-b1-t2-405-v2&M-b1-t2-412-sv&M-b1-t2-420-fl,cl&M-b1-t2-428-ob&M-b1-t2-430-chor&M-b1-t2-443-fg&M-b1-t2-492-vc&M-b1-t3-29-fl,ob,cl&M-b1-t3-33-tr&M-b1-t3-41-tr&M-b1-t3-58-fl,ob&M-b1-t3-60-va,vc&M-b1-t3-61-ob,cl&M-b1-t3-63-hr&M-b1-t3-81-ob,cl&M-b1-t3-83-hr,chor&M-b1-t3-97-cl&M-b1-t3-118-fhr&M-b1-t3-120-fhr&M-b1-t3-121-pis&M-b1-t3-122-hr&M-b1-t3-149-hr&M-b1-t3-152-ob&M-b1-t3-168-hr&M-b1-t3-207-fg&M-b1-t3-217-ob&M-b1-t3-224-ob,eh&M-b1-t3-229-ob&M-b1-t3-237-tr&M-b1-t3-269-fl&M-b1-t3-285-ob,cl&M-b1-t3-304-ob&M-b1-t3-370-fl&M-b1-t3-376-va,vc&M-b1-t3-380-va&M-b1-t3-432-fg&M-b1-t3-508-fl&M-b1-t3-518-ob&M-b1-t3-519-eh&M-b2-t1-226-ten&M-b2-t1-278-fl&M-b2-t1-340-ob&M-b2-t2-151-ob&M-b2-t2-161-hr&M-b2-t2-263-cl&M-b2-t2-377-cl&M-d-d04-4-cl&M-d-d04-140-v1&M-d-d05-20-ob&M-e-e5-128-vc&M-h-h-29-v1,v2&M-h-h-93-v1&M-h-h-240-cl&M-h-h-296-va&M-h-h-388-v1&M-h-h-396-fl&"
+  },
+  {
+    "__exampleOrder": 1034,
+    "de": "Hier ist nach allmählicher Steigerung ein frisches, belebtes zeitmass eingetregen",
+    "de_normalized": "hier ist nach allmaehlicher steigerung ein frisches, belebtes zeitmass eingetregen",
+    "ja": "ここはだんだんテンポを上げたあとで，はつらつとした，いきいきとしたテンポになる",
+    "data": "M-1-1-135-all&"
+  },
+  {
+    "__exampleOrder": 1037,
+    "de": "Hier soll die Musik viel stärker hörbar sein.",
+    "de_normalized": "hier soll die musik viel staerker hoerbar sein.",
+    "ja": "ここでは音楽は十分に強く聞こえなければならない",
+    "data": "M-2-5-376-tr&"
+  },
+  {
+    "__exampleOrder": 1066,
+    "de": "I. Gruppe",
+    "de_normalized": "i. gruppe",
+    "ja": "第1グループ",
+    "data": "M-8-t2-552-chor2&M-8-t2-559-chor2&M-8-t2-572-chor2&M-8-t2-575-chor2&"
+  },
+  {
+    "__exampleOrder": 1092,
+    "de": "im Anfang nach gemeiner Art an der großen Trommel befestigt",
+    "de_normalized": "im anfang nach gemeiner art an der grossen trommel befestigt",
+    "ja": "最初は通常の方法で大太鼓に固定しておく",
+    "data": "M-d-d01-1-bec&"
+  },
+  {
+    "__exampleOrder": 1115,
+    "de": "immer auf G-Saite",
+    "de_normalized": "immer auf g-saite",
+    "ja": "変わらずG線で",
+    "data": "M-5-2-433-v1,v2&"
+  },
+  {
+    "__exampleOrder": 1133,
+    "de": "Immer dieselben 四分音符 (Allegro) Stets streng im Takt ohne Ritenuto",
+    "de_normalized": "immer dieselben 四分音符 (allegro) stets streng im takt ohne ritenuto",
+    "ja": "変わらず同じ四分音符の長さで（アレグロ），常にリテヌートせず厳格なテンポで",
+    "data": "M-8-t1-182-all&"
+  },
+  {
+    "__exampleOrder": 1136,
+    "de": "immer etwas hervortretend",
+    "de_normalized": "immer etwas hervortretend",
+    "ja": "変わらずいくらか目立たせて",
+    "data": "M-4-2-159-sv&"
+  },
+  {
+    "__exampleOrder": 1138,
+    "de": "immer etwas stärker als die Oboe",
+    "de_normalized": "immer etwas staerker als die oboe",
+    "ja": "常にオーボエよりいくらか強く",
+    "data": "M-7-2-13-cl&"
+  },
+  {
+    "__exampleOrder": 1154,
+    "de": "Immer gleich schnell und hastig (aber 4/4)",
+    "de_normalized": "immer gleich schnell und hastig (aber 4/4)",
+    "ja": "変わらず同様に速く，慌ただしく",
+    "data": "M-8-t1-205-all&"
+  },
+  {
+    "__exampleOrder": 1161,
+    "de": "Immer langsamer",
+    "de_normalized": "immer langsamer",
+    "ja": "いっそうゆっくりと",
+    "data": "M-2-1-384-all&M-6-4-808-all&"
+  },
+  {
+    "__exampleOrder": 1165,
+    "de": "Immer mehr und mehr zurückhaltend",
+    "de_normalized": "immer mehr und mehr zurueckhaltend",
+    "ja": "さらにますます速度を緩めて",
+    "data": "M-2-2-280-all&"
+  },
+  {
+    "__exampleOrder": 1170,
+    "de": "immer mit Dämpfern",
+    "de_normalized": "immer mit daempfern",
+    "ja": "変わらずミュートをつけたままで",
+    "data": "M-5-2-410-tr&M-6-1-43-tr&M-6-4-131-tr&M-6-4-455-tr&"
+  },
+  {
+    "__exampleOrder": 1173,
+    "de": "immer mit Schwammschlägel",
+    "de_normalized": "immer mit schwammschlaegel",
+    "ja": "変わらずスポンジのマレットで",
+    "data": "M-3-1-258-bec&M-3-1-266-bec&M-4-1-159-bec&M-5-2-180-bec&"
+  },
+  {
+    "__exampleOrder": 1190,
+    "de": "Immer noch zurückhalten!",
+    "de_normalized": "immer noch zurueckhalten!",
+    "ja": "なお速度を緩めて！",
+    "data": "M-h-h-398-all&"
+  },
+  {
+    "__exampleOrder": 1211,
+    "de": "immer ungebrochen",
+    "de_normalized": "immer ungebrochen",
+    "ja": "変わらずアルペジオにしない",
+    "data": "M-8-t2-1193-hp&"
+  },
+  {
+    "__exampleOrder": 1275,
+    "de": "Kl. Fl. nimmt 4. Fl.",
+    "de_normalized": "kl. fl. nimmt 4. fl.",
+    "ja": "ピッコロは4thフルートに持ち替える",
+    "data": "M-102-1-78-pic&M-102-2-412-pic&M-102-4-112-pic&M-102-4-272-all&M-102-5-130-pic&M-102-5-268-pic&"
+  },
+  {
+    "__exampleOrder": 1280,
+    "de": "kläglich",
+    "de_normalized": "klaeglich",
+    "ja": "悲しそうに",
+    "data": "M-d-d14-75-sti&"
+  },
+  {
+    "__exampleOrder": 1290,
+    "de": "klingt Octave höher",
+    "de_normalized": "klingt octave hoeher",
+    "ja": "1オクターブ高い音が出る",
+    "data": "M-3-2-274-gls&"
+  },
+  {
+    "__exampleOrder": 1334,
+    "de": "Langsam aber immer 2/2",
+    "de_normalized": "langsam aber immer 2/2",
+    "ja": "ゆっくりと，しかし変わらず2/2拍子のままで",
+    "data": "M-5-2-189-all&"
+  },
+  {
+    "__exampleOrder": 1337,
+    "de": "Langsam steigern",
+    "de_normalized": "langsam steigern",
+    "ja": "ゆっくりと盛り上がる",
+    "data": "M-2-5-685-all&"
+  },
+  {
+    "__exampleOrder": 1340,
+    "de": "Langsam und träumerisch",
+    "de_normalized": "langsam und traeumerisch",
+    "ja": "ゆっくりと，夢見るように",
+    "data": "M-b1-t1-1-all&"
+  },
+  {
+    "__exampleOrder": 1356,
+    "de": "Lebhaft",
+    "de_normalized": "lebhaft",
+    "ja": "いきいきと",
+    "data": "M-b1-t1-250-all&M-b1-t1-389-all&"
+  },
+  {
+    "__exampleOrder": 1367,
+    "de": "Leise",
+    "de_normalized": "leise",
+    "ja": "静かに",
+    "data": "M-c-c2-103-sti&"
+  },
+  {
+    "__exampleOrder": 1379,
+    "de": "Lustig",
+    "de_normalized": "lustig",
+    "ja": "陽気に",
+    "data": "M-3-3-374-all&M-3-5-91-kchor&"
+  },
+  {
+    "__exampleOrder": 1380,
+    "de": "lustig",
+    "de_normalized": "lustig",
+    "ja": "陽気に",
+    "data": "M-4-2-170-hr&"
+  },
+  {
+    "__exampleOrder": 1414,
+    "de": "mit 2 Schwammschlägeln",
+    "de_normalized": "mit 2 schwammschlaegeln",
+    "ja": "2本のスポンジのマレットで",
+    "data": "M-3-1-14-gtr&"
+  },
+  {
+    "__exampleOrder": 1449,
+    "de": "mit Gefühl",
+    "de_normalized": "mit gefuehl",
+    "ja": "感情を込めて",
+    "data": "M-d-d14-110-sti&"
+  },
+  {
+    "__exampleOrder": 1464,
+    "de": "Mit großer Empfindung, aber zart und weich",
+    "de_normalized": "mit grosser empfindung, aber zart und weich",
+    "ja": "より豊かな情感を込めて，しかし繊細に，柔らかく",
+    "data": "M-a-6-245-vc&"
+  },
+  {
+    "__exampleOrder": 1472,
+    "de": "Mit höllischer Wildheit",
+    "de_normalized": "mit hoellischer wildheit",
+    "ja": "地獄のような荒々しさで",
+    "data": "M-b1-t3-1-all&"
+  },
+  {
+    "__exampleOrder": 1492,
+    "de": "mit naivem Vortrag, ohne Sentimentalität",
+    "de_normalized": "mit naivem vortrag, ohne sentimentalitaet",
+    "ja": "純真な表現で，感傷的にならずに",
+    "data": "M-d-d14-8-sti&"
+  },
+  {
+    "__exampleOrder": 1500,
+    "de": "mit Schlägel",
+    "de_normalized": "mit schlaegel",
+    "ja": "マレットで",
+    "data": "M-2-1-321-bec&M-2-1-408-bec&M-2-1-412-tam&"
+  },
+  {
+    "__exampleOrder": 1513,
+    "de": "Mit sehr geheimnisvollem Ausdruck",
+    "de_normalized": "mit sehr geheimnisvollem ausdruck",
+    "ja": "たいへん神秘的な表情で",
+    "data": "M-b1-t2-1-all&"
+  },
+  {
+    "__exampleOrder": 1519,
+    "de": "Mit Teller klingen lassen",
+    "de_normalized": "mit teller klingen lassen",
+    "ja": "クラッシュシンバルで響かせたままにする",
+    "data": "M-2-1-89-bec&"
+  },
+  {
+    "__exampleOrder": 1529,
+    "de": "mit Verzweiflung",
+    "de_normalized": "mit verzweiflung",
+    "ja": "絶望して",
+    "data": "M-d-d13-167-sti&"
+  },
+  {
+    "__exampleOrder": 1536,
+    "de": "mit zärtlichem Ausdruck",
+    "de_normalized": "mit zaertlichem ausdruck",
+    "ja": "繊細な情感をもって",
+    "data": "M-a-2-64-all&"
+  },
+  {
+    "__exampleOrder": 1538,
+    "de": "mittlere",
+    "de_normalized": "mittlere",
+    "ja": "中声部",
+    "data": "M-3-5-0-fchor&"
+  },
+  {
+    "__exampleOrder": 1560,
+    "de": "nach B",
+    "de_normalized": "nach b",
+    "ja": "B管に持ち替える",
+    "data": "M-7-5-78-cl&"
+  },
+  {
+    "__exampleOrder": 1577,
+    "de": "NB. Alle Pausen gut gehalten",
+    "de_normalized": "nb. alle pausen gut gehalten",
+    "ja": "注意：すべての休符は十分に保って",
+    "data": "M-2-5-345-fg,vc&"
+  },
+  {
+    "__exampleOrder": 1610,
+    "de": "nehmen den Platz im Orchester ein",
+    "de_normalized": "nehmen den platz im orchester ein",
+    "ja": "オーケストラの中の自席につく",
+    "data": "M-2-5-93-hr&"
+  },
+  {
+    "__exampleOrder": 1613,
+    "de": "nehmen F-Tromp.",
+    "de_normalized": "nehmen f-tromp.",
+    "ja": "F管トランペットに持ち替える",
+    "data": "M-3-1-99-tr&M-3-1-324-tr&"
+  },
+  {
+    "__exampleOrder": 1615,
+    "de": "nehmen Gr. Fl.",
+    "de_normalized": "nehmen gr. fl.",
+    "ja": "フルートに持ち替える",
+    "data": "M-3-1-462-pic&"
+  },
+  {
+    "__exampleOrder": 1616,
+    "de": "nehmen gr. Fl.",
+    "de_normalized": "nehmen gr. fl.",
+    "ja": "フルートに持ち替える",
+    "data": "M-3-3-362-pic&M-6-2-216-pic&M-6-2-275-pic&"
+  },
+  {
+    "__exampleOrder": 1637,
+    "de": "neues Register nehmen",
+    "de_normalized": "neues register nehmen",
+    "ja": "新しいストップに変える",
+    "data": "M-8-t2-1291-org&"
+  },
+  {
+    "__exampleOrder": 1647,
+    "de": "nicht brechen!",
+    "de_normalized": "nicht brechen!",
+    "ja": "アルペジオにしない！",
+    "data": "M-b2-t2-29-hp&"
+  },
+  {
+    "__exampleOrder": 1651,
+    "de": "Nicht drängend",
+    "de_normalized": "nicht draengend",
+    "ja": "切迫しないで",
+    "data": "M-3-6-100-vc&"
+  },
+  {
+    "__exampleOrder": 1656,
+    "de": "Nicht eilen bis zum Schluß",
+    "de_normalized": "nicht eilen bis zum schluss",
+    "ja": "終わりまで急がないで",
+    "data": "M-9-2-606-all&"
+  },
+  {
+    "__exampleOrder": 1675,
+    "de": "nicht getheilt",
+    "de_normalized": "nicht getheilt",
+    "ja": "divisiではない",
+    "data": "M-1-1-352-va&M-1-2-358-v1,v2,va,vc&M-2-3-223-v1&M-2-3-263-v2&M-2-3-264-v1&"
+  },
+  {
+    "__exampleOrder": 1682,
+    "de": "Nicht mehr so breit",
+    "de_normalized": "nicht mehr so breit",
+    "ja": "もはやそれほどゆったりとしない",
+    "data": "M-3-6-41-all&M-3-6-124-all&"
+  },
+  {
+    "__exampleOrder": 1700,
+    "de": "nicht sentimental",
+    "de_normalized": "nicht sentimental",
+    "ja": "感傷的にならずに",
+    "data": "M-c-c4-50-sti&"
+  },
+  {
+    "__exampleOrder": 1702,
+    "de": "nicht sordinirt",
+    "de_normalized": "nicht sordinirt",
+    "ja": "ミュートなしで",
+    "data": "M-1-3-29-v2&M-1-3-31-v1&"
+  },
+  {
+    "__exampleOrder": 1735,
+    "de": "nimmt Bassclar.",
+    "de_normalized": "nimmt bassclar.",
+    "ja": "バスクラリネットに持ち替える",
+    "data": "M-3-1-256-cl&"
+  },
+  {
+    "__exampleOrder": 1740,
+    "de": "nimmt Clar. in B",
+    "de_normalized": "nimmt clar. in b",
+    "ja": "B管クラリネットに持ち替える",
+    "data": "M-2-1-166-bcl&M-3-1-124-bcl&"
+  },
+  {
+    "__exampleOrder": 1775,
+    "de": "Noch breiter werden",
+    "de_normalized": "noch breiter werden",
+    "ja": "さらにゆったりとなっていく",
+    "data": "M-8-t2-742-all&"
+  },
+  {
+    "__exampleOrder": 1787,
+    "de": "Noch etwas frischer",
+    "de_normalized": "noch etwas frischer",
+    "ja": "さらにいくらかはつらつと",
+    "data": "M-9-2-486-all&"
+  },
+  {
+    "__exampleOrder": 1791,
+    "de": "Noch etwas langsamer (Graziosissimo, beinahe Menuett)",
+    "de_normalized": "noch etwas langsamer (graziosissimo, beinahe menuett)",
+    "ja": "さらにいくらかゆっくりと（最高に優雅に，ほとんどメヌエットのテンポで）",
+    "data": "M-7-5-422-all&"
+  },
+  {
+    "__exampleOrder": 1853,
+    "de": "Ohne Hast",
+    "de_normalized": "ohne hast",
+    "ja": "慌てないで",
+    "data": "M-3-3-1-all&"
+  },
+  {
+    "__exampleOrder": 1864,
+    "de": "ohne Sord.",
+    "de_normalized": "ohne sord.",
+    "ja": "ミュートなしで",
+    "data": "M-2-5-96-v2&M-2-5-109-v1&M-2-5-161-v1&M-8-t1-73-v1,v2,va,vc&M-8-t1-230-sv&M-8-t1-238-tr,v1&M-8-t1-258-v2,va&M-8-t2-516-v1&M-8-t2-520-v2,va,vc&M-8-t2-592-v2&M-8-t2-593-v1&M-8-t2-936-va&M-8-t2-956-v2&M-102-1-94-va&M-102-1-95-v2&M-102-1-96-v1&M-102-1-194-tr&M-102-2-206-sva&M-102-3-41-kb&M-102-3-65-v1,v2,va&M-102-3-66-vc&M-102-3-94-tr&M-102-4-11-tr&M-102-4-25-pos&M-102-4-47-tr&M-102-4-103-hr&M-102-4-104-tr&M-102-4-106-hr&M-102-4-115-tr&M-102-4-202-pos&M-102-4-205-pos&M-102-4-210-tr&M-102-4-269-hr,tr,pos&M-102-4-275-tr&M-102-4-311-v1&M-102-4-312-va&M-102-4-315-v2,va&M-102-4-318-tr&M-102-4-361-pos&M-102-4-362-pos&M-102-4-366-tr&M-102-4-382-pos&M-102-4-386-tr&M-102-4-483-hr&M-102-4-492-hr&M-102-4-509-pos&M-102-5-119-v1,v2,va,vc&M-102-5-130-tr&M-102-5-143-v2&M-102-5-144-v1&M-102-5-173-pos&M-102-5-177-pos&M-102-5-223-v1&M-102-5-225-v2,va,vc&M-102-5-261-pos&M-102-5-267-tr&M-102-5-274-tr&M-102-5-389-va&M-102-5-394-v2&M-102-5-398-hr&M-b2-t1-177-vc&M-b2-t1-183-sv&M-b2-t1-189-v1,v2&M-b2-t1-344-v1,v2,vc,kb&M-b2-t1-346-va&M-b2-t1-506-v2,va&M-b2-t2-112-hr,tr&M-b2-t2-155-v1&M-b2-t2-212-vc&M-b2-t2-213-v1,v2&M-b2-t2-223-kb&M-b2-t2-237-sv&"
+  },
+  {
+    "__exampleOrder": 1865,
+    "de": "Ohne Sord.",
+    "de_normalized": "ohne sord.",
+    "ja": "ミュートなしで",
+    "data": "M-b2-t2-166-v1&"
+  },
+  {
+    "__exampleOrder": 1866,
+    "de": "ohne Sordine",
+    "de_normalized": "ohne sordine",
+    "ja": "ミュートなしで",
+    "data": "M-b2-t1-316-sv&M-g-g-79-v1&"
+  },
+  {
+    "__exampleOrder": 1899,
+    "de": "Plötzlich wieder bedeutend langsamer (Tempo des ersten Satzes: Trauermarsch)",
+    "de_normalized": "ploetzlich wieder bedeutend langsamer (tempo des ersten satzes: trauermarsch)",
+    "ja": "突然ふたたび著しくゆっくりと（第1楽章の「葬送行進曲」のテンポで）",
+    "data": "M-5-2-266-all&"
+  },
+  {
+    "__exampleOrder": 1904,
+    "de": "Plöztlich gehalten. Sehr ausdrucksvoll",
+    "de_normalized": "ploeztlich gehalten. sehr ausdrucksvoll",
+    "ja": "突然音の長さを保って．たいへん表情豊かに",
+    "data": "M-102-2-416-all&"
+  },
+  {
+    "__exampleOrder": 1924,
+    "de": "rasch abdämpfen",
+    "de_normalized": "rasch abdaempfen",
+    "ja": "素早く音を消す",
+    "data": "M-102-2-469-hp&"
+  },
+  {
+    "__exampleOrder": 2009,
+    "de": "schwächer werden",
+    "de_normalized": "schwaecher werden",
+    "ja": "弱くなっていく",
+    "data": "M-6-3-89-hgl&"
+  },
+  {
+    "__exampleOrder": 2044,
+    "de": "sehr entfernt",
+    "de_normalized": "sehr entfernt",
+    "ja": "たいへん遠くから（かすかに）",
+    "data": "M-2-5-461-hr&M-2-5-464-hr&"
+  },
+  {
+    "__exampleOrder": 2062,
+    "de": "Sehr gemessen (二分音符 = wie früher die 四分音符)",
+    "de_normalized": "sehr gemessen (二分音符 = wie frueher die 四分音符)",
+    "ja": "たいへん落ち着いて（二分音符は前の四分音符の長さで）",
+    "data": "M-b2-t2-213-all&"
+  },
+  {
+    "__exampleOrder": 2115,
+    "de": "sehr weich gesungen",
+    "de_normalized": "sehr weich gesungen",
+    "ja": "たいへん柔らかく歌う",
+    "data": "M-1-1-32-hr&"
+  },
+  {
+    "__exampleOrder": 2123,
+    "de": "sehr zart und ausdrucksvoll gesungen",
+    "de_normalized": "sehr zart und ausdrucksvoll gesungen",
+    "ja": "たいへん繊細に，表情豊かに歌って",
+    "data": "M-1-4-465-v1&"
+  },
+  {
+    "__exampleOrder": 2142,
+    "de": "Sich merklich mäßigend",
+    "de_normalized": "sich merklich maessigend",
+    "ja": "目に見えて（テンポを）抑えて",
+    "data": "M-d-d13-133-all&"
+  },
+  {
+    "__exampleOrder": 2163,
+    "de": "Sollten nicht mindestens 2 Contrabässe das 'contra C' auf ihrem Instrument besitzen, so haben Bassiten die 'E Saite' auf D herab zu stimmen. Die fehｌenden Töne eine Octave höher zu spielen, wie manchmal Gebrauch ist, ist hier---wie bei allen folgenden Gelegenheiten---unzulässig.",
+    "de_normalized": "sollten nicht mindestens 2 contrabaesse das 'contra c' auf ihrem instrument besitzen, so haben bassiten die 'e saite' auf d herab zu stimmen. die fehｌenden toene eine octave hoeher zu spielen, wie manchmal gebrauch ist, ist hier---wie bei allen folgenden gelegenheiten---unzulaessig.",
+    "ja": "少なくとも2つのコントラバスにC弦が備わっていない場合には，2人のバス奏者が「E弦」を D に下げて調弦しなければならない．ときどき行われるような足りない音を1オクターブ高く演奏することは，以下のすべての場合と同様この曲では許されない",
+    "data": "M-2-1-97-kb&"
+  },
+  {
+    "__exampleOrder": 2176,
+    "de": "springender Bogen",
+    "de_normalized": "springender bogen",
+    "ja": "スピッカートで",
+    "data": "M-7-5-143-vc,kb&M-b1-t1-88-v2,va&M-b1-t2-386-v2&M-d-d08-159-va,vc,kb&"
+  },
+  {
+    "__exampleOrder": 2191,
+    "de": "stets breitester Strich!",
+    "de_normalized": "stets breitester strich!",
+    "ja": "変わらずもっとも幅広く弓を使って弾く！",
+    "data": "M-9-4-65-v1,v2&"
+  },
+  {
+    "__exampleOrder": 2249,
+    "de": "Triumphal",
+    "de_normalized": "triumphal",
+    "ja": "勝ち誇って",
+    "data": "M-1-4-657-all&"
+  },
+  {
+    "__exampleOrder": 2276,
+    "de": "untere Stimme nur von den mit Contra-C versehen Bässen auszuführen.",
+    "de_normalized": "untere stimme nur von den mit contra-c versehen baessen auszufuehren.",
+    "ja": "下声部はC弦を備えたコントラバスで演奏するためのもの",
+    "data": "M-2-1-15-kb&"
+  },
+  {
+    "__exampleOrder": 2286,
+    "de": "verlöschend",
+    "de_normalized": "verloeschend",
+    "ja": "消えていくように",
+    "data": "M-5-1-388-vc&M-5-1-389-v1,va,kb&M-5-1-391-tr&"
+  },
+  {
+    "__exampleOrder": 2312,
+    "de": "Volles Werk",
+    "de_normalized": "volles werk",
+    "ja": "フルストップで",
+    "data": "M-8-t1-1-org&M-8-t1-19-org&M-8-t1-41-org&M-8-t1-122-org&M-8-t1-262-org&M-8-t1-270-org&M-8-t1-292-org&M-8-t1-380-org&M-8-t1-389-org&M-8-t1-413-org&M-8-t1-492-org&M-8-t1-494-org&M-8-t1-519-org&M-8-t1-525-org&M-8-t1-572-org&M-8-t2-1506-org&M-8-t2-1528-org&M-8-t2-1552-org&"
+  },
+  {
+    "__exampleOrder": 2356,
+    "de": "Vorwärts!",
+    "de_normalized": "vorwaerts!",
+    "ja": "前へ！",
+    "data": "M-6-4-516-all&M-d-d04-99-all&"
+  },
+  {
+    "__exampleOrder": 2364,
+    "de": "Wenn dein Mütterlein",
+    "de_normalized": "wenn dein muetterlein",
+    "ja": "おまえのやさしい母さんが",
+    "data": "M-e-e3-0-all&"
+  },
+  {
+    "__exampleOrder": 2382,
+    "de": "Wie die gleiche Stelle im I. Teil",
+    "de_normalized": "wie die gleiche stelle im i. teil",
+    "ja": "第1部の同じ場所のように",
+    "data": "M-8-t2-552-all&"
+  },
+  {
+    "__exampleOrder": 2399,
+    "de": "wie im ersten Teil",
+    "de_normalized": "wie im ersten teil",
+    "ja": "最初の部分のように",
+    "data": "M-5-2-214-all&"
+  },
+  {
+    "__exampleOrder": 2411,
+    "de": "Wieder (unmerklich) bewegter",
+    "de_normalized": "wieder (unmerklich) bewegter",
+    "ja": "ふたたび（さりげなく）より動きをもって",
+    "data": "M-2-5-602-all&"
+  },
+  {
+    "__exampleOrder": 2432,
+    "de": "Wieder etwas zurückhaltend (Immer Halbe)",
+    "de_normalized": "wieder etwas zurueckhaltend (immer halbe)",
+    "ja": "ふたたびいくらか速度を緩めて（変わらず2拍子で）",
+    "data": "M-6-4-520-all&"
+  },
+  {
+    "__exampleOrder": 2439,
+    "de": "wieder gehalten",
+    "de_normalized": "wieder gehalten",
+    "ja": "再び音の長さを保って",
+    "data": "M-2-2-261-all&"
+  },
+  {
+    "__exampleOrder": 2440,
+    "de": "Wieder gehalten",
+    "de_normalized": "wieder gehalten",
+    "ja": "ふたたび音の長さを保って",
+    "data": "M-4-3-210-all&M-7-5-241-all&M-102-3-92-all&"
+  },
+  {
+    "__exampleOrder": 2465,
+    "de": "Wieder sehr breit",
+    "de_normalized": "wieder sehr breit",
+    "ja": "ふたたびたいへん幅広く，ゆったりと",
+    "data": "M-2-5-143-all&"
+  },
+  {
+    "__exampleOrder": 2482,
+    "de": "Wieder wie vorher (Nicht schleppend)",
+    "de_normalized": "wieder wie vorher (nicht schleppend)",
+    "ja": "ふたたび前のように（引きずらないで）",
+    "data": "M-8-t2-1506-all&"
+  },
+  {
+    "__exampleOrder": 2488,
+    "de": "Wieder wie zuerst",
+    "de_normalized": "wieder wie zuerst",
+    "ja": "ふたたび最初のように",
+    "data": "M-c-c1-64-all&"
+  },
+  {
+    "__exampleOrder": 2492,
+    "de": "Wieder zum Tempo I zurückkehrend",
+    "de_normalized": "wieder zum tempo i zurueckkehrend",
+    "ja": "ふたたびTenpo I に戻っていく",
+    "data": "M-5-3-628-all&"
+  },
+  {
+    "__exampleOrder": 2497,
+    "de": "Wild bewegt",
+    "de_normalized": "wild bewegt",
+    "ja": "荒々しい動きをもって",
+    "data": "M-b1-t3-323-all&"
+  },
+  {
+    "__exampleOrder": 2500,
+    "de": "Wo die schönen Trompeten blasen",
+    "de_normalized": "wo die schoenen trompeten blasen",
+    "ja": "美しく喇叭の鳴り響くところ",
+    "data": "M-d-d12-0-all&"
+  },
+  {
+    "__exampleOrder": 2566,
+    "de": "四分音符 = wie früher die 二分音符",
+    "de_normalized": "四分音符 = wie frueher die 二分音符",
+    "ja": "四分音符は前の二分音符の長さで",
+    "data": "M-1-1-163-all&M-2-5-712-all&"
+  },
+  {
+    "__exampleOrder": 2590,
+    "de": "二分音符 wie früher 四分音符 (immer im Tempo I. )",
+    "de_normalized": "二分音符 wie frueher 四分音符 (immer im tempo i. )",
+    "ja": "二分音符は前の四分音符の長さで（変わらずTempo I で）",
+    "data": "M-7-5-368-all&"
+  }
+]
