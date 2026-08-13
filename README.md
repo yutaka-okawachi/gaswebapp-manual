@@ -1,189 +1,118 @@
-# RWGMRS (Mahler Search App)
+# ドイツ語の音楽用語
 
-このリポジトリは、リヒャルト・ワーグナー、リヒャルト・シュトラウス、マーラーなどの音楽用語検索アプリケーションのソースコードとマニュアルを含んでいます。
+Richard Wagner（リヒャルト・ワーグナー）、Gustav Mahler（グスタフ・マーラー）、Richard Strauss（リヒャルト・シュトラウス）などのスコアに記された、ドイツ語の演奏指示・歌唱指示・舞台指示を検索できるデータベースです。
 
----
+検索結果から用語集へ移動し、一般的な意味、音楽用語としての訳例、作品中の使用例やコメントを確認できます。
 
-## 運用・保守マニュアル
-プロジェクトの継続的な運用のために、以下のマニュアルを整備しています。
+## 公開サイト
+
+**[ドイツ語の音楽用語 | German Music Terms Dictionary](https://yutaka-okawachi.github.io/gaswebapp-manual/)**
+
+ブラウザから無料で利用できます。インストールやアカウント登録は必要ありません。
+
+## できること
+
+### Richard Wagner（RW）
+
+主要な楽劇などに記された歌唱指示・舞台指示を調べられます。
+
+- [曲名から検索](https://yutaka-okawachi.github.io/gaswebapp-manual/mahler-search-app/richard_wagner.html)
+  - 作品を選び、場面、指示対象（登場人物）、スコアのページなどから絞り込めます。
+  - 選択した条件に該当するドイツ語の指示と訳を一覧で確認できます。
+- [用語から検索](https://yutaka-okawachi.github.io/gaswebapp-manual/mahler-search-app/rw_terms_search.html)
+  - ドイツ語の用語から、その用語が使われている作品や箇所を探せます。
+- [あらすじ集](https://yutaka-okawachi.github.io/gaswebapp-manual/mahler-search-app/rw_synopsis.html)
+  - 作品ごとのあらすじ資料を参照できます。
+
+### Gustav Mahler（GM）
+
+全交響曲および主要な管弦楽作品に記された演奏指示を調べられます。
+
+- [曲名と楽器等から検索](https://yutaka-okawachi.github.io/gaswebapp-manual/mahler-search-app/mahler.html)
+  - 作品、楽章、楽器などを選んで検索できます。
+  - 該当する演奏指示を小節番号とともに確認できます。
+  - 弦楽器群、木管楽器群、金管楽器群、打楽器群など、楽器群単位でも指定できます。
+- [用語から検索](https://yutaka-okawachi.github.io/gaswebapp-manual/mahler-search-app/terms_search.html)
+  - ドイツ語の用語から、その用語が使われている作品、楽章、楽器や小節を探せます。
+
+### Richard Strauss（RS）
+
+主要なオペラに記された歌唱指示・舞台指示を調べられます。
+
+- [曲名から検索](https://yutaka-okawachi.github.io/gaswebapp-manual/mahler-search-app/richard_strauss.html)
+  - 作品を選び、場面、指示対象（登場人物）、スコアのページなどから絞り込めます。
+  - 選択した条件に該当するドイツ語の指示と訳を一覧で確認できます。
+- [用語から検索](https://yutaka-okawachi.github.io/gaswebapp-manual/mahler-search-app/rs_terms_search.html)
+  - ドイツ語の用語から、その用語が使われている作品や箇所を探せます。
+- [あらすじ集](https://yutaka-okawachi.github.io/gaswebapp-manual/mahler-search-app/rs_synopsis.html)
+  - 作品ごとのあらすじ資料を参照できます。
+
+### ドイツ語の音楽用語集
+
+[ドイツ語の音楽用語集](https://yutaka-okawachi.github.io/gaswebapp-manual/mahler-search-app/dic.html)では、検索ページに収録された用語をまとめて調べられます。
+
+- 一般的な意味
+- 音楽用語としての訳例
+- 英語・イタリア語などの対応語
+- 作品中の使用例や用語についてのコメント
+- その用語が使われている検索結果へのリンク
+
+ワーグナー、マーラー、R.シュトラウスのほか、Anton Bruckner、Paul Hindemith、Sigfrid Karg-Elertのスコアで見つかった用語も一部収録しています。
+
+## 基本的な使い方
+
+1. 公開サイトで作曲家を選びます。
+2. 作品や楽器などから探すか、「用語から検索」を選びます。
+3. 条件を指定して検索結果を表示します。
+4. 用語のリンクを開き、詳しい意味、訳例、コメントやほかの使用例を確認します。
+
+特定の語の意味を直接調べたい場合は、最初から「ドイツ語の音楽用語集」を利用できます。
+
+## 想定している利用場面
+
+- オーケストラ作品のスコアを読むとき
+- オペラや楽劇の歌唱指示・舞台指示を確認するとき
+- 指揮、器楽、声楽の練習中にドイツ語の指示を調べるとき
+- 同じ用語が別の作品や楽器でどのように使われているか比較するとき
+- 音楽用語の訳や解釈を検討するとき
+
+## 収録範囲と注意事項
+
+- このデータベースは、ドイツ語の音楽用語、演奏指示、歌唱指示、舞台指示を主な対象としています。
+- ワーグナーとR.シュトラウスについては、主に歌唱指示と舞台指示を収録しています。オーケストラに対する一般的な指示は、マーラーの検索で代替できるものを中心に省略している場合があります。
+- イタリア語・フランス語の用語は原則として扱っていません。
+- 歌詞は収録対象としていません。
+- 用語集は網羅的な辞書ではありません。スコアで確認した用語を中心に、必要に応じて追加しています。
+- ページ番号などは使用した楽譜に基づきます。使用楽譜と出典については[作品・索引など](https://yutaka-okawachi.github.io/gaswebapp-manual/mahler-search-app/other.html)を参照してください。
+
+## このリポジトリについて
+
+このリポジトリには、公開サイトのHTML、CSS、JavaScript、検索用データ、Google Apps Script、および運用・保守マニュアルが含まれています。
+
+データはGoogleスプレッドシートを基に生成され、Google Apps ScriptとGitHub Pagesを利用して公開されています。
+
+### 運用・保守を行う方へ
 
 - [マニュアル一覧](./manuals/README.md): 目的別のマニュアル入口
-- [**プロジェクト引き継ぎ・長期保守ガイド (SUCCESSOR_GUIDE.md)**](./manuals/SUCCESSOR_GUIDE.md): 後継者への引き継ぎ手順や必要情報・権限チェックリスト
-- [**開発者・運用保守ガイド (DEVELOPER_GUIDE.md)**](./manuals/DEVELOPER_GUIDE.md): 開発環境構築、データ同期手順、SEO・パフォーマンス方針
+- [プロジェクト引き継ぎ・長期保守ガイド](./manuals/SUCCESSOR_GUIDE.md): 後継者向けの初期設定、日常同期、権限移譲
+- [開発者・運用保守ガイド](./manuals/DEVELOPER_GUIDE.md): 開発環境、データ同期、GAS、管理者ダッシュボード、公開と障害対応
+- [更新履歴](./CHANGELOG.md): サイトとリポジトリの主な変更
 
-`manuals` 配下の Markdown ファイルは GitHub 上で閲覧できる前提です。トークン、パスワード、実際の秘密情報は書き込まないでください。
-
----
+`manuals`配下のMarkdownファイルはGitHub上で閲覧できる前提です。トークン、パスワード、実際の秘密情報は書き込まないでください。
 
 ## ライセンス・利用許諾
 
-本リポジトリのコード・データ・ドキュメントは **[Creative Commons 表示-非営利 4.0 国際（CC BY-NC 4.0）](https://creativecommons.org/licenses/by-nc/4.0/deed.ja)** ライセンスのもとで公開されています。
+本リポジトリのコード・データ・ドキュメントは、[Creative Commons 表示-非営利 4.0 国際（CC BY-NC 4.0）](https://creativecommons.org/licenses/by-nc/4.0/deed.ja)ライセンスのもとで公開されています。
 
-- ✅ 非営利目的での複製・改変・再配布が可能です
-- ✅ 利用・引用の際は出典（著者名・リポジトリURL）の明記をお願いします
-- ❌ 営利目的での利用・転載は禁止です
+- 非営利目的での複製・改変・再配布が可能です。
+- 利用・引用の際は、著者名とリポジトリURLを明記してください。
+- 営利目的での利用は許可していません。
 
-詳細は [LICENSE](./LICENSE) ファイルを参照してください。
+詳細は[LICENSE](./LICENSE)を参照してください。
 
-### 引用指針
+### 推奨引用形式
 
-本アプリおよびデータを学術論文・資料等で引用する場合は、以下の形式を推奨します：
-
-```
-大川内豊 (2024-2026). RWGMRS Mahler Search App.
+```text
+大川内豊 (2024-2026). ドイツ語の音楽用語 | German Music Terms Dictionary.
 https://github.com/yutaka-okawachi/gaswebapp-manual
 ```
-
----
-
-## データ更新手順
-
-`dic.html`（用語集）の更新手順は、変更内容によって異なります。
-以下のスクリプトを実行することで、自動的に「GASへの反映 → 生成 → GitHubへの同期」が行われます。
-
-PC操作に詳しくない後継者は、PowerShell を開く必要はありません。
-初回セットアップは `01_START_SUCCESSOR_SETUP.bat`、日常同期は `02_RUN_SYNC.bat` をダブルクリックしてください。
-
-### 1. ローカルでファイルを編集した場合
-フォントサイズやレイアウト（`generate_dic_html.js`）や、スタイルシート（`common.css`）などを編集した後の更新手順です。
-
-1. **同期用ファイルをダブルクリック**
-   プロジェクトフォルダ直下の `02_RUN_SYNC.bat` をダブルクリックします。
-
-2. **画面の表示を確認**
-   黒い画面が開き、自動的に同期処理が進みます。途中で質問が出た場合は、内容が分からなければ止めて前任者または管理者に確認してください。
-
-3. **完了**
-   数分後に [GitHub Pages](https://yutaka-okawachi.github.io/gaswebapp-manual/) に反映されます。
-
-PowerShellで直接実行する場合は、以下のコマンドを使います。
-
-   ```powershell
-   .\sync-data.ps1 -message "変更内容のメモ"
-   ```
-   *例: `.\sync-data.ps1 -message "フォントサイズを0.85remに変更"`*
-
----
-
-### 2. スプレッドシートだけを更新した場合
-プログラム（JSやCSS）は触らず、Googleスプレッドシートのデータ（用語の追加・修正など）のみを行った場合の手順です。
-
-1. **GASエディタで実行する場合（推奨・確実）**
-   - [GASエディタ](https://script.google.com/home) を開きます。
-   - `src/export_json.js` を開き、関数 `exportAllDataToJson` を選択して「実行」を押します。
-   - これだけで `dic.html` が再生成され、GitHubへプッシュされます。
-
-2. **ローカルPCから行う場合**
-   プロジェクトフォルダ直下の `02_RUN_SYNC.bat` をダブルクリックします。
-   PowerShellで直接実行する場合は、以下のコマンドでも更新可能です。
-   ```powershell
-   .\sync-data.ps1
-   ```
-   *※ Step 0（コミット）などはスキップされ、Step 2（GAS実行）と Step 3（Pull）が中心に動作します。*
-
----
-
-## トラブルシューティング
-
-### clasp pushの認証エラー
-
-**症状**: `sync-data.ps1`実行時に「Insufficient Permission」「permission」などの警告が表示される
-
-**原因**: 別のGoogleアカウントでclaspにログインしているため、GASプロジェクトの編集権限がない
-
-**動作**: ✅ **スクリプトは自動的に続行します**（v2024.12.27以降）
-
-```
-⚠ clasp push failed: Authentication error detected.
-⚠ Skipping clasp push. GAS files will not be updated.
-✓ GAS function executed successfully via Web App.
-```
-
-**対処が必要な場合**: GASファイル（`src/`内のファイル）をローカルで編集した場合のみ
-
-```powershell
-cd src
-clasp logout
-clasp login  # ブラウザで管理対象のGoogleアカウントを選択
-```
-
-> **Note**: スプレッドシートのデータ更新だけなら、認証エラーは無視して問題ありません。
-
----
-
-### git pull失敗（sync-data.ps1実行時）
-
-**症状**: `sync-data.ps1`の`[6/8] GitHub から最新データを取得中 (git pull)...`でエラーが発生
-
-**原因**: ローカルとGitHubで競合が発生、またはネットワークエラー
-
-**対処**: v2024.12.27以降のスクリプトは自動的にリトライします
-
-```
-⚠ git pull failed.
-Retrying pull in 5 seconds...
-✓ Pull succeeded on retry.
-```
-
-**手動で解決する場合**:
-```powershell
-git pull --rebase
-# コンフリクトが発生した場合
-git checkout --theirs mahler-search-app/dic.html  # GitHub版を採用
-git rebase --continue
-```
-
-> **Note**: v2024.12.27以降、スクリプトは自動的に3秒待機してからgit pullを実行し、失敗時は5秒後にリトライします。
-
----
-
-### GAS実行時のAuth Error (401)
-
-**Q. GAS実行時に Auth Error (401) が出る**
-
-A. しばらくデプロイを更新していなかったり、大幅な変更をした直後は、Googleのセキュリティロックがかかることがあります。
-一度、ブラウザで [Web App URL](https://script.google.com/macros/s/YOUR_WEB_APP_ID/exec) にアクセスし、画面の指示に従って「許可」ボタンを押してください。その後、再度スクリプトを実行すれば通ります。
-
-
----
-
-### デプロイ数上限の警告
-
-**症状**: `sync-data.ps1`の最後に `⚠️ WARNING: Deployment count is high (195/200)` のような警告が出る
-
-**原因**: Google Apps ScriptのWebアプリデプロイ数の上限（200件）に近づいています。
-
-**対処**:
-1. [GASエディタ](https://script.google.com/home) を開きます。
-2. 右上の「デプロイ」ボタン -> 「デプロイの管理」を選択します。
-3. 古いデプロイを選択し、アーカイブ（削除）してください。
-   または、コマンドラインから `src` ディレクトリで `clasp undeploy --all` を実行して整理することも可能です。
-
----
-
-## 更新履歴
-
-### 2026/05/15 - 継承マニュアルの整備
-- **継承者向けガイドの統合・整理**: 後継者・初心者向けに `manuals/SUCCESSOR_GUIDE.md` を作成・整理。
-- **manuals 配下の公開方針変更**: `manuals` 配下の Markdown ファイルを GitHub 上で閲覧可能に整理。
-
-### 2026/04/16 - SEO・サイト構造最適化
-- **トップページのルート移行**: `mahler-search-app/index.html` をルートディレクトリ (`/`) に移動し、サイトのメインエントリーポイントとして整理
-- **リダイレクト設定**: 旧トップページにメタデータ（`canonical`, `og:url`）および自動リダイレクトを追加し、検索エンジンの評価を新トップページへ集約
-- **canonicalタグの最適化**: 全HTMLファイルおよび生成スクリプト (`generate_dic_html.js`) において、`canonical` タグの位置をHead上部に統一。検索エンジンによるURL正規化の精度を向上
-- **sitemap.xmlの物理的整合性向上**: 全ての掲載URLを新構造に合わせ修正
-
-### 2025/02/04 - SEO対応
-- **og:urlメタタグの追加**: 全10個のHTMLファイルに `<meta property="og:url">` を追加し、SNS共有時の正規URLを明示化
-- **sitemap.xmlの更新**: 全ページの `lastmod` を更新
-- **generate_dic_html.jsの更新**: dic.html自動生成時にもog:urlタグが含まれるよう対応
-- 詳細は **開発者・運用保守ガイド (manuals/DEVELOPER_GUIDE.md)** を参照（※ローカルのみ）
-
-### 2025/01/08 - 検索機能強化
-- **フローティングバーの実装**: `richard_wagner.html` および `richard_strauss.html` に、検索状況（選んだ曲、場面、ページなど）を常時表示するフローティングバーを追加しました。
-- **検索情報の排他表示**: 選択している検索方法（「場面から検索」や「ページから検索」）に応じて、関連する情報のみをサマリーに表示するように修正しました。
-- **スクロール挙動の改善**: 曲選択時に自動的に検索方法選択エリアへスクロールする機能を廃止し、スムーズな操作性を確保しました。
-
-### その他
-- **用語集 (`dic.html`) の修正**: 特定の用語（Sigfrid Karg-Elertなど）に関する説明文の文言を修正しました。
-
