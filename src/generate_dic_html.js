@@ -285,7 +285,7 @@ function sortDicData(data) {
  * @param {Object} termsIndex - 用語インデックス（正規化キー → ID）
  * @return {string} 生成されたHTML
  */
-function generateDicListHtml(dicData, termsIndex, abbreviationIndex) {
+function generateDicListHtml(dicData, termsIndex, abbreviationIndex, dictionaryExampleIndex) {
   if (!dicData || dicData.length === 0) {
     return '<div class="result-message">データが存在しません。</div>';
   }
@@ -328,14 +328,23 @@ function generateDicListHtml(dicData, termsIndex, abbreviationIndex) {
     if (hasExample) {
       const queryParam = encodeURIComponent(german);
       const links = [];
+      const createExampleHref = (pageName, composer) => {
+        const shardIds = typeof getDictionaryExampleShardIds === 'function'
+          ? getDictionaryExampleShardIds(dictionaryExampleIndex, composer, german)
+          : [];
+        const shardParam = shardIds.length > 0
+          ? `&example_shards=${shardIds.join(',')}`
+          : '';
+        return `${pageName}?q=${queryParam}&source=dictionary_example${shardParam}`;
+      };
       if (hasRW) {
-        links.push(`<a href="rw_terms_search.html?q=${queryParam}&source=dictionary_example" class="composer-link" target="_self">Wagner</a>`);
+        links.push(`<a href="${createExampleHref('rw_terms_search.html', 'rw')}" class="composer-link" target="_self">Wagner</a>`);
       }
       if (hasGM) {
-        links.push(`<a href="terms_search.html?q=${queryParam}&source=dictionary_example" class="composer-link" target="_self">Mahler</a>`);
+        links.push(`<a href="${createExampleHref('terms_search.html', 'gm')}" class="composer-link" target="_self">Mahler</a>`);
       }
       if (hasRS) {
-        links.push(`<a href="rs_terms_search.html?q=${queryParam}&source=dictionary_example" class="composer-link" target="_self">R.Strauss</a>`);
+        links.push(`<a href="${createExampleHref('rs_terms_search.html', 'rs')}" class="composer-link" target="_self">R.Strauss</a>`);
       }
       const linksHtml = links.join(' ');
       
@@ -412,12 +421,12 @@ function generateAbbrListHtml(abbrData) {
  * @param {Array} abbrData - 略記データ
  * @return {string} 完全なHTMLファイルの内容
  */
-function generateDicHtml(dicData, abbrData) {
+function generateDicHtml(dicData, abbrData, dictionaryExampleIndex) {
   // 用語インデックスを生成
   const termsIndex = generateDicTermsIndex(dicData);
   const abbreviationIndex = generateAbbreviationIndex(abbrData);
   
-  const dicListHtml = generateDicListHtml(dicData, termsIndex, abbreviationIndex);
+  const dicListHtml = generateDicListHtml(dicData, termsIndex, abbreviationIndex, dictionaryExampleIndex);
   const abbrListHtml = generateAbbrListHtml(abbrData);
 
   // 構造化データの生成 (SEO対策)
@@ -1017,6 +1026,58 @@ ${breadcrumbJSON}
             };
         }
 
+        const dictionaryExamplePrefetches = new Set();
+
+        function queueDictionaryExamplePrefetch(url) {
+            if (!url || dictionaryExamplePrefetches.has(url)) return;
+            dictionaryExamplePrefetches.add(url);
+
+            const prefetch = document.createElement('link');
+            prefetch.rel = 'prefetch';
+            prefetch.href = url;
+            document.head.appendChild(prefetch);
+        }
+
+        function prefetchDictionaryExampleLink(link) {
+            const connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+            if (connection && (connection.saveData || /(^|-)2g$/.test(connection.effectiveType || ''))) {
+                return;
+            }
+
+            let destination;
+            try {
+                destination = new URL(link.href, window.location.href);
+            } catch (error) {
+                return;
+            }
+
+            const shardValue = destination.searchParams.get('example_shards');
+            if (!shardValue) return;
+
+            const pageName = destination.pathname.split('/').pop();
+            const composer = pageName === 'rw_terms_search.html'
+                ? 'rw'
+                : pageName === 'rs_terms_search.html'
+                    ? 'rs'
+                    : 'gm';
+
+            queueDictionaryExamplePrefetch(destination.href);
+            queueDictionaryExamplePrefetch(new URL('data/dic_terms_index.json', destination).href);
+            shardValue.split(',').forEach(value => {
+                const shardNumber = Number(value);
+                if (!Number.isInteger(shardNumber) || shardNumber < 0 || shardNumber >= 16) return;
+                const suffix = String(shardNumber).padStart(2, '0');
+                queueDictionaryExamplePrefetch(
+                    new URL('data/dictionary-examples/' + composer + '-' + suffix + '.json', destination).href
+                );
+            });
+        }
+
+        function prefetchDictionaryExamples(row) {
+            if (!row) return;
+            row.querySelectorAll('a.composer-link').forEach(prefetchDictionaryExampleLink);
+        }
+
         // 一括開閉機能
         function openAllAccordions() {
             document.querySelectorAll('#listContainer .row').forEach(el => el.classList.add('accordion-open'));
@@ -1070,6 +1131,18 @@ ${breadcrumbJSON}
         window.addEventListener('DOMContentLoaded', () => {
             const listContainer = document.getElementById('listContainer');
             if (listContainer) {
+                listContainer.addEventListener('pointerover', (e) => {
+                    const composerLink = e.target.closest('a.composer-link');
+                    if (composerLink && listContainer.contains(composerLink)) {
+                        prefetchDictionaryExampleLink(composerLink);
+                    }
+                });
+                listContainer.addEventListener('focusin', (e) => {
+                    const composerLink = e.target.closest('a.composer-link');
+                    if (composerLink && listContainer.contains(composerLink)) {
+                        prefetchDictionaryExampleLink(composerLink);
+                    }
+                });
                 listContainer.addEventListener('click', (e) => {
                     const abbreviationLink = e.target.closest('a.abbr-link');
                     if (abbreviationLink && listContainer.contains(abbreviationLink)) {
@@ -1096,7 +1169,11 @@ ${breadcrumbJSON}
                     if (dt) {
                         const row = dt.closest('.row');
                         if (row) {
+                            const isOpening = !row.classList.contains('accordion-open');
                             row.classList.toggle('accordion-open');
+                            if (isOpening) {
+                                prefetchDictionaryExamples(row);
+                            }
                         }
                     }
                 });

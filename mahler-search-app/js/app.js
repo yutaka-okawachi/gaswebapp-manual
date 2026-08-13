@@ -245,6 +245,103 @@ async function loadData(key) {
     }
 }
 
+const dictionaryExampleSearchConfig = Object.freeze({
+    terms_search: {
+        composer: 'gm',
+        dataKey: 'mahler',
+        fullDataPath: 'data/mahler.json'
+    },
+    rw_terms_search: {
+        composer: 'rw',
+        dataKey: 'richard_wagner',
+        fullDataPath: 'data/richard_wagner.json'
+    },
+    rs_terms_search: {
+        composer: 'rs',
+        dataKey: 'richard_strauss',
+        fullDataPath: 'data/richard_strauss.json'
+    }
+});
+const dictionaryExamplePartialData = {};
+const dictionaryExampleFullDataPromises = {};
+
+window.loadDictionaryExampleData = async function(key, rawQuery) {
+    const config = dictionaryExampleSearchConfig[key];
+    const urlParams = new URLSearchParams(window.location.search);
+    if (
+        !config ||
+        !rawQuery ||
+        urlParams.get('source') !== 'dictionary_example'
+    ) {
+        return false;
+    }
+
+    const shardIds = Array.from(new Set(
+        String(urlParams.get('example_shards') || '')
+            .split(',')
+            .map(value => Number(value))
+            .filter(value => Number.isInteger(value) && value >= 0 && value < 16)
+    ));
+    if (shardIds.length === 0) return false;
+
+    try {
+        const shardRequests = shardIds.map(shardNumber => {
+            const suffix = String(shardNumber).padStart(2, '0');
+            return fetchJson(`data/dictionary-examples/${config.composer}-${suffix}.json`);
+        });
+        const dictionaryIndexRequest = window.appData.dic_terms_index
+            ? Promise.resolve(window.appData.dic_terms_index)
+            : fetchJson('data/dic_terms_index.json');
+
+        const [shards, dictionaryIndex] = await Promise.all([
+            Promise.all(shardRequests),
+            dictionaryIndexRequest
+        ]);
+        window.appData[config.dataKey] = shards.reduce((rows, shard) => {
+            return rows.concat(Array.isArray(shard) ? shard : []);
+        }, []).sort((a, b) => {
+            return Number(a.__exampleOrder || 0) - Number(b.__exampleOrder || 0);
+        });
+        window.appData[config.dataKey].forEach(row => {
+            delete row.__exampleOrder;
+        });
+        window.appData.dic_terms_index = dictionaryIndex;
+        dictionaryExamplePartialData[key] = true;
+        return true;
+    } catch (error) {
+        console.warn('実例検索用の分割データを読み込めないため、通常データを使用します:', error);
+        return false;
+    }
+};
+
+window.hydrateDictionaryExampleData = function(key, onLoaded) {
+    const config = dictionaryExampleSearchConfig[key];
+    if (!config || !dictionaryExamplePartialData[key]) return;
+
+    const loadFullData = () => {
+        if (!dictionaryExampleFullDataPromises[key]) {
+            dictionaryExampleFullDataPromises[key] = fetchJson(config.fullDataPath)
+                .then(data => {
+                    window.appData[config.dataKey] = data;
+                    dictionaryExamplePartialData[key] = false;
+                    if (typeof onLoaded === 'function') onLoaded(data);
+                    return data;
+                })
+                .catch(error => {
+                    delete dictionaryExampleFullDataPromises[key];
+                    console.warn('全検索データのバックグラウンド読み込みに失敗:', error);
+                });
+        }
+        return dictionaryExampleFullDataPromises[key];
+    };
+
+    if (typeof window.requestIdleCallback === 'function') {
+        window.requestIdleCallback(loadFullData, { timeout: 1500 });
+    } else {
+        window.setTimeout(loadFullData, 250);
+    }
+};
+
 async function fetchJson(path) {
     // console.log(`Fetching ${path}...`);
     // GitHub Pages の ETag/ブラウザキャッシュを利用する。時刻パラメータを

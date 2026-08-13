@@ -208,12 +208,20 @@ function exportAllDataToJson() {
         abbrJson = data.slice(1).map(row => [row[0], row[1], row[2]]);
     }
 
-    // 9. Generate dic.html (静的HTML生成 - リンク機能付き)
+    // 9. 「実例を見る」用の分割データを生成
+    const dictionaryExampleData = buildDictionaryExampleShardFiles(dicNotesJson, {
+        mahler: mahlerJson,
+        wagner: rwJson,
+        strauss: rsJson
+    });
+    Logger.log('実例検索用JSON生成完了: ' + Object.keys(dictionaryExampleData.files).length + ' ファイル');
+
+    // 10. Generate dic.html (静的HTML生成 - リンク機能付き)
     Logger.log('=== dic.htmlを生成中（リンク機能付き） ===');
-    const dicHtml = generateDicHtml(dicNotesJson, abbrJson);
+    const dicHtml = generateDicHtml(dicNotesJson, abbrJson, dictionaryExampleData.queryIndex);
     Logger.log('dic.html生成完了: ' + Math.round(dicHtml.length / 1024) + ' KB');
     
-    // 10. 用語インデックスを生成
+    // 11. 用語インデックスを生成
     const termsIndex = generateDicTermsIndex(dicNotesJson);
     Logger.log('dic_terms_index.json生成完了: ' + Object.keys(termsIndex).length + ' 件');
 
@@ -233,6 +241,7 @@ function exportAllDataToJson() {
         'mahler-search-app/dic.html': dicHtml  // 新規: 生成されたHTML（リンク付き）
         , 'mahler-search-app/data/whom_list.json': whomList
     };
+    Object.assign(files, dictionaryExampleData.files);
 
     // 自動生成されたコミットメッセージ
     const timestamp = new Date().toLocaleString('ja-JP', { timeZone: 'Asia/Tokyo' });

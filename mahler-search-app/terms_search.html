@@ -69,7 +69,7 @@
     <link rel="apple-touch-icon" href="https://yutaka-okawachi.github.io/gaswebapp-manual/apple-touch-icon.png">
     <link rel="preload" href="css/common.css" as="style">
     <link rel="stylesheet" href="css/common.css">
-    <script src="js/app.js?v=11"></script>
+    <script src="js/app.js?v=12"></script>
 
     <script>
         /*******************************************************************
@@ -254,6 +254,7 @@
             const inputField = document.getElementById('termInput');
             const resultsDiv = document.getElementById('results');
             const rawQuery = new URLSearchParams(window.location.search).get('q');
+            let usedDictionaryExampleData = false;
             if (rawQuery) {
                 inputField.value = typeof normalizeString === 'function' ? normalizeString(rawQuery) : rawQuery;
                 resultsDiv.innerHTML = '<p class="loading">検索データを読み込んでいます・・・</p>';
@@ -272,7 +273,12 @@
             // Load data locally first (needed for local search)
             if (typeof loadData === 'function') {
                 try {
-                    await loadData('terms_search');
+                    if (typeof loadDictionaryExampleData === 'function') {
+                        usedDictionaryExampleData = await loadDictionaryExampleData('terms_search', rawQuery);
+                    }
+                    if (!usedDictionaryExampleData) {
+                        await loadData('terms_search');
+                    }
                 } catch (error) {
                     console.error('GM検索データの読み込みに失敗しました:', error);
                     resultsDiv.innerHTML = '<p class="result-message">検索データを読み込めませんでした。ページを再読み込みしてください。</p>';
@@ -302,6 +308,11 @@
                 console.log(`Loaded ${termEntries.length} terms locally.`);
                 debouncedOnTermInput({ target: inputField });
                 checkQueryAndSearch(inputField);
+                if (usedDictionaryExampleData && typeof hydrateDictionaryExampleData === 'function') {
+                    hydrateDictionaryExampleData('terms_search', () => {
+                        termEntries = getMahlerTermsListLocal();
+                    });
+                }
             }
 
             function checkQueryAndSearch(inputField) {
