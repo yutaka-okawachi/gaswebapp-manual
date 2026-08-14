@@ -13,6 +13,9 @@ vm.runInContext(generatorSource, context, { filename: generatorPath });
 const dictionaryData = [
   ['geteilt', '分かれて', '[B: 6]'],
   ['zusammen', '一緒に', '[RW: Oper ], [GM]'],
+  ['mässig', '適度に', '[GM]'],
+  ['mäßig', '適度に', '[GM]'],
+  ['maessig 2', '予約済みIDとの衝突確認', '[GM]'],
   ['unbekannt', '不明', '[UNKNOWN]']
 ];
 
@@ -31,6 +34,11 @@ assert.ok(html.includes('href="#abbr-b-6" class="abbr-link"'));
 assert.ok(html.includes('href="#abbr-rw-oper" class="abbr-link"'));
 assert.ok(html.includes('href="#abbr-gm" class="abbr-link"'));
 assert.ok(html.includes('data-return-target="term-geteilt"'));
+assert.strictEqual((html.match(/\sid="term-maessig"/g) || []).length, 1);
+assert.strictEqual((html.match(/\sid="term-maessig-2"/g) || []).length, 1);
+assert.strictEqual((html.match(/\sid="term-maessig-3"/g) || []).length, 1);
+const generatedIds = Array.from(html.matchAll(/\sid="([^"]+)"/g), match => match[1]);
+assert.strictEqual(new Set(generatedIds).size, generatedIds.length);
 assert.ok(html.includes('<span class="source">[UNKNOWN]</span>'));
 assert.strictEqual((html.match(/\sid="abbr-rw-oper"/g) || []).length, 1);
 assert.strictEqual((html.match(/data-abbr-id="abbr-rw-oper"/g) || []).length, 2);
