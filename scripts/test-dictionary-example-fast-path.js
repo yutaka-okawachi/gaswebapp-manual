@@ -29,6 +29,18 @@ assert.deepStrictEqual(
   ['gm', 'rs', 'rw']
 );
 
+const fullDictionaryHtml = context.generateDicHtml(dictionaryData, [], built.queryIndex);
+const generatedExampleLinks = Array.from(
+  fullDictionaryHtml.matchAll(/href="([^"]+source=dictionary_example[^"]*)"/g),
+  match => match[1]
+);
+assert.ok(generatedExampleLinks.length > 0);
+assert.strictEqual(
+  generatedExampleLinks.filter(href => !href.includes('example_shards=')).length,
+  0,
+  '検索結果がない実例リンクを生成しないこと'
+);
+
 const composerSpecs = {
   gm: { rows: composerData.mahler, requirePage: false },
   rw: { rows: composerData.wagner, requirePage: true },

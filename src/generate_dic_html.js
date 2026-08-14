@@ -47,6 +47,33 @@ function generateDicTermsIndex(dicData) {
 }
 
 /**
+ * 用語IDの重複を避けつつ、通常の用語IDを可能な限り維持する
+ * @param {string} normalizedId - normalizeForId() が返したID本体
+ * @param {Set} usedIds - すでに使用した完全な用語ID
+ * @param {Set} reservedIds - 辞書内の見出し語が本来使用する用語ID
+ * @return {string} term- から始まる一意な用語ID
+ */
+function allocateUniqueTermId(normalizedId, usedIds, reservedIds) {
+  if (!normalizedId) return '';
+
+  const baseId = `term-${normalizedId}`;
+  if (!usedIds.has(baseId)) {
+    usedIds.add(baseId);
+    return baseId;
+  }
+
+  let suffix = 2;
+  let candidateId = `${baseId}-${suffix}`;
+  while (usedIds.has(candidateId) || reservedIds.has(candidateId)) {
+    suffix += 1;
+    candidateId = `${baseId}-${suffix}`;
+  }
+
+  usedIds.add(candidateId);
+  return candidateId;
+}
+
+/**
  * 略記の照合用キーを生成する
  * @param {string} abbreviation - [GM] などの略記
  * @return {string} 照合用キー
@@ -292,6 +319,13 @@ function generateDicListHtml(dicData, termsIndex, abbreviationIndex, dictionaryE
   
   // データをソート
   const sortedData = sortDicData(dicData);
+  const reservedTermIds = new Set(
+    sortedData
+      .map(row => normalizeForId(row && row[0]))
+      .filter(Boolean)
+      .map(normalizedId => `term-${normalizedId}`)
+  );
+  const usedTermIds = new Set();
   
   let html = '';
   let prevLetter = null;
@@ -311,8 +345,9 @@ function generateDicListHtml(dicData, termsIndex, abbreviationIndex, dictionaryE
     }
     
     // Individual Term ID (Always use id for native browser scrolling)
-    const termId = german ? normalizeForId(german) : '';
-    const termIdAttr = termId ? ` id="term-${termId}"` : '';
+    const normalizedTermId = german ? normalizeForId(german) : '';
+    const termId = allocateUniqueTermId(normalizedTermId, usedTermIds, reservedTermIds);
+    const termIdAttr = termId ? ` id="${termId}"` : '';
     
     // translationにリンクを適用
     const linkedTranslation = termsIndex ? linkTermsInTranslation(translation, termsIndex) : escapeHtmlWithBreaks(translation);
@@ -329,26 +364,34 @@ function generateDicListHtml(dicData, termsIndex, abbreviationIndex, dictionaryE
       const queryParam = encodeURIComponent(german);
       const links = [];
       const createExampleHref = (pageName, composer) => {
+        const hasExampleIndex = dictionaryExampleIndex &&
+          dictionaryExampleIndex[composer] &&
+          typeof getDictionaryExampleShardIds === 'function';
         const shardIds = typeof getDictionaryExampleShardIds === 'function'
           ? getDictionaryExampleShardIds(dictionaryExampleIndex, composer, german)
           : [];
+        if (hasExampleIndex && shardIds.length === 0) return '';
         const shardParam = shardIds.length > 0
           ? `&example_shards=${shardIds.join(',')}`
           : '';
         return `${pageName}?q=${queryParam}&source=dictionary_example${shardParam}`;
       };
       if (hasRW) {
-        links.push(`<a href="${createExampleHref('rw_terms_search.html', 'rw')}" class="composer-link" target="_self">Wagner</a>`);
+        const href = createExampleHref('rw_terms_search.html', 'rw');
+        if (href) links.push(`<a href="${href}" class="composer-link" target="_self">Wagner</a>`);
       }
       if (hasGM) {
-        links.push(`<a href="${createExampleHref('terms_search.html', 'gm')}" class="composer-link" target="_self">Mahler</a>`);
+        const href = createExampleHref('terms_search.html', 'gm');
+        if (href) links.push(`<a href="${href}" class="composer-link" target="_self">Mahler</a>`);
       }
       if (hasRS) {
-        links.push(`<a href="${createExampleHref('rs_terms_search.html', 'rs')}" class="composer-link" target="_self">R.Strauss</a>`);
+        const href = createExampleHref('rs_terms_search.html', 'rs');
+        if (href) links.push(`<a href="${href}" class="composer-link" target="_self">R.Strauss</a>`);
       }
-      const linksHtml = links.join(' ');
-      
-      toggleArea = `\n      <div class="example-wrapper"><span class="example-label">実例を見る▶</span><span class="example-content">${linksHtml}</span></div>`;
+      if (links.length > 0) {
+        const linksHtml = links.join(' ');
+        toggleArea = `\n      <div class="example-wrapper"><span class="example-label">実例を見る▶</span><span class="example-content">${linksHtml}</span></div>`;
+      }
     }
 
     // rowのHTML生成（セマンティックHTMLで辞書構造を明示）
@@ -359,7 +402,7 @@ function generateDicListHtml(dicData, termsIndex, abbreviationIndex, dictionaryE
     </div>
     <div class="dt-details">
       ${toggleArea}
-      ${source ? `<span class="source">${linkAbbreviationsInSource(source, abbreviationIndex, `term-${termId}`)}</span>` : ''}
+      ${source ? `<span class="source">${linkAbbreviationsInSource(source, abbreviationIndex, termId)}</span>` : ''}
     </div>
   </dt>
   <dd class="translation">${linkedTranslation}</dd>
