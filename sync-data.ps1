@@ -155,15 +155,16 @@ function Wait-GitHubPagesChecks {
         try {
             $response = Invoke-RestMethod -Headers $headers -Uri $apiUrl
             $checks = @($response.check_runs | Where-Object {
-                $_.app.slug -eq "github-actions" -and
-                ($_.name -eq "build" -or $_.name -eq "deploy" -or $_.name -eq "report-build-status")
-            })
+                    $_.app.slug -eq "github-actions" -and
+                    ($_.name -eq "build" -or $_.name -eq "deploy" -or $_.name -eq "report-build-status")
+                })
 
             if ($checks.Count -gt 0 -and -not ($checks | Where-Object { $_.status -ne "completed" })) {
                 Write-Host "[OK] GitHub Pages の中間チェックが完了しました。" -ForegroundColor Green
                 return
             }
-        } catch {
+        }
+        catch {
             Write-Host "GitHub Pages チェックの照会に失敗しました。プッシュを継続します。" -ForegroundColor Gray
             return
         }
@@ -229,7 +230,8 @@ if ($currentBranch -ne "main") {
             Write-Host "変更をコミット中..." -ForegroundColor Gray
             try {
                 Add-ApprovedSyncSourceChanges
-            } catch {
+            }
+            catch {
                 Write-Error "[エラー] $($_.Exception.Message)"
                 exit 1
             }
@@ -246,25 +248,29 @@ if ($currentBranch -ne "main") {
                 Write-Error "[エラー] マージに失敗しました (競合が発生した可能性があります)。手動で解決してください。"
                 exit 1
             }
-        } else {
-             $stashResp = Read-Host "変更を退避 (stash) して main ブランチに切り替えますか？ (Y/N)"
-             if ($stashResp -match "^[Yy]") {
-                 Write-Host "変更を退避中..." -ForegroundColor Gray
-                 git stash push -u -m "sync-data による自動退避"
-                 git checkout main
-             } else {
-                 Write-Error "[エラー] 中止しました。未コミットの変更を手動で処理してください。"
-                 exit 1
-             }
         }
-    } else {
+        else {
+            $stashResp = Read-Host "変更を退避 (stash) して main ブランチに切り替えますか？ (Y/N)"
+            if ($stashResp -match "^[Yy]") {
+                Write-Host "変更を退避中..." -ForegroundColor Gray
+                git stash push -u -m "sync-data による自動退避"
+                git checkout main
+            }
+            else {
+                Write-Error "[エラー] 中止しました。未コミットの変更を手動で処理してください。"
+                exit 1
+            }
+        }
+    }
+    else {
         # Clean state
         $resp = Read-Host "'$currentBranch' を 'main' にマージしますか？ (Y=マージする, N=切替のみ)"
         if ($resp -match "^[Yy]") {
             Write-Host "main ブランチに切り替えてマージ中..." -ForegroundColor Gray
             git checkout main
             git merge $currentBranch
-        } else {
+        }
+        else {
             Write-Host "main ブランチに切り替え中..." -ForegroundColor Gray
             git checkout main
         }
@@ -273,8 +279,8 @@ if ($currentBranch -ne "main") {
     # Ensure we are on main now
     $newBranch = git branch --show-current
     if ($newBranch -ne "main") {
-         Write-Error "[エラー] main ブランチへの切り替えに失敗しました。"
-         exit 1
+        Write-Error "[エラー] main ブランチへの切り替えに失敗しました。"
+        exit 1
     }
     Write-Host "[OK] main ブランチに切り替えました。" -ForegroundColor Green
 }
@@ -315,8 +321,9 @@ $pushExitCode = $LASTEXITCODE
 if ($pushExitCode -ne 0) {
     # "No valid files to push" は実質的な成功（変更なし）とみなす
     if ($pushOutput -match "No valid files to push") {
-         Write-Host "[OK] GASへアップロードする変更はありません。" -ForegroundColor Green
-    } else {
+        Write-Host "[OK] GASへアップロードする変更はありません。" -ForegroundColor Green
+    }
+    else {
         # 変更があるのに失敗した場合、または予期せぬエラー
         if ($gasChanges) {
             Write-Host ""
@@ -333,29 +340,33 @@ if ($pushExitCode -ne 0) {
                 Write-Host "要対応: 認証に失敗しました。" -ForegroundColor Yellow
                 Write-Host "今すぐログインを実行すると、アップロードを再試行して処理を再開できます。" -ForegroundColor Cyan
                 $loginChoice = Read-Host "'clasp login' を実行して再開しますか？ (Y/N)"
-                 if ($loginChoice -match "^[Yy]") {
+                if ($loginChoice -match "^[Yy]") {
                     Write-Host "'clasp login' を実行中..." -ForegroundColor Cyan
                     clasp login
                     Write-Host "clasp push を再試行中..." -ForegroundColor Cyan
                     $pushOutput = clasp push -f 2>&1
                     if ($LASTEXITCODE -eq 0) {
                         Write-Host "[OK] GASソースコードの更新が成功しました (再試行)。" -ForegroundColor Green
-                    } else {
+                    }
+                    else {
                         Write-Error "[エラー] 再試行に失敗しました。中止します。"
                         Pop-Location
                         exit 1
                     }
-                 } else {
+                }
+                else {
                     Write-Host "中止します。" -ForegroundColor Red
                     Pop-Location
                     exit 1
-                 }
-            } else {
+                }
+            }
+            else {
                 # 認証以外のエラーで、かつ変更がある場合 -> 中止
                 Pop-Location
                 exit 1
             }
-        } else {
+        }
+        else {
             # 変更がない場合は警告のみで続行
             Write-Host ""
             Write-Warning "[警告] clasp push に失敗しましたが、ローカルのGAS変更は検出されませんでした。"
@@ -364,7 +375,8 @@ if ($pushExitCode -ne 0) {
             Write-Host ""
         }
     }
-} else {
+}
+else {
     Write-Host "[OK] GASソースコードの更新が完了しました。" -ForegroundColor Green
 }
 
@@ -373,7 +385,8 @@ Write-Host "Web App デプロイ設定を更新中..." -ForegroundColor Cyan
 try {
     Invoke-NodeScriptStrict -ScriptPath "manage_deploy.js"
     Invoke-NodeScriptStrict -ScriptPath "update_env.js"
-} catch {
+}
+catch {
     Write-Error "[エラー] Web App デプロイ設定の更新に失敗しました: $($_.Exception.Message)"
     Pop-Location
     exit 1
@@ -389,7 +402,8 @@ if ($appChanges) {
     Write-Host "[OK] ローカルの変更を検出しました。安全なリバース/マージのためコミットします..." -ForegroundColor Gray
     try {
         Add-ApprovedSyncSourceChanges
-    } catch {
+    }
+    catch {
         Write-Error "[エラー] $($_.Exception.Message)"
         exit 1
     }
@@ -407,10 +421,12 @@ if ($appChanges) {
             exit 1
         }
         Write-Host "[OK] ローカルの変更をコミットしました。" -ForegroundColor Green
-    } else {
+    }
+    else {
         Write-Host "[OK] コミット対象のソースコード変更はありません (ステージングされたファイルはスキップされました)。" -ForegroundColor Gray
     }
-} else {
+}
+else {
     Write-Host "[OK] コミット対象のローカル変更はありません。" -ForegroundColor Gray
 }
 
@@ -541,12 +557,14 @@ if ($runFailed) {
                 if ($curlOutput -match '"status":\s*"success"') {
                     Write-Host "[OK] Web App 経由で GAS 関数の実行に成功しました。" -ForegroundColor Green
                     Write-Host "  実行時間: $([math]::Round($webDuration.TotalSeconds, 1)) 秒" -ForegroundColor Gray
-                } else {
+                }
+                else {
                     Write-Host ""
                     Write-Error "[エラー] Web App の実行に失敗したか、予期せぬ応答が返されました。"
                     $outputSummary = if ($curlOutput -and $curlOutput.Length -gt 0) { 
                         $curlOutput.Substring(0, [math]::Min(500, $curlOutput.Length)) 
-                    } else { 
+                    }
+                    else { 
                         "(空の応答)" 
                     }
                     Write-Host "応答概要: $outputSummary" -ForegroundColor DarkGray
@@ -558,12 +576,14 @@ if ($runFailed) {
                     Write-Host ""
                     exit 1
                 }
-            } catch {
+            }
+            catch {
                 Write-Host "" 
                 Write-Error "[エラー] Web App リクエストに失敗しました: $($_.Exception.Message)"
                 exit 1
             }
-        } else {
+        }
+        else {
             # Web App未設定の場合
             Write-Host ""
             Write-Warning "[警告] Web App が設定されていません。"
@@ -575,7 +595,8 @@ if ($runFailed) {
             exit 1
         }
     }
-} else {
+}
+else {
     $duration = (Get-Date) - $startTime
     Write-Host "[OK] clasp run 経由で GAS 関数を実行完了しました。" -ForegroundColor Green
     Write-Host "  実行時間: $([math]::Round($duration.TotalSeconds, 1)) 秒" -ForegroundColor Gray
@@ -601,7 +622,8 @@ if ($autoDeployChanges) {
     }
     Write-Host "[OK] app.js の変更をコミットしました。" -ForegroundColor Green
     Write-Host ""
-} else {
+}
+else {
     Write-Host "[5/8] Web App 設定更新のコミットチェック: 変更なし" -ForegroundColor Gray
     Write-Host ""
 }
@@ -656,7 +678,8 @@ if ($pullExitCode -ne 0) {
     if ($pullOutput -match "conflict|CONFLICT") {
         Write-Error "[エラー] 競合 (Conflict) が検出されました。手動で解決してください。"
         exit 1
-    } else {
+    }
+    else {
         Write-Host "5秒後に pull を再試行します..." -ForegroundColor Yellow
         Start-Sleep -Seconds 5
         
@@ -664,11 +687,13 @@ if ($pullExitCode -ne 0) {
         if ($LASTEXITCODE -ne 0) {
             Write-Error "[エラー] 再試行後も git pull に失敗しました。手動で 'git pull --rebase' を実行してください。"
             exit 1
-        } else {
+        }
+        else {
             Write-Host "[OK] 再試行で pull が成功しました。" -ForegroundColor Green
         }
     }
-} else {
+}
+else {
     Write-Host "[OK] ローカルリポジトリが最新の状態になりました。" -ForegroundColor Green
     if ($pullOutput -match "mahler-search-app/dic.html") {
         Write-Host "  - dic.html を GitHub から更新しました" -ForegroundColor Gray
@@ -693,38 +718,38 @@ if (Test-Path $sitemapPath) {
     $hasSitemapUpdates = $false
 
     $pathMappings = @{
-        'src/index.html' = @('/')
-        'index.html' = @('/')
-        'src/mahler.html' = @('mahler-search-app/mahler.html')
-        'src/dic.html' = @('mahler-search-app/dic.html')
-        'src/terms_search.html' = @('mahler-search-app/terms_search.html')
-        'src/rs_terms_search.html' = @('mahler-search-app/rs_terms_search.html')
-        'src/rw_terms_search.html' = @('mahler-search-app/rw_terms_search.html')
-        'src/richard_strauss.html' = @('mahler-search-app/richard_strauss.html')
-        'src/richard_wagner.html' = @('mahler-search-app/richard_wagner.html')
-        'src/notes.html' = @('mahler-search-app/notes.html')
-        'src/other.html' = @('mahler-search-app/other.html')
-        'mahler-search-app/mahler.html' = @('mahler-search-app/mahler.html')
-        'mahler-search-app/dic.html' = @('mahler-search-app/dic.html')
-        'mahler-search-app/terms_search.html' = @('mahler-search-app/terms_search.html')
-        'mahler-search-app/rs_terms_search.html' = @('mahler-search-app/rs_terms_search.html')
-        'mahler-search-app/rw_terms_search.html' = @('mahler-search-app/rw_terms_search.html')
-        'mahler-search-app/richard_strauss.html' = @('mahler-search-app/richard_strauss.html')
-        'mahler-search-app/richard_wagner.html' = @('mahler-search-app/richard_wagner.html')
-        'mahler-search-app/rs_synopsis.html' = @('mahler-search-app/rs_synopsis.html')
-        'mahler-search-app/rw_synopsis.html' = @('mahler-search-app/rw_synopsis.html')
-        'mahler-search-app/notes.html' = @('mahler-search-app/notes.html')
-        'mahler-search-app/other.html' = @('mahler-search-app/other.html')
+        'src/index.html'                              = @('/')
+        'index.html'                                  = @('/')
+        'src/mahler.html'                             = @('mahler-search-app/mahler.html')
+        'src/dic.html'                                = @('mahler-search-app/dic.html')
+        'src/terms_search.html'                       = @('mahler-search-app/terms_search.html')
+        'src/rs_terms_search.html'                    = @('mahler-search-app/rs_terms_search.html')
+        'src/rw_terms_search.html'                    = @('mahler-search-app/rw_terms_search.html')
+        'src/richard_strauss.html'                    = @('mahler-search-app/richard_strauss.html')
+        'src/richard_wagner.html'                     = @('mahler-search-app/richard_wagner.html')
+        'src/notes.html'                              = @('mahler-search-app/notes.html')
+        'src/other.html'                              = @('mahler-search-app/other.html')
+        'mahler-search-app/mahler.html'               = @('mahler-search-app/mahler.html')
+        'mahler-search-app/dic.html'                  = @('mahler-search-app/dic.html')
+        'mahler-search-app/terms_search.html'         = @('mahler-search-app/terms_search.html')
+        'mahler-search-app/rs_terms_search.html'      = @('mahler-search-app/rs_terms_search.html')
+        'mahler-search-app/rw_terms_search.html'      = @('mahler-search-app/rw_terms_search.html')
+        'mahler-search-app/richard_strauss.html'      = @('mahler-search-app/richard_strauss.html')
+        'mahler-search-app/richard_wagner.html'       = @('mahler-search-app/richard_wagner.html')
+        'mahler-search-app/rs_synopsis.html'          = @('mahler-search-app/rs_synopsis.html')
+        'mahler-search-app/rw_synopsis.html'          = @('mahler-search-app/rw_synopsis.html')
+        'mahler-search-app/notes.html'                = @('mahler-search-app/notes.html')
+        'mahler-search-app/other.html'                = @('mahler-search-app/other.html')
         
         # JSON data files mappings
-        'mahler-search-app/data/mahler.json' = @('mahler-search-app/mahler.html', 'mahler-search-app/terms_search.html')
+        'mahler-search-app/data/mahler.json'          = @('mahler-search-app/mahler.html', 'mahler-search-app/terms_search.html')
         'mahler-search-app/data/richard_strauss.json' = @('mahler-search-app/richard_strauss.html', 'mahler-search-app/rs_terms_search.html')
-        'mahler-search-app/data/richard_wagner.json' = @('mahler-search-app/richard_wagner.html', 'mahler-search-app/rw_terms_search.html')
-        'mahler-search-app/data/rs_scenes.json' = @('mahler-search-app/rs_synopsis.html')
-        'mahler-search-app/data/rw_scenes.json' = @('mahler-search-app/rw_synopsis.html')
-        'mahler-search-app/data/dic_notes.json' = @('mahler-search-app/dic.html')
+        'mahler-search-app/data/richard_wagner.json'  = @('mahler-search-app/richard_wagner.html', 'mahler-search-app/rw_terms_search.html')
+        'mahler-search-app/data/rs_scenes.json'       = @('mahler-search-app/rs_synopsis.html')
+        'mahler-search-app/data/rw_scenes.json'       = @('mahler-search-app/rw_synopsis.html')
+        'mahler-search-app/data/dic_notes.json'       = @('mahler-search-app/dic.html')
         'mahler-search-app/data/dic_terms_index.json' = @('mahler-search-app/dic.html')
-        'mahler-search-app/data/abbr_list.json' = @('mahler-search-app/dic.html')
+        'mahler-search-app/data/abbr_list.json'       = @('mahler-search-app/dic.html')
     }
 
     foreach ($file in $changedFiles) {
@@ -733,7 +758,8 @@ if (Test-Path $sitemapPath) {
             foreach ($targetPath in $targetPaths) {
                 if ($targetPath -eq '/') {
                     $escapedFile = '/'
-                } else {
+                }
+                else {
                     $escapedFile = [regex]::Escape($targetPath)
                 }
                 $pattern = "(?i)(<loc>[^<]*?$escapedFile</loc>\s*<lastmod>)\d{4}-\d{2}-\d{2}(</lastmod>)"
@@ -753,7 +779,8 @@ if (Test-Path $sitemapPath) {
         
         git add $sitemapPath
         git commit -m "chore: auto-update sitemap lastmod for modified files" -q
-    } else {
+    }
+    else {
         Write-Host "[OK] sitemap.xml の更新が必要な HTML ファイルはありません。" -ForegroundColor Gray
     }
 }
@@ -810,7 +837,8 @@ for (
         $dashboardApiResultByPeriod[$period] = $result
         if ($result.Success) {
             Write-Host "  [OK] period=$period" -ForegroundColor Green
-        } else {
+        }
+        else {
             $nextPendingPeriods += $period
         }
         if (-not $result.Success -and $attemptIndex -lt $dashboardApiRetryDelays.Count - 1) {
@@ -836,7 +864,8 @@ if ($dashboardApiHealthy) {
     Write-Host "================================" -ForegroundColor Cyan
     Write-Host ""
     Write-Host "アプリ、生成データ、およびダッシュボード API の同期が完了しました。" -ForegroundColor White
-} else {
+}
+else {
     Write-Host "================================" -ForegroundColor Yellow
     Write-Host "[一部完了] サイト同期は成功しましたが、ダッシュボード API の検証に失敗しました" -ForegroundColor Yellow
     Write-Host "================================" -ForegroundColor Yellow
