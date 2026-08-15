@@ -285,8 +285,8 @@
     "[RS: Qui]"
   ],
   [
-    "Augenblicke",
-    "(≒ moments, instants / momenti, istanti)\nAugenblick の複数形\n【一般的な意味】\n① 瞬間，一瞬，瞬きする間，短い時間．\n② （現在の）時期，時節，目下．\n【音楽用語としての訳例】\n「一瞬」，「瞬間」，「（einen Augenblick で）一瞬の間」，「（同）少しの間」，「（単数形で）ほんの束の間」",
+    "Augenblick",
+    "(≒ moment, instant / attimo, momento)\n【一般的な意味】\n① 瞬間，刹那，ほんのわずかな時間\n② 目くばせ，一瞥\n【音楽用語としての訳例】\n「一瞬」，「瞬間」，「（einen Augenblick で）一瞬の間」，「（同）少しの間」，「（単数形で）ほんの束の間」",
     " [RW: Oper], [RS: Oper], [RS: Alpen]"
   ],
   [
@@ -310,9 +310,9 @@
     "[GM], [RW: Oper], [RS: Oper]"
   ],
   [
-    "ausgelassener",
-    "(≒ more exuberant, more unrestrained / più sfrenato, più esuberante)\nausgelassen の比較級，あるいは格変化形\n【一般的な意味】\n① （比較級として）より陽気な，いっそう奔放な，さらに羽目を外した．\n② （形容詞の格変化形として）非常に陽気な，浮かれた，抑えがきかない．\n【音楽用語としての訳例】\n「（比較級として）より奔放に」，「いっそう熱狂的に」，「さらに浮かれて」，「（格変化として）タガが外れたような」，「狂乱した」",
-    "[RS: Till], [RW: Oper], [RS: Oper]"
+    "ausgelassen",
+    "(≒ exuberant, unrestrained, boisterous, omitted / esuberante, sfrenato, omesso)\nauslassen の過去分詞（または形容詞）\n【一般的な意味】\n① （気分・態度などが）非常に陽気な，浮かれた，羽目を外した，奔放な\n② （動詞 auslassen の過去分詞として）省略された，抜かされた，省かれた\n③ （脂などを）溶かした，抽出した\n【音楽用語としての訳例】\n「奔放に」，「熱狂的に」，「陽気にはしゃいで」，「（反復や小節などを）省略して」，「省かれた」",
+    "[GM], [RW: Oper], [RS: Oper], [RS: Till], "
   ],
   [
     "aushalten",
@@ -431,8 +431,13 @@
   ],
   [
     "befremdet",
-    "(≒ disconcerted, estranged, surprised / sconcertato, sorpreso, stranito)\nbefremden の過去分詞\n【一般的な意味】\n① （様子や言動を）奇異に感じた，違和感を抱いた，不審に思った．\n② 驚きあきれた，面食らった，疎外感を覚えた．\n【音楽用語としての訳例】\n「怪訝そうに」，「不審げに」，「奇異なものを見るように」，「面食らって」，「よそよそしく」",
-    "[RW: Oper], [RS: Oper]"
+    "(≒ disconcerted, alienated, estranging, struck as strange / sconcertato, estraniato, sorpreso)\nbefremden の過去分詞（または3人称単数現在形）\n【一般的な意味】\n① いぶかしく思った，奇異に感じた，不審に思った，当惑した\n② よそよそしさを感じた，疎遠になった，疎外感を覚えた\n【音楽用語としての訳例】\n「いぶかしげに」，「奇異の念を抱いて」，「不審そうに」，「当惑して」，「よそよそしく」，「疎外感を込めて」",
+    "[RS: Oper]"
+  ],
+  [
+    "Befremdung",
+    "(≒ estrangement, alienation, surprise, disconcertment / sconcerto, meraviglia, estraneità)\n【一般的な意味】\n① いぶかしさ，奇異の念，不審，当惑\n② よそよそしさ，疎遠，疎外感\n【音楽用語としての訳例】\n「いぶかしげに」，「奇異の念を込めて」，「不審そうに」，「当惑して」，「よそよそしく」，「疎外感を込めて」",
+    "[RW: Oper]"
   ],
   [
     "Begeisterung",
@@ -822,7 +827,7 @@
   [
     "devot",
     "(≒ submissive, servile, humble / sottomesso, servile, umile)\n【一般的な意味】\n① （態度が）過度にへりくだった，卑屈な，服従的な，隷属的な．\n② （古語として）信心深い，献身的な．\n【音楽用語としての訳例】\n「卑屈に」，「へりくだって」，「もみ手をするように」，「服従して」，「（過度に）恭しく」，「ペコペコして」\n\n「へりくだって」などとしている．\ndemütig：謙虚・恭しい（中立〜やや肯定的）\ndevot：過剰に従順 / 卑屈 / 媚びた（否定的ニュアンスが強い）\n現代ドイツ語では devot ＝ 卑屈で相手に迎合的 という語感が強いようだ．",
-    "[RW: Oper], [RS: Oper]"
+    "[RS: Oper]"
   ],
   [
     "Dickicht",
@@ -1035,14 +1040,14 @@
     "[GM], [RW: Oper], [RS: Oper]"
   ],
   [
+    "durchweg",
+    "(≒ throughout, consistently, without exception / sempre, costantemente)\ndurchwegs は南ドイツ・オーストリアで使われる別形．\n【一般的な意味】\n① 終始，一貫して，最初から最後まで．\n② 例外なく，軒並み，全面的に．\n【音楽用語としての訳例】\n「終始」，「一貫して」，「（durchwegs leise などで）常に（弱く）」，「（sempre の意味で）絶えず」，「例外なく」\n\nちなみに ”durchaus” もほぼ同じ意味だが， 微妙なニュアンスの違いがあるようだ．\n●durchaus:\n「あくまでも」「断じて（絶対に）」という，意志の強さや程度の徹底さを強調するニュアンス．\n●durchweg (または durchwegs):\n「終始一貫して」「例外なく」という，時間的・空間的にずっとそうである（ムラがない）ことを強調するニュアンス．",
+    "[GM], [RW: Oper], [RS: Oper]"
+  ],
+  [
     "durchweg mit dem zweiten Pedal zu spielen",
     "全体を通して第2ペダル（ダンパーペダル）を使って弾く ",
     "[H: KM2]"
-  ],
-  [
-    "durchwegs",
-    "(≒ throughout, consistently, without exception / sempre, costantemente)\ndurchweg の別形（特に南ドイツ・オーストリアで使われる）\n【一般的な意味】\n① 終始，一貫して，最初から最後まで．\n② 例外なく，軒並み，全面的に．\n【音楽用語としての訳例】\n「終始」，「一貫して」，「（durchwegs leise などで）常に（弱く）」，「（sempre の意味で）絶えず」，「例外なく」\n\nちなみに ”durchaus” もほぼ同じ意味だが， 微妙なニュアンスの違いがあるようだ．\n●durchaus:\n「あくまでも」「断じて（絶対に）」という，意志の強さや程度の徹底さを強調するニュアンス．\n●durchwegs (または durchweg):\n「終始一貫して」「例外なく」という，時間的・空間的にずっとそうである（ムラがない）ことを強調するニュアンス．",
-    "[GM], [RW: Oper], [RS: Oper]"
   ],
   [
     "düster",
@@ -1077,7 +1082,7 @@
   [
     "eifersüchtig",
     "(≒ jealous, envious / geloso, invidioso)\nEifersucht は「嫉妬」．\n【一般的な意味】\n① （恋愛関係において）嫉妬深い，焼き餅を焼く．\n② （他人の幸運・成功などを）ねたむ，うらやむ，そねむ．\n【音楽用語としての訳例】\n「嫉妬して」，「嫉妬深く」，「ねたんで」，「（心を）焦がして」",
-    "[RW: Oper], [RS: Oper]"
+    "[RS: Oper]"
   ],
   [
     "eigenhändig",
@@ -1137,7 +1142,7 @@
   [
     "Einleitung",
     "(≒ introduction, preface / introduzione, preludio)\n【一般的な意味】\n① 導入，紹介，手引き，入門．\n② （書物・演説などの）序文，前書き，枕．\n③ （手続き・処置などの）開始，着手．\n【音楽用語としての訳例】\n「序奏部」，「イントロダクション」，「前奏」\n\n\"Eingang\" と比較するとやや大規模なもの．",
-    "[GM], [RS: Oper]"
+    "[GM], [RW: Oper]"
   ],
   [
     "einsetzen",
@@ -1275,9 +1280,14 @@
     "[RW: Oper], [RS: Oper]"
   ],
   [
+    "erhobener",
+    "\"erhobner\" の項を参照．",
+    "[RW: Oper], [RS: Oper]"
+  ],
+  [
     "erhobner",
     "(≒ raised, uplifted, exalted / alzato, sollevato, esaltato)\nerheben の過去分詞 erhoben の格変化形（erhobener の短縮形）\n【一般的な意味】\n① （物理的に）持ち上げられた，高く掲げられた，振り上げられた．\n② （声・音などが）張り上げられた，高められた．\n③ （気分・精神などが）高揚した，誇らしげな，威厳のある．\n【音楽用語としての訳例】\n「（楽器のベルなどを）高く掲げて」，「（手や指揮棒を）振り上げて」，「高らかに」，「高揚して」，「誇らしげに」，「威厳を持って」\n\nGM では子供の魔法の角笛  \"Der Tamboursg'sell\" にのみ使用例がある．\"mit sehr erhobner Stimme\"は「たいへん高らかに声を上げて」と訳している．",
-    "[GM], [RW: Oper], [RS: Oper]"
+    "[GM]"
   ],
   [
     "erleichtert",
@@ -1772,7 +1782,7 @@
   [
     "geschwind",
     "(≒ swift, fast, quick / presto, veloce, rapido)\n【一般的な意味】\n① 速い，素早い，迅速な．\n② 即座の，敏速な．\n【音楽用語としての訳例】\n「速く」，「急速に」",
-    "[K: Cap], [RW: Oper], [RS: Oper]"
+    "[K: Cap], [RW: Oper]"
   ],
   [
     "Geschwindmarsch",
@@ -2872,7 +2882,7 @@
   [
     "murmeln",
     "(≒ murmur, mumble, ripple / mormorare, bisbigliare)\n【一般的な意味】\n① ささやく，つぶやく，ぼそぼそ言う．\n② （小川などが）せせらぎの音を立てる，とつとつと流れる．\n【音楽用語としての訳例】\n「ささやくように」，「つぶやくように」，「せせらぎのように」",
-    "[RW: Oper], [RS: Oper]"
+    "[RS: Oper]"
   ],
   [
     "mürrisch",
@@ -3252,7 +3262,7 @@
   [
     "riesenhaft",
     "(≒ gigantic, colossal, immense / gigantesco, colossale)\n【一般的な意味】\n① 巨人なみの，巨大な，莫大な．\n② （比喩的に）途方もない，驚くべき，並外れた．\n【音楽用語としての訳例】\n「巨大な（響きで）」，「圧倒的なスケールで」，「怪物的に」，「威圧的に」",
-    "[RW: Oper], [RS: Oper]"
+    "[RS: Oper]"
   ],
   [
     "Ritter",
@@ -3452,7 +3462,7 @@
   [
     "schnippisch",
     "(≒ snappy, pert, saucy, impudent / sfacciato, impertinente)\n【一般的な意味】\n① （口調や態度が）生意気な，小生意気な，こざかしい．\n② 軽薄な，きざな．\n【音楽用語としての訳例】\n「生意気に」，「小生意気に」，「断定的に鋭く」，「つっけんどんに」，「とげとげしい口調で」",
-    "[RW: Oper], [RS: Oper]"
+    "[RS: Oper]"
   ],
   [
     "schon",
@@ -3470,8 +3480,8 @@
     "[GM], [RW: Oper], [RS: Oper]"
   ],
   [
-    "schreitende",
-    "(≒ striding, stepping, pacing / incedente, passo misurato)\nschreiten の現在分詞 schreitend の格変化形\n【一般的な意味】\n① 大股で，または威厳のある歩調で進んでいる．\n② （時間が）経過していく．\n【音楽用語としての訳例】\n「威厳のある歩調で」，「厳かに」，「着実に歩を進めて」，「（ゆったりと）歩いて」",
+    "schreiten",
+    "(≒ stride, pace, step, proceed / incedere, camminare, avanzare)\n【一般的な意味】\n① （威厳や落ち着きを持って大股で）歩む，歩行する，足を進める\n② （段階・行動・措置などに）移る，着手する，取りかかる\n【音楽用語としての訳例】\n「歩むように」，「堂々と歩を進めて」，「歩調を保って（行進するように）」",
     "[H: KM3],  [RW: Oper], [RS: Oper]"
   ],
   [
@@ -3737,7 +3747,7 @@
   [
     "stetig",
     "(≒ steady, continuous, constant / costante, continuo, regolare)\n【一般的な意味】\n① 絶え間ない，不断の，連続的な．\n② 安定した，不変の，一定の．\n③ （数学）連続の，連続的な．\n【音楽用語としての訳例】\n「絶え間なく」，「着実に」，「一定の速さで」，「規則正しく」",
-    "[GM], [RW: Oper]"
+    "[GM]"
   ],
   [
     "stets",
@@ -3787,7 +3797,12 @@
   [
     "streicheln",
     "(≒ to stroke, caress, pet / accarezzare)\n【一般的な意味】\n① 優しくなでる，愛撫する，（ペットなどを）可愛がる．\n② （比喩的に）優しく慰める，心を和ませる．\n【音楽用語としての訳例】\n「優しくなでるように」，「甘く」，「愛撫するように」",
-    "[RW: Oper], [RS: Oper]"
+    "[RW: Oper]"
+  ],
+  [
+    "streichelt",
+    "\"streicheln\" の現在形・三人称単数形．\n\"streicheln\" の項を参照．",
+    "[RS: Oper]"
   ],
   [
     "Streicher",
@@ -3977,7 +3992,7 @@
   [
     "übernehmen",
     "(≒ to take over, to take on, to assume / assumere, farsi carico di)\n【一般的な意味】\n① 引き受ける，（任務などを）担当する，（責任などを）負う．\n② （他人の考えや習慣などを）受け入れる，採用する，借用する．\n③ （地位・権限などを）引き継ぐ，乗っ取る．\n④ （sich übernehmenの形で）無理をする，力を出しすぎる．\n\n【音楽用語としての訳例】 \n「（先行する楽器から旋律やリズムを）引き継いで」，「（他のパートを）肩代わりして演奏する」，「（合唱などで特定のパートを）受け持つ」\n\nGM で ”ubernimmt”（直接法現在三人称単数形）は「持ち替える」「引き受ける」など，\"übernommen\"（過去分詞）は「受け持つ」と訳した． RW，RS では「引き継ぐ」という意味で用いられている．",
-    "[GM], [RW: Oper], [RS: Oper]"
+    "[GM], [RS: Oper]"
   ],
   [
     "übernimmt",
@@ -4166,8 +4181,8 @@
   ],
   [
     "verlöschen",
-    "(≒ to die out, to fade away, to become extinct / estinguersi, spegnersi)\n(≒erlöschen, verschwinden) \n【一般的な意味】\n① （火・光・生命などが）消える，尽きる，絶える．\n② （音や響きが）次第に弱まり，消滅する．\n③ （法律・権利などが）失効する，無効になる．\n【音楽用語としての訳例】\n「morendo」，「perdendosi」，「（響きが）消滅する」，「絶え入るように」，「鳴りやむ」",
-    "[GM], [RW: Oper], [RS: Oper]"
+    "(≒ to die out, to fade away, to become extinct / estinguersi, spegnersi)\n(≒erlöschen, verschwinden) \n【一般的な意味】\n① （火・光・生命などが）消える，尽きる，絶える．\n② （音や響きが）次第に弱まり，消滅する．\n③ （法律・権利などが）失効する，無効になる．\n【音楽用語としての訳例】\n「morendo」，「perdendosi」，「（響きが）消滅する」，「絶え入るように」，「鳴りやむ」\n\n\"verlöscht\" なら RW にも使用例がある．",
+    "[GM], [RS: Oper]"
   ],
   [
     "vernehmbar",
@@ -4175,8 +4190,8 @@
     "[RW: Oper], [RS: Oper], [B: 4-2]"
   ],
   [
-    "vernehmlicher",
-    "(≒ more audible, clearer, more perceptible / più udibile, più distinto)\r\nvernehmlich の比較級\r\n【一般的な意味】\r\n① 前よりも聞き取りやすい，より明瞭な．\r\n② よりはっきりと知覚できる．",
+    "vernehmlich",
+    "(≒ audible, distinct, clearly perceptible / udibile, chiaro, distinto)\n【一般的な意味】\nはっきりと聞き取れる，明瞭に聞こえる，耳に入る\n【音楽用語としての訳例】\n「はっきりと聞こえるように」，「明瞭に聞き取れるように」，「耳に届くように」",
     "[RW: Oper], [RS: Oper]"
   ],
   [
@@ -4396,7 +4411,7 @@
   ],
   [
     "Vorschlag",
-    "(≒ proposal, suggestion, grace note / proposta, abbellimento)\n【一般的な意味】\n① 提案，提議，申し出．\n② （音楽）装飾音，前打音．\n③ （建築の）張り出し．\n【音楽用語としての訳例】\n「前打音」\n\n対義語は \"Nachschlag\"． ",
+    "(≒ proposal, suggestion, grace note / proposta, abbellimento)\n【一般的な意味】\n① 提案，提議，申し出．\n② （音楽）装飾音，前打音．\n③ （建築の）張り出し．\n【音楽用語としての訳例】\n「前打音」\n\n複数形は \"Vorschläge\"．対義語は \"Nachschlag\"． ",
     "[GM], [RS: Oper]"
   ],
   [

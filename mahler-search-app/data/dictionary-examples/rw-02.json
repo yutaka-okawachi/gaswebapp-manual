@@ -3107,6 +3107,19 @@
     "場面タイトル": "第2幕第2場"
   },
   {
+    "__exampleOrder": 3790,
+    "Oper": "tristan",
+    "Aufzug": 2,
+    "Szene": 2,
+    "page": 351,
+    "whom": "Isolde",
+    "de": "beruhigend, ersterbend.",
+    "de_normalized": "beruhigend, ersterbend.",
+    "ja": "穏やかに，消え入るように",
+    "楽譜情報": "C.F. Peters",
+    "場面タイトル": "第2幕第2場"
+  },
+  {
     "__exampleOrder": 3798,
     "Oper": "tristan",
     "Aufzug": 2,
