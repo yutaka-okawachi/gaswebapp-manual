@@ -190,8 +190,8 @@
     "[GM]"
   ],
   [
-    "anschließend",
-    "(≒ following, connecting, subsequent / seguente, attaccato, successivo) anschließen の現在分詞\n【一般的な意味】\n① 続いて起こる，次の，後に続く．\n② （副詞的に）引き続いて，その後に，追って． ③ 隣接した，接続した．\n【音楽用語としての訳例】\n「（切れ目なく）続いて」，「直結して（attacca）」，「次の」，「これに続く」",
+    "anschließen",
+    "(≒ join, connect, follow, attach / unire, collegare, attaccare, seguire)\n【一般的な意味】\n① つなぐ，接続する，連結する，（器具・電気などを）つなぎ合わせる\n② （集団・組織などに）加わる，同調する，賛同する\n③ （空間的・時間的に）隣接する，引き続いて起こる，（前文などに）続く\n【音楽用語としての訳例】\n「attacca で」，「（休みなく）続けて」，「引き続いて」，「（他のパートや旋律に）合わせて加わる」",
     "[B: 1], [RW: Oper]"
   ],
   [
@@ -270,14 +270,19 @@
     "[GM]"
   ],
   [
+    "aufstellen",
+    "(≒ to be placed, to be set up / da collocare, da disporre)\n【一般的な意味】\n① （人や物を）配置する，並べる，設置する，（建物を）建てる．\n② （説・記録・計画などを）立てる，打ち立てる，主張する．\n【音楽用語としての訳例】\n「（楽器を～に）配置する」，「（スタンドなどに）据え付ける」，「（舞台裏などに）待機させる」，「（シンバルなどを）吊るすように固定する」など．\n\n[RW: Oper] では\"aufstellen\"は「整列する」としている．",
+    "[RW: Oper]"
+  ],
+  [
     "aufzufassen",
     "(≒ to be conceived, to be interpreted, to be understood / da intendersi, da concepire)\nauffassen の zu 不定詞\n【一般的な意味】\n① （事柄をあるように）解釈する，受け止める，みなす．\n② （言葉や意味を）理解する，把握する，聞き取る．\n【音楽用語としての訳例】\n「（テンポやリズムを～として）捉える」，「解釈する」，「（拍を～のように）感じる」，「（～のつもりで）演奏する」",
     "[RS: Dom]"
   ],
   [
     "aufzustellen",
-    "(≒ to be placed, to be set up / da collocare, da disporre)\naufstellen の zu 不定詞\n【一般的な意味】\n① （人や物を）配置する，並べる，設置する，（建物を）建てる．\n② （説・記録・計画などを）立てる，打ち立てる，主張する．\n【音楽用語としての訳例】\n「（楽器を～に）配置する」，「（スタンドなどに）据え付ける」，「（舞台裏などに）待機させる」，「（シンバルなどを）吊るすように固定する」など．\n\n[RW: Oper] では\"aufstellen\"は「整列する」としている．",
-    "[RS: Qui], [RW: Oper]"
+    "\"aufstellen\" の zu 不定詞．\"aufstellen\" の項を参照．",
+    "[RS: Qui]"
   ],
   [
     "Augenblicke",
@@ -395,8 +400,8 @@
     "[B: 5]"
   ],
   [
-    "beängstigen",
-    "(≒ frighten, alarm, oppress / spaventare, angosciare, opprimere)\n【一般的な意味】\n① （人を）怖がらせる，不安にさせる，脅かす．\n② （心配・不安などで）胸を締めつける，重苦しくさせる，悩ます．\n【音楽用語としての訳例】\n「（beängstigend で）恐ろしいほどに」，「不安を煽るように」，「脅かすように」，「胸が締めつけられるように」，「気味悪く」\n\n”mit beängstem Ausdruck”は「不安な表情で」とした．",
+    "beängstigem",
+    "(≒ frighten, alarm, oppress / spaventare, angosciare, opprimere)\nbeängstigen の現在分詞の格変化形\n【一般的な意味】\n① （人を）怖がらせる，不安にさせる，脅かす．\n② （心配・不安などで）胸を締めつける，重苦しくさせる，悩ます．\n【音楽用語としての訳例】\n「（beängstigend で）恐ろしいほどに」，「不安を煽るように」，「脅かすように」，「胸が締めつけられるように」，「気味悪く」\n\n”mit beängstem Ausdruck”は「不安な表情で」とした．",
     "[GM]"
   ],
   [
@@ -532,6 +537,11 @@
   [
     "besetzen",
     "(≒ occupy, fill, cast / occupare, coprire, distribuire)\n【一般的な意味】\n① （場所・土地・座席・地位などを）占める，占領する，（席を）取る．\n② （役職や配役などを）割り当てる，任命する．\n③ （ふち・飾りなどを）付ける，縫い付ける．\n【音楽用語としての訳例】\n「（楽器を）編成する」，「（パートを）割り当てる」，「（役を）キャストする」，「（stark besetzt で）大編成で」，「（doppelt besetzt で）倍管で（プルトを倍にして）」\n\nGM では「配置する」の意味で使われていることが多い．大地の歌第4楽章には\"stark besetzt\"という指示があるが，これは「複数人で（厚めに）編成せよ」という意味であろう．",
+    "[RW: Oper], [RS: Oper]"
+  ],
+  [
+    "besetzt",
+    "besetzen の過去分詞．\"besetzen\" の項を参照．",
     "[GM], [RW: Oper], [RS: Oper]"
   ],
   [
@@ -685,13 +695,13 @@
     "[GM]"
   ],
   [
-    "d.h.",
-    "(＝das heißt ≒ meaning, that is, in other words) つまり，すなわち",
+    "d. h.",
+    "(=das heißt ≒ meaning, that is, in other words) つまり，すなわち",
     "[GM]"
   ],
   [
-    "D.H., d.H.",
-    "(＝Der Herausgeber)  編集者，編集発行人 ",
+    "D. H., d. H.",
+    "(=Der Herausgeber)  編集者，編集発行人 ",
     "[B: 7], [B: 8-2]"
   ],
   [
@@ -1827,7 +1837,7 @@
   [
     "gewichtig",
     "(≒ weighty, important, significant / pesante, grave, importante)\n【一般的な意味】\n① 相当の重さがある，重みのある，分厚い．\n② （事柄・態度などが）重要な，意義深い，権威ある，重々しい．\n【音楽用語としての訳例】\n「重々しく」，「威厳をもって」，「（響きに）重みをつけて」",
-    "[GM],  [RW: Oper], [RS: Oper], [H: Welt]"
+    "[RW: Oper], [RS: Oper], [H: Welt]"
   ],
   [
     "gewidmet",
@@ -2106,12 +2116,7 @@
   ],
   [
     "hinaufziehen",
-    "\"to pull up\" \"to move up\" 「（上への） ポルタメント」．ちなみに\"herunterziehen，hinunterziehen\" は「（下への） ポルタメント」",
-    "[GM]"
-  ],
-  [
-    "hinausziehen",
-    "(≒ to draw out, to pull out, to prolong / prolungare, protrarre)\n分離動詞 hinausziehen の不定詞\n【一般的な意味】\n① （物を）外へ引き出す，引き抜く．\n② （時間や期間を）長引かせる，引き延ばす，延期する．\n【音楽用語としての訳例】\n「引き延ばす」，「長引かせる」，「（テンポや音価を）持続させる」，「ゆったりと引っ張る」",
+    "(≒ pull up, draw up, move upwards, wind up / tirare su, salire, alzare)\n【一般的な意味】\n① （幕・旗・ロープなどを）引き上げる，巻き上げる，（時計のぜんまいを）巻く\n② （軍勢・雲・嵐などが）上方へ移動する，立ちのぼる，（上空へ）覆いかぶさるように広がる\n③ （人が上層・高所へ）移り住む，引っ越す\n④ （子や動物を）育てる，養育する\n【音楽用語としての訳例】\n「（上への）ポルタメント」，「（音やポジションを）引き上げて」，「（舞台の幕を）引き上げる」\n\nちなみに\"herunterziehen\"，\"hinunterziehen\" は「（下への） ポルタメント」",
     "[GM]"
   ],
   [
@@ -2660,17 +2665,17 @@
     "[GM], [RW: Oper], [RS: Oper]"
   ],
   [
-    "m.d.",
+    "m. d.",
     "( ≒ mano destra) 「右手」．これはイタリア語",
     "[GM]"
   ],
   [
-    "m.Dpf.",
+    "m. Dpf.",
     "mit Dämpfer の項を参照．\nなお，GM の交響曲第1番第3楽章の有名な Kontrabass の旋律は旧全集版では「Tutti の第1パート」と長い間されてきたが，Kubik 版において「Solo」であることが確定しているようである．\n",
     "[GM]"
   ],
   [
-    "m.s.",
+    "m. s.",
     "( ≒ mano sinistra) 「左手」．これはイタリア語",
     "[GM]"
   ],
@@ -2775,11 +2780,6 @@
     "[GM]"
   ],
   [
-    "mit Bogen geschlagen",
-    "「弓で叩く」は弓の弦の部分で叩くのか，木の部分で叩くのか迷うが，交響曲第3番第3楽章に \"col legno geschlagen\" とあり，こちらは木の部分で叩く，と判断できるので，\"mit Bogen geschlagen\" は「弓（の弦の部分） で叩く」とした．",
-    "[GM]"
-  ],
-  [
     "mit breitem Strich",
     "幅広く弓を使って",
     "[RS: Alpen]"
@@ -2788,6 +2788,11 @@
     "mit breitem Ton",
     "幅広く豊かな音で ，ゆったりと豊かな音で ",
     "[K: Cap]"
+  ],
+  [
+    "mit dem Bogen geschlagen",
+    "「弓で叩く」は弓の弦の部分で叩くのか，木の部分で叩くのか迷うが，交響曲第3番第3楽章に \"col legno geschlagen\" とあり，こちらは木の部分で叩く，と判断できるので，\"mit Bogen geschlagen\" は「弓（の弦の部分） で叩く」とした．\n\n\"mit dem Bgn. geschlagen\" も同じ．",
+    "[GM]"
   ],
   [
     "mit durchweg spitzigem Ton",
@@ -4002,7 +4007,12 @@
   [
     "Umstand",
     "(≒ circumstance, condition, trouble (pl.) / circostanza, condizione)\n【一般的な意味】\n① 状況，事情，環境，なりゆき．\n② （主に複数形 Umstände で）面倒，手間，煩わしさ．\n\n\"unter keinen Umständen\" は，「いかなる状況でも~ない」，「どんな場合でも絶対に～しない」",
-    "[GM], [RS: Oper]"
+    "[RS: Oper]"
+  ],
+  [
+    "Umstände",
+    "\"Umstand\" の複数形\n\"Umstand\" の項を参照．",
+    "[GM]"
   ],
   [
     "umstimmen",
@@ -4060,8 +4070,8 @@
     "[GM]"
   ],
   [
-    "untersagen",
-    "(≒ prohibit, forbid, interdict / proibire, vietare)\n【一般的な意味】\n① 禁じる，禁止する，差し止める．\n② （法的に）規制する，禁制する．\n\nGM の交響曲第8番第1部に\"Es ist absolut untersagt, daß sich die Vertreter der Solostimmen bei dieser Unisonostelle 'schonen'.\"（独唱者たちが、このユニゾンの箇所で「手加減」することは絶対に禁止）と強い調子で書いてあるのが面白い．リハのときにソリストが手抜きして GM がブチ切れたに違いない．",
+    "untersagt",
+    "(≒ prohibited, forbidden, banned / proibito, vietato)\nuntersagen の過去分詞\n【一般的な意味】\n禁止された，差し止められた，禁じられた\n\nGM の交響曲第8番第1部に\"Es ist absolut untersagt, daß sich die Vertreter der Solostimmen bei dieser Unisonostelle 'schonen'.\"（独唱者たちが、このユニゾンの箇所で「手加減」することは絶対に禁止）と強い調子で書いてあるのが面白い．リハのときにソリストが手抜きして GM がブチ切れたに違いない．",
     "[GM]"
   ],
   [
@@ -4220,8 +4230,8 @@
     "[GM], [RW: Oper], [RS: Oper]"
   ],
   [
-    "verwehen",
-    "(≒ to blow away, to drift away, to scatter / svanire, dissipare)\n【一般的な意味】\n① 風で吹き払う，吹き散らす，吹き飛ばす．\n② （比喩的に）消え去る，忘れ去られる．\n\nGM の嘆きの歌第3部にのみ用いられている．",
+    "verweht",
+    "(≒ blown away, faded, dispersed, faint / dileguato, affievolito, soffiato via)\nverwehen の過去分詞\n【一般的な意味】\n① （風に）吹き飛ばされた，（風で砂・雪などが）吹き払われた・覆い隠された\n② （足跡・記憶・音などが）消え去った，薄れた，かき消された\n\n【音楽用語としての訳例】\n「風に吹き消されるように」，「かすかに消え入るように」，「遠くへ消え去るように」，「おぼろげに」\n\nGM の嘆きの歌第3部にのみ用いられている．",
     "[GM]"
   ],
   [
