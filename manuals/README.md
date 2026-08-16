@@ -24,3 +24,13 @@
   * 管理者ダッシュボードの通常確認、API・画面変更、Sites公開、障害復旧
   * 楽譜情報（`score_metadata.js`）の更新手順
   * サイト運用（SEO、canonical設定、PageSpeed Insights パフォーマンス最適化方針）
+
+---
+
+## 3. [管理者ブラウザのアクセス解析・検索通知除外 (ADMIN_BROWSER_OPTOUT.md)](ADMIN_BROWSER_OPTOUT.md)
+* **対象者**: 自分自身の閲覧・検索を利用統計から除外したいサイト管理者
+* **主な内容**:
+  * Android Chrome、PC Chrome、Microsoft Edge での管理者モード有効化
+  * GA4、検索通知メール、スプレッドシート「検索履歴」の一括停止
+  * `?admin=1` による設定、`?admin=0` による解除
+  * ブラウザごとの設定範囲、動作確認、サイトデータ削除後の再設定
