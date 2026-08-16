@@ -87,6 +87,10 @@ https://yutaka-okawachi.github.io/gaswebapp-manual/mahler-search-app/mahler.html
 
 管理者モードのキーは `gmt_admin_device_optout` です．公開サイト側の `mahler-search-app/js/analytics.js` が URL の `admin=1` / `admin=0` を読み取り，localStorage に保存します．
 
-管理者モードでは Google Analytics の無効化フラグを設定し，検索通知関数をブラウザ側で抑止します．検索通知リクエスト自体を送信しないため，GAS 側のメール通知と「検索履歴」への記録の双方が実行されません．
+`analytics.js` は Google Analytics のタグより先に読み込まれます．そのため，管理者モードでは GA4 の初期 `page_view` が送信される前に `ga-disable-G-ZT6MPW5MNG` が有効になり，ページ表示・検索結果表示・検索ページ遷移などの GA4 イベントを送信しません．
+
+検索時は検索通知関数もブラウザ側で抑止します．検索通知リクエスト自体を GAS へ送信しないため，メール通知と Google スプレッドシート「検索履歴」への記録の双方が実行されません．
+
+公開 HTML と `src/generate_dic_html.js` の GA4 読み込み順は `scripts/normalize-admin-optout.js` で検査・正規化できます．用語集 `dic.html` の再生成元にも同じ読み込み順を反映しているため，通常の `sync-data` によるデータ再生成後も管理者モードが維持される構成です．
 
 この機能は管理者自身のデータを利用統計へ混ぜないことを目的とした運用機能です．一般利用者向けの検索動作や検索結果には影響しません．
