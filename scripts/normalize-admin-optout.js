@@ -5,6 +5,10 @@ const ROOT = path.resolve(__dirname, '..');
 const GTAG_SRC = 'https://www.googletagmanager.com/gtag/js?id=G-ZT6MPW5MNG';
 const GENERATOR_PATH = path.join(ROOT, 'src', 'generate_dic_html.js');
 
+function escapeRegExp(value) {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
 function walkHtml(dir, files = []) {
   for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
     if (entry.name === '.git' || entry.name === 'node_modules') continue;
@@ -32,6 +36,13 @@ function removeAnalyticsTags(text) {
   );
 }
 
+function makeGtagLineRegex() {
+  return new RegExp(
+    `(^[ \\t]*<script(?:\\s+async)?\\s+src=["']${escapeRegExp(GTAG_SRC)}["']><\\/script>[ \\t]*$)`,
+    'm'
+  );
+}
+
 function patchHtml(file) {
   let text = fs.readFileSync(file, 'utf8');
   if (!text.includes(GTAG_SRC)) return false;
@@ -39,10 +50,7 @@ function patchHtml(file) {
   const tag = analyticsTagFor(file);
   text = removeAnalyticsTags(text);
 
-  const gtagLine = new RegExp(
-    `(^[ \\t]*<script(?:\\s+async)?\\s+src=["']${GTAG_SRC.replace(/[.*+?^${}()|[\\]\\]/g, '\\$&')}["']><\\/script>[ \\t]*$)`,
-    'm'
-  );
+  const gtagLine = makeGtagLineRegex();
   if (!gtagLine.test(text)) {
     throw new Error(`Google tag script line not found in ${path.relative(ROOT, file)}`);
   }
@@ -59,10 +67,7 @@ function patchDictionaryGenerator() {
 
   text = removeAnalyticsTags(text);
   const tag = '<script src="js/analytics.js"></script>';
-  const gtagLine = new RegExp(
-    `(^[ \\t]*<script(?:\\s+async)?\\s+src=["']${GTAG_SRC.replace(/[.*+?^${}()|[\\]\\]/g, '\\$&')}["']><\\/script>[ \\t]*$)`,
-    'm'
-  );
+  const gtagLine = makeGtagLineRegex();
   if (!gtagLine.test(text)) {
     throw new Error('Google tag script line not found in src/generate_dic_html.js');
   }
