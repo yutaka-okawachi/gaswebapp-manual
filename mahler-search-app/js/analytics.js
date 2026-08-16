@@ -1,6 +1,8 @@
 (function () {
     'use strict';
 
+    const GA_MEASUREMENT_ID = 'G-ZT6MPW5MNG';
+    const ADMIN_DEVICE_KEY = 'gmt_admin_device_optout';
     const SEARCH_PAGE_PATHS = Object.freeze({
         'mahler.html': '/gaswebapp-manual/mahler-search-app/mahler.html',
         'terms_search.html': '/gaswebapp-manual/mahler-search-app/terms_search.html',
@@ -9,6 +11,123 @@
         'richard_strauss.html': '/gaswebapp-manual/mahler-search-app/richard_strauss.html',
         'richard_wagner.html': '/gaswebapp-manual/mahler-search-app/richard_wagner.html'
     });
+
+    function storageAvailable() {
+        try {
+            const testKey = '__gmt_storage_test__';
+            window.localStorage.setItem(testKey, '1');
+            window.localStorage.removeItem(testKey);
+            return true;
+        } catch (error) {
+            return false;
+        }
+    }
+
+    const canUseStorage = storageAvailable();
+
+    function setAdminDeviceOptOut(enabled) {
+        if (!canUseStorage) return false;
+        try {
+            if (enabled) {
+                window.localStorage.setItem(ADMIN_DEVICE_KEY, '1');
+            } else {
+                window.localStorage.removeItem(ADMIN_DEVICE_KEY);
+            }
+            return true;
+        } catch (error) {
+            return false;
+        }
+    }
+
+    function isAdminDeviceOptOut() {
+        if (!canUseStorage) return false;
+        try {
+            return window.localStorage.getItem(ADMIN_DEVICE_KEY) === '1';
+        } catch (error) {
+            return false;
+        }
+    }
+
+    function applyAdminDeviceUrlCommand() {
+        try {
+            const params = new URLSearchParams(window.location.search);
+            const adminValue = params.get('admin');
+            if (adminValue === '1') {
+                setAdminDeviceOptOut(true);
+            } else if (adminValue === '0') {
+                setAdminDeviceOptOut(false);
+            }
+        } catch (error) {
+            // URL handling must never block the page.
+        }
+    }
+
+    function disableGoogleAnalyticsForAdminDevice() {
+        if (!isAdminDeviceOptOut()) return;
+        window[`ga-disable-${GA_MEASUREMENT_ID}`] = true;
+        window.__gaAdminOptOut = true;
+    }
+
+    function installAdminModeBadge() {
+        if (!isAdminDeviceOptOut() || document.getElementById('admin-device-optout-badge')) return;
+        const badge = document.createElement('div');
+        badge.id = 'admin-device-optout-badge';
+        badge.textContent = '管理者モード：解析・検索記録 OFF';
+        badge.setAttribute('role', 'status');
+        badge.style.position = 'fixed';
+        badge.style.right = '10px';
+        badge.style.bottom = '10px';
+        badge.style.zIndex = '2147483647';
+        badge.style.padding = '6px 10px';
+        badge.style.borderRadius = '999px';
+        badge.style.background = 'rgba(37, 37, 37, 0.88)';
+        badge.style.color = '#fff';
+        badge.style.fontSize = '12px';
+        badge.style.lineHeight = '1.4';
+        badge.style.boxShadow = '0 2px 8px rgba(0, 0, 0, 0.25)';
+        badge.style.pointerEvents = 'none';
+        document.body.appendChild(badge);
+    }
+
+    function wrapSearchNotificationForAdminDevice() {
+        if (!isAdminDeviceOptOut()) return false;
+        if (typeof window.sendSearchNotification !== 'function') return false;
+        if (window.sendSearchNotification.__adminOptOutWrapped) return true;
+
+        const originalSendSearchNotification = window.sendSearchNotification;
+        window.sendSearchNotification = async function adminOptOutSendSearchNotification(details, pageName) {
+            console.info('管理者モードのため，検索通知・検索履歴記録を送信しません。', { details, pageName });
+            return undefined;
+        };
+        window.sendSearchNotification.__adminOptOutWrapped = true;
+        window.sendSearchNotification.__originalSendSearchNotification = originalSendSearchNotification;
+        return true;
+    }
+
+    function installAdminSearchNotificationGuard() {
+        if (!isAdminDeviceOptOut()) return;
+        wrapSearchNotificationForAdminDevice();
+        window.setTimeout(wrapSearchNotificationForAdminDevice, 0);
+        window.setTimeout(wrapSearchNotificationForAdminDevice, 250);
+        window.setTimeout(wrapSearchNotificationForAdminDevice, 1000);
+    }
+
+    applyAdminDeviceUrlCommand();
+    disableGoogleAnalyticsForAdminDevice();
+
+    window.isAdminDeviceOptOut = isAdminDeviceOptOut;
+    window.setAdminDeviceOptOut = function (enabled) {
+        const changed = setAdminDeviceOptOut(Boolean(enabled));
+        disableGoogleAnalyticsForAdminDevice();
+        return changed;
+    };
+
+    document.addEventListener('DOMContentLoaded', function () {
+        disableGoogleAnalyticsForAdminDevice();
+        installAdminModeBadge();
+        installAdminSearchNotificationGuard();
+    });
+    window.addEventListener('load', installAdminSearchNotificationGuard);
 
     function normalizeAnalyticsPath(pathname) {
         const path = String(pathname || '').split(/[?#]/, 1)[0] || '/';
@@ -47,7 +166,7 @@
         window.__searchPageMoveTrackingInstalled = true;
 
         document.addEventListener('click', function (event) {
-            if (event.defaultPrevented) return;
+            if (event.defaultPrevented || isAdminDeviceOptOut()) return;
 
             const link = event.target.closest && event.target.closest('a[href]');
             if (!link || link.hasAttribute('download')) return;
@@ -78,8 +197,6 @@
                     payload.search_term = searchTerm;
                 }
 
-                // This click sends only the movement event. Search-result events are
-                // sent later, after the destination page finishes the actual search.
                 window.gtag('event', 'search_page_move', payload);
             } catch (error) {
                 // Analytics must never prevent navigation.
