@@ -3,6 +3,7 @@ const path = require('path');
 
 const ROOT = path.resolve(__dirname, '..');
 const GTAG_SRC = 'https://www.googletagmanager.com/gtag/js?id=G-ZT6MPW5MNG';
+const GTAG_MARKER = '<!-- Google tag (gtag.js) -->';
 const GENERATOR_PATH = path.join(ROOT, 'src', 'generate_dic_html.js');
 
 function escapeRegExp(value) {
@@ -43,19 +44,27 @@ function makeGtagLineRegex() {
   );
 }
 
+function insertBeforeGoogleTag(text, tag, label) {
+  const gtagLine = makeGtagLineRegex();
+  if (gtagLine.test(text)) {
+    return text.replace(gtagLine, `${tag}\n$1`);
+  }
+
+  const markerRegex = new RegExp(`(^[ \\t]*${escapeRegExp(GTAG_MARKER)}[ \\t]*$)`, 'm');
+  if (markerRegex.test(text)) {
+    return text.replace(markerRegex, `$1\n${tag}`);
+  }
+
+  throw new Error(`Google tag bootstrap not found in ${label}`);
+}
+
 function patchHtml(file) {
   let text = fs.readFileSync(file, 'utf8');
   if (!text.includes(GTAG_SRC)) return false;
 
   const tag = analyticsTagFor(file);
   text = removeAnalyticsTags(text);
-
-  const gtagLine = makeGtagLineRegex();
-  if (!gtagLine.test(text)) {
-    throw new Error(`Google tag script line not found in ${path.relative(ROOT, file)}`);
-  }
-
-  text = text.replace(gtagLine, `${tag}\n$1`);
+  text = insertBeforeGoogleTag(text, tag, path.relative(ROOT, file));
   fs.writeFileSync(file, text, 'utf8');
   return true;
 }
@@ -66,18 +75,16 @@ function patchDictionaryGenerator() {
   if (!text.includes(GTAG_SRC)) return false;
 
   text = removeAnalyticsTags(text);
-  const tag = '<script src="js/analytics.js"></script>';
-  const gtagLine = makeGtagLineRegex();
-  if (!gtagLine.test(text)) {
-    throw new Error('Google tag script line not found in src/generate_dic_html.js');
-  }
-  text = text.replace(gtagLine, `${tag}\n$1`);
+  text = insertBeforeGoogleTag(
+    text,
+    '<script src="js/analytics.js"></script>',
+    'src/generate_dic_html.js'
+  );
   fs.writeFileSync(GENERATOR_PATH, text, 'utf8');
   return true;
 }
 
-function validateHtml(file) {
-  const text = fs.readFileSync(file, 'utf8');
+function validateText(text, label) {
   if (!text.includes(GTAG_SRC)) return;
   const candidates = [
     text.indexOf('src="js/analytics.js"'),
@@ -87,7 +94,7 @@ function validateHtml(file) {
   const analyticsIndex = candidates.length ? Math.min(...candidates) : -1;
   const gtagIndex = text.indexOf(GTAG_SRC);
   if (analyticsIndex < 0 || analyticsIndex > gtagIndex) {
-    throw new Error(`analytics.js must load before gtag in ${path.relative(ROOT, file)}`);
+    throw new Error(`analytics.js must load before gtag in ${label}`);
   }
 }
 
@@ -98,14 +105,11 @@ for (const file of htmlFiles) {
 }
 patchDictionaryGenerator();
 
-for (const file of htmlFiles) validateHtml(file);
+for (const file of htmlFiles) {
+  validateText(fs.readFileSync(file, 'utf8'), path.relative(ROOT, file));
+}
 if (fs.existsSync(GENERATOR_PATH)) {
-  const generator = fs.readFileSync(GENERATOR_PATH, 'utf8');
-  const analyticsIndex = generator.indexOf('src="js/analytics.js"');
-  const gtagIndex = generator.indexOf(GTAG_SRC);
-  if (gtagIndex >= 0 && (analyticsIndex < 0 || analyticsIndex > gtagIndex)) {
-    throw new Error('analytics.js must load before gtag in src/generate_dic_html.js');
-  }
+  validateText(fs.readFileSync(GENERATOR_PATH, 'utf8'), 'src/generate_dic_html.js');
 }
 
 console.log(`Admin opt-out bootstrap normalized in ${patched} HTML files.`);
