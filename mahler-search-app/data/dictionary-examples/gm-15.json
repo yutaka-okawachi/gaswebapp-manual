@@ -658,6 +658,13 @@
     "data": "M-8-t2-1280-hp&"
   },
   {
+    "__exampleOrder": 1550,
+    "de": "N. B. Alle diese, wie die folgenden Modificationen des Tempo unmerklich ausführen!",
+    "de_normalized": "n. b. alle diese, wie die folgenden modificationen des tempo unmerklich ausfuehren!",
+    "ja": "注意：以下のテンポの変化も同様に，これらすべてはさりげなく行うこと",
+    "data": "M-7-5-220-all&"
+  },
+  {
     "__exampleOrder": 1566,
     "de": "Nachlassend",
     "de_normalized": "nachlassend",

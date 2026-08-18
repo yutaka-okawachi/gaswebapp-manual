@@ -693,11 +693,11 @@
     "data": "M-8-t2-906-alt1&M-8-t2-1025-alt1&"
   },
   {
-    "__exampleOrder": 1558,
-    "de": "N.B. Zum 2. Viertel ausholen!",
-    "de_normalized": "n.b. zum 2. viertel ausholen!",
-    "ja": "注意：2拍目は身構えること！",
-    "data": "M-7-1-478-all&"
+    "__exampleOrder": 1552,
+    "de": "N. B. Anmerkung für den Dirigenten: Zum 2. Viertel ganzes Orchester ausholen.",
+    "de_normalized": "n. b. anmerkung fuer den dirigenten: zum 2. viertel ganzes orchester ausholen.",
+    "ja": "指揮者への注意：全オーケストラは2拍目に向けて身構える",
+    "data": "M-6-1-111-dir&"
   },
   {
     "__exampleOrder": 1570,

@@ -658,6 +658,13 @@
     "data": "M-7-4-187-hr&"
   },
   {
+    "__exampleOrder": 1559,
+    "de": "N. B. フェルマータ記号 bedeuten keinen Halt, sondern nur eine unbedeutende Dehnung; ebenso ist 'drängend' nur eine Direktive zur Phrasierung und sehr diskret auszuführen.",
+    "de_normalized": "n. b. フェルマータ記号 bedeuten keinen halt, sondern nur eine unbedeutende dehnung; ebenso ist 'draengend' nur eine direktive zur phrasierung und sehr diskret auszufuehren.",
+    "ja": "注意：フェルマータの記号は休止を意味するのではなく，わずかに引き伸ばすだけ．同様に「drängend（切迫して）」は単なるフレージングについての指示で控えめに演奏する．",
+    "data": "M-7-1-118-v1,v2&M-7-1-119-v1,v2,va,vc&"
+  },
+  {
     "__exampleOrder": 1562,
     "de": "Nachgeben",
     "de_normalized": "nachgeben",
