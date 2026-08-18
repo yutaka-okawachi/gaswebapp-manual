@@ -38,7 +38,10 @@ function generateDicTermsIndex(dicData) {
     if (german && typeof german === 'string') {
       const normalizedId = normalizeForId(german);
       if (normalizedId && !termsIndex[normalizedId]) {
-        termsIndex[normalizedId] = `term-${normalizedId}`;
+        const termId = `term-${normalizedId}`;
+        termsIndex[normalizedId] = german.includes('.')
+          ? { id: termId, original: german }
+          : termId;
       }
     }
   });
@@ -172,15 +175,61 @@ function linkAbbreviationsInSource(source, abbreviationIndex, termId) {
  * @param {string} normalizedTerm - 正規化された用語
  * @return {string} 正規表現パターン
  */
-function generateTermPattern(normalizedTerm) {
-  if (!normalizedTerm) return null;
-  let pattern = normalizedTerm;
-  pattern = pattern.split('ae').join('(?:ae|ä)');
-  pattern = pattern.split('oe').join('(?:oe|ö)');
-  pattern = pattern.split('ue').join('(?:ue|ü)');
-  pattern = pattern.split('ss').join('(?:ss|ß)');
-  pattern = pattern.split('-').join('[\\s\\-]?');
+function generateOriginalTermPattern(originalTerm) {
+  if (!originalTerm) return null;
+  const source = escapeHtml(originalTerm).toLowerCase().trim();
+  let pattern = '';
+
+  for (let i = 0; i < source.length; i++) {
+    const char = source[i];
+    if (/\s/.test(char)) {
+      while (i + 1 < source.length && /\s/.test(source[i + 1])) i++;
+      pattern += '[\\s\\-]*';
+    } else if (char === '.') {
+      pattern += '\\.?';
+    } else if (char === '-') {
+      pattern += '[\\s\\-]?';
+    } else if (char === ',') {
+      pattern += '[,;:]?';
+    } else if (char === 'ä') {
+      pattern += '(?:ae|ä)';
+    } else if (char === 'ö') {
+      pattern += '(?:oe|ö)';
+    } else if (char === 'ü') {
+      pattern += '(?:ue|ü)';
+    } else if (char === 'ß') {
+      pattern += '(?:ss|ß)';
+    } else {
+      pattern += char.replace(/[\\^$*+?()[\]{}|]/g, '\\$&');
+    }
+  }
+
   return pattern;
+}
+
+function generateTermPattern(normalizedTerm, originalTerm) {
+  if (!normalizedTerm) return null;
+  const abbreviationSegments = normalizedTerm.split('-');
+  const isDottedAbbreviation =
+    abbreviationSegments.length > 1 &&
+    abbreviationSegments.some(segment => segment.length === 1) &&
+    abbreviationSegments.every(segment => /^[a-z0-9]{1,3}$/i.test(segment));
+  let pattern;
+  if (isDottedAbbreviation) {
+    pattern = abbreviationSegments
+      .map(segment => `${segment}\\.?`)
+      .join('[\\s,;:\\-]*');
+  } else {
+    pattern = normalizedTerm;
+    pattern = pattern.split('ae').join('(?:ae|ä)');
+    pattern = pattern.split('oe').join('(?:oe|ö)');
+    pattern = pattern.split('ue').join('(?:ue|ü)');
+    pattern = pattern.split('ss').join('(?:ss|ß)');
+    pattern = pattern.split('-').join('[\\s\\-]?');
+  }
+
+  const originalPattern = generateOriginalTermPattern(originalTerm);
+  return originalPattern ? `(?:${originalPattern}|${pattern})` : pattern;
 }
 
 /**
@@ -199,9 +248,11 @@ function linkTermsInTranslation(text, termsIndex) {
   const placeholders = [];
   
   terms.forEach((term) => {
-    if (term.length < 3) return;
-    const termId = termsIndex[term];
-    const termPattern = generateTermPattern(term);
+    const termEntry = termsIndex[term];
+    const termId = typeof termEntry === 'string' ? termEntry : termEntry && termEntry.id;
+    const originalTerm = typeof termEntry === 'object' && termEntry ? termEntry.original : '';
+    if (Math.max(term.length, originalTerm.length) < 3 || !termId) return;
+    const termPattern = generateTermPattern(term, originalTerm);
     if (!termPattern) return;
     
     try {

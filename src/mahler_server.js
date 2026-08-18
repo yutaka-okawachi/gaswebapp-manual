@@ -52,15 +52,61 @@ function normalizeForId(term) {
 /**
  * 正規化された用語から正規表現パターンを生成
  */
-function generateTermPattern(normalizedTerm) {
-  if (!normalizedTerm) return null;
-  let pattern = normalizedTerm;
-  pattern = pattern.split('ae').join('(?:ae|ä)');
-  pattern = pattern.split('oe').join('(?:oe|ö)');
-  pattern = pattern.split('ue').join('(?:ue|ü)');
-  pattern = pattern.split('ss').join('(?:ss|ß)');
-  pattern = pattern.split('-').join('[\\s\\-]?');
+function generateOriginalTermPattern(originalTerm) {
+  if (!originalTerm) return null;
+  const source = escapeHtml(originalTerm).toLowerCase().trim();
+  let pattern = '';
+
+  for (let i = 0; i < source.length; i++) {
+    const char = source[i];
+    if (/\s/.test(char)) {
+      while (i + 1 < source.length && /\s/.test(source[i + 1])) i++;
+      pattern += '[\\s\\-]*';
+    } else if (char === '.') {
+      pattern += '\\.?';
+    } else if (char === '-') {
+      pattern += '[\\s\\-]?';
+    } else if (char === ',') {
+      pattern += '[,;:]?';
+    } else if (char === 'ä') {
+      pattern += '(?:ae|ä)';
+    } else if (char === 'ö') {
+      pattern += '(?:oe|ö)';
+    } else if (char === 'ü') {
+      pattern += '(?:ue|ü)';
+    } else if (char === 'ß') {
+      pattern += '(?:ss|ß)';
+    } else {
+      pattern += char.replace(/[\\^$*+?()[\]{}|]/g, '\\$&');
+    }
+  }
+
   return pattern;
+}
+
+function generateTermPattern(normalizedTerm, originalTerm) {
+  if (!normalizedTerm) return null;
+  const abbreviationSegments = normalizedTerm.split('-');
+  const isDottedAbbreviation =
+    abbreviationSegments.length > 1 &&
+    abbreviationSegments.some(segment => segment.length === 1) &&
+    abbreviationSegments.every(segment => /^[a-z0-9]{1,3}$/i.test(segment));
+  let pattern;
+  if (isDottedAbbreviation) {
+    pattern = abbreviationSegments
+      .map(segment => `${segment}\\.?`)
+      .join('[\\s,;:\\-]*');
+  } else {
+    pattern = normalizedTerm;
+    pattern = pattern.split('ae').join('(?:ae|ä)');
+    pattern = pattern.split('oe').join('(?:oe|ö)');
+    pattern = pattern.split('ue').join('(?:ue|ü)');
+    pattern = pattern.split('ss').join('(?:ss|ß)');
+    pattern = pattern.split('-').join('[\\s\\-]?');
+  }
+
+  const originalPattern = generateOriginalTermPattern(originalTerm);
+  return originalPattern ? `(?:${originalPattern}|${pattern})` : pattern;
 }
 
 /**
@@ -68,7 +114,7 @@ function generateTermPattern(normalizedTerm) {
  */
 function getDicTermsIndex() {
   const cache = CacheService.getScriptCache();
-  const cached = cache.get('dic_terms_index_v1');
+  const cached = cache.get('dic_terms_index_v2');
   if (cached) return JSON.parse(cached);
 
   const ss = SpreadsheetApp.openById(SPREADSHEET_ID);
@@ -81,10 +127,13 @@ function getDicTermsIndex() {
     const german = data[i][0];
     if (german) {
       const id = normalizeForId(german);
-      index[id] = `term-${id}`;
+      const termId = `term-${id}`;
+      index[id] = String(german).includes('.')
+        ? { id: termId, original: String(german) }
+        : termId;
     }
   }
-  cache.put('dic_terms_index_v1', JSON.stringify(index), 21600);
+  cache.put('dic_terms_index_v2', JSON.stringify(index), 21600);
   return index;
 }
 
@@ -103,9 +152,11 @@ function linkTermsInTranslation(text) {
   const placeholders = [];
   
   sortedTerms.forEach((term) => {
-    if (term.length < 3) return;
-    const termId = termsIndex[term];
-    const termPattern = generateTermPattern(term);
+    const termEntry = termsIndex[term];
+    const termId = typeof termEntry === 'string' ? termEntry : termEntry && termEntry.id;
+    const originalTerm = typeof termEntry === 'object' && termEntry ? termEntry.original : '';
+    if (Math.max(term.length, originalTerm.length) < 3 || !termId) return;
+    const termPattern = generateTermPattern(term, originalTerm);
     if (!termPattern) return;
     
     try {

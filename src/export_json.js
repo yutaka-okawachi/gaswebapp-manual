@@ -5,7 +5,8 @@ function exportAllDataToJson() {
     const cache = CacheService.getScriptCache();
     const cacheKeys = [
         'mahler_data_v2', 'richard_strauss_data_v2', 'richard_wagner_data_v2',
-        'rw_de_terms_cache_v2', 'rs_de_terms_cache_v2', 'whom_options_v1', 'dic_terms_index_v1'
+        'rw_de_terms_cache_v2', 'rs_de_terms_cache_v2', 'whom_options_v1',
+        'dic_terms_index_v1', 'dic_terms_index_v2'
     ];
     cacheKeys.forEach(key => {
         // 通常のキャッシュ削除
@@ -227,6 +228,7 @@ function exportAllDataToJson() {
 
     // キャッシュを無効化（サーバーサイド検索用）
     CacheService.getScriptCache().remove('dic_terms_index_v1');
+    CacheService.getScriptCache().remove('dic_terms_index_v2');
 
     // GitHubへ直接プッシュ（Google Drive不要）
     const files = {
