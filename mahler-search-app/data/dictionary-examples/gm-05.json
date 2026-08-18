@@ -714,11 +714,18 @@
     "data": "M-a-1-16-ten&"
   },
   {
-    "__exampleOrder": 1554,
-    "de": "N. B. Die ten. haben hier die Bedeutung eines Kleinen Haltes mit vorausgehender geringfügiger Beschleunigung.",
-    "de_normalized": "n. b. die ten. haben hier die bedeutung eines kleinen haltes mit vorausgehender geringfuegiger beschleunigung.",
-    "ja": "注意：ここではテヌートは，先行してほんのわずかに（前の音符の）テンポを速めることで，音符を少し保持することを意味する．",
-    "data": "M-6-1-359-all&M-6-1-360-all&M-6-1-361-all&"
+    "__exampleOrder": 1553,
+    "de": "N.B. ausholen zum 2. Viertel",
+    "de_normalized": "n.b. ausholen zum 2. viertel",
+    "ja": "注意：2拍目は身構えて",
+    "data": "M-7-1-128-all&M-7-1-132-all&"
+  },
+  {
+    "__exampleOrder": 1556,
+    "de": "N.B. In diese beiden Takten die mit pp bezeichneten Noten sehr flüchtig.",
+    "de_normalized": "n.b. in diese beiden takten die mit pp bezeichneten noten sehr fluechtig.",
+    "ja": "注意：この2小節ではppのついた音はたいへん素早く",
+    "data": "M-7-5-333-all&"
   },
   {
     "__exampleOrder": 1561,
@@ -1041,13 +1048,6 @@
     "de_normalized": "vorwaerts gehen",
     "ja": "前へ進む",
     "data": "M-3-6-75-all&"
-  },
-  {
-    "__exampleOrder": 2357,
-    "de": "Waldhörner m. Dpf.",
-    "de_normalized": "waldhoerner m. dpf.",
-    "ja": "Waldhornはミュートをつけて",
-    "data": "M-b1-t3-175-whr&M-b1-t3-184-whr&"
   },
   {
     "__exampleOrder": 2366,

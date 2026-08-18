@@ -504,6 +504,20 @@
     "data": "M-2-5-699-tr&M-b2-t2-112-hr&"
   },
   {
+    "__exampleOrder": 1552,
+    "de": "N.B. Anmerkung für den Dirigenten: Zum 2. Viertel ganzes Orchester ausholen.",
+    "de_normalized": "n.b. anmerkung fuer den dirigenten: zum 2. viertel ganzes orchester ausholen.",
+    "ja": "指揮者への注意：全オーケストラは2拍目に向けて身構える",
+    "data": "M-6-1-111-dir&"
+  },
+  {
+    "__exampleOrder": 1559,
+    "de": "N.B. フェルマータ記号 bedeuten keinen Halt, sondern nur eine unbedeutende Dehnung; ebenso ist 'drängend' nur eine Direktive zur Phrasierung und sehr diskret auszuführen.",
+    "de_normalized": "n.b. フェルマータ記号 bedeuten keinen halt, sondern nur eine unbedeutende dehnung; ebenso ist 'draengend' nur eine direktive zur phrasierung und sehr diskret auszufuehren.",
+    "ja": "注意：フェルマータの記号は休止を意味するのではなく，わずかに引き伸ばすだけ．同様に「drängend（切迫して）」は単なるフレージングについての指示で控えめに演奏する．",
+    "data": "M-7-1-118-v1,v2&M-7-1-119-v1,v2,va,vc&"
+  },
+  {
     "__exampleOrder": 1579,
     "de": "NB. An dieser Stelle wirken die Posaunen, Violinen und Viol. nur im Notfalle mit, wenn es gilt den Chor vor 'Fallen' zu bewahren.",
     "de_normalized": "nb. an dieser stelle wirken die posaunen, violinen und viol. nur im notfalle mit, wenn es gilt den chor vor 'fallen' zu bewahren.",

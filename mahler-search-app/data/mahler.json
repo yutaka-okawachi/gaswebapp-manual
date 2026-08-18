@@ -6972,8 +6972,8 @@
     "data": "M-2-1-384-all&M-6-4-808-all&"
   },
   {
-    "de": "immer m. Dpf.",
-    "de_normalized": "immer m. dpf.",
+    "de": "immer m.Dpf.",
+    "de_normalized": "immer m.dpf.",
     "ja": "変わらずミュートをつけたままで",
     "data": "M-d-d01-33-v1,v2,va,vc,kb&"
   },
@@ -8298,8 +8298,8 @@
     "data": "M-3-5-1-all&"
   },
   {
-    "de": "m. d.",
-    "de_normalized": "m. d.",
+    "de": "m.d.",
+    "de_normalized": "m.d.",
     "ja": "右手で",
     "data": "M-8-t2-808-cel,klv&M-8-t2-850-klv&"
   },
@@ -8310,8 +8310,8 @@
     "data": "M-5-3-604-tr&"
   },
   {
-    "de": "m. Dpf.",
-    "de_normalized": "m. dpf.",
+    "de": "m.Dpf.",
+    "de_normalized": "m.dpf.",
     "ja": "ミュートをつけて",
     "data": "M-5-2-59-tr&M-b1-t1-405-hr&M-b1-t2-131-hr&M-b1-t2-133-hr&M-b1-t2-227-hr&M-b1-t2-316-hr&M-b1-t2-318-hr&M-b1-t2-402-hr&M-b1-t2-440-tr&M-d-d01-1-vc&M-d-d01-3-va,kb&M-d-d01-4-v1,v2&M-d-d01-5-tr&M-d-d01-68-tr&M-d-d01-90-v1,v2,va,vc&M-d-d01-105-kb&M-d-d04-10-v1&M-d-d04-21-v2&M-d-d04-33-hr&M-d-d04-39-v1,v2,va,vc&M-d-d04-47-v1&M-d-d04-48-vc&M-d-d04-50-va&M-d-d04-61-sv&M-d-d04-64-vc&M-d-d04-67-va,vc,kb&M-d-d04-72-v1,v2,kb&M-d-d04-80-v1,v2,vc&M-d-d04-81-va&M-d-d04-109-kb&M-d-d04-112-hr&M-d-d04-113-v1,v2,va,vc&M-d-d04-124-v1&M-d-d04-125-va&M-d-d04-127-v2&M-d-d04-132-vc&M-d-d06-0-v1,v2,va,vc&M-d-d06-1-v1,v2,va,vc&M-d-d06-49-tr&M-d-d07-1-v1,v2,va,vc&M-d-d07-2-kb&M-d-d07-60-sv&M-d-d10-24-tr&M-d-d10-40-tr&M-d-d11-2-tr&M-d-d11-17-v1,v2,va&M-d-d11-19-vc&M-d-d11-30-tr&M-d-d11-100-tr&M-d-d12-1-hr&M-d-d12-17-tr,vc&M-d-d12-19-va&M-d-d12-39-v1,v2&M-d-d12-40-kb&M-d-d12-116-v1,v2&M-d-d12-139-va,vc,kb&M-d-d12-140-tr&M-d-d13-122-tr&M-d-d13-140-tr&M-d-d13-155-hr&M-d-d13-169-tr&M-d-d13-170-tr&M-d-d14-4-hr&M-d-d14-94-vc&M-d-d14-95-vc&"
   },
@@ -8322,8 +8322,8 @@
     "data": "M-5-2-531-pau,bec&"
   },
   {
-    "de": "m. s.",
-    "de_normalized": "m. s.",
+    "de": "m.s.",
+    "de_normalized": "m.s.",
     "ja": "左手で",
     "data": "M-8-t2-808-cel,klv&M-8-t2-850-klv&"
   },
@@ -9294,68 +9294,68 @@
     "data": "M-b1-t1-380-chor&"
   },
   {
-    "de": "N. B. ↓ Zum Schlag ausholen!",
-    "de_normalized": "n. b. ↓ zum schlag ausholen!",
+    "de": "N.B. ↓ Zum Schlag ausholen!",
+    "de_normalized": "n.b. ↓ zum schlag ausholen!",
     "ja": "注意：↓の記号で身構えること！",
     "data": "M-7-1-466-all&"
   },
   {
-    "de": "N. B. Alle diese, wie die folgenden Modificationen des Tempo unmerklich ausführen!",
-    "de_normalized": "n. b. alle diese, wie die folgenden modificationen des tempo unmerklich ausfuehren!",
+    "de": "N.B. Alle diese, wie die folgenden Modificationen des Tempo unmerklich ausführen!",
+    "de_normalized": "n.b. alle diese, wie die folgenden modificationen des tempo unmerklich ausfuehren!",
     "ja": "注意：以下のテンポの変化も同様に，これらすべてはさりげなく行うこと",
     "data": "M-7-5-220-all&"
   },
   {
-    "de": "N. B. Alle Vorschläge stets vor dem betreffenden Taktteil",
-    "de_normalized": "n. b. alle vorschlaege stets vor dem betreffenden taktteil",
+    "de": "N.B. Alle Vorschläge stets vor dem betreffenden Taktteil",
+    "de_normalized": "n.b. alle vorschlaege stets vor dem betreffenden taktteil",
     "ja": "注意：すべての前打音は常に該当する拍の前に出す",
     "data": "M-7-2-1-all&"
   },
   {
-    "de": "N. B. Anmerkung für den Dirigenten: Zum 2. Viertel ganzes Orchester ausholen.",
-    "de_normalized": "n. b. anmerkung fuer den dirigenten: zum 2. viertel ganzes orchester ausholen.",
+    "de": "N.B. Anmerkung für den Dirigenten: Zum 2. Viertel ganzes Orchester ausholen.",
+    "de_normalized": "n.b. anmerkung fuer den dirigenten: zum 2. viertel ganzes orchester ausholen.",
     "ja": "指揮者への注意：全オーケストラは2拍目に向けて身構える",
     "data": "M-6-1-111-dir&"
   },
   {
-    "de": "N. B. ausholen zum 2. Viertel",
-    "de_normalized": "n. b. ausholen zum 2. viertel",
+    "de": "N.B. ausholen zum 2. Viertel",
+    "de_normalized": "n.b. ausholen zum 2. viertel",
     "ja": "注意：2拍目は身構えて",
     "data": "M-7-1-128-all&M-7-1-132-all&"
   },
   {
-    "de": "N. B. Die ten. haben hier die Bedeutung eines Kleinen Haltes mit vorausgehender geringfügiger Beschleunigung.",
-    "de_normalized": "n. b. die ten. haben hier die bedeutung eines kleinen haltes mit vorausgehender geringfuegiger beschleunigung.",
+    "de": "N.B. Die ten. haben hier die Bedeutung eines Kleinen Haltes mit vorausgehender geringfügiger Beschleunigung.",
+    "de_normalized": "n.b. die ten. haben hier die bedeutung eines kleinen haltes mit vorausgehender geringfuegiger beschleunigung.",
     "ja": "注意：ここではテヌートは，先行してほんのわずかに（前の音符の）テンポを速めることで，音符を少し保持することを意味する．",
     "data": "M-6-1-359-all&M-6-1-360-all&M-6-1-361-all&"
   },
   {
-    "de": "N. B. Ein solcher Strich '\\' '/' zwischen 2 Noten bedeuter stets portament(gliss. )",
-    "de_normalized": "n. b. ein solcher strich '\\' '/' zwischen 2 noten bedeuter stets portament(gliss. )",
+    "de": "N.B. Ein solcher Strich '\\' '/' zwischen 2 Noten bedeuter stets portament(gliss. )",
+    "de_normalized": "n.b. ein solcher strich '\\' '/' zwischen 2 noten bedeuter stets portament(gliss. )",
     "ja": "注意：2音間の「\\」「/」のような線は，常にポルタメント（グリッサンド）を意味する",
     "data": "M-6-1-127-dir&"
   },
   {
-    "de": "N. B. In diese beiden Takten die mit pp bezeichneten Noten sehr flüchtig.",
-    "de_normalized": "n. b. in diese beiden takten die mit pp bezeichneten noten sehr fluechtig.",
+    "de": "N.B. In diese beiden Takten die mit pp bezeichneten Noten sehr flüchtig.",
+    "de_normalized": "n.b. in diese beiden takten die mit pp bezeichneten noten sehr fluechtig.",
     "ja": "注意：この2小節ではppのついた音はたいへん素早く",
     "data": "M-7-5-333-all&"
   },
   {
-    "de": "N. B. Wenn die B-Cl. nicht mit der tiefen Es-Klappe versehen sind, so müßte die ganze Stelle von zwei Takte vor 260 an auf A-Cl. geblasen werden.",
-    "de_normalized": "n. b. wenn die b-cl. nicht mit der tiefen es-klappe versehen sind, so muesste die ganze stelle von zwei takte vor 260 an auf a-cl. geblasen werden.",
+    "de": "N.B. Wenn die B-Cl. nicht mit der tiefen Es-Klappe versehen sind, so müßte die ganze Stelle von zwei Takte vor 260 an auf A-Cl. geblasen werden.",
+    "de_normalized": "n.b. wenn die b-cl. nicht mit der tiefen es-klappe versehen sind, so muesste die ganze stelle von zwei takte vor 260 an auf a-cl. geblasen werden.",
     "ja": "注意：低いEsのキーのないB管クラリネットの場合は，練習番号260の2小節前からすべての箇所をA管クラリネットで奏さなければならない",
     "data": "M-7-5-311-cl&"
   },
   {
-    "de": "N. B. Zum 2. Viertel ausholen!",
-    "de_normalized": "n. b. zum 2. viertel ausholen!",
+    "de": "N.B. Zum 2. Viertel ausholen!",
+    "de_normalized": "n.b. zum 2. viertel ausholen!",
     "ja": "注意：2拍目は身構えること！",
     "data": "M-7-1-478-all&"
   },
   {
-    "de": "N. B. フェルマータ記号 bedeuten keinen Halt, sondern nur eine unbedeutende Dehnung; ebenso ist 'drängend' nur eine Direktive zur Phrasierung und sehr diskret auszuführen.",
-    "de_normalized": "n. b. フェルマータ記号 bedeuten keinen halt, sondern nur eine unbedeutende dehnung; ebenso ist 'draengend' nur eine direktive zur phrasierung und sehr diskret auszufuehren.",
+    "de": "N.B. フェルマータ記号 bedeuten keinen Halt, sondern nur eine unbedeutende Dehnung; ebenso ist 'drängend' nur eine Direktive zur Phrasierung und sehr diskret auszuführen.",
+    "de_normalized": "n.b. フェルマータ記号 bedeuten keinen halt, sondern nur eine unbedeutende dehnung; ebenso ist 'draengend' nur eine direktive zur phrasierung und sehr diskret auszufuehren.",
     "ja": "注意：フェルマータの記号は休止を意味するのではなく，わずかに引き伸ばすだけ．同様に「drängend（切迫して）」は単なるフレージングについての指示で控えめに演奏する．",
     "data": "M-7-1-118-v1,v2&M-7-1-119-v1,v2,va,vc&"
   },
@@ -14142,8 +14142,8 @@
     "data": "M-6-4-516-all&M-d-d04-99-all&"
   },
   {
-    "de": "Waldhörner m. Dpf.",
-    "de_normalized": "waldhoerner m. dpf.",
+    "de": "Waldhörner m.Dpf.",
+    "de_normalized": "waldhoerner m.dpf.",
     "ja": "Waldhornはミュートをつけて",
     "data": "M-b1-t3-175-whr&M-b1-t3-184-whr&"
   },

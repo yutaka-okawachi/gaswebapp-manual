@@ -505,8 +505,8 @@
   },
   {
     "__exampleOrder": 1162,
-    "de": "immer m. Dpf.",
-    "de_normalized": "immer m. dpf.",
+    "de": "immer m.Dpf.",
+    "de_normalized": "immer m.dpf.",
     "ja": "変わらずミュートをつけたままで",
     "data": "M-d-d01-33-v1,v2,va,vc,kb&"
   },
@@ -665,18 +665,11 @@
     "data": "M-f-f4-74-all&"
   },
   {
-    "__exampleOrder": 1549,
-    "de": "N. B. ↓ Zum Schlag ausholen!",
-    "de_normalized": "n. b. ↓ zum schlag ausholen!",
-    "ja": "注意：↓の記号で身構えること！",
-    "data": "M-7-1-466-all&"
-  },
-  {
-    "__exampleOrder": 1551,
-    "de": "N. B. Alle Vorschläge stets vor dem betreffenden Taktteil",
-    "de_normalized": "n. b. alle vorschlaege stets vor dem betreffenden taktteil",
-    "ja": "注意：すべての前打音は常に該当する拍の前に出す",
-    "data": "M-7-2-1-all&"
+    "__exampleOrder": 1555,
+    "de": "N.B. Ein solcher Strich '\\' '/' zwischen 2 Noten bedeuter stets portament(gliss. )",
+    "de_normalized": "n.b. ein solcher strich '\\' '/' zwischen 2 noten bedeuter stets portament(gliss. )",
+    "ja": "注意：2音間の「\\」「/」のような線は，常にポルタメント（グリッサンド）を意味する",
+    "data": "M-6-1-127-dir&"
   },
   {
     "__exampleOrder": 1573,

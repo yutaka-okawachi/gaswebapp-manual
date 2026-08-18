@@ -630,13 +630,6 @@
     "data": "M-3-5-1-all&"
   },
   {
-    "__exampleOrder": 1387,
-    "de": "m. s.",
-    "de_normalized": "m. s.",
-    "ja": "左手で",
-    "data": "M-8-t2-808-cel,klv&M-8-t2-850-klv&"
-  },
-  {
     "__exampleOrder": 1409,
     "de": "mf aber marcato",
     "de_normalized": "mf aber marcato",
@@ -677,6 +670,13 @@
     "de_normalized": "mit triangelschlaegel",
     "ja": "トライアングルのマレットで",
     "data": "M-3-3-134-bec&"
+  },
+  {
+    "__exampleOrder": 1554,
+    "de": "N.B. Die ten. haben hier die Bedeutung eines Kleinen Haltes mit vorausgehender geringfügiger Beschleunigung.",
+    "de_normalized": "n.b. die ten. haben hier die bedeutung eines kleinen haltes mit vorausgehender geringfuegiger beschleunigung.",
+    "ja": "注意：ここではテヌートは，先行してほんのわずかに（前の音符の）テンポを速めることで，音符を少し保持することを意味する．",
+    "data": "M-6-1-359-all&M-6-1-360-all&M-6-1-361-all&"
   },
   {
     "__exampleOrder": 1572,

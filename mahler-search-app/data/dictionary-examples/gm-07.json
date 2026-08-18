@@ -595,6 +595,13 @@
     "data": "M-5-2-531-pau,bec&"
   },
   {
+    "__exampleOrder": 1387,
+    "de": "m.s.",
+    "de_normalized": "m.s.",
+    "ja": "左手で",
+    "data": "M-8-t2-808-cel,klv&M-8-t2-850-klv&"
+  },
+  {
     "__exampleOrder": 1390,
     "de": "m. Schwschl.",
     "de_normalized": "m. schwschl.",
@@ -663,13 +670,6 @@
     "de_normalized": "molto devoto",
     "ja": "たいへん敬虔に，祈りをこめて",
     "data": "M-8-t2-724-all&"
-  },
-  {
-    "__exampleOrder": 1553,
-    "de": "N. B. ausholen zum 2. Viertel",
-    "de_normalized": "n. b. ausholen zum 2. viertel",
-    "ja": "注意：2拍目は身構えて",
-    "data": "M-7-1-128-all&M-7-1-132-all&"
   },
   {
     "__exampleOrder": 1564,
