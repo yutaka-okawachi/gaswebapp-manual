@@ -92,7 +92,7 @@ assert.ok(appSource.includes("Promise.all(shardRequests)"));
   const source = read(`mahler-search-app/${fileName}`);
   assert.ok(source.includes('await loadDictionaryExampleData('), fileName);
   assert.ok(source.includes('hydrateDictionaryExampleData('), fileName);
-  assert.ok(source.includes('js/app.js?v=12'), fileName);
+  assert.ok(source.includes('js/app.js?v=13'), fileName);
 });
 
 console.log('dictionary example fast path tests: OK');
