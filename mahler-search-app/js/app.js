@@ -80,6 +80,20 @@ function trackSearchResults(options) {
 }
 window.trackSearchResults = trackSearchResults;
 
+function escapeRegExpLiteral(value) {
+    return String(value).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+function createTermHighlightRegex(normalizedQuery) {
+    let pattern = escapeRegExpLiteral(normalizedQuery);
+    pattern = pattern.split('ae').join('(?:ae|ä)');
+    pattern = pattern.split('oe').join('(?:oe|ö)');
+    pattern = pattern.split('ue').join('(?:ue|ü)');
+    pattern = pattern.split('ss').join('(?:ss|ß)');
+    return new RegExp(`(${pattern})(?![^<]*>)`, 'gi');
+}
+window.createTermHighlightRegex = createTermHighlightRegex;
+
 /**
  * Sends a search notification to the Google Apps Script Web App.
  * @param {Object} details - The search details { work, scope, term }.
@@ -1957,14 +1971,7 @@ function searchGenericTermsLocal(query, dataKey, type, resultMeta) {
         return '<div class="result-message">該当するデータが見つかりませんでした。</div>';
     }
 
-    // Create highlight regex
-    let highlightPattern = normalizedQuery;
-    highlightPattern = highlightPattern.split('ae').join('(?:ae|ä)');
-    highlightPattern = highlightPattern.split('oe').join('(?:oe|ö)');
-    highlightPattern = highlightPattern.split('ue').join('(?:ue|ü)');
-    highlightPattern = highlightPattern.split('ss').join('(?:ss|ß)');
-    
-    const highlightRegex = new RegExp(`(${highlightPattern})(?![^<]*>)`, 'gi');
+    const highlightRegex = createTermHighlightRegex(normalizedQuery);
 
     // Group by 'de' text
     const groupedByDe = filteredData.reduce((acc, row) => {

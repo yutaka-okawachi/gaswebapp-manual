@@ -984,7 +984,7 @@ assert.ok(publicAppScriptSource.includes("resultCount > 0"));
 assert.ok(publicAppScriptSource.includes("urlParams.get('source') === 'dictionary_example'"));
 assert.ok(publicAppScriptSource.includes("'view_example_search_results'"));
 publicTermSearchPages.forEach(pagePath => {
-  assert.ok(fs.readFileSync(pagePath, 'utf8').includes('js/app.js?v=13'));
+  assert.ok(fs.readFileSync(pagePath, 'utf8').includes('js/app.js?v=14'));
 });
 assert.strictEqual(
   fs.readFileSync(sourcePath, 'utf8').includes("'click_view_example'"),
