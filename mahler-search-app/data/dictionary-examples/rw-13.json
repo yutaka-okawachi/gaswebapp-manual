@@ -422,8 +422,8 @@
     "Szene": "",
     "page": 401,
     "whom": "Senta",
-    "de": "Senta hat sich mit wütender Gewalt losgerissen und erreicht ein in das  Meer vorstehendes Felsenriff; von da ruft sie mit aller Kraft dem absegelnden Holländer nach. ",
-    "de_normalized": "senta hat sich mit wuetender gewalt losgerissen und erreicht ein in das  meer vorstehendes felsenriff; von da ruft sie mit aller kraft dem absegelnden hollaender nach. ",
+    "de": "Senta hat sich mit wütender Gewalt losgerissen und erreicht ein in das  Meer vorstehendes Felsenriff; von da ruft sie mit aller Kraft dem absegelnden Holländer nach.",
+    "de_normalized": "senta hat sich mit wuetender gewalt losgerissen und erreicht ein in das  meer vorstehendes felsenriff; von da ruft sie mit aller kraft dem absegelnden hollaender nach.",
     "ja": "Senta はすさまじい力で振りほどき，海に突き出た岩礁にたどり着く．そこから彼女は力の限り，出航していく Holländer に向かって叫ぶ．",
     "楽譜情報": "Adolph Fürstner",
     "場面タイトル": "第3幕"
@@ -3960,7 +3960,7 @@
     "whom": "Gurnemanz",
     "de": "ausweichend",
     "de_normalized": "ausweichend",
-    "ja": "（答えを）はぐらかすように ",
+    "ja": "（答えを）はぐらかすように",
     "楽譜情報": "C.F. Peters",
     "場面タイトル": "第1幕"
   },

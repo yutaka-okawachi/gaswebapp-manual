@@ -2180,6 +2180,11 @@
     ""
   ],
   [
+    "hoch",
+    "(≒ high, tall, lofty, high-pitched / alto, elevato, acuto)\n【一般的な意味】\n① （空間的・物理的位置や高度が）高い，上方の\n② （数値・度合い・身分・価値などが）高い，高度な，崇高な\n③ （音や声のピッチが）高い\n【音楽用語としての訳例】\n「高く掲げて（Schalltrichter hoch 等のベルアップ指示）」，「高音で」，「高い音域で（acuto）」，「高らかに」，「崇高に」",
+    "[GM], [RW: Oper], [RS: Oper]"
+  ],
+  [
     "höhnisch",
     "(≒ scornful, mocking, derisive / beffardo, cinico)\n【一般的な意味】\n① 嘲笑的な，あざけりの，冷笑的な．\n② 侮蔑的な，馬鹿にした．\n③ 皮肉な，シニカルな．\n【音楽用語としての訳例】\n「嘲笑的に」，「あざけって」，「冷笑的に」，「皮肉を込めて」",
     "[RW: Oper], [RS: Oper]"
@@ -3045,6 +3050,11 @@
     "[K: Cap]"
   ],
   [
+    "nehmen",
+    "(≒ take, take up, pick up, receive / prendere, prendere in mano, ricevere)\n不規則動詞．三人称単数現在形は nimmt，過去形は nahm，過去分詞は genommen．  \n【一般的な意味】\n① 手に取る，つかむ，取る，受け取る\n② （物・手段・乗り物などを）選ぶ，利用する，用いる\n③ （場所・位置・姿勢・態度などを）とる\n④ 引き受ける，受け入れる\n⑤ （食物・薬などを）摂る，服用する  \n【音楽用語としての訳例】\n「〜を手に取る」，「〜を持つ」，「〜に持ち替える」，「〜を用いる」，「〜を取る」など．\n\n\"Tempo nehmen\" は「テンポをとる」，\"Stellung nehmen\" は「位置をとる」,「態度をとる」などとなる．",
+    "[GM], [RW: Oper], [RS: Oper]"
+  ],
+  [
     "nicht das leere A nehmen",
     "開放弦のAは使わない ",
     "[H: KM3]"
@@ -3068,6 +3078,11 @@
     "nie",
     "(≒ never, not ever / mai)\n【一般的な意味】\n① 決して〜ない，一度も〜ない，これまで〜ない．\n② （強調として）断じて，絶対に．",
     "[GM]"
+  ],
+  [
+    "nimmt",
+    "(≒ takes, takes up, picks up / prende, prende in mano)\nnehmen の現在形・三人称単数形\n【一般的な意味】\n① 手に取る，つかむ，受け取る\n② （物・手段などを）取る，選ぶ，利用する\n③ （姿勢・態度・立場などを）とる，引き受ける  \n【音楽用語としての訳例】\n「〜を手に取る」，「〜を持つ」，「〜に持ち替える」，「〜を取る」．\"nehmen\" の項を参照．",
+    "[GM], [RW: Oper], [RS: Oper]"
   ],
   [
     "noch",
@@ -3928,6 +3943,11 @@
     "thätig",
     "(≒ active, busy, energetic / attivo, operoso)\ntätig の古い綴り\n【一般的な意味】\n① 活動的な，動いている，活動中の．\n② 職に就いている，従事している．\n\nJ.S.Bach などの古いドイツ語の文献や楽譜において、楽器のストップや機構が「機能している（オンになっている）」状態を指すこともある．GM の交響曲第2番における \"1. 2. 3. 4. Horn in F in der Ferne; sind an den in der Partitur bemerkten Stellen mit im Orch. thätig.\" では，「最初は舞台裏や遠くで吹いているホルン奏者たちが，曲の途中の特定のタイミングからは舞台上のオーケストラ席に戻って，他の楽器と一緒に合奏に加わる．」という配置上のルールを説明している．",
     "[GM]"
+  ],
+  [
+    "tief",
+    "(≒ deep, low, profound / profondo, basso)\n【一般的な意味】\n① （空間的・物理的に）深い，奥深い\n② （位置・高度・数値・音高などが）低い\n③ （感情・思考・学識・眠りなどが）深い，深刻な，極めて強い\n【音楽用語としての訳例】\n「低音の」，「低い音域で（basso）」，「深く（profondo）」，「沈痛に」，「深々と」\n\nGM ではほとんど②の意味で用いられている．",
+    "[GM], [RW: Oper], [RS: Oper]"
   ],
   [
     "tobend",

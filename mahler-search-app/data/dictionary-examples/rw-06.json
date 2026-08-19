@@ -526,8 +526,8 @@
     "Szene": "",
     "page": 76,
     "whom": "舵手",
-    "de": "Der Steuermann fährt auf und sieht nach dem Steuer; überzeugt, dass nichts geschehen, setzt er sich wieder und brummt den Anfang seines Liedes. ",
-    "de_normalized": "der steuermann faehrt auf und sieht nach dem steuer; ueberzeugt, dass nichts geschehen, setzt er sich wieder und brummt den anfang seines liedes. ",
+    "de": "Der Steuermann fährt auf und sieht nach dem Steuer; überzeugt, dass nichts geschehen, setzt er sich wieder und brummt den Anfang seines Liedes.",
+    "de_normalized": "der steuermann faehrt auf und sieht nach dem steuer; ueberzeugt, dass nichts geschehen, setzt er sich wieder und brummt den anfang seines liedes.",
     "ja": "舵手ははっと飛び起き舵を見る．何も起こっていないことを確認し，再び座り込んで歌の冒頭を口ずさむ．",
     "楽譜情報": "Adolph Fürstner",
     "場面タイトル": "第1幕"
@@ -1241,8 +1241,8 @@
     "Szene": 3,
     "page": 70,
     "whom": "Friedrich",
-    "de": "der unverwandt sein Auge forschend auf Lohengrin geheftet hat. ",
-    "de_normalized": "der unverwandt sein auge forschend auf lohengrin geheftet hat. ",
+    "de": "der unverwandt sein Auge forschend auf Lohengrin geheftet hat.",
+    "de_normalized": "der unverwandt sein auge forschend auf lohengrin geheftet hat.",
     "ja": "Lohengrin から片時も目を離さず，探るように見つめ続けている",
     "楽譜情報": "Breitkopf & Härtel",
     "場面タイトル": "第1幕第3場"
@@ -3555,8 +3555,8 @@
     "Szene": 3,
     "page": 634,
     "whom": "Isolde",
-    "de": "Marke und Brangäne blicken während Isoldens Verklärung nicht in das Publikum, oder abseits, sondern unverwandt auf Isolde. - Brangäne immer bereit ihr beizustehen, mit schmerzlicher Verklärung; so gut wie keine Gebärden. ",
-    "de_normalized": "marke und brangaene blicken waehrend isoldens verklaerung nicht in das publikum, oder abseits, sondern unverwandt auf isolde. - brangaene immer bereit ihr beizustehen, mit schmerzlicher verklaerung; so gut wie keine gebaerden. ",
+    "de": "Marke und Brangäne blicken während Isoldens Verklärung nicht in das Publikum, oder abseits, sondern unverwandt auf Isolde. - Brangäne immer bereit ihr beizustehen, mit schmerzlicher Verklärung; so gut wie keine Gebärden.",
+    "de_normalized": "marke und brangaene blicken waehrend isoldens verklaerung nicht in das publikum, oder abseits, sondern unverwandt auf isolde. - brangaene immer bereit ihr beizustehen, mit schmerzlicher verklaerung; so gut wie keine gebaerden.",
     "ja": "Isolde の昇華の場面（死の場面）の間，Marke と Brangäne は観客や脇を見ず，Isolde から目を逸らさない．Brangäne はいつでも Isolde を支えられるよう，苦痛に満ちた浄化の表情で．ほとんど身振りはないと言ってよい．",
     "楽譜情報": "C.F. Peters",
     "場面タイトル": "第3幕第3場"

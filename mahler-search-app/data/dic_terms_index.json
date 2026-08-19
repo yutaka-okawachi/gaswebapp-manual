@@ -527,6 +527,7 @@
     "id": "term-hob",
     "original": "Hob."
   },
+  "hoch": "term-hoch",
   "hoehnisch": "term-hoehnisch",
   "hoellisch": "term-hoellisch",
   "hoerbar": "term-hoerbar",
@@ -750,6 +751,7 @@
   "neapolitanisches-volkslied": "term-neapolitanisches-volkslied",
   "nebel": "term-nebel",
   "neckisch": "term-neckisch",
+  "nehmen": "term-nehmen",
   "nicht-das-leere-a-nehmen": "term-nicht-das-leere-a-nehmen",
   "nicht-mehr": "term-nicht-mehr",
   "nicht-schleppen-ohne-jedes-pathos": "term-nicht-schleppen-ohne-jedes-pathos",
@@ -758,6 +760,7 @@
     "original": "Nicht zu schnell. Keinefalls schleppend"
   },
   "nie": "term-nie",
+  "nimmt": "term-nimmt",
   "noch": "term-noch",
   "noch-einmal": "term-noch-einmal",
   "noch-immer": "term-noch-immer",
@@ -952,6 +955,7 @@
     "original": "Tempo v.d. Introduction"
   },
   "thaetig": "term-thaetig",
+  "tief": "term-tief",
   "tobend": "term-tobend",
   "ton": "term-ton",
   "tongebung": "term-tongebung",
