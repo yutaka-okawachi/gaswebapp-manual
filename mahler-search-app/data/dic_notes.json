@@ -1795,6 +1795,16 @@
     "[H: Sere]"
   ],
   [
+    "gespr.",
+    "\"gesprochen\" の項を参照．",
+    "[RS: Oper]"
+  ],
+  [
+    "gesprochen",
+    "(≒ spoken, recited; declared / parlato, recitato)\nsprechen の過去分詞\n\n【一般的な意味】\n① 話された，語られた，口頭で述べられた\n② （動詞 sprechen の完了分詞として）話した，言葉を発した\n\n【音楽用語としての訳例】\n「話すように（パルランド / parlando）」，「語るように（レシタンド / recitando）」，「（歌わずに）台詞として話して（Sprechgesang）」",
+    "[RW: Oper], [RS: Oper]"
+  ],
+  [
     "Gestalt",
     "(≒ shape, form, figure / forma, figura)\n【一般的な意味】\n① 形，形態，外観，輪郭．\n② （人の）姿，容姿，体つき，身長．\n③ （物語などの）登場人物，キャラクター．",
     "[RS: Qui], [RW: Oper], [RS: Oper]"
@@ -2008,6 +2018,11 @@
     "halbe",
     "(≒ half, partial / mezzo, metà)\nhalb の格変化形\n【一般的な意味】\n① 半分の，部分的な，不完全な．\n② 半時間，半分．\n【音楽用語としての訳例】\n「二分音符」，「halbes Tempo」（半分のテンポ），「halbe Töne」（半音），「半分の（パートで）」，「部分的に」\n\nGM では\"Halbe taktieren\"は「2つ振り」としているが，これは「2分音符を基準にカウントする」を意訳している．",
     "[GM],  [RW: Oper], [RS: Oper]"
+  ],
+  [
+    "halblaut",
+    "(≒ half-loud, in a low voice, half-audible, sotto voce / a mezza voce, sotto voce)\n【一般的な意味】\n① （声や物音を潜めて）小声で，控えめな音量で，半分ほどの声・音量で\n② （周囲に遠慮して）低めの声の，抑えた響きの\n【音楽用語としての訳例】\n「声を潜めて」，「小声で」，「mezza voce で」，「sotto voce で」，「音量を半分ほどに抑えて」",
+    "[RS: Oper]"
   ],
   [
     "hallend",
@@ -3701,13 +3716,23 @@
   ],
   [
     "spottend",
-    "(≒ mocking, scornful, derisive / beffardo, derisorio)\nspotten の現在分詞\n【一般的な意味】\n① 嘲笑している，あざけっている，馬鹿にしている．\n② （物事が）〜に反している，対立している．\n【音楽用語としての訳例】\n「嘲笑的に」，「あざけって」，「皮肉を込めて」，「あざ笑って」\n\n直接の嘲笑より弱く，軽蔑・無関心・冷酷さを帯びた嘲笑",
+    "(≒ mocking, scornful, derisive / beffardo, derisorio)\nspotten の現在分詞\n【一般的な意味】\n① 嘲笑している，あざけっている，馬鹿にしている．\n② （物事が）〜に反している，対立している．\n【音楽用語としての訳例】\n「嘲笑しながら」，「あざけりながら」，「皮肉を込めながら」，「あざ笑いながら」\n\n直接の嘲笑より弱く，軽蔑・無関心・冷酷さを帯びた嘲笑．\"spöttisch\" の項も参照．",
+    "[RW: Oper], [RS: Oper]"
+  ],
+  [
+    "spöttisch",
+    "(≒ mocking, scornful, sarcastic, derisive / beffardo, canzonatorio, derisorio)\n【一般的な意味】\n嘲るような，皮肉な，小馬鹿にした，冷やかしの\n【音楽用語としての訳例】\n「嘲るように」，「皮肉っぽく」，「冷笑的に」，「小馬鹿にしたように」\n\n\"spottend\" の項も参照．",
     "[RW: Oper], [RS: Oper]"
   ],
   [
     "Sprachrohr",
     "(≒ speaking tube, mouthpiece, spokesman / megafono, portavoce)\n【一般的な意味】\n① （船舶などで使う）伝声管，スピーキングチューブ．\n② （意見や思想の）代弁者，広報役，伝達手段．\n③ メガホン．\n\n直訳すると「伝声管」であるが，これは\n●手に持って叫ぶ「メガホン」（拡声筒）\n●船などの「伝声管」（ブリッジから機関室に声を伝える管）\nの両方を指す．実物は細長い管の両端にラッパ型の開口部が付いたものや，真鍮製のコーン型メガホンなどである．\n\nRW では Der fliegende Holländer，Die Walküre，Siegfried に，RS では Die ägyptische Helena にその使用についての指示がある．RW や RS の作品では，これが小道具・舞台音響装置として使用され，声を遠くに，あるいは異界的に響かせるために活用された．\n\n★ 当時（19〜20世紀初頭）の使い方\nRW，RS の時代には，電気的な拡声装置が存在しなかったため，物理的な管・金属製メガホン・舞台裏の声管を用いて声を方向づけたり反響させたりした．\n●Der fliegende Holländer では Steuermann が船から呼びかける場面で，実際の船舶のメガホンに近い道具が使われた．単に手で囲ってメガホンのようにして叫ぶなどで代用したこともあっただろう．\n●Die Walküre では，呼びかけや雷鳴の中で遠方から響く声を強調するため，袖・舞台裏から金属管に向けて声を通す方法がとられた．\n●Sigfried の Fafner では RW 自身の「durch ein starkes Sprachrohr（強力なメガホンを通して）」の指定に従い，歌手は舞台裏で大型の金属管に向かって歌い，洞窟の怪物の声の“低く歪んだ響き”を作り出した．\n●Die ägyptische Helena でも舞台裏からの声・幻影的な響きを強めるために同種の装置が用いられた．\nいずれも，声の方向性・距離感・異質性を生の音響で実現するための工夫であり，当時の劇場建築と密接に連動していた．\n\n★現代の使い方\n今日では，劇場の音響設備が進化したため，Sprachrohr の扱いはプロダクションにより大きく異なる．\n●歴史的再現（アコースティック）派\n実際に金属製のメガホンや管を使用し，当時の物理的効果を模倣する．Siegfried では実物の管をセットに組み込み，歌手が内部で歌う例もある．\n●電気的処理（マイク・スピーカー）派\n歌手を舞台裏に置き，マイクで拾った声をスピーカーから出すことで距離感・反響を演出．Die ägyptische Helenaの幻想的な場面，Die Walküre の遠方から叫びなどで多用される．効果としては“現代版Sprachrohr”だが，舞台上には道具が登場しないことも多い．\n●視覚的演出を優先する派\n道具としてのメガホンは持たせるが，実際の音は電気処理で補う．演技上の説得力を重視した折衷案である．",
     "[RW: Oper], [RS: Oper]"
+  ],
+  [
+    "Sprechgesang",
+    "(≒ spoken song, speech-song / canto parlato)\n【一般的な意味】\n語るような歌唱，話し言葉と歌の中間的な歌唱法．",
+    ""
   ],
   [
     "sprühend",
@@ -4397,6 +4422,11 @@
   [
     "Vordergrund",
     "(≒ foreground / primo piano)\n【一般的な意味】\n① 前景，（舞台などの）最前部．\n② 最前面，目立つ場所，重要視される地位．\n【音楽用語としての訳例】\n「前景で」，「最前部で」，「舞台の前面で」，「（他の楽器よりも）際立って」，「前面に押し出して」\n\n対義語は \"Hintergrund\" ",
+    "[RW: Oper], [RS: Oper]"
+  ],
+  [
+    "Vorhang",
+    "(≒ curtain, stage curtain, drape / sipario, tenda)\n【一般的な意味】\n① （劇場・オペラ・舞台などの）幕，緞帳（どんちょう）\n② （窓や部屋などの）カーテン，垂れ幕\n【音楽用語としての訳例】\n「幕」，「緞帳」．\"Vorhang auf\" で「幕が上がる」．",
     "[RW: Oper], [RS: Oper]"
   ],
   [
