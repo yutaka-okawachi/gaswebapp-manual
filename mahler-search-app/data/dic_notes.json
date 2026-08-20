@@ -1,7 +1,7 @@
 [
   [
     "ab",
-    "(≒ from, off, down, away; remove / via, via da, togliere)\n【一般的な意味】\n① （時間・空間・順序の起点として）〜から，〜以降\n② （舞台・位置などから）去って，退場して，離れて\n③ （スイッチなどが）切れて，外れて\n【音楽用語としての訳例】\n「（ミュート・弱音器を）外して（Dämpfer ab / senza sordino）」，「（弱音ペダルを）離して」，「（弓を弦から）離して」，「（指定の小節・拍）から」，「（舞台から）退場して」",
+    "(≒ from, off, down, away; remove / via, via da, togliere)\n【一般的な意味】\n① （時間・空間・順序の起点として）〜から，〜以降．\n② （舞台・位置などから）去って，退場して，離れて．\n③ （スイッチなどが）切れて，外れて．\n【音楽用語としての訳例】\n「（ミュート・弱音器を）外して（Dämpfer ab / senza sordino）」，「（弱音ペダルを）離して」，「（弓を弦から）離して」，「（指定の小節・拍）から」，「（舞台から）退場して」",
     "[GM], [RW: Oper], [RS: Oper]"
   ],
   [
@@ -11,12 +11,12 @@
   ],
   [
     "abgestimmte",
-    "(≒ coordinated, balanced, tuned / accordato, bilanciato, coordinato)\nabstimmen の過去分詞 abgestimmt の格変化形\n【一般的な意味】\n① （互いに）調整された，調和した，整合された，（服装などが）コーディネートされた．\n② 投票された，表決された．\n【音楽用語としての訳例】\n「（ボウイングなどが）そろえられた」，「（音量や音色の）バランスが調整された」，「（他の楽器とピッチが）合わせられた」",
+    "(≒ coordinated, balanced, tuned / accordato, bilanciato, coordinato)\nabstimmen の過去分詞 abgestimmt の格変化形．\n【一般的な意味】\n① （互いに）調整された，調和した，整合された，（服装などが）コーディネートされた．\n② 投票された，表決された．\n【音楽用語としての訳例】\n「（ボウイングなどが）そろえられた」，「（音量や音色の）バランスが調整された」，「（他の楽器とピッチが）合わせられた」",
     "[GM]"
   ],
   [
     "abnehmen",
-    "(≒ to decrease, to diminish, to remove / diminuire, calare, levare, togliere)\n【一般的な意味】　\n① （量・程度・力などが）減少する，減る，衰える\n② （帽子・眼鏡などを）取る，外す\n③ （重さ・体重が）減る\n④ （受話器を）取る\n【音楽用語としての訳例】\n「（音量・力強さ・テンポなどが）減少する」，「衰える」，「弱くなる」（diminuendoや calando に相当）\n\nGM では①②どちらの意味でも使用例がある．",
+    "(≒ to decrease, to diminish, to remove / diminuire, calare, levare, togliere)\n【一般的な意味】\n① （量・程度・力などが）減少する，減る，衰える．\n② （帽子・眼鏡などを）取る，外す．\n③ （重さ・体重が）減る．\n④ （受話器を）取る．\n【音楽用語としての訳例】\n「（音量・力強さ・テンポなどが）減少する」，「衰える」，「弱くなる」（diminuendo や calando に相当）\n\nGM では①②どちらの意味でも使用例がある．",
     "[GM]"
   ],
   [
@@ -26,7 +26,7 @@
   ],
   [
     "Abstieg",
-    "下山，下り道，下り坂 ",
+    "下山，下り道，下り坂",
     "[RS: Alpen]"
   ],
   [
@@ -36,12 +36,12 @@
   ],
   [
     "Abstufungen",
-    "(≒ gradations, shadings, nuances / gradazioni, sfumature)\r\nAbstufung の複数形\r\n【一般的な意味】\r\n① （色・音・光などの）段階的な変化，濃淡，グラデーション，陰影．\r\n② 段階づけ，等級，区別，差異．\r\n【音楽用語としての訳例】\r\n「（強弱やテンポの）段階的な変化」，「（強弱の）細かい区別」，「陰影」，「ニュアンス」，「階調」",
+    "(≒ gradations, shadings, nuances / gradazioni, sfumature)\nAbstufung の複数形．\n【一般的な意味】\n① （色・音・光などの）段階的な変化，濃淡，グラデーション，陰影．\n② 段階づけ，等級，区別，差異．\n【音楽用語としての訳例】\n「（強弱やテンポの）段階的な変化」，「（強弱の）細かい区別」，「陰影」，「ニュアンス」，「階調」",
     "[GM]"
   ],
   [
     "abwärts",
-    "(≒ downward)  下へ，下って ",
+    "(≒ downward / verso il basso)\n【一般的な意味】\n「下へ」，「下って」",
     "[B: 3], [B: 5]"
   ],
   [
@@ -61,12 +61,12 @@
   ],
   [
     "Akzente",
-    "(＝accent)  \"Akzent\" アクセント ",
+    "(＝accent)  \"Akzent\" アクセント",
     "[H: KM4]"
   ],
   [
     "alle in den Bläsern als トレモロ音符 notirten Stellen sind mit Zungenschlag auszuführen.",
-    "すべての管楽器のトレモロ音符で記されている音はタンギング（フラッター）で演奏する． ",
+    "すべての管楽器のトレモロ音符で記されている音はタンギング（フラッター）で演奏する．",
     "[RS: Qui]"
   ],
   [
@@ -81,17 +81,17 @@
   ],
   [
     "allmählich",
-    "(≒ gradually / gradualmente)\n【一般的な意味】\nだんだんと，次第に，徐々に．\n\n[RW: Oper], [RS: Oper] では ”allmälig“ となっているところもある． ",
+    "(≒ gradually / gradualmente)\n【一般的な意味】\nだんだんと，次第に，徐々に．\n\n[RW: Oper], [RS: Oper] では \"allmälig\" となっているところもある．",
     "[GM], [RW: Oper], [RS: Oper]"
   ],
   [
     "allmählich alle anderen hinzu",
-    "徐々に残りの全員が入ってくる ",
+    "徐々に残りの全員が入ってくる",
     "[H: Welt]"
   ],
   [
     "allmählich an Stärke immer anwachsen",
-    "徐々に強さを増していく ．\"anwachen\"(≒ to increase)",
+    "徐々に強さを増していく．\"anwachen\"(≒ to increase)",
     "[B: 8-2]"
   ],
   [
@@ -106,12 +106,12 @@
   ],
   [
     "Alm",
-    "（夏に利用される）山地の牧草地 ",
+    "（夏に利用される）山地の牧草地",
     "[RS: Alpen]"
   ],
   [
     "Almosenier",
-    "(≒ almoner, chaplain / elemosiniere, cappellano)\n【一般的な意味】\n① （宮廷・貴族の館・軍隊・病院などに仕える）専属司祭，従軍司祭，チャプレン．\n② 施し役，慈善係（貧民への金品の施しを分配する職）．\n【音楽用語としての訳例】\n「（オペラの役名として）司祭」，「（宮廷）司祭」，「施し役」\n\nDer Rosenkavalier の使用人たちについては \"Haushofmeister\" の項を参照． ",
+    "(≒ almoner, chaplain / elemosiniere, cappellano)\n【一般的な意味】\n① （宮廷・貴族の館・軍隊・病院などに仕える）専属司祭，従軍司祭，チャプレン．\n② 施し役，慈善係（貧民への金品の施しを分配する職）．\n【音楽用語としての訳例】\n「（オペラの役名として）司祭」，「（宮廷）司祭」，「施し役」\n\nDer Rosenkavalier の使用人たちについては \"Haushofmeister\" の項を参照．",
     "[RS: Oper]"
   ],
   [
@@ -121,7 +121,7 @@
   ],
   [
     "also",
-    "(≒ therefore, thus, so / dunque, quindi, perciò, così)\n【一般的な意味】\n① したがって，それゆえ，だから（論理的帰結）．\n② つまり，すなわち，言い換えれば．\n③ （文頭などで）さて，それでは．\n【音楽用語としての訳例】\n「したがって」，「それゆえ」，「すなわち」，「（前の指示を受けて）そのように」，「（RSの \"Also sprach Zarathustra\" などで）かくして」",
+    "(≒ therefore, thus, so / dunque, quindi, perciò, così)\n【一般的な意味】\n① したがって，それゆえ，だから（論理的帰結）．\n② つまり，すなわち，言い換えれば．\n③ （文頭などで）さて，それでは．\n【音楽用語としての訳例】\n「したがって」，「それゆえ」，「すなわち」，「（前の指示を受けて）そのように」，「（RS の \"Also sprach Zarathustra\" などで）かくして」",
     "[GM], [RS: Oper]"
   ],
   [
@@ -131,7 +131,7 @@
   ],
   [
     "Andacht",
-    "(≒ devotion, reverence, prayer / devozione, raccoglimento)\n【一般的な意味】\n① （神への）祈り，礼拝，勤行．\n② 敬虔な気持ち，畏敬の念，信心，（精神の）集中．\n【音楽用語としての訳例】\"mit Andacht\" で「敬虔に」，「祈るように」，「信心深く」，「畏敬の念を持って」，「うやうやしく」，",
+    "(≒ devotion, reverence, prayer / devozione, raccoglimento)\n【一般的な意味】\n① （神への）祈り，礼拝，勤行．\n② 敬虔な気持ち，畏敬の念，信心，（精神の）集中．\n【音楽用語としての訳例】\"mit Andacht\" で「敬虔に」，「祈るように」，「信心深く」，「畏敬の念を持って」，「うやうやしく」，．",
     "[RS: Oper], [RS: Zara]"
   ],
   [
@@ -146,12 +146,12 @@
   ],
   [
     "angegeben",
-    "(≒ indicated, specified, stated / indicato, stabilito)\nangeben の過去分詞\n【一般的な意味】\n申告された，指定された，述べられた，表示された．\n【音楽用語としての訳例】\n「指定された通りに」，「（テンポなどが）指示されたように」，「（メトロノームなどについて）書かれた通りに」",
+    "(≒ indicated, specified, stated / indicato, stabilito)\nangeben の過去分詞．\n【一般的な意味】\n申告された，指定された，述べられた，表示された．\n【音楽用語としての訳例】\n「指定された通りに」，「（テンポなどが）指示されたように」，「（メトロノームなどについて）書かれた通りに」",
     "[GM]"
   ],
   [
     "angehalten",
-    "(≒ held back, stopped, sustained / ritenuto, sostenuto, fermato)\nanhalten の過去分詞\n【一般的な意味】\n① 止められた，停止させられた．\n② 促された，しつけられた．\n【音楽用語としての訳例】\n「（テンポを）抑制して」，「引き止めて（ritenuto）」，など．\n「遅くして」と訳している．\n\n\"anhalten\" の項を参照．",
+    "(≒ held back, stopped, sustained / ritenuto, sostenuto, fermato)\nanhalten の過去分詞（原形は「anhalten」を参照）\n【一般的な意味】\n① 止められた，停止させられた．\n② 促された，しつけられた．\n【音楽用語としての訳例】\n「（テンポを）抑制して」，「引き止めて（ritenuto）」，など．\n「遅くして」と訳している．\n\n\"anhalten\" の項を参照．",
     "[GM], [RW: Oper], [RS: Oper]"
   ],
   [
@@ -161,22 +161,22 @@
   ],
   [
     "ängstlich",
-    "Angst の項を参照．",
+    "\"Angst\" の項を参照．",
     "[RW: Oper], [RS: Oper]"
   ],
   [
     "anhalten",
-    "(≒ stop, halt, hold back / fermare, arrestare, trattenere)\n【一般的な意味】\n① （人や車を）止める，停止させる，呼び止める．\n② （息を）殺す，止める．\n③ （状態・天候などが）続く，持続する．\n④ （～するように）しつける，促す．\n【音楽用語としての訳例】\n「（テンポを）抑える」，「引き止める（リテヌート）」，「立ち止まる」，「（音を）保つ」\n\nGM では「遅くして」，RW では「間を置いて」と訳している． ”anhalten” は「（進行しているものを）引き留める，ストップをかける，ブレーキをかける」という動的な制御を意味するため，テンポをその場でぐっと引き留めるイタリア語の ritenuto（直ちに遅くして，抑制して）のニュアンスに極めて近い．それに対して，\"gehalten\" は \"tenuto\" くらいのニュアンスか．名詞の \"Anhalten\" は「休止」と訳しているが，これは \"fermata\" というよりも，進んでいるものに対して「ブレーキをかけて制動する（引き留める）」という，動きに対するコントロールを指す．息をぐっと止める（Atem anhalten）ときのような，内的な緊張感を伴った抑制を伴っている．\n\"gehalten\" の項も参照．\n",
+    "(≒ stop, halt, hold back / fermare, arrestare, trattenere)\n【一般的な意味】\n① （人や車を）止める，停止させる，呼び止める．\n② （息を）殺す，止める．\n③ （状態・天候などが）続く，持続する．\n④ （～するように）しつける，促す．\n【音楽用語としての訳例】\n「（テンポを）抑える」，「引き止める（リテヌート）」，「立ち止まる」，「（音を）保つ」\n\nGM では「遅くして」，RW では「間を置いて」と訳している． \"anhalten\" は「（進行しているものを）引き留める，ストップをかける，ブレーキをかける」という動的な制御を意味するため，テンポをその場でぐっと引き留めるイタリア語の ritenuto（直ちに遅くして，抑制して）のニュアンスに極めて近い．それに対して，\"gehalten\" は \"tenuto\" くらいのニュアンスか．名詞の \"Anhalten\" は「休止」と訳しているが，これは \"fermata\" というよりも，進んでいるものに対して「ブレーキをかけて制動する（引き留める）」という，動きに対するコントロールを指す．息をぐっと止める（Atem anhalten）ときのような，内的な緊張感を伴った抑制を伴っている．\n\"gehalten\" の項も参照．",
     "[GM], [RW: Oper]"
   ],
   [
     "Anhang",
-    "(≒ appendix)  付録，補遺 ",
+    "(≒ appendix, supplement / appendice, supplemento)\n【一般的な意味】\n「付録」，「補遺」",
     "[H: KM3]"
   ],
   [
     "Anmerkung für den Dirigenten:  Von hier * )  bis poco a poco calando ganze Takte schlagen!",
-    " 指揮者への注意: この*)  からpoco a poco calandoまでは1つ振り！ ",
+    "指揮者への注意: この*)  から poco a poco calando までは1つ振り！",
     "[RS: Juan]"
   ],
   [
@@ -196,17 +196,17 @@
   ],
   [
     "anschließen",
-    "(≒ join, connect, follow, attach / unire, collegare, attaccare, seguire)\n【一般的な意味】\n① つなぐ，接続する，連結する，（器具・電気などを）つなぎ合わせる\n② （集団・組織などに）加わる，同調する，賛同する\n③ （空間的・時間的に）隣接する，引き続いて起こる，（前文などに）続く\n【音楽用語としての訳例】\n「attacca で」，「（休みなく）続けて」，「引き続いて」，「（他のパートや旋律に）合わせて加わる」",
+    "(≒ join, connect, follow, attach / unire, collegare, attaccare, seguire)\n【一般的な意味】\n① つなぐ，接続する，連結する，（器具・電気などを）つなぎ合わせる．\n② （集団・組織などに）加わる，同調する，賛同する．\n③ （空間的・時間的に）隣接する，引き続いて起こる，（前文などに）続く．\n【音楽用語としての訳例】\n「attacca で」，「（休みなく）続けて」，「引き続いて」，「（他のパートや旋律に）合わせて加わる」",
     "[B: 1], [RW: Oper]"
   ],
   [
     "anschwellen",
-    "(≒ swell, increase, grow / crescere, aumentare, ingrossare)\n【一般的な意味】\n① （音・声・風などが）次第に大きくなる，強まる，高まる．\n② （川や水かさが）増水する，みなぎる．\n③ （体の一部が）腫れる，膨れる．\n【音楽用語としての訳例】\n「（音を）膨らませて」，「音量を増して（cresc.）」，「（音が）沸き上がるように」，「（音を）張りつめて」\n\n\"nicht Anschwellung\"「大きくしないで」が [B: 8-1]にある． ",
+    "(≒ swell, increase, grow / crescere, aumentare, ingrossare)\n【一般的な意味】\n① （音・声・風などが）次第に大きくなる，強まる，高まる．\n② （川や水かさが）増水する，みなぎる．\n③ （体の一部が）腫れる，膨れる．\n【音楽用語としての訳例】\n「（音を）膨らませて」，「音量を増して（cresc.）」，「（音が）沸き上がるように」，「（音を）張りつめて」\n\n\"nicht Anschwellung\"「大きくしないで」が [B: 8-1]にある．",
     "[GM], [B: 8-1], [RW: Oper], [RS: Oper]"
   ],
   [
     "Anstieg",
-    "登山，登山道，上り坂 ",
+    "登山，登山道，上り坂",
     "[RS: Alpen]"
   ],
   [
@@ -246,17 +246,17 @@
   ],
   [
     "auf und ab",
-    "(≒ up and down, to and fro / su e giù, sali e scendi)\nauf と ab の組み合わせ\n【一般的な意味】\n① 上へ下へと，上下に，（部屋などを）行ったり来たり，あちこちへ．\n② （道などが）起伏のある，（運命・相場・感情などが）浮き沈みのある，変動する．\n【音楽用語としての訳例】\n「（音型が）上下して」，「（旋律が）昇降して」，「（ボウイングで）上げ下げして」，「（感情や強弱が）高まったり静まったり」，「（波のように）うねって」\n\nGM では交響曲第6番第3楽章に \"auf-und abwogend\" ，交響曲第8番第2部に \"auf und abschwebend\" とある．\"wogen\" は「(大きく ) 波打つ」，「波打つように動く」，\"schweben\" は「浮かぶ」，「漂う」，「宙づりになっている」の意．[RW: Oper]や [RS: Oper] では「行ったり来たり」，「上下に」と訳している．",
+    "(≒ up and down, to and fro / su e giù, sali e scendi)\nauf と ab の組み合わせ\n【一般的な意味】\n① 上へ下へと，上下に，（部屋などを）行ったり来たり，あちこちへ．\n② （道などが）起伏のある，（運命・相場・感情などが）浮き沈みのある，変動する．\n【音楽用語としての訳例】\n「（音型が）上下して」，「（旋律が）昇降して」，「（ボウイングで）上げ下げして」，「（感情や強弱が）高まったり静まったり」，「（波のように）うねって」\n\nGM では交響曲第6番第3楽章に \"auf-und abwogend\"，交響曲第8番第2部に \"auf und abschwebend\" とある．\"wogen\" は「(大きく ) 波打つ」，「波打つように動く」，\"schweben\" は「浮かぶ」，「漂う」，「宙づりになっている」の意．[RW: Oper]や [RS: Oper] では「行ったり来たり」，「上下に」と訳している．",
     "[GM], [RW: Oper], [RS: Oper]"
   ],
   [
     "aufdringlich",
-    "(≒ obtrusive, intrusive, importunate / invadente, importuno)\n【一般的な意味】\n① （人や態度が）押し付けがましい，出しゃばりな，しつこい．\n② （色・音・光などが）けばけばしい，目障りな，強烈な．\n【音楽用語としての訳例】\n「押し付けがましく」，「出しゃばって」，「（nicht aufdringlich で）目立たないように」，「（同）邪魔にならないように」，「（特定の声部が）突出して」\n\nGM では \"nicht aufdringlich\" は「押しつけがましくなく」と訳している． ",
+    "(≒ obtrusive, intrusive, importunate / invadente, importuno)\n【一般的な意味】\n① （人や態度が）押し付けがましい，出しゃばりな，しつこい．\n② （色・音・光などが）けばけばしい，目障りな，強烈な．\n【音楽用語としての訳例】\n「押し付けがましく」，「出しゃばって」，「（nicht aufdringlich で）目立たないように」，「（同）邪魔にならないように」，「（特定の声部が）突出して」\n\nGM では \"nicht aufdringlich\" は「押しつけがましくなく」と訳している．",
     "[GM], [RW: Oper]"
   ],
   [
     "auffahrend",
-    "(≒ flaring up, vehement, starting up / impetuoso, scattante, veemente)\nauffahren の現在分詞\n【一般的な意味】\n① （怒りや驚きで）激昂する，カッとなる，いきり立つ，（座席から）跳ね起きる，飛び起きる．\n② （乗り物が）乗り上げる，衝突する，（門などを）開く．\n【音楽用語としての訳例】\n「激昂して」，「荒々しく」，「（感情が）爆発するように」，「急激に」，「（急に）湧き上がるように」\n\n①の意味で訳していることが多い．",
+    "(≒ flaring up, vehement, starting up / impetuoso, scattante, veemente)\nauffahren の現在分詞．\n【一般的な意味】\n① （怒りや驚きで）激昂する，カッとなる，いきり立つ，（座席から）跳ね起きる，飛び起きる．\n② （乗り物が）乗り上げる，衝突する，（門などを）開く．\n【音楽用語としての訳例】\n「激昂して」，「荒々しく」，「（感情が）爆発するように」，「急激に」，「（急に）湧き上がるように」\n\n①の意味で訳していることが多い．",
     "[RW: Oper], [RS: Oper]"
   ],
   [
@@ -266,7 +266,7 @@
   ],
   [
     "aufgeregt",
-    "(≒ excited, agitated, nervous / agitato, eccitato, nervoso)\naufregen の過去分詞\n【一般的な意味】\n① （精神的に）興奮した，高ぶった，激した，動揺した．\n② 慌てた，取り乱した，そわそわした．\n【音楽用語としての訳例】\n「興奮して」，「激して」，「せき込んで」，「動揺して」，「気もそぞろに」，「（心理的に）ざわめいて」",
+    "(≒ excited, agitated, nervous / agitato, eccitato, nervoso)\naufregen の過去分詞．\n【一般的な意味】\n① （精神的に）興奮した，高ぶった，激した，動揺した．\n② 慌てた，取り乱した，そわそわした．\n【音楽用語としての訳例】\n「興奮して」，「激して」，「せき込んで」，「動揺して」，「気もそぞろに」，「（心理的に）ざわめいて」",
     "[GM], [RW: Oper], [RS: Oper]"
   ],
   [
@@ -286,22 +286,22 @@
   ],
   [
     "aufzustellen",
-    "\"aufstellen\" の zu 不定詞．\"aufstellen\" の項を参照．",
+    "aufstellen の zu 不定詞．\"aufstellen\" の項を参照．",
     "[RS: Qui]"
   ],
   [
     "Augenblick",
-    "(≒ moment, instant / attimo, momento)\n【一般的な意味】\n① 瞬間，刹那，ほんのわずかな時間\n② 目くばせ，一瞥\n【音楽用語としての訳例】\n「一瞬」，「瞬間」，「（einen Augenblick で）一瞬の間」，「（同）少しの間」，「（単数形で）ほんの束の間」",
+    "(≒ moment, instant / attimo, momento)\n【一般的な意味】\n① 瞬間，刹那，ほんのわずかな時間．\n② 目くばせ，一瞥．\n【音楽用語としての訳例】\n「一瞬」，「瞬間」，「（einen Augenblick で）一瞬の間」，「（同）少しの間」，「（単数形で）ほんの束の間」",
     " [RW: Oper], [RS: Oper], [RS: Alpen]"
   ],
   [
     "ausbrechen",
-    "(≒ break out, erupt, burst forth / erompere, scoppiare, scatenarsi)\r\n【一般的な意味】\r\n① （囚人や動物が）逃げ出す，脱走する，脱獄する．\r\n② （戦争・火事・病気・嵐などが）突発する，勃発する，（火山が）噴火する．\r\n③ （汗・涙・感情などが）急に吹き出る，ほとばしる，（笑い声などが）どっと起こる．\r\n④ （壁や歯などの）一部が欠けて落ちる，折れる．\r\n【音楽用語としての訳例】\r\n「（音が）爆発して」，「（感情を）爆発させて」，「突発的に（激しく）」，「（急激に）沸き起こって」",
+    "(≒ break out, erupt, burst forth / erompere, scoppiare, scatenarsi)\n【一般的な意味】\n① （囚人や動物が）逃げ出す，脱走する，脱獄する．\n② （戦争・火事・病気・嵐などが）突発する，勃発する，（火山が）噴火する．\n③ （汗・涙・感情などが）急に吹き出る，ほとばしる，（笑い声などが）どっと起こる．\n④ （壁や歯などの）一部が欠けて落ちる，折れる．\n【音楽用語としての訳例】\n「（音が）爆発して」，「（感情を）爆発させて」，「突発的に（激しく）」，「（急激に）沸き起こって」",
     "[GM], [RW: Oper], [RS: Oper]"
   ],
   [
     "ausbreitend",
-    "(≒ spreading out, broadening, expanding / allargando, spianato)\nausbreiten の現在分詞\n【一般的な意味】\n① （物を）広げる，展開する，（腕を）伸ばす．\n② （範囲・勢力などが）広がる，拡張する，（伝染病などが）蔓延する．\n③ （詳細に）述べる，詳説する．\n【音楽用語としての訳例】\n「（テンポや表現を）幅広く」，「広がりを持って」，「雄大に」，「ゆったりと (allargando) 」，「（音を）拡散させて」など．\n\n\"breit\"とほぼ同じ指示とみてよいだろう．",
+    "(≒ spreading out, broadening, expanding / allargando, spianato)\nausbreiten の現在分詞．\n【一般的な意味】\n① （物を）広げる，展開する，（腕を）伸ばす．\n② （範囲・勢力などが）広がる，拡張する，（伝染病などが）蔓延する．\n③ （詳細に）述べる，詳説する．\n【音楽用語としての訳例】\n「（テンポや表現を）幅広く」，「広がりを持って」，「雄大に」，「ゆったりと (allargando) 」，「（音を）拡散させて」など．\n\n\"breit\" とほぼ同じ指示とみてよいだろう．",
     "[GM]"
   ],
   [
@@ -316,7 +316,7 @@
   ],
   [
     "ausgelassen",
-    "(≒ exuberant, unrestrained, boisterous, omitted / esuberante, sfrenato, omesso)\nauslassen の過去分詞（または形容詞）\n【一般的な意味】\n① （気分・態度などが）非常に陽気な，浮かれた，羽目を外した，奔放な\n② （動詞 auslassen の過去分詞として）省略された，抜かされた，省かれた\n③ （脂などを）溶かした，抽出した\n【音楽用語としての訳例】\n「奔放に」，「熱狂的に」，「陽気にはしゃいで」，「（反復や小節などを）省略して」，「省かれた」",
+    "(≒ exuberant, unrestrained, boisterous, omitted / esuberante, sfrenato, omesso)\nauslassen の過去分詞（または形容詞）\n【一般的な意味】\n① （気分・態度などが）非常に陽気な，浮かれた，羽目を外した，奔放な．\n② （動詞 auslassen の過去分詞として）省略された，抜かされた，省かれた．\n③ （脂などを）溶かした，抽出した．\n【音楽用語としての訳例】\n「奔放に」，「熱狂的に」，「陽気にはしゃいで」，「（反復や小節などを）省略して」，「省かれた」",
     "[GM], [RW: Oper], [RS: Oper], [RS: Till], "
   ],
   [
@@ -336,27 +336,27 @@
   ],
   [
     "auslaufen",
-    "(≒ run out, peter out, fade away / sfumare, scemare, finire)\n【一般的な意味】\n① （液体が）流出する，漏れる，枯渇する．\n② （船が）出航する，港を出る．\n③ （物事・期間・契約などが）終わる，満了する，（徐々に）停止する．\n④ （機械や運動が）惰性で動いて止まる，（余勢で）走り終える．\n【音楽用語としての訳例】\n「（音やフレーズが）消えていく」，「（動きが）止まっていく」，「（余韻で）終わる」，「流れるように終わらせる」，「（力を抜いて）惰性で終わる」など．\n\n[H: KM1-1]での\"auslaufen lassen\" は，「（サイレンを止めるのだが，すぐに音を消さずに）徐々に音が弱まっていくままにしておく」くらいのニュアンスであろうか． ",
+    "(≒ run out, peter out, fade away / sfumare, scemare, finire)\n【一般的な意味】\n① （液体が）流出する，漏れる，枯渇する．\n② （船が）出航する，港を出る．\n③ （物事・期間・契約などが）終わる，満了する，（徐々に）停止する．\n④ （機械や運動が）惰性で動いて止まる，（余勢で）走り終える．\n【音楽用語としての訳例】\n「（音やフレーズが）消えていく」，「（動きが）止まっていく」，「（余韻で）終わる」，「流れるように終わらせる」，「（力を抜いて）惰性で終わる」など．\n\n[H: KM1-1]での\"auslaufen lassen\" は，「（サイレンを止めるのだが，すぐに音を消さずに）徐々に音が弱まっていくままにしておく」くらいのニュアンスであろうか．",
     "[H: KM1-1]"
   ],
   [
     "ausser sich",
-    "außer sich の項を参照．",
+    "\"außer sich\" の項を参照．",
     "[RW: Oper], [RS: Oper]"
   ],
   [
     "außer sich",
-    "(≒ beside oneself, frantic, out of one's mind / fuori di sé)\n\n【一般的な意味】\n① 我を忘れて，逆上して，（怒り・悲しみ・喜びなどで）正気でなくなって．\n② 夢中になって．\n【音楽用語としての訳例】 \n「我を忘れたように」，「狂気じみた様子で」，「我を失うほど激しく」\n\n喜びで「我を忘れる」こともあるが，怒り，恐怖，絶望といった強い衝動によって理性を失っている状態を指すこともある．",
+    "(≒ beside oneself, frantic, out of one's mind / fuori di sé)\n【一般的な意味】\n① 我を忘れて，逆上して，（怒り・悲しみ・喜びなどで）正気でなくなって．\n② 夢中になって．\n【音楽用語としての訳例】\n「我を忘れたように」，「狂気じみた様子で」，「我を失うほど激しく」\n\n喜びで「我を忘れる」こともあるが，怒り，恐怖，絶望といった強い衝動によって理性を失っている状態を指すこともある．",
     "[RW: Oper], [RS: Oper]"
   ],
   [
     "äusserst",
-    "äußerst の項を参照",
+    "\"äußerst\" の項を参照",
     "[GM], [RW: Oper], [RS: Oper]"
   ],
   [
     "äußerst",
-    "(≒ extremely, utmost / estremamente, estremo)\näußerst の別表記（außer の最上級）\n【一般的な意味】\n① この上なく，極めて，非常に，甚だ．\n② （空間・時間的に）最も外側の，一番端の，ギリギリの．\n【音楽用語としての訳例】\n「極めて」，「最大限に」，「（他の形容詞を強めて）この上なく」，「極度に」，「限界まで」",
+    "(≒ extremely, utmost / estremamente, estremo)\näußer の最上級に由来する副詞・形容詞\n【一般的な意味】\n① この上なく，極めて，非常に，甚だ．\n② （空間・時間的に）最も外側の，一番端の，ギリギリの．\n【音楽用語としての訳例】\n「極めて」，「最大限に」，「（他の形容詞を強めて）この上なく」，「極度に」，「限界まで」",
     "[GM], [RW: Oper], [RS: Oper]"
   ],
   [
@@ -4841,17 +4841,17 @@
   ],
   [
     "\"Fuchstanz\" vom Wilm Wilm mit Genehmigung des Verlegers Fritz Schuberth jun. Leipzig",
-    "LeipzigのFritz Schuberth jun.出版社の許可を得たWilm Wilm (Wilm Wieninger)  による\"foxtrot\" ",
+    "Leipzig の出版社 Fritz Schuberth jun. の許可を得て引用された，Wilm-Wilm（本名 Wilhelm Wieninger）による「フォックストロット」．Hindemith は Foxtrott を Fuchstanz と直訳している．",
     "[H: KM1-1]"
   ],
   [
     "/ bedeutet stets: starkes Portamento!",
-    "\"/\"は常にはっきりとしたポルタメントを意味する！ ",
+    "/は常にはっきりとしたポルタメントを意味する！",
     "[RS: Held]"
   ],
   [
     "/ bedeutet: vom einem Ton zum andern schleifen (portamento) ",
-    "\"/\"は2音間のポルタメントを意味する． ",
+    "/は2音間のポルタメントを意味する．",
     "[RS: Held]"
   ],
   [
@@ -4866,7 +4866,7 @@
   ],
   [
     "5 volle Takte lang",
-    "5小節間の長さで ",
+    "5小節間の長さで",
     "[RS: Dom]"
   ]
 ]
