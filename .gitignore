@@ -24,3 +24,7 @@ clasp_check/
 
 # ローカル確認用テストページ
 mahler-search-app/*_test.html
+
+# 作業用出力ディレクトリ
+outputs/
+
