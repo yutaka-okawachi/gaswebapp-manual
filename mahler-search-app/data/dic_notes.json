@@ -366,7 +366,7 @@
   ],
   [
     "AV",
-    "(≒ Asow catalogue, Asow number / catalogo di Asow, numero Asow)\n【一般的な意味】\nErich Hermann Müller von Asow 編纂による Richard Strauss 作品主題目録（Asow-Verzeichnis）の略称，およびその目録番号．\n【音楽用語としての訳例】\n「AV番号」，「アゾウ番号」，「リヒャルト・シュトラウス作品目録番号」\n\nAV（Asow-Verzeichnis）：Erich Hermann Müller von Asow が編纂した全3巻の作品主題目録（Richard Strauss: Thematisches Verzeichnis，1959–1974年）に基づく作品番号．各作品の冒頭主題（incipit）や成立経緯・初演情報などを網羅した本格的な主題目録体系．\n\n\"TrV\" の項も参照のこと．",
+    "(≒ Asow catalogue, Asow number / catalogo di Asow, numero Asow)\nErich Hermann Müller von Asow 編纂による Richard Strauss 作品主題目録（Asow-Verzeichnis）の略称，およびその目録番号．\n「AV番号」，「アゾウ番号」，「リヒャルト・シュトラウス作品目録番号」\n\nTrV と AV の違いと2つの目録が存在する理由・役割\nRichard Strauss, 1864–1949 の作品には，生前に付けられた「作品番号（Opus番号）」が存在するが，初期作品，晩年の作品，習作，機会音楽，歌曲などの多くに Opus 番号が付いていない．そのため，全作品を体系的に整理・同定する目的で後世の研究者によって作品目録が編纂された．その代表が AV（アゾウ番号） と TrV（トレンナー番号） である．\n\n両者が併存している背景とそれぞれの特徴・役割の違いは以下の通り．\n\n1. AV（Asow-Verzeichnis / Müller von Asow 番号）\n編纂者: Erich Hermann Müller von Asow\n正式書名: Richard Strauss: Thematisches Verzeichnis（全3巻，1959–1974年刊行）\n特徴と役割:\nRIchard Strauus の没後，本格的な「主題目録（テーマ別・冒頭主題付き目録）」として初めて編纂された大規模な作品目録．\n各作品の冒頭主題（Incipit）の楽譜引用，楽器編成，成立経緯，自筆譜の所在，初演日・演奏者，初期の出版譜情報などを極めて詳細に網羅した学術的レファレンス・資料集としての役割を担っている．Müller von Asow 本人が第3巻の編纂途中で亡くなったため，妻の Hedwig Müller von Asow や Alfons Ott らによって補完・完結された．そのため，後から発見された情報や晩年の整理において一部追補的な扱いになった部分がある．\n\n2. TrV（Trenner-Verzeichnis / Trenner 番号）\n編纂者: Franz Trenner\n正式書名: Richard Strauss: Werkverzeichnis（1985年刊行 / 1993年改訂版，Florian Trenner による改訂など）\n特徴と役割:\nMüller von Asow の目録刊行後，リヒャルト・シュトラウス研究所（Richard-Strauss-Institut）などの最新研究成果や，新しく発見されたスケッチ・断片・草稿を反映し，厳密な作曲年代順（クロノロジカル） に全300曲以上を整理・再構築した目録．徹底した年代順配列（1870年の最初期の習作から1949年の絶筆まで）がなされているため，Richard Strauss の創作活動の変遷や作曲年代の正確な把握・同定に最も適している．現在の新リヒャルト・シュトラウス全集（Richard Strauss Gesamtausgabe / リヒャルト・シュトラウス・クリティカル・エディション）や現代の音楽学研究，校訂譜では，この TrV が実質的な標準カタログ番号として優先的に用いられている．\n\nまとめると，\nAV: 冒頭主題や詳細な歴史的書誌データ・成立背景を調べるための「網羅的主題目録（Thematisches Verzeichnis）」．\nTrV: 最新の研究に基づいて厳密な年代順で作品を配列・同定するための「標準年代順目録（Chronologisches Werkverzeichnis）」．\n\nこのように，J.S.Bach の BWVや Mozart のKVとは異なり，「先行する詳細な主題目録（AV）」と「その後の研究進展を反映して厳密な年代順に整理し直した最新目録（TrV）」という成立経緯の違いから，現在でも楽譜の解説や研究文献において両方の番号が併記されることが多くなっている．",
     ""
   ],
   [
@@ -381,7 +381,7 @@
   ],
   [
     "Bandes",
-    "(≒ volume)  \"Band\" は（本の ）「巻」，「冊」 ",
+    "(≒ volume)  \"Band\" の単数属格．\"Band\" は（本の ）「巻」，「冊」． ",
     "[H: KM3]"
   ],
   [
@@ -405,8 +405,8 @@
     "[B: 5]"
   ],
   [
-    "beängstigem",
-    "(≒ frighten, alarm, oppress / spaventare, angosciare, opprimere)\nbeängstigen の現在分詞の格変化形\n【一般的な意味】\n① （人を）怖がらせる，不安にさせる，脅かす．\n② （心配・不安などで）胸を締めつける，重苦しくさせる，悩ます．\n【音楽用語としての訳例】\n「（beängstigend で）恐ろしいほどに」，「不安を煽るように」，「脅かすように」，「胸が締めつけられるように」，「気味悪く」\n\n”mit beängstem Ausdruck”は「不安な表情で」とした．",
+    "beängstigtem",
+    "(≒ anxious, frightened / ansioso, impaurito)\nbeängstigen の過去分詞 beängstigt の格変化形（mit に支配される男性・中性単数与格）．\n【一般的な意味】\n① 不安を感じた，おびえた．\n② 不安そうな，心配そうな．\n【音楽用語としての訳例】\n「不安そうな表情で」，「おびえたような表情で」\n\n\"mit beängstigtem Ausdruck\" は「不安な表情で」とした．",
     "[GM]"
   ],
   [
@@ -426,7 +426,7 @@
   ],
   [
     "Bediente",
-    "(≒ servant, attendant, lackey / servo, servitore)\nbedienen の過去分詞 bedient の名詞化\n【一般的な意味】\n① 召使い，使用人，従僕，（身分の低い）家来．\n② （店などの）店員，給仕．\n\nDer Rosenkavalier の使用人たちについては \"Haushofmeister\" の項を参照． ",
+    "(≒ servant, attendant, lackey / servo, servitore)\nBedienter の格変化形（bedienen の過去分詞 bedient の名詞化）\n【一般的な意味】\n① 召使い，使用人，従僕，（身分の低い）家来．\n② （店などの）店員，給仕．\n\nDer Rosenkavalier の使用人たちについては \"Haushofmeister\" の項を参照．",
     "[RS: Oper]"
   ],
   [
@@ -596,13 +596,13 @@
   ],
   [
     "bisbigliando",
-    "(≒ whispering, murmuring / flüsternd)\nイタリア語 bisbigliare の現在分詞（bispigliando は古風な綴り，または異綴り）\"bisbigliare\" は「ささやく」，「ひそひそ話す」や「つぶやく」，「ぼそぼそ話す」の意味がある．\n【一般的な意味】\n① ささやく，小声で話す，耳打ちする．\n② （葉や水などが）さらさらと鳴る，ざわめく．\n【音楽用語としての訳例】\n「ささやくように」，「（ハープなどで）異名同音を用いた微細なトレモロで」，「ざわめくような音色で」\n\n[RS: Duett] には \"bispiglando\" という表記もある．",
+    "(≒ whispering, murmuring / sussurrando, mormorando)\nイタリア語 bisbigliare の現在分詞．\n【一般的な意味】\n① ささやく，小声で話す，耳打ちする．\n② （葉や水などが）さらさらと鳴る，ざわめく．\n【音楽用語としての訳例】\n「ささやくように」，「（ハープなどで）異名同音を用いた微細なトレモロで」，「ざわめくような音色で」\n\n[RS: Duett] には \"bispiglando\" という表記もあるが，標準的なイタリア語形ではなく，bisbigliando の異綴りまたは誤記と考えられる．",
     "[GM]"
   ],
   [
     "bispigliando",
     "bisbigliando の項を参照．",
-    "[GM]"
+    "[GM], [RS: Duett]"
   ],
   [
     "bitte",
@@ -4011,7 +4011,7 @@
   ],
   [
     "TrV",
-    "(≒ Trenner catalogue, Trenner number / catalogo di Trenner, numero Trenner)\nTrenner-Verzeichnis の略\nFranz Trenner が編纂した年代順作品目録（Richard Strauss: Werkverzeichnis，1985/1993年）に基づく番号．現在では AV と並び，研究・同定および楽譜の整理において標準的な参照番号として広く併用されている．\n\n例：\nSonatine Nr.1 → TrV 288\nMetamorphosen → TrV 290\nOboe Concerto → TrV 292\n\n\"AV\" の項も参照．",
+    "(≒ Trenner catalogue, Trenner number / catalogo di Trenner, numero Trenner)\nTrenner-Verzeichnis の略．\nFranz Trenner が編纂した年代順作品目録（Richard Strauss: Werkverzeichnis，1985/1993年）に基づく番号．現在では AV と並び，研究・同定および楽譜の整理において標準的な参照番号として広く併用されている．\n\nTrV と AV の違い\nRichard Strauss, 1864–1949 の作品には，生前に付けられた「作品番号（Opus番号）」が存在するが，初期作品，晩年の作品，習作，機会音楽，歌曲などの多くに Opus 番号が付いていない．そのため，全作品を体系的に整理・同定する目的で後世の研究者によって作品目録が編纂された．その代表が AV（アゾウ番号） と TrV（トレンナー番号） である．\n\n両者のそれぞれの特徴・役割の違いは以下の通り．\n\n1. AV（Asow-Verzeichnis / Müller von Asow 番号）\n編纂者: Erich Hermann Müller von Asow\n正式書名: Richard Strauss: Thematisches Verzeichnis（全3巻，1959–1974年刊行）\n特徴と役割:\nRIchard Strauus の没後，本格的な「主題目録（テーマ別・冒頭主題付き目録）」として初めて編纂された大規模な作品目録．\n各作品の冒頭主題（Incipit）の楽譜引用，楽器編成，成立経緯，自筆譜の所在，初演日・演奏者，初期の出版譜情報などを極めて詳細に網羅した学術的レファレンス・資料集としての役割を担っている．Müller von Asow 本人が第3巻の編纂途中で亡くなったため，妻の Hedwig Müller von Asow や Alfons Ott らによって補完・完結された．そのため，後から発見された情報や晩年の整理において一部追補的な扱いになった部分がある．\n\n2. TrV（Trenner-Verzeichnis / Trenner 番号）\n編纂者: Franz Trenner\n正式書名: Richard Strauss: Werkverzeichnis（1985年刊行 / 1993年改訂版，Florian Trenner による改訂など）\n特徴と役割:\nMüller von Asow の目録刊行後，リヒャルト・シュトラウス研究所（Richard-Strauss-Institut）などの最新研究成果や，新しく発見されたスケッチ・断片・草稿を反映し，厳密な作曲年代順（クロノロジカル） に全300曲以上を整理・再構築した目録．徹底した年代順配列（1870年の最初期の習作から1949年の絶筆まで）がなされているため，Richard Strauss の創作活動の変遷や作曲年代の正確な把握・同定に最も適している．現在の新リヒャルト・シュトラウス全集（Richard Strauss Gesamtausgabe / リヒャルト・シュトラウス・クリティカル・エディション）や現代の音楽学研究，校訂譜では，この TrV が実質的な標準カタログ番号として優先的に用いられている．\n\n例：\nSonatine Nr.1 → TrV 288\nMetamorphosen → TrV 290\nOboe Concerto → TrV 292\n\nまとめると，\nAV: 冒頭主題や詳細な歴史的書誌データ・成立背景を調べるための「網羅的主題目録（Thematisches Verzeichnis）」．\nTrV: 最新の研究に基づいて厳密な年代順で作品を配列・同定するための「標準年代順目録（Chronologisches Werkverzeichnis）」．\n\nこのように，J.S.Bach の BWVや Mozart のKVとは異なり，「先行する詳細な主題目録（AV）」と「その後の研究進展を反映して厳密な年代順に整理し直した最新目録（TrV）」という成立経緯の違いから，現在でも楽譜の解説や研究文献において両方の番号が併記されることが多くなっている．",
     ""
   ],
   [
@@ -4171,7 +4171,7 @@
   ],
   [
     "vehemenz",
-    "(≒ vehemence, intensity, passion / veemenza, impeto)\n【一般的な意味】\n① 激情，熱情，猛烈さ，激しさ．\n② （行動の）強引さ，強さ．\n【音楽用語としての訳例】\n「激情を込めて」，「猛烈な勢いで」，「強引に」\n\nGM の交響曲第5番第1楽章，第2楽章にのみ使用例がある．",
+    "(≒ vehemence, intensity, passion / veemenza, impeto)\n【一般的な意味】\n① 激情，熱情，猛烈さ，激しさ．\n② （行動の）強引さ，強さ．\n【音楽用語としての訳例】\n「激情を込めて」，「猛烈な勢いで」，「強引に」\n\nGM の交響曲第5番第2楽章にのみ使用例がある．なお，\"vehement\" が同曲の第1楽章にある．",
     "[GM]"
   ],
   [
