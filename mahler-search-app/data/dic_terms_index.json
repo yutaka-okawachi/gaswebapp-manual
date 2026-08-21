@@ -786,6 +786,7 @@
   "posaunensaetze": "term-posaunensaetze",
   "potpourri": "term-potpourri",
   "praecis": "term-praecis",
+  "praecis-sehr-leicht-markieren": "term-praecis-sehr-leicht-markieren",
   "praegnant": "term-praegnant",
   "prickelnd": "term-prickelnd",
   "proportioniert": "term-proportioniert",
@@ -964,6 +965,10 @@
   "traeumend": "term-traeumend",
   "traurig": "term-traurig",
   "treibend": "term-treibend",
+  "trio-in-g-dur-dann-scherzo-rep-u-coda": {
+    "id": "term-trio-in-g-dur-dann-scherzo-rep-u-coda",
+    "original": "Trio in G dur, dann Scherzo rep. u. Coda"
+  },
   "trocken": "term-trocken",
   "trommelst-trommelstoecken": {
     "id": "term-trommelst-trommelstoecken",
