@@ -28,3 +28,7 @@ mahler-search-app/*_test.html
 # 作業用出力ディレクトリ
 outputs/
 
+# Codexのローカル生成物
+.codex-slide-build/
+.codex-slide-revision/
+

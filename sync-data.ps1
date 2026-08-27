@@ -704,6 +704,29 @@ else {
 }
 Write-Host ""
 
+# 「実例を見る」専用データは exportAllDataToJson が毎回再生成する。
+# pull 後に3作曲家×16ファイルが揃っていることを確認し、不完全な公開を防ぐ。
+$dictionaryExampleDirectory = Join-Path $PSScriptRoot "mahler-search-app/data/dictionary-examples"
+$dictionaryExampleExpectedComposers = @("gm", "rw", "rs")
+$dictionaryExampleFiles = @(
+    Get-ChildItem -LiteralPath $dictionaryExampleDirectory -Filter "*.json" -File -ErrorAction SilentlyContinue
+)
+if ($dictionaryExampleFiles.Count -ne 48) {
+    Write-Error "[エラー] dictionary-example JSON は48ファイル必要ですが、$($dictionaryExampleFiles.Count)ファイルでした。"
+    exit 1
+}
+foreach ($composer in $dictionaryExampleExpectedComposers) {
+    $composerFiles = @(
+        Get-ChildItem -LiteralPath $dictionaryExampleDirectory -Filter "$composer-*.json" -File -ErrorAction SilentlyContinue
+    )
+    if ($composerFiles.Count -ne 16) {
+        Write-Error "[エラー] dictionary-example JSON ($composer) は16ファイル必要ですが、$($composerFiles.Count)ファイルでした。"
+        exit 1
+    }
+}
+Write-Host "[OK] dictionary-example JSON を確認しました（GM/RW/RS 各16、合計48ファイル）。" -ForegroundColor Green
+Write-Host ""
+
 # --- [7/8] sitemap.xml の自動更新 ---
 Write-Host "[7/8] 変更されたファイルに対応する sitemap.xml を更新中..." -ForegroundColor Yellow
 $pulledFiles = git diff --name-only $beforePullHead HEAD

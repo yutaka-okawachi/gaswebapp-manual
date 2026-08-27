@@ -84,15 +84,18 @@ assert.ok(html.includes("prefetchDictionaryExamples(row)"));
 assert.ok(html.includes("data/dictionary-examples/"));
 
 const appSource = read('mahler-search-app/js/app.js');
+const syncSource = read('sync-data.ps1');
 assert.ok(appSource.includes('window.loadDictionaryExampleData'));
 assert.ok(appSource.includes('window.hydrateDictionaryExampleData'));
 assert.ok(appSource.includes("Promise.all(shardRequests)"));
+assert.ok(syncSource.includes('$dictionaryExampleFiles.Count -ne 48'));
+assert.ok(syncSource.includes('$composerFiles.Count -ne 16'));
 
 ['terms_search.html', 'rw_terms_search.html', 'rs_terms_search.html'].forEach(fileName => {
   const source = read(`mahler-search-app/${fileName}`);
   assert.ok(source.includes('await loadDictionaryExampleData('), fileName);
   assert.ok(source.includes('hydrateDictionaryExampleData('), fileName);
-  assert.ok(source.includes('js/app.js?v=14'), fileName);
+  assert.ok(source.includes('js/app.js?v=15'), fileName);
 });
 
 console.log('dictionary example fast path tests: OK');

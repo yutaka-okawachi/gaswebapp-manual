@@ -6,7 +6,7 @@
  * read or returned here.
  */
 
-const DASHBOARD_SCHEMA_VERSION = 5;
+const DASHBOARD_SCHEMA_VERSION = 6;
 const DASHBOARD_TIME_ZONE = 'Asia/Tokyo';
 const DASHBOARD_ALLOWED_PERIODS = Object.freeze([7, 30, 90]);
 const DASHBOARD_CACHE_SECONDS = 900;
@@ -151,7 +151,7 @@ function getDashboardAnalytics(period) {
   }
 
   const cache = CacheService.getScriptCache();
-  const cacheKey = 'admin_dashboard_analytics_v19_' + propertyId + '_' + period;
+  const cacheKey = 'admin_dashboard_analytics_v20_' + propertyId + '_' + period;
   const cachedResult = readDashboardCachedResult(cache, cacheKey);
   if (cachedResult) return cachedResult;
 
@@ -175,6 +175,7 @@ function getDashboardAnalytics(period) {
       pageViews: runDashboardPageViewsReport(propertyName, range),
       pageEngagement: runDashboardPageEngagementReport(propertyName, range),
       activity: runDashboardActivityReport(propertyName, range),
+      exampleTimings: runDashboardExampleTimingReport(propertyName, range),
       searchMoves: runDashboardSearchMovesReport(propertyName, range),
       terms: runDashboardTermsReport(propertyName, range),
       previousRange: previousRange,
@@ -411,6 +412,22 @@ function createDashboardPageTrendRange(asOfDate) {
     startDate: dashboardMonthStart(asOfDate, -(DASHBOARD_PAGE_TREND_MONTH_COUNT - 1)),
     endDate: asOfDate
   };
+}
+
+function runDashboardExampleTimingReport(propertyName, range) {
+  return AnalyticsData.Properties.runReport({
+    dateRanges: [range],
+    dimensions: [{ name: 'customEvent:destination_page' }],
+    metrics: [
+      { name: 'eventCount' },
+      { name: 'eventValue' }
+    ],
+    dimensionFilter: dashboardExactFilter(
+      'eventName',
+      'dictionary_example_timing'
+    ),
+    limit: '100000'
+  }, propertyName);
 }
 
 function getDashboardAcquisitionAnalytics(propertyName, cache, asOfDate) {
@@ -1093,6 +1110,10 @@ function buildDashboardAnalyticsResponse(period, range, reports) {
     }
   });
 
+  const dictionaryExamplePerformance = buildDashboardDictionaryExamplePerformance(
+    reports.exampleTimings
+  );
+
   const termAggregates = {};
   const pageTermCounts = {};
   dashboardReportRows(reports.terms, 4).forEach(row => {
@@ -1205,7 +1226,52 @@ function buildDashboardAnalyticsResponse(period, range, reports) {
       path: item.path,
       count: dictionaryExampleMoveCounts[item.path]
     })),
+    dictionaryExamplePerformance: dictionaryExamplePerformance,
     terms: terms
+  };
+}
+
+function buildDashboardDictionaryExamplePerformance(report) {
+  const byPath = {};
+  DASHBOARD_DICTIONARY_EXAMPLE_DESTINATIONS.forEach(item => {
+    byPath[item.path] = {
+      composer: item.composer,
+      path: item.path,
+      sampleCount: 0,
+      totalMilliseconds: 0
+    };
+  });
+
+  dashboardReportRows(report, 1).forEach(row => {
+    const path = normalizeDashboardPagePath(row.dimensions[0]);
+    if (!byPath[path]) return;
+    byPath[path].sampleCount += dashboardCount(row.metrics[0]);
+    byPath[path].totalMilliseconds += dashboardNumber(row.metrics[1]);
+  });
+
+  const composers = DASHBOARD_DICTIONARY_EXAMPLE_DESTINATIONS.map(item => {
+    const aggregate = byPath[item.path];
+    return {
+      composer: aggregate.composer,
+      path: aggregate.path,
+      sampleCount: aggregate.sampleCount,
+      averageMilliseconds: aggregate.sampleCount > 0
+        ? Math.round(aggregate.totalMilliseconds / aggregate.sampleCount)
+        : null
+    };
+  });
+  const sampleCount = composers.reduce((sum, item) => sum + item.sampleCount, 0);
+  const totalMilliseconds = Object.keys(byPath).reduce(
+    (sum, path) => sum + byPath[path].totalMilliseconds,
+    0
+  );
+
+  return {
+    sampleCount: sampleCount,
+    averageMilliseconds: sampleCount > 0
+      ? Math.round(totalMilliseconds / sampleCount)
+      : null,
+    composers: composers
   };
 }
 

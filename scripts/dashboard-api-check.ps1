@@ -110,6 +110,7 @@ function Test-DashboardApiPayload {
         "acquisition",
         "pages",
         "dictionaryExampleMoves",
+        "dictionaryExamplePerformance",
         "terms"
     )
     foreach ($key in $requiredTopLevel) {
@@ -118,7 +119,7 @@ function Test-DashboardApiPayload {
         }
     }
 
-    if ([int]$data.schemaVersion -ne 5) {
+    if ([int]$data.schemaVersion -ne 6) {
         return New-DashboardApiCheckResult -Success $false -Period $ExpectedPeriod -Message "Unexpected schemaVersion"
     }
     if ([int]$data.period -ne $ExpectedPeriod) {
@@ -139,6 +140,7 @@ function Test-DashboardApiPayload {
     $searchMethods = @($data.searchMethods)
     $pages = @($data.pages)
     $dictionaryExampleMoves = @($data.dictionaryExampleMoves)
+    $dictionaryExamplePerformance = $data.dictionaryExamplePerformance
     $terms = @($data.terms)
     if ($daily.Count -ne $ExpectedPeriod) {
         return New-DashboardApiCheckResult -Success $false -Period $ExpectedPeriod -Message "daily length mismatch"
@@ -154,6 +156,30 @@ function Test-DashboardApiPayload {
     }
     if ($dictionaryExampleMoves.Count -ne 3) {
         return New-DashboardApiCheckResult -Success $false -Period $ExpectedPeriod -Message "dictionaryExampleMoves length mismatch"
+    }
+    if (
+        -not (Test-DashboardHasProperty -Object $dictionaryExamplePerformance -Name "sampleCount") -or
+        -not (Test-DashboardHasProperty -Object $dictionaryExamplePerformance -Name "averageMilliseconds") -or
+        -not (Test-DashboardHasProperty -Object $dictionaryExamplePerformance -Name "composers") -or
+        -not (Test-DashboardNonNegativeInteger -Value $dictionaryExamplePerformance.sampleCount) -or
+        ($null -ne $dictionaryExamplePerformance.averageMilliseconds -and
+            -not (Test-DashboardNonNegativeInteger -Value $dictionaryExamplePerformance.averageMilliseconds)) -or
+        @($dictionaryExamplePerformance.composers).Count -ne 3
+    ) {
+        return New-DashboardApiCheckResult -Success $false -Period $ExpectedPeriod -Message "Invalid dictionary example performance"
+    }
+    foreach ($composerTiming in @($dictionaryExamplePerformance.composers)) {
+        if (
+            -not (Test-DashboardHasProperty -Object $composerTiming -Name "composer") -or
+            -not (Test-DashboardHasProperty -Object $composerTiming -Name "path") -or
+            -not (Test-DashboardHasProperty -Object $composerTiming -Name "sampleCount") -or
+            -not (Test-DashboardHasProperty -Object $composerTiming -Name "averageMilliseconds") -or
+            -not (Test-DashboardNonNegativeInteger -Value $composerTiming.sampleCount) -or
+            ($null -ne $composerTiming.averageMilliseconds -and
+                -not (Test-DashboardNonNegativeInteger -Value $composerTiming.averageMilliseconds))
+        ) {
+            return New-DashboardApiCheckResult -Success $false -Period $ExpectedPeriod -Message "Invalid composer example performance"
+        }
     }
 
     foreach ($day in $daily) {

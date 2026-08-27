@@ -11,6 +11,7 @@ const postRouterPath = path.join(repositoryRoot, 'src', 'web_trigger.js');
 const commonScriptsPath = path.join(repositoryRoot, 'src', 'common_scripts.html');
 const dictionaryGeneratorPath = path.join(repositoryRoot, 'src', 'generate_dic_html.js');
 const publicAppScriptPath = path.join(repositoryRoot, 'mahler-search-app', 'js', 'app.js');
+const analyticsScriptPath = path.join(repositoryRoot, 'mahler-search-app', 'js', 'analytics.js');
 const publicTermSearchPages = [
   'terms_search.html',
   'rs_terms_search.html',
@@ -166,6 +167,17 @@ const searchMovesReport = {
       'search_navigation',
       '/gaswebapp-manual/mahler-search-app/dic.html'
     ], 7)
+  ]
+};
+
+const exampleTimingReport = {
+  rows: [
+    reportRow([
+      '/gaswebapp-manual/mahler-search-app/rw_terms_search.html'
+    ], [1, 1250]),
+    reportRow([
+      '/gaswebapp-manual/mahler-search-app/terms_search.html'
+    ], [2, 1640])
   ]
 };
 
@@ -496,6 +508,17 @@ const context = {
           );
           return searchMovesReport;
         }
+        if (dimensionNames === 'customEvent:destination_page') {
+          assert.deepStrictEqual(
+            JSON.parse(JSON.stringify(request.metrics)),
+            [{ name: 'eventCount' }, { name: 'eventValue' }]
+          );
+          assert.strictEqual(
+            request.dimensionFilter.filter.stringFilter.value,
+            'dictionary_example_timing'
+          );
+          return exampleTimingReport;
+        }
         if (
           dimensionNames ===
           'searchTerm,customEvent:source_page,pagePath,customEvent:search_type'
@@ -545,10 +568,10 @@ assert.deepStrictEqual(
 assert.strictEqual(analyticsCallCount, 1);
 
 const result = context.getDashboardAnalytics(7);
-assert.strictEqual(analyticsCallCount, 17);
+assert.strictEqual(analyticsCallCount, 18);
 assert.strictEqual(lockAcquireCount, 1);
 assert.strictEqual(lockReleaseCount, 1);
-assert.strictEqual(result.schemaVersion, 5);
+assert.strictEqual(result.schemaVersion, 6);
 assert.strictEqual(result.period, 7);
 assert.deepStrictEqual(
   JSON.parse(JSON.stringify(result.range)),
@@ -763,6 +786,33 @@ assert.deepStrictEqual(
     }
   ]
 );
+assert.deepStrictEqual(
+  JSON.parse(JSON.stringify(result.dictionaryExamplePerformance)),
+  {
+    sampleCount: 3,
+    averageMilliseconds: 963,
+    composers: [
+      {
+        composer: 'Wagner',
+        path: '/gaswebapp-manual/mahler-search-app/rw_terms_search.html',
+        sampleCount: 1,
+        averageMilliseconds: 1250
+      },
+      {
+        composer: 'Mahler',
+        path: '/gaswebapp-manual/mahler-search-app/terms_search.html',
+        sampleCount: 2,
+        averageMilliseconds: 820
+      },
+      {
+        composer: 'R. Strauss',
+        path: '/gaswebapp-manual/mahler-search-app/rs_terms_search.html',
+        sampleCount: 0,
+        averageMilliseconds: null
+      }
+    ]
+  }
+);
 
 const manyTermsReport = {
   rows: Array.from({ length: 55 }, (_, index) => reportRow([
@@ -871,7 +921,7 @@ assert.strictEqual(
 );
 
 const cachedResult = context.getDashboardAnalytics(7);
-assert.strictEqual(analyticsCallCount, 17);
+assert.strictEqual(analyticsCallCount, 18);
 assert.strictEqual(lockAcquireCount, 1);
 assert.strictEqual(lockReleaseCount, 1);
 assert.deepStrictEqual(
@@ -917,6 +967,33 @@ assert.deepStrictEqual(
   assert.strictEqual(emptyResponse.previous.daily[0].views, 0);
   assert.strictEqual(emptyResponse.previous.daily[0].exampleClicks, 0);
   assert.strictEqual(emptyResponse.pages.length, 11);
+  assert.deepStrictEqual(
+    JSON.parse(JSON.stringify(emptyResponse.dictionaryExamplePerformance)),
+    {
+      sampleCount: 0,
+      averageMilliseconds: null,
+      composers: [
+        {
+          composer: 'Wagner',
+          path: '/gaswebapp-manual/mahler-search-app/rw_terms_search.html',
+          sampleCount: 0,
+          averageMilliseconds: null
+        },
+        {
+          composer: 'Mahler',
+          path: '/gaswebapp-manual/mahler-search-app/terms_search.html',
+          sampleCount: 0,
+          averageMilliseconds: null
+        },
+        {
+          composer: 'R. Strauss',
+          path: '/gaswebapp-manual/mahler-search-app/rs_terms_search.html',
+          sampleCount: 0,
+          averageMilliseconds: null
+        }
+      ]
+    }
+  );
 });
 
 function assertFiniteNonNegativeCounts(value, key) {
@@ -973,6 +1050,7 @@ const postRouterSource = fs.readFileSync(postRouterPath, 'utf8');
 const commonScriptsSource = fs.readFileSync(commonScriptsPath, 'utf8');
 const dictionaryGeneratorSource = fs.readFileSync(dictionaryGeneratorPath, 'utf8');
 const publicAppScriptSource = fs.readFileSync(publicAppScriptPath, 'utf8');
+const analyticsScriptSource = fs.readFileSync(analyticsScriptPath, 'utf8');
 assert.ok(getRouterSource.includes("e.parameter.api === 'dashboard'"));
 assert.ok(postRouterSource.includes("data.api === 'dashboard'"));
 assert.ok(dictionaryGeneratorSource.includes('&source=dictionary_example'));
@@ -980,11 +1058,18 @@ assert.strictEqual(dictionaryGeneratorSource.includes("'click_view_example'"), f
 assert.ok(commonScriptsSource.includes("resultCount > 0"));
 assert.ok(commonScriptsSource.includes("urlParams.get('source') === 'dictionary_example'"));
 assert.ok(commonScriptsSource.includes("'view_example_search_results'"));
+assert.ok(commonScriptsSource.includes("'dictionary_example_timing'"));
+assert.ok(commonScriptsSource.includes('duration_ms: elapsedMilliseconds'));
 assert.ok(publicAppScriptSource.includes("resultCount > 0"));
 assert.ok(publicAppScriptSource.includes("urlParams.get('source') === 'dictionary_example'"));
 assert.ok(publicAppScriptSource.includes("'view_example_search_results'"));
+assert.ok(publicAppScriptSource.includes("'dictionary_example_timing'"));
+assert.ok(publicAppScriptSource.includes('duration_ms: elapsedMilliseconds'));
+assert.ok(analyticsScriptSource.includes("linkType === 'example_search'"));
+assert.ok(analyticsScriptSource.includes('window.sessionStorage.setItem'));
+assert.ok(analyticsScriptSource.includes('startedAt: Date.now()'));
 publicTermSearchPages.forEach(pagePath => {
-  assert.ok(fs.readFileSync(pagePath, 'utf8').includes('js/app.js?v=14'));
+  assert.ok(fs.readFileSync(pagePath, 'utf8').includes('js/app.js?v=15'));
 });
 assert.strictEqual(
   fs.readFileSync(sourcePath, 'utf8').includes("'click_view_example'"),

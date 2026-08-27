@@ -44,7 +44,7 @@ foreach ($period in @(7, 30, 90)) {
     }
 
     $payload = @{
-        schemaVersion = 4
+        schemaVersion = 6
         period = $period
         updatedAt = "2026年7月26日 14:05"
         range = @{
@@ -119,12 +119,50 @@ foreach ($period in @(7, 30, 90)) {
                 }
             })
         }
+        acquisition = @{
+            granularity = "month"
+            asOfDate = "2026-07-26"
+            range = @{
+                startMonth = "2025-08"
+                endMonth = "2026-07"
+            }
+            totalSessions = 0
+            summary = @(
+                @{ key = "referral"; label = "Referral"; sessions = 0; share = 0 },
+                @{ key = "search"; label = "Search"; sessions = 0; share = 0 },
+                @{ key = "direct"; label = "Direct"; sessions = 0; share = 0 },
+                @{ key = "other"; label = "Other"; sessions = 0; share = 0 }
+            )
+            months = @(1..12 | ForEach-Object {
+                @{
+                    month = "2025-$('{0:D2}' -f $_)"
+                    totalSessions = 0
+                    status = if ($_ -eq 12) { "collecting" } else { "complete" }
+                    channels = @(
+                        @{ key = "referral"; label = "Referral"; sessions = 0; share = 0 },
+                        @{ key = "search"; label = "Search"; sessions = 0; share = 0 },
+                        @{ key = "direct"; label = "Direct"; sessions = 0; share = 0 },
+                        @{ key = "other"; label = "Other"; sessions = 0; share = 0 }
+                    )
+                }
+            })
+            sources = @()
+        }
         pages = $pages
         dictionaryExampleMoves = @(
             @{ composer = "Wagner"; path = "/rw_terms_search.html"; count = 0 },
             @{ composer = "Mahler"; path = "/terms_search.html"; count = 0 },
             @{ composer = "R. Strauss"; path = "/rs_terms_search.html"; count = 0 }
         )
+        dictionaryExamplePerformance = @{
+            sampleCount = 3
+            averageMilliseconds = 963
+            composers = @(
+                @{ composer = "Wagner"; path = "/rw_terms_search.html"; sampleCount = 1; averageMilliseconds = 1250 },
+                @{ composer = "Mahler"; path = "/terms_search.html"; sampleCount = 2; averageMilliseconds = 820 },
+                @{ composer = "R. Strauss"; path = "/rs_terms_search.html"; sampleCount = 0; averageMilliseconds = $null }
+            )
+        }
         terms = @(
             @{
                 term = "innig"
@@ -136,7 +174,7 @@ foreach ($period in @(7, 30, 90)) {
     } | ConvertTo-Json -Depth 8
 
     $result = Test-DashboardApiPayload -Payload $payload -ExpectedPeriod $period
-    Assert-True -Condition $result.Success -Message "valid $period-day payload"
+    Assert-True -Condition $result.Success -Message "valid $period-day payload: $($result.Message)"
 }
 
 $htmlResult = Test-DashboardApiPayload -Payload "<html>login</html>" -ExpectedPeriod 7

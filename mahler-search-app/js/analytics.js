@@ -3,6 +3,7 @@
 
     const GA_MEASUREMENT_ID = 'G-ZT6MPW5MNG';
     const ADMIN_DEVICE_KEY = 'gmt_admin_device_optout';
+    const DICTIONARY_EXAMPLE_TIMING_KEY = 'gmt_dictionary_example_timing';
     const SEARCH_PAGE_PATHS = Object.freeze({
         'mahler.html': '/gaswebapp-manual/mahler-search-app/mahler.html',
         'terms_search.html': '/gaswebapp-manual/mahler-search-app/terms_search.html',
@@ -182,12 +183,24 @@
                 if (!isSupportedOrigin) return;
 
                 const destinationPage = getSearchDestinationPath(destinationUrl);
-                if (!destinationPage || typeof window.gtag !== 'function') return;
+                if (!destinationPage) return;
 
                 const searchTerm = String(destinationUrl.searchParams.get('q') || '').trim();
                 const linkType = searchTerm
                     ? (link.classList.contains('composer-link') ? 'example_search' : 'prefilled_search')
                     : 'search_navigation';
+                if (linkType === 'example_search') {
+                    try {
+                        window.sessionStorage.setItem(DICTIONARY_EXAMPLE_TIMING_KEY, JSON.stringify({
+                            startedAt: Date.now(),
+                            destinationPage: destinationPage,
+                            searchTerm: searchTerm
+                        }));
+                    } catch (error) {
+                        // Timing is optional and must never prevent navigation.
+                    }
+                }
+                if (typeof window.gtag !== 'function') return;
                 const payload = {
                     source_page: getAnalyticsPagePath(),
                     destination_page: destinationPage,

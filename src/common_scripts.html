@@ -109,6 +109,32 @@
     }
     window.getSearchResultCount = getSearchResultCount;
 
+    const DICTIONARY_EXAMPLE_TIMING_KEY = 'gmt_dictionary_example_timing';
+    const DICTIONARY_EXAMPLE_TIMING_MAX_AGE_MS = 5 * 60 * 1000;
+
+    function consumeDictionaryExampleTiming(searchTerm, destinationPage) {
+      try {
+        const stored = JSON.parse(window.sessionStorage.getItem(DICTIONARY_EXAMPLE_TIMING_KEY) || 'null');
+        if (!stored || typeof stored.startedAt !== 'number') return null;
+
+        const elapsedMilliseconds = Math.round(Date.now() - stored.startedAt);
+        const matchesRequest =
+          stored.searchTerm === searchTerm &&
+          stored.destinationPage === destinationPage;
+        window.sessionStorage.removeItem(DICTIONARY_EXAMPLE_TIMING_KEY);
+        if (
+          !matchesRequest ||
+          elapsedMilliseconds < 0 ||
+          elapsedMilliseconds > DICTIONARY_EXAMPLE_TIMING_MAX_AGE_MS
+        ) {
+          return null;
+        }
+        return elapsedMilliseconds;
+      } catch (error) {
+        return null;
+      }
+    }
+
     function trackSearchResults(options) {
       if (typeof window.gtag !== 'function' || !options) return false;
 
@@ -136,13 +162,23 @@
         !window.__dictionaryExampleResultTracked
       ) {
         window.__dictionaryExampleResultTracked = true;
-        window.gtag('event', 'view_example_search_results', Object.assign({}, payload, {
+        const destinationPage = typeof window.getAnalyticsPagePath === 'function'
+          ? window.getAnalyticsPagePath()
+          : window.location.pathname;
+        const examplePayload = Object.assign({}, payload, {
           term: searchTerm,
           source_page: '/gaswebapp-manual/mahler-search-app/dic.html',
-          destination_page: typeof window.getAnalyticsPagePath === 'function'
-            ? window.getAnalyticsPagePath()
-            : window.location.pathname
-        }));
+          destination_page: destinationPage
+        });
+        window.gtag('event', 'view_example_search_results', examplePayload);
+
+        const elapsedMilliseconds = consumeDictionaryExampleTiming(searchTerm, destinationPage);
+        if (elapsedMilliseconds !== null) {
+          window.gtag('event', 'dictionary_example_timing', Object.assign({}, examplePayload, {
+            value: elapsedMilliseconds,
+            duration_ms: elapsedMilliseconds
+          }));
+        }
       }
       return true;
     }
