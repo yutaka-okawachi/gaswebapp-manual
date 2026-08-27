@@ -134,6 +134,17 @@ function Get-GitHubRepoSlug {
     return $null
 }
 
+function Get-GitHubCredentialToken {
+    if ($env:GH_TOKEN) { return $env:GH_TOKEN.Trim() }
+    if ($env:GITHUB_TOKEN) { return $env:GITHUB_TOKEN.Trim() }
+
+    $credentialInput = "protocol=https`nhost=github.com`n`n"
+    $credentialLines = $credentialInput | git credential fill 2>$null
+    $passwordLine = $credentialLines | Where-Object { $_ -like "password=*" } | Select-Object -First 1
+    if (-not $passwordLine) { return $null }
+    return $passwordLine.Substring(9).Trim()
+}
+
 function Wait-GitHubPagesChecks {
     param(
         [string]$RepoSlug,
@@ -529,10 +540,17 @@ if ($runFailed) {
             try {
                 $webStartTime = Get-Date
                 
-                $webAction = "exportAllDataToJson"
                 $baseUrl = $env:GAS_DEPLOY_URL.Trim()
                 $tokenParam = $env:GAS_SECRET_TOKEN.Trim()
-                $webUrl = "${baseUrl}?action=${webAction}&token=${tokenParam}"
+                $githubCredentialToken = Get-GitHubCredentialToken
+                if (-not $githubCredentialToken) {
+                    throw "GitHub の保存済み認証を取得できません。GitHub に再ログインしてから再実行してください。"
+                }
+                $requestBody = @{
+                    action = "exportAllDataToJson"
+                    token = $tokenParam
+                    githubToken = $githubCredentialToken
+                } | ConvertTo-Json -Compress
                 
                 Write-Host "Web App にリクエストを送信中..." -ForegroundColor Gray
                 
@@ -545,8 +563,13 @@ if ($runFailed) {
                         Start-Sleep -Seconds $webDelaySeconds
                     }
 
-                    $curlOutputLines = & curl.exe -s -L "$webUrl"
-                    $curlOutput = $curlOutputLines -join "`n"
+                    try {
+                        $webResponse = Invoke-RestMethod -Method Post -Uri $baseUrl -ContentType "application/json" -Body $requestBody -TimeoutSec 180
+                        $curlOutput = $webResponse | ConvertTo-Json -Depth 8 -Compress
+                    }
+                    catch {
+                        $curlOutput = $_.Exception.Message
+                    }
                     if ($curlOutput -match '"status":\s*"success"') {
                         break
                     }

@@ -90,6 +90,11 @@ assert.ok(appSource.includes('window.hydrateDictionaryExampleData'));
 assert.ok(appSource.includes("Promise.all(shardRequests)"));
 assert.ok(syncSource.includes('$dictionaryExampleFiles.Count -ne 48'));
 assert.ok(syncSource.includes('$composerFiles.Count -ne 16'));
+assert.ok(syncSource.includes('function Get-GitHubCredentialToken'));
+assert.ok(syncSource.includes('githubToken = $githubCredentialToken'));
+assert.ok(syncSource.includes('Invoke-RestMethod -Method Post'));
+assert.ok(read('src/web_trigger.js').includes("exportAllDataToJson({ githubToken: params.githubToken || '' })"));
+assert.ok(read('src/export_json.js').includes('pushToGitHub(files, commitMessage, exportOptions.githubToken)'));
 
 ['terms_search.html', 'rw_terms_search.html', 'rs_terms_search.html'].forEach(fileName => {
   const source = read(`mahler-search-app/${fileName}`);

@@ -5,10 +5,10 @@
  */
 
 // 設定情報をスクリプトプロパティから取得
-function getGitHubConfig() {
+function getGitHubConfig(tokenOverride) {
   const props = PropertiesService.getScriptProperties();
   return {
-    token: props.getProperty('GITHUB_TOKEN'),
+    token: tokenOverride || props.getProperty('GITHUB_TOKEN'),
     owner: props.getProperty('GITHUB_OWNER') || 'yutaka-okawachi',
     repo: props.getProperty('GITHUB_REPO') || 'gaswebapp-manual',
     branch: props.getProperty('GITHUB_BRANCH') || 'main'
@@ -97,8 +97,8 @@ function createBlob(content, config) {
  * @param {string} commitMessage - コミットメッセージ
  * @return {Object} 結果サマリー
  */
-function pushToGitHub(files, commitMessage) {
-  const config = getGitHubConfig();
+function pushToGitHub(files, commitMessage, tokenOverride) {
+  const config = getGitHubConfig(tokenOverride);
   
   if (!config.token) {
     throw new Error('GitHub Tokenが設定されていません。setup_credentials.js を実行してください。');

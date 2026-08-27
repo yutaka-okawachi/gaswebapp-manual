@@ -1,6 +1,7 @@
 // SPREADSHEET_ID is defined in mahler.js
 
-function exportAllDataToJson() {
+function exportAllDataToJson(options) {
+    const exportOptions = options || {};
     // 最新データを取得するためにキャッシュを確実にクリア
     const cache = CacheService.getScriptCache();
     const cacheKeys = [
@@ -253,7 +254,7 @@ function exportAllDataToJson() {
     
     try {
         // github_sync.js の pushToGitHub() を呼び出し
-        const result = pushToGitHub(files, commitMessage);
+        const result = pushToGitHub(files, commitMessage, exportOptions.githubToken);
         
         Logger.log('=== 完了 ===');
         Logger.log(`成功: ${result.success.length} ファイル`);

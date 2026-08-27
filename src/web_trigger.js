@@ -253,7 +253,9 @@ function handleRequest(params) {
     
     let result;
     if (action === "exportDic" || action === "exportAllDataToJson") {
-      const exportResult = exportAllDataToJson();
+      // sync-data.ps1 からの POST では、その実行時だけ有効な Git 認証を使う。
+      // Script Properties に保存せず、レスポンスやログにも含めない。
+      const exportResult = exportAllDataToJson({ githubToken: params.githubToken || '' });
       result = { 
         status: exportResult.failed.length === 0 ? "success" : "partial_success", 
         message: "Export completed",
