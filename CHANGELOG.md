@@ -2,6 +2,13 @@
 
 サイトとリポジトリの主な変更を記録します。運用・保守の現行手順は、更新履歴ではなく[マニュアル一覧](./manuals/README.md)から確認してください。
 
+## 2026/08/31 - プライバシー保護・機密情報秘匿化と新PC移行ガイドの改訂
+
+- ソースコード（`src/web_trigger.js`、`src/mahler_server.js`）内の直書きメールアドレスを削除し、GASスクリプトプロパティ（`NOTIFY_EMAIL`）からの安全な取得方式へ完全移行。
+- `manuals/SUCCESSOR_GUIDE.md` を更新し、機密情報の保護理由、新PC移行時のセットアップ手順、GAS側での `NOTIFY_EMAIL` 設定手順を詳細化。
+- `manuals/DEVELOPER_GUIDE.md` にセキュリティおよびプライバシー保護規則を追記。
+- 過去のタスク履歴（`manuals/ADMIN_DASHBOARD_TASKS.md`）内の個人アドレス表記を汎用プレースホルダーに更新。
+
 ## 2026/08/31 - ドキュメント構成の整理とマニュアル集約
 
 - ルート直下の設計仕様・タスク履歴ファイル（`ADMIN_DASHBOARD_API_SPEC.md`、`ADMIN_DASHBOARD_TASKS.md`、`GA4_EVENT_SPEC.md`）を `manuals/` ディレクトリへ統合。

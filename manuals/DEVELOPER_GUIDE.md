@@ -33,6 +33,10 @@ GAS_DEPLOY_URL=https://script.google.com/macros/s/XXXXXXXXXXXXXXXXXXXX/exec
 GAS_SECRET_TOKEN=任意の安全なトークン文字列
 ```
 
+### 1-4. セキュリティとプライバシー保護規則
+* **個人情報・メールアドレスのコード直書き禁止**: 検索通知先メールアドレスなどはコードに直接書かず、必ず GAS の「スクリプト プロパティ（`NOTIFY_EMAIL`）」に保存します。
+* **機密情報のコミット防止**: `.env`、`.clasp.json`、認証トークンなどは `.gitignore` で除外されており、絶対に GitHub にプッシュしないこと。
+
 ---
 
 ## 2. データ同期ワークフロー

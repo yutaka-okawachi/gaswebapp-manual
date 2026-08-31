@@ -1229,11 +1229,15 @@ function escapeHtmlWithBreaks(str) {
  * @param {string} body - メールの本文
  */
 function sendSearchNotification(subject, body) {
-  const recipient = PropertiesService.getScriptProperties().getProperty('NOTIFY_EMAIL') || 'pistares@ezweb.ne.jp';
-  try {
-    MailApp.sendEmail(recipient, subject, body);
-  } catch (e) {
-    Logger.log(`メール通知の送信に失敗しました: ${e.toString()}`);
+  const recipient = PropertiesService.getScriptProperties().getProperty('NOTIFY_EMAIL');
+  if (recipient) {
+    try {
+      MailApp.sendEmail(recipient, subject, body);
+    } catch (e) {
+      Logger.log(`メール通知の送信に失敗しました: ${e.toString()}`);
+    }
+  } else {
+    Logger.log('NOTIFY_EMAIL がスクリプトプロパティに設定されていないため、メール通知をスキップしました。');
   }
 }
 

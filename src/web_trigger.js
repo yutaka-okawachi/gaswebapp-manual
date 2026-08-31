@@ -355,11 +355,15 @@ function handleSearchNotification(data) {
             "■ ユーザー環境\n" +
             getValue(data.userAgent);
                 
-    const recipient = PropertiesService.getScriptProperties().getProperty('NOTIFY_EMAIL') || 'pistares@ezweb.ne.jp';
-    try {
-      MailApp.sendEmail(recipient, subject, body);
-    } catch (e) {
-      Logger.log("Email sending failed: " + e.toString());
+    const recipient = PropertiesService.getScriptProperties().getProperty('NOTIFY_EMAIL');
+    if (recipient) {
+      try {
+        MailApp.sendEmail(recipient, subject, body);
+      } catch (e) {
+        Logger.log("Email sending failed: " + e.toString());
+      }
+    } else {
+      Logger.log("NOTIFY_EMAIL is not set in Script Properties. Skipping email notification.");
     }
     
     // Log to Spreadsheet
