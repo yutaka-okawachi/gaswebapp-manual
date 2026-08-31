@@ -1,4 +1,4 @@
-param([string]$message = "自動同期アップデート")
+﻿param([string]$message = "自動同期アップデート")
 
 $dashboardApiCheckScript = Join-Path $PSScriptRoot "scripts/dashboard-api-check.ps1"
 if (-not (Test-Path -LiteralPath $dashboardApiCheckScript)) {

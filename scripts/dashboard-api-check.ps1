@@ -1,4 +1,4 @@
-function New-DashboardApiCheckResult {
+﻿function New-DashboardApiCheckResult {
     param(
         [bool]$Success,
         [int]$Period,
