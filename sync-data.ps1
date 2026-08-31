@@ -1,4 +1,4 @@
-﻿param([string]$message = "自動同期アップデート")
+param([string]$message = "自動同期アップデート")
 
 $dashboardApiCheckScript = Join-Path $PSScriptRoot "scripts/dashboard-api-check.ps1"
 if (-not (Test-Path -LiteralPath $dashboardApiCheckScript)) {
@@ -17,10 +17,7 @@ $syncAllowedExactPaths = @(
     "_config.yml",
     "01_START_SUCCESSOR_SETUP.bat",
     "02_RUN_SYNC.bat",
-    "ADMIN_DASHBOARD_API_SPEC.md",
-    "ADMIN_DASHBOARD_TASKS.md",
     "CHANGELOG.md",
-    "GA4_EVENT_SPEC.md",
     "apple-touch-icon.png",
     "favicon.png",
     "favicon_original.png",
