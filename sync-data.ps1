@@ -751,7 +751,10 @@ Write-Host ""
 Write-Host "[7/8] 変更されたファイルに対応する sitemap.xml を更新中..." -ForegroundColor Yellow
 $pulledFiles = git diff --name-only $beforePullHead HEAD
 $unpushedFiles = git diff --name-only origin/main HEAD
-$changedFiles = @($pulledFiles + $unpushedFiles) | Where-Object { $_ } | Sort-Object -Unique
+$changedFiles = @(
+    $pulledFiles
+    $unpushedFiles
+) | Where-Object { $_ } | Sort-Object -Unique
 $today = (Get-Date).ToString("yyyy-MM-dd")
 $sitemapPath = "sitemap.xml"
 
