@@ -565,6 +565,11 @@
     "[GM], [RW: Oper], [RS: Oper]"
   ],
   [
+    "Betonung",
+    "(≒ accent, emphasis, stress / accento, enfasi)\n【一般的な意味】\n① （言語や発音における）アクセント，強勢．\n② （事柄や意味に対する）強調，重視．\n【音楽用語としての訳例】\n「アクセント」，「強調して」，「強勢」",
+    "[GM], [RS: Oper]"
+  ],
+  [
     "betreffen",
     "(≒ concern, affect, regard / riguardare, concernere)\n【一般的な意味】\n① （事柄が人や物に）関係する，関わる，影響を及ぼす．\n② （人・主語を）対象とする，問題にする．\n③ （was ... betrifft の形で）～に関しては，～について言えば．\n\nGM では①の意味で用いられている．",
     "[GM]"
@@ -616,7 +621,7 @@
   ],
   [
     "Blechbläser",
-    "(≒ brass, brass instruments, brass players / ottoni)\n【一般的な意味】\n金管楽器，金管楽器群，金管楽器奏者\n\nちなみに「木管楽器」は \"Holzbläser\"．\nそもそも \"Blech\" は\n① 板金，薄板金属，トタン，ブリキ．\n② （俗語・口語として）くだらないこと，ナンセンス，くだらないおしゃべり．\nなど",
+    "(≒ brass, brass instruments, brass players / ottoni)\n【一般的な意味】\n金管楽器，金管楽器群，金管楽器奏者\n\nそもそも \"Blech\" は\n① 板金，薄板金属，トタン，ブリキ．\n② （俗語・口語として）くだらないこと，ナンセンス，くだらないおしゃべり．\nなど．\nちなみに「木管楽器」は \"Holzbläser\"．",
     "[H: K49], [H: K50]"
   ],
   [
@@ -2201,7 +2206,7 @@
   ],
   [
     "Holzbläser",
-    "(≒ woodwinds, woodwind instruments / legni, fiati di legno)\n【一般的な意味】\n木管楽器，木管楽器群，木管楽器奏者\n\nちなみに「金管楽器」は \"Blechbläser\" ．\nそもそも \"Holz\" は\n①（樹木の伐採によって得られる）木材，材木，薪．\n②（生きた）樹木，森林．",
+    "(≒ woodwinds, woodwind instruments / legni, fiati di legno)\n【一般的な意味】\n木管楽器，木管楽器群，木管楽器奏者\n\nそもそも \"Holz\" は\n①（樹木の伐採によって得られる）木材，材木，薪．\n②（生きた）樹木，森林．\nちなみに「金管楽器」は \"Blechbläser\" ．",
     "[GM], [RS: Oper]"
   ],
   [
