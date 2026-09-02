@@ -119,15 +119,42 @@ function escapeRegExpLiteral(value) {
     return String(value).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 
-function createTermHighlightRegex(normalizedQuery) {
+function createTermHighlightRegex(normalizedQuery, matchMode) {
     let pattern = escapeRegExpLiteral(normalizedQuery);
     pattern = pattern.split('ae').join('(?:ae|ä)');
     pattern = pattern.split('oe').join('(?:oe|ö)');
     pattern = pattern.split('ue').join('(?:ue|ü)');
     pattern = pattern.split('ss').join('(?:ss|ß)');
+    if (matchMode === 'exact') {
+        return new RegExp(`(?<![\\p{L}\\p{N}])(${pattern})(?![\\p{L}\\p{N}])(?![^<]*>)`, 'giu');
+    }
     return new RegExp(`(${pattern})(?![^<]*>)`, 'gi');
 }
 window.createTermHighlightRegex = createTermHighlightRegex;
+
+function isTermWordCharacter(character) {
+    return typeof character === 'string' && character !== '' && /[\p{L}\p{N}]/u.test(character);
+}
+
+function matchesTermQuery(value, query, matchMode) {
+    const normalizedValue = normalizeString(String(value || ''));
+    const normalizedQuery = normalizeString(String(query || ''));
+    if (!normalizedQuery) return false;
+    if (matchMode !== 'exact') return normalizedValue.includes(normalizedQuery);
+
+    let searchFrom = 0;
+    while (searchFrom <= normalizedValue.length - normalizedQuery.length) {
+        const matchIndex = normalizedValue.indexOf(normalizedQuery, searchFrom);
+        if (matchIndex === -1) return false;
+        const before = matchIndex > 0 ? normalizedValue.charAt(matchIndex - 1) : '';
+        const afterIndex = matchIndex + normalizedQuery.length;
+        const after = afterIndex < normalizedValue.length ? normalizedValue.charAt(afterIndex) : '';
+        if (!isTermWordCharacter(before) && !isTermWordCharacter(after)) return true;
+        searchFrom = matchIndex + 1;
+    }
+    return false;
+}
+window.matchesTermQuery = matchesTermQuery;
 
 /**
  * Sends a search notification to the Google Apps Script Web App.
@@ -1910,14 +1937,14 @@ window.getMahlerTermsListLocal = function () {
     return mapped;
 };
 
-window.searchMahlerTermsLocal = function (query, resultMeta) {
+window.searchMahlerTermsLocal = function (query, resultMeta, matchMode) {
     const data = window.appData.mahler;
     if (!data) return '<div class="result-message">データが読み込まれていません。</div>';
 
     const normalizedQuery = normalizeString(query);
     const results = data.filter(row => {
         const deNormalized = row.de_normalized || row[1];
-        return deNormalized && deNormalized.includes(normalizedQuery);
+        return deNormalized && matchesTermQuery(deNormalized, normalizedQuery, matchMode);
     });
 
     if (results.length === 0) {
@@ -1976,18 +2003,18 @@ window.searchMahlerTermsLocal = function (query, resultMeta) {
 };
 
 // RS Terms Search Local
-window.searchRSTermsLocal = function (query, resultMeta) {
-    return searchGenericTermsLocal(query, 'richard_strauss', 'RS', resultMeta);
+window.searchRSTermsLocal = function (query, resultMeta, matchMode) {
+    return searchGenericTermsLocal(query, 'richard_strauss', 'RS', resultMeta, matchMode);
 };
 
 // RW Terms Search Local
-window.searchRWTermsLocal = function (query, resultMeta) {
-    return searchGenericTermsLocal(query, 'richard_wagner', 'RW', resultMeta);
+window.searchRWTermsLocal = function (query, resultMeta, matchMode) {
+    return searchGenericTermsLocal(query, 'richard_wagner', 'RW', resultMeta, matchMode);
 };
 
 // Generic Terms Search Local for RS/RW
 // Generic Terms Search Local for RS/RW
-function searchGenericTermsLocal(query, dataKey, type, resultMeta) {
+function searchGenericTermsLocal(query, dataKey, type, resultMeta, matchMode) {
     const data = window.appData[dataKey];
     if (!data) return '<div class="result-message">データが読み込まれていません。</div>';
 
@@ -1998,7 +2025,7 @@ function searchGenericTermsLocal(query, dataKey, type, resultMeta) {
         const de = row.de || '';
         const deNormalized = row.de_normalized || normalizeString(de);
         const pageExists = row.page !== null && row.page !== undefined && String(row.page).trim() !== '';
-        return deNormalized.includes(normalizedQuery) && pageExists;
+        return matchesTermQuery(deNormalized, normalizedQuery, matchMode) && pageExists;
     });
 
     if (filteredData.length === 0) {
@@ -2006,7 +2033,7 @@ function searchGenericTermsLocal(query, dataKey, type, resultMeta) {
         return '<div class="result-message">該当するデータが見つかりませんでした。</div>';
     }
 
-    const highlightRegex = createTermHighlightRegex(normalizedQuery);
+    const highlightRegex = createTermHighlightRegex(normalizedQuery, matchMode);
 
     // Group by 'de' text
     const groupedByDe = filteredData.reduce((acc, row) => {

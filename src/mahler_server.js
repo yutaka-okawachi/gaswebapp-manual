@@ -38,6 +38,33 @@ function normalizeString(str) {
 }
 
 /**
+ * 用語検索の一致方法を判定する。
+ * exact は文字列全体ではなく、検索語の前後が文字・数字でない「独立語一致」。
+ */
+function isTermWordCharacter(character) {
+  return typeof character === 'string' && character !== '' && /[\p{L}\p{N}]/u.test(character);
+}
+
+function matchesTermQuery(value, query, matchMode) {
+  const normalizedValue = normalizeString(String(value || ''));
+  const normalizedQuery = normalizeString(String(query || ''));
+  if (!normalizedQuery) return false;
+  if (matchMode !== 'exact') return normalizedValue.includes(normalizedQuery);
+
+  let searchFrom = 0;
+  while (searchFrom <= normalizedValue.length - normalizedQuery.length) {
+    const matchIndex = normalizedValue.indexOf(normalizedQuery, searchFrom);
+    if (matchIndex === -1) return false;
+    const before = matchIndex > 0 ? normalizedValue.charAt(matchIndex - 1) : '';
+    const afterIndex = matchIndex + normalizedQuery.length;
+    const after = afterIndex < normalizedValue.length ? normalizedValue.charAt(afterIndex) : '';
+    if (!isTermWordCharacter(before) && !isTermWordCharacter(after)) return true;
+    searchFrom = matchIndex + 1;
+  }
+  return false;
+}
+
+/**
  * 用語をID用の文字列に正規化する (辞書リンク用)
  */
 function normalizeForId(term) {
@@ -676,7 +703,7 @@ function searchRWTermsPartially(input) {
     .slice(0, 20);
 }
 
-function searchRWTerms(query) {
+function searchRWTerms(query, matchMode) {
   try {
     if (!query || typeof query !== 'string' || query.trim() === '') {
       return '<p class="result-message">検索語句を入力してください。</p>';
@@ -695,7 +722,7 @@ function searchRWTerms(query) {
     const normalizedQuery = normalizeString(query);
 
     const filteredData = allData.filter(row => {
-      const deMatch = row.de && normalizeString(row.de).includes(normalizedQuery);
+      const deMatch = row.de && matchesTermQuery(row.de, normalizedQuery, matchMode);
       const pageExists = row.page !== null && row.page !== undefined && String(row.page).trim() !== '';
       return deMatch && pageExists;
     });
@@ -1089,7 +1116,7 @@ function searchEnglishTermsPartially(input) {
   return results;
 }
 
-function searchByTerm(query) {
+function searchByTerm(query, matchMode) {
   const ss = SpreadsheetApp.openById(SPREADSHEET_ID);
   const sheet = ss.getSheetByName('GM');
   if (!sheet) {
@@ -1105,7 +1132,7 @@ function searchByTerm(query) {
 
   const rows = data.slice(1);
   const results = rows.filter(row =>
-    row[1] && String(row[1]).toLowerCase().includes(query.toLowerCase())
+    row[1] && matchesTermQuery(row[1], query, matchMode)
   );
   if (results.length === 0) {
     return '<p class="result-message">該当するデータが見つかりませんでした。</p>';

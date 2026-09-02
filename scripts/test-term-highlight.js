@@ -34,14 +34,14 @@ vm.runInContext(inlineScript, context, { filename: 'mahler-search-app/terms_sear
 
 window.appData.dic_terms_index = [];
 
-function search(query, de) {
+function search(query, de, matchMode) {
   window.appData.mahler = [{
     de,
     de_normalized: context.normalizeString(de),
     ja: 'テスト',
     data: 'x-a-1-1-vn'
   }];
-  return window.searchMahlerTermsLocal(query, {});
+  return window.searchMahlerTermsLocal(query, {}, matchMode);
 }
 
 function queryFromDictionaryLink(term) {
@@ -93,5 +93,30 @@ window.appData.richard_wagner = [{
 const genericHtml = window.searchRWTermsLocal('m.d.', {});
 assert.ok(genericHtml.includes('<span style="color: red;">m.d.</span>'));
 assert.ok(!genericHtml.includes('<span style="color: red;">mXdX</span>'));
+
+[
+  ['ab', 'ab', true],
+  ['ab', 'ab,', true],
+  ['ab', 'ab.', true],
+  ['ab', 'Alle ab.', true],
+  ['ab', 'Dämpfung ab!', true],
+  ['ab', '(ab)', true],
+  ['ab', 'abnehmen', false],
+  ['ab', 'Labial', false]
+].forEach(([query, de, shouldMatch]) => {
+  const html = search(query, de, 'exact');
+  assert.strictEqual(
+    !html.includes('該当するデータが見つかりませんでした。'),
+    shouldMatch,
+    `完全一致: ${query} / ${de}`
+  );
+});
+
+assert.ok(!search('ab', 'abnehmen', 'partial').includes('該当するデータが見つかりませんでした。'));
+
+const exactHighlightHtml = search('ab', 'Alle ab, aber haben', 'exact');
+assert.ok(exactHighlightHtml.includes('Alle <span style="color: red;">ab</span>, aber haben'));
+assert.ok(!exactHighlightHtml.includes('<span style="color: red;">ab</span>er'));
+assert.ok(!exactHighlightHtml.includes('h<span style="color: red;">ab</span>en'));
 
 console.log('term highlight tests: OK');

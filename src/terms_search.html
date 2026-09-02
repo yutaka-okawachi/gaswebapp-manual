@@ -86,6 +86,9 @@
       // 入力フィールドに文字を入力するたびにイベント発火
       inputField.addEventListener('input', debouncedOnTermInput);
       inputField.addEventListener('focus', () => debouncedOnTermInput({ target: inputField }));
+      document.querySelectorAll('input[name="termMatchMode"]').forEach(radio => {
+        radio.addEventListener('change', () => debouncedOnTermInput({ target: inputField }));
+      });
       inputField.addEventListener('blur', () => {
         setTimeout(() => {
           if (typeof hideTermSuggestions === 'function') {
@@ -127,8 +130,9 @@
       }
 
       const normalizedInput = normalizeString(input);
+      const matchMode = getTermMatchMode();
       const matches = termEntries
-        .filter(entry => entry.normalized.includes(normalizedInput))
+        .filter(entry => window.matchesTermQuery(entry.normalized, normalizedInput, matchMode))
         .sort((a, b) => a.normalized.localeCompare(b.normalized));
 
       updateDatalist(matches);
@@ -152,6 +156,7 @@
     // 「検索」ボタン押下時
     function search() {
       const query = document.getElementById('termInput').value.trim();
+      const matchMode = getTermMatchMode();
       const resultsDiv = document.getElementById('results');
       const loadingHtml = '<p class=\"loading\">検索中・・・</p>';
       resultsDiv.innerHTML = loadingHtml;
@@ -185,7 +190,12 @@
             console.log('古い検索結果を無視');
           }
         })
-        .searchByTerm(query);
+        .searchByTerm(query, matchMode);
+    }
+
+    function getTermMatchMode() {
+      const selected = document.querySelector('input[name="termMatchMode"]:checked');
+      return selected ? selected.value : 'partial';
     }
 
     // 「中止」ボタン押下
@@ -255,6 +265,11 @@
       </p>
   
       <!-- 検索入力欄 -->
+      <fieldset class="term-match-mode">
+        <legend>検索方法</legend>
+        <label><input type="radio" name="termMatchMode" value="partial" checked>部分一致</label>
+        <label><input type="radio" name="termMatchMode" value="exact">完全一致</label>
+      </fieldset>
       <input type="text" id="termInput" list="termSuggestions" placeholder="検索する用語を入力">
       <datalist id="termSuggestions"></datalist>
   

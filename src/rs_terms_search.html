@@ -69,6 +69,9 @@
       const inputField = document.getElementById('termInput');
       inputField.addEventListener('input', debouncedOnTermInput);
       inputField.addEventListener('focus', () => debouncedOnTermInput({ target: inputField }));
+      document.querySelectorAll('input[name="termMatchMode"]').forEach(radio => {
+        radio.addEventListener('change', () => debouncedOnTermInput({ target: inputField }));
+      });
       inputField.addEventListener('blur', () => {
         setTimeout(() => {
           if (typeof hideTermSuggestions === 'function') {
@@ -105,8 +108,9 @@
       if (input.length < 2) { document.getElementById('termSuggestions').innerHTML = ''; return; }
 
       const normalizedInput = normalizeString(input);
+      const matchMode = getTermMatchMode();
       const matches = termEntries
-        .filter(entry => entry.normalized.includes(normalizedInput))
+        .filter(entry => window.matchesTermQuery(entry.normalized, normalizedInput, matchMode))
         .sort((a, b) => a.normalized.localeCompare(b.normalized));
 
       updateDatalist(matches);
@@ -126,6 +130,7 @@
     }
     function search() {
       const query = document.getElementById('termInput').value.trim();
+      const matchMode = getTermMatchMode();
       const resultsDiv = document.getElementById('results');
       const loadingHtml = '<p class=\"loading\">検索中・・・</p>';
       resultsDiv.innerHTML = loadingHtml;
@@ -149,7 +154,12 @@
             });
           }
         }
-      }).searchRSTerms(query);
+      }).searchRSTerms(query, matchMode);
+    }
+
+    function getTermMatchMode() {
+      const selected = document.querySelector('input[name="termMatchMode"]:checked');
+      return selected ? selected.value : 'partial';
     }
 
     function normalizeTermEntry(term) {
@@ -208,6 +218,11 @@
         <li>ß⇒ss　例：fließend⇒fliessend</li>
       </ul>
   
+      <fieldset class="term-match-mode">
+        <legend>検索方法</legend>
+        <label><input type="radio" name="termMatchMode" value="partial" checked>部分一致</label>
+        <label><input type="radio" name="termMatchMode" value="exact">完全一致</label>
+      </fieldset>
       <input type="text" id="termInput" list="termSuggestions" placeholder="用語を入力">
       <datalist id="termSuggestions"></datalist>
   

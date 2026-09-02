@@ -100,7 +100,7 @@ assert.ok(read('src/export_json.js').includes('pushToGitHub(files, commitMessage
   const source = read(`mahler-search-app/${fileName}`);
   assert.ok(source.includes('await loadDictionaryExampleData('), fileName);
   assert.ok(source.includes('hydrateDictionaryExampleData('), fileName);
-  assert.ok(source.includes('js/app.js?v=15'), fileName);
+  assert.ok(source.includes('js/app.js?v=16'), fileName);
 });
 
 console.log('dictionary example fast path tests: OK');

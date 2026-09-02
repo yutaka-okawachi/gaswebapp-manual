@@ -240,7 +240,7 @@ function searchRSTermsPartially(input) {
     .slice(0, 20);
 }
 
-function searchRSTerms(query) {
+function searchRSTerms(query, matchMode) {
   try {
     if (!query || typeof query !== 'string' || query.trim() === '') {
       return '<p class="result-message">検索語句を入力してください。</p>';
@@ -258,7 +258,7 @@ function searchRSTerms(query) {
     const normalizedQuery = normalizeString(query);
 
     const filteredData = allData.filter(row => {
-      const deMatch = row.de && normalizeString(row.de).includes(normalizedQuery);
+      const deMatch = row.de && matchesTermQuery(row.de, normalizedQuery, matchMode);
       const pageExists = row.page !== null && row.page !== undefined && String(row.page).trim() !== '';
       return deMatch && pageExists;
     });

@@ -27,6 +27,29 @@
       }
     }
 
+    function isTermWordCharacter(character) {
+      return typeof character === 'string' && character !== '' && /[\p{L}\p{N}]/u.test(character);
+    }
+
+    window.matchesTermQuery = function(value, query, matchMode) {
+      const normalizedValue = String(value || '');
+      const normalizedQuery = String(query || '');
+      if (!normalizedQuery) return false;
+      if (matchMode !== 'exact') return normalizedValue.includes(normalizedQuery);
+
+      let searchFrom = 0;
+      while (searchFrom <= normalizedValue.length - normalizedQuery.length) {
+        const matchIndex = normalizedValue.indexOf(normalizedQuery, searchFrom);
+        if (matchIndex === -1) return false;
+        const before = matchIndex > 0 ? normalizedValue.charAt(matchIndex - 1) : '';
+        const afterIndex = matchIndex + normalizedQuery.length;
+        const after = afterIndex < normalizedValue.length ? normalizedValue.charAt(afterIndex) : '';
+        if (!isTermWordCharacter(before) && !isTermWordCharacter(after)) return true;
+        searchFrom = matchIndex + 1;
+      }
+      return false;
+    };
+
     // Show/hide the "back to top" button — use class toggles and run on load/resize/scroll
     // Throttled to avoid freezing on heavy pages
     let isScrolling = false;
