@@ -21,6 +21,8 @@ Richard Wagner（リヒャルト・ワーグナー）、Gustav Mahler（グス�
   - 選択した条件に該当するドイツ語の指示と訳を一覧で確認できます。
 - [用語から検索](https://yutaka-okawachi.github.io/gaswebapp-manual/mahler-search-app/rw_terms_search.html)
   - ドイツ語の用語から、その用語が使われている作品や箇所を探せます。
+  - 入力中に表示される候補から用語を選べます。
+  - 「部分一致」と「完全一致」を切り替えられます。完全一致では、単語の一部ではなく、空白や記号で区切られた独立した語を検索します。
 - [あらすじ集](https://yutaka-okawachi.github.io/gaswebapp-manual/mahler-search-app/rw_synopsis.html)
   - 作品ごとのあらすじ資料を参照できます。
 
@@ -34,6 +36,8 @@ Richard Wagner（リヒャルト・ワーグナー）、Gustav Mahler（グス�
   - 弦楽器群、木管楽器群、金管楽器群、打楽器群など、楽器群単位でも指定できます。
 - [用語から検索](https://yutaka-okawachi.github.io/gaswebapp-manual/mahler-search-app/terms_search.html)
   - ドイツ語の用語から、その用語が使われている作品、楽章、楽器や小節を探せます。
+  - 入力中に表示される候補から用語を選べます。
+  - 「部分一致」と「完全一致」を切り替えられます。完全一致では、単語の一部ではなく、空白や記号で区切られた独立した語を検索します。
 
 ### Richard Strauss（RS）
 
@@ -44,6 +48,8 @@ Richard Wagner（リヒャルト・ワーグナー）、Gustav Mahler（グス�
   - 選択した条件に該当するドイツ語の指示と訳を一覧で確認できます。
 - [用語から検索](https://yutaka-okawachi.github.io/gaswebapp-manual/mahler-search-app/rs_terms_search.html)
   - ドイツ語の用語から、その用語が使われている作品や箇所を探せます。
+  - 入力中に表示される候補から用語を選べます。
+  - 「部分一致」と「完全一致」を切り替えられます。完全一致では、単語の一部ではなく、空白や記号で区切られた独立した語を検索します。
 - [あらすじ集](https://yutaka-okawachi.github.io/gaswebapp-manual/mahler-search-app/rs_synopsis.html)
   - 作品ごとのあらすじ資料を参照できます。
 
