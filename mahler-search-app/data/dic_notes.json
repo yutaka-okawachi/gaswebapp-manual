@@ -2546,6 +2546,11 @@
   ],
   [
     "langsam",
+    "(≒ slow, deliberate / lento, adagio)\r\n【一般的な意味】\r\n① （速度・動き・進行などが）遅い，緩やかな，のろい\r\n② （時間が）ゆっくりとした，時間をかけた\r\n【音楽用語としての訳例】\r\n「遅く」，「ゆるやかに」，「落ち着いて」，「ゆっくりと」",
+    "[GM], [RW: Oper], [RS: Oper]"
+  ],
+  [
+    "langsam",
     "(≒ slow, gradually / lento, adagio)\n【一般的な意味】\n① 動作や速度が遅い，緩やかな．\n② 慎重に，少しずつ\n③ （時間的に）ゆっくりと，徐々に．\n【音楽用語としての訳例】\n「遅く」，「緩やかに」，「徐々に」\n\nGM ではほとんど①の意味であり「ゆっくりと」，「遅く」などと訳しているが，交響曲第1番第4楽章の”Langsam steigern!”（ゆっくりと盛り上がる！）のように③の意味での使用例もある．",
     "[GM], [RW: Oper], [RS: Oper]"
   ],
@@ -3503,6 +3508,11 @@
     "schnarrend",
     "(≒ rattling, buzzing, whirring / ronzante, stridente)\nschnarren の現在分詞\n【一般的な意味】\n① （機械などが）ガタガタ，ガラガラと鳴る，ざわめく．\n② （声などが）しわがれている，耳障りな．\n【音楽用語としての訳例】\n「（雑音が混ざって）ガラガラと」，「（音色が）唸るように」，",
     "[RS: Held]"
+  ],
+  [
+    "schnell",
+    "(≒ fast, quick, rapid / presto, allegro, rapido)\r\n【一般的な意味】\r\n速い，素早い，迅速な\r\n【音楽用語としての訳例】\r\n「速く」，「急速に」，「敏捷に」",
+    "[GM], [RW: Oper], [RS: Oper]"
   ],
   [
     "Schnippchen",
