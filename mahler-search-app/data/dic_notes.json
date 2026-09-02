@@ -616,7 +616,7 @@
   ],
   [
     "Blechbläser",
-    "金管楽器 ",
+    "(≒ brass, brass instruments, brass players / ottoni)\n【一般的な意味】\n金管楽器，金管楽器群，金管楽器奏者\n\nちなみに「木管楽器」は \"Holzbläser\"．\nそもそも \"Blech\" は\n① 板金，薄板金属，トタン，ブリキ．\n② （俗語・口語として）くだらないこと，ナンセンス，くだらないおしゃべり．\nなど",
     "[H: K49], [H: K50]"
   ],
   [
@@ -1023,6 +1023,11 @@
     "dumpf",
     "(≒ dull, muffled, hollow, gloomy / cupo, sordo, soffocato)\n【一般的な意味】\n① （音・声などが）こもった，鈍い，重苦しい，澄んでいない．\n② （光・雰囲気などが）どんよりした，薄暗い，陰気な，鬱屈した．\n③ （感覚・痛みなどが）鈍い，ぼんやりした．\n【音楽用語としての訳例】\n「くぐもらせて」，「（音が）こもった」，「鈍く」，「（響きを）止めて」，「（ティンパニなどで）余韻を消して」，「陰鬱に（cupo）」，「（音色を）暗く」",
     "[GM], [RW: Oper], [RS: Oper]"
+  ],
+  [
+    "dunkel",
+    "(≒ dark, dim, obscure, somber / oscuro, cupo, tenebroso)\n【一般的な意味】\n① （光が乏しく）暗い，薄暗い，黒っぽい\n② （音色・声などが）暗い，くぐもった，低みのある，沈んだ\n③ （気分・表情・情勢などが）陰気な，憂鬱な，不穏な\n④ （意味や由来が）曖昧な，不明瞭な，不可解な\n【音楽用語としての訳例】\n「暗く」，「暗い音色で」，「くぐもった音で」，「陰鬱に」，「重苦しく」",
+    "[RW: Oper], [RS: Oper]"
   ],
   [
     "dünnen",
@@ -2193,6 +2198,11 @@
     "höllisch",
     "(≒ hellish, infernal, atrocious / infernale, diabolico)\n【一般的な意味】\n① 地獄の，地獄のような，悪魔の．\n② 恐ろしい，凄まじい，ひどい．\n③ （俗語的に）ものすごく，非常に．\n【音楽用語としての訳例】\n「地獄のように」，「悪魔的に」，「凄まじい力で」，「猛烈に」",
     "[GM]"
+  ],
+  [
+    "Holzbläser",
+    "(≒ woodwinds, woodwind instruments / legni, fiati di legno)\n【一般的な意味】\n木管楽器，木管楽器群，木管楽器奏者\n\nちなみに「金管楽器」は \"Blechbläser\" ．\nそもそも \"Holz\" は\n①（樹木の伐採によって得られる）木材，材木，薪．\n②（生きた）樹木，森林．",
+    "[GM], [RS: Oper]"
   ],
   [
     "hörbar",
@@ -4597,6 +4607,11 @@
   [
     "weiter",
     "(≒ further, onward, continued / avanti, più oltre)\n【一般的な意味】\n① さらに遠くへ，もっと先へ．\n② （時間的に）その後，引き続き．\n③ （比較として）さらに〜，もっと〜．\n【音楽用語としての訳例】\n「さらに先へ」，「続けて」，「前進して」\n\n\"gleich weiter\"や\"sofort weiter\" という使用例は GM にはないが，これは\"attacca\"のこと．",
+    "[GM], [RW: Oper], [RS: Oper], [H]"
+  ],
+  [
+    "wenig",
+    "(≒ little, few, slightly / poco)\n【一般的な意味】\n① （量や程度が）少ない，わずかな，少しの\n② （数が）わずかな，少数の",
     "[GM], [RW: Oper], [RS: Oper], [H]"
   ],
   [
