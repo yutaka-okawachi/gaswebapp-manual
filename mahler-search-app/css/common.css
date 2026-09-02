@@ -265,6 +265,45 @@ body {
     display: none; 
 }
 
+/* ページ下部の法務情報．通常の閲覧を妨げない控えめな表示とする． */
+.site-legal-footer {
+    margin: 2rem 0 0 220px;
+    padding: 0.75rem 1rem 1.25rem;
+    color: #68727d;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    font-size: 0.72rem;
+    line-height: 1.7;
+    text-align: center;
+    opacity: 0.78;
+}
+
+.site-legal-footer a {
+    color: inherit;
+    text-decoration: none;
+}
+
+.site-legal-footer a:hover,
+.site-legal-footer a:focus-visible {
+    color: #34495e;
+    text-decoration: underline;
+}
+
+.site-legal-footer__copyright {
+    display: block;
+}
+
+.home-page .site-legal-footer,
+.legal-page .site-legal-footer {
+    margin-left: 0;
+}
+
+@media (max-width: 768px) {
+    .site-legal-footer {
+        margin-left: 0;
+        font-size: 0.68rem;
+    }
+}
+
 @media (max-width: 600px) {
     h1 {
         font-size: 1.5rem;

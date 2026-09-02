@@ -113,6 +113,36 @@
         window.setTimeout(wrapSearchNotificationForAdminDevice, 1000);
     }
 
+    function installLegalFooter() {
+        if (!document.body || document.querySelector('.site-legal-footer')) return;
+
+        const isAppPage = /\/mahler-search-app(?:\/|$)/.test(window.location.pathname);
+        const rootPrefix = isAppPage ? '../' : '';
+        const footer = document.createElement('footer');
+        footer.className = 'site-legal-footer';
+        footer.setAttribute('aria-label', 'サイト情報');
+
+        const privacyLink = document.createElement('a');
+        privacyLink.href = `${rootPrefix}privacy.html`;
+        privacyLink.textContent = 'プライバシーポリシー';
+
+        const licenseLink = document.createElement('a');
+        licenseLink.href = `${rootPrefix}license.html`;
+        licenseLink.textContent = 'ライセンス・利用条件';
+
+        const separator = document.createElement('span');
+        separator.className = 'site-legal-footer__separator';
+        separator.setAttribute('aria-hidden', 'true');
+        separator.textContent = '｜';
+
+        const copyright = document.createElement('span');
+        copyright.className = 'site-legal-footer__copyright';
+        copyright.textContent = '© 2014–2026 Yutaka Okawachi';
+
+        footer.append(privacyLink, separator, licenseLink, copyright);
+        document.body.appendChild(footer);
+    }
+
     applyAdminDeviceUrlCommand();
     disableGoogleAnalyticsForAdminDevice();
 
@@ -127,6 +157,7 @@
         disableGoogleAnalyticsForAdminDevice();
         installAdminModeBadge();
         installAdminSearchNotificationGuard();
+        installLegalFooter();
     });
     window.addEventListener('load', installAdminSearchNotificationGuard);
 

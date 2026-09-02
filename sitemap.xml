@@ -95,4 +95,20 @@
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
+
+  <!-- プライバシーポリシー -->
+  <url>
+    <loc>https://yutaka-okawachi.github.io/gaswebapp-manual/privacy.html</loc>
+    <lastmod>2026-09-02</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+
+  <!-- ライセンス・利用条件 -->
+  <url>
+    <loc>https://yutaka-okawachi.github.io/gaswebapp-manual/license.html</loc>
+    <lastmod>2026-09-02</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
 </urlset>

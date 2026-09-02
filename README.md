@@ -119,6 +119,6 @@ Richard Wagner（リヒャルト・ワーグナー）、Gustav Mahler（グス�
 ### 推奨引用形式
 
 ```text
-大川内豊 (2024-2026). ドイツ語の音楽用語 | German Music Terms Dictionary.
+大川内豊 (2014-2026). ドイツ語の音楽用語 | German Music Terms Dictionary.
 https://github.com/yutaka-okawachi/gaswebapp-manual
 ```
