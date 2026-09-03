@@ -175,6 +175,11 @@
     "[H: KM3]"
   ],
   [
+    "Anmerkung",
+    "(≒ note, annotation, remark / nota, annotazione, osservazione)\n【一般的な意味】\n① （書物や文書などにおける）注釈，注記，付記，備考．\n② （気づいたことなどに対する）短い意見，見解，コメント．\n【音楽用語としての訳例】\n「注意」，「注釈」，「（演奏者や指揮者への）指示書き」",
+    "[GM], [RS: Oper]"
+  ],
+  [
     "Anmerkung für den Dirigenten:  Von hier * )  bis poco a poco calando ganze Takte schlagen!",
     "指揮者への注意: この*)  から poco a poco calando までは1つ振り！",
     "[RS: Juan]"
@@ -771,7 +776,7 @@
   ],
   [
     "dasselbe",
-    "(≒ the same, identical / lo stesso, il medesimo)\n【一般的な意味】\n 同じもの，同一のもの，変わらないこと．\n【音楽用語としての訳例】\n「同じ」，「同様に」，「（dasselbe Zeitmaß / Tempo で）同じ速さで（l'istesso tempo）」，「前と同じように」\n\n\"derselbe\"，\"dieselbe\" も同じ．\"dasselbe\"は後ろに中性名詞が続くときに用いられる．\nただし，上記とは違う使われ方もある．[RW: Oper] や[RS: Oper] などに出てくる少し古い文体や硬い文体では，es（それ）と言う代わりに dasselbe（それそのもの，同上のもの）を使って，対象を強調したり，名詞の繰り返しを避けたりすることがあるようだ．",
+    "(≒ the same, identical / lo stesso, il medesimo)\n【一般的な意味】\n 同じもの，同一のもの，変わらないこと．\n【音楽用語としての訳例】\n「同じ」，「同様に」，「（dasselbe Zeitmaß / Tempo で）同じ速さで（l'istesso tempo）」，「前と同じように」\n\n\"derselbe\"，\"dieselbe\" も同じ．\"dasselbe\"は後ろに中性名詞が続くときに用いられる．\nただし，上記とは違う使われ方もある．[RW: Oper] や [RS: Oper] などに出てくる少し古い文体や硬い文体では，es（それ）と言う代わりに dasselbe（それそのもの，同上のもの）を使って，対象を強調したり，名詞の繰り返しを避けたりすることがあるようだ．",
     "[GM], [RW: Oper], [RS: Oper]"
   ],
   [
@@ -953,6 +958,11 @@
     "Dieses Stück wurde am 21. Januar 1936 in London, am Tage nach dem Tode König George V. von England, geschrieben und vom Englischen Rundfunk (BBC)  am 22. Januar in einem Gedächtniskonzert zum erstem Mal ausgeführt, wobei der Komponist den Solopart spielte.",
     "この作品は，1936年1月21日にロンドンで，イングランド王ジョージ5世の死の翌日に作曲され，1936年1月22日にイギリス放送協会（BBC）による追悼演奏会で初演され，その際，作曲者自身がソロ・パートを演奏した．\n\nBBCのオフィスの一室を借りて，1月21日の11時から17時までのあいだに一気に書き上げた，というエピソードがある．",
     "[H: Trau]"
+  ],
+  [
+    "Dirigent",
+    "(≒ conductor / direttore d'orchestra)\n【一般的な意味】\n（オーケストラや合唱団などの）指揮者．",
+    "[GM], [RW: Oper], [RS: Oper]"
   ],
   [
     "dito",

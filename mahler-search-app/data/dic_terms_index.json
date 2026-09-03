@@ -37,6 +37,7 @@
   "aengstlich": "term-aengstlich",
   "anhalten": "term-anhalten",
   "anhang": "term-anhang",
+  "anmerkung": "term-anmerkung",
   "anmerkung-fuer-den-dirigenten-von-hier-bis-poco-a-poco-calando-ganze-takte-schlagen": "term-anmerkung-fuer-den-dirigenten-von-hier-bis-poco-a-poco-calando-ganze-takte-schlagen",
   "anmutig": "term-anmutig",
   "anreissen": "term-anreissen",
@@ -248,6 +249,7 @@
     "id": "term-dieses-stueck-wurde-am-21-januar-1936-in-london-am-tage-nach-dem-tode-koenig-george-v-von-england-geschrieben-und-vom-englischen-rundfunk-bbc-am-22-januar-in-einem-gedaechtniskonzert-zum-erstem-mal-ausgefuehrt-wobei-der-komponist-den-solopart-spielte",
     "original": "Dieses Stück wurde am 21. Januar 1936 in London, am Tage nach dem Tode König George V. von England, geschrieben und vom Englischen Rundfunk (BBC)  am 22. Januar in einem Gedächtniskonzert zum erstem Mal ausgeführt, wobei der Komponist den Solopart spielte."
   },
+  "dirigent": "term-dirigent",
   "dito": "term-dito",
   "doch": "term-doch",
   "don-quixote-der-ritter-von-der-traurigen-gestalt": {
