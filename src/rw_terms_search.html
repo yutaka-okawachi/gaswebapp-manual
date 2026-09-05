@@ -6,8 +6,8 @@
   <?!= include('gtag.html') ?>
   <link rel="canonical" href="https://yutaka-okawachi.github.io/gaswebapp-manual/mahler-search-app/rw_terms_search.html">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="用語から検索（RW） | German Music Terms Dictionary">
-  <meta property="og:description" content="Richard Wagner（リヒャルト・ワーグナー）の作品で使用されているドイツ語の音楽用語等の訳例を検索できるデータベース．">
+  <meta property="og:title" content="Richard Wagner（リヒャルト・ワーグナー）のドイツ語歌唱・舞台指示検索（RW）">
+  <meta property="og:description" content="Richard Wagner（リヒャルト・ワーグナー，RW）の主要な楽劇等に記されたドイツ語の歌唱指示・舞台指示を検索可能．作品名，場面，指示対象，スコアのページ，日本語訳を掲載．">
   <meta property="og:url" content="https://yutaka-okawachi.github.io/gaswebapp-manual/mahler-search-app/rw_terms_search.html">
   <meta property="og:image" content="https://yutaka-okawachi.github.io/gaswebapp-manual/ogp.png">
   <meta name="twitter:card" content="summary">
@@ -17,9 +17,9 @@
   {
     "@context": "https://schema.org",
     "@type": "WebApplication",
-    "name": "用語から検索 (RW)",
+    "name": "Richard Wagner（リヒャルト・ワーグナー）のドイツ語歌唱・舞台指示検索（RW）",
     "url": "https://yutaka-okawachi.github.io/gaswebapp-manual/mahler-search-app/rw_terms_search.html",
-    "description": "リヒャルト・ワーグナーのスコア（楽譜）に登場するドイツ語の演奏指示や音楽用語を日本語で検索できる専門データベース．",
+    "description": "Richard Wagner（リヒャルト・ワーグナー，RW）の主要な楽劇等に記されたドイツ語の歌唱指示・舞台指示を検索可能．作品名，場面，指示対象，スコアのページ，日本語訳を掲載．",
     "applicationCategory": "ReferenceApplication",
     "operatingSystem": "Any",
     "about": {
@@ -45,8 +45,8 @@
     }]
   }
   </script>
-  <meta name="description" content="Richard Wagner（リヒャルト・ワーグナー）の作品で使用されているドイツ語音楽用語を検索できるデータベース．詳細な訳例や解釈，作品別の使用例を掲載．スコアの読み込みをサポートする専門ツール．">
-  <title>用語から検索 (RW)</title>
+  <meta name="description" content="Richard Wagner（リヒャルト・ワーグナー，RW）の主要な楽劇等に記されたドイツ語の歌唱指示・舞台指示を検索可能．作品名，場面，指示対象，スコアのページ，日本語訳を掲載．">
+  <title>Richard Wagner（リヒャルト・ワーグナー）のドイツ語歌唱・舞台指示検索（RW）</title>
   <link rel="icon" href="https://yutaka-okawachi.github.io/gaswebapp-manual/favicon.png">
   <link rel="apple-touch-icon" href="https://yutaka-okawachi.github.io/gaswebapp-manual/apple-touch-icon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -192,6 +192,29 @@
     function cancelSearch() { document.getElementById('results').innerHTML = '<p class="loading">検索を中止しました</p>'; currentSearchId++; }
     function clearInput() { document.getElementById('termInput').value = ''; document.getElementById('termSuggestions').innerHTML = ''; document.getElementById('results').innerHTML = ''; }
   </script>
+  <style>
+    h1.search-page-title {
+      font-size: 22px;
+      line-height: 1.5;
+      letter-spacing: 0.02em;
+      margin: 24px auto 20px;
+      padding-bottom: 12px;
+      max-width: 100%;
+    }
+    .search-page-title .search-title-subject { display: block; }
+    ul.search-usage {
+      margin: 0 0 20px;
+      padding: 0 0 0 1.5em;
+      background: none;
+      border: 0;
+      border-radius: 0;
+      box-shadow: none;
+    }
+    .search-usage li { margin-bottom: 0.5em; }
+    @media (max-width: 600px) {
+      h1.search-page-title { font-size: 18px; }
+    }
+  </style>
 </head>
 
 <body>
@@ -205,9 +228,13 @@
           <li aria-current="page">用語から検索 (RW)</li>
         </ol>
       </nav>
-      <h1>用語から検索 (RW)</h1>
-    <p class="glossary-link"><b>各用語についてのコメントは<a href="dic.html"
-          target="_blank">ドイツ語の音楽用語集</a>を参照</b></p>
+<h1 class="search-page-title">Richard Wagner<span class="search-title-subject">ドイツ語歌唱・舞台指示検索</span></h1>
+      <p class="search-intro">Richard Wagner（リヒャルト・ワーグナー，RW）の主要な楽劇等に記されたドイツ語の歌唱指示，舞台指示等を，用語から検索可能．</p>
+      <ul class="search-usage">
+        <li>検索結果には，作品名，場面，指示対象（登場人物），スコアのページ，日本語訳を掲載．</li>
+        <li>検索結果の用語に付いたリンクから，ドイツ語の音楽用語集の該当項目を参照可能．</li>
+        <li>用語の一般的な意味や詳しい解釈については<a href="dic.html" target="_blank">ドイツ語の音楽用語集</a>を参照．</li>
+      </ul>
     <p><strong>検索窓は英字入力を想定しているので，特殊文字は慣例にしたがって以下のように入力する</strong></p>
     <ul>
       <li>ä⇒ae　例：Dämpfer⇒Daempfer</li>

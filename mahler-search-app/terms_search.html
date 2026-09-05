@@ -14,15 +14,15 @@
     </script>
     <meta charset="UTF-8">
 
-    <meta property="og:description" content="Gustav Mahler（グスタフ・マーラー）の作品で使用されているドイツ語の音楽用語等の訳例を検索できるデータベース．">
+    <meta property="og:description" content="Gustav Mahler（グスタフ・マーラー，GM）の交響曲・管弦楽作品に記されたドイツ語の演奏指示を検索可能．作品名，楽章，楽器，小節番号，日本語訳を掲載．">
     <link rel="canonical" href="https://yutaka-okawachi.github.io/gaswebapp-manual/mahler-search-app/terms_search.html">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="用語から検索（GM） | German Music Terms Dictionary">
+    <meta property="og:title" content="Gustav Mahler（グスタフ・マーラー）のドイツ語音楽用語・演奏指示検索（GM）">
     <meta property="og:url" content="https://yutaka-okawachi.github.io/gaswebapp-manual/mahler-search-app/terms_search.html">
     <meta property="og:image" content="https://yutaka-okawachi.github.io/gaswebapp-manual/ogp.png">
     <meta name="twitter:card" content="summary">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Gustav Mahler（グスタフ・マーラー）の作品で使用されているドイツ語音楽用語を検索できるデータベース．詳細な訳例や解釈，作品別の使用例を掲載．スコアの読み込みをサポートする専門ツール．">
+    <meta name="description" content="Gustav Mahler（グスタフ・マーラー，GM）の交響曲・管弦楽作品に記されたドイツ語の演奏指示を検索可能．作品名，楽章，楽器，小節番号，日本語訳を掲載．">
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -45,9 +45,9 @@
     {
       "@context": "https://schema.org",
       "@type": "WebApplication",
-      "name": "用語から検索 (GM)",
+      "name": "Gustav Mahler（グスタフ・マーラー）のドイツ語音楽用語・演奏指示検索（GM）",
       "url": "https://yutaka-okawachi.github.io/gaswebapp-manual/mahler-search-app/terms_search.html",
-      "description": "マーラーのスコア（楽譜）に登場するドイツ語の演奏指示や音楽用語を日本語で検索できる専門データベース．",
+      "description": "Gustav Mahler（グスタフ・マーラー，GM）の交響曲・管弦楽作品に記されたドイツ語の演奏指示を検索可能．作品名，楽章，楽器，小節番号，日本語訳を掲載．",
       "applicationCategory": "ReferenceApplication",
       "operatingSystem": "Any",
       "about": {
@@ -56,7 +56,7 @@
       }
     }
     </script>
-    <title>用語から検索 (GM)</title>
+    <title>Gustav Mahler（グスタフ・マーラー）のドイツ語音楽用語・演奏指示検索（GM）</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Lora:wght@400;700&display=swap">
@@ -428,6 +428,29 @@
             document.getElementById('termInput').focus();
         }
     </script>
+  <style>
+    h1.search-page-title {
+      font-size: 22px;
+      line-height: 1.5;
+      letter-spacing: 0.02em;
+      margin: 24px auto 20px;
+      padding-bottom: 12px;
+      max-width: 100%;
+    }
+    .search-page-title .search-title-subject { display: block; }
+    ul.search-usage {
+      margin: 0 0 20px;
+      padding: 0 0 0 1.5em;
+      background: none;
+      border: 0;
+      border-radius: 0;
+      box-shadow: none;
+    }
+    .search-usage li { margin-bottom: 0.5em; }
+    @media (max-width: 600px) {
+      h1.search-page-title { font-size: 18px; }
+    }
+  </style>
 </head>
 
 <body>
@@ -474,8 +497,13 @@
                     <li aria-current="page">用語から検索 (GM)</li>
                 </ol>
             </nav>
-            <h1>用語から検索 (GM)</h1>
-        <p><span style="font-size: 0.9rem;">各用語についてのコメントは</span><a href="dic.html" target="_blank" style="font-size: 1.2rem; font-weight: bold; color: var(--button-bg); text-decoration: none; border-bottom: 2px solid transparent; transition: all 0.2s ease;">ドイツ語の音楽用語集</a><span style="font-size: 0.9rem;">を参照</span></p>
+<h1 class="search-page-title">Gustav Mahler<span class="search-title-subject">ドイツ語音楽用語・演奏指示検索</span></h1>
+      <p class="search-intro">Gustav Mahler（グスタフ・マーラー，GM）の全交響曲および主要な管弦楽作品に記されたドイツ語の演奏指示を，用語から検索可能．</p>
+      <ul class="search-usage">
+        <li>検索結果には，作品名，楽章，楽器，小節番号，日本語訳を掲載．</li>
+        <li>検索結果の用語に付いたリンクから，ドイツ語の音楽用語集の該当項目を参照可能．</li>
+        <li>用語の一般的な意味や詳しい解釈については<a href="dic.html" target="_blank">ドイツ語の音楽用語集</a>を参照．</li>
+      </ul>
         <div style="background-color: #f5f5f5; border-radius: 8px; padding: 15px 20px; margin-bottom: 20px;">
             <p style="margin-top: 0;">
                 <strong>検索窓は英字入力を想定しているので，特殊文字は慣例にしたがって以下のように入力する</strong><br>
