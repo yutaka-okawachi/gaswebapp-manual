@@ -575,8 +575,6 @@ function generateDicHtml(dicData, abbrData, dictionaryExampleIndex) {
   };
   const breadcrumbJSON = JSON.stringify(breadcrumbObj, null, 2);
 
-  // タイムスタンプをコメントに追加
-  const timestamp = new Date().toLocaleString('ja-JP', { timeZone: 'Asia/Tokyo' });
     const html = `<!DOCTYPE html>
 <html>
 
@@ -1628,7 +1626,7 @@ ${abbrListHtml}
 </body>
 
 </html>
-<!-- Generated: ${timestamp} -->`;
+<!-- Generated deterministically from the spreadsheet source. -->`;
 
   return html;
 
