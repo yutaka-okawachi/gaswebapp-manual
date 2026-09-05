@@ -13,6 +13,7 @@
   * 引き継ぎ時の権限共有・情報渡しチェックリスト
   * 長期保守・アカウント継承設定（Google 無効化管理ツール、GitHub Successor）
   * サイドバー・メニューの管理注意事項
+  * メインリポジトリとルート用リポジトリの役割、`robots.txt` の引き継ぎ
 
 ---
 
@@ -23,7 +24,7 @@
   * 同期スクリプト (`sync-data.ps1`) の動作仕様とトラブルシューティング
   * 管理者ダッシュボードの通常確認、API・画面変更、Sites公開、障害復旧
   * 楽譜情報（`score_metadata.js`）の更新手順
-  * サイト運用（SEO、canonical設定、PageSpeed Insights パフォーマンス最適化方針）
+  * サイト運用（SEO、canonical設定、`robots.txt`、Search Console、PageSpeed Insights パフォーマンス最適化方針）
 
 ---
 

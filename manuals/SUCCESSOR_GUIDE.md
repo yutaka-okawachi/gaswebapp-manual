@@ -12,7 +12,8 @@
 |---|---|---|
 | **Google スプレッドシート** | マスターデータ（用語、訳例、メタデータ） | Google ドライブ |
 | **Google Apps Script (GAS)** | データ処理、HTML生成、GitHub同期API | スプレッドシートの「拡張機能 > Apps Script」 |
-| **GitHub リポジトリ** | ソースコード、公開サイトのホスティング | [yutaka-okawachi/gaswebapp-manual](https://github.com/yutaka-okawachi/gaswebapp-manual) |
+| **メインGitHubリポジトリ** | ソースコード、公開サイト、サイトマップの管理 | [yutaka-okawachi/gaswebapp-manual](https://github.com/yutaka-okawachi/gaswebapp-manual) |
+| **ルート用GitHubリポジトリ** | ホスト直下の `robots.txt` の管理 | [yutaka-okawachi/yutaka-okawachi.github.io](https://github.com/yutaka-okawachi/yutaka-okawachi.github.io) |
 | **公開 Web サイト** | アプリケーションの動作ページ | `https://yutaka-okawachi.github.io/gaswebapp-manual/` |
 
 ---
@@ -43,7 +44,7 @@
 ### 3-1. 権限の共有
 * [ ] **Google スプレッドシートの共有**: 後継者の Google アカウントに「編集者」権限を付与する。
 * [ ] **GAS プロジェクトのアクセス権**: スプレッドシート共有により、後継者が「拡張機能 > Apps Script」からエディタを開けることを確認する。
-* [ ] **GitHub リポジトリの Collaborator 追加**: `Settings > Collaborators` から招待し、Write（書き込み）権限以上を付与する。
+* [ ] **GitHub リポジトリの Collaborator 追加**: `gaswebapp-manual` と `yutaka-okawachi.github.io` の両方で `Settings > Collaborators` から招待し、Write（書き込み）権限以上を付与する。
 
 ### 3-2. 安全に引き渡すパラメータ（ローカル用）
 * [ ] **GAS Web App URL**:
@@ -97,3 +98,17 @@ Richard Strauss (RS) および Richard Wagner (RW) のあらすじ集ページ�
 
 1. **静的HTML**: `mahler-search-app/` 配下の全HTML (12ファイル) および ルートの `index.html`
 2. **GAS関連ファイル**: `src/sidebar.html`、`src/index.html`、および `src/generate_dic_html.js` 内のサイドバーHTML埋め込み箇所
+
+### 5-3. robots.txt と2つのGitHubリポジトリ
+
+公開サイトのページ本体と `sitemap.xml` は、従来どおり `gaswebapp-manual` リポジトリで管理します。ホスト直下の `robots.txt` だけは、`yutaka-okawachi.github.io` リポジトリで管理します。
+
+ページの追加、本文修正、デザイン変更、検索データ更新では、通常は `gaswebapp-manual` だけを更新します。公開ページをルート用リポジトリへ移す必要はありません。ルート用リポジトリを触るのは、サイトマップURL、ホスト全体のクロール方針、またはGitHub Pagesの構成を変更するときだけです。
+
+保守後は次を確認してください。
+
+* `https://yutaka-okawachi.github.io/robots.txt` が表示されること
+* その `Sitemap:` 行が `https://yutaka-okawachi.github.io/gaswebapp-manual/sitemap.xml` を指していること
+* サイトマップが表示され、追加・削除したページが正しく反映されていること
+
+Google Search Consoleへ `robots.txt` を登録したり、ルート用リポジトリのために新しいプロパティを追加したりする作業はありません。サイトマップがすでに「成功」なら、通常の更新時は何もしません。「取得できませんでした」と表示された場合は、公開URLを確認したうえでサイトマップを1回送信し、時間を置いて再確認します。

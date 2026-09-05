@@ -197,6 +197,25 @@ GAS APIの更新とSitesの公開は別作業です。どちらか一方の成�
 * **正規タグの設定**: 各 HTML の `<head>` 内に `<link rel="canonical">` および `<meta property="og:url">` が指定され、重複コンテンツを防いでいます。
 * **新規ファイル追加時**: `sitemap.xml` への追加に加え、`sync-data.ps1` の内側にある `$pathMappings` 変数へファイルパスを登録することで、最終更新日の自動更新機能が有効になります。
 
+#### robots.txt とルート用リポジトリ
+
+`https://yutaka-okawachi.github.io/robots.txt` は、ホストのルートに置く必要があるため、専用リポジトリ [yutaka-okawachi/yutaka-okawachi.github.io](https://github.com/yutaka-okawachi/yutaka-okawachi.github.io) で管理します。現在の役割は、`gaswebapp-manual` のサイトマップURLを検索エンジンへ知らせることだけです。
+
+通常のページ追加・本文修正・デザイン変更・検索データ更新では、ルート用リポジトリを変更しません。本リポジトリ側でページ、内部リンク、`sitemap.xml`、必要に応じて `sync-data.ps1` の `$pathMappings` を更新します。公開ページをルート用リポジトリへ移す必要はありません。`sync-data.ps1` はルート用リポジトリを更新しません。
+
+ルート用リポジトリを変更するのは、次の場合に限ります。
+
+* サイトマップの公開URLを変更した場合
+* `yutaka-okawachi.github.io` ホスト全体のクロール許可・拒否方針を変更する場合
+* ホスト名やGitHub Pagesの構成を変更する場合
+
+変更後は、次の2つを別々に確認します。
+
+1. `https://yutaka-okawachi.github.io/robots.txt` がHTTP 200で取得でき、`Sitemap:` 行が正しいこと
+2. `https://yutaka-okawachi.github.io/gaswebapp-manual/sitemap.xml` がHTTP 200で取得でき、掲載URLが正しいこと
+
+Google Search Consoleへ `robots.txt` を登録したり、ルート用リポジトリのために新しいプロパティを追加したりする作業はありません。既存のサイトマップが「成功」なら、そのままで構いません。未登録または「取得できませんでした」の場合だけ、既存プロパティの「サイトマップ」から上記のサイトマップURLを1回送信し、後日ステータスを確認します。通常のページ更新ごとに再送信する必要はありません。
+
 ### 4-2. パフォーマンス向上 (PageSpeed Insights 対応)
 * **フォントの最適化**: ページ読み込み時の LCP（最大コンテンツ描画）遅延を防ぐため、トップページ冒頭の説明文（`.subtitle`）には Web フォントではなくシステムフォントを明示的に指定しています。
 * **Googleタグの遅延読み込み**: 描画ブロックを防ぐため、`gtag.js` を即時ロードせず、ページ読み込み後に遅延して追加する実装を行っています。
