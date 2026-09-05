@@ -242,7 +242,7 @@ function buildExportSnapshot_(exportOptions) {
     CacheService.getScriptCache().remove('dic_terms_index_v1');
     CacheService.getScriptCache().remove('dic_terms_index_v2');
 
-    // GitHubへ直接プッシュ（Google Drive不要）
+    // 検証済みの生成結果をローカル同期へ返す
     const files = {
         'mahler-search-app/data/mahler.json': mahlerJson,
         'mahler-search-app/data/richard_strauss.json': rsJson,

@@ -2,6 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const { root, sha256, normalizeText, request, delay, writeIfChanged } = require('./core');
 const { runClasp, run: deploy } = require('../../src/manage_deploy');
+const DEPLOYMENT_VERIFY_DELAYS_MS = [0, 2000, 5000, 10000, 20000];
 function configuration() {
     const file = path.join(root, '.env');
     const settings = { ...process.env };
@@ -48,23 +49,38 @@ async function inspect(settings) {
         throw error;
     }
 }
-async function ensureDeployment(settings, state, save) {
+async function waitForSourceHash(settings, expectedHash, options = {}) {
+    const inspectFn = options.inspect || inspect;
+    const wait = options.delay || delay;
+    const delays = options.delays || DEPLOYMENT_VERIFY_DELAYS_MS;
+    let observed = null;
+    let lastError = null;
+    for (const waitMs of delays) {
+        await wait(waitMs);
+        try {
+            observed = await inspectFn(settings);
+            lastError = null;
+            if (observed && observed.sourceHash === expectedHash) return observed;
+        } catch (error) {
+            lastError = error;
+        }
+    }
+    const detail = lastError
+        ? ` 最後のエラー: ${lastError.message}`
+        : ` 確認値: ${observed && observed.sourceHash ? observed.sourceHash : '取得できず'}`;
+    throw new Error('デプロイした GAS ソースの反映を確認できません。sync-data を再実行すると反映済みのデプロイを再利用します。' + detail);
+}
+async function ensureDeployment(settings, state, save, observed) {
     const hash = fingerprint();
-    const observed = await inspect(settings);
-    if (observed && observed.sourceHash === hash) { state.gasHash = hash; save(); return hash; }
+    const current = observed === undefined ? await inspect(settings) : observed;
+    if (current && current.sourceHash === hash) { state.gasHash = hash; save(); return hash; }
     if (state.gasApproval !== hash) throw new Error('GAS の更新前確認が必要です。sync-data を再実行してください。');
     console.log('GAS ソースを更新し、固定デプロイを検証します。');
     runClasp(['push', '-f']);
     deploy();
-    let verified = null;
-    for (const waitMs of [0, 2000, 5000, 10000, 20000]) {
-        await delay(waitMs);
-        verified = await call(settings, 'syncInfo');
-        if (verified.sourceHash === hash) break;
-    }
-    if (!verified || verified.sourceHash !== hash) throw new Error('デプロイした GAS ソースの内容を確認できません。');
+    await waitForSourceHash(settings, hash);
     state.gasHash = hash;
     save();
     return hash;
 }
-module.exports = { configuration, fingerprint, prepareBuild, inspect, call, exportSnapshot, ensureDeployment };
+module.exports = { configuration, fingerprint, prepareBuild, inspect, call, exportSnapshot, waitForSourceHash, ensureDeployment, DEPLOYMENT_VERIFY_DELAYS_MS };

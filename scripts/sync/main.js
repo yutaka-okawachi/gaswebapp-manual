@@ -113,7 +113,7 @@ async function main(args = process.argv.slice(2)) {
             state.gasApproval = gas.fingerprint();
             save();
         }
-        if (!selected.documentsOnly && opt.mode !== 'Site') await gas.ensureDeployment(settings, state, save);
+        if (!selected.documentsOnly && opt.mode !== 'Site') await gas.ensureDeployment(settings, state, save, observedGas);
         if (selected.data) {
             console.log('スプレッドシートからデータを取得・検証します。');
             const requestId = crypto.randomUUID();

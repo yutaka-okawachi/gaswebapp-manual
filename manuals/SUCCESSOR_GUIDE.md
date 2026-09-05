@@ -11,7 +11,7 @@
 | 資産 | 役割 | 管理場所 |
 |---|---|---|
 | **Google スプレッドシート** | マスターデータ（用語、訳例、メタデータ） | Google ドライブ |
-| **Google Apps Script (GAS)** | データ処理、HTML生成、GitHub同期API | スプレッドシートの「拡張機能 > Apps Script」 |
+| **Google Apps Script (GAS)** | データ処理、HTML生成、同期用スナップショットAPI | スプレッドシートの「拡張機能 > Apps Script」 |
 | **メインGitHubリポジトリ** | ソースコード、公開サイト、サイトマップの管理 | [yutaka-okawachi/gaswebapp-manual](https://github.com/yutaka-okawachi/gaswebapp-manual) |
 | **ルート用GitHubリポジトリ** | ホスト直下の `robots.txt` の管理 | [yutaka-okawachi/yutaka-okawachi.github.io](https://github.com/yutaka-okawachi/yutaka-okawachi.github.io) |
 | **公開 Web サイト** | アプリケーションの動作ページ | `https://yutaka-okawachi.github.io/gaswebapp-manual/` |
@@ -60,14 +60,16 @@
 |---|---|---|
 | `NOTIFY_EMAIL` | 通知先メールアドレス | ユーザーが検索を実行した際の通知送信先 |
 | `GAS_SECRET_TOKEN` | 任意の認証トークン文字列 | ローカルPCからの自動同期認証用 |
-| GitHubのPC認証 | Git Credential Manager または GH_TOKEN | sync-dataからGitHubへ公開・状態確認する用。GASには送信しません |
+| `SPREADSHEET_ID` | データ元スプレッドシートのID | 同期時に読み込むシートの指定。スプレッドシートの「データ同期」メニューから設定可能 |
+
+GitHubの認証はPC側の Git Credential Manager または `GH_TOKEN` で管理します。`sync-data` が公開と状態確認に使用し、GASのスクリプトプロパティには保存しません。
 
 #### 💡 GAS スクリプト プロパティの確認・設定手順
 1. Google スプレッドシートを開き、メニューの **「拡張機能」 ＞ 「Apps Script」** をクリックします。
 2. 左サイドバーの **⚙️（歯車アイコン：プロジェクトの設定）** をクリックします。
 3. ページ下部の **「スクリプト プロパティ」** セクションへ移動します。
 4. **「スクリプト プロパティを編集」**（または「プロパティを追加」）をクリックします。
-5. `NOTIFY_EMAIL` に通知を受け取りたいメールアドレスを入力し、**「スクリプト プロパティを保存」** をクリックします。
+5. `NOTIFY_EMAIL` と `GAS_SECRET_TOKEN` を入力し、**「スクリプト プロパティを保存」** をクリックします。`SPREADSHEET_ID` は同じ画面で設定するか、スプレッドシートを開いて **「データ同期」＞「このシートをデータ元に設定」** を選びます。
 
 ---
 

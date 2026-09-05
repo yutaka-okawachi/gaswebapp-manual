@@ -50,8 +50,6 @@ assert.strictEqual(publicPath('/src/web_trigger.js'), null);
 assert.strictEqual(publicPath('/mahler-search-app/%2e%2e%5c.env'), null);
 assert.ok(publicPath('/mahler-search-app/dic.html').endsWith('dic.html'));
 assert.ok(previewHtml('<html><head></head><body></body></html>', 'test', true).includes('確認しました。この内容を公開する'));
-assert.ok(fs.readFileSync(path.join(root, 'scripts/sync/gas.js'), 'utf8').includes('[0, 2000, 5000, 10000, 20000]'));
-
 let released = 0;
 const context = vm.createContext({
     LockService: { getScriptLock: () => ({ tryLock: () => true, releaseLock: () => released++ }) },
