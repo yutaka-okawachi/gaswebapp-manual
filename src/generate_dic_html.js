@@ -584,6 +584,7 @@ function generateDicHtml(dicData, abbrData, dictionaryExampleIndex) {
     
     <!-- Google tag (gtag.js) -->
 <script src="js/analytics.js?v=${typeof PUBLIC_ASSET_VERSIONS === 'object' ? PUBLIC_ASSET_VERSIONS['js/analytics.js'] : '1'}"></script>
+<script src="js/analytics.js"></script>
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZT6MPW5MNG"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
@@ -1253,6 +1254,28 @@ ${breadcrumbJSON}
                         return;
                     }
 
+                    const composerLink = e.target.closest('a.composer-link');
+                    if (composerLink && listContainer.contains(composerLink)) {
+                        const sourceRow = composerLink.closest('.row');
+                        if (sourceRow && sourceRow.id) {
+                            const termId = sourceRow.id;
+                            try {
+                                window.sessionStorage.setItem('dictionary_example_return_target', termId);
+                            } catch (err) {}
+                            try {
+                                if ('scrollRestoration' in window.history) {
+                                    window.history.scrollRestoration = 'manual';
+                                }
+                                window.history.replaceState(
+                                    Object.assign({}, window.history.state, { dictionaryExampleReturnTarget: termId }),
+                                    '',
+                                    '#' + encodeURIComponent(termId)
+                                );
+                            } catch (err) {}
+                        }
+                        return;
+                    }
+
                     // リンク自体のクリック時はアコーディオン開閉処理を行わない
                     if (e.target.closest('a')) {
                         return;
@@ -1286,8 +1309,30 @@ ${breadcrumbJSON}
         });
 
         window.addEventListener('hashchange', handleHashChange);
+        window.addEventListener('popstate', handleHashChange);
+        window.addEventListener('pageshow', (event) => {
+            const isBackForward = event.persisted ||
+                (window.performance && window.performance.getEntriesByType &&
+                    window.performance.getEntriesByType('navigation')[0] &&
+                    window.performance.getEntriesByType('navigation')[0].type === 'back_forward');
+            if (isBackForward || (window.location.hash && window.location.hash.startsWith('#term-'))) {
+                handleHashChange();
+            }
+        });
 
         let hashScrollSequence = 0;
+
+        function cancelHashScroll() {
+            hashScrollSequence++;
+        }
+
+        window.addEventListener('wheel', cancelHashScroll, { passive: true });
+        window.addEventListener('touchstart', cancelHashScroll, { passive: true });
+        window.addEventListener('keydown', (e) => {
+            if (['ArrowUp', 'ArrowDown', 'PageUp', 'PageDown', 'Space', 'Home', 'End'].includes(e.code)) {
+                cancelHashScroll();
+            }
+        }, { passive: true });
 
         function getHashScrollOffset() {
             const navToggle = document.querySelector('.nav-toggle');
@@ -1324,11 +1369,39 @@ ${breadcrumbJSON}
                 window.requestAnimationFrame(realign);
             });
             window.setTimeout(realign, 150);
-            window.setTimeout(realign, 500);
+            window.setTimeout(realign, 300);
+            window.setTimeout(realign, 600);
+            window.setTimeout(realign, 1000);
+        }
+
+        function getPendingExampleReturnTarget() {
+            try {
+                const target = window.sessionStorage.getItem('dictionary_example_return_target');
+                if (target) {
+                    window.sessionStorage.removeItem('dictionary_example_return_target');
+                    return target;
+                }
+            } catch (err) {}
+            if (window.history.state && window.history.state.dictionaryExampleReturnTarget) {
+                return window.history.state.dictionaryExampleReturnTarget;
+            }
+            return null;
         }
 
         function handleHashChange() {
-            const hash = window.location.hash;
+            let hash = window.location.hash;
+            const pendingReturnTarget = getPendingExampleReturnTarget();
+
+            if (!hash && pendingReturnTarget) {
+                hash = '#' + encodeURIComponent(pendingReturnTarget);
+                try {
+                    window.history.replaceState(
+                        Object.assign({}, window.history.state, { dictionaryExampleReturnTarget: pendingReturnTarget }),
+                        '',
+                        hash
+                    );
+                } catch (err) {}
+            }
 
             document.querySelectorAll('.row.highlight-active').forEach(el => el.classList.remove('highlight-active'));
             clearAbbreviationHighlights();
@@ -1345,6 +1418,10 @@ ${breadcrumbJSON}
             if (!targetElement) {
                 hideAbbreviationReturnPanel();
                 return;
+            }
+
+            if ('scrollRestoration' in window.history) {
+                window.history.scrollRestoration = 'manual';
             }
 
             const isAbbreviationTarget = targetId.startsWith('abbr-');
