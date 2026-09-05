@@ -1,41 +1,25 @@
-name: Normalize admin opt-out bootstrap
+name: Validate site and sync
 
 on:
   push:
     branches: [main]
-    paths:
-      - '.github/workflows/normalize-admin-optout.yml'
-      - 'scripts/normalize-admin-optout.js'
+  pull_request:
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
-  normalize:
+  test:
     runs-on: ubuntu-latest
     steps:
-      - name: Check out repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
-          fetch-depth: 0
-
-      - name: Normalize analytics bootstrap order
-        run: node scripts/normalize-admin-optout.js
-
-      - name: Validate JavaScript syntax
+          node-version: '22'
+      - name: Build and check reproducibility
         run: |
-          node --check scripts/normalize-admin-optout.js
-          node --check mahler-search-app/js/analytics.js
-          node --check src/generate_dic_html.js
-
-      - name: Commit normalized files
-        run: |
-          if git diff --quiet; then
-            echo "No normalization changes needed."
-            exit 0
-          fi
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -- index.html mahler-search-app src/generate_dic_html.js
-          git commit -m "Ensure admin opt-out loads before GA4"
-          git push
+          node scripts/build-site.js
+          node -e "require('./scripts/sync/gas').prepareBuild()"
+          git diff --exit-code
+      - name: Run local regressions
+        run: node scripts/check-local.js

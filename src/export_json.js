@@ -1,7 +1,17 @@
 // SPREADSHEET_ID is defined in mahler.js
 
 function exportAllDataToJson(options) {
-    const exportOptions = options || {};
+    const settings = options || {};
+    const lock = LockService.getScriptLock();
+    if (!lock.tryLock(1000)) throw new Error('データ生成が実行中です。少し待って再実行してください。');
+    try {
+        return buildExportSnapshot_(settings);
+    } finally {
+        lock.releaseLock();
+    }
+}
+
+function buildExportSnapshot_(exportOptions) {
     // 最新データを取得するためにキャッシュを確実にクリア
     const cache = CacheService.getScriptCache();
     const cacheKeys = [
@@ -20,6 +30,7 @@ function exportAllDataToJson(options) {
     });
     
     const ss = SpreadsheetApp.openById(SPREADSHEET_ID);
+    validateExportSheets_(ss);
 
     // 0. Score Info (楽譜情報) - Load first for Publisher info
     const scoreSheet = ss.getSheetByName('楽譜情報');
@@ -246,54 +257,30 @@ function exportAllDataToJson(options) {
     };
     Object.assign(files, dictionaryExampleData.files);
 
-    // 自動生成されたコミットメッセージ
-    const timestamp = new Date().toLocaleString('ja-JP', { timeZone: 'Asia/Tokyo' });
-    const commitMessage = `自動更新: スプレッドシートからデータ同期 [${timestamp}] [skip ci]`;
+    return {
+        schemaVersion: 1,
+        requestId: String(exportOptions.requestId || ''),
+        sourceHash: typeof SYNC_SOURCE_HASH === 'string' ? SYNC_SOURCE_HASH : '',
+        files: files
+    };
+}
 
-    Logger.log('=== GitHubへデータをプッシュ中 ===');
-    
-    try {
-        // github_sync.js の pushToGitHub() を呼び出し
-        const result = pushToGitHub(files, commitMessage, exportOptions.githubToken);
-        
-        Logger.log('=== 完了 ===');
-        Logger.log(`成功: ${result.success.length} ファイル`);
-        Logger.log(`失敗: ${result.failed.length} ファイル`);
-        
-        if (result.success.length > 0) {
-            Logger.log('\n✓ 成功したファイル:');
-            result.success.forEach(path => Logger.log(`  - ${path}`));
+function validateExportSheets_(ss) {
+    const required = {
+        GM: 4, RS: 8, RW: 8, Notes: 3, '略記一覧': 3,
+        'RS幕構成': 4, 'RW幕構成': 4, '楽譜情報': 5
+    };
+    Object.keys(required).forEach(name => {
+        const sheet = ss.getSheetByName(name);
+        if (!sheet) throw new Error('必須シートが欠落しています: ' + name);
+        const values = sheet.getDataRange().getValues();
+        if (!values.length || values[0].length < required[name]) throw new Error('必須列が不足しています: ' + name);
+        if (name === 'RS' || name === 'RW') {
+            const header = values[0].slice(0, 8).map(value => String(value).trim());
+            ['Oper', 'de', 'ja', 'page', 'whom'].forEach(key => {
+                if (header.indexOf(key) === -1) throw new Error('必須列が不足しています: ' + name + ':' + key);
+            });
+            if (new Set(header).size !== header.length) throw new Error('列名が重複しています: ' + name);
         }
-        
-        if (result.failed.length > 0) {
-            Logger.log('\n✗ 失敗したファイル:');
-            result.failed.forEach(f => Logger.log(`  - ${f.path}: ${f.error}`));
-        }
-        
-        // ユーザーへの通知（オプション）
-        if (result.success.length === result.total) {
-            SpreadsheetApp.getActiveSpreadsheet().toast(
-                `${result.total}個のファイルをGitHubへプッシュしました`,
-                '✓ 完了',
-                5
-            );
-        } else {
-            SpreadsheetApp.getActiveSpreadsheet().toast(
-                `${result.success.length}/${result.total}個のファイルをプッシュしました（${result.failed.length}個失敗）`,
-                '⚠️ 一部失敗',
-                10
-            );
-        }
-        
-        return result;
-        
-    } catch (error) {
-        Logger.log('✗ エラー: ' + error.message);
-        SpreadsheetApp.getActiveSpreadsheet().toast(
-            'エラー: ' + error.message,
-            '✗ 失敗',
-            10
-        );
-        throw error;
-    }
+    });
 }

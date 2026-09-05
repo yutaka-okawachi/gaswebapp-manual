@@ -1,0 +1,11 @@
+[
+  "src/search_core.js",
+  "frontend/state-and-notifications.js",
+  "frontend/data-loader.js",
+  "frontend/suggestions.js",
+  "frontend/strauss-view.js",
+  "frontend/result-format.js",
+  "frontend/wagner-view.js",
+  "frontend/dictionary-view.js",
+  "frontend/search.js"
+]

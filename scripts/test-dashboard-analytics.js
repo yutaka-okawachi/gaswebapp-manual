@@ -1069,7 +1069,7 @@ assert.ok(analyticsScriptSource.includes("linkType === 'example_search'"));
 assert.ok(analyticsScriptSource.includes('window.sessionStorage.setItem'));
 assert.ok(analyticsScriptSource.includes('startedAt: Date.now()'));
 publicTermSearchPages.forEach(pagePath => {
-  assert.ok(fs.readFileSync(pagePath, 'utf8').includes('js/app.js?v=16'));
+  assert.match(fs.readFileSync(pagePath, 'utf8'), /js\/app\.js\?v=[a-f0-9]{12}/);
 });
 assert.strictEqual(
   fs.readFileSync(sourcePath, 'utf8').includes("'click_view_example'"),

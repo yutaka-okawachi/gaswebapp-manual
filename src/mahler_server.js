@@ -26,43 +26,15 @@ const SPREADSHEET_ID = PropertiesService.getScriptProperties().getProperty('SPRE
  * 文字列を正規化する関数
  * ウムラウトなどを変換し、小文字化・空白除去を行う
  */
-function normalizeString(str) {
-  if (typeof str !== 'string') return '';
-  return str
-    .toLowerCase()
-    .replace(/ä/g, 'ae')
-    .replace(/ö/g, 'oe')
-    .replace(/ü/g, 'ue')
-    .replace(/ß/g, 'ss')
-    .trim();
-}
+
 
 /**
  * 用語検索の一致方法を判定する。
  * exact は文字列全体ではなく、検索語の前後が文字・数字でない「独立語一致」。
  */
-function isTermWordCharacter(character) {
-  return typeof character === 'string' && character !== '' && /[\p{L}\p{N}]/u.test(character);
-}
 
-function matchesTermQuery(value, query, matchMode) {
-  const normalizedValue = normalizeString(String(value || ''));
-  const normalizedQuery = normalizeString(String(query || ''));
-  if (!normalizedQuery) return false;
-  if (matchMode !== 'exact') return normalizedValue.includes(normalizedQuery);
 
-  let searchFrom = 0;
-  while (searchFrom <= normalizedValue.length - normalizedQuery.length) {
-    const matchIndex = normalizedValue.indexOf(normalizedQuery, searchFrom);
-    if (matchIndex === -1) return false;
-    const before = matchIndex > 0 ? normalizedValue.charAt(matchIndex - 1) : '';
-    const afterIndex = matchIndex + normalizedQuery.length;
-    const after = afterIndex < normalizedValue.length ? normalizedValue.charAt(afterIndex) : '';
-    if (!isTermWordCharacter(before) && !isTermWordCharacter(after)) return true;
-    searchFrom = matchIndex + 1;
-  }
-  return false;
-}
+
 
 /**
  * 用語をID用の文字列に正規化する (辞書リンク用)
@@ -223,14 +195,6 @@ function include(filename) {
  * 管理APIリクエスト（tokenパラメータ有り）とWeb UIリクエストを統合処理
  */
 function doGet(e) {
-  // デバッグログ: パラメータの状態を確認
-  Logger.log("doGet called");
-  Logger.log("e object: " + JSON.stringify(e));
-  if (e && e.parameter) {
-    Logger.log("e.parameter: " + JSON.stringify(e.parameter));
-    Logger.log("token parameter: " + e.parameter.token);
-  }
-
   // Public dashboard API. It returns aggregate values only and never exposes
   // tokens, user identifiers, UserAgent values, or raw search-history rows.
   if (e && e.parameter && e.parameter.api === 'dashboard') {

@@ -34,3 +34,6 @@ tmp/
 .codex-slide-build/
 .codex-slide-revision/
 
+
+# Local sync receipts and staged snapshots (never published)
+.sync-state/

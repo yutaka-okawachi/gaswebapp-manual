@@ -585,7 +585,7 @@ function generateDicHtml(dicData, abbrData, dictionaryExampleIndex) {
     <meta name="google-site-verification" content="oMTfhSgc1nOrF9dVnBCR_YGcwCDYlrqNmyYn-UJuBJc" />
     
     <!-- Google tag (gtag.js) -->
-<script src="js/analytics.js"></script>
+<script src="js/analytics.js?v=${typeof PUBLIC_ASSET_VERSIONS === 'object' ? PUBLIC_ASSET_VERSIONS['js/analytics.js'] : '1'}"></script>
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZT6MPW5MNG"></script>
     <script>
       window.dataLayer = window.dataLayer || [];

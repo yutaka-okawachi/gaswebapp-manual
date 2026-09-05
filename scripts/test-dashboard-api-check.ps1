@@ -197,12 +197,12 @@ Assert-True `
     -Condition ($dashboardApiHelperSource -match '%\{http_code\}\|%\{content_type\}') `
     -Message "HTTP status and content type must be captured"
 
-$syncSource = Get-Content (Join-Path $PSScriptRoot "..\sync-data.ps1") -Raw
+$syncSource = Get-Content (Join-Path $PSScriptRoot "verify-dashboard.ps1") -Raw
 Assert-True `
-    -Condition ($syncSource -match '\$dashboardApiRetryDelays = @\(0, 10, 20, 40, 60\)') `
+    -Condition ($syncSource -match '@\(0, 10, 20, 40, 60\)') `
     -Message "dashboard API retries must allow propagation time"
 Assert-True `
-    -Condition ($syncSource -match '\$pendingDashboardPeriods = @\(\$dashboardPeriods\)') `
+    -Condition ($syncSource -match '\$pending = @\(7, 30, 90\)') `
     -Message "all periods must share one retry schedule"
 
 Write-Output "sync dashboard API checks: OK"

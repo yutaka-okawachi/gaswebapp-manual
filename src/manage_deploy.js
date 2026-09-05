@@ -224,10 +224,7 @@ function run() {
     }
     const verification = verifyDeploymentVersion(deploymentId, versionNumber);
     if (verification.status === 'superseded') {
-        console.warn(
-            `Fixed deployment was advanced concurrently to version ` +
-            `${verification.observedVersion}; keeping the newer version.`
-        );
+        throw new Error('別の同期によってデプロイが更新されました。再実行してください。');
     } else {
         console.log(`[OK] Fixed Web App deployment verified at version ${versionNumber}.`);
     }
@@ -247,6 +244,7 @@ if (require.main === module) {
 }
 
 module.exports = {
+    run,
     getDeploymentIdFromEnv,
     parseDeployments,
     parseCreatedVersion,

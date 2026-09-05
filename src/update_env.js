@@ -8,7 +8,7 @@ const fs = require('fs');
 const path = require('path');
 
 const ENV_PATH = path.join(__dirname, '../.env');
-const APP_JS_PATH = path.join(__dirname, '../mahler-search-app/js/app.js');
+const APP_JS_PATH = path.join(__dirname, '../frontend/state-and-notifications.js');
 
 function getFixedDeploymentUrl(envContent) {
     const match = envContent.match(

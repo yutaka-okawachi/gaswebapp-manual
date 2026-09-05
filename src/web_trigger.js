@@ -252,15 +252,13 @@ function handleRequest(params) {
     }
     
     let result;
-    if (action === "exportDic" || action === "exportAllDataToJson") {
-      // sync-data.ps1 からの POST では、その実行時だけ有効な Git 認証を使う。
-      // Script Properties に保存せず、レスポンスやログにも含めない。
-      const exportResult = exportAllDataToJson({ githubToken: params.githubToken || '' });
-      result = { 
-        status: exportResult.failed.length === 0 ? "success" : "partial_success", 
-        message: "Export completed",
-        details: exportResult 
-      };
+    if (action === "exportSnapshot") {
+      if (!/^[a-f0-9-]{36}$/.test(String(params.requestId || ''))) throw new Error('Invalid requestId');
+      result = Object.assign({ status: 'success' }, exportAllDataToJson({ requestId: params.requestId }));
+    } else if (action === 'syncInfo') {
+      result = { status: 'success', schemaVersion: 1, sourceHash: SYNC_SOURCE_HASH };
+    } else if (action === 'exportDic' || action === 'exportAllDataToJson') {
+      throw new Error('公開処理はPCの sync-data.ps1 から実行してください。');
     } else if (action === "ping") {
       result = { status: "success", message: "Pong" };
     } else {

@@ -37,7 +37,7 @@ function extractFunctionExpression(source, start) {
   throw new Error('function expression closing brace was not found');
 }
 
-const serverSource = read('src/mahler_server.js');
+const serverSource = read('src/search_core.js');
 const serverContext = {};
 vm.createContext(serverContext);
 vm.runInContext([
@@ -138,7 +138,7 @@ cases.forEach(([value, query, mode, expected]) => {
   assert.match(page, /name="termMatchMode" value="exact"/);
   assert.match(page, /window\.matchesTermQuery\(entry\.normalized, normalizedInput, matchMode\)/);
   assert.ok(page.includes(`${localFunction}(query, resultMeta, matchMode)`));
-  assert.ok(page.includes('js/app.js?v=16'));
+  assert.match(page, /js\/app\.js\?v=[a-f0-9]{12}/);
 });
 
 const syncSource = read('sync-data.ps1');
@@ -149,6 +149,6 @@ const generatedOutputBlock = syncSource.slice(
 ['terms_search.html', 'rw_terms_search.html', 'rs_terms_search.html', 'js/app.js', 'css/common.css'].forEach(file => {
   assert.ok(!generatedOutputBlock.includes(file), `${file} must not be reset as generated output by sync-data.ps1`);
 });
-assert.ok(syncSource.includes('"mahler-search-app/"'), 'sync-data.ps1 should commit the public page source files');
+assert.ok(read('scripts/sync/git.js').includes("'mahler-search-app/'"), 'sync-data.ps1 should commit the public page source files');
 
 console.log('Term search match-mode tests passed.');

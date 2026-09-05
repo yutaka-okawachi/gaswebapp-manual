@@ -168,16 +168,10 @@ function clearGitHubSettings() {
  */
 function onOpen() {
   const ui = SpreadsheetApp.getUi();
-  ui.createMenu('🔧 GitHub同期')
-    .addItem('📝 GitHub設定を行う', 'setupGitHubCredentials')
-    .addItem('👁️ 現在の設定を確認', 'viewGitHubSettings')
-    .addSeparator()
-    .addItem('🚀 GitHubへデータをエクスポート', 'exportAllDataToJson')
-    .addItem('🧪 接続テスト', 'testGitHubSync')
-    .addSeparator()
-    .addItem('🗑️ 設定をクリア', 'clearGitHubSettings')
+  ui.createMenu('🔧 データ同期')
+    .addItem('同期方法を確認', 'testGitHubSync')
     .addToUi();
-    
+
   ui.createMenu('📊 検索履歴グラフ')
     .addItem('🔄 グラフを最新に更新する', 'updateSearchHistoryCharts')
     .addToUi();

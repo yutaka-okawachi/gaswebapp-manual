@@ -4,3 +4,13 @@ exclude:
   - .agent
   - .venv
   - scratch
+  - frontend
+  - src
+  - scripts
+  - manuals
+  - output
+  - outputs
+  - tmp
+  - sync-data.ps1
+  - 01_START_SUCCESSOR_SETUP.bat
+  - 02_RUN_SYNC.bat
