@@ -56,8 +56,13 @@ async function ensureDeployment(settings, state, save) {
     console.log('GAS ソースを更新し、固定デプロイを検証します。');
     runClasp(['push', '-f']);
     deploy();
-    const verified = await call(settings, 'syncInfo');
-    if (verified.sourceHash !== hash) throw new Error('デプロイした GAS ソースの内容を確認できません。');
+    let verified = null;
+    for (const waitMs of [0, 2000, 5000, 10000, 20000]) {
+        await delay(waitMs);
+        verified = await call(settings, 'syncInfo');
+        if (verified.sourceHash === hash) break;
+    }
+    if (!verified || verified.sourceHash !== hash) throw new Error('デプロイした GAS ソースの内容を確認できません。');
     state.gasHash = hash;
     save();
     return hash;
