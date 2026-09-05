@@ -1,4 +1,5 @@
 const { run, request, delay, sha256, normalizeText, git } = require('./core');
+const logger = require('./logger');
 function token() {
     if (process.env.GH_TOKEN || process.env.GITHUB_TOKEN) return process.env.GH_TOKEN || process.env.GITHUB_TOKEN;
     const data = run('git', ['credential', 'fill'], { redactError: true, input: 'protocol=https\nhost=github.com\n\n', env: { ...process.env, GIT_TERMINAL_PROMPT: '0' } });
@@ -56,7 +57,7 @@ async function verifyPages(slug, sha, credential, baseUrl, manifest) {
                 return;
             } catch (e) { last = e.message; }
         }
-        console.log(`Pages の公開確認を継続中…${last ? ' ' + last : ''}`);
+        logger.wait(`Pages の公開確認を継続中…${last ? ' (' + last + ')' : ''}`);
         await delay(10000);
     }
     throw new Error(`公開確認がタイムアウトしました。再実行で確認を再開します。${last}`);

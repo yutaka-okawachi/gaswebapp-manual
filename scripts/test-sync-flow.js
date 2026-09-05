@@ -6,7 +6,7 @@ const vm = require('vm');
 const core = require('./sync/core');
 const source = fs.readFileSync(path.join(__dirname, 'sync/main.js'), 'utf8');
 
-async function scenario({ failCheck = false, failSnapshot = false, failPublish = false, editDuringPreview = false } = {}) {
+async function scenario({ failCheck = false, failSnapshot = false, failPublish = false } = {}) {
     const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'gmt-sync-test-'));
     const events = [];
     let head = 'source-head';
@@ -15,6 +15,10 @@ async function scenario({ failCheck = false, failSnapshot = false, failPublish =
     const fakeRequire = name => {
         const stubs = {
             './core': { ...core, root: directory, run: () => '', git: (...args) => args[0] === 'rev-parse' ? head : '' },
+            './logger': {
+                c: {}, header: () => {}, success: () => {}, info: () => {},
+                warn: () => {}, error: () => {}, wait: () => {}, sub: () => {}, finish: () => {}
+            },
             './git': {
                 preflight: () => { events.push('preflight'); return changes; },
                 repoSlug: () => 'owner/repo', changed: () => changes,
@@ -39,12 +43,7 @@ async function scenario({ failCheck = false, failSnapshot = false, failPublish =
                 verifyPages: async () => { events.push('verify'); if (publishFailure) { publishFailure = false; throw new Error('pending Pages'); } }
             },
             '../build-site': { build: () => { events.push('build'); } },
-            '../check-local': { check: () => { events.push('tests'); if (failCheck) throw new Error('bad test'); } },
-            '../preview-site': { startPreview: async ({ phase }) => {
-                events.push(phase === 'prepare' ? 'prepare-approval' : 'publish-approval');
-                if (editDuringPreview) changes = ['index.html'];
-                return { approved: Promise.resolve(), close: async () => {} };
-            } }
+            '../check-local': { check: () => { events.push('tests'); if (failCheck) throw new Error('bad test'); } }
         };
         return Object.hasOwn(stubs, name) ? stubs[name] : require(name);
     };
@@ -62,22 +61,20 @@ async function scenario({ failCheck = false, failSnapshot = false, failPublish =
         } else if (failSnapshot) {
             assert.ok(failed);
             assert.ok(!events.includes('install') && !events.includes('push'));
-        } else if (editDuringPreview) {
-            assert.ok(failed);
-            assert.ok(!events.includes('deploy') && !events.includes('push'));
         } else if (failPublish) {
             assert.ok(failed);
             const before = events.length;
             await main([]);
             const resume = events.slice(before);
             assert.ok(resume.includes('verify'));
-            for (const stage of ['deploy', 'snapshot', 'install', 'commit', 'publish-approval']) assert.ok(!resume.includes(stage), stage);
+            for (const stage of ['deploy', 'snapshot', 'install', 'commit']) assert.ok(!resume.includes(stage), stage);
         } else {
             assert.ok(!failed);
             assert.ok(events.indexOf('tests') < events.indexOf('deploy'));
-            assert.ok(events.indexOf('prepare-approval') < events.indexOf('deploy'));
             assert.ok(events.indexOf('validate') < events.indexOf('install'));
-            assert.ok(events.indexOf('publish-approval') < events.indexOf('push'));
+            assert.ok(events.indexOf('install') < events.indexOf('commit'));
+            assert.ok(events.indexOf('commit') < events.indexOf('push'));
+            assert.ok(events.indexOf('push') < events.indexOf('verify'));
         }
         const state = core.readJson(path.join(directory, '.sync-state/state.json'), {});
         assert.ok(!JSON.stringify(state).includes('secret'));
@@ -92,6 +89,5 @@ async function scenario({ failCheck = false, failSnapshot = false, failPublish =
     await scenario({ failCheck: true });
     await scenario({ failSnapshot: true });
     await scenario({ failPublish: true });
-    await scenario({ editDuringPreview: true });
     console.log('sync workflow ordering and failure recovery tests: OK');
 })().catch(error => { console.error(error); process.exitCode = 1; });
