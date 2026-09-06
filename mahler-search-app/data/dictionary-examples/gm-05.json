@@ -80,6 +80,7 @@
   {"__exampleOrder":1176,"de":"immer mit Sordinen","de_normalized":"immer mit sordinen","ja":"変わらずミュートをつけたままで","data":"M-b2-t1-112-va&M-b2-t1-308-v1&"},
   {"__exampleOrder":1181,"de":"Immer noch etwas drängend","de_normalized":"immer noch etwas draengend","ja":"なおいくらか切迫して","data":"M-2-5-364-all&"},
   {"__exampleOrder":1205,"de":"immer stacc.","de_normalized":"immer stacc.","ja":"常にスタッカートで","data":"M-6-1-2-vc,kb&"},
+  {"__exampleOrder":1218,"de":"Immer 𝅗𝅥 = 𝅗𝅥 aber immer gemessen","de_normalized":"immer 𝅗𝅥 = 𝅗𝅥 aber immer gemessen","ja":"常に二分音符は前の二分音符と同じ長さで，しかし常に落ち着いて","data":"M-7-5-220-all&"},
   {"__exampleOrder":1219,"de":"in 3 gleiche Partien get.","de_normalized":"in 3 gleiche partien get.","ja":"均等に3グループにdivisi","data":"M-b2-t1-308-v2&"},
   {"__exampleOrder":1265,"de":"Keck, aber nicht zu schnell","de_normalized":"keck, aber nicht zu schnell","ja":"活発に，しかし速すぎずに","data":"M-a-5-1-all&"},
   {"__exampleOrder":1298,"de":"Kopfstimme!","de_normalized":"kopfstimme!","ja":"頭声で！","data":"M-3-5-96-fchor&"},
