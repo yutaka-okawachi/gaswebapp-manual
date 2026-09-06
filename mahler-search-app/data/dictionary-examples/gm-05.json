@@ -46,7 +46,6 @@
   {"__exampleOrder":606,"de":"die andere Hälfte","de_normalized":"die andere haelfte","ja":"もう一方の半分で","data":"M-5-3-148-vc&"},
   {"__exampleOrder":614,"de":"Die erste Stimme stärker besetzt, die anderen zu gleichen Theilen","de_normalized":"die erste stimme staerker besetzt, die anderen zu gleichen theilen","ja":"第1声部は多めにして，他声部は同数に分ける","data":"M-3-3-466-v1&"},
   {"__exampleOrder":618,"de":"Die Figuren der Holzbläser und später der Geiger immer gleich schnell ohne Rücksicht auf das langsame Tempo der Stelle.","de_normalized":"die figuren der holzblaeser und spaeter der geiger immer gleich schnell ohne ruecksicht auf das langsame tempo der stelle.","ja":"木管楽器と，後に続くヴァイオリンの音型は，この場所のゆっくりとしたテンポを無視して常に同じ速さで","data":"M-c-c3-75-all&"},
-  {"__exampleOrder":649,"de":"Die 𝅘𝅥 = wie früher die 付点𝅘𝅥","de_normalized":"die 𝅘𝅥 = wie frueher die 付点𝅘𝅥","ja":"四分音符は前の付点四分音符の長さで","data":"M-2-5-26-all&"},
   {"__exampleOrder":675,"de":"Drängend bis a tempo","de_normalized":"draengend bis a tempo","ja":"a tempoまで切迫して","data":"M-102-2-327-all&"},
   {"__exampleOrder":687,"de":"durchaus zart","de_normalized":"durchaus zart","ja":"一貫して繊細に","data":"M-2-4-0-alt&M-d-d07-0-sti&"},
   {"__exampleOrder":733,"de":"erzählend und ohne Espressivo","de_normalized":"erzaehlend und ohne espressivo","ja":"物語るように，表情をつけずに","data":"M-a-6-375-alt&"},
@@ -164,5 +163,6 @@
   {"__exampleOrder":2577,"de":"𝅗𝅥 = etwas schneller wie zu Anfang die 𝅘𝅥 =","de_normalized":"𝅗𝅥 = etwas schneller wie zu anfang die 𝅘𝅥 =","ja":"二分音符は最初の四分音符よりいくらか速いテンポで","data":"M-3-6-234-all&"},
   {"__exampleOrder":2591,"de":"𝅗𝅥 wie früher 𝅗𝅥","de_normalized":"𝅗𝅥 wie frueher 𝅗𝅥","ja":"二分音符は前の二分音符の長さで","data":"M-8-t2-219-all&"},
   {"__exampleOrder":2592,"de":"𝅗𝅥 wie im letzten Takt die 𝅘𝅥","de_normalized":"𝅗𝅥 wie im letzten takt die 𝅘𝅥","ja":"二分音符は直前の四分音符の拍の長さで","data":"M-4-3-107-all&"},
-  {"__exampleOrder":2593,"de":"𝅗𝅥 wie vorher die 𝅘𝅥","de_normalized":"𝅗𝅥 wie vorher die 𝅘𝅥","ja":"二分音符は前の四分音符の長さで","data":"M-9-3-311-all&"}
+  {"__exampleOrder":2593,"de":"𝅗𝅥 wie vorher die 𝅘𝅥","de_normalized":"𝅗𝅥 wie vorher die 𝅘𝅥","ja":"二分音符は前の四分音符の長さで","data":"M-9-3-311-all&"},
+  {"__exampleOrder":2601,"de":"𝅘𝅥. = wie früher 𝅘𝅥𝅮𝅘𝅥𝅮𝅘𝅥𝅮","de_normalized":"𝅘𝅥. = wie frueher 𝅘𝅥𝅮𝅘𝅥𝅮𝅘𝅥𝅮","ja":"付点四分音符は前の八分音符3つの長さで","data":"M-3-2-144-all&"}
 ]

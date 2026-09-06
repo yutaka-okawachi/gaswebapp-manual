@@ -43,7 +43,6 @@
   {"__exampleOrder":588,"de":"Der Tamboursg'sell","de_normalized":"der tamboursg'sell","ja":"少年鼓笛兵（少年鼓手）","data":"M-d-d14-0-all&"},
   {"__exampleOrder":603,"de":"Die 3 Tromp. nehmen ihren Platz im Orchester ein","de_normalized":"die 3 tromp. nehmen ihren platz im orchester ein","ja":"3人のトランペットはオーケストラの自席につく","data":"M-1-1-47-tr&"},
   {"__exampleOrder":643,"de":"Die vollendeteren Engel","de_normalized":"die vollendeteren engel","ja":"成熟した天使たち","data":"M-8-t2-552-chor2&"},
-  {"__exampleOrder":650,"de":"Die 𝅘𝅥 etwas schneller wie vorher die 付点𝅘𝅥","de_normalized":"die 𝅘𝅥 etwas schneller wie vorher die 付点𝅘𝅥","ja":"四分音符は前の付点四分音符よりいくらか速く","data":"M-b2-t2-13-all&"},
   {"__exampleOrder":657,"de":"Diese Instrumente sollen zu dieser Nummer neben einander, am besten im Hintergrunde des Orchesterraums aufgestellt sein.","de_normalized":"diese instrumente sollen zu dieser nummer neben einander, am besten im hintergrunde des orchesterraums aufgestellt sein.","ja":"この楽章におけるこれらの楽器は互いに近い位置で，オーケストラの背後に配置するのがもっともよい．","data":"M-2-4-0-fg,cfg,hr,tr&"},
   {"__exampleOrder":663,"de":"doch hervortretend","de_normalized":"doch hervortretend","ja":"しかし目立たせて","data":"M-3-1-488-tr&"},
   {"__exampleOrder":682,"de":"durch Flag. hervorzubringen","de_normalized":"durch flag. hervorzubringen","ja":"フラジョレットで音を出す","data":"M-b2-t2-264-vc&"},
@@ -159,6 +158,5 @@
   {"__exampleOrder":2488,"de":"Wieder wie zuerst","de_normalized":"wieder wie zuerst","ja":"ふたたび最初のように","data":"M-c-c1-64-all&"},
   {"__exampleOrder":2492,"de":"Wieder zum Tempo I zurückkehrend","de_normalized":"wieder zum tempo i zurueckkehrend","ja":"ふたたびTenpo I に戻っていく","data":"M-5-3-628-all&"},
   {"__exampleOrder":2497,"de":"Wild bewegt","de_normalized":"wild bewegt","ja":"荒々しい動きをもって","data":"M-b1-t3-323-all&"},
-  {"__exampleOrder":2500,"de":"Wo die schönen Trompeten blasen","de_normalized":"wo die schoenen trompeten blasen","ja":"美しく喇叭の鳴り響くところ","data":"M-d-d12-0-all&"},
-  {"__exampleOrder":2600,"de":"付点𝅘𝅥 = wie früher im letzten Takte die 𝅗𝅥","de_normalized":"付点𝅘𝅥 = wie frueher im letzten takte die 𝅗𝅥","ja":"付点四分音符は直前の二分音符の長さで","data":"M-b2-t2-36-all&"}
+  {"__exampleOrder":2500,"de":"Wo die schönen Trompeten blasen","de_normalized":"wo die schoenen trompeten blasen","ja":"美しく喇叭の鳴り響くところ","data":"M-d-d12-0-all&"}
 ]

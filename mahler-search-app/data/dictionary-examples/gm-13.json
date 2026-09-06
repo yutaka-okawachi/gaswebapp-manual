@@ -35,6 +35,7 @@
   {"__exampleOrder":516,"de":"Chor seliger Knaben","de_normalized":"chor seliger knaben","ja":"昇天した子供たちの合唱","data":"M-8-t2-613-kchor&"},
   {"__exampleOrder":551,"de":"Dämpfer auf","de_normalized":"daempfer auf","ja":"ミュートをつける","data":"M-1-4-24-tr&M-7-1-285-v1&M-9-1-317-va&M-a-4-92-v2&M-b1-t3-243-v1,v2&"},
   {"__exampleOrder":565,"de":"das Tempo ist bereits ein sehr lebhaftes geworden","de_normalized":"das tempo ist bereits ein sehr lebhaftes geworden","ja":"テンポはすでにたいへんいきいきとした速さになっている","data":"M-d-d04-95-all&"},
+  {"__exampleOrder":568,"de":"Dasselbe Tempo (𝅗𝅥 wie früher 𝅘𝅥.)","de_normalized":"dasselbe tempo (𝅗𝅥 wie frueher 𝅘𝅥.)","ja":"同じテンポで（二分音符は前の付点四分音符の長さで）","data":"M-b1-t3-13-all&"},
   {"__exampleOrder":594,"de":"Des nach B","de_normalized":"des nach b","ja":"Des を B に","data":"M-3-1-625-pau&"},
   {"__exampleOrder":600,"de":"deutlich beginnend","de_normalized":"deutlich beginnend","ja":"はっきりと始める","data":"M-6-4-554-hgl&"},
   {"__exampleOrder":602,"de":"Die 2. Spieler setzen ruhig die Dämpfer auf und treten unmerklich ein! [Anmerkung Mahlers]","de_normalized":"die 2. spieler setzen ruhig die daempfer auf und treten unmerklich ein! [anmerkung mahlers]","ja":"divisiの第2グループの奏者たちは，静かにミュートをつけて，さりげなく演奏に入る！（マーラーによる注意）","data":"M-d-d13-139-vc,kb&"},

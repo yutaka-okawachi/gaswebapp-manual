@@ -567,7 +567,7 @@
   {"de":"das Tempo ist bereits ein sehr lebhaftes geworden","de_normalized":"das tempo ist bereits ein sehr lebhaftes geworden","ja":"テンポはすでにたいへんいきいきとした速さになっている","data":"M-d-d04-95-all&"},
   {"de":"Das Tempo unmerklich etwas einhaltend","de_normalized":"das tempo unmerklich etwas einhaltend","ja":"さりげなくテンポをいくらか落として","data":"M-5-3-614-all&"},
   {"de":"Das Trinklied vom Jammer der Erde","de_normalized":"das trinklied vom jammer der erde","ja":"大地の哀愁をうたう酒の歌","data":"M-a-1-0-all&"},
-  {"de":"Dasselbe Tempo (𝅗𝅥 wie früher 付点𝅘𝅥)","de_normalized":"dasselbe tempo (𝅗𝅥 wie frueher 付点𝅘𝅥)","ja":"同じテンポで（二分音符は前の付点四分音符の長さで）","data":"M-b1-t3-13-all&"},
+  {"de":"Dasselbe Tempo (𝅗𝅥 wie früher 𝅘𝅥.)","de_normalized":"dasselbe tempo (𝅗𝅥 wie frueher 𝅘𝅥.)","ja":"同じテンポで（二分音符は前の付点四分音符の長さで）","data":"M-b1-t3-13-all&"},
   {"de":"Dasselbe Tempo. Sehr rhythmisch und exakt","de_normalized":"dasselbe tempo. sehr rhythmisch und exakt","ja":"同じテンポで．たいへんリズミカルに，正確に","data":"M-b1-t3-89-all&"},
   {"de":"Dem Chor nachgeben","de_normalized":"dem chor nachgeben","ja":"合唱に譲る（引き渡す）","data":"M-2-5-532-sop&"},
   {"de":"Den Akkord in Allen Instrumenten scharf abreißen","de_normalized":"den akkord in allen instrumenten scharf abreissen","ja":"すべての楽器による和音は鋭く切ること","data":"M-7-5-51-all&"},
@@ -648,8 +648,8 @@
   {"de":"Die zwei blauen Augen von meinem Schatz","de_normalized":"die zwei blauen augen von meinem schatz","ja":"愛しき人の碧きふたつの瞳（恋人の青い瞳）","data":"M-c-c4-0-all&"},
   {"de":"Die 𝅘𝅥 = ungefähr wie zuletzt die 𝅗𝅥","de_normalized":"die 𝅘𝅥 = ungefaehr wie zuletzt die 𝅗𝅥","ja":"四分音符は直前の二分音符の長さとほぼ同じ","data":"M-3-6-92-all&"},
   {"de":"Die 𝅘𝅥 = wie eben die 𝅗𝅥","de_normalized":"die 𝅘𝅥 = wie eben die 𝅗𝅥","ja":"四分音符はちょうど二分音符の長さで","data":"M-3-6-198-all&"},
-  {"de":"Die 𝅘𝅥 = wie früher die 付点𝅘𝅥","de_normalized":"die 𝅘𝅥 = wie frueher die 付点𝅘𝅥","ja":"四分音符は前の付点四分音符の長さで","data":"M-2-5-26-all&"},
-  {"de":"Die 𝅘𝅥 etwas schneller wie vorher die 付点𝅘𝅥","de_normalized":"die 𝅘𝅥 etwas schneller wie vorher die 付点𝅘𝅥","ja":"四分音符は前の付点四分音符よりいくらか速く","data":"M-b2-t2-13-all&"},
+  {"de":"Die 𝅘𝅥 = wie früher die 𝅘𝅥.","de_normalized":"die 𝅘𝅥 = wie frueher die 𝅘𝅥.","ja":"四分音符は前の付点四分音符の長さで","data":"M-2-5-26-all&"},
+  {"de":"Die 𝅘𝅥 etwas schneller wie vorher die 𝅘𝅥.","de_normalized":"die 𝅘𝅥 etwas schneller wie vorher die 𝅘𝅥.","ja":"四分音符は前の付点四分音符よりいくらか速く","data":"M-b2-t2-13-all&"},
   {"de":"Die 𝅘𝅥 plötzlich etwas langsamer als vorher","de_normalized":"die 𝅘𝅥 ploetzlich etwas langsamer als vorher","ja":"四分音符は突然前よりいくらかゆっくりと","data":"M-8-t2-266-all&"},
   {"de":"Die 𝅘𝅥 wie früher die 𝅗𝅥","de_normalized":"die 𝅘𝅥 wie frueher die 𝅗𝅥","ja":"四分音符は前の二分音符の長さで","data":"M-b1-t2-302-all&"},
   {"de":"Die 𝅗𝅥 = ungefähr wie im Anfang die 𝅘𝅥 =","de_normalized":"die 𝅗𝅥 = ungefaehr wie im anfang die 𝅘𝅥 =","ja":"二分音符はだいたい最初の四分音符の長さで","data":"M-3-6-182-all&"},
@@ -2599,6 +2599,6 @@
   {"de":"𝅘𝅥𝅮𝅘𝅥𝅮𝅘𝅥𝅮 = wie früher 𝅘𝅥","de_normalized":"𝅘𝅥𝅮𝅘𝅥𝅮𝅘𝅥𝅮 = wie frueher 𝅘𝅥","ja":"八分音符3つは前の 四分音符の長さで","data":"M-3-2-79-all&M-3-3-68-v1&"},
   {"de":"𝅘𝅥𝅮𝅘𝅥𝅮𝅘𝅥𝅮 = wie früher 𝅘𝅥𝅮の3連符","de_normalized":"𝅘𝅥𝅮𝅘𝅥𝅮𝅘𝅥𝅮 = wie frueher 𝅘𝅥𝅮の3連符","ja":"八分音符3つは前の八分音符の3連符の長さで ","data":"M-3-2-50-all&"},
   {"de":"𝅘𝅥𝅮𝅘𝅥𝅮𝅘𝅥𝅮 etwas langsamer wie früher 𝅘𝅥","de_normalized":"𝅘𝅥𝅮𝅘𝅥𝅮𝅘𝅥𝅮 etwas langsamer wie frueher 𝅘𝅥","ja":"八分音符3つは前の 四分音符よりいくらかゆっくりと","data":"M-3-3-256-all&"},
-  {"de":"付点𝅘𝅥 = wie früher im letzten Takte die 𝅗𝅥","de_normalized":"付点𝅘𝅥 = wie frueher im letzten takte die 𝅗𝅥","ja":"付点四分音符は直前の二分音符の長さで","data":"M-b2-t2-36-all&"},
-  {"de":"付点𝅘𝅥 = wie früher 𝅘𝅥𝅮𝅘𝅥𝅮𝅘𝅥𝅮","de_normalized":"付点𝅘𝅥 = wie frueher 𝅘𝅥𝅮𝅘𝅥𝅮𝅘𝅥𝅮","ja":"付点四分音符は前の八分音符3つの長さで","data":"M-3-2-144-all&"}
+  {"de":"𝅘𝅥. = wie früher im letzten Takte die 𝅗𝅥","de_normalized":"𝅘𝅥. = wie frueher im letzten takte die 𝅗𝅥","ja":"付点四分音符は直前の二分音符の長さで","data":"M-b2-t2-36-all&"},
+  {"de":"𝅘𝅥. = wie früher 𝅘𝅥𝅮𝅘𝅥𝅮𝅘𝅥𝅮","de_normalized":"𝅘𝅥. = wie frueher 𝅘𝅥𝅮𝅘𝅥𝅮𝅘𝅥𝅮","ja":"付点四分音符は前の八分音符3つの長さで","data":"M-3-2-144-all&"}
 ]

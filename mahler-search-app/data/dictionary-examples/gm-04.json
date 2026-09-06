@@ -37,6 +37,7 @@
   {"__exampleOrder":591,"de":"Der Trinkene im Frühling","de_normalized":"der trinkene im fruehling","ja":"春に酔えるもの","data":"M-a-5-0-all&"},
   {"__exampleOrder":631,"de":"Die Sechzehntel immer gleich schnell, das rit. die Punkte zu verlegen.","de_normalized":"die sechzehntel immer gleich schnell, das rit. die punkte zu verlegen.","ja":"16分音符はいつも変わらず素早く．リタルダンドは付点音符で行う","data":"M-3-2-32-v2&"},
   {"__exampleOrder":644,"de":"Die Vorschläge sehr kurz","de_normalized":"die vorschlaege sehr kurz","ja":"前打音は非常に短く","data":"M-4-1-102-cl&"},
+  {"__exampleOrder":649,"de":"Die 𝅘𝅥 = wie früher die 𝅘𝅥.","de_normalized":"die 𝅘𝅥 = wie frueher die 𝅘𝅥.","ja":"四分音符は前の付点四分音符の長さで","data":"M-2-5-26-all&"},
   {"__exampleOrder":658,"de":"Diese Triole jedesmal mit Spring. Bogen rfz am Steg (in Nachahmung der Mandolinen)","de_normalized":"diese triole jedesmal mit spring. bogen rfz am steg (in nachahmung der mandolinen)","ja":"この3連符は（マンドリンをまねて）毎回駒の近くのスピッカートで，リンフォルツァンドで演奏する","data":"M-a-4-53-v1&"},
   {"__exampleOrder":667,"de":"Doctor Marianus nur begleitend, nicht hervortretend","de_normalized":"doctor marianus nur begleitend, nicht hervortretend","ja":"マリア崇拝の博士は伴唱するだけで，目立たないように","data":"M-8-t2-604-ten&"},
   {"__exampleOrder":672,"de":"Dpf. ab","de_normalized":"dpf. ab","ja":"ミュートをはずす","data":"M-2-1-209-tr&M-8-t1-209-pos&M-8-t2-565-va&M-8-t2-731-pos&M-8-t2-1445-hr&M-a-6-75-vc&"},

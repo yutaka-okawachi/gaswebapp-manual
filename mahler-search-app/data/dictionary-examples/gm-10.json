@@ -42,7 +42,6 @@
   {"__exampleOrder":522,"de":"Clar. ohne Rücksicht auf das Tempo I.","de_normalized":"clar. ohne ruecksicht auf das tempo i.","ja":"クラリネットはTempo I を無視して","data":"M-1-1-32-cl&M-1-1-47-cl&"},
   {"__exampleOrder":528,"de":"Contrafagott nimmt 3. Fagott","de_normalized":"contrafagott nimmt 3. fagott","ja":"コントラファゴットは3rdファゴットに持ち替える","data":"M-1-4-290-cfg&"},
   {"__exampleOrder":562,"de":"Das himmlische Leben","de_normalized":"das himmlische leben","ja":"天上の生","data":"M-d-d04-0-all&"},
-  {"__exampleOrder":568,"de":"Dasselbe Tempo (𝅗𝅥 wie früher 付点𝅘𝅥)","de_normalized":"dasselbe tempo (𝅗𝅥 wie frueher 付点𝅘𝅥)","ja":"同じテンポで（二分音符は前の付点四分音符の長さで）","data":"M-b1-t3-13-all&"},
   {"__exampleOrder":570,"de":"Dem Chor nachgeben","de_normalized":"dem chor nachgeben","ja":"合唱に譲る（引き渡す）","data":"M-2-5-532-sop&"},
   {"__exampleOrder":595,"de":"Des nach C","de_normalized":"des nach c","ja":"Des を C に","data":"M-3-1-625-pau&"},
   {"__exampleOrder":598,"de":"Des nach D, A nach Ces, Ges nach F","de_normalized":"des nach d, a nach ces, ges nach f","ja":"Des を D に，A を Ces に，Ges を F に","data":"M-2-5-684-pau&"},

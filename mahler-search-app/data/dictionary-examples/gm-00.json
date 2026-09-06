@@ -36,6 +36,7 @@
   {"__exampleOrder":585,"de":"Der Ruf eines Kukkuck nachzuahmen","de_normalized":"der ruf eines kukkuck nachzuahmen","ja":"郭公の鳴き声を真似して","data":"M-1-1-30-cl&"},
   {"__exampleOrder":592,"de":"Des Antonius von Padua Fischpredigt","de_normalized":"des antonius von padua fischpredigt","ja":"魚に説教するパドヴァの聖アントニウス","data":"M-d-d08-0-all&"},
   {"__exampleOrder":632,"de":"Die Spielmann","de_normalized":"die spielmann","ja":"楽師","data":"M-b1-t2-0-all&"},
+  {"__exampleOrder":650,"de":"Die 𝅘𝅥 etwas schneller wie vorher die 𝅘𝅥.","de_normalized":"die 𝅘𝅥 etwas schneller wie vorher die 𝅘𝅥.","ja":"四分音符は前の付点四分音符よりいくらか速く","data":"M-b2-t2-13-all&"},
   {"__exampleOrder":652,"de":"Die 𝅘𝅥 wie früher die 𝅗𝅥","de_normalized":"die 𝅘𝅥 wie frueher die 𝅗𝅥","ja":"四分音符は前の二分音符の長さで","data":"M-b1-t2-302-all&"},
   {"__exampleOrder":707,"de":"Ein wenig fließender (ganz unmerklich)","de_normalized":"ein wenig fliessender (ganz unmerklich)","ja":"わずかに流れるように（全く気付かれないように）","data":"M-7-5-220-all&"},
   {"__exampleOrder":725,"de":"Entzückt","de_normalized":"entzueckt","ja":"陶酔するように","data":"M-8-t2-638-ten&"},
@@ -169,5 +170,6 @@
   {"__exampleOrder":2489,"de":"Wieder wie zuvor","de_normalized":"wieder wie zuvor","ja":"ふたたび前のように","data":"M-6-2-130-all&M-6-2-292-all&"},
   {"__exampleOrder":2519,"de":"zart hervortretend","de_normalized":"zart hervortretend","ja":"繊細に，目立たせて","data":"M-1-1-231-fl&M-1-1-247-hr&M-1-2-207-ob&M-2-1-131-ob&M-3-1-505-ob&M-3-2-246-vc&M-5-2-214-hr&M-7-4-7-hr&M-8-t2-861-sv&M-8-t2-1161-tr&M-9-1-436-cl&M-a-5-31-sv&M-d-d09-85-fl&M-h-h-131-ob&"},
   {"__exampleOrder":2569,"de":"𝅘𝅥 = wie zuletzt die 𝅗𝅥","de_normalized":"𝅘𝅥 = wie zuletzt die 𝅗𝅥","ja":"四分音符は直前の二分音符の長さで","data":"M-2-5-448-all&"},
-  {"__exampleOrder":2585,"de":"𝅗𝅥 etwas langsamer wie im letzten Takte 𝅘𝅥","de_normalized":"𝅗𝅥 etwas langsamer wie im letzten takte 𝅘𝅥","ja":"二分音符は直前の四分音符の拍の長さよりいくらかゆっくりと","data":"M-6-4-479-all&"}
+  {"__exampleOrder":2585,"de":"𝅗𝅥 etwas langsamer wie im letzten Takte 𝅘𝅥","de_normalized":"𝅗𝅥 etwas langsamer wie im letzten takte 𝅘𝅥","ja":"二分音符は直前の四分音符の拍の長さよりいくらかゆっくりと","data":"M-6-4-479-all&"},
+  {"__exampleOrder":2600,"de":"𝅘𝅥. = wie früher im letzten Takte die 𝅗𝅥","de_normalized":"𝅘𝅥. = wie frueher im letzten takte die 𝅗𝅥","ja":"付点四分音符は直前の二分音符の長さで","data":"M-b2-t2-36-all&"}
 ]
