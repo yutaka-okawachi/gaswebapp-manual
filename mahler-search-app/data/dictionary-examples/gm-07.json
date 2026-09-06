@@ -134,6 +134,7 @@
   {"__exampleOrder":2026,"de":"sehr ausdrucksvoll","de_normalized":"sehr ausdrucksvoll","ja":"たいへん表情豊かに","data":"M-1-1-302-hr&M-2-1-428-ob&M-2-5-536-hr,v1,v2&M-6-4-302-tr&M-102-3-92-v1,v2,va&M-a-6-412-alt&M-b1-t3-159-ob&M-b1-t3-282-fl,ob&M-b2-t1-25-ob&M-b2-t1-157-ob&M-b2-t1-230-alt&M-e-e1-36-hr&"},
   {"__exampleOrder":2028,"de":"sehr ausdrucksvoll und getragen","de_normalized":"sehr ausdrucksvoll und getragen","ja":"たいへん表情豊かに，荘重に","data":"M-3-6-8-vc&"},
   {"__exampleOrder":2037,"de":"sehr deutlich","de_normalized":"sehr deutlich","ja":"非常にはっきりと","data":"M-2-1-54-hr&M-2-1-208-hp&"},
+  {"__exampleOrder":2062,"de":"Sehr gemessen (𝅗𝅥 = wie früher die 𝅘𝅥)","de_normalized":"sehr gemessen (𝅗𝅥 = wie frueher die 𝅘𝅥)","ja":"たいへん落ち着いて（二分音符は前の四分音符の長さで）","data":"M-b2-t2-213-all&"},
   {"__exampleOrder":2065,"de":"sehr gesangvoll (zart hervortretend)","de_normalized":"sehr gesangvoll (zart hervortretend)","ja":"たっぷりと歌って（繊細に，目立たせて）","data":"M-3-6-20-vc&"},
   {"__exampleOrder":2093,"de":"sehr laut","de_normalized":"sehr laut","ja":"たいへん大きく","data":"M-d-d13-75-sti&M-d-d13-96-sti&"},
   {"__exampleOrder":2095,"de":"Sehr leidenschaftlich","de_normalized":"sehr leidenschaftlich","ja":"たいへん情熱的に","data":"M-3-6-157-all&M-8-t2-219-bar&"},
@@ -165,7 +166,6 @@
   {"__exampleOrder":2535,"de":"zögernd","de_normalized":"zoegernd","ja":"ためらって","data":"M-4-3-330-v1&M-5-2-189-vc&M-5-5-7-ob&M-9-4-167-v1&M-102-1-236-all&M-102-2-310-all&M-102-2-316-all&M-102-2-337-all&M-a-2-63-all&M-a-5-42-ten&M-d-d04-150-cl,v1&M-f-f3-15-all&"},
   {"__exampleOrder":2536,"de":"Zögernd","de_normalized":"zoegernd","ja":"ためらって","data":"M-5-4-85-all&M-9-1-444-all&M-a-5-55-all&M-b1-t1-365-all&M-d-d01-25-all&"},
   {"__exampleOrder":2547,"de":"Zum Tempo I. zurückkehren","de_normalized":"zum tempo i. zurueckkehren","ja":"Tempo I. に戻っていく","data":"M-2-3-328-all&"},
-  {"__exampleOrder":2577,"de":"二分音符 = etwas schneller wie zu Anfang die 四分音符 =","de_normalized":"二分音符 = etwas schneller wie zu anfang die 四分音符 =","ja":"二分音符は最初の四分音符よりいくらか速いテンポで","data":"M-3-6-234-all&"},
-  {"__exampleOrder":2591,"de":"二分音符 wie früher 二分音符","de_normalized":"二分音符 wie frueher 二分音符","ja":"二分音符は前の二分音符の長さで","data":"M-8-t2-219-all&"},
-  {"__exampleOrder":2592,"de":"二分音符 wie im letzten Takt die 四分音符","de_normalized":"二分音符 wie im letzten takt die 四分音符","ja":"二分音符は直前の四分音符の拍の長さで","data":"M-4-3-107-all&"}
+  {"__exampleOrder":2565,"de":"𝅘𝅥 = wie eben die 𝅗𝅥 =","de_normalized":"𝅘𝅥 = wie eben die 𝅗𝅥 =","ja":"四分音符はちょうど二分音符の長さで","data":"M-3-6-245-all&"},
+  {"__exampleOrder":2580,"de":"𝅗𝅥 = wie früher 𝅘𝅥","de_normalized":"𝅗𝅥 = wie frueher 𝅘𝅥","ja":"二分音符は前の四分音符の長さで","data":"M-1-4-458-all&M-2-5-97-all&M-b2-t1-353-all&"}
 ]

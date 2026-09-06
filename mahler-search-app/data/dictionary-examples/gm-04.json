@@ -33,6 +33,7 @@
   {"__exampleOrder":553,"de":"Dämpfer aufsetzen","de_normalized":"daempfer aufsetzen","ja":"ミュートをつけて","data":"M-3-3-156-tr&"},
   {"__exampleOrder":566,"de":"Das Tempo unmerklich etwas einhaltend","de_normalized":"das tempo unmerklich etwas einhaltend","ja":"さりげなくテンポをいくらか落として","data":"M-5-3-614-all&"},
   {"__exampleOrder":571,"de":"Den Akkord in Allen Instrumenten scharf abreißen","de_normalized":"den akkord in allen instrumenten scharf abreissen","ja":"すべての楽器による和音は鋭く切ること","data":"M-7-5-51-all&"},
+  {"__exampleOrder":587,"de":"Der Sinn dieser Bezeichnung 𝄐とV記号 ist, den Eintritt der Violinen, Violen und Celli erst nach den letzten Viertel zu vollziehen, um ihn deutlich zu machen_ also zwischen den letzten Takt des Tempo I und den Eintritt der Streichinstrumente eine unbedeutende 'Luftpause' zu legen (ungefähr in der Dauer eines Achtel) eben nur so lang als zur rhythmischen Gestaltung nötig.","de_normalized":"der sinn dieser bezeichnung 𝄐とv記号 ist, den eintritt der violinen, violen und celli erst nach den letzten viertel zu vollziehen, um ihn deutlich zu machen_ also zwischen den letzten takt des tempo i und den eintritt der streichinstrumente eine unbedeutende 'luftpause' zu legen (ungefaehr in der dauer eines achtel) eben nur so lang als zur rhythmischen gestaltung noetig.","ja":"これらのフェルマータとVの記号は最後の拍が演奏されたあとでヴァイオリンとヴィオラとチェロが入ることを明確にしようとしたものである．したがってTempo Iの最後の拍と弦楽器の入りの間に，ちょうどリズムが整うのに必要なだけの長さのほんのわずかな「休止」（だいたい八分音符の長さ）を置くこと","data":"M-7-5-196-all&"},
   {"__exampleOrder":591,"de":"Der Trinkene im Frühling","de_normalized":"der trinkene im fruehling","ja":"春に酔えるもの","data":"M-a-5-0-all&"},
   {"__exampleOrder":631,"de":"Die Sechzehntel immer gleich schnell, das rit. die Punkte zu verlegen.","de_normalized":"die sechzehntel immer gleich schnell, das rit. die punkte zu verlegen.","ja":"16分音符はいつも変わらず素早く．リタルダンドは付点音符で行う","data":"M-3-2-32-v2&"},
   {"__exampleOrder":644,"de":"Die Vorschläge sehr kurz","de_normalized":"die vorschlaege sehr kurz","ja":"前打音は非常に短く","data":"M-4-1-102-cl&"},
@@ -82,7 +83,6 @@
   {"__exampleOrder":1329,"de":"Lange halten","de_normalized":"lange halten","ja":"（音を）長く保つ","data":"M-7-5-52-all&"},
   {"__exampleOrder":1338,"de":"Langsam und ppp bis zum Schluß","de_normalized":"langsam und ppp bis zum schluss","ja":"ゆっくりと，最後までpppで","data":"M-9-4-162-all&"},
   {"__exampleOrder":1342,"de":"Langsam, schwer","de_normalized":"langsam, schwer","ja":"ゆっくりと，重く","data":"M-102-5-1-all&"},
-  {"__exampleOrder":1352,"de":"Langsamer (die 四分音符 etwas langsamer als früher die 二分音符)","de_normalized":"langsamer (die 四分音符 etwas langsamer als frueher die 二分音符)","ja":"ゆっくりと（四分音符は前の二分音符よりいくらかゆっくりと）","data":"M-b1-t3-204-all&"},
   {"__exampleOrder":1363,"de":"Leidenschaftlich aber zart","de_normalized":"leidenschaftlich aber zart","ja":"情熱的に，しかし繊細に","data":"M-2-4-49-alt&"},
   {"__exampleOrder":1364,"de":"leidenschaftlich aber zart","de_normalized":"leidenschaftlich aber zart","ja":"情熱的に，しかし繊細に","data":"M-d-d07-49-sti&"},
   {"__exampleOrder":1383,"de":"m.d.","de_normalized":"m.d.","ja":"右手で","data":"M-8-t2-808-cel,klv&M-8-t2-850-klv&"},
@@ -141,6 +141,7 @@
   {"__exampleOrder":2103,"de":"Sehr ruhig","de_normalized":"sehr ruhig","ja":"たいへん落ち着いて","data":"M-6-1-217-all&M-8-t1-156-all&M-102-5-299-all&M-a-1-81-all&M-b2-t1-308-all&"},
   {"__exampleOrder":2104,"de":"sehr ruhig","de_normalized":"sehr ruhig","ja":"たいへん落ち着いて","data":"M-a-1-179-all&"},
   {"__exampleOrder":2107,"de":"Sehr scharf rhythmisiert","de_normalized":"sehr scharf rhythmisiert","ja":"たいへん鋭くリズミックに","data":"M-2-5-197-all&"},
+  {"__exampleOrder":2134,"de":"Sehr zurückhaltend (𝅘𝅥 = wie früher die 𝅗𝅥, ungefähr M. M. 66)","de_normalized":"sehr zurueckhaltend (𝅘𝅥 = wie frueher die 𝅗𝅥, ungefaehr m. m. 66)","ja":"たいへん速度を緩めて（四分音符はだいたいメトロノームで66の，前の二分音符の長さで）","data":"M-b2-t2-259-all&"},
   {"__exampleOrder":2144,"de":"sich verlierend","de_normalized":"sich verlierend","ja":"消えていく","data":"M-2-5-41-va&M-2-5-42-gtr,vc&M-2-5-467-tr,hr&M-2-5-468-tr&M-2-5-470-tr&M-2-5-471-fl&M-3-1-457-va&M-d-d01-88-ktr&"},
   {"__exampleOrder":2182,"de":"stark hervortretend","de_normalized":"stark hervortretend","ja":"きわめて目立たせて","data":"M-3-1-868-tr&M-7-1-27-pos&M-7-1-495-tr&M-7-4-23-sv&M-7-4-367-hr&M-8-t1-73-alt1&M-8-t1-136-hr&M-8-t1-437-ten&M-8-t2-346-hr&M-8-t2-576-alt1&M-8-t2-937-sv&M-8-t2-1480-chor1&M-9-3-484-sva&M-9-4-17-hr&M-9-4-44-sv&M-9-4-49-hr&M-102-1-63-hr&M-102-5-205-hr&"},
   {"__exampleOrder":2185,"de":"Starkes Glockengeläute (tief)","de_normalized":"starkes glockengelaeute (tief)","ja":"（低い音が出る）鐘を強く鳴らす","data":"M-7-5-361-gl&"},
@@ -150,7 +151,6 @@
   {"__exampleOrder":2210,"de":"Straffer im Tempo, allmählich in Halbe übergehen","de_normalized":"straffer im tempo, allmaehlich in halbe uebergehen","ja":"厳格なテンポで，徐々に2拍子に移行していく","data":"M-6-4-586-all&"},
   {"__exampleOrder":2211,"de":"strahlend","de_normalized":"strahlend","ja":"光り輝いて","data":"M-7-5-506-tr&"},
   {"__exampleOrder":2227,"de":"Tempo III. (Ländler, ganz langsam)","de_normalized":"tempo iii. (laendler, ganz langsam)","ja":"Tempo III.（レントラー，たいへんゆっくりと）","data":"M-9-2-218-all&M-9-2-333-all&"},
-  {"__exampleOrder":2229,"de":"Tempo primo (二分音符 = 四分音符) etwas feierlich. Prachtvoll","de_normalized":"tempo primo (二分音符 = 四分音符) etwas feierlich. prachtvoll","ja":"最初の速さで（二分音符は前の四分音符の長さで），いくらか荘厳に．華麗に","data":"M-7-5-539-all&"},
   {"__exampleOrder":2323,"de":"Von hier an aber wieder Viertel ausschlagen","de_normalized":"von hier an aber wieder viertel ausschlagen","ja":"しかしここからはふたたび4つ振り","data":"M-b2-t2-311-all&"},
   {"__exampleOrder":2327,"de":"Von hier an Halbe taktieren","de_normalized":"von hier an halbe taktieren","ja":"ここからは2つ振り","data":"M-b2-t2-278-all&"},
   {"__exampleOrder":2338,"de":"von tiefem untereinander verschiedenem Klange ohne bestimmte Tonhöhe","de_normalized":"von tiefem untereinander verschiedenem klange ohne bestimmte tonhoehe","ja":"音律の定まらない相異なる低い響きで","data":"M-2-5-732-gl&"},
@@ -171,5 +171,7 @@
   {"__exampleOrder":2512,"de":"zart betont","de_normalized":"zart betont","ja":"繊細なアクセントで","data":"M-2-5-496-hr&"},
   {"__exampleOrder":2518,"de":"zart hervortreten","de_normalized":"zart hervortreten","ja":"繊細に，目立たせて","data":"M-4-1-96-ob&"},
   {"__exampleOrder":2538,"de":"zu 2 gestopft","de_normalized":"zu 2 gestopft","ja":"2本ともゲシュトップ","data":"M-3-3-460-hr&"},
-  {"__exampleOrder":2585,"de":"二分音符 etwas langsamer wie im letzten Takte 四分音符","de_normalized":"二分音符 etwas langsamer wie im letzten takte 四分音符","ja":"二分音符は直前の四分音符の拍の長さよりいくらかゆっくりと","data":"M-6-4-479-all&"}
+  {"__exampleOrder":2574,"de":"𝅘𝅥 wie vorher 付点𝅗𝅥","de_normalized":"𝅘𝅥 wie vorher 付点𝅗𝅥","ja":"四分音符は前の付点二分音符の長さで","data":"M-4-3-283-all&"},
+  {"__exampleOrder":2576,"de":"𝅘𝅥3つ wie früher 𝅘𝅥三連符","de_normalized":"𝅘𝅥3つ wie frueher 𝅘𝅥三連符","ja":"四分音符3つは前の四分音符三連符の長さで","data":"M-d-d01-16-all&M-d-d01-92-all&"},
+  {"__exampleOrder":2578,"de":"𝅗𝅥 = ungefähr wie die 𝅘𝅥 der beiden letzten Takte","de_normalized":"𝅗𝅥 = ungefaehr wie die 𝅘𝅥 der beiden letzten takte","ja":"二分音符は最後の2小節の四分音符の長さとほぼ同じ","data":"M-1-1-207-all&"}
 ]

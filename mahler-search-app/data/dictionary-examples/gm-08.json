@@ -33,7 +33,6 @@
   {"__exampleOrder":550,"de":"Dämpfer allmählich ab","de_normalized":"daempfer allmaehlich ab","ja":"徐々にミュートをはずす","data":"M-8-t2-1465-va,vc,kb&"},
   {"__exampleOrder":561,"de":"Das Es der I. Posaune ist richtig.","de_normalized":"das es der i. posaune ist richtig.","ja":"1stトロンボーンのEsは正しい","data":"M-6-4-131-pos&"},
   {"__exampleOrder":567,"de":"Das Trinklied vom Jammer der Erde","de_normalized":"das trinklied vom jammer der erde","ja":"大地の哀愁をうたう酒の歌","data":"M-a-1-0-all&"},
-  {"__exampleOrder":568,"de":"Dasselbe Tempo (二分音符 wie früher 付点四分音符)","de_normalized":"dasselbe tempo (二分音符 wie frueher 付点四分音符)","ja":"同じテンポで（二分音符は前の付点四分音符の長さで）","data":"M-b1-t3-13-all&"},
   {"__exampleOrder":569,"de":"Dasselbe Tempo. Sehr rhythmisch und exakt","de_normalized":"dasselbe tempo. sehr rhythmisch und exakt","ja":"同じテンポで．たいへんリズミカルに，正確に","data":"M-b1-t3-89-all&"},
   {"__exampleOrder":581,"de":"Der Einsame im Herbst","de_normalized":"der einsame im herbst","ja":"秋にさびしきもの","data":"M-a-2-0-all&"},
   {"__exampleOrder":612,"de":"Die Bezeichnung 'gestopft' gilt, bis sie durch eine neue 'offen' wieder aufgehoben ist","de_normalized":"die bezeichnung 'gestopft' gilt, bis sie durch eine neue 'offen' wieder aufgehoben ist","ja":"「gestopft」の表記は新たな「offen」（の表記）によって再び打ち消されるまで有効である．","data":"M-2-1-0-hr&"},
@@ -65,7 +64,6 @@
   {"__exampleOrder":994,"de":"Halbe taktieren","de_normalized":"halbe taktieren","ja":"2つ振り","data":"M-2-5-380-all&M-2-5-560-all&M-3-4-133-all&"},
   {"__exampleOrder":1008,"de":"heftig","de_normalized":"heftig","ja":"激しく","data":"M-102-1-147-v2&"},
   {"__exampleOrder":1012,"de":"Heftig drängend","de_normalized":"heftig draengend","ja":"激しく切迫して","data":"M-2-5-311-all&M-2-5-376-all&M-5-3-486-all&"},
-  {"__exampleOrder":1030,"de":"Hier haben die 四分音符 wieder eine Schnelligkeit von M. M. 104 (wie zuvor) erreicht","de_normalized":"hier haben die 四分音符 wieder eine schnelligkeit von m. m. 104 (wie zuvor) erreicht","ja":"ここで四分音符はふたたび（前のように）メトロノームで104の速さに到達する","data":"M-b2-t2-65-all&"},
   {"__exampleOrder":1036,"de":"Hier muß dieses tempo bewegter genommen werden als an den korrespondierenden Stellen im ersten Saite","de_normalized":"hier muss dieses tempo bewegter genommen werden als an den korrespondierenden stellen im ersten saite","ja":"ここでは，第1楽章の類似箇所より速いテンポを取らなければならない","data":"M-4-4-40-dir&"},
   {"__exampleOrder":1047,"de":"Höchste Kraft","de_normalized":"hoechste kraft","ja":"最大限の力で","data":"M-1-4-623-all&M-9-1-308-all&"},
   {"__exampleOrder":1059,"de":"Holzschl. schnell abdämpfen","de_normalized":"holzschl. schnell abdaempfen","ja":"木のマレットで，素早く音を消す","data":"M-7-3-504-pau&"},
@@ -98,7 +96,6 @@
   {"__exampleOrder":1730,"de":"nimmt 4. Fl.","de_normalized":"nimmt 4. fl.","ja":"4thフルートに持ち替える","data":"M-102-2-252-pic&M-102-4-42-pic&"},
   {"__exampleOrder":1755,"de":"nimmt gr. Flöte","de_normalized":"nimmt gr. floete","ja":"フルートに持ち替える","data":"M-3-1-509-pic&M-3-3-410-pic&M-b2-t1-48-pic&M-b2-t1-133-pic&M-b2-t1-322-pic&M-b2-t1-384-pic&M-b2-t2-167-pic&M-b2-t2-351-pic&"},
   {"__exampleOrder":1756,"de":"nimmt Gr. Flöte","de_normalized":"nimmt gr. floete","ja":"フルートに持ち替える","data":"M-3-2-238-pic&M-3-3-190-pic&M-b2-t2-409-pic&"},
-  {"__exampleOrder":1781,"de":"Noch einmal so langsam als vorher. (八分音符 = 四分音符) Nicht schleppend","de_normalized":"noch einmal so langsam als vorher. (八分音符 = 四分音符) nicht schleppend","ja":"ふたたび前と同じようにゆっくりと（八分音符は前の四分音符の長さで）．引きずらないで","data":"M-8-t1-217-all&"},
   {"__exampleOrder":1828,"de":"o. Dpf.","de_normalized":"o. dpf.","ja":"ミュートなしで","data":"M-b1-t1-401-pau&M-b1-t1-435-hr&M-b1-t2-149-hr&M-b1-t2-161-hr&M-b1-t2-236-hr&M-b1-t2-237-hr&M-b1-t2-324-hr&M-b1-t2-325-hr&M-b1-t2-327-hr&M-b1-t2-412-hr&M-b1-t2-455-tr&M-b1-t3-204-hr&M-b1-t3-205-hr&M-d-d01-9-tr&M-d-d01-62-vc,kb&M-d-d01-63-v1,v2,va&M-d-d01-74-tr&M-d-d04-25-v2&M-d-d04-27-v1&M-d-d04-40-hr&M-d-d04-41-v1,v2,va,vc&M-d-d04-53-v1&M-d-d04-58-va&M-d-d04-76-v1,v2,va,vc&M-d-d04-78-kb&M-d-d04-89-va,vc&M-d-d04-91-v2&M-d-d04-92-v1&M-d-d04-114-v2,va,vc&M-d-d04-115-v1&M-d-d04-117-kb&M-d-d07-40-sv&M-d-d07-46-sv&M-d-d11-29-va,vc&M-d-d11-31-v1,v2&M-d-d11-37-tr&M-d-d11-109-tr&M-d-d12-107-v1,v2&M-d-d12-162-hr,tr&M-d-d12-170-tr&M-d-d12-177-hr&M-d-d13-164-hr&M-d-d14-15-hr&"},
   {"__exampleOrder":1837,"de":"offen (Schalltrichter in die Höhe)","de_normalized":"offen (schalltrichter in die hoehe)","ja":"開く（ゲシュトップから戻る，あるいはミュートをはずす），（ベルアップ）","data":"M-2-1-41-tr&"},
   {"__exampleOrder":1838,"de":"offen!","de_normalized":"offen!","ja":"開く！（ゲシュトップから戻る，あるいはミュートをはずす）","data":"M-3-1-237-tr&"},
@@ -150,5 +147,7 @@
   {"__exampleOrder":2546,"de":"Zum Anfangstempo zurückkehren","de_normalized":"zum anfangstempo zurueckkehren","ja":"最初のテンポに戻っていく","data":"M-3-1-217-all&"},
   {"__exampleOrder":2554,"de":"zurückhalten hervortretend","de_normalized":"zurueckhalten hervortretend","ja":"速度を緩めて，目立たせて","data":"M-2-5-637-alt&"},
   {"__exampleOrder":2564,"de":"Zweite Abteilung","de_normalized":"zweite abteilung","ja":"第2部","data":"M-3-2-0-all&"},
-  {"__exampleOrder":2574,"de":"四分音符 wie vorher 付点二分音符","de_normalized":"四分音符 wie vorher 付点二分音符","ja":"四分音符は前の付点二分音符の長さで","data":"M-4-3-283-all&"}
+  {"__exampleOrder":2568,"de":"𝅘𝅥 = wie früher 𝅘𝅥𝅮3つ","de_normalized":"𝅘𝅥 = wie frueher 𝅘𝅥𝅮3つ","ja":"四分音符は前の八分音符3つの長さで","data":"M-3-2-70-all&"},
+  {"__exampleOrder":2572,"de":"𝅘𝅥 wie früher 𝅗𝅥","de_normalized":"𝅘𝅥 wie frueher 𝅗𝅥","ja":"四分音符は前の二分音符の長さで","data":"M-8-t2-1449-all&"},
+  {"__exampleOrder":2597,"de":"𝅘𝅥𝅮3つ = wie früher 𝅘𝅥","de_normalized":"𝅘𝅥𝅮3つ = wie frueher 𝅘𝅥","ja":"八分音符3つは前の 四分音符の長さで","data":"M-3-2-79-all&M-3-3-68-v1&"}
 ]

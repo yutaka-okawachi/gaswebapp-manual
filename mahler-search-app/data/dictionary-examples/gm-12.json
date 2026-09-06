@@ -157,6 +157,6 @@
   {"__exampleOrder":2539,"de":"zu 2 od. 3","de_normalized":"zu 2 od. 3","ja":"2台，あるいは3台で","data":"M-8-t1-389-bec&"},
   {"__exampleOrder":2544,"de":"zu eventueller Unterstützung der Hörner","de_normalized":"zu eventueller unterstuetzung der hoerner","ja":"必要であればホルンの補強のために（演奏する）","data":"M-2-5-89-tr&"},
   {"__exampleOrder":2563,"de":"zweifach get.","de_normalized":"zweifach get.","ja":"2グループにdivisi","data":"M-b1-t3-270-v2&"},
-  {"__exampleOrder":2570,"de":"四分音符 = wie zuletzt 二分音符","de_normalized":"四分音符 = wie zuletzt 二分音符","ja":"四分音符は直前の二分音符の長さで","data":"M-1-4-428-all&M-2-5-602-all&"},
-  {"__exampleOrder":2588,"de":"二分音符 wie die früher die 四分音符","de_normalized":"二分音符 wie die frueher die 四分音符","ja":"二分音符は前の四分音符の長さで","data":"M-b2-t2-377-all&"}
+  {"__exampleOrder":2582,"de":"𝅗𝅥 = wie zuletzt 𝅘𝅥","de_normalized":"𝅗𝅥 = wie zuletzt 𝅘𝅥","ja":"二分音符は直前の四分音符の長さで","data":"M-2-5-640-all&"},
+  {"__exampleOrder":2589,"de":"𝅗𝅥 wie früher die 𝅘𝅥","de_normalized":"𝅗𝅥 wie frueher die 𝅘𝅥","ja":"二分音符は前の四分音符の長さで","data":"M-b1-t3-218-all&M-b1-t3-379-all&"}
 ]

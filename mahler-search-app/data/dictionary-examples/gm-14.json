@@ -37,6 +37,7 @@
   {"__exampleOrder":619,"de":"Die ganze Stelle wird von der D-Klarinette ausgeführt","de_normalized":"die ganze stelle wird von der d-klarinette ausgefuehrt","ja":"すべての（C管クラリネットの）箇所はD管クラリネットで演奏してよい","data":"M-5-1-259-cl&"},
   {"__exampleOrder":633,"de":"Die Steigerung des Tempo muß sich ganz unmerklich vollziehen","de_normalized":"die steigerung des tempo muss sich ganz unmerklich vollziehen","ja":"テンポの速め方はまったく気づかれないように行わなければならない","data":"M-8-t2-418-dir&"},
   {"__exampleOrder":637,"de":"Die Triolen immer schnell (als vorschlag) ausgeführt","de_normalized":"die triolen immer schnell (als vorschlag) ausgefuehrt","ja":"3連符は常に速く（前打音のように）演奏する","data":"M-3-1-164-all&"},
+  {"__exampleOrder":651,"de":"Die 𝅘𝅥 plötzlich etwas langsamer als vorher","de_normalized":"die 𝅘𝅥 ploetzlich etwas langsamer als vorher","ja":"四分音符は突然前よりいくらかゆっくりと","data":"M-8-t2-266-all&"},
   {"__exampleOrder":666,"de":"Doctor Marianus (in der höchsten, reinlichsten Zelle)","de_normalized":"doctor marianus (in der hoechsten, reinlichsten zelle)","ja":"マリア崇拝の博士（最も高い，最も清らかな岩窟で）","data":"M-8-t2-604-ten&"},
   {"__exampleOrder":668,"de":"Doppelgr.","de_normalized":"doppelgr.","ja":"重音","data":"M-3-1-69-va&M-3-1-410-v1,v2&M-3-1-868-v1,v2,va&M-4-1-51-v1&M-4-4-116-v2,va,vc&M-5-2-42-va&M-8-t2-1134-vc&M-d-d04-28-vc&M-d-d11-3-v2&M-d-d11-4-va&M-d-d11-7-v2&M-d-d11-8-va&M-d-d11-9-v2,va&M-d-d11-12-v2&M-d-d11-29-va&M-d-d11-31-v2&M-d-d13-30-va,vc&M-d-d13-47-vc&M-d-d13-61-v2,va&M-d-d13-72-va,vc&M-d-d13-124-v1,v2,va,vc&"},
   {"__exampleOrder":670,"de":"Doppelgriffe","de_normalized":"doppelgriffe","ja":"重音","data":"M-4-1-209-v1,v2&M-8-t2-1102-kb&"},
@@ -50,7 +51,6 @@
   {"__exampleOrder":913,"de":"Ganzes Orchester stetig, langsam anschwellend!","de_normalized":"ganzes orchester stetig, langsam anschwellend!","ja":"オーケストラ全体が切れ目なくゆっくりと大きくなっていく！","data":"M-3-5-64-all&"},
   {"__exampleOrder":923,"de":"Gehaltener","de_normalized":"gehaltener","ja":"音の長さを保って","data":"M-8-t1-432-all&"},
   {"__exampleOrder":926,"de":"Gemächlich heiter","de_normalized":"gemaechlich heiter","ja":"ゆったりと，陽気に","data":"M-d-d02-1-all&"},
-  {"__exampleOrder":928,"de":"Gemessen (四分音符 wie früher 二分音符)","de_normalized":"gemessen (四分音符 wie frueher 二分音符)","ja":"落ち着いて（四分音符は前の二分音符の長さで）","data":"M-b1-t3-33-all&"},
   {"__exampleOrder":962,"de":"gleich abdämpfen","de_normalized":"gleich abdaempfen","ja":"すぐに音を消す","data":"M-2-1-321-bec&"},
   {"__exampleOrder":978,"de":"großer markiger Strich!","de_normalized":"grosser markiger strich!","ja":"より大きく力強い弓で！","data":"M-7-5-15-v1,v2,va,vc,kb&"},
   {"__exampleOrder":1010,"de":"heftig ausbrechend","de_normalized":"heftig ausbrechend","ja":"激しく突然爆発して","data":"M-9-4-107-v1&"},
@@ -81,6 +81,7 @@
   {"__exampleOrder":1335,"de":"langsam aber stetig cresc.","de_normalized":"langsam aber stetig cresc.","ja":"ゆっくりと，しかし常にクレッシェンド","data":"M-b2-t1-450-va&"},
   {"__exampleOrder":1345,"de":"Langsam. Misterioso","de_normalized":"langsam. misterioso","ja":"ゆっくりと，神秘的に","data":"M-2-5-472-all&"},
   {"__exampleOrder":1350,"de":"Langsam. Schwer","de_normalized":"langsam. schwer","ja":"ゆっくりと，重く","data":"M-3-1-164-all&"},
+  {"__exampleOrder":1352,"de":"Langsamer (die 𝅘𝅥 etwas langsamer als früher die 𝅗𝅥)","de_normalized":"langsamer (die 𝅘𝅥 etwas langsamer als frueher die 𝅗𝅥)","ja":"ゆっくりと（四分音符は前の二分音符よりいくらかゆっくりと）","data":"M-b1-t3-204-all&"},
   {"__exampleOrder":1371,"de":"Leise, aber mit Empfindung","de_normalized":"leise, aber mit empfindung","ja":"静かに，しかし情感を込めて","data":"M-c-c2-115-sti&"},
   {"__exampleOrder":1468,"de":"mit höchster Gewalt","de_normalized":"mit hoechster gewalt","ja":"最大限に暴力的に","data":"M-9-1-314-pos,bt&"},
   {"__exampleOrder":1478,"de":"mit Holzschlägeln","de_normalized":"mit holzschlaegeln","ja":"木のマレットで","data":"M-2-5-3-pau&M-5-3-799-pau&M-6-1-420-pau&M-102-3-64-pau&"},
@@ -144,5 +145,5 @@
   {"__exampleOrder":2511,"de":"zart aber ausdrucksvoll","de_normalized":"zart aber ausdrucksvoll","ja":"繊細に，しかし表情豊かに","data":"M-7-1-72-v1,vc&"},
   {"__exampleOrder":2516,"de":"zart gesungen","de_normalized":"zart gesungen","ja":"繊細に歌って","data":"M-1-3-95-ob&M-5-2-267-v1,v2&M-d-d09-3-v1&"},
   {"__exampleOrder":2531,"de":"ziehen","de_normalized":"ziehen","ja":"ポルタメント","data":"M-d-d14-25-sti&M-d-d14-51-sti&"},
-  {"__exampleOrder":2572,"de":"四分音符 wie früher 二分音符","de_normalized":"四分音符 wie frueher 二分音符","ja":"四分音符は前の二分音符の長さで","data":"M-8-t2-1449-all&"}
+  {"__exampleOrder":2588,"de":"𝅗𝅥 wie die früher die 𝅘𝅥","de_normalized":"𝅗𝅥 wie die frueher die 𝅘𝅥","ja":"二分音符は前の四分音符の長さで","data":"M-b2-t2-377-all&"}
 ]
