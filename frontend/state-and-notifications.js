@@ -18,27 +18,60 @@ const GAS_NOTIFICATION_URL = 'https://script.google.com/macros/s/AKfycbzFD2EDHfE
 const DICTIONARY_EXAMPLE_TIMING_KEY = 'gmt_dictionary_example_timing';
 const DICTIONARY_EXAMPLE_TIMING_MAX_AGE_MS = 5 * 60 * 1000;
 
+function normalizeDictionaryExampleTimingTerm(term) {
+    const value = String(term || '').normalize('NFKC').trim().toLowerCase();
+    if (typeof normalizeString === 'function') return normalizeString(value);
+    return value
+        .replace(/ä/g, 'ae')
+        .replace(/ö/g, 'oe')
+        .replace(/ü/g, 'ue')
+        .replace(/ß/g, 'ss');
+}
+
+function getDictionaryExampleNavigationStart() {
+    if (window.performance) {
+        if (Number.isFinite(window.performance.timeOrigin)) {
+            return window.performance.timeOrigin;
+        }
+        if (
+            window.performance.timing &&
+            Number.isFinite(window.performance.timing.navigationStart)
+        ) {
+            return window.performance.timing.navigationStart;
+        }
+    }
+    return null;
+}
+
 function consumeDictionaryExampleTiming(searchTerm, destinationPage) {
     try {
         const stored = JSON.parse(window.sessionStorage.getItem(DICTIONARY_EXAMPLE_TIMING_KEY) || 'null');
-        if (!stored || typeof stored.startedAt !== 'number') return null;
-
-        const elapsedMilliseconds = Math.round(Date.now() - stored.startedAt);
-        const matchesRequest =
-            stored.searchTerm === searchTerm &&
-            stored.destinationPage === destinationPage;
         window.sessionStorage.removeItem(DICTIONARY_EXAMPLE_TIMING_KEY);
-        if (
-            !matchesRequest ||
-            elapsedMilliseconds < 0 ||
-            elapsedMilliseconds > DICTIONARY_EXAMPLE_TIMING_MAX_AGE_MS
-        ) {
-            return null;
+        if (stored && typeof stored.startedAt === 'number') {
+            const elapsedMilliseconds = Math.round(Date.now() - stored.startedAt);
+            const matchesRequest =
+                normalizeDictionaryExampleTimingTerm(stored.searchTerm) ===
+                    normalizeDictionaryExampleTimingTerm(searchTerm) &&
+                stored.destinationPage === destinationPage;
+            if (
+                matchesRequest &&
+                elapsedMilliseconds >= 0 &&
+                elapsedMilliseconds <= DICTIONARY_EXAMPLE_TIMING_MAX_AGE_MS
+            ) {
+                return elapsedMilliseconds;
+            }
         }
-        return elapsedMilliseconds;
     } catch (error) {
-        return null;
+        // Continue with the navigation timing fallback below.
     }
+
+    const navigationStart = getDictionaryExampleNavigationStart();
+    if (navigationStart === null) return null;
+    const fallbackMilliseconds = Math.round(Date.now() - navigationStart);
+    return fallbackMilliseconds >= 0 &&
+        fallbackMilliseconds <= DICTIONARY_EXAMPLE_TIMING_MAX_AGE_MS
+        ? fallbackMilliseconds
+        : null;
 }
 
 function getSearchResultCount(options) {

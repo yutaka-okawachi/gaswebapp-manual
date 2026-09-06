@@ -1060,11 +1060,67 @@ assert.ok(commonScriptsSource.includes("urlParams.get('source') === 'dictionary_
 assert.ok(commonScriptsSource.includes("'view_example_search_results'"));
 assert.ok(commonScriptsSource.includes("'dictionary_example_timing'"));
 assert.ok(commonScriptsSource.includes('duration_ms: elapsedMilliseconds'));
+assert.ok(commonScriptsSource.includes("normalize('NFKC')"));
+assert.ok(commonScriptsSource.includes('getDictionaryExampleNavigationStart'));
+assert.ok(commonScriptsSource.includes('window.performance.timeOrigin'));
 assert.ok(publicAppScriptSource.includes("resultCount > 0"));
 assert.ok(publicAppScriptSource.includes("urlParams.get('source') === 'dictionary_example'"));
 assert.ok(publicAppScriptSource.includes("'view_example_search_results'"));
 assert.ok(publicAppScriptSource.includes("'dictionary_example_timing'"));
 assert.ok(publicAppScriptSource.includes('duration_ms: elapsedMilliseconds'));
+assert.ok(publicAppScriptSource.includes("normalize('NFKC')"));
+assert.ok(publicAppScriptSource.includes('getDictionaryExampleNavigationStart'));
+
+function evaluateDictionaryExampleTiming(source, storedValue, now, timeOrigin) {
+  const helperStart = source.indexOf('function normalizeDictionaryExampleTimingTerm');
+  const helperEnd = source.indexOf('function trackSearchResults', helperStart);
+  assert.ok(helperStart >= 0 && helperEnd > helperStart);
+  const removedKeys = [];
+  const timingContext = {
+    DICTIONARY_EXAMPLE_TIMING_KEY: 'gmt_dictionary_example_timing',
+    DICTIONARY_EXAMPLE_TIMING_MAX_AGE_MS: 5 * 60 * 1000,
+    Date: { now: () => now },
+    Number,
+    String,
+    JSON,
+    normalizeString: value => String(value)
+      .toLowerCase()
+      .replace(/ä/g, 'ae')
+      .replace(/ö/g, 'oe')
+      .replace(/ü/g, 'ue')
+      .replace(/ß/g, 'ss'),
+    window: {
+      performance: { timeOrigin },
+      sessionStorage: {
+        getItem: () => storedValue === null ? null : JSON.stringify(storedValue),
+        removeItem: key => removedKeys.push(key)
+      }
+    }
+  };
+  vm.createContext(timingContext);
+  vm.runInContext(source.slice(helperStart, helperEnd), timingContext);
+  return {
+    milliseconds: timingContext.consumeDictionaryExampleTiming(
+      'maessig',
+      '/gaswebapp-manual/mahler-search-app/terms_search.html'
+    ),
+    removedKeys
+  };
+}
+
+[commonScriptsSource, publicAppScriptSource].forEach(source => {
+  const storedTiming = evaluateDictionaryExampleTiming(source, {
+    startedAt: 1000,
+    searchTerm: 'mäßig',
+    destinationPage: '/gaswebapp-manual/mahler-search-app/terms_search.html'
+  }, 2500, 500);
+  assert.strictEqual(storedTiming.milliseconds, 1500);
+  assert.deepStrictEqual(storedTiming.removedKeys, ['gmt_dictionary_example_timing']);
+
+  const fallbackTiming = evaluateDictionaryExampleTiming(source, null, 2500, 400);
+  assert.strictEqual(fallbackTiming.milliseconds, 2100);
+});
+
 assert.ok(analyticsScriptSource.includes("linkType === 'example_search'"));
 assert.ok(analyticsScriptSource.includes('window.sessionStorage.setItem'));
 assert.ok(analyticsScriptSource.includes('startedAt: Date.now()'));
