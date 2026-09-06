@@ -35,7 +35,8 @@ async function scenario({ failCheck = false, failSnapshot = false, failPublish =
                 previousData: () => ({}),
                 validateSnapshot: () => { events.push('validate'); if (failSnapshot) throw new Error('bad snapshot'); return {}; },
                 installSnapshot: () => { events.push('install'); },
-                updateSitemap: () => {}, releaseManifest: () => ({ releaseId: 'release', hashes: {} })
+                updateSitemap: () => {}, releaseManifest: () => ({ releaseId: 'release', hashes: {} }),
+                formatJson: (file, value) => typeof value === 'string' ? value : JSON.stringify(value)
             },
             './publish': {
                 token: () => 'secret', preflight: async () => 'https://example.test/',

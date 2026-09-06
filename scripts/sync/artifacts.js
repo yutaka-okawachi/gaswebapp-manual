@@ -43,10 +43,23 @@ function previousData() {
     }
     return result;
 }
+function formatJson(file, value) {
+    if (typeof value === 'string') return value;
+    const isRecordArray = typeof file === 'string' && (
+        /\/(mahler|richard_strauss|richard_wagner|dic_notes|abbr_list)\.json$/.test(file) ||
+        file.includes('/dictionary-examples/')
+    );
+    if (Array.isArray(value) && isRecordArray) {
+        if (!value.length) return '[]\n';
+        return '[\n' + value.map((item, idx) =>
+            `  ${JSON.stringify(item)}${idx < value.length - 1 ? ',' : ''}`).join('\n') + '\n]\n';
+    }
+    return JSON.stringify(value, null, 2) + '\n';
+}
 function installSnapshot(files) {
     // Called only after the entire snapshot has passed validation.
     return Object.entries(files).filter(([file, value]) => writeIfChanged(file,
-        typeof value === 'string' ? value : JSON.stringify(value))).map(([file]) => file);
+        formatJson(file, value))).map(([file]) => file);
 }
 function updateSitemap(changed, today = new Date().toLocaleDateString('en-CA', { timeZone: 'Asia/Tokyo' })) {
     const mapping = {
@@ -90,7 +103,7 @@ function releaseManifest() {
     for (const file of publicFiles()) hashes[file] = sha256(normalizeText(fs.readFileSync(path.join(root, file), 'utf8')));
     const releaseId = sha256(JSON.stringify(hashes));
     const manifest = { schemaVersion: 1, releaseId, hashes };
-    writeIfChanged(base + 'release.json', JSON.stringify(manifest));
+    writeIfChanged(base + 'release.json', formatJson(base + 'release.json', manifest));
     return manifest;
 }
-module.exports = { expectedPaths, validateSnapshot, previousData, installSnapshot, updateSitemap, releaseManifest };
+module.exports = { expectedPaths, validateSnapshot, previousData, installSnapshot, updateSitemap, releaseManifest, formatJson };

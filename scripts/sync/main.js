@@ -160,7 +160,7 @@ async function main(args = process.argv.slice(2)) {
             const values = artifacts.validateSnapshot(snapshot, requestId, artifacts.previousData(), opt.allowRemoval);
             logger.sub(`検証合格: 全 ${Object.keys(values).length} ファイル (辞書・実例48分割シャード整合)`);
             state.ownedData = Object.fromEntries(Object.entries(values).map(([file, value]) =>
-                [file, sha256(normalizeText(typeof value === 'string' ? value : JSON.stringify(value)))]));
+                [file, sha256(normalizeText(typeof artifacts.formatJson === 'function' ? artifacts.formatJson(file, value) : (typeof value === 'string' ? value : JSON.stringify(value))))]));
             save();
             artifacts.installSnapshot(values);
             logger.success('ローカルデータファイルを最新スナップショットで更新しました。');

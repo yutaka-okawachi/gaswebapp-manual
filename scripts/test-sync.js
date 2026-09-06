@@ -4,7 +4,7 @@ const path = require('path');
 const vm = require('vm');
 const { root } = require('./sync/core');
 const { parseStatus, isAllowed } = require('./sync/git');
-const { expectedPaths, validateSnapshot, previousData } = require('./sync/artifacts');
+const { expectedPaths, validateSnapshot, previousData, formatJson } = require('./sync/artifacts');
 const { deploymentState } = require('./sync/publish');
 const { plan, options } = require('./sync/main');
 const { publicPath, previewHtml } = require('./preview-site');
@@ -18,6 +18,18 @@ assert.ok(plan('Auto', ['README.md'], false).documentsOnly);
 assert.ok(plan('Auto', ['README.md'], true).deploy);
 assert.throws(() => plan('Site', ['src/search_core.js'], true));
 assert.strictEqual(options(['--message', 'literal $(secret) `text`']).message, 'literal $(secret) `text`');
+
+// formatJson 仕様テスト
+const rsSample = [{ Oper: 'guntram', page: 16 }, { Oper: 'guntram', page: 17 }];
+const rsFormatted = formatJson('mahler-search-app/data/richard_strauss.json', rsSample);
+assert.strictEqual(rsFormatted, '[\n  {"Oper":"guntram","page":16},\n  {"Oper":"guntram","page":17}\n]\n');
+assert.deepStrictEqual(JSON.parse(rsFormatted), rsSample);
+assert.strictEqual(formatJson('mahler-search-app/data/mahler.json', []), '[]\n');
+const whomSample = { guntram: ['Orchester'] };
+const whomFormatted = formatJson('mahler-search-app/data/whom_list.json', whomSample);
+assert.strictEqual(whomFormatted, JSON.stringify(whomSample, null, 2) + '\n');
+assert.deepStrictEqual(JSON.parse(whomFormatted), whomSample);
+assert.strictEqual(formatJson('mahler-search-app/dic.html', '<html></html>'), '<html></html>');
 
 const files = previousData();
 files['mahler-search-app/dic.html'] = fs.readFileSync(path.join(root, 'mahler-search-app/dic.html'), 'utf8');
