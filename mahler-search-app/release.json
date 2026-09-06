@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "releaseId": "fb39ebf2c3e5ab5f8db2746e7ba8c2367b2d55ae7ef5b650b2e83bf8c66f3508",
+  "releaseId": "3309e0e08c82d2fff4885e8b486b868c88bdfd4ac7b74dd60a7a11130dedeb87",
   "hashes": {
     "index.html": "de76bb4909d5657135d0d4f3f340477e4cc32843f7ad148b6eb5c4a4bfed0478",
     "license.html": "45561e4dff60dc3f3b59a3ded96e85efa93037179503cf79df8fcf9f2c219ecd",
@@ -68,21 +68,21 @@
     "mahler-search-app/home.html": "c69ca3995d2fe49f29882d93d9cc99a743139e668c57d36429582c03711f6a53",
     "mahler-search-app/index.html": "7037250dfe691606073ab9315342228b1abc7f1b3fc1398b8b9c3d49d49fccf4",
     "mahler-search-app/js/analytics.js": "384b45d7de22dd5756d3a76bf0fb6bec04bfa07725c405d5bf1911a2d2e583a6",
-    "mahler-search-app/js/app.js": "976f55e254135a5c104c3ad30cc327d7efd8b768f7cb9f52e5c1f35689fbabab",
+    "mahler-search-app/js/app.js": "62c2832e39cfa9bf053dfaad08b5cb5788535dac8120153b88bd82f5134a7c11",
     "mahler-search-app/js/score_metadata.js": "8a94e6fe26f3983d3cd3ca04848b789b026034057bfb402639bd9827295da9e5",
     "mahler-search-app/js/wagner_strauss.js": "8cb4cf33e0c1af41e3723e37f0bd6e22da4266de52741604d4900198c72a0406",
-    "mahler-search-app/mahler.html": "b1edf49a0b1b03d1c5a754dc67cd234b59d61268944345722020e55c8fe6d859",
-    "mahler-search-app/notes.html": "ecf88f57a8ad600e97cdaf3e6dce87324caf5deb9570b3beff9b19bbac3c598d",
-    "mahler-search-app/other.html": "9794c82099531c835590bc12de93c2e6e80ccd25ad1529a031d6bc14866fc6e6",
-    "mahler-search-app/richard_strauss.html": "8d2d5835d6c5d403d0ba4a0a9f82063c9fe95e37174b4205348d121754314f0b",
-    "mahler-search-app/richard_wagner.html": "4f0ef5c094571f2234e3380e99784b9c2146b37ac25bc1f2c9fce984bd17474f",
+    "mahler-search-app/mahler.html": "0c094d0971aae56f902de445bf16ec4eb4ac1dc56e77d5bbb3b7ff0d13cd22bf",
+    "mahler-search-app/notes.html": "b7308415b52a07bfd0024248661b8675a474a3cdc983a721f46c85df8a6fcd95",
+    "mahler-search-app/other.html": "3bbf5f41e597647f3699a4e560031f1c62830d0004de1e5ab377950518b46548",
+    "mahler-search-app/richard_strauss.html": "039c1887b226074b69f01f210f111c796a595907fba52f21cf32a669d58f82c1",
+    "mahler-search-app/richard_wagner.html": "72b6316ca2de50718e999475d5a0838010e8990590e3ab104001a9d43a60edcf",
     "mahler-search-app/rs_synopsis.html": "c5299167c36f839dd8c9d806c7900b0103989de0326a0370aedaaeacddd9349b",
-    "mahler-search-app/rs_terms_search.html": "432fe56e5503d66b9822afad03685b731f1a76e525eb23aa22dbf47d35af115b",
+    "mahler-search-app/rs_terms_search.html": "08a2f5a1a54cdb2e31efc51f3cf2bd3a384803e2eb8bb9f723125a74d8f78108",
     "mahler-search-app/rw_synopsis.html": "52374d88a210c1c92fd36e11b98ab29b7dec4f7001a02db70323979173767f2a",
-    "mahler-search-app/rw_terms_search.html": "89a9a99712eecb78bc784cbfc09f3a7d8e6bc42a65e6bf899e4c34a1e6b2539e",
-    "mahler-search-app/terms_search.html": "6abaa5d88a46c65826d9387ef4248526e3eef00ea4fbabe59042353c332a3ee6",
+    "mahler-search-app/rw_terms_search.html": "b74d7b3e6ab48bf2f0704492bc0de46547b611d082aed8de7d2fae8caf13574a",
+    "mahler-search-app/terms_search.html": "e4035d7ce70e3e4d026bdfb12f394ce3e6c43b9f69d6d3b4c62445df023be8fa",
     "privacy.html": "830cf426b5c863bf969a3903e1af89649668005fd7517de1725232e548c540ee",
     "robots.txt": "f8e564433b1070c88c346790607f4e5be1e23bb9e605359e0347f3c87855183f",
-    "sitemap.xml": "067c07ac83a103346b3920351d7ea00769aba05ea251ac75b3f2c7e83049a8e3"
+    "sitemap.xml": "e055975c21220e385c521562ff077a7c18b111b31ac90598384fa6f4cb98bda8"
   }
 }
