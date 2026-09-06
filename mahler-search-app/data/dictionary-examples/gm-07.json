@@ -167,5 +167,6 @@
   {"__exampleOrder":2536,"de":"Zögernd","de_normalized":"zoegernd","ja":"ためらって","data":"M-5-4-85-all&M-9-1-444-all&M-a-5-55-all&M-b1-t1-365-all&M-d-d01-25-all&"},
   {"__exampleOrder":2547,"de":"Zum Tempo I. zurückkehren","de_normalized":"zum tempo i. zurueckkehren","ja":"Tempo I. に戻っていく","data":"M-2-3-328-all&"},
   {"__exampleOrder":2565,"de":"𝅘𝅥 = wie eben die 𝅗𝅥 =","de_normalized":"𝅘𝅥 = wie eben die 𝅗𝅥 =","ja":"四分音符はちょうど二分音符の長さで","data":"M-3-6-245-all&"},
+  {"__exampleOrder":2568,"de":"𝅘𝅥 = wie früher 𝅘𝅥𝅮𝅘𝅥𝅮𝅘𝅥𝅮","de_normalized":"𝅘𝅥 = wie frueher 𝅘𝅥𝅮𝅘𝅥𝅮𝅘𝅥𝅮","ja":"四分音符は前の八分音符3つの長さで","data":"M-3-2-70-all&"},
   {"__exampleOrder":2580,"de":"𝅗𝅥 = wie früher 𝅘𝅥","de_normalized":"𝅗𝅥 = wie frueher 𝅘𝅥","ja":"二分音符は前の四分音符の長さで","data":"M-1-4-458-all&M-2-5-97-all&M-b2-t1-353-all&"}
 ]

@@ -164,7 +164,5 @@
   {"__exampleOrder":2575,"de":"𝅘𝅥 wie zuletzt 𝅗𝅥","de_normalized":"𝅘𝅥 wie zuletzt 𝅗𝅥","ja":"四分音符は直前の二分音符の長さで","data":"M-4-3-179-all&"},
   {"__exampleOrder":2586,"de":"𝅗𝅥 ungefähr wie im letzten halben Takte die 𝅘𝅥","de_normalized":"𝅗𝅥 ungefaehr wie im letzten halben takte die 𝅘𝅥","ja":"二分音符はだいたい直前の半分の長さで（四分音符の長さで）","data":"M-8-t2-580-all&"},
   {"__exampleOrder":2590,"de":"𝅗𝅥 wie früher 𝅘𝅥 (immer im Tempo I. )","de_normalized":"𝅗𝅥 wie frueher 𝅘𝅥 (immer im tempo i. )","ja":"二分音符は前の四分音符の長さで（変わらずTempo I で）","data":"M-7-5-368-all&"},
-  {"__exampleOrder":2595,"de":"𝅗𝅥 wie zuletzt 𝅝","de_normalized":"𝅗𝅥 wie zuletzt 𝅝","ja":"二分音符は直前の全音符の長さで","data":"M-8-t2-1404-all&"},
-  {"__exampleOrder":2598,"de":"𝅘𝅥𝅮3つ = wie früher 𝅘𝅥𝅮の3連符","de_normalized":"𝅘𝅥𝅮3つ = wie frueher 𝅘𝅥𝅮の3連符","ja":"八分音符3つは前の八分音符の3連符の長さで ","data":"M-3-2-50-all&"},
-  {"__exampleOrder":2599,"de":"𝅘𝅥𝅮3つ etwas langsamer wie früher 𝅘𝅥","de_normalized":"𝅘𝅥𝅮3つ etwas langsamer wie frueher 𝅘𝅥","ja":"八分音符3つは前の 四分音符よりいくらかゆっくりと","data":"M-3-3-256-all&"}
+  {"__exampleOrder":2595,"de":"𝅗𝅥 wie zuletzt 𝅝","de_normalized":"𝅗𝅥 wie zuletzt 𝅝","ja":"二分音符は直前の全音符の長さで","data":"M-8-t2-1404-all&"}
 ]

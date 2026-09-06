@@ -147,7 +147,5 @@
   {"__exampleOrder":2546,"de":"Zum Anfangstempo zurückkehren","de_normalized":"zum anfangstempo zurueckkehren","ja":"最初のテンポに戻っていく","data":"M-3-1-217-all&"},
   {"__exampleOrder":2554,"de":"zurückhalten hervortretend","de_normalized":"zurueckhalten hervortretend","ja":"速度を緩めて，目立たせて","data":"M-2-5-637-alt&"},
   {"__exampleOrder":2564,"de":"Zweite Abteilung","de_normalized":"zweite abteilung","ja":"第2部","data":"M-3-2-0-all&"},
-  {"__exampleOrder":2568,"de":"𝅘𝅥 = wie früher 𝅘𝅥𝅮3つ","de_normalized":"𝅘𝅥 = wie frueher 𝅘𝅥𝅮3つ","ja":"四分音符は前の八分音符3つの長さで","data":"M-3-2-70-all&"},
-  {"__exampleOrder":2572,"de":"𝅘𝅥 wie früher 𝅗𝅥","de_normalized":"𝅘𝅥 wie frueher 𝅗𝅥","ja":"四分音符は前の二分音符の長さで","data":"M-8-t2-1449-all&"},
-  {"__exampleOrder":2597,"de":"𝅘𝅥𝅮3つ = wie früher 𝅘𝅥","de_normalized":"𝅘𝅥𝅮3つ = wie frueher 𝅘𝅥","ja":"八分音符3つは前の 四分音符の長さで","data":"M-3-2-79-all&M-3-3-68-v1&"}
+  {"__exampleOrder":2572,"de":"𝅘𝅥 wie früher 𝅗𝅥","de_normalized":"𝅘𝅥 wie frueher 𝅗𝅥","ja":"四分音符は前の二分音符の長さで","data":"M-8-t2-1449-all&"}
 ]

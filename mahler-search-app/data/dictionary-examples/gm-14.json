@@ -145,5 +145,7 @@
   {"__exampleOrder":2511,"de":"zart aber ausdrucksvoll","de_normalized":"zart aber ausdrucksvoll","ja":"繊細に，しかし表情豊かに","data":"M-7-1-72-v1,vc&"},
   {"__exampleOrder":2516,"de":"zart gesungen","de_normalized":"zart gesungen","ja":"繊細に歌って","data":"M-1-3-95-ob&M-5-2-267-v1,v2&M-d-d09-3-v1&"},
   {"__exampleOrder":2531,"de":"ziehen","de_normalized":"ziehen","ja":"ポルタメント","data":"M-d-d14-25-sti&M-d-d14-51-sti&"},
-  {"__exampleOrder":2588,"de":"𝅗𝅥 wie die früher die 𝅘𝅥","de_normalized":"𝅗𝅥 wie die frueher die 𝅘𝅥","ja":"二分音符は前の四分音符の長さで","data":"M-b2-t2-377-all&"}
+  {"__exampleOrder":2588,"de":"𝅗𝅥 wie die früher die 𝅘𝅥","de_normalized":"𝅗𝅥 wie die frueher die 𝅘𝅥","ja":"二分音符は前の四分音符の長さで","data":"M-b2-t2-377-all&"},
+  {"__exampleOrder":2598,"de":"𝅘𝅥𝅮𝅘𝅥𝅮𝅘𝅥𝅮 = wie früher 𝅘𝅥𝅮の3連符","de_normalized":"𝅘𝅥𝅮𝅘𝅥𝅮𝅘𝅥𝅮 = wie frueher 𝅘𝅥𝅮の3連符","ja":"八分音符3つは前の八分音符の3連符の長さで ","data":"M-3-2-50-all&"},
+  {"__exampleOrder":2601,"de":"付点𝅘𝅥 = wie früher 𝅘𝅥𝅮𝅘𝅥𝅮𝅘𝅥𝅮","de_normalized":"付点𝅘𝅥 = wie frueher 𝅘𝅥𝅮𝅘𝅥𝅮𝅘𝅥𝅮","ja":"付点四分音符は前の八分音符3つの長さで","data":"M-3-2-144-all&"}
 ]

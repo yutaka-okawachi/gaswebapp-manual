@@ -184,5 +184,6 @@
   {"__exampleOrder":2553,"de":"zurückhalten","de_normalized":"zurueckhalten","ja":"速度を緩めて","data":"M-a-5-17-ten&M-f-f4-88-all&"},
   {"__exampleOrder":2555,"de":"zurückhaltend","de_normalized":"zurueckhaltend","ja":"速度を緩めて","data":"M-1-1-317-all&M-1-1-324-all&M-1-3-36-all&M-2-5-326-pos&M-3-3-308-phr&M-4-3-98-all&M-5-3-290-all&M-5-4-31-all&M-5-4-67-all&M-6-1-247-all&M-6-4-48-all&M-8-t2-573-all&M-a-5-4-ten&M-b2-t1-170-all&M-b2-t2-71-all&M-d-d04-150-all&M-e-e2-39-all&"},
   {"__exampleOrder":2556,"de":"Zurückhaltend","de_normalized":"zurueckhaltend","ja":"速度を緩めて","data":"M-1-4-204-all&M-1-4-336-all&M-1-4-476-all&M-1-4-611-all&M-2-1-104-all&M-2-5-532-all&M-2-5-547-all&M-2-5-617-chor&M-2-5-625-all&M-3-1-11-all&M-3-1-179-all&M-3-1-364-all&M-3-1-420-all&M-3-1-655-all&M-3-3-281-all&M-3-3-304-all&M-3-3-523-all&M-4-3-55-all&M-4-3-71-all&M-5-1-372-all&M-6-3-109-all&M-7-5-443-all&M-102-4-119-all&M-102-4-244-all&M-102-4-287-all&M-102-4-512-all&M-102-5-119-all&M-a-1-75-all&M-a-5-37-all&M-b1-t1-139-all&M-b1-t1-272-all&"},
-  {"__exampleOrder":2570,"de":"𝅘𝅥 = wie zuletzt 𝅗𝅥","de_normalized":"𝅘𝅥 = wie zuletzt 𝅗𝅥","ja":"四分音符は直前の二分音符の長さで","data":"M-1-4-428-all&M-2-5-602-all&"}
+  {"__exampleOrder":2570,"de":"𝅘𝅥 = wie zuletzt 𝅗𝅥","de_normalized":"𝅘𝅥 = wie zuletzt 𝅗𝅥","ja":"四分音符は直前の二分音符の長さで","data":"M-1-4-428-all&M-2-5-602-all&"},
+  {"__exampleOrder":2599,"de":"𝅘𝅥𝅮𝅘𝅥𝅮𝅘𝅥𝅮 etwas langsamer wie früher 𝅘𝅥","de_normalized":"𝅘𝅥𝅮𝅘𝅥𝅮𝅘𝅥𝅮 etwas langsamer wie frueher 𝅘𝅥","ja":"八分音符3つは前の 四分音符よりいくらかゆっくりと","data":"M-3-3-256-all&"}
 ]

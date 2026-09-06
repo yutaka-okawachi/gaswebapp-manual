@@ -162,5 +162,5 @@
   {"__exampleOrder":2545,"de":"zuerst noch gemässigt","de_normalized":"zuerst noch gemaessigt","ja":"最初はまだ穏やかに","data":"M-3-1-737-all&"},
   {"__exampleOrder":2567,"de":"𝅘𝅥 = wie früher 𝅗𝅥","de_normalized":"𝅘𝅥 = wie frueher 𝅗𝅥","ja":"四分音符は前の二分音符の長さで","data":"M-8-t2-552-all&"},
   {"__exampleOrder":2587,"de":"𝅗𝅥 werden 𝅘𝅥","de_normalized":"𝅗𝅥 werden 𝅘𝅥","ja":"（前の）二分音符（の長さ）は四分音符（の長さ）になる","data":"M-7-1-118-all&"},
-  {"__exampleOrder":2601,"de":"付点𝅘𝅥 = wie früher 𝅘𝅥𝅮3つ","de_normalized":"付点𝅘𝅥 = wie frueher 𝅘𝅥𝅮3つ","ja":"付点四分音符は前の八分音符3つの長さで","data":"M-3-2-144-all&"}
+  {"__exampleOrder":2597,"de":"𝅘𝅥𝅮𝅘𝅥𝅮𝅘𝅥𝅮 = wie früher 𝅘𝅥","de_normalized":"𝅘𝅥𝅮𝅘𝅥𝅮𝅘𝅥𝅮 = wie frueher 𝅘𝅥","ja":"八分音符3つは前の 四分音符の長さで","data":"M-3-2-79-all&M-3-3-68-v1&"}
 ]
