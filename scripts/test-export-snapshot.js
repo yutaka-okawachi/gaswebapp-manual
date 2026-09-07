@@ -22,7 +22,7 @@ const context = vm.createContext({
     LockService: { getScriptLock: () => ({ tryLock: () => true, releaseLock: () => released++ }) },
     SpreadsheetApp: { openById: () => ({ getSheetByName: name => sheets[name] ? { getDataRange: () => ({ getValues: () => sheets[name] }) } : null }) }
 });
-for (const file of ['asset_versions', 'sync_build', 'dictionary_example_shards', 'generate_dic_html', 'export_json']) {
+for (const file of ['sync_build', 'dictionary_example_shards', 'generate_dic_html', 'export_json']) {
     vm.runInContext(fs.readFileSync(path.join(root, `src/${file}.js`), 'utf8'), context);
 }
 const first = JSON.parse(JSON.stringify(context.exportAllDataToJson({ requestId: 'fixture' })));
@@ -30,6 +30,8 @@ validateSnapshot(first, 'fixture');
 assert.strictEqual(first.files['mahler-search-app/data/richard_wagner.json'][0]['楽譜情報'], '出版社');
 assert.strictEqual(first.files['mahler-search-app/data/richard_wagner.json'][0]['場面タイトル'], '場面');
 assert.strictEqual(first.files['mahler-search-app/data/whom_list.json'].test[0], 'Alle');
+assert.strictEqual((first.files['mahler-search-app/dic.html'].match(/<script src="js\/analytics\.js"><\/script>/g) || []).length, 1,
+    'GAS must emit one cache-neutral analytics script; build-site adds its public version locally');
 const second = JSON.parse(JSON.stringify(context.exportAllDataToJson({ requestId: 'fixture' })));
 assert.deepStrictEqual(second, first, 'Retrying the same read-only snapshot must be deterministic');
 assert.strictEqual(released, 2);

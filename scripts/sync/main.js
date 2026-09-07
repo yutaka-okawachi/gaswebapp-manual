@@ -163,6 +163,9 @@ async function main(args = process.argv.slice(2)) {
                 [file, sha256(normalizeText(typeof artifacts.formatJson === 'function' ? artifacts.formatJson(file, value) : (typeof value === 'string' ? value : JSON.stringify(value))))]));
             save();
             artifacts.installSnapshot(values);
+            // GAS returns a cache-neutral dictionary. Apply current public asset hashes locally
+            // so browser-only changes never require a GAS deployment.
+            build({ includeDictionary: true });
             logger.success('ローカルデータファイルを最新スナップショットで更新しました。');
         } else {
             logger.info('データ更新はスキップされました。');

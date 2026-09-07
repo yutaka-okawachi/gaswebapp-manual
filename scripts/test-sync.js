@@ -18,6 +18,9 @@ assert.ok(plan('Auto', ['README.md'], false).documentsOnly);
 assert.ok(plan('Auto', ['README.md'], true).deploy);
 assert.throws(() => plan('Site', ['src/web_trigger.js'], true));
 assert.strictEqual(plan('Auto', ['frontend/search-core.js'], false).deploy, false);
+assert.strictEqual(plan('Auto', ['frontend/search-core.js'], false).data, false);
+assert.ok(!fs.existsSync(path.join(root, 'src/asset_versions.js')), 'Public asset versions must not be part of GAS source');
+assert.ok(!fs.readFileSync(path.join(root, 'scripts/build-site.js'), 'utf8').includes("writeIfChanged('src/asset_versions.js'"));
 assert.strictEqual(options(['--message', 'literal $(secret) `text`']).message, 'literal $(secret) `text`');
 
 // formatJson 仕様テスト

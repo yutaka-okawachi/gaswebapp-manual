@@ -57,6 +57,8 @@ GAS_SECRET_TOKEN=任意の安全なトークン文字列
 
 通常は従来どおり `02_RUN_SYNC.bat` または `.\sync-data.ps1` の一回実行で最後まで自動で完了します。ブラウザーでの手動確認操作は不要で、ターミナル上に詳細な進捗がカラー表示されます。
 
+分岐を含むフローチャートは [SYNC_DATA_FLOW.md](SYNC_DATA_FLOW.md) を参照してください。
+
 1. main・未完了Git操作・変更パス・生成物の手動変更を確認します。自動マージ、自動退避、生成物の自動破棄は行いません。
 2. ブラウザー用コードを組み立て、楽譜情報を自動コピーし、JS/CSSの内容ハッシュを各画面に付けます。既存テストと同期の安全性テストを実行します。
 3. GitHub認証と公開設定を確認し、ソース変更があればローカルにコミットします。リモートに未取得の変更がある場合は、本番変更前に停止します。
@@ -97,7 +99,7 @@ GASへの接続確認と更新直後の反映確認は、Google側の一時的�
 | 同期 | `scripts/sync/`。PowerShellは入口のみ |
 | 公開前確認 | `scripts/preview-site.js` |
 
-`mahler-search-app/js/app.js`、`mahler-search-app/js/score_metadata.js`、`src/asset_versions.js`、`src/sync_build.js` は組み立て結果です。利用者向け画面はGitHub Pages版だけを正本とします。GASは同期スナップショット、検索通知、ダッシュボード集計APIを提供し、GAS URLへ通常アクセスした場合はGitHub Pages版へ移動します。GAS側に利用者向けHTMLテンプレートは置かず、Google Sites等へ画面として埋め込みません。
+`mahler-search-app/js/app.js`、`mahler-search-app/js/score_metadata.js`、`src/sync_build.js` は組み立て結果です。公開アセットの内容ハッシュはローカルで各HTMLへ反映し、GASの変更判定には含めません。利用者向け画面はGitHub Pages版だけを正本とします。GASは同期スナップショット、検索通知、ダッシュボード集計APIを提供し、GAS URLへ通常アクセスした場合はGitHub Pages版へ移動します。GAS側に利用者向けHTMLテンプレートは置かず、Google Sites等へ画面として埋め込みません。
 
 ブラウザー用データは必要なファイルを並行取得し、同時に同じデータを要求しても通信を共有します。同期時のJSONは、検索・実例などの大量データは1行1レコード形式、設定・定義・マニフェスト等のオブジェクトデータは2スペースインデント形式で整形して保存します（エディタでの可読性向上とGit差分の局所化のため）。既存の実例検索の分割方式・検索結果は維持します。
 
