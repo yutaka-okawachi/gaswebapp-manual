@@ -16,7 +16,6 @@
   {"__exampleOrder":309,"de":"Alt-Stimme (in erzählendem Ton, ohne Ausdruck)","de_normalized":"alt-stimme (in erzaehlendem ton, ohne ausdruck)","ja":"アルト（物語るような調子で，表情をつけずに）","data":"M-a-6-19-alt&"},
   {"__exampleOrder":313,"de":"am Griffbr.","de_normalized":"am griffbr.","ja":"指板の近くで","data":"M-2-1-189-va,vc&"},
   {"__exampleOrder":327,"de":"Anmerkung f. d. Dirigenten: Achtung auf den Unterschied zwischen f u. ff","de_normalized":"anmerkung f. d. dirigenten: achtung auf den unterschied zwischen f u. ff","ja":"指揮者への注意：fとffの違いに注意せよ","data":"M-3-3-382-dir&"},
-  {"__exampleOrder":336,"de":"Anmerkung für den Dirigenten und Sänger:𝄐 bedeutet hier nur ein kurzes Anhalten auf dem Taktstrich und nicht etwa eine Fermate. [Anmerkung Mahlers]","de_normalized":"anmerkung fuer den dirigenten und saenger:𝄐 bedeutet hier nur ein kurzes anhalten auf dem taktstrich und nicht etwa eine fermate. [anmerkung mahlers]","ja":"指揮者と独唱者への注意：フェルマータ記号は小節間の短い休止を意味するだけで，まったくフェルマータではない（マーラーによる注意）","data":"M-d-d04-151-sti,dir&"},
   {"__exampleOrder":351,"de":"Anmerkung für den Dirigenten: Geigen stets so vehement als möglich","de_normalized":"anmerkung fuer den dirigenten: geigen stets so vehement als moeglich","ja":"指揮者への注意：ヴァイオリンは常にできる限り激しく","data":"M-5-1-155-dir&"},
   {"__exampleOrder":370,"de":"antwortend","de_normalized":"antwortend","ja":"応える","data":"M-7-2-2-hr&M-7-2-6-hr&"},
   {"__exampleOrder":371,"de":"anwachsend","de_normalized":"anwachsend","ja":"高まって","data":"M-8-t2-625-ten&"},
