@@ -16,7 +16,8 @@ assert.ok(plan('Auto', [], false).data);
 assert.ok(!plan('Auto', ['index.html'], false).data);
 assert.ok(plan('Auto', ['README.md'], false).documentsOnly);
 assert.ok(plan('Auto', ['README.md'], true).deploy);
-assert.throws(() => plan('Site', ['src/search_core.js'], true));
+assert.throws(() => plan('Site', ['src/web_trigger.js'], true));
+assert.strictEqual(plan('Auto', ['frontend/search-core.js'], false).deploy, false);
 assert.strictEqual(options(['--message', 'literal $(secret) `text`']).message, 'literal $(secret) `text`');
 
 // formatJson 仕様テスト
@@ -75,7 +76,7 @@ assert.strictEqual(released, 1, 'Export errors must release the lock');
 context.LockService.getScriptLock = () => ({ tryLock: () => false, releaseLock: () => released++ });
 assert.throws(() => context.exportAllDataToJson({}), /実行中/);
 assert.strictEqual(released, 1);
-const shared = fs.readFileSync(path.join(root, 'src/search_core.js'), 'utf8');
+const shared = fs.readFileSync(path.join(root, 'frontend/search-core.js'), 'utf8');
 vm.runInContext(shared, context);
 assert.strictEqual(context.normalizeString(42), '');
 const app = fs.readFileSync(path.join(root, 'mahler-search-app/js/app.js'), 'utf8');

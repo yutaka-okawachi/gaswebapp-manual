@@ -1,5 +1,5 @@
 [
-  "src/search_core.js",
+  "frontend/search-core.js",
   "frontend/state-and-notifications.js",
   "frontend/data-loader.js",
   "frontend/suggestions.js",

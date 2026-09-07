@@ -1,5 +1,5 @@
 /**
- * score_metadata.js
+ * Public-site score metadata.
  * 作品ごとの詳細な楽譜情報（出版社、プレート番号、版情報、IMSLPリンク）を定義します。
  */
 

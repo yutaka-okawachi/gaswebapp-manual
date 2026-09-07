@@ -1,7 +1,22 @@
 const assert = require('assert');
-const { waitForSourceHash, DEPLOYMENT_VERIFY_DELAYS_MS } = require('./sync/gas');
+const { inspect, waitForSourceHash, DEPLOYMENT_VERIFY_DELAYS_MS, INSPECTION_RETRY_DELAYS_MS } = require('./sync/gas');
 
 async function main() {
+    let inspectionCalls = 0;
+    const inspectionWaits = [];
+    const inspected = await inspect({}, {
+        delays: [0, 1],
+        delay: async ms => inspectionWaits.push(ms),
+        call: async () => {
+            inspectionCalls += 1;
+            if (inspectionCalls === 1) throw new Error('HTTP 404');
+            return { sourceHash: 'current' };
+        }
+    });
+    assert.strictEqual(inspected.sourceHash, 'current');
+    assert.deepStrictEqual(inspectionWaits, [0, 1]);
+    assert.deepStrictEqual(INSPECTION_RETRY_DELAYS_MS, [0, 2000, 5000, 10000]);
+
     const waits = [];
     const responses = [new Error('一時的な HTTP エラー'), { sourceHash: 'old' }, { sourceHash: 'expected' }];
     const result = await waitForSourceHash({}, 'expected', {

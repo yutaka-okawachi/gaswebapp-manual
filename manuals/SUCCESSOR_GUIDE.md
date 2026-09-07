@@ -94,12 +94,10 @@ GitHub の `Settings > Account > Successor settings` にて、後継者の GitHu
 ### 5-1. あらすじ集の構成
 Richard Strauss (RS) および Richard Wagner (RW) のあらすじ集ページ（`rs_synopsis.html`, `rw_synopsis.html`）は、デザインを「曲名から検索」画面と統一し、外部リンク（Google ドライブの PDF ファイル）として運用しています。これらのリンクのクリック数は、Google アナリティクス (GA4) の「離脱クリック」イベントとして自動測定されます。
 
-### 5-2. サイドバーメニューの管理（超重要）
-サイドバーメニュー（`<nav class="sidebar">`）のリンク項目を新規追加・変更・削除する場合は、**静的HTML** と **GAS側のテンプレート・ビルドロジック** の両方を修正する必要があります。
-`dic.html` はスプレッドシートから自動生成されます。ローカルの `mahler-search-app/dic.html` を直接書き換えると同期が停止します。必ず以下のファイルを同期して修正してください。
+### 5-2. 公開画面とサイドバーメニューの管理（超重要）
+利用者向け画面はGitHub Pages版だけです。GAS URLは同期・通知・集計APIとして維持し、通常アクセスはGitHub Pages版へ移動します。GAS側に別の利用者向け画面はなく、Google Sites等への画面埋め込みにも使用しません。
 
-1. **静的HTML**: `mahler-search-app/` 配下の全HTML (12ファイル) および ルートの `index.html`
-2. **GAS関連ファイル**: `src/sidebar.html`、`src/index.html`、および `src/generate_dic_html.js` 内のサイドバーHTML埋め込み箇所
+サイドバーメニュー（`<nav class="sidebar">`）のリンク項目を新規追加・変更・削除する場合は、ルートの `index.html` と `mahler-search-app/` 配下の公開HTMLを修正します。用語集 `mahler-search-app/dic.html` は生成物なので直接編集せず、`src/generate_dic_html.js` のサイドバー生成部分を修正します。変更後は `sync-data` のプレビューで各画面と用語集を確認します。
 
 ### 5-3. robots.txt と2つのGitHubリポジトリ
 

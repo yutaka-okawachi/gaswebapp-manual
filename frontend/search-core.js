@@ -1,4 +1,4 @@
-// Shared by GAS and the public browser bundle. Edit this file only.
+// Shared by the public browser bundle and its local tests. Edit this file only.
 
 function normalizeString(str) {
   if (typeof str !== 'string') return '';

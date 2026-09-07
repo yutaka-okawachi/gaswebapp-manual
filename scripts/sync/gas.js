@@ -3,6 +3,7 @@ const path = require('path');
 const { root, sha256, normalizeText, request, delay, writeIfChanged } = require('./core');
 const { runClasp, run: deploy } = require('../../src/manage_deploy');
 const DEPLOYMENT_VERIFY_DELAYS_MS = [0, 2000, 5000, 10000, 20000];
+const INSPECTION_RETRY_DELAYS_MS = [0, 2000, 5000, 10000];
 function configuration() {
     const file = path.join(root, '.env');
     const settings = { ...process.env };
@@ -42,15 +43,27 @@ async function exportSnapshot(settings, requestId) {
     }
     throw error;
 }
-async function inspect(settings) {
+async function inspectOnce(settings) {
     try { return await call(settings, 'syncInfo'); }
     catch (error) {
         if (/Unknown action/.test(error.message)) return null;
         throw error;
     }
 }
+async function inspect(settings, options = {}) {
+    const callFn = options.call || inspectOnce;
+    const wait = options.delay || delay;
+    const delays = options.delays || INSPECTION_RETRY_DELAYS_MS;
+    let lastError = null;
+    for (const waitMs of delays) {
+        await wait(waitMs);
+        try { return await callFn(settings); }
+        catch (error) { lastError = error; }
+    }
+    throw lastError;
+}
 async function waitForSourceHash(settings, expectedHash, options = {}) {
-    const inspectFn = options.inspect || inspect;
+    const inspectFn = options.inspect || inspectOnce;
     const wait = options.delay || delay;
     const delays = options.delays || DEPLOYMENT_VERIFY_DELAYS_MS;
     let observed = null;
@@ -83,4 +96,4 @@ async function ensureDeployment(settings, state, save, observed) {
     save();
     return hash;
 }
-module.exports = { configuration, fingerprint, prepareBuild, inspect, call, exportSnapshot, waitForSourceHash, ensureDeployment, DEPLOYMENT_VERIFY_DELAYS_MS };
+module.exports = { configuration, fingerprint, prepareBuild, inspect, call, exportSnapshot, waitForSourceHash, ensureDeployment, DEPLOYMENT_VERIFY_DELAYS_MS, INSPECTION_RETRY_DELAYS_MS };

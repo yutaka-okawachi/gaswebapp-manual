@@ -8,7 +8,6 @@ const sourcePath = path.join(repositoryRoot, 'src', 'dashboard_analytics.js');
 const manifestPath = path.join(repositoryRoot, 'src', 'appsscript.json');
 const getRouterPath = path.join(repositoryRoot, 'src', 'mahler_server.js');
 const postRouterPath = path.join(repositoryRoot, 'src', 'web_trigger.js');
-const commonScriptsPath = path.join(repositoryRoot, 'src', 'common_scripts.html');
 const dictionaryGeneratorPath = path.join(repositoryRoot, 'src', 'generate_dic_html.js');
 const publicAppScriptPath = path.join(repositoryRoot, 'mahler-search-app', 'js', 'app.js');
 const analyticsScriptPath = path.join(repositoryRoot, 'mahler-search-app', 'js', 'analytics.js');
@@ -1047,22 +1046,13 @@ assert.deepStrictEqual(manifest.dependencies.enabledAdvancedServices, [{
 
 const getRouterSource = fs.readFileSync(getRouterPath, 'utf8');
 const postRouterSource = fs.readFileSync(postRouterPath, 'utf8');
-const commonScriptsSource = fs.readFileSync(commonScriptsPath, 'utf8');
 const dictionaryGeneratorSource = fs.readFileSync(dictionaryGeneratorPath, 'utf8');
 const publicAppScriptSource = fs.readFileSync(publicAppScriptPath, 'utf8');
 const analyticsScriptSource = fs.readFileSync(analyticsScriptPath, 'utf8');
-assert.ok(getRouterSource.includes("e.parameter.api === 'dashboard'"));
+assert.ok(getRouterSource.includes("parameters.api === 'dashboard'"));
 assert.ok(postRouterSource.includes("data.api === 'dashboard'"));
 assert.ok(dictionaryGeneratorSource.includes('&source=dictionary_example'));
 assert.strictEqual(dictionaryGeneratorSource.includes("'click_view_example'"), false);
-assert.ok(commonScriptsSource.includes("resultCount > 0"));
-assert.ok(commonScriptsSource.includes("urlParams.get('source') === 'dictionary_example'"));
-assert.ok(commonScriptsSource.includes("'view_example_search_results'"));
-assert.ok(commonScriptsSource.includes("'dictionary_example_timing'"));
-assert.ok(commonScriptsSource.includes('duration_ms: elapsedMilliseconds'));
-assert.ok(commonScriptsSource.includes("normalize('NFKC')"));
-assert.ok(commonScriptsSource.includes('getDictionaryExampleNavigationStart'));
-assert.ok(commonScriptsSource.includes('window.performance.timeOrigin'));
 assert.ok(publicAppScriptSource.includes("resultCount > 0"));
 assert.ok(publicAppScriptSource.includes("urlParams.get('source') === 'dictionary_example'"));
 assert.ok(publicAppScriptSource.includes("'view_example_search_results'"));
@@ -1108,7 +1098,7 @@ function evaluateDictionaryExampleTiming(source, storedValue, now, timeOrigin) {
   };
 }
 
-[commonScriptsSource, publicAppScriptSource].forEach(source => {
+[publicAppScriptSource].forEach(source => {
   const storedTiming = evaluateDictionaryExampleTiming(source, {
     startedAt: 1000,
     searchTerm: 'mäßig',
