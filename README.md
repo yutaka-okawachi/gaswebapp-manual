@@ -99,9 +99,10 @@ Richard Wagner（リヒャルト・ワーグナー）、Gustav Mahler（グス�
 
 ### 運用・保守を行う方へ
 
-- [マニュアル一覧](./manuals/README.md): 目的別のマニュアル入口
-- [プロジェクト引き継ぎ・長期保守ガイド](./manuals/SUCCESSOR_GUIDE.md): 後継者向けの初期設定、日常同期、権限移譲
-- [開発者・運用保守ガイド](./manuals/DEVELOPER_GUIDE.md): 開発環境、データ同期、GAS、管理者ダッシュボード、公開と障害対応
+- [日常保守マニュアル](./manuals/DEVELOPER_GUIDE.md): データ更新、同期、障害対応、管理者モード
+- [PC移行マニュアル](./manuals/PC_MIGRATION_GUIDE.md): 新しいPCの準備、設定復元、初回確認
+- [継承者マニュアル](./manuals/SUCCESSOR_GUIDE.md): 資産・権限・アカウントの引き継ぎ
+- [ダッシュボードマニュアル](./manuals/DASHBOARD_GUIDE.md): 利用状況確認、画面・API保守、公開、新PC作業
 - [更新履歴](./CHANGELOG.md): サイトとリポジトリの主な変更
 
 `manuals`配下のMarkdownファイルはGitHub上で閲覧できる前提です。トークン、パスワード、実際の秘密情報は書き込まないでください。
