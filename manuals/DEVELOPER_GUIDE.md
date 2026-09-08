@@ -182,10 +182,10 @@ Google Search Consoleへ `robots.txt` を登録したり、ルート用リポジ
 
 ### 5-2. 管理者モードを有効にする
 
-除外したいブラウザで，次の URL を一度開きます．
+除外したいブラウザで，サイトのルートにある次の推奨 URL を一度開きます．
 
 ```text
-https://yutaka-okawachi.github.io/gaswebapp-manual/mahler-search-app/mahler.html?admin=1
+https://yutaka-okawachi.github.io/gaswebapp-manual/?admin=1
 ```
 
 ページ右下に次の表示が出れば有効です．
@@ -193,6 +193,8 @@ https://yutaka-okawachi.github.io/gaswebapp-manual/mahler-search-app/mahler.html
 ```text
 管理者モード：解析・検索記録 OFF
 ```
+
+`https://yutaka-okawachi.github.io/gaswebapp-manual/index.html?admin=1` を開いても，同じように管理者モードを有効にできます．サイトのルートから設定する上記の形式を通常の案内に使用します．
 
 この設定は `yutaka-okawachi.github.io` 上の本サイトに対してブラウザ内へ保存されるため，以後は通常の URL から検索ページを開いて構いません．`?admin=1` を毎回付ける必要はありません．
 
@@ -228,8 +230,10 @@ GA4 は反映や集計に時間差が生じることがあるため，メール�
 通常の利用者として再び計測したいブラウザで，次の URL を一度開きます．
 
 ```text
-https://yutaka-okawachi.github.io/gaswebapp-manual/mahler-search-app/mahler.html?admin=0
+https://yutaka-okawachi.github.io/gaswebapp-manual/?admin=0
 ```
+
+`https://yutaka-okawachi.github.io/gaswebapp-manual/index.html?admin=0` を開いても，同じように管理者モードを解除できます．
 
 その後ページを再読み込みし，右下の管理者モード表示が消えていることを確認します．
 
