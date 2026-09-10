@@ -234,7 +234,7 @@ GAS APIの更新とSitesの公開は別作業です。どちらか一方の成�
 | あらすじ集 (RS) | `/gaswebapp-manual/mahler-search-app/rs_synopsis.html` |
 | あらすじ集 (RW) | `/gaswebapp-manual/mahler-search-app/rw_synopsis.html` |
 | 訳出についての覚書 | `/gaswebapp-manual/mahler-search-app/notes.html` |
-| 作品・索引など | `/gaswebapp-manual/mahler-search-app/other.html` |
+| その他 | `/gaswebapp-manual/mahler-search-app/other.html` |
 
 ページ別の帰属規則は次のとおりとする。
 
