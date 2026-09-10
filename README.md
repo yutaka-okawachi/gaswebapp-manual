@@ -89,7 +89,7 @@ Richard Wagner（リヒャルト・ワーグナー）、Gustav Mahler（グス�
 - イタリア語・フランス語の用語は原則として扱っていません。
 - 歌詞は収録対象としていません。
 - 用語集は網羅的な辞書ではありません。スコアで確認した用語を中心に、必要に応じて追加しています。
-- ページ番号などは使用した楽譜に基づきます。使用楽譜と出典については[作品・索引など](https://yutaka-okawachi.github.io/gaswebapp-manual/mahler-search-app/other.html)を参照してください。
+- ページ番号などは使用した楽譜に基づきます。使用楽譜と出典については[その他](https://yutaka-okawachi.github.io/gaswebapp-manual/mahler-search-app/other.html)を参照してください。
 
 ## このリポジトリについて
 
