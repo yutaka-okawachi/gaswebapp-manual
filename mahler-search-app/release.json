@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "releaseId": "237b7b99d6b942df86a4c5a32f4a1ba3ac9360c64521a112f08c05974f32146a",
+  "releaseId": "f3cf4774c080978449996e88e3156b3e38d130e5a2624d5c3c65468cd89f1347",
   "hashes": {
     "index.html": "de76bb4909d5657135d0d4f3f340477e4cc32843f7ad148b6eb5c4a4bfed0478",
     "license.html": "45561e4dff60dc3f3b59a3ded96e85efa93037179503cf79df8fcf9f2c219ecd",
@@ -83,6 +83,6 @@
     "mahler-search-app/terms_search.html": "336debf22655cdbdcb3e9b2ee7ea63d694f7e617b256690de94f74e5858fa4c0",
     "privacy.html": "830cf426b5c863bf969a3903e1af89649668005fd7517de1725232e548c540ee",
     "robots.txt": "f8e564433b1070c88c346790607f4e5be1e23bb9e605359e0347f3c87855183f",
-    "sitemap.xml": "8bcf79fdbcc6dbe715c300058cb5f656fd8e6f6847de100e4d3f5518abea7795"
+    "sitemap.xml": "a7cc9a8204844d056715949bb8899ec78e36c8414dc6fae88c03cabe28528864"
   }
 }
