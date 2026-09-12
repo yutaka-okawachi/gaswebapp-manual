@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const { root, run, git, sha256, normalizeText } = require('./core');
 const exact = new Set(['.claspignore', '.gitignore', '_config.yml', '01_START_SUCCESSOR_SETUP.bat',
-    '02_RUN_SYNC.bat', 'CHANGELOG.md', 'apple-touch-icon.png', 'favicon.png', 'favicon_original.png',
+    '02_RUN_SYNC.bat', 'AGENTS.md', 'CHANGELOG.md', 'apple-touch-icon.png', 'favicon.png', 'favicon_original.png',
     'google34b939d4db375916.html', 'index.html', 'LICENSE', 'license.html', 'privacy.html',
     'ogp.png', 'README.md', 'robots.txt', 'sitemap.xml', 'sync-data.ps1']);
 const prefixes = ['.agent/workflows/', '.github/workflows/', 'mahler-search-app/', 'manuals/', 'scripts/', 'src/', 'frontend/'];

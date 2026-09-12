@@ -24,7 +24,7 @@ function options(args) {
 }
 
 function plan(mode, files, gasChanged) {
-    const documentsOnly = files.length > 0 && files.every(file => /^(manuals\/|README\.md$|CHANGELOG\.md$)/.test(file));
+    const documentsOnly = files.length > 0 && files.every(file => /^(manuals\/|README\.md$|CHANGELOG\.md$|AGENTS\.md$)/.test(file));
     if (mode === 'Site' && gasChanged) throw new Error('GAS に未反映の変更があります。通常の sync-data を実行してください。');
     return {
         deploy: mode !== 'Site' && gasChanged,

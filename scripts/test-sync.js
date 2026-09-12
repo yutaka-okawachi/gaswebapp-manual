@@ -10,11 +10,12 @@ const { plan, options } = require('./sync/main');
 const { publicPath, previewHtml } = require('./preview-site');
 
 assert.deepStrictEqual(parseStatus(' M src/日本語.js\0R  src/new.js\0src/old.js\0?? privacy.html\0'), ['src/日本語.js', 'src/new.js', 'src/old.js', 'privacy.html']);
-assert.ok(isAllowed('privacy.html') && isAllowed('license.html'));
+assert.ok(isAllowed('privacy.html') && isAllowed('license.html') && isAllowed('AGENTS.md'));
 assert.ok(!isAllowed('.env') && !isAllowed('output/private.json'));
 assert.ok(plan('Auto', [], false).data);
 assert.ok(!plan('Auto', ['index.html'], false).data);
 assert.ok(plan('Auto', ['README.md'], false).documentsOnly);
+assert.ok(plan('Auto', ['AGENTS.md'], false).documentsOnly);
 assert.ok(plan('Auto', ['README.md'], true).deploy);
 assert.throws(() => plan('Site', ['src/web_trigger.js'], true));
 assert.strictEqual(plan('Auto', ['frontend/search-core.js'], false).deploy, false);
