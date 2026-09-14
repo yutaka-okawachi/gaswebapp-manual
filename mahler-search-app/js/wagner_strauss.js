@@ -701,7 +701,7 @@ function injectMottlNote(html, operaValue) {
         return html;
     }
 
-    const noteHtml = '<div style="font-family: \'Lora\', serif; font-weight: bold; margin-top: 5px;">Felix Mottl による指示も含む</div>';
+    const noteHtml = '<div style="font-family: \'Lora\', \'Meiryo\', \'メイリオ\', sans-serif; font-weight: bold; margin-top: 5px;">Felix Mottl による指示も含む</div>';
     
     // score-info-bannerのdivブロックの終端を探して挿入
     // <div class="score-info-banner">...</div> の後ろに挿入したい

@@ -644,7 +644,7 @@ ${breadcrumbJSON}
             padding: 8px;
             margin-bottom: 0.5em;
             border-radius: 5px;
-            font-family: 'Lora', serif;
+            font-family: 'Lora', 'Meiryo', 'メイリオ', sans-serif;
         }
 
         .abbr-row {
@@ -657,14 +657,14 @@ ${breadcrumbJSON}
         .abbr-short {
             flex: 0 0 20%;
             font-weight: bold;
-            font-family: 'Lora', serif;
+            font-family: 'Lora', 'Meiryo', 'メイリオ', sans-serif;
             font-size: 0.9rem;
         }
 
         .abbr-long {
             flex: 1;
             margin-left: 1em;
-            font-family: 'Lora', serif;
+            font-family: 'Lora', 'Meiryo', 'メイリオ', sans-serif;
             font-size: 0.8rem;
         }
 
@@ -908,7 +908,7 @@ ${breadcrumbJSON}
             font-weight: bold;
             font-size: 1.0rem;
             display: block;
-            font-family: 'Lora', serif;
+            font-family: 'Lora', 'Meiryo', 'メイリオ', sans-serif;
         }
 
         .dt-main {
@@ -934,7 +934,7 @@ ${breadcrumbJSON}
         .source {
             font-size: 0.8rem;
             color: #555;
-            font-family: 'Lora', serif;
+            font-family: 'Lora', 'Meiryo', 'メイリオ', sans-serif;
             display: block;
             margin-bottom: 2px;
         }
@@ -960,7 +960,7 @@ ${breadcrumbJSON}
             display: inline-flex;
             gap: 6px;
             font-size: 0.85rem;
-            font-family: 'Lora', serif;
+            font-family: 'Lora', 'Meiryo', 'メイリオ', sans-serif;
         }
 
         .composer-link {
@@ -1023,7 +1023,7 @@ ${breadcrumbJSON}
             border-radius: 4px;
             text-decoration: none;
             font-size: 0.85rem;
-            font-family: 'Lora', serif;
+            font-family: 'Lora', 'Meiryo', 'メイリオ', sans-serif;
             transition: background 0.2s;
         }
 

@@ -1055,7 +1055,7 @@ function formatGenericResults(data) {
             }
             
             if (sceneTitle) {
-                html += `<h2 style="font-family: 'Lora', serif; font-size: 1.1em; font-weight: bold; margin-top: 20px; margin-bottom: 10px; color: #333;">${sceneTitle}</h2><hr style="border-top: 1px solid #ccc; margin-bottom: 20px;">`;
+                html += `<h2 style="font-family: 'Lora', 'Meiryo', 'メイリオ', sans-serif; font-size: 1.1em; font-weight: bold; margin-top: 20px; margin-bottom: 10px; color: #333;">${sceneTitle}</h2><hr style="border-top: 1px solid #ccc; margin-bottom: 20px;">`;
             }
             
             prevAufzug = currentAufzug;
