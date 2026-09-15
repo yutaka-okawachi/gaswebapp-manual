@@ -776,7 +776,7 @@ function updateSelectionSummary() {
         }
     }
 
-    summaryDiv.innerHTML = `<div class="summary-block"><div class="summary-title">選んだ曲：</div><div class="summary-value">${operaText}</div></div>${detailsText}`;
+    summaryDiv.innerHTML = `<div class="summary-block"><div class="summary-title">選んだ作品：</div><div class="summary-value">${operaText}</div></div>${detailsText}`;
     
     adjustFloatingBarSpacing();
 }

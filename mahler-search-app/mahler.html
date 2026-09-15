@@ -18,7 +18,7 @@
   <meta charset="UTF-8">
   <link rel="canonical" href="https://yutaka-okawachi.github.io/gaswebapp-manual/mahler-search-app/mahler.html">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Gustav Mahler（グスタフ・マーラー）のドイツ語演奏指示検索｜曲名・楽器等から検索（GM）">
+  <meta property="og:title" content="Gustav Mahler（グスタフ・マーラー）のドイツ語演奏指示検索｜作品・楽器等から検索（GM）">
   <meta property="og:description" content="Gustav Mahler（グスタフ・マーラー）の作品で使用されているドイツ語音楽用語を検索できるデータベース．">
   <meta property="og:url" content="https://yutaka-okawachi.github.io/gaswebapp-manual/mahler-search-app/mahler.html">
   <meta property="og:image" content="https://yutaka-okawachi.github.io/gaswebapp-manual/ogp.png">
@@ -38,7 +38,7 @@
     {
       "@type": "ListItem",
       "position": 2,
-      "name": "Gustav Mahler（グスタフ・マーラー）のドイツ語演奏指示検索｜曲名・楽器等から検索（GM）",
+      "name": "Gustav Mahler（グスタフ・マーラー）のドイツ語演奏指示検索｜作品・楽器等から検索（GM）",
       "item": "https://yutaka-okawachi.github.io/gaswebapp-manual/mahler-search-app/mahler.html"
     }]
   }
@@ -47,7 +47,7 @@
   {
     "@context": "https://schema.org",
     "@type": "WebPage",
-    "name": "Gustav Mahler（グスタフ・マーラー）のドイツ語演奏指示検索｜曲名・楽器等から検索（GM）",
+    "name": "Gustav Mahler（グスタフ・マーラー）のドイツ語演奏指示検索｜作品・楽器等から検索（GM）",
     "url": "https://yutaka-okawachi.github.io/gaswebapp-manual/mahler-search-app/mahler.html",
     "operatingSystem": "Any",
     "about": {
@@ -56,7 +56,7 @@
     }
   }
   </script>
-  <title>Gustav Mahler（グスタフ・マーラー）のドイツ語演奏指示検索｜曲名・楽器等から検索（GM）</title>
+  <title>Gustav Mahler（グスタフ・マーラー）のドイツ語演奏指示検索｜作品・楽器等から検索（GM）</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Lora:wght@400;500;600;700&display=swap">
@@ -68,8 +68,8 @@
   <link rel="icon" href="https://yutaka-okawachi.github.io/gaswebapp-manual/favicon.png">
   <link rel="apple-touch-icon" href="https://yutaka-okawachi.github.io/gaswebapp-manual/apple-touch-icon.png">
 
-  <link rel="preload" href="css/common.css?v=420d568e6c81" as="style">
-  <link rel="stylesheet" href="css/common.css?v=420d568e6c81">
+  <link rel="preload" href="css/common.css?v=fb477b88d363" as="style">
+  <link rel="stylesheet" href="css/common.css?v=fb477b88d363">
   <script src="js/app.js?v=ff3af4912b84"></script>
   <style>
     /* index.html固有のスタイル */
@@ -368,7 +368,7 @@
       flex-direction: column;
       gap: 10px;
       word-break: break-word;
-      font-family: Georgia, 'Meiryo', 'メイリオ', sans-serif;
+      font-family: 'Lora', 'Yu Mincho', 'YuMincho', 'Hiragino Mincho ProN', 'MS Mincho', serif;
       font-size: 0.8em;
       text-align: left;
       align-items: flex-start;
@@ -836,7 +836,7 @@
       const includeOrchestraAll = document.querySelector('input[name="include-orchestra-all"]:checked').value === 'on';
 
       if (works.length === 0) {
-        resultsDiv.innerHTML = '<p class="loading">曲名を選択してください。</p>';
+        resultsDiv.innerHTML = '<p class="loading">作品を選択してください。</p>';
         searchButton.disabled = false;
         focusResultsPanel({ instant: true });
         return;
@@ -1123,7 +1123,7 @@
           }
       }
 
-      summaryDiv.innerHTML = '<div class="summary-block">' + '<div class="summary-title">選択した曲：</div>' + '<div class="summary-value">' + workValue + '</div>' + '</div>' + '<div class="summary-block">' + '<div class="summary-title">選択した楽器：' + includeOrchMsg + '</div>' + '<div class="summary-value">' + instrumentValue + '</div>' + '</div>';
+      summaryDiv.innerHTML = '<div class="summary-block">' + '<div class="summary-title">選択した作品：</div>' + '<div class="summary-value">' + workValue + '</div>' + '</div>' + '<div class="summary-block">' + '<div class="summary-title">選択した楽器：' + includeOrchMsg + '</div>' + '<div class="summary-value">' + instrumentValue + '</div>' + '</div>';
 
       adjustFloatingBarSpacing();
     }
@@ -1156,11 +1156,7 @@
     }
 
   </script>
-  <style>
-    h1.search-page-title { font-size: 22px; line-height: 1.5; letter-spacing: 0.02em; }
-    .search-page-title span { display: block; }
-    @media (max-width: 600px) { h1.search-page-title { font-size: 18px; } }
-  </style>
+
 </head>
 
 <body>
@@ -1172,20 +1168,20 @@
     <h3 class="sidebar-home"><a href="../index.html">🏠 HOME</a></h3>
     <h3>Richard Wagner (RW)</h3>
     <ul>
-      <li><a href="richard_wagner.html">曲名から検索</a></li>
+      <li><a href="richard_wagner.html">作品から検索</a></li>
       <li><a href="rw_terms_search.html">用語から検索</a></li>
       <li><a href="rw_synopsis.html">あらすじ集</a></li>
     </ul>
 
     <h3>Gustav Mahler (GM)</h3>
     <ul>
-      <li><a href="mahler.html">曲名と楽器等から検索</a></li>
+      <li><a href="mahler.html">作品・楽器等から検索</a></li>
       <li><a href="terms_search.html">用語から検索</a></li>
     </ul>
 
     <h3>Richard Strauss (RS)</h3>
     <ul>
-      <li><a href="richard_strauss.html">曲名から検索</a></li>
+      <li><a href="richard_strauss.html">作品から検索</a></li>
       <li><a href="rs_terms_search.html">用語から検索</a></li>
       <li><a href="rs_synopsis.html">あらすじ集</a></li>
     </ul>
@@ -1203,23 +1199,23 @@
       <nav class="breadcrumb" aria-label="パンくずリスト">
         <ol>
           <li><a href="../index.html">HOME</a></li>
-          <li aria-current="page">Gustav Mahler（グスタフ・マーラー）のドイツ語演奏指示検索｜曲名・楽器等から検索（GM）</li>
+          <li aria-current="page">Gustav Mahler（グスタフ・マーラー）のドイツ語演奏指示検索｜作品・楽器等から検索（GM）</li>
         </ol>
       </nav>
-      <h1 class="search-page-title"><span>Gustav Mahler（GM）</span><span class="search-title-subject">曲名・楽器等から検索</span></h1>
+      <h1 class="search-page-title"><span class="search-title-composer">Gustav Mahler（GM）</span><span class="search-title-subject">作品・楽器等から検索</span></h1>
     <p><span style="font-size: 0.9rem;">各用語についてのコメントは</span><a href="dic.html" target="_blank" style="font-size: 1.2rem; font-weight: bold; color: var(--button-bg); text-decoration: none; border-bottom: 2px solid transparent; transition: all 0.2s ease;">ドイツ語の音楽用語集</a><span style="font-size: 0.9rem;">を参照</span></p>
-    <!-- 曲名エリア -->
-      <div class="big-label">曲名を選択 </div>
+    <!-- 作品エリア -->
+      <div class="big-label">作品を選択 </div>
       <div style="margin-bottom: 15px;"><button type="button" id="all-works-button"
-          class="btn-action">すべての曲を選択</button><button type="button" onclick="clearWorks()"
-          class="btn-clear">曲名をクリア</button></div>
-      <!-- 曲名をアコーディオン化: instrument-group の挙動に合わせる -->
+          class="btn-action">すべての作品を選択</button><button type="button" onclick="clearWorks()"
+          class="btn-clear">作品をクリア</button></div>
+      <!-- 作品をアコーディオン化: instrument-group の挙動に合わせる -->
         <details class="instrument-group" id="works-group">
-          <summary>曲名</summary>
+          <summary>作品</summary>
           <fieldset id="works">
             <!-- ALLチェックボックス --><label class="all-label"><input type="checkbox" id="all-works" value="ALL">ALL </label>
               <div class="inner-checkbox-group checkbox-grid-songs">
-                <!-- 曲名チェックボックス群 --><label><input type="checkbox"
+                <!-- 作品チェックボックス群 --><label><input type="checkbox"
                       value="交響曲第1番ニ長調（1884-88）">交響曲第1番ニ長調（1884-88）</label><label><input type="checkbox"
                       value="交響曲第2番ハ短調（1888-94）">交響曲第2番ハ短調（1888-94）</label><label><input type="checkbox"
                       value="交響曲第3番ニ短調（1893-96）">交響曲第3番ニ短調（1893-96）</label><label><input type="checkbox"

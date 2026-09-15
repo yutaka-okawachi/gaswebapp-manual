@@ -53,7 +53,7 @@
     <meta property="og:description" content="Richard Wagner（リヒャルト・ワーグナー）の主要な楽劇等に記されたドイツ語の歌唱指示・舞台指示を，作品名や場面から検索できるデータベース．">
     <meta property="og:description" content="Richard Wagner（リヒャルト・ワーグナー）の主要な楽劇等に記されたドイツ語の歌唱指示・舞台指示を，作品名や場面から検索できるデータベース．">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="曲名から検索（RW） | German Music Terms Dictionary">
+    <meta property="og:title" content="Richard Wagner（リヒャルト・ワーグナー）の歌唱・舞台指示検索｜作品・場面等から検索（RW）">
     <meta property="og:url" content="https://yutaka-okawachi.github.io/gaswebapp-manual/mahler-search-app/richard_wagner.html">
     <meta property="og:image" content="https://yutaka-okawachi.github.io/gaswebapp-manual/ogp.png">
     <meta name="twitter:card" content="summary">
@@ -70,11 +70,11 @@
 
     <link rel="icon" href="https://yutaka-okawachi.github.io/gaswebapp-manual/favicon.png">
     <link rel="apple-touch-icon" href="https://yutaka-okawachi.github.io/gaswebapp-manual/apple-touch-icon.png">
-    <link rel="preload" href="css/common.css?v=420d568e6c81" as="style">
-    <link rel="stylesheet" href="css/common.css?v=420d568e6c81">
+    <link rel="preload" href="css/common.css?v=fb477b88d363" as="style">
+    <link rel="stylesheet" href="css/common.css?v=fb477b88d363">
     <script src="js/score_metadata.js?v=f0faf2281480"></script>
     <script src="js/app.js?v=ff3af4912b84"></script>
-    <script src="js/wagner_strauss.js?v=1981d5bad25d"></script>
+    <script src="js/wagner_strauss.js?v=8b6e32a5a331"></script>
     <style>
         .big-label {
             font-size: 1.2em;
@@ -136,7 +136,7 @@
           flex-direction: column;
           gap: 10px;
           word-break: break-word;
-          font-family: Georgia, 'Meiryo', 'メイリオ', sans-serif;
+          font-family: 'Lora', 'Yu Mincho', 'YuMincho', 'Hiragino Mincho ProN', 'MS Mincho', serif;
           font-size: 0.8em;
           text-align: left;
           align-items: flex-start;
@@ -187,11 +187,7 @@
           }
         }
     </style>
-    <style>
-        h1.search-page-title { font-size: 22px; line-height: 1.5; letter-spacing: 0.02em; }
-        .search-page-title span { display: block; }
-        @media (max-width: 600px) { h1.search-page-title { font-size: 18px; } }
-    </style>
+
 </head>
 
 <body>
@@ -204,20 +200,20 @@
 
         <h3>Richard Wagner (RW)</h3>
         <ul>
-            <li><a href="richard_wagner.html">曲名から検索</a></li>
+            <li><a href="richard_wagner.html">作品から検索</a></li>
             <li><a href="rw_terms_search.html">用語から検索</a></li>
             <li><a href="rw_synopsis.html">あらすじ集</a></li>
         </ul>
 
         <h3>Gustav Mahler (GM)</h3>
         <ul>
-            <li><a href="mahler.html">曲名と楽器等から検索</a></li>
+            <li><a href="mahler.html">作品・楽器等から検索</a></li>
             <li><a href="terms_search.html">用語から検索</a></li>
         </ul>
 
         <h3>Richard Strauss (RS)</h3>
         <ul>
-            <li><a href="richard_strauss.html">曲名から検索</a></li>
+            <li><a href="richard_strauss.html">作品から検索</a></li>
             <li><a href="rs_terms_search.html">用語から検索</a></li>
             <li><a href="rs_synopsis.html">あらすじ集</a></li>
         </ul>
@@ -238,12 +234,12 @@
             <li aria-current="page">Richard Wagner（リヒャルト・ワーグナー）の歌唱・舞台指示検索｜作品・場面等から検索（RW）</li>
                 </ol>
             </nav>
-            <h1 class="search-page-title"><span>Richard Wagner（RW）</span><span class="search-title-subject">作品・場面等から検索</span></h1>
+            <h1 class="search-page-title"><span class="search-title-composer">Richard Wagner（RW）</span><span class="search-title-subject">作品・場面等から検索</span></h1>
         <p><span style="font-size: 0.9rem;">各用語についてのコメントは</span><a href="dic.html" target="_blank" style="font-size: 1.2rem; font-weight: bold; color: var(--button-bg); text-decoration: none; border-bottom: 2px solid transparent; transition: all 0.2s ease;">ドイツ語の音楽用語集</a><span style="font-size: 0.9rem;">を参照</span></p>
         <p>オーケストラに対する指示で Gustav Mahler の用語検索ページで何とかなりそうなものは基本的に不記載</p>
-        <div class="big-label">曲名を選択</div>
+        <div class="big-label">作品を選択</div>
         <details class="instrument-group" id="works-group">
-            <summary>曲名</summary>
+            <summary>作品</summary>
             <fieldset>
                 <legend>オペラ</legend>
                 <div class="radio-group" id="opera-selection">
@@ -287,7 +283,7 @@
             <fieldset>
                 <legend>場面</legend>
                 <div id="scene-options-wrapper">
-                    <p style="padding: 10px; color: #666;">（曲名を選択すると、ここに場面一覧が表示されます）</p>
+                    <p style="padding: 10px; color: #666;">（作品を選択すると、ここに場面一覧が表示されます）</p>
                 </div>
             </fieldset>
             <div class="button-container">
@@ -314,7 +310,7 @@
             <fieldset>
                 <legend>指示対象</legend>
                 <div id="whom-options-wrapper">
-                    <p style="padding: 10px; color: #666;">（曲名を選択すると，ここに指示対象一覧が表示されます）</p>
+                    <p style="padding: 10px; color: #666;">（作品を選択すると，ここに指示対象一覧が表示されます）</p>
                 </div>
             </fieldset>
             <div class="button-container">

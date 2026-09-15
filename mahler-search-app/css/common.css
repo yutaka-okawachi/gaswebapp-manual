@@ -1,7 +1,7 @@
 
 
 body {
-    font-family: 'Lora', 'Meiryo', 'メイリオ', 'Yu Mincho', 'Hiragino Mincho ProN', 'MS Mincho', sans-serif;
+    font-family: 'Lora', 'Yu Mincho', 'YuMincho', 'Hiragino Mincho ProN', 'MS Mincho', serif;
     background-color: var(--primary-bg);
 }
 
@@ -69,7 +69,7 @@ body {
     height: 100vh;
     background: #2c3e50;
     color: white;
-    padding: 30px 20px;
+    padding: 30px 20px 60px 20px;
     overflow-y: auto;
     z-index: 1000;
     transition: transform 0.3s ease-in-out;
@@ -762,7 +762,7 @@ button.clear-input-btn:hover {
 
 .loading,
 .result-message {
-    font-family: 'Lora', 'Meiryo', 'メイリオ', sans-serif;
+    font-family: 'Lora', 'Yu Mincho', 'YuMincho', 'Hiragino Mincho ProN', 'MS Mincho', serif;
     font-size: 1.0em;
     font-weight: bold;
     text-align: center;
@@ -777,7 +777,7 @@ button.clear-input-btn:hover {
     min-height: 150px;
     line-height: 1.5;
     white-space: normal;
-    font-family: 'Lora', 'Meiryo', 'メイリオ', sans-serif;
+    font-family: 'Lora', 'Yu Mincho', 'YuMincho', 'Hiragino Mincho ProN', 'MS Mincho', serif;
     font-size: 0.92em;
 }
 
@@ -921,7 +921,7 @@ button.clear-input-btn:hover {
 #results {
     min-height: 200px;
     margin-bottom: 100px;
-    font-family: 'Lora', 'Meiryo', 'メイリオ', sans-serif;
+    font-family: 'Lora', 'Yu Mincho', 'YuMincho', 'Hiragino Mincho ProN', 'MS Mincho', serif;
 }
 
 h2 {
@@ -1070,4 +1070,70 @@ dt, dd {
 }
 dfn {
     font-style: normal; /* ブラウザデフォルトの斜体を解除 */
+}
+
+/* =============================================
+   PC表示時：フローティングバーをメインコンテンツ領域幅に限定し、
+   左側サイドバー（幅260px）との重なりを防止
+   ============================================= */
+@media (min-width: 769px) {
+    #floating-bar {
+        left: 260px !important;
+        width: calc(100% - 260px) !important;
+    }
+}
+
+/* =============================================
+   検索ページ・あらすじページ共通 ページタイトル (h1)
+   1行目（作曲家名）を大きく（Lora Bold 34px）、
+   2行目（サブタイトル）を控えめ（17px）に配置
+   ============================================= */
+h1.search-page-title,
+h1.synopsis-page-title {
+    margin: 24px auto 20px;
+    padding-bottom: 12px;
+    text-align: center;
+    letter-spacing: 0.02em;
+    max-width: 100%;
+}
+
+.search-page-title .search-title-composer,
+.synopsis-page-title .search-title-composer,
+.search-page-title > span:first-child,
+.synopsis-page-title > span:first-child {
+    display: block;
+    font-family: 'Lora', 'Meiryo', 'メイリオ', 'Yu Mincho', serif;
+    font-size: 34px;
+    font-weight: 700;
+    line-height: 1.25;
+    color: #1f2328;
+}
+
+.search-page-title .search-title-subject,
+.synopsis-page-title .search-title-subject,
+.search-page-title > span:last-child:not(:first-child),
+.synopsis-page-title > span:last-child:not(:first-child) {
+    display: block;
+    font-size: 17px;
+    font-weight: 600;
+    line-height: 1.4;
+    margin-top: 8px;
+    color: #4a5568;
+}
+
+@media (max-width: 600px) {
+    .search-page-title .search-title-composer,
+    .synopsis-page-title .search-title-composer,
+    .search-page-title > span:first-child,
+    .synopsis-page-title > span:first-child {
+        font-size: 24px;
+    }
+
+    .search-page-title .search-title-subject,
+    .synopsis-page-title .search-title-subject,
+    .search-page-title > span:last-child:not(:first-child),
+    .synopsis-page-title > span:last-child:not(:first-child) {
+        font-size: 14px;
+        margin-top: 6px;
+    }
 }
