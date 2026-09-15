@@ -10,6 +10,10 @@ body {
 * 全ページで共通して使用される基本的なスタイルシート。
 */
 :root {
+    /* タイポグラフィシステム（ハイブリッド統一） */
+    --font-serif: 'Lora', 'Yu Mincho', 'YuMincho', 'Hiragino Mincho ProN', 'MS Mincho', serif;
+    --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", 'Meiryo', 'メイリオ', 'Hiragino Sans', sans-serif;
+
     --primary-bg: #f0f8ff;
     --container-bg: #fff;
     --title-bg: #ffdce0;
@@ -85,7 +89,7 @@ body {
     text-align: left;
     background: none;
     border-radius: 0;
-    font-family: 'Bitter', 'Meiryo', 'メイリオ', sans-serif;
+    font-family: var(--font-sans);
     font-weight: 700;
 }
 
@@ -317,7 +321,7 @@ h1 {
     font-size: 2.0rem;
     position: relative;
     padding-bottom: 15px;
-    font-family: 'Bitter', 'Meiryo', 'メイリオ', sans-serif;
+    font-family: var(--font-sans);
     font-weight: 700;
     letter-spacing: 0.05em;
     max-width: fit-content;
@@ -356,7 +360,7 @@ h1::after {
     margin-bottom: 15px;
     border-bottom: 2px solid #f0f4f8;
     padding-bottom: 10px;
-    font-family: 'Bitter', 'Meiryo', 'メイリオ', sans-serif;
+    font-family: var(--font-sans);
     font-weight: 700;
     display: flex;
     align-items: center;
@@ -553,7 +557,7 @@ legend {
 .radio-group label {
     display: block;
     margin-bottom: 8px;
-    font-family: Georgia, 'Meiryo', 'メイリオ', sans-serif;
+    font-family: var(--font-sans);
     font-size: 0.95rem;
     /* フォントサイズを少し小さく調整 */
 }
@@ -562,7 +566,7 @@ legend {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
     gap: 5px 15px;
-    font-family: Georgia, 'Meiryo', 'メイリオ', sans-serif;
+    font-family: var(--font-sans);
     font-size: 0.95rem;
 }
 
@@ -931,7 +935,7 @@ h2 {
     margin-top: 40px;
     margin-bottom: 20px;
     font-size: 1.5rem;
-    font-family: 'Bitter', 'Meiryo', 'メイリオ', sans-serif;
+    font-family: var(--font-sans);
     font-weight: 700;
 }
 
@@ -940,7 +944,7 @@ h3 {
     margin-bottom: 15px;
     color: #444;
     font-size: 1.2rem;
-    font-family: 'Bitter', 'Meiryo', 'メイリオ', sans-serif;
+    font-family: var(--font-sans);
     font-weight: 700;
 }
 
@@ -1136,4 +1140,57 @@ h1.synopsis-page-title {
         font-size: 14px;
         margin-top: 6px;
     }
+}
+
+/* =============================================
+   タイポグラフィ統一ルール（案1: 役割分担型ハイブリッド）
+   ・操作系UI（ボタン、サイドバー、アコーディオン、ラベル等）: ゴシック体
+   ・本文、解説、検索結果、入力窓（#termInput）: Lora・明朝体
+   ============================================= */
+
+/* 操作系UI要素: ゴシック体 */
+button,
+input[type="button"],
+input[type="submit"],
+.btn-search,
+.btn-action,
+.btn-danger,
+.btn-clear,
+.btn-active,
+.clear-input-btn,
+#scrollToTop,
+.mobile-home-btn,
+.sidebar,
+.sidebar h3,
+.sidebar a,
+summary,
+legend,
+.big-label,
+label,
+.summary-title,
+.breadcrumb {
+    font-family: var(--font-sans);
+}
+
+/* タイトル2行目（サブタイトル）: ゴシック体で1行目(Lora)と対比 */
+.search-page-title .search-title-subject,
+.synopsis-page-title .search-title-subject,
+.search-page-title > span:last-child:not(:first-child),
+.synopsis-page-title > span:last-child:not(:first-child) {
+    font-family: var(--font-sans) !important;
+}
+
+/* 用語検索入力窓: Lora・明朝体（ドイツ語入力時のセリフ体体験） */
+#termInput,
+input#termInput,
+.term-input {
+    font-family: var(--font-serif) !important;
+    font-size: 1.15rem;
+    letter-spacing: 0.02em;
+}
+
+/* サジェストパネル */
+.term-suggestions-panel,
+.term-suggestion-item {
+    font-family: var(--font-serif);
 }

@@ -150,7 +150,7 @@ legend {
 .radio-group label {
     display: block;
     margin-bottom: 8px;
-    font-family: Georgia, 'Meiryo', 'メイリオ', sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Meiryo', 'メイリオ', sans-serif;
     font-size: 0.95rem;
 }
 
@@ -158,7 +158,7 @@ legend {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
     gap: 5px 15px;
-    font-family: Georgia, 'Meiryo', 'メイリオ', sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Meiryo', 'メイリオ', sans-serif;
     font-size: 0.95rem;
 }
 

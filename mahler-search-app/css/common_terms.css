@@ -5,6 +5,9 @@
  * 「用語から検索」系のページで共通して使用されるスタイルシート。
  */
 :root {
+    --font-serif: 'Lora', 'Yu Mincho', 'YuMincho', 'Hiragino Mincho ProN', 'MS Mincho', serif;
+    --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", 'Meiryo', 'メイリオ', 'Hiragino Sans', sans-serif;
+
     --primary-bg: #fffaf7;
     --container-bg: #fff;
     --title-bg: #ffdce0;
@@ -197,4 +200,15 @@ button.clear-input-btn:hover {
 #scrollToTop:active {
     transform: translateY(1px);
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+/* 用語検索入力窓: Lora・明朝体 */
+#termInput,
+input[type="text"]#termInput {
+    font-family: var(--font-serif);
+    font-size: 1.15rem;
+    letter-spacing: 0.02em;
+}
+button {
+    font-family: var(--font-sans);
 }
