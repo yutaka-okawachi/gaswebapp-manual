@@ -434,7 +434,7 @@ h1::after {
     padding: 8px 12px;
     margin-bottom: 15px;
     border-radius: 5px;
-    font-family: 'Lora', 'Meiryo', 'メイリオ', sans-serif;
+    font-family: var(--font-serif);
     font-size: 0.75rem; /* 小さく設定 */
     line-height: 1.4;
     color: #555;
@@ -521,7 +521,7 @@ ul {
         font-size: 1.2em;
         line-height: 1.45;
         display: block;
-        font-family: 'Lora', 'Meiryo', 'メイリオ', sans-serif;
+        font-family: var(--font-serif);
     }
 
     border: 1px solid #ccc;
@@ -822,7 +822,7 @@ button.clear-input-btn:hover {
     font-size: 1.0rem;
     line-height: 1.45;
     display: block;
-    font-family: 'Lora', 'Meiryo', 'メイリオ', sans-serif;
+    font-family: var(--font-serif);
 }
 
 .result-ja-loc {
@@ -1106,7 +1106,7 @@ h1.synopsis-page-title {
 .search-page-title > span:first-child,
 .synopsis-page-title > span:first-child {
     display: block;
-    font-family: 'Lora', 'Meiryo', 'メイリオ', 'Yu Mincho', serif;
+    font-family: var(--font-serif);
     font-size: 34px;
     font-weight: 700;
     line-height: 1.25;

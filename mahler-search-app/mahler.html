@@ -68,8 +68,8 @@
   <link rel="icon" href="https://yutaka-okawachi.github.io/gaswebapp-manual/favicon.png">
   <link rel="apple-touch-icon" href="https://yutaka-okawachi.github.io/gaswebapp-manual/apple-touch-icon.png">
 
-  <link rel="preload" href="css/common.css?v=924f86ecc36e" as="style">
-  <link rel="stylesheet" href="css/common.css?v=924f86ecc36e">
+  <link rel="preload" href="css/common.css?v=711c1209ca0b" as="style">
+  <link rel="stylesheet" href="css/common.css?v=711c1209ca0b">
   <script src="js/app.js?v=ff3af4912b84"></script>
   <style>
     /* index.html固有のスタイル */
@@ -105,7 +105,7 @@
     #results {
       min-height: 200px;
       margin-bottom: 100px;
-      font-family: 'Lora', 'Meiryo', 'メイリオ', sans-serif;
+      font-family: var(--font-serif);
     }
 
     /* fieldsetのタイトル（legend）のスタイル */
@@ -245,7 +245,7 @@
       border-color: #d2e3fc;
       color: var(--button-bg);
       margin-top: 0.5em;
-      font-family: 'Lora', 'Meiryo', 'メイリオ', sans-serif;
+      font-family: var(--font-sans);
     }
 
 
@@ -263,7 +263,7 @@
       font-size: 1.0rem; /* Unified size across all pages */
       font-weight: bold;
 
-      font-family: 'Lora', 'Meiryo', 'メイリオ', sans-serif;
+      font-family: var(--font-serif);
     }
 
     .result-c {
@@ -271,7 +271,7 @@
       font-weight: normal; /* Explicitly not bold */
       margin-bottom: 4px;
       margin-left: 1.5em; /* Increased indentation */
-      font-family: 'Lora', 'Meiryo', 'メイリオ', sans-serif;
+      font-family: var(--font-serif);
     }
 
     .result-loc {
@@ -279,7 +279,7 @@
       font-weight: normal; /* Explicitly not bold */
       color: #333;
       margin-left: 3em; /* Further increased indentation */
-      font-family: 'Lora', 'Meiryo', 'メイリオ', sans-serif;
+      font-family: var(--font-serif);
     }
 
     .inner-checkbox-group::-webkit-scrollbar {
