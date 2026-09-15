@@ -42,6 +42,16 @@ assert.strictEqual(
     4,
     'all four HOME card descriptions should use the page-description font'
 );
+assert.match(
+    topPage,
+    /<ul class="page-description"[^>]*>[\s\S]*?<li>Sigfrid Karg-Elert<\/li>/,
+    'the dictionary composer list should match the HOME description font'
+);
+assert.match(
+    topPage,
+    /\.global-note\s*\{[^}]*font-family:\s*var\(--font-sans\);/s,
+    'HOME warning notes should match the description font'
+);
 
 [
     'mahler-search-app/mahler.html',
