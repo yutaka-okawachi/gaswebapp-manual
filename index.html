@@ -189,18 +189,30 @@
         .decor-svg-watercolor.flip {
             transform: scaleX(-1);
         }
-        @media (max-width: 650px) {
+        @media (max-width: 768px) {
             .title-decor-wrapper {
-                flex-direction: column;
-                gap: 8px;
+                gap: 10px;
             }
             .title-decor-wrapper h1 {
-                font-size: 1.85rem;
-                white-space: normal;
+                font-size: 1.75rem;
+                letter-spacing: 0.05em;
             }
             .decor-svg-watercolor {
-                width: 58px;
-                height: 38px;
+                width: 52px;
+                height: 33px;
+            }
+        }
+        @media (max-width: 480px) {
+            .title-decor-wrapper {
+                gap: 6px;
+            }
+            .title-decor-wrapper h1 {
+                font-size: clamp(1.15rem, 5.2vw, 1.45rem);
+                letter-spacing: 0.02em;
+            }
+            .decor-svg-watercolor {
+                width: 36px;
+                height: 23px;
             }
         }
 
