@@ -98,8 +98,8 @@
     <link rel="apple-touch-icon" href="https://yutaka-okawachi.github.io/gaswebapp-manual/apple-touch-icon.png">
 
     <!-- Reset CSS & Common styles -->
-    <link rel="preload" href="mahler-search-app/css/common.css?v=711c1209ca0b" as="style">
-    <link rel="stylesheet" href="mahler-search-app/css/common.css?v=711c1209ca0b">
+    <link rel="preload" href="mahler-search-app/css/common.css?v=70a2ddb54d17" as="style">
+    <link rel="stylesheet" href="mahler-search-app/css/common.css?v=70a2ddb54d17">
 
     <style>
         :root {
@@ -161,6 +161,47 @@
             margin-bottom: 40px;
             border-bottom: 1px solid var(--border-color);
             padding-bottom: 20px;
+        }
+
+        /* ボタニカル（水彩画風）タイトル装飾 */
+        .title-decor-wrapper {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            max-width: 100%;
+        }
+        .title-decor-wrapper h1 {
+            font-family: var(--font-serif);
+            font-size: 2.35rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            color: #1a1a1a;
+            margin: 0;
+            white-space: nowrap;
+        }
+        .decor-svg-watercolor {
+            width: 72px;
+            height: 46px;
+            flex-shrink: 0;
+            filter: drop-shadow(0 2px 5px rgba(46, 125, 50, 0.18));
+        }
+        .decor-svg-watercolor.flip {
+            transform: scaleX(-1);
+        }
+        @media (max-width: 650px) {
+            .title-decor-wrapper {
+                flex-direction: column;
+                gap: 8px;
+            }
+            .title-decor-wrapper h1 {
+                font-size: 1.85rem;
+                white-space: normal;
+            }
+            .decor-svg-watercolor {
+                width: 58px;
+                height: 38px;
+            }
         }
 
 
@@ -308,6 +349,23 @@
 
         .link-card:hover .icon {
             opacity: 1;
+        }
+
+        .link-card .nav-card-icon {
+            width: 24px;
+            height: 24px;
+            margin-right: 12px;
+            flex-shrink: 0;
+            display: inline-block;
+            vertical-align: middle;
+            opacity: 0.95;
+            transition: transform 0.2s ease, filter 0.2s ease;
+        }
+
+        .link-card:hover .nav-card-icon {
+            opacity: 1;
+            transform: scale(1.12);
+            filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.35));
         }
 
         .link-card .text {
@@ -483,8 +541,58 @@
     </nav>
 
     <div class="page-wrapper">
-        <header class="main-header">
-            <h1>ドイツ語の音楽用語</h1>
+        <header class="main-header" id="homeMainHeader">
+            <div class="title-decor-wrapper">
+                <!-- 左側の水彩画風オリーブ枝 -->
+                <svg class="decor-svg-watercolor" viewBox="0 0 100 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <linearGradient id="wcGreen1_L" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#4caf50" stop-opacity="0.85"/>
+                            <stop offset="100%" stop-color="#2e7d32" stop-opacity="0.95"/>
+                        </linearGradient>
+                        <linearGradient id="wcGreen2_L" x1="100%" y1="0%" x2="0%" y2="100%">
+                            <stop offset="0%" stop-color="#81c784" stop-opacity="0.75"/>
+                            <stop offset="100%" stop-color="#388e3c" stop-opacity="0.9"/>
+                        </linearGradient>
+                        <linearGradient id="wcStem_L" x1="0%" y1="100%" x2="100%" y2="0%">
+                            <stop offset="0%" stop-color="#8d6e63" stop-opacity="0.8"/>
+                            <stop offset="100%" stop-color="#558b2f" stop-opacity="0.9"/>
+                        </linearGradient>
+                    </defs>
+                    <path d="M5 50 C25 45, 55 35, 95 10" stroke="url(#wcStem_L)" stroke-width="2.2" stroke-linecap="round"/>
+                    <path d="M95 10 C83 4, 72 13, 78 20 C84 27, 95 14, 95 10 Z" fill="url(#wcGreen1_L)"/>
+                    <path d="M68 25 C58 10, 44 15, 51 24 C58 33, 68 29, 68 25 Z" fill="url(#wcGreen2_L)"/>
+                    <path d="M58 33 C56 47, 40 44, 43 35 C46 26, 56 30, 58 33 Z" fill="url(#wcGreen1_L)"/>
+                    <path d="M38 39 C30 26, 17 31, 23 40 C29 49, 38 43, 38 39 Z" fill="url(#wcGreen2_L)"/>
+                    <circle cx="75" cy="31" r="3.5" fill="#33691e" opacity="0.85"/>
+                    <circle cx="47" cy="46" r="3" fill="#558b2f" opacity="0.85"/>
+                </svg>
+                <h1>ドイツ語の音楽用語</h1>
+                <!-- 右側の水彩画風オリーブ枝（反転） -->
+                <svg class="decor-svg-watercolor flip" viewBox="0 0 100 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <linearGradient id="wcGreen1_R" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#4caf50" stop-opacity="0.85"/>
+                            <stop offset="100%" stop-color="#2e7d32" stop-opacity="0.95"/>
+                        </linearGradient>
+                        <linearGradient id="wcGreen2_R" x1="100%" y1="0%" x2="0%" y2="100%">
+                            <stop offset="0%" stop-color="#81c784" stop-opacity="0.75"/>
+                            <stop offset="100%" stop-color="#388e3c" stop-opacity="0.9"/>
+                        </linearGradient>
+                        <linearGradient id="wcStem_R" x1="0%" y1="100%" x2="100%" y2="0%">
+                            <stop offset="0%" stop-color="#8d6e63" stop-opacity="0.8"/>
+                            <stop offset="100%" stop-color="#558b2f" stop-opacity="0.9"/>
+                        </linearGradient>
+                    </defs>
+                    <path d="M5 50 C25 45, 55 35, 95 10" stroke="url(#wcStem_R)" stroke-width="2.2" stroke-linecap="round"/>
+                    <path d="M95 10 C83 4, 72 13, 78 20 C84 27, 95 14, 95 10 Z" fill="url(#wcGreen1_R)"/>
+                    <path d="M68 25 C58 10, 44 15, 51 24 C58 33, 68 29, 68 25 Z" fill="url(#wcGreen2_R)"/>
+                    <path d="M58 33 C56 47, 40 44, 43 35 C46 26, 56 30, 58 33 Z" fill="url(#wcGreen1_R)"/>
+                    <path d="M38 39 C30 26, 17 31, 23 40 C29 49, 38 43, 38 39 Z" fill="url(#wcGreen2_R)"/>
+                    <circle cx="75" cy="31" r="3.5" fill="#33691e" opacity="0.85"/>
+                    <circle cx="47" cy="46" r="3" fill="#558b2f" opacity="0.85"/>
+                </svg>
+            </div>
             <div class="subtitle"
                 style="max-width: 800px; margin: 20px auto 0; line-height: 1.8; text-align: left; font-size: 0.95rem;">
                 <p>Richard Wagner（リヒャルト・ワーグナー），Gustav Mahler（グスタフ・マーラー），Richard
@@ -502,21 +610,79 @@
                 <div class="links-container">
                     <a href="mahler-search-app/richard_wagner.html" class="link-card">
                         <div class="content-wrapper">
-                            <span class="icon">🪈</span>
+                            <svg class="nav-card-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                <defs>
+                                    <linearGradient id="gfTube_W" x1="0%" y1="0%" x2="0%" y2="100%">
+                                        <stop offset="0%" stop-color="#fff8db"/>
+                                        <stop offset="30%" stop-color="#f6be3c"/>
+                                        <stop offset="70%" stop-color="#cf810c"/>
+                                        <stop offset="100%" stop-color="#7a4602"/>
+                                    </linearGradient>
+                                    <linearGradient id="gfKey_W" x1="0%" y1="0%" x2="0%" y2="100%">
+                                        <stop offset="0%" stop-color="#ffffff"/>
+                                        <stop offset="35%" stop-color="#ffd868"/>
+                                        <stop offset="75%" stop-color="#d98910"/>
+                                        <stop offset="100%" stop-color="#8f5304"/>
+                                    </linearGradient>
+                                    <linearGradient id="gfPlate_W" x1="0%" y1="100%" x2="0%" y2="0%">
+                                        <stop offset="0%" stop-color="#e09012"/>
+                                        <stop offset="50%" stop-color="#fff4d0"/>
+                                        <stop offset="100%" stop-color="#f6be3c"/>
+                                    </linearGradient>
+                                </defs>
+                                <g transform="rotate(-30 12 12)">
+                                    <path d="M1.3 11.2 C1.3 10.7, 1.8 10.4, 2.5 10.4 L3.2 10.4 L3.2 13.6 L2.5 13.6 C1.8 13.6, 1.3 13.3, 1.3 12.8 Z" fill="url(#gfKey_W)"/>
+                                    <rect x="2.8" y="10.8" width="0.8" height="2.4" fill="#8f5304"/>
+                                    <rect x="3.4" y="10.8" width="5" height="2.4" rx="0.3" fill="url(#gfTube_W)"/>
+                                    <rect x="4.8" y="10.1" width="2.8" height="1.4" rx="0.5" fill="url(#gfPlate_W)" stroke="#8f5304" stroke-width="0.3"/>
+                                    <ellipse cx="6.2" cy="11.4" rx="0.75" ry="0.45" fill="#301801"/>
+                                    <rect x="8.2" y="10.5" width="1.2" height="3" rx="0.3" fill="url(#gfKey_W)" stroke="#7a4602" stroke-width="0.3"/>
+                                    <rect x="9.3" y="10.8" width="13.2" height="2.4" rx="0.3" fill="url(#gfTube_W)"/>
+                                    <line x1="9.6" y1="10.9" x2="22.2" y2="10.9" stroke="#7a4602" stroke-width="0.7"/>
+                                    <ellipse cx="11.0" cy="10.6" rx="1.15" ry="0.8" fill="url(#gfKey_W)" stroke="#7a4602" stroke-width="0.35"/>
+                                    <ellipse cx="13.2" cy="10.6" rx="1.15" ry="0.8" fill="url(#gfKey_W)" stroke="#7a4602" stroke-width="0.35"/>
+                                    <ellipse cx="15.4" cy="10.6" rx="1.15" ry="0.8" fill="url(#gfKey_W)" stroke="#7a4602" stroke-width="0.35"/>
+                                    <ellipse cx="17.6" cy="10.6" rx="1.15" ry="0.8" fill="url(#gfKey_W)" stroke="#7a4602" stroke-width="0.35"/>
+                                    <ellipse cx="19.7" cy="10.6" rx="1.05" ry="0.75" fill="url(#gfKey_W)" stroke="#7a4602" stroke-width="0.35"/>
+                                    <circle cx="21.4" cy="10.7" r="0.7" fill="url(#gfKey_W)" stroke="#7a4602" stroke-width="0.3"/>
+                                    <rect x="22.4" y="10.7" width="0.6" height="2.6" rx="0.2" fill="url(#gfKey_W)"/>
+                                </g>
+                            </svg>
                             <span class="text">作品から検索</span>
                         </div>
                         <span class="arrow">&rarr;</span>
                     </a>
                     <a href="mahler-search-app/rw_terms_search.html" class="link-card">
                         <div class="content-wrapper">
-                            <span class="icon">📑</span>
+                            <svg class="nav-card-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                <rect x="3" y="3" width="13" height="17" rx="2" fill="#ffffff" stroke="#cbd5e0" stroke-width="1.2"/>
+                                <line x1="5.5" y1="6.5" x2="13.5" y2="6.5" stroke="#94a3b8" stroke-width="1" stroke-linecap="round"/>
+                                <line x1="5.5" y1="9.5" x2="11.5" y2="9.5" stroke="#94a3b8" stroke-width="1" stroke-linecap="round"/>
+                                <line x1="5.5" y1="12.5" x2="9.5" y2="12.5" stroke="#94a3b8" stroke-width="1" stroke-linecap="round"/>
+                                <line x1="5.5" y1="15.5" x2="10.5" y2="15.5" stroke="#94a3b8" stroke-width="1" stroke-linecap="round"/>
+                                <circle cx="15.5" cy="14.5" r="4.5" fill="#f8fafc" stroke="#38bdf8" stroke-width="1.6"/>
+                                <circle cx="14.5" cy="15.5" r="1" fill="#0284c7"/>
+                                <path d="M15.5 15.5 V12.5 C15.5 12.5, 16.5 12.2, 17 12.8" stroke="#0284c7" stroke-width="0.9" stroke-linecap="round"/>
+                                <line x1="18.8" y1="17.8" x2="22" y2="21" stroke="#38bdf8" stroke-width="2" stroke-linecap="round"/>
+                            </svg>
                             <span class="text">用語から検索</span>
                         </div>
                         <span class="arrow">&rarr;</span>
                     </a>
                     <a href="mahler-search-app/rw_synopsis.html" class="link-card">
                         <div class="content-wrapper">
-                            <span class="icon">📖</span>
+                            <svg class="nav-card-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                <path d="M12 6 C12 6, 12 18, 12 19.5" stroke="#94a3b8" stroke-width="1.2" stroke-linecap="round"/>
+                                <path d="M12 6.5 C9.5 5, 5 5, 2.5 6 C2 6.2, 2 6.8, 2 7.5 L2 18 C2 18.6, 2.4 19, 3 18.8 C5.5 18, 9.5 18, 12 19.5" fill="#ffffff" stroke="#cbd5e0" stroke-width="1.2" stroke-linejoin="round"/>
+                                <path d="M12 6.5 C14.5 5, 19 5, 21.5 6 C22 6.2, 22 6.8, 22 7.5 L22 18 C22 18.6, 21.6 19, 21 18.8 C18.5 18, 14.5 18, 12 19.5" fill="#ffffff" stroke="#cbd5e0" stroke-width="1.2" stroke-linejoin="round"/>
+                                <line x1="4.5" y1="9.5" x2="9.5" y2="9.5" stroke="#cbd5e0" stroke-width="0.9" stroke-linecap="round"/>
+                                <line x1="4.5" y1="12" x2="9.5" y2="12" stroke="#cbd5e0" stroke-width="0.9" stroke-linecap="round"/>
+                                <line x1="4.5" y1="14.5" x2="8" y2="14.5" stroke="#cbd5e0" stroke-width="0.9" stroke-linecap="round"/>
+                                <line x1="14.5" y1="9.5" x2="19.5" y2="9.5" stroke="#cbd5e0" stroke-width="0.9" stroke-linecap="round"/>
+                                <line x1="14.5" y1="12" x2="19.5" y2="12" stroke="#cbd5e0" stroke-width="0.9" stroke-linecap="round"/>
+                                <line x1="14.5" y1="14.5" x2="17.5" y2="14.5" stroke="#cbd5e0" stroke-width="0.9" stroke-linecap="round"/>
+                                <path d="M12 5.5 V14 L13.5 12.5 L15 14 V5.5" fill="#f43f5e" stroke="#e11d48" stroke-width="0.5"/>
+                            </svg>
                             <span class="text">あらすじ集</span>
                         </div>
                         <span class="arrow">&rarr;</span>
@@ -532,14 +698,61 @@
                 <div class="links-container">
                     <a href="mahler-search-app/mahler.html" class="link-card">
                         <div class="content-wrapper">
-                            <span class="icon">🪈</span>
+                            <svg class="nav-card-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                <defs>
+                                    <linearGradient id="gfTube_M" x1="0%" y1="0%" x2="0%" y2="100%">
+                                        <stop offset="0%" stop-color="#fff8db"/>
+                                        <stop offset="30%" stop-color="#f6be3c"/>
+                                        <stop offset="70%" stop-color="#cf810c"/>
+                                        <stop offset="100%" stop-color="#7a4602"/>
+                                    </linearGradient>
+                                    <linearGradient id="gfKey_M" x1="0%" y1="0%" x2="0%" y2="100%">
+                                        <stop offset="0%" stop-color="#ffffff"/>
+                                        <stop offset="35%" stop-color="#ffd868"/>
+                                        <stop offset="75%" stop-color="#d98910"/>
+                                        <stop offset="100%" stop-color="#8f5304"/>
+                                    </linearGradient>
+                                    <linearGradient id="gfPlate_M" x1="0%" y1="100%" x2="0%" y2="0%">
+                                        <stop offset="0%" stop-color="#e09012"/>
+                                        <stop offset="50%" stop-color="#fff4d0"/>
+                                        <stop offset="100%" stop-color="#f6be3c"/>
+                                    </linearGradient>
+                                </defs>
+                                <g transform="rotate(-30 12 12)">
+                                    <path d="M1.3 11.2 C1.3 10.7, 1.8 10.4, 2.5 10.4 L3.2 10.4 L3.2 13.6 L2.5 13.6 C1.8 13.6, 1.3 13.3, 1.3 12.8 Z" fill="url(#gfKey_M)"/>
+                                    <rect x="2.8" y="10.8" width="0.8" height="2.4" fill="#8f5304"/>
+                                    <rect x="3.4" y="10.8" width="5" height="2.4" rx="0.3" fill="url(#gfTube_M)"/>
+                                    <rect x="4.8" y="10.1" width="2.8" height="1.4" rx="0.5" fill="url(#gfPlate_M)" stroke="#8f5304" stroke-width="0.3"/>
+                                    <ellipse cx="6.2" cy="11.4" rx="0.75" ry="0.45" fill="#301801"/>
+                                    <rect x="8.2" y="10.5" width="1.2" height="3" rx="0.3" fill="url(#gfKey_M)" stroke="#7a4602" stroke-width="0.3"/>
+                                    <rect x="9.3" y="10.8" width="13.2" height="2.4" rx="0.3" fill="url(#gfTube_M)"/>
+                                    <line x1="9.6" y1="10.9" x2="22.2" y2="10.9" stroke="#7a4602" stroke-width="0.7"/>
+                                    <ellipse cx="11.0" cy="10.6" rx="1.15" ry="0.8" fill="url(#gfKey_M)" stroke="#7a4602" stroke-width="0.35"/>
+                                    <ellipse cx="13.2" cy="10.6" rx="1.15" ry="0.8" fill="url(#gfKey_M)" stroke="#7a4602" stroke-width="0.35"/>
+                                    <ellipse cx="15.4" cy="10.6" rx="1.15" ry="0.8" fill="url(#gfKey_M)" stroke="#7a4602" stroke-width="0.35"/>
+                                    <ellipse cx="17.6" cy="10.6" rx="1.15" ry="0.8" fill="url(#gfKey_M)" stroke="#7a4602" stroke-width="0.35"/>
+                                    <ellipse cx="19.7" cy="10.6" rx="1.05" ry="0.75" fill="url(#gfKey_M)" stroke="#7a4602" stroke-width="0.35"/>
+                                    <circle cx="21.4" cy="10.7" r="0.7" fill="url(#gfKey_M)" stroke="#7a4602" stroke-width="0.3"/>
+                                    <rect x="22.4" y="10.7" width="0.6" height="2.6" rx="0.2" fill="url(#gfKey_M)"/>
+                                </g>
+                            </svg>
                             <span class="text">作品・楽器等から検索</span>
                         </div>
                         <span class="arrow">&rarr;</span>
                     </a>
                     <a href="mahler-search-app/terms_search.html" class="link-card">
                         <div class="content-wrapper">
-                            <span class="icon">📑</span>
+                            <svg class="nav-card-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                <rect x="3" y="3" width="13" height="17" rx="2" fill="#ffffff" stroke="#cbd5e0" stroke-width="1.2"/>
+                                <line x1="5.5" y1="6.5" x2="13.5" y2="6.5" stroke="#94a3b8" stroke-width="1" stroke-linecap="round"/>
+                                <line x1="5.5" y1="9.5" x2="11.5" y2="9.5" stroke="#94a3b8" stroke-width="1" stroke-linecap="round"/>
+                                <line x1="5.5" y1="12.5" x2="9.5" y2="12.5" stroke="#94a3b8" stroke-width="1" stroke-linecap="round"/>
+                                <line x1="5.5" y1="15.5" x2="10.5" y2="15.5" stroke="#94a3b8" stroke-width="1" stroke-linecap="round"/>
+                                <circle cx="15.5" cy="14.5" r="4.5" fill="#f8fafc" stroke="#38bdf8" stroke-width="1.6"/>
+                                <circle cx="14.5" cy="15.5" r="1" fill="#0284c7"/>
+                                <path d="M15.5 15.5 V12.5 C15.5 12.5, 16.5 12.2, 17 12.8" stroke="#0284c7" stroke-width="0.9" stroke-linecap="round"/>
+                                <line x1="18.8" y1="17.8" x2="22" y2="21" stroke="#38bdf8" stroke-width="2" stroke-linecap="round"/>
+                            </svg>
                             <span class="text">用語から検索</span>
                         </div>
                         <span class="arrow">&rarr;</span>
@@ -562,21 +775,79 @@
                 <div class="links-container">
                     <a href="mahler-search-app/richard_strauss.html" class="link-card">
                         <div class="content-wrapper">
-                            <span class="icon">🪈</span>
+                            <svg class="nav-card-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                <defs>
+                                    <linearGradient id="gfTube_S" x1="0%" y1="0%" x2="0%" y2="100%">
+                                        <stop offset="0%" stop-color="#fff8db"/>
+                                        <stop offset="30%" stop-color="#f6be3c"/>
+                                        <stop offset="70%" stop-color="#cf810c"/>
+                                        <stop offset="100%" stop-color="#7a4602"/>
+                                    </linearGradient>
+                                    <linearGradient id="gfKey_S" x1="0%" y1="0%" x2="0%" y2="100%">
+                                        <stop offset="0%" stop-color="#ffffff"/>
+                                        <stop offset="35%" stop-color="#ffd868"/>
+                                        <stop offset="75%" stop-color="#d98910"/>
+                                        <stop offset="100%" stop-color="#8f5304"/>
+                                    </linearGradient>
+                                    <linearGradient id="gfPlate_S" x1="0%" y1="100%" x2="0%" y2="0%">
+                                        <stop offset="0%" stop-color="#e09012"/>
+                                        <stop offset="50%" stop-color="#fff4d0"/>
+                                        <stop offset="100%" stop-color="#f6be3c"/>
+                                    </linearGradient>
+                                </defs>
+                                <g transform="rotate(-30 12 12)">
+                                    <path d="M1.3 11.2 C1.3 10.7, 1.8 10.4, 2.5 10.4 L3.2 10.4 L3.2 13.6 L2.5 13.6 C1.8 13.6, 1.3 13.3, 1.3 12.8 Z" fill="url(#gfKey_S)"/>
+                                    <rect x="2.8" y="10.8" width="0.8" height="2.4" fill="#8f5304"/>
+                                    <rect x="3.4" y="10.8" width="5" height="2.4" rx="0.3" fill="url(#gfTube_S)"/>
+                                    <rect x="4.8" y="10.1" width="2.8" height="1.4" rx="0.5" fill="url(#gfPlate_S)" stroke="#8f5304" stroke-width="0.3"/>
+                                    <ellipse cx="6.2" cy="11.4" rx="0.75" ry="0.45" fill="#301801"/>
+                                    <rect x="8.2" y="10.5" width="1.2" height="3" rx="0.3" fill="url(#gfKey_S)" stroke="#7a4602" stroke-width="0.3"/>
+                                    <rect x="9.3" y="10.8" width="13.2" height="2.4" rx="0.3" fill="url(#gfTube_S)"/>
+                                    <line x1="9.6" y1="10.9" x2="22.2" y2="10.9" stroke="#7a4602" stroke-width="0.7"/>
+                                    <ellipse cx="11.0" cy="10.6" rx="1.15" ry="0.8" fill="url(#gfKey_S)" stroke="#7a4602" stroke-width="0.35"/>
+                                    <ellipse cx="13.2" cy="10.6" rx="1.15" ry="0.8" fill="url(#gfKey_S)" stroke="#7a4602" stroke-width="0.35"/>
+                                    <ellipse cx="15.4" cy="10.6" rx="1.15" ry="0.8" fill="url(#gfKey_S)" stroke="#7a4602" stroke-width="0.35"/>
+                                    <ellipse cx="17.6" cy="10.6" rx="1.15" ry="0.8" fill="url(#gfKey_S)" stroke="#7a4602" stroke-width="0.35"/>
+                                    <ellipse cx="19.7" cy="10.6" rx="1.05" ry="0.75" fill="url(#gfKey_S)" stroke="#7a4602" stroke-width="0.35"/>
+                                    <circle cx="21.4" cy="10.7" r="0.7" fill="url(#gfKey_S)" stroke="#7a4602" stroke-width="0.3"/>
+                                    <rect x="22.4" y="10.7" width="0.6" height="2.6" rx="0.2" fill="url(#gfKey_S)"/>
+                                </g>
+                            </svg>
                             <span class="text">作品から検索</span>
                         </div>
                         <span class="arrow">&rarr;</span>
                     </a>
                     <a href="mahler-search-app/rs_terms_search.html" class="link-card">
                         <div class="content-wrapper">
-                            <span class="icon">📑</span>
+                            <svg class="nav-card-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                <rect x="3" y="3" width="13" height="17" rx="2" fill="#ffffff" stroke="#cbd5e0" stroke-width="1.2"/>
+                                <line x1="5.5" y1="6.5" x2="13.5" y2="6.5" stroke="#94a3b8" stroke-width="1" stroke-linecap="round"/>
+                                <line x1="5.5" y1="9.5" x2="11.5" y2="9.5" stroke="#94a3b8" stroke-width="1" stroke-linecap="round"/>
+                                <line x1="5.5" y1="12.5" x2="9.5" y2="12.5" stroke="#94a3b8" stroke-width="1" stroke-linecap="round"/>
+                                <line x1="5.5" y1="15.5" x2="10.5" y2="15.5" stroke="#94a3b8" stroke-width="1" stroke-linecap="round"/>
+                                <circle cx="15.5" cy="14.5" r="4.5" fill="#f8fafc" stroke="#38bdf8" stroke-width="1.6"/>
+                                <circle cx="14.5" cy="15.5" r="1" fill="#0284c7"/>
+                                <path d="M15.5 15.5 V12.5 C15.5 12.5, 16.5 12.2, 17 12.8" stroke="#0284c7" stroke-width="0.9" stroke-linecap="round"/>
+                                <line x1="18.8" y1="17.8" x2="22" y2="21" stroke="#38bdf8" stroke-width="2" stroke-linecap="round"/>
+                            </svg>
                             <span class="text">用語から検索</span>
                         </div>
                         <span class="arrow">&rarr;</span>
                     </a>
                     <a href="mahler-search-app/rs_synopsis.html" class="link-card">
                         <div class="content-wrapper">
-                            <span class="icon">📖</span>
+                            <svg class="nav-card-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                <path d="M12 6 C12 6, 12 18, 12 19.5" stroke="#94a3b8" stroke-width="1.2" stroke-linecap="round"/>
+                                <path d="M12 6.5 C9.5 5, 5 5, 2.5 6 C2 6.2, 2 6.8, 2 7.5 L2 18 C2 18.6, 2.4 19, 3 18.8 C5.5 18, 9.5 18, 12 19.5" fill="#ffffff" stroke="#cbd5e0" stroke-width="1.2" stroke-linejoin="round"/>
+                                <path d="M12 6.5 C14.5 5, 19 5, 21.5 6 C22 6.2, 22 6.8, 22 7.5 L22 18 C22 18.6, 21.6 19, 21 18.8 C18.5 18, 14.5 18, 12 19.5" fill="#ffffff" stroke="#cbd5e0" stroke-width="1.2" stroke-linejoin="round"/>
+                                <line x1="4.5" y1="9.5" x2="9.5" y2="9.5" stroke="#cbd5e0" stroke-width="0.9" stroke-linecap="round"/>
+                                <line x1="4.5" y1="12" x2="9.5" y2="12" stroke="#cbd5e0" stroke-width="0.9" stroke-linecap="round"/>
+                                <line x1="4.5" y1="14.5" x2="8" y2="14.5" stroke="#cbd5e0" stroke-width="0.9" stroke-linecap="round"/>
+                                <line x1="14.5" y1="9.5" x2="19.5" y2="9.5" stroke="#cbd5e0" stroke-width="0.9" stroke-linecap="round"/>
+                                <line x1="14.5" y1="12" x2="19.5" y2="12" stroke="#cbd5e0" stroke-width="0.9" stroke-linecap="round"/>
+                                <line x1="14.5" y1="14.5" x2="17.5" y2="14.5" stroke="#cbd5e0" stroke-width="0.9" stroke-linecap="round"/>
+                                <path d="M12 5.5 V14 L13.5 12.5 L15 14 V5.5" fill="#f43f5e" stroke="#e11d48" stroke-width="0.5"/>
+                            </svg>
                             <span class="text">あらすじ集</span>
                         </div>
                         <span class="arrow">&rarr;</span>

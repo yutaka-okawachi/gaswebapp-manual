@@ -5,6 +5,10 @@ body {
     background-color: var(--primary-bg);
 }
 
+h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-sans);
+}
+
 /*
 * common_styles.html
 * 全ページで共通して使用される基本的なスタイルシート。
@@ -1099,6 +1103,7 @@ h1.synopsis-page-title {
     text-align: center;
     letter-spacing: 0.02em;
     max-width: 100%;
+    font-family: var(--font-sans);
 }
 
 .search-page-title .search-title-composer,
@@ -1106,7 +1111,7 @@ h1.synopsis-page-title {
 .search-page-title > span:first-child,
 .synopsis-page-title > span:first-child {
     display: block;
-    font-family: var(--font-serif);
+    font-family: var(--font-sans);
     font-size: 34px;
     font-weight: 700;
     line-height: 1.25;
