@@ -56,11 +56,18 @@ assert.match(
 [
     'mahler-search-app/mahler.html',
     'mahler-search-app/richard_wagner.html',
-    'mahler-search-app/richard_strauss.html'
+    'mahler-search-app/richard_strauss.html',
+    'mahler-search-app/dic.html'
 ].forEach(relativePath => {
     const page = read(relativePath);
-    assert.match(page, /<p class="page-description">/);
+    assert.match(page, /<p class="page-description"/);
 });
+
+assert.match(
+    read('src/generate_dic_html.js'),
+    /<p class="page-description"/,
+    'dic generator template should include page-description class'
+);
 
 [
     'mahler-search-app/terms_search.html',
