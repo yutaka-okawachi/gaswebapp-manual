@@ -69,6 +69,17 @@ assert.match(
     'dic generator template should include page-description class'
 );
 
+assert.match(
+    read('mahler-search-app/dic.html'),
+    /\.info-notice\s*\{[^}]*font-family:\s*var\(--font-sans\);/s,
+    'dictionary info-notice should use sans-serif font stack'
+);
+assert.match(
+    read('src/generate_dic_html.js'),
+    /\.info-notice\s*\{[^}]*font-family:\s*var\(--font-sans\);/s,
+    'dictionary generator info-notice should use sans-serif font stack'
+);
+
 [
     'mahler-search-app/terms_search.html',
     'mahler-search-app/rw_terms_search.html',

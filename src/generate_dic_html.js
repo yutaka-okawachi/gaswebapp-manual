@@ -1002,6 +1002,7 @@ ${breadcrumbJSON}
             align-items: center;
             justify-content: space-between;
             gap: 15px;
+            font-family: var(--font-sans);
         }
 
         .info-notice-content p {
@@ -1009,6 +1010,7 @@ ${breadcrumbJSON}
             font-size: 0.9rem;
             color: #333;
             line-height: 1.5;
+            font-family: var(--font-sans);
         }
 
         .info-notice-action {
@@ -1023,7 +1025,7 @@ ${breadcrumbJSON}
             border-radius: 4px;
             text-decoration: none;
             font-size: 0.85rem;
-            font-family: 'Lora', 'Meiryo', 'メイリオ', sans-serif;
+            font-family: var(--font-sans);
             transition: background 0.2s;
         }
 
