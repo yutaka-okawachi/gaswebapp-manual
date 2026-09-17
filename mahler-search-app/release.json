@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "releaseId": "7fb0d492fb9437ed8a99856c10de928915fd271ed134938c8a689a47a6a5a730",
+  "releaseId": "7d8ca5e5bc59d7407908a5f27e81a8c3ef854a4126d77e05600613d0f109fa5c",
   "hashes": {
     "index.html": "dade5cba2a271cc76b36aa1b159fd93e6842f6251e327db51d86a21080e80b20",
     "license.html": "2201109f794b062c749d92d057592871b03d7ecf88752cfeef467ca10d2d0434",
@@ -70,12 +70,12 @@
     "mahler-search-app/js/analytics.js": "384b45d7de22dd5756d3a76bf0fb6bec04bfa07725c405d5bf1911a2d2e583a6",
     "mahler-search-app/js/app.js": "819f1cd703a9cc516b5266427e86099eaebe923464cfa03ce6dc2a5d39f199a5",
     "mahler-search-app/js/score_metadata.js": "f0faf22814806184239b5b13991f59bf7152cdef4fb9cba1a1b703e46088904f",
-    "mahler-search-app/js/wagner_strauss.js": "8b6e32a5a331156ac825662aa9bb7ea2faf0b051f6d834868d743f70f32a7cb3",
+    "mahler-search-app/js/wagner_strauss.js": "b34069028d3e724dd7b16240cb0cc18cb690096c5447746c8a26a710e139b382",
     "mahler-search-app/mahler.html": "b08568c4584d1c554938e19c2b37ce1d6ad2111408d3c67bee769f7c85b23761",
     "mahler-search-app/notes.html": "9808976abfe55c75485f46222cbfec1635c29c2381ccaa901903906bde9fe10e",
     "mahler-search-app/other.html": "8ef9d0510ab8c7432c18b987bb36632f33fa1221354e8a10a2eab08c0a9cc0e1",
-    "mahler-search-app/richard_strauss.html": "698818c5d576a04b3ca071bae5c933761eff2e6fe2cf9a6741ed103c32a51aeb",
-    "mahler-search-app/richard_wagner.html": "db5cab1df3be402c1299a48acea7e4b4908b8e488e138b2d8f1d35c5eae228da",
+    "mahler-search-app/richard_strauss.html": "423b74257fdad31de1b24186f040c5efab6233f3e2036528daaee605f3d4d448",
+    "mahler-search-app/richard_wagner.html": "61ab5ee0b61d5de530f31626c5b573a27e404a15f4a72015ae45fe7333b410a4",
     "mahler-search-app/rs_synopsis.html": "e94918a2d0a0ba8e84dff14be32f849f202d6a063360ab6245900ff6fb9ca83a",
     "mahler-search-app/rs_terms_search.html": "fb9e90b837c399e92a09c24b4c09a9a51ad51f4491fa53c8d82e004eef7f804a",
     "mahler-search-app/rw_synopsis.html": "992e0b0625c0bc35a1c6625ed59255d31d3044b672e8b2bf25d8420221565ec3",
