@@ -284,7 +284,8 @@ function searchByScene() {
         google.script.run
             .withSuccessHandler(html => {
                 if (thisSearchId === currentSearchId) {
-                    setResults(html);
+                    const finalHtml = injectMottlNote(html, operaValue);
+                    setResults(finalHtml);
                     if (typeof window.trackSearchResults === 'function') {
                         window.trackSearchResults({
                             searchTerm: `${operaValue}|scenes:${selectedScenes.join(',')}`,
@@ -400,7 +401,8 @@ function searchByPage() {
         google.script.run
             .withSuccessHandler(html => {
                 if (thisSearchId === currentSearchId) {
-                    setResults(html);
+                    const finalHtml = injectMottlNote(html, operaValue);
+                    setResults(finalHtml);
                     if (typeof window.trackSearchResults === 'function') {
                         window.trackSearchResults({
                             searchTerm: `${operaValue}|pages:${pageInput}`,
@@ -695,18 +697,43 @@ function setResults(html) {
 function injectMottlNote(html, operaValue) {
     if (!html) return html;
     
-    // 対象のオペラかチェック
-    const targetOperas = ['tann_dresden', 'tann_paris', 'walküre', 'tristan', 'parsifal'];
+    // 対象のオペラかチェック（正規化表記も対象）
+    const targetOperas = ['tann_dresden', 'tann_paris', 'walküre', 'walkuere', 'tristan', 'parsifal'];
     if (!targetOperas.includes(operaValue)) {
         return html;
     }
 
-    const noteHtml = '<div style="font-family: \'Lora\', \'Meiryo\', \'メイリオ\', sans-serif; font-weight: bold; margin-top: 5px;">Felix Mottl による指示も含む</div>';
+    const noteHtml = '<div style="font-family: \'Lora\', \'Meiryo\', \'メイリオ\', sans-serif; font-weight: bold; margin-top: 5px; margin-bottom: 10px;">Felix Mottl による指示も含む</div>';
     
-    // score-info-bannerのdivブロックの終端を探して挿入
-    // <div class="score-info-banner">...</div> の後ろに挿入したい
-    // 正規表現でマッチ
-    return html.replace(/(<div class="score-info-banner">.*?<\/div>)/s, '$1' + noteHtml);
+    // score-info-bannerのdivブロックの終端（</div>）を探して直後に挿入
+    const bannerMatch = html.match(/<div\b[^>]*class=["'][^"']*\bscore-info-banner\b[^"']*["'][^>]*>/i);
+    if (!bannerMatch) {
+        return noteHtml + html;
+    }
+
+    // bannerMatchの開始位置から対応する閉じタグ </div> を探索
+    let depth = 0;
+    const tagRegex = /<\/?div\b[^>]*>/gi;
+    tagRegex.lastIndex = bannerMatch.index;
+    let m;
+    let bannerEnd = -1;
+    while ((m = tagRegex.exec(html)) !== null) {
+        if (m[0].startsWith('</')) {
+            depth--;
+            if (depth === 0) {
+                bannerEnd = tagRegex.lastIndex;
+                break;
+            }
+        } else {
+            depth++;
+        }
+    }
+
+    if (bannerEnd !== -1) {
+        return html.slice(0, bannerEnd) + noteHtml + html.slice(bannerEnd);
+    }
+
+    return html + noteHtml;
 }
 
 /**
