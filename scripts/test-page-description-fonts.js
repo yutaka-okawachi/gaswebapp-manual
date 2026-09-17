@@ -90,6 +90,27 @@ assert.match(
     assert.match(page, /class="search-usage page-description"/);
     assert.match(page, /class="search-input-guide page-description"/);
     assert.match(page, /<div id="results"><\/div>/);
+    assert.match(page, /class="search-intro page-description">主要な.*?を検索するページ．<\/p>/);
+    assert.doesNotMatch(page, /検索できます/);
+    assert.match(page, /<a href="dic\.html">ドイツ語の音楽用語集<\/a>/);
+    assert.doesNotMatch(page, /<a href="dic\.html"[^>]*target="_blank"/);
 });
+
+[
+    'mahler-search-app/mahler.html',
+    'mahler-search-app/richard_wagner.html',
+    'mahler-search-app/richard_strauss.html'
+].forEach(relativePath => {
+    const page = read(relativePath);
+    assert.match(page, /<a href="dic\.html">ドイツ語の音楽用語集<\/a>/);
+    assert.doesNotMatch(page, /font-size:\s*1\.2rem/);
+    assert.doesNotMatch(page, /<a href="dic\.html"[^>]*target="_blank"/);
+});
+
+assert.match(
+    commonCss,
+    /\.page-description a,\s*\.search-usage a\s*\{[^}]*color:\s*var\(--button-bg\);[^}]*text-decoration:\s*none;/s,
+    'page description links should match HOME breadcrumb link style'
+);
 
 console.log('Page description font tests passed.');

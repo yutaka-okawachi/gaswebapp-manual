@@ -2,7 +2,7 @@ function renderRichardStraussSearch(container) {
     container.innerHTML = `
         <div id="rs-search-container">
             <h1>曲名から検索 (RS)</h1>
-            <p><b>Richard Strauss の管弦楽曲については<a href="dic.html" target="_blank">ドイツ語の音楽用語集</a>のページを参照</b></p>
+            <p class="page-description">Richard Strauss の管弦楽曲については<a href="dic.html">ドイツ語の音楽用語集</a>のページを参照</p>
             <p>オーケストラに対する指示で Gustav Mahler の用語検索ページで何とかなりそうなものは基本的に不記載．</p>
             <div class="big-label">曲名を選択</div>
             <details class="instrument-group" id="works-group">

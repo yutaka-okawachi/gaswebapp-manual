@@ -1160,6 +1160,19 @@ h1.synopsis-page-title {
     font-family: var(--font-sans);
 }
 
+.page-description a,
+.search-usage a {
+    color: var(--button-bg);
+    text-decoration: none;
+}
+
+.page-description a:hover,
+.page-description a:focus,
+.search-usage a:hover,
+.search-usage a:focus {
+    text-decoration: underline;
+}
+
 /* 操作系UI要素: ゴシック体 */
 button,
 input[type="button"],
