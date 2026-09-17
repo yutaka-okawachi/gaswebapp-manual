@@ -1602,8 +1602,9 @@ ${breadcrumbJSON}
             <h1>ドイツ語の音楽用語集</h1>
 
             <p class="page-description" style="font-size: 0.85rem; color: #555; margin-top: 0.5em; margin-bottom: 1em;">
-                このページは，Richard Wagner (RW)，Gustav Mahler (GM)，Richard Strauss (RS)，Anton Bruckner，Paul Hindemith などで使用されているドイツ語の訳例やコメント集（ほんの一部だけイタリア語，フランス語等を含む）．[GM]などの略記については「<a href="#abbrListContainer">略記一覧</a>」を参照のこと．ただし，”実例を見る”ではRichard Straussの場合，オペラのみに対応しているので注意．
+                スコアで確認したドイツ語の一般的な意味，音楽用語としての訳例・コメント・出典を一覧で確認可能．アルファベットから用語を探し，「実例を見る」から各作曲家の検索結果へ移動可能．
             </p>
+            <p class="page-description" style="font-size: 0.85rem; color: #555; margin-top: 0; margin-bottom: 1em;">※「実例を見る」は，Richard Strauss についてはオペラのみ対応．</p>
 
             <!-- Info Notice Section -->
             <div class="info-notice">

@@ -49,6 +49,16 @@ assert.match(
 );
 assert.match(
     topPage,
+    /Richard Wagner（リヒャルト・ワーグナー），Gustav Mahler（グスタフ・マーラー），Richard Strauss（リヒャルト・シュトラウス）/,
+    'HOME description should use the full composer names'
+);
+assert.match(
+    topPage,
+    /収録した<a href="mahler-search-app\/dic\.html">ドイツ語の音楽用語集<\/a>も参照可能．/,
+    'HOME description should link to the dictionary without Japanese quotation marks'
+);
+assert.match(
+    topPage,
     /\.global-note\s*\{[^}]*font-family:\s*var\(--font-sans\);/s,
     'HOME warning notes should match the description font'
 );
@@ -67,6 +77,16 @@ assert.match(
     read('src/generate_dic_html.js'),
     /<p class="page-description"/,
     'dic generator template should include page-description class'
+);
+assert.match(
+    read('src/generate_dic_html.js'),
+    /スコアで確認したドイツ語の一般的な意味，音楽用語としての訳例・コメント・出典を一覧で確認可能．/,
+    'dic generator template should include the revised dictionary description'
+);
+assert.match(
+    read('src/generate_dic_html.js'),
+    /※「実例を見る」は，Richard Strauss についてはオペラのみ対応．/,
+    'dic generator template should retain the Richard Strauss example limitation'
 );
 
 assert.match(
@@ -87,13 +107,22 @@ assert.match(
 ].forEach(relativePath => {
     const page = read(relativePath);
     assert.match(page, /class="search-intro page-description"/);
-    assert.match(page, /class="search-usage page-description"/);
+    assert.doesNotMatch(page, /class="search-usage page-description"/);
     assert.match(page, /class="search-input-guide page-description"/);
     assert.match(page, /<div id="results"><\/div>/);
-    assert.match(page, /class="search-intro page-description">主要な.*?を検索するページ．<\/p>/);
+    assert.match(page, /class="search-intro page-description">.*?検索可能．.*?検索すると，.*?<\/p>/);
     assert.doesNotMatch(page, /検索できます/);
+    assert.doesNotMatch(page, /「検索」を押すと/);
     assert.match(page, /<a href="dic\.html">ドイツ語の音楽用語集<\/a>/);
     assert.doesNotMatch(page, /<a href="dic\.html"[^>]*target="_blank"/);
+});
+
+[
+    'mahler-search-app/rw_synopsis.html',
+    'mahler-search-app/rs_synopsis.html'
+].forEach(relativePath => {
+    const page = read(relativePath);
+    assert.match(page, /<h1 class="synopsis-page-title">[\s\S]*?<\/h1>\s*<p class="page-description">.*?別タブで表示．<\/p>/);
 });
 
 [
