@@ -157,5 +157,6 @@ const mahlerPage = read('mahler-search-app/mahler.html');
 assert.match(mahlerPage, /score-info-banner/, 'mahler.html should render score-info-banner');
 assert.match(mahlerPage, /other\.html#score-mahler/, 'mahler.html should link to other.html#score-mahler');
 assert.match(mahlerPage, /楽譜情報\(Score information\)/, 'mahler.html should contain score information link text');
+assert.match(mahlerPage, /使用楽譜の一覧は，<a href="other\.html#score-mahler"[^>]*>楽譜情報\(Score information\) ↗<\/a> を参照．/, 'mahler.html score info banner text should use を参照． with Japanese comma/period');
 
 console.log('Page description font tests passed.');

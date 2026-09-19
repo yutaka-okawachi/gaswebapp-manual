@@ -212,7 +212,7 @@ window.searchMahlerDataLocal = function (choice1Arr, choice2Arr, includeOrchestr
 
     const scoreInfoHtml = `<div class="score-info-banner" style="text-align: left; padding: 12px; font-size: 0.85em; line-height: 1.6;">` +
         `<div style="font-weight: bold; border-bottom: 1px solid #ccc; margin-bottom: 8px; padding-bottom: 4px;">楽譜情報 (Score Information)</div>` +
-        `<div>使用楽譜の一覧は <a href="other.html#score-mahler" target="_blank" rel="noopener noreferrer" style="color: #0066cc; text-decoration: underline; font-weight: bold;">楽譜情報(Score information) ↗</a> を参照してください。</div>` +
+        `<div>使用楽譜の一覧は，<a href="other.html#score-mahler" target="_blank" rel="noopener noreferrer" style="color: #0066cc; text-decoration: underline; font-weight: bold;">楽譜情報(Score information) ↗</a> を参照．</div>` +
         `</div>`;
 
     return totalMatches === 0 ? '<div class="result-message">該当するデータが見つかりませんでした。</div>' : `<div>${totalMatches}件ありました。</div>${scoreInfoHtml}${resultHTML}`;
