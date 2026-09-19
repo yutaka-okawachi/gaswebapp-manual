@@ -110,15 +110,15 @@ GAS APIの更新とSitesの公開は別作業です。どちらか一方の成�
 
 ## 4. 計測とAPIの保守資料
 
-2026-09-07のローカル実装では `schemaVersion` は **6** です。本番が同じ版かどうかは公開後のAPI検査で確認します。古いschemaVersion 1のJSON例は使用しません。
+2026-09-19のローカル実装では `schemaVersion` は **7** です。本番が同じ版かどうかは公開後のAPI検査で確認します。古いschemaVersion 1のJSON例は使用しません。
 
-必須キーは `schemaVersion`、`period`、`updatedAt`、`range`、`daily`、`previous`、`searchSummary`、`searchMethods`、`retention`、`pageTrends`、`acquisition`、`pages`、`dictionaryExampleMoves`、`dictionaryExamplePerformance`、`terms` です。型・値の制約は `scripts/dashboard-api-check.ps1`、計算方法は `src/dashboard_analytics.js` とそのテストを正本とします。
+必須キーは `schemaVersion`、`period`、`updatedAt`、`range`、`daily`、`previous`、`searchSummary`、`searchMethods`、`retention`、`pageTrends`、`acquisition`、`pages`、`dictionaryExampleMoves`、`dictionaryExamplePerformance`、`terms`、`works` です。型・値の制約は `scripts/dashboard-api-check.ps1`、計算方法は `src/dashboard_analytics.js` とそのテストを正本とします。
 
 ### GA4・GAS設定の引き継ぎ確認
 
 - GASのスクリプトプロパティ `GA4_PROPERTY_ID` と、実行アカウントの対象プロパティへの読み取り権限を確認します。
 - `src/appsscript.json` のAnalytics DataサービスとOAuthスコープを維持します。
-- イベントスコープの `search_type`、`composer`、`source_page`、`destination_page`、`link_type`、`term`（表示名 `term_toggle`）とカスタム指標 `result_count` を確認します。`search_term` は標準の `searchTerm` を使います。
+- イベントスコープの `search_type`、`composer`、`source_page`、`destination_page`、`link_type`、`term`（表示名 `term_toggle`）、`work_id`、`work_title` とカスタム指標 `result_count` を確認します。`search_term` は標準の `searchTerm` を使います。
 - 拡張計測の「サイト内検索」を無効にし、明示送信イベントとの重複を避けます。これらはクラウド側設定なので、PC変更だけで再作成しません。
 - 管理者自身の計測除外は[日常保守マニュアル](DEVELOPER_GUIDE.md)第5章に従い、ブラウザごとに設定します。
 
@@ -208,6 +208,27 @@ GAS APIの更新とSitesの公開は別作業です。どちらか一方の成�
 - 表示する用語は、同じ集計キーの中で最も多く観測された元表記を使う。
 - 同数の場合は、大文字・小文字を無視した昇順で先に来る表記を使う。
 
+### 作品別集計
+
+- 作品検索が完了したとき、通常の検索結果イベントとは別に、選択された作品ごとに
+  `work_search_selection` を1件送る。
+- GMで複数作品を選択した場合は、1回の検索でも各作品を1件ずつ数える。このため
+  `works[].searches` の合計は検索実行数を上回ることがある。
+- GMで作品の `ALL` を選択した場合は個別作品へ展開せず、`work_id=gm_all`、
+  `work_title=マーラーの全ての楽曲` の1件として数える。
+- RW・RSは選択された1作品を1件として数える。
+- 検索結果が0件の場合も、完了した作品検索として作品別集計に含める。
+- 無効入力、検索中止、検索処理の失敗は送信しない。
+- `composer` と `work_id` の組み合わせで集約し、検索数降順で最大50件を返す。
+- 新しいカスタムディメンションは設定後のイベントから有効になり、過去データには遡及しない。
+
+公開前にGA4のイベントスコープのカスタムディメンションとして `work_id` と
+`work_title` を登録する。登録前にschemaVersion 7のGAS APIを公開すると作品レポートの
+取得に失敗するため、公開順序は「GA4の2項目を登録」→「schemaVersion 7を受け取れる
+Sitesを公開」→「通常の `sync-data` でサイト計測とGAS APIを公開」とする。既存の
+schemaVersion 5・6を受け取ったSitesは、作品ランキングを空欄として表示し、ほかの集計を
+継続する。
+
 #### 訳語
 
 - `Notes` シートのドイツ語見出しを同じ規則で正規化して照合する。
@@ -258,6 +279,7 @@ GAS APIの更新とSitesの公開は別作業です。どちらか一方の成�
 - `pages[].topTerms`: 検索数降順、同数は正規化済み用語の昇順、最大3件。
 - `dictionaryExampleMoves`: Wagner、Mahler、R. Straussの固定順、3件。
 - `terms`: 検索数降順、同数は正規化済み用語の昇順、最大50件。
+- `works`: 検索数降順、同数は作曲家名、作品名の昇順、最大50件。
 - `terms[].pages`: 検索数が1件以上のページだけを対象とし、検索数降順、同数はページ対応表の順。
 - `terms` が50件を超える場合も、検索総数や日別・ページ別の合計値は切り詰めない。
 
@@ -283,6 +305,21 @@ GAS APIの更新とSitesの公開は別作業です。どちらか一方の成�
 - `source_page`: 検索を実行したページ
 
 検索総数は、この2イベントのイベント数を合計する。`result_count` は合計しない。
+
+#### 選択作品
+
+作品検索が完了した時点で、選択作品ごとに `work_search_selection` を送る。
+
+パラメータ:
+
+- `composer`: `GM`、`RW`、`RS`
+- `work_id`: 作曲家接頭辞を含む固定の作品ID
+- `work_title`: ダッシュボードに表示する作品名
+- `search_type`: 検索形式
+- `result_count`: その検索全体の結果件数
+- `source_page`: 検索を実行したページ
+
+同じ検索内で同一の `work_id` は重複送信しない。作品イベントは検索実行数には加えない。
 
 #### 検索ページへの移動
 

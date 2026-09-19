@@ -6,12 +6,18 @@
  * read or returned here.
  */
 
-const DASHBOARD_SCHEMA_VERSION = 6;
+const DASHBOARD_SCHEMA_VERSION = 7;
 const DASHBOARD_TIME_ZONE = 'Asia/Tokyo';
 const DASHBOARD_ALLOWED_PERIODS = Object.freeze([7, 30, 90]);
 const DASHBOARD_CACHE_SECONDS = 900;
 const DASHBOARD_LOCK_WAIT_MILLISECONDS = 30000;
 const DASHBOARD_TERM_LIMIT = 50;
+const DASHBOARD_WORK_LIMIT = 50;
+const DASHBOARD_COMPOSER_LABELS = Object.freeze({
+  GM: 'Mahler',
+  RW: 'Wagner',
+  RS: 'R. Strauss'
+});
 const DASHBOARD_HOST_NAME = 'yutaka-okawachi.github.io';
 const DASHBOARD_RETENTION_COHORT_COUNT = 12;
 const DASHBOARD_RETENTION_END_OFFSET = 3;
@@ -151,7 +157,7 @@ function getDashboardAnalytics(period) {
   }
 
   const cache = CacheService.getScriptCache();
-  const cacheKey = 'admin_dashboard_analytics_v20_' + propertyId + '_' + period;
+  const cacheKey = 'admin_dashboard_analytics_v21_' + propertyId + '_' + period;
   const cachedResult = readDashboardCachedResult(cache, cacheKey);
   if (cachedResult) return cachedResult;
 
@@ -178,6 +184,7 @@ function getDashboardAnalytics(period) {
       exampleTimings: runDashboardExampleTimingReport(propertyName, range),
       searchMoves: runDashboardSearchMovesReport(propertyName, range),
       terms: runDashboardTermsReport(propertyName, range),
+      works: runDashboardWorksReport(propertyName, range),
       previousRange: previousRange,
       previousPageViews: runDashboardPageViewsReport(propertyName, previousRange),
       previousPageEngagement: runDashboardPageEngagementReport(
@@ -367,6 +374,21 @@ function runDashboardTermsReport(propertyName, range) {
       dashboardExactFilter('eventName', 'view_search_results'),
       dashboardInListFilter('customEvent:search_type', DASHBOARD_TERM_SEARCH_TYPES)
     ]),
+    limit: '100000'
+  }, propertyName);
+}
+
+function runDashboardWorksReport(propertyName, range) {
+  return AnalyticsData.Properties.runReport({
+    dateRanges: [range],
+    dimensions: [
+      { name: 'customEvent:work_id' },
+      { name: 'customEvent:work_title' },
+      { name: 'customEvent:composer' },
+      { name: 'customEvent:search_type' }
+    ],
+    metrics: [{ name: 'eventCount' }],
+    dimensionFilter: dashboardExactFilter('eventName', 'work_search_selection'),
     limit: '100000'
   }, propertyName);
 }
@@ -1185,6 +1207,55 @@ function buildDashboardAnalyticsResponse(period, range, reports) {
       .map(itemPage => ({ name: itemPage.name, count: itemPage.count }))
   }));
 
+  const workAggregates = {};
+  dashboardReportRows(reports.works, 4).forEach(row => {
+    const workId = String(row.dimensions[0] || '').trim();
+    const workTitle = String(row.dimensions[1] || '').trim().replace(/\s+/g, ' ');
+    const composerCode = String(row.dimensions[2] || '').trim().toUpperCase();
+    const searchType = String(row.dimensions[3] || '').trim();
+    const composer = DASHBOARD_COMPOSER_LABELS[composerCode];
+    const count = dashboardCount(row.metrics[0]);
+    if (
+      !workId ||
+      workId === '(not set)' ||
+      !workTitle ||
+      workTitle === '(not set)' ||
+      !composer ||
+      !DASHBOARD_SEARCH_TYPE_PAGE_PATHS[searchType] ||
+      count < 1
+    ) return;
+
+    const key = composerCode + '|' + workId;
+    if (!workAggregates[key]) {
+      workAggregates[key] = {
+        workId: workId,
+        composer: composer,
+        searches: 0,
+        titles: {}
+      };
+    }
+    const aggregate = workAggregates[key];
+    aggregate.searches += count;
+    aggregate.titles[workTitle] = (aggregate.titles[workTitle] || 0) + count;
+  });
+
+  const works = Object.keys(workAggregates)
+    .map(key => {
+      const aggregate = workAggregates[key];
+      return {
+        workId: aggregate.workId,
+        workTitle: chooseDashboardTermVariant(aggregate.titles),
+        composer: aggregate.composer,
+        searches: aggregate.searches
+      };
+    })
+    .sort((a, b) =>
+      b.searches - a.searches ||
+      a.composer.localeCompare(b.composer) ||
+      a.workTitle.localeCompare(b.workTitle)
+    )
+    .slice(0, DASHBOARD_WORK_LIMIT);
+
   return {
     schemaVersion: DASHBOARD_SCHEMA_VERSION,
     period: period,
@@ -1227,7 +1298,8 @@ function buildDashboardAnalyticsResponse(period, range, reports) {
       count: dictionaryExampleMoveCounts[item.path]
     })),
     dictionaryExamplePerformance: dictionaryExamplePerformance,
-    terms: terms
+    terms: terms,
+    works: works
   };
 }
 

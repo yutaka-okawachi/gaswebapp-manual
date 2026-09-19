@@ -8,6 +8,18 @@ const sceneOptionsCache = {};
 let currentSearchId = 0;
 let dataLoadedPromise = null;
 
+function getOperaWorkAnalyticsSelection(selectedOpera, composerCode) {
+    const label = selectedOpera && selectedOpera.closest('label');
+    const workValue = String(selectedOpera && selectedOpera.value || '').trim();
+    const workTitle = String(label && label.textContent || workValue).trim();
+    if (!workValue || !workTitle) return [];
+    return [{
+        composer: composerCode,
+        workId: `${composerCode.toLowerCase()}_${workValue}`,
+        workTitle
+    }];
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     // 1. リスナーを即座に登録（データロード完了前でもユーザーの操作を受け付ける）
     document.querySelectorAll('input[name="opera"]').forEach(radio => {
@@ -291,6 +303,7 @@ function searchByScene() {
                             searchTerm: `${operaValue}|scenes:${selectedScenes.join(',')}`,
                             searchType: composerCode === 'RW' ? 'rw_work_scene' : 'rs_work_scene',
                             resultRoot: document.getElementById('results'),
+                            workSelections: getOperaWorkAnalyticsSelection(selectedOpera, composerCode),
                             params: { composer: composerCode, scene_count: selectedScenes.length }
                         });
                     }
@@ -340,6 +353,7 @@ function searchByScene() {
                         searchTerm: `${operaValue}|scenes:${selectedScenes.join(',')}`,
                         searchType: composerCode === 'RW' ? 'rw_work_scene' : 'rs_work_scene',
                         resultCount: filteredData.length,
+                        workSelections: getOperaWorkAnalyticsSelection(selectedOpera, composerCode),
                         params: { composer: composerCode, scene_count: selectedScenes.length }
                     });
                 }
@@ -408,6 +422,7 @@ function searchByPage() {
                             searchTerm: `${operaValue}|pages:${pageInput}`,
                             searchType: composerCode === 'RW' ? 'rw_work_page' : 'rs_work_page',
                             resultRoot: document.getElementById('results'),
+                            workSelections: getOperaWorkAnalyticsSelection(selectedOpera, composerCode),
                             params: { composer: composerCode }
                         });
                     }
@@ -456,6 +471,7 @@ function searchByPage() {
                         searchTerm: `${operaValue}|pages:${pageInput}`,
                         searchType: composerCode === 'RW' ? 'rw_work_page' : 'rs_work_page',
                         resultCount: filteredData.length,
+                        workSelections: getOperaWorkAnalyticsSelection(selectedOpera, composerCode),
                         params: { composer: composerCode }
                     });
                 }
@@ -650,6 +666,7 @@ function searchByWhom() {
                     searchTerm: `${operaValue}|whom:${selectedWhoms.join(',')}`,
                     searchType: composerCode === 'RW' ? 'rw_work_whom' : 'rs_work_whom',
                     resultCount: filteredData.length,
+                    workSelections: getOperaWorkAnalyticsSelection(selectedOpera, composerCode),
                     params: { composer: composerCode, whom_count: selectedWhoms.length }
                 });
             }

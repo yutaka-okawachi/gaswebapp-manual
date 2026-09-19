@@ -119,6 +119,23 @@ function trackSearchResults(options) {
     });
     window.gtag('event', resultCount > 0 ? 'view_search_results' : 'search_no_results', payload);
 
+    const trackedWorkIds = new Set();
+    (Array.isArray(options.workSelections) ? options.workSelections : []).forEach(work => {
+        const workId = String(work && work.workId || '').trim();
+        const workTitle = String(work && work.workTitle || '').trim();
+        const composer = String(work && work.composer || payload.composer || '').trim();
+        if (!workId || !workTitle || !composer || trackedWorkIds.has(workId)) return;
+        trackedWorkIds.add(workId);
+        window.gtag('event', 'work_search_selection', {
+            composer,
+            work_id: workId,
+            work_title: workTitle,
+            search_type: searchType,
+            result_count: resultCount,
+            source_page: payload.source_page
+        });
+    });
+
     const urlParams = new URLSearchParams(window.location.search);
     if (
         resultCount > 0 &&

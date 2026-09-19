@@ -70,7 +70,7 @@
 
   <link rel="preload" href="css/common.css?v=4889e2aedb54" as="style">
   <link rel="stylesheet" href="css/common.css?v=4889e2aedb54">
-  <script src="js/app.js?v=da1f728b767a"></script>
+  <script src="js/app.js?v=038d6cee0230"></script>
   <style>
     /* index.html固有のスタイル */
     
@@ -471,6 +471,21 @@
     window._allGlobalSelected = false;
     let currentSearchId = 0;
 
+    function getMahlerWorkAnalyticsSelections(works) {
+      if (works.includes('ALL')) {
+        return [{
+          composer: 'GM',
+          workId: 'gm_all',
+          workTitle: 'マーラーの全ての楽曲'
+        }];
+      }
+      return works.map(workTitle => ({
+        composer: 'GM',
+        workId: `gm_${aMapping[workTitle] || workTitle}`,
+        workTitle
+      }));
+    }
+
     window.addEventListener('DOMContentLoaded', async () => {
       // 「すべての曲を選択」ボタン
       document.getElementById('all-works-button').addEventListener('click', e => {
@@ -864,6 +879,7 @@
                       searchTerm: `works:${works.join(',')}|instruments:${instruments.join(',')}`,
                       searchType: 'gm_work',
                       resultCount: results.length,
+                      workSelections: getMahlerWorkAnalyticsSelections(works),
                       params: {
                         composer: 'GM',
                         work_count: works.length,

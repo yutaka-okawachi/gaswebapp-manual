@@ -44,7 +44,7 @@ foreach ($period in @(7, 30, 90)) {
     }
 
     $payload = @{
-        schemaVersion = 6
+        schemaVersion = 7
         period = $period
         updatedAt = "2026年7月26日 14:05"
         range = @{
@@ -169,6 +169,14 @@ foreach ($period in @(7, 30, 90)) {
                 translation = "心をこめて"
                 searches = 1
                 pages = @(@{ name = "Page 1"; count = 1 })
+            }
+        )
+        works = @(
+            @{
+                workId = "gm_all"
+                workTitle = "マーラーの全ての楽曲"
+                composer = "Mahler"
+                searches = 1
             }
         )
     } | ConvertTo-Json -Depth 8

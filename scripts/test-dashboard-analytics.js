@@ -11,6 +11,8 @@ const postRouterPath = path.join(repositoryRoot, 'src', 'web_trigger.js');
 const dictionaryGeneratorPath = path.join(repositoryRoot, 'src', 'generate_dic_html.js');
 const publicAppScriptPath = path.join(repositoryRoot, 'mahler-search-app', 'js', 'app.js');
 const analyticsScriptPath = path.join(repositoryRoot, 'mahler-search-app', 'js', 'analytics.js');
+const mahlerPagePath = path.join(repositoryRoot, 'mahler-search-app', 'mahler.html');
+const workSearchScriptPath = path.join(repositoryRoot, 'mahler-search-app', 'js', 'wagner_strauss.js');
 const publicTermSearchPages = [
   'terms_search.html',
   'rs_terms_search.html',
@@ -200,6 +202,16 @@ const termsReport = {
       '/gaswebapp-manual/mahler-search-app/rs_terms_search.html',
       'rs_term'
     ], 2),
+    reportRow(['(not set)', '(not set)', '(not set)', '(not set)'], 9)
+  ]
+};
+
+const worksReport = {
+  rows: [
+    reportRow(['gm_all', 'マーラーの全ての楽曲', 'GM', 'gm_work'], 3),
+    reportRow(['gm_1', '交響曲第1番ニ長調（1884-88）', 'GM', 'gm_work'], 2),
+    reportRow(['rw_tristan', 'Tristan und Isolde, WWV 90 (1857-59)', 'RW', 'rw_work_scene'], 2),
+    reportRow(['rs_salome', 'Salome, Op.54 (1903-05)', 'RS', 'rs_work_page'], 1),
     reportRow(['(not set)', '(not set)', '(not set)', '(not set)'], 9)
   ]
 };
@@ -529,6 +541,16 @@ const context = {
           );
           return termsReport;
         }
+        if (
+          dimensionNames ===
+          'customEvent:work_id,customEvent:work_title,customEvent:composer,customEvent:search_type'
+        ) {
+          assert.strictEqual(
+            request.dimensionFilter.filter.stringFilter.value,
+            'work_search_selection'
+          );
+          return worksReport;
+        }
         throw new Error(`Unexpected report dimensions: ${dimensionNames}`);
       }
     }
@@ -567,10 +589,10 @@ assert.deepStrictEqual(
 assert.strictEqual(analyticsCallCount, 1);
 
 const result = context.getDashboardAnalytics(7);
-assert.strictEqual(analyticsCallCount, 18);
+assert.strictEqual(analyticsCallCount, 19);
 assert.strictEqual(lockAcquireCount, 1);
 assert.strictEqual(lockReleaseCount, 1);
-assert.strictEqual(result.schemaVersion, 6);
+assert.strictEqual(result.schemaVersion, 7);
 assert.strictEqual(result.period, 7);
 assert.deepStrictEqual(
   JSON.parse(JSON.stringify(result.range)),
@@ -812,6 +834,35 @@ assert.deepStrictEqual(
     ]
   }
 );
+assert.deepStrictEqual(
+  JSON.parse(JSON.stringify(result.works)),
+  [
+    {
+      workId: 'gm_all',
+      workTitle: 'マーラーの全ての楽曲',
+      composer: 'Mahler',
+      searches: 3
+    },
+    {
+      workId: 'gm_1',
+      workTitle: '交響曲第1番ニ長調（1884-88）',
+      composer: 'Mahler',
+      searches: 2
+    },
+    {
+      workId: 'rw_tristan',
+      workTitle: 'Tristan und Isolde, WWV 90 (1857-59)',
+      composer: 'Wagner',
+      searches: 2
+    },
+    {
+      workId: 'rs_salome',
+      workTitle: 'Salome, Op.54 (1903-05)',
+      composer: 'R. Strauss',
+      searches: 1
+    }
+  ]
+);
 
 const manyTermsReport = {
   rows: Array.from({ length: 55 }, (_, index) => reportRow([
@@ -839,6 +890,34 @@ assert.strictEqual(limitedTermsResult.terms[0].term, 'term-55');
 assert.strictEqual(limitedTermsResult.terms[0].searches, 55);
 assert.strictEqual(limitedTermsResult.terms[49].term, 'term-06');
 assert.strictEqual(limitedTermsResult.terms[49].searches, 6);
+
+const manyWorksReport = {
+  rows: Array.from({ length: 55 }, (_, index) => reportRow([
+    `gm_${String(index + 1).padStart(2, '0')}`,
+    `作品${String(index + 1).padStart(2, '0')}`,
+    'GM',
+    'gm_work'
+  ], index + 1))
+};
+const limitedWorksResult = context.buildDashboardAnalyticsResponse(
+  7,
+  context.createDashboardDateRange(7),
+  {
+    pageViews: {},
+    activity: {},
+    searchMoves: {},
+    terms: {},
+    works: manyWorksReport,
+    previousRange: { startDate: '2026-07-13', endDate: '2026-07-19' },
+    previousPageViews: {},
+    previousActivity: {}
+  }
+);
+assert.strictEqual(limitedWorksResult.works.length, 50);
+assert.strictEqual(limitedWorksResult.works[0].workTitle, '作品55');
+assert.strictEqual(limitedWorksResult.works[0].searches, 55);
+assert.strictEqual(limitedWorksResult.works[49].workTitle, '作品06');
+assert.strictEqual(limitedWorksResult.works[49].searches, 6);
 
 const searchMethodResult = context.buildDashboardAnalyticsResponse(
   7,
@@ -920,7 +999,7 @@ assert.strictEqual(
 );
 
 const cachedResult = context.getDashboardAnalytics(7);
-assert.strictEqual(analyticsCallCount, 18);
+assert.strictEqual(analyticsCallCount, 19);
 assert.strictEqual(lockAcquireCount, 1);
 assert.strictEqual(lockReleaseCount, 1);
 assert.deepStrictEqual(
@@ -1049,6 +1128,8 @@ const postRouterSource = fs.readFileSync(postRouterPath, 'utf8');
 const dictionaryGeneratorSource = fs.readFileSync(dictionaryGeneratorPath, 'utf8');
 const publicAppScriptSource = fs.readFileSync(publicAppScriptPath, 'utf8');
 const analyticsScriptSource = fs.readFileSync(analyticsScriptPath, 'utf8');
+const mahlerPageSource = fs.readFileSync(mahlerPagePath, 'utf8');
+const workSearchScriptSource = fs.readFileSync(workSearchScriptPath, 'utf8');
 assert.ok(getRouterSource.includes("parameters.api === 'dashboard'"));
 assert.ok(postRouterSource.includes("data.api === 'dashboard'"));
 assert.ok(dictionaryGeneratorSource.includes('&source=dictionary_example'));
@@ -1058,8 +1139,106 @@ assert.ok(publicAppScriptSource.includes("urlParams.get('source') === 'dictionar
 assert.ok(publicAppScriptSource.includes("'view_example_search_results'"));
 assert.ok(publicAppScriptSource.includes("'dictionary_example_timing'"));
 assert.ok(publicAppScriptSource.includes('duration_ms: elapsedMilliseconds'));
+assert.ok(publicAppScriptSource.includes("'work_search_selection'"));
+assert.ok(publicAppScriptSource.includes('work_id: workId'));
 assert.ok(publicAppScriptSource.includes("normalize('NFKC')"));
 assert.ok(publicAppScriptSource.includes('getDictionaryExampleNavigationStart'));
+assert.ok(mahlerPageSource.includes("workId: 'gm_all'"));
+assert.ok(mahlerPageSource.includes("workTitle: 'マーラーの全ての楽曲'"));
+assert.ok(mahlerPageSource.includes('workSelections: getMahlerWorkAnalyticsSelections(works)'));
+assert.ok(workSearchScriptSource.includes('function getOperaWorkAnalyticsSelection'));
+assert.strictEqual(
+  (workSearchScriptSource.match(/workSelections: getOperaWorkAnalyticsSelection/g) || []).length,
+  5
+);
+
+function evaluateWorkSelectionTracking(source) {
+  const helperStart = source.indexOf('function trackSearchResults');
+  const endMarker = 'window.trackSearchResults = trackSearchResults;';
+  const helperEnd = source.indexOf(endMarker, helperStart) + endMarker.length;
+  assert.ok(helperStart >= 0 && helperEnd > helperStart);
+  const calls = [];
+  const trackingContext = {
+    Array,
+    Object,
+    Set,
+    String,
+    URLSearchParams,
+    getSearchResultCount: () => 4,
+    window: {
+      location: {
+        pathname: '/gaswebapp-manual/mahler-search-app/mahler.html',
+        search: ''
+      },
+      getAnalyticsPagePath: () => '/gaswebapp-manual/mahler-search-app/mahler.html',
+      gtag: (...args) => calls.push(args)
+    }
+  };
+  vm.createContext(trackingContext);
+  vm.runInContext(source.slice(helperStart, helperEnd), trackingContext);
+  trackingContext.trackSearchResults({
+    searchTerm: 'works:test',
+    searchType: 'gm_work',
+    resultCount: 4,
+    workSelections: [
+      { composer: 'GM', workId: 'gm_1', workTitle: '交響曲第1番' },
+      { composer: 'GM', workId: 'gm_2', workTitle: '交響曲第2番' },
+      { composer: 'GM', workId: 'gm_1', workTitle: '交響曲第1番' }
+    ],
+    params: { composer: 'GM' }
+  });
+  return calls;
+}
+
+const workSelectionCalls = evaluateWorkSelectionTracking(publicAppScriptSource);
+assert.strictEqual(workSelectionCalls.length, 3);
+assert.strictEqual(workSelectionCalls[0][1], 'view_search_results');
+assert.strictEqual(workSelectionCalls[1][1], 'work_search_selection');
+assert.strictEqual(workSelectionCalls[1][2].work_id, 'gm_1');
+assert.strictEqual(workSelectionCalls[2][2].work_id, 'gm_2');
+
+function evaluateZeroResultWorkSelectionTracking(source) {
+  const helperStart = source.indexOf('function trackSearchResults');
+  const endMarker = 'window.trackSearchResults = trackSearchResults;';
+  const helperEnd = source.indexOf(endMarker, helperStart) + endMarker.length;
+  const calls = [];
+  const trackingContext = {
+    Array,
+    Object,
+    Set,
+    String,
+    URLSearchParams,
+    getSearchResultCount: () => 0,
+    window: {
+      location: {
+        pathname: '/gaswebapp-manual/mahler-search-app/mahler.html',
+        search: ''
+      },
+      getAnalyticsPagePath: () => '/gaswebapp-manual/mahler-search-app/mahler.html',
+      gtag: (...args) => calls.push(args)
+    }
+  };
+  vm.createContext(trackingContext);
+  vm.runInContext(source.slice(helperStart, helperEnd), trackingContext);
+  trackingContext.trackSearchResults({
+    searchTerm: 'works:ALL',
+    searchType: 'gm_work',
+    resultCount: 0,
+    workSelections: [
+      { composer: 'GM', workId: 'gm_all', workTitle: 'マーラーの全ての楽曲' }
+    ],
+    params: { composer: 'GM' }
+  });
+  return calls;
+}
+
+const zeroResultWorkSelectionCalls = evaluateZeroResultWorkSelectionTracking(
+  publicAppScriptSource
+);
+assert.strictEqual(zeroResultWorkSelectionCalls.length, 2);
+assert.strictEqual(zeroResultWorkSelectionCalls[0][1], 'search_no_results');
+assert.strictEqual(zeroResultWorkSelectionCalls[1][1], 'work_search_selection');
+assert.strictEqual(zeroResultWorkSelectionCalls[1][2].work_id, 'gm_all');
 
 function evaluateDictionaryExampleTiming(source, storedValue, now, timeOrigin) {
   const helperStart = source.indexOf('function normalizeDictionaryExampleTimingTerm');

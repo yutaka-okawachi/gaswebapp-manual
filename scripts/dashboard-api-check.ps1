@@ -111,7 +111,8 @@ function Test-DashboardApiPayload {
         "pages",
         "dictionaryExampleMoves",
         "dictionaryExamplePerformance",
-        "terms"
+        "terms",
+        "works"
     )
     foreach ($key in $requiredTopLevel) {
         if (-not (Test-DashboardHasProperty -Object $data -Name $key)) {
@@ -119,7 +120,7 @@ function Test-DashboardApiPayload {
         }
     }
 
-    if ([int]$data.schemaVersion -ne 6) {
+    if ([int]$data.schemaVersion -ne 7) {
         return New-DashboardApiCheckResult -Success $false -Period $ExpectedPeriod -Message "Unexpected schemaVersion"
     }
     if ([int]$data.period -ne $ExpectedPeriod) {
@@ -142,6 +143,7 @@ function Test-DashboardApiPayload {
     $dictionaryExampleMoves = @($data.dictionaryExampleMoves)
     $dictionaryExamplePerformance = $data.dictionaryExamplePerformance
     $terms = @($data.terms)
+    $works = @($data.works)
     if ($daily.Count -ne $ExpectedPeriod) {
         return New-DashboardApiCheckResult -Success $false -Period $ExpectedPeriod -Message "daily length mismatch"
     }
@@ -156,6 +158,9 @@ function Test-DashboardApiPayload {
     }
     if ($dictionaryExampleMoves.Count -ne 3) {
         return New-DashboardApiCheckResult -Success $false -Period $ExpectedPeriod -Message "dictionaryExampleMoves length mismatch"
+    }
+    if ($works.Count -gt 50) {
+        return New-DashboardApiCheckResult -Success $false -Period $ExpectedPeriod -Message "works length exceeds limit"
     }
     if (
         -not (Test-DashboardHasProperty -Object $dictionaryExamplePerformance -Name "sampleCount") -or
@@ -414,6 +419,22 @@ function Test-DashboardApiPayload {
             ) {
                 return New-DashboardApiCheckResult -Success $false -Period $ExpectedPeriod -Message "Invalid term page item"
             }
+        }
+    }
+
+    foreach ($work in $works) {
+        foreach ($key in @("workId", "workTitle", "composer", "searches")) {
+            if (-not (Test-DashboardHasProperty -Object $work -Name $key)) {
+                return New-DashboardApiCheckResult -Success $false -Period $ExpectedPeriod -Message "Invalid work item"
+            }
+        }
+        if (
+            [string]::IsNullOrWhiteSpace([string]$work.workId) -or
+            [string]::IsNullOrWhiteSpace([string]$work.workTitle) -or
+            [string]$work.composer -notin @("Mahler", "Wagner", "R. Strauss") -or
+            -not (Test-DashboardNonNegativeInteger -Value $work.searches)
+        ) {
+            return New-DashboardApiCheckResult -Success $false -Period $ExpectedPeriod -Message "Invalid work item value"
         }
     }
 
