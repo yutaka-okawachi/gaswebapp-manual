@@ -142,4 +142,20 @@ assert.match(
     'page description links should match HOME breadcrumb link style'
 );
 
+[
+    'mahler-search-app/richard_wagner.html',
+    'mahler-search-app/richard_strauss.html'
+].forEach(relativePath => {
+    const page = read(relativePath);
+    assert.doesNotMatch(page, /条件を指定して検索/, 'RW/RS descriptions should not contain 条件を指定して検索');
+});
+
+const otherPage = read('mahler-search-app/other.html');
+assert.match(otherPage, /id="score-mahler"/, 'other.html should have score-mahler id anchor');
+
+const mahlerPage = read('mahler-search-app/mahler.html');
+assert.match(mahlerPage, /score-info-banner/, 'mahler.html should render score-info-banner');
+assert.match(mahlerPage, /other\.html#score-mahler/, 'mahler.html should link to other.html#score-mahler');
+assert.match(mahlerPage, /楽譜情報\(Score information\)/, 'mahler.html should contain score information link text');
+
 console.log('Page description font tests passed.');
