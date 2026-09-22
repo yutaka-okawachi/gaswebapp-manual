@@ -165,22 +165,92 @@ function trackSearchResults(options) {
 }
 window.trackSearchResults = trackSearchResults;
 
+function shouldObserveUnregisteredResultTermSearch(options) {
+    if (!options || !Number.isInteger(options.resultCount) || options.resultCount <= 0) return false;
+
+    const searchTerm = String(options.searchTerm || '').normalize('NFC').trim();
+    if (!searchTerm || searchTerm.length > 120) return false;
+
+    const queryKey = typeof dictionaryTermIndexKey === 'function'
+        ? dictionaryTermIndexKey(searchTerm)
+        : '';
+    if (queryKey && options.termsIndex && options.termsIndex[queryKey]) return false;
+
+    if (typeof getDictionaryTermResolution === 'function') {
+        const resolution = getDictionaryTermResolution(searchTerm, options.termsIndex);
+        if (resolution) return false;
+    }
+    return true;
+}
+window.shouldObserveUnregisteredResultTermSearch = shouldObserveUnregisteredResultTermSearch;
+
+function createUnregisteredResultTermObservationEventId() {
+    if (window.crypto && typeof window.crypto.randomUUID === 'function') {
+        return window.crypto.randomUUID();
+    }
+    return `${Date.now().toString(16)}-${Math.random().toString(16).slice(2)}-${Math.random().toString(16).slice(2)}`;
+}
+
+async function observeUnregisteredResultTermSearch(options, pageName) {
+    if (!shouldObserveUnregisteredResultTermSearch(options)) return false;
+    if (window.__LOCAL_PREVIEW__) return false;
+    if (typeof window.isAdminDeviceOptOut === 'function' && window.isAdminDeviceOptOut()) {
+        return false;
+    }
+    if (GAS_NOTIFICATION_URL === 'YOUR_GAS_WEB_APP_URL_HERE' || !GAS_NOTIFICATION_URL) {
+        return false;
+    }
+
+    try {
+        await fetch(GAS_NOTIFICATION_URL, {
+            method: 'POST',
+            mode: 'no-cors',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                action: 'observe_unregistered_result_term',
+                term: String(options.searchTerm || '').normalize('NFC').trim(),
+                page: pageName,
+                resultCount: options.resultCount,
+                eventId: createUnregisteredResultTermObservationEventId()
+            })
+        });
+        return true;
+    } catch (error) {
+        console.error('検索結果にある未登録語の観測を送信できませんでした．', error);
+        return false;
+    }
+}
+window.observeUnregisteredResultTermSearch = observeUnregisteredResultTermSearch;
+
 function escapeRegExpLiteral(value) {
     return String(value).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 
 function createTermHighlightRegex(normalizedQuery, matchMode) {
-    let pattern = escapeRegExpLiteral(normalizedQuery);
-    pattern = pattern.split('ae').join('(?:ae|ä)');
-    pattern = pattern.split('oe').join('(?:oe|ö)');
-    pattern = pattern.split('ue').join('(?:ue|ü)');
-    pattern = pattern.split('ss').join('(?:ss|ß)');
+    return createTermHighlightRegexForQueries([normalizedQuery], matchMode);
+}
+
+function createTermHighlightRegexForQueries(queries, matchMode) {
+    const patterns = Array.from(new Set((queries || []).map(normalizeString).filter(Boolean)))
+        .map(query => {
+            let pattern = escapeRegExpLiteral(query);
+            pattern = pattern.split('ae').join('(?:ae|ä)');
+            pattern = pattern.split('oe').join('(?:oe|ö)');
+            pattern = pattern.split('ue').join('(?:ue|ü)');
+            pattern = pattern.split('ss').join('(?:ss|ß)');
+            return pattern;
+        })
+        .sort((a, b) => b.length - a.length);
+    const pattern = patterns.length > 0 ? `(?:${patterns.join('|')})` : '(?!)';
     if (matchMode === 'exact') {
         return new RegExp(`(?<![\\p{L}\\p{N}])(${pattern})(?![\\p{L}\\p{N}])(?![^<]*>)`, 'giu');
     }
     return new RegExp(`(${pattern})(?![^<]*>)`, 'gi');
 }
 window.createTermHighlightRegex = createTermHighlightRegex;
+window.createTermHighlightRegexForQueries = createTermHighlightRegexForQueries;
 
 
 window.matchesTermQuery = matchesTermQuery;

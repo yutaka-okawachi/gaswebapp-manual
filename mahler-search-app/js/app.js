@@ -37,6 +37,111 @@ function matchesTermQuery(value, query, matchMode) {
   return false;
 }
 
+function dictionaryTermIndexKey(value) {
+  return normalizeString(String(value || ''))
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+}
+
+function dictionaryTermEntryId(entry) {
+  return typeof entry === 'string' ? entry : entry && entry.id;
+}
+
+function getDictionaryTermResolution(query, termsIndex) {
+  const originalQuery = String(query || '').trim();
+  const queryKey = dictionaryTermIndexKey(originalQuery);
+  const entry = queryKey && termsIndex ? termsIndex[queryKey] : null;
+  if (!entry || typeof entry !== 'object' || !entry.canonical) return null;
+
+  const rawType = String(entry.type || '').trim();
+  const upperType = rawType.toUpperCase();
+  let category = 'ALIAS';
+  if (
+    ['格変化形', '複数形', '過去分詞', '活用形', '変化形', '語形'].includes(rawType) ||
+    upperType === 'INFLECTION'
+  ) {
+    category = 'INFLECTION';
+  } else if (
+    ['旧綴り', '別綴り', '表記ゆれ', '異綴り'].includes(rawType) ||
+    upperType === 'ORTHOGRAPHIC_VARIANT'
+  ) {
+    category = 'ORTHOGRAPHIC_VARIANT';
+  } else if (['誤入力', '誤記'].includes(rawType) || upperType === 'TYPO') {
+    category = 'TYPO';
+  }
+
+  return {
+    query: originalQuery,
+    canonical: String(entry.canonical),
+    type: rawType,
+    category,
+    id: dictionaryTermEntryId(entry)
+  };
+}
+
+function escapeTermResolutionHtml(value) {
+  return String(value || '').replace(/[&<>"']/g, character => ({
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#39;'
+  })[character]);
+}
+
+function buildTermResolutionNotice(query, termsIndex, resultCount) {
+  const resolution = getDictionaryTermResolution(query, termsIndex);
+  if (!resolution) return '';
+
+  const escapedQuery = escapeTermResolutionHtml(resolution.query);
+  const escapedCanonical = escapeTermResolutionHtml(resolution.canonical);
+  if (resolution.category === 'TYPO') {
+    if (Number(resultCount) !== 0) return '';
+    const href = `?q=${encodeURIComponent(resolution.canonical)}`;
+    return `<p class="term-resolution-notice term-resolution-suggestion">もしかして：<a href="${href}">${escapedCanonical}</a></p>`;
+  }
+
+  const relation = resolution.category === 'INFLECTION'
+    ? '語形'
+    : resolution.category === 'ORTHOGRAPHIC_VARIANT' ? '別綴り' : '対応する語形';
+  return `<p class="term-resolution-notice">「${escapedQuery}」は「${escapedCanonical}」の${relation}として検索している．</p>`;
+}
+
+function getDictionaryExampleSearchQueries(query, termsIndex, isDictionaryExample) {
+  const originalQuery = String(query || '').trim();
+  if (!originalQuery || !isDictionaryExample || !termsIndex) return originalQuery ? [originalQuery] : [];
+
+  const queryKey = dictionaryTermIndexKey(originalQuery);
+  const targetId = dictionaryTermEntryId(termsIndex[queryKey]);
+  if (!queryKey || !targetId) return [originalQuery];
+
+  const queries = [originalQuery];
+  Object.keys(termsIndex).forEach(key => {
+    const entry = termsIndex[key];
+    if (dictionaryTermEntryId(entry) !== targetId || !entry || typeof entry !== 'object') return;
+    if (entry.original) queries.push(String(entry.original));
+  });
+
+  const seen = new Set();
+  return queries.filter(candidate => {
+    const normalized = normalizeString(candidate);
+    if (!normalized || seen.has(normalized)) return false;
+    seen.add(normalized);
+    return true;
+  });
+}
+
+function matchesAnyTermQuery(value, queries, matchMode) {
+  return (queries || []).some(query => matchesTermQuery(value, query, matchMode));
+}
+
+if (typeof window !== 'undefined') {
+  window.getDictionaryTermResolution = getDictionaryTermResolution;
+  window.buildTermResolutionNotice = buildTermResolutionNotice;
+  window.getDictionaryExampleSearchQueries = getDictionaryExampleSearchQueries;
+  window.matchesAnyTermQuery = matchesAnyTermQuery;
+}
+
 
 // ---- frontend/state-and-notifications.js ----
 // app.js
@@ -206,22 +311,92 @@ function trackSearchResults(options) {
 }
 window.trackSearchResults = trackSearchResults;
 
+function shouldObserveUnregisteredResultTermSearch(options) {
+    if (!options || !Number.isInteger(options.resultCount) || options.resultCount <= 0) return false;
+
+    const searchTerm = String(options.searchTerm || '').normalize('NFC').trim();
+    if (!searchTerm || searchTerm.length > 120) return false;
+
+    const queryKey = typeof dictionaryTermIndexKey === 'function'
+        ? dictionaryTermIndexKey(searchTerm)
+        : '';
+    if (queryKey && options.termsIndex && options.termsIndex[queryKey]) return false;
+
+    if (typeof getDictionaryTermResolution === 'function') {
+        const resolution = getDictionaryTermResolution(searchTerm, options.termsIndex);
+        if (resolution) return false;
+    }
+    return true;
+}
+window.shouldObserveUnregisteredResultTermSearch = shouldObserveUnregisteredResultTermSearch;
+
+function createUnregisteredResultTermObservationEventId() {
+    if (window.crypto && typeof window.crypto.randomUUID === 'function') {
+        return window.crypto.randomUUID();
+    }
+    return `${Date.now().toString(16)}-${Math.random().toString(16).slice(2)}-${Math.random().toString(16).slice(2)}`;
+}
+
+async function observeUnregisteredResultTermSearch(options, pageName) {
+    if (!shouldObserveUnregisteredResultTermSearch(options)) return false;
+    if (window.__LOCAL_PREVIEW__) return false;
+    if (typeof window.isAdminDeviceOptOut === 'function' && window.isAdminDeviceOptOut()) {
+        return false;
+    }
+    if (GAS_NOTIFICATION_URL === 'YOUR_GAS_WEB_APP_URL_HERE' || !GAS_NOTIFICATION_URL) {
+        return false;
+    }
+
+    try {
+        await fetch(GAS_NOTIFICATION_URL, {
+            method: 'POST',
+            mode: 'no-cors',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                action: 'observe_unregistered_result_term',
+                term: String(options.searchTerm || '').normalize('NFC').trim(),
+                page: pageName,
+                resultCount: options.resultCount,
+                eventId: createUnregisteredResultTermObservationEventId()
+            })
+        });
+        return true;
+    } catch (error) {
+        console.error('検索結果にある未登録語の観測を送信できませんでした．', error);
+        return false;
+    }
+}
+window.observeUnregisteredResultTermSearch = observeUnregisteredResultTermSearch;
+
 function escapeRegExpLiteral(value) {
     return String(value).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 
 function createTermHighlightRegex(normalizedQuery, matchMode) {
-    let pattern = escapeRegExpLiteral(normalizedQuery);
-    pattern = pattern.split('ae').join('(?:ae|ä)');
-    pattern = pattern.split('oe').join('(?:oe|ö)');
-    pattern = pattern.split('ue').join('(?:ue|ü)');
-    pattern = pattern.split('ss').join('(?:ss|ß)');
+    return createTermHighlightRegexForQueries([normalizedQuery], matchMode);
+}
+
+function createTermHighlightRegexForQueries(queries, matchMode) {
+    const patterns = Array.from(new Set((queries || []).map(normalizeString).filter(Boolean)))
+        .map(query => {
+            let pattern = escapeRegExpLiteral(query);
+            pattern = pattern.split('ae').join('(?:ae|ä)');
+            pattern = pattern.split('oe').join('(?:oe|ö)');
+            pattern = pattern.split('ue').join('(?:ue|ü)');
+            pattern = pattern.split('ss').join('(?:ss|ß)');
+            return pattern;
+        })
+        .sort((a, b) => b.length - a.length);
+    const pattern = patterns.length > 0 ? `(?:${patterns.join('|')})` : '(?!)';
     if (matchMode === 'exact') {
         return new RegExp(`(?<![\\p{L}\\p{N}])(${pattern})(?![\\p{L}\\p{N}])(?![^<]*>)`, 'giu');
     }
     return new RegExp(`(${pattern})(?![^<]*>)`, 'gi');
 }
 window.createTermHighlightRegex = createTermHighlightRegex;
+window.createTermHighlightRegexForQueries = createTermHighlightRegexForQueries;
 
 
 window.matchesTermQuery = matchesTermQuery;
@@ -1850,15 +2025,17 @@ window.searchMahlerTermsLocal = function (query, resultMeta, matchMode) {
     const data = window.appData.mahler;
     if (!data) return '<div class="result-message">データが読み込まれていません。</div>';
 
-    const normalizedQuery = normalizeString(query);
+    const isDictionaryExample = new URLSearchParams(window.location.search).get('source') === 'dictionary_example';
+    const searchQueries = getDictionaryExampleSearchQueries(query, window.appData.dic_terms_index, isDictionaryExample);
     const results = data.filter(row => {
         const deNormalized = row.de_normalized || row[1];
-        return deNormalized && matchesTermQuery(deNormalized, normalizedQuery, matchMode);
+        return deNormalized && matchesAnyTermQuery(deNormalized, searchQueries, matchMode);
     });
 
     if (results.length === 0) {
         if (resultMeta) resultMeta.resultCount = 0;
-        return '<div class="result-message">該当するデータが見つかりませんでした。</div>';
+        const notice = buildTermResolutionNotice(query, window.appData.dic_terms_index, 0);
+        return `${notice}<div class="result-message">該当するデータが見つかりませんでした。</div>`;
     }
 
     let resultHTML = '';
@@ -1908,7 +2085,10 @@ window.searchMahlerTermsLocal = function (query, resultMeta, matchMode) {
     }
 
     if (resultMeta) resultMeta.resultCount = totalMatches;
-    return totalMatches === 0 ? '<div class="result-message">該当するデータが見つかりませんでした。</div>' : `<div>${totalMatches}件ありました。</div>${resultHTML}`;
+    const notice = buildTermResolutionNotice(query, window.appData.dic_terms_index, totalMatches);
+    return totalMatches === 0
+        ? `${notice}<div class="result-message">該当するデータが見つかりませんでした。</div>`
+        : `${notice}<div>${totalMatches}件ありました。</div>${resultHTML}`;
 };
 
 // RS Terms Search Local
@@ -1927,22 +2107,24 @@ function searchGenericTermsLocal(query, dataKey, type, resultMeta, matchMode) {
     const data = window.appData[dataKey];
     if (!data) return '<div class="result-message">データが読み込まれていません。</div>';
 
-    const normalizedQuery = normalizeString(query);
+    const isDictionaryExample = new URLSearchParams(window.location.search).get('source') === 'dictionary_example';
+    const searchQueries = getDictionaryExampleSearchQueries(query, window.appData.dic_terms_index, isDictionaryExample);
     
     // Filter data
     const filteredData = data.filter(row => {
         const de = row.de || '';
         const deNormalized = row.de_normalized || normalizeString(de);
         const pageExists = row.page !== null && row.page !== undefined && String(row.page).trim() !== '';
-        return matchesTermQuery(deNormalized, normalizedQuery, matchMode) && pageExists;
+        return matchesAnyTermQuery(deNormalized, searchQueries, matchMode) && pageExists;
     });
 
     if (filteredData.length === 0) {
         if (resultMeta) resultMeta.resultCount = 0;
-        return '<div class="result-message">該当するデータが見つかりませんでした。</div>';
+        const notice = buildTermResolutionNotice(query, window.appData.dic_terms_index, 0);
+        return `${notice}<div class="result-message">該当するデータが見つかりませんでした。</div>`;
     }
 
-    const highlightRegex = createTermHighlightRegex(normalizedQuery, matchMode);
+    const highlightRegex = createTermHighlightRegexForQueries(searchQueries, matchMode);
 
     // Group by 'de' text
     const groupedByDe = filteredData.reduce((acc, row) => {
@@ -1957,7 +2139,8 @@ function searchGenericTermsLocal(query, dataKey, type, resultMeta, matchMode) {
     // 見出し語の件数を表示
     const headwordCount = Object.keys(groupedByDe).length;
     if (resultMeta) resultMeta.resultCount = headwordCount;
-    let html = `<div class="result-message">${headwordCount}件ありました。</div>`;
+    const notice = buildTermResolutionNotice(query, window.appData.dic_terms_index, headwordCount);
+    let html = `${notice}<div class="result-message">${headwordCount}件ありました。</div>`;
     
     const sortedDeKeys = Object.keys(groupedByDe).sort((a, b) => a.localeCompare(b, 'de'));
     
@@ -1984,7 +2167,7 @@ function searchGenericTermsLocal(query, dataKey, type, resultMeta, matchMode) {
         let resultDe = linkTermsInTranslation(de, window.appData.dic_terms_index);
         
         // Apply Highlight
-        if (normalizedQuery.length >= 2) {
+        if (searchQueries.some(searchQuery => normalizeString(searchQuery).length >= 2)) {
              resultDe = resultDe.replace(highlightRegex, '<span style="color: red;">$1</span>');
         }
 

@@ -47,4 +47,9 @@ function onOpen() {
   ui.createMenu('📊 検索履歴グラフ')
     .addItem('🔄 グラフを最新に更新する', 'updateSearchHistoryCharts')
     .addToUi();
+
+  ui.createMenu('📝 GPT草案')
+    .addItem('選択行の草案を作成', 'generateGptDraftForActiveCandidate')
+    .addItem('設定を確認', 'showGptDraftSettings')
+    .addToUi();
 }

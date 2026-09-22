@@ -67,9 +67,9 @@
 
     <link rel="icon" href="https://yutaka-okawachi.github.io/gaswebapp-manual/favicon.png">
     <link rel="apple-touch-icon" href="https://yutaka-okawachi.github.io/gaswebapp-manual/apple-touch-icon.png">
-    <link rel="preload" href="css/common.css?v=4889e2aedb54" as="style">
-    <link rel="stylesheet" href="css/common.css?v=4889e2aedb54">
-    <script src="js/app.js?v=038d6cee0230"></script>
+    <link rel="preload" href="css/common.css?v=95b8b873a073" as="style">
+    <link rel="stylesheet" href="css/common.css?v=95b8b873a073">
+    <script src="js/app.js?v=c8f78100f431"></script>
 
     <script>
         /*******************************************************************
@@ -162,18 +162,20 @@
             if (!data) return '<div class="result-message">データが読み込まれていません。</div>';
 
             // Allow periods in search query normalization
-            const normalizedQuery = normalizeString(query);
+            const isDictionaryExample = new URLSearchParams(window.location.search).get('source') === 'dictionary_example';
+            const searchQueries = window.getDictionaryExampleSearchQueries(query, window.appData.dic_terms_index, isDictionaryExample);
             const results = data.filter(row => {
                 const deNormalized = row.de_normalized || row[1];
-                return deNormalized && window.matchesTermQuery(deNormalized, normalizedQuery, matchMode);
+                return deNormalized && window.matchesAnyTermQuery(deNormalized, searchQueries, matchMode);
             });
 
             if (results.length === 0) {
                 if (resultMeta) resultMeta.resultCount = 0;
-                return '<div class="result-message">該当するデータが見つかりませんでした。</div>';
+                const notice = window.buildTermResolutionNotice(query, window.appData.dic_terms_index, 0);
+                return `${notice}<div class="result-message">該当するデータが見つかりませんでした。</div>`;
             }
 
-            const highlightRegex = window.createTermHighlightRegex(normalizedQuery, matchMode);
+            const highlightRegex = window.createTermHighlightRegexForQueries(searchQueries, matchMode);
 
             let resultHTML = '';
 
@@ -211,7 +213,7 @@
                     let resultDe = window.linkTermsInTranslation ? window.linkTermsInTranslation(deData, window.appData.dic_terms_index) : escapeHtmlWithBreaks(deData);
                     
                     // 2. Apply Highlight
-                    if (normalizedQuery.length >= 2) {
+                    if (searchQueries.some(searchQuery => normalizeString(searchQuery).length >= 2)) {
                          resultDe = resultDe.replace(highlightRegex, '<span style="color: red;">$1</span>');
                     }
 
@@ -228,7 +230,8 @@
             }
 
             if (resultMeta) resultMeta.resultCount = results.length;
-            return `<div class="result-message">${results.length}件ありました。</div>${resultHTML}`;
+            const notice = window.buildTermResolutionNotice(query, window.appData.dic_terms_index, results.length);
+            return `${notice}<div class="result-message">${results.length}件ありました。</div>${resultHTML}`;
         };
 
         // DOM構築後に動作をセット
@@ -242,7 +245,11 @@
                 resultsDiv.innerHTML = '<p class="loading">検索データを読み込んでいます・・・</p>';
             }
             // 入力フィールドに文字を入力するたびにイベント発火
-            inputField.addEventListener('input', debouncedOnTermInput);
+            inputField.addEventListener('input', event => {
+                const aliasNotice = document.getElementById('dictionaryExampleAliasNotice');
+                if (aliasNotice) aliasNotice.hidden = true;
+                debouncedOnTermInput(event);
+            });
             inputField.addEventListener('focus', () => debouncedOnTermInput({ target: inputField }));
             document.querySelectorAll('input[name="termMatchMode"]').forEach(radio => {
                 radio.addEventListener('change', () => debouncedOnTermInput({ target: inputField }));
@@ -269,6 +276,16 @@
                     resultsDiv.innerHTML = '<p class="result-message">検索データを読み込めませんでした。ページを再読み込みしてください。</p>';
                     return;
                 }
+            }
+
+            if (
+                usedDictionaryExampleData &&
+                window.getDictionaryExampleSearchQueries(rawQuery, window.appData.dic_terms_index, true).length > 1
+            ) {
+                const exactRadio = document.querySelector('input[name="termMatchMode"][value="exact"]');
+                if (exactRadio) exactRadio.checked = true;
+                const aliasNotice = document.getElementById('dictionaryExampleAliasNotice');
+                if (aliasNotice) aliasNotice.hidden = false;
             }
 
             // ページ読み込み時に全用語リストを取得
@@ -317,9 +334,9 @@
             }
 
             const normalizedInput = normalizeString(input);
-            const matchMode = getTermMatchMode();
             const matches = termEntries
-                .filter(entry => window.matchesTermQuery(entry.normalized, normalizedInput, matchMode))
+                // 予測候補は入力途中でも表示し，検索実行時だけ選択中の一致方法を適用する．
+                .filter(entry => window.matchesTermQuery(entry.normalized, normalizedInput, 'partial'))
                 .sort((a, b) => {
                     // 前方一致を優先
                     const aStarts = a.normalized.startsWith(normalizedInput);
@@ -396,6 +413,13 @@
                         resultRoot: resultsDiv,
                         params: { composer: 'GM', query_length: query.length }
                     });
+                }
+                if (typeof window.observeUnregisteredResultTermSearch === 'function') {
+                    window.observeUnregisteredResultTermSearch({
+                        searchTerm: query,
+                        resultCount: resultMeta.resultCount,
+                        termsIndex: window.appData.dic_terms_index
+                    }, 'terms_search.html');
                 }
 
                 // Send notification
@@ -507,6 +531,7 @@
             <label><input type="radio" name="termMatchMode" value="partial" checked>部分一致</label>
             <label><input type="radio" name="termMatchMode" value="exact">完全一致</label>
         </fieldset>
+        <p id="dictionaryExampleAliasNotice" class="dictionary-example-alias-notice" hidden>用語集から移動した検索では，検索欄の見出し語に加え，登録済みの語形・別綴りも独立した単語として検索対象となる．</p>
         <input type="text" id="termInput" list="termSuggestions" placeholder="検索するドイツ語を入力">
         <datalist id="termSuggestions"></datalist>
 

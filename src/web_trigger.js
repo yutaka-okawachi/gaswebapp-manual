@@ -22,6 +22,24 @@ const pageNameMap = {
   'other.html': 'その他 (Other)'
 };
 
+const UNREGISTERED_RESULT_TERM_SHEET_NAME = '検索結果未登録語_正規化テスト';
+const UNREGISTERED_TERM_CANDIDATE_SHEET_NAME = '未登録語候補_正規化テスト';
+const JEV_REVIEW_SHEET_NAME = 'Jev判定_正規化テスト';
+const UNREGISTERED_RESULT_TERM_HEADERS = [
+  '観測ID', '検索語', '正規化語形', '初回検索日時', '最終検索日時',
+  '検索回数', '検索ページ', '最大検索結果件数', '処理状態', 'Jev判定ID', '備考'
+];
+const UNREGISTERED_TERM_CANDIDATE_HEADERS = [
+  '候補ID', '検索語', '正規化語形', '初回検索日時', '最終検索日時',
+  '検索回数', '検索ページ', 'Jev判定', '分類確信度', '類似する既存語候補',
+  '状態', '管理者メモ', 'GPT草案状態', 'GPT草案', '元判定ID', '更新日時',
+  '草案基本形', '草案品詞', '草案語形・変化形', '草案訳語', '草案説明', '草案分類',
+  '草案類似語', '草案備考', 'GPT生成日時', 'GPTモデル', '草案確認', '草案修正メモ'
+];
+const ALLOWED_UNREGISTERED_RESULT_TERM_PAGES = Object.freeze([
+  'terms_search.html', 'rs_terms_search.html', 'rw_terms_search.html'
+]);
+
 const operaNameMap_RS = {
   'guntram': 'Guntram, Op.25', 'feuersnot': 'Feuersnot, Op.50', 'salome': 'Salome, Op.54',
   'elektra': 'Elektra, Op.58', 'rosenkavalier': 'Der Rosenkavalier, Op.59', 'ariadne': 'Ariadne auf Naxos, Op.60',
@@ -221,6 +239,13 @@ function doPost(e) {
     if (data.api === 'dashboard') {
         return handleDashboardAnalyticsRequest(data);
     }
+
+    // Public route for searched terms that returned results but are absent from
+    // the dictionary and registered aliases. This never sends mail or
+    // writes to the production search-history sheet.
+    if (data.action === 'observe_unregistered_result_term' && !data.token) {
+        return handleUnregisteredResultTermObservation(data);
+    }
     
     // Route 1: Search Notification
     if (data.work && data.page && !data.token && !data.action) {
@@ -257,6 +282,8 @@ function handleRequest(params) {
       result = Object.assign({ status: 'success' }, exportAllDataToJson({ requestId: params.requestId }));
     } else if (action === 'syncInfo') {
       result = { status: 'success', schemaVersion: 1, sourceHash: SYNC_SOURCE_HASH };
+    } else if (action === 'promoteApprovedNewTermCandidates') {
+      result = Object.assign({ status: 'success' }, promoteApprovedNewTermCandidates());
     } else if (action === 'exportDic' || action === 'exportAllDataToJson') {
       throw new Error('公開処理はPCの sync-data.ps1 から実行してください。');
     } else if (action === "ping") {
@@ -267,6 +294,254 @@ function handleRequest(params) {
     return createJsonResponse(result);
   } catch (error) {
     return createJsonResponse({ status: "error", error: error.toString() }, 500);
+  }
+}
+
+function normalizeObservedTerm(value) {
+  return String(value || '')
+    .normalize('NFC')
+    .toLowerCase()
+    .replace(/ä/g, 'ae')
+    .replace(/ö/g, 'oe')
+    .replace(/ü/g, 'ue')
+    .replace(/ß/g, 'ss')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+function sanitizeUnregisteredResultTermObservation(data) {
+  const term = String(data && data.term || '').normalize('NFC').replace(/\s+/g, ' ').trim();
+  const page = String(data && data.page || '').trim();
+  const eventId = String(data && data.eventId || '').trim();
+  if (!term || term.length > 120) throw new Error('検索語が空か，長すぎます．');
+  if (ALLOWED_UNREGISTERED_RESULT_TERM_PAGES.indexOf(page) === -1) throw new Error('対象外の検索ページです．');
+  const resultCount = Number(data && data.resultCount);
+  if (!Number.isInteger(resultCount) || resultCount <= 0 || resultCount > 1000000) {
+    throw new Error('1件以上の有効な検索結果件数が必要です．');
+  }
+  if (!/^[a-f0-9-]{16,80}$/i.test(eventId)) throw new Error('観測イベントIDが不正です．');
+
+  const normalized = normalizeObservedTerm(term);
+  if (!normalized) throw new Error('正規化後の検索語が空です．');
+  return { term: term, normalized: normalized, page: page, resultCount: resultCount, eventId: eventId };
+}
+
+function termRecordId(prefix, normalized) {
+  const bytes = Utilities.computeDigest(
+    Utilities.DigestAlgorithm.SHA_256,
+    normalized,
+    Utilities.Charset.UTF_8
+  );
+  const hex = bytes.map(value => (value + 256).toString(16).slice(-2)).join('');
+  return (prefix ? prefix + '-' : '') + hex.slice(0, 24);
+}
+
+function mergeObservationPages(currentValue, newValue) {
+  const pages = String(currentValue || '').split('，').map(value => value.trim()).filter(Boolean);
+  if (newValue && pages.indexOf(newValue) === -1) pages.push(newValue);
+  return pages.join('，');
+}
+
+function requireSheetWithHeaders(spreadsheet, sheetName, requiredHeaders) {
+  const sheet = spreadsheet.getSheetByName(sheetName);
+  if (!sheet) throw new Error('必要な実験用タブがありません: ' + sheetName);
+  const actual = sheet.getRange(1, 1, 1, requiredHeaders.length).getValues()[0];
+  requiredHeaders.forEach((header, index) => {
+    if (actual[index] !== header) {
+      throw new Error(sheetName + ' の列構成が一致しません: ' + header);
+    }
+  });
+  return sheet;
+}
+
+function handleUnregisteredResultTermObservation(data) {
+  try {
+    const observation = sanitizeUnregisteredResultTermObservation(data);
+    const result = recordUnregisteredResultTermObservation(observation);
+    return createJsonResponse(Object.assign({ status: 'success' }, result));
+  } catch (error) {
+    Logger.log('handleUnregisteredResultTermObservation error: ' + error.toString());
+    return createJsonResponse({ status: 'error', error: error.toString() }, 400);
+  }
+}
+
+function recordUnregisteredResultTermObservation(observation) {
+  const pageTitle = pageNameMap[observation.page];
+  const cache = CacheService.getScriptCache();
+  const cacheKey = 'unregistered-result-term-event-' + termRecordId('', observation.eventId);
+  const lock = LockService.getScriptLock();
+  if (!lock.tryLock(5000)) throw new Error('検索結果未登録語の更新ロックを取得できませんでした．');
+
+  try {
+    if (cache.get(cacheKey)) return { recorded: false, duplicate: true };
+
+    const sheet = requireSheetWithHeaders(
+      SpreadsheetApp.getActiveSpreadsheet(),
+      UNREGISTERED_RESULT_TERM_SHEET_NAME,
+      UNREGISTERED_RESULT_TERM_HEADERS
+    );
+    const now = new Date();
+    const lastRow = sheet.getLastRow();
+    let targetRow = 0;
+    if (lastRow >= 2) {
+      const normalizedValues = sheet.getRange(2, 3, lastRow - 1, 1).getValues();
+      const matchIndex = normalizedValues.findIndex(row => String(row[0] || '') === observation.normalized);
+      if (matchIndex >= 0) targetRow = matchIndex + 2;
+    }
+
+    if (targetRow) {
+      const row = sheet.getRange(targetRow, 1, 1, UNREGISTERED_RESULT_TERM_HEADERS.length).getValues()[0];
+      row[4] = now;
+      row[5] = Math.max(0, Number(row[5]) || 0) + 1;
+      row[6] = mergeObservationPages(row[6], pageTitle);
+      row[7] = Math.max(0, Number(row[7]) || 0, observation.resultCount);
+      sheet.getRange(targetRow, 1, 1, row.length).setValues([row]);
+    } else {
+      sheet.appendRow([
+        termRecordId('observation', observation.normalized),
+        observation.term,
+        observation.normalized,
+        now,
+        now,
+        1,
+        pageTitle,
+        observation.resultCount,
+        '未判定',
+        '',
+        ''
+      ]);
+    }
+
+    cache.put(cacheKey, '1', 5);
+    return { recorded: true, duplicate: false };
+  } finally {
+    lock.releaseLock();
+  }
+}
+
+function promoteApprovedNewTermCandidates() {
+  const lock = LockService.getScriptLock();
+  if (!lock.tryLock(10000)) throw new Error('未登録語候補の更新ロックを取得できませんでした．');
+
+  try {
+    const spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
+    const observationSheet = requireSheetWithHeaders(
+      spreadsheet,
+      UNREGISTERED_RESULT_TERM_SHEET_NAME,
+      UNREGISTERED_RESULT_TERM_HEADERS
+    );
+    const candidateSheet = requireSheetWithHeaders(
+      spreadsheet,
+      UNREGISTERED_TERM_CANDIDATE_SHEET_NAME,
+      UNREGISTERED_TERM_CANDIDATE_HEADERS
+    );
+    const reviewHeaders = [
+      '判定ID', '入力語形', '文脈', '正規化語形', '判定経路', '処理状態',
+      '分類', '対応見出し', '対応見出しID', '分類確信度', '対応確信度',
+      '候補一覧', '人による確認', '確認メモ', '生成日時'
+    ];
+    const reviewSheet = requireSheetWithHeaders(spreadsheet, JEV_REVIEW_SHEET_NAME, reviewHeaders);
+    const observationRows = observationSheet.getLastRow() >= 2
+      ? observationSheet.getRange(2, 1, observationSheet.getLastRow() - 1, UNREGISTERED_RESULT_TERM_HEADERS.length).getValues()
+      : [];
+    const candidateRows = candidateSheet.getLastRow() >= 2
+      ? candidateSheet.getRange(2, 1, candidateSheet.getLastRow() - 1, UNREGISTERED_TERM_CANDIDATE_HEADERS.length).getValues()
+      : [];
+    const reviewRows = reviewSheet.getLastRow() >= 2
+      ? reviewSheet.getRange(2, 1, reviewSheet.getLastRow() - 1, reviewHeaders.length).getValues()
+      : [];
+    const observationByNormalized = new Map();
+    observationRows.forEach((row, index) => {
+      const normalized = normalizeObservedTerm(row[2] || row[1]);
+      if (normalized && !observationByNormalized.has(normalized)) {
+        observationByNormalized.set(normalized, { row: row, sheetRow: index + 2 });
+      }
+    });
+    const candidateByNormalized = new Map();
+    candidateRows.forEach((row, index) => {
+      const normalized = normalizeObservedTerm(row[2] || row[1]);
+      if (normalized && !candidateByNormalized.has(normalized)) {
+        candidateByNormalized.set(normalized, { row: row, sheetRow: index + 2 });
+      }
+    });
+
+    const now = new Date();
+    const processed = new Set();
+    let inserted = 0;
+    let updated = 0;
+    let skipped = 0;
+    reviewRows.forEach(review => {
+      if (
+        review[4] !== 'Jev' || review[5] !== 'ADVISORY' ||
+        review[6] !== 'NEW_TERM_CANDIDATE' || review[12] !== '採用'
+      ) return;
+
+      const normalized = normalizeObservedTerm(review[3] || review[1]);
+      const observed = observationByNormalized.get(normalized);
+      if (!normalized || !observed || processed.has(normalized)) {
+        skipped += 1;
+        return;
+      }
+      processed.add(normalized);
+
+      const existing = candidateByNormalized.get(normalized);
+      if (existing) {
+        const row = existing.row.slice();
+        row[1] = observed.row[1];
+        row[2] = normalized;
+        row[3] = observed.row[3];
+        row[4] = observed.row[4];
+        row[5] = observed.row[5];
+        row[6] = observed.row[6];
+        row[7] = 'NEW_TERM_CANDIDATE';
+        row[8] = review[9];
+        row[9] = review[11];
+        row[14] = review[0];
+        row[15] = now;
+        candidateSheet.getRange(existing.sheetRow, 1, 1, row.length).setValues([row]);
+        updated += 1;
+      } else {
+        candidateSheet.appendRow([
+          termRecordId('candidate', normalized),
+          observed.row[1],
+          normalized,
+          observed.row[3],
+          observed.row[4],
+          observed.row[5],
+          observed.row[6],
+          'NEW_TERM_CANDIDATE',
+          review[9],
+          review[11],
+          '候補',
+          '',
+          '未作成',
+          '',
+          review[0],
+          now,
+          '',
+          '',
+          '',
+          '',
+          '',
+          '',
+          '',
+          '',
+          '',
+          '',
+          '未確認',
+          ''
+        ]);
+        inserted += 1;
+      }
+
+      observed.row[8] = '候補移送済み';
+      observed.row[9] = review[0];
+      observationSheet.getRange(observed.sheetRow, 1, 1, observed.row.length).setValues([observed.row]);
+    });
+
+    return { inserted: inserted, updated: updated, skipped: skipped };
+  } finally {
+    lock.releaseLock();
   }
 }
 

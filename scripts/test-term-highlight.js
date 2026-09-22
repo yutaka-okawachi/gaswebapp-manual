@@ -119,4 +119,26 @@ assert.ok(exactHighlightHtml.includes('Alle <span style="color: red;">ab</span>,
 assert.ok(!exactHighlightHtml.includes('<span style="color: red;">ab</span>er'));
 assert.ok(!exactHighlightHtml.includes('h<span style="color: red;">ab</span>en'));
 
+window.location.search = '?source=dictionary_example';
+window.appData.dic_terms_index = {
+  stuerzen: 'term-stuerzen',
+  stuerzt: { id: 'term-stuerzen', original: 'stürzt' }
+};
+const canonicalExampleHtml = search('stürzen', 'Elektra stürzt zusammen', 'exact');
+assert.ok(
+  canonicalExampleHtml.includes('<span style="color: red;">stürzt</span>'),
+  'dictionary example search should find and highlight a registered form'
+);
+assert.ok(
+  search('stürzen', 'Alle sind bestürzt', 'exact').includes('該当するデータが見つかりませんでした。'),
+  'registered forms should match as independent words in dictionary example searches'
+);
+
+window.location.search = '';
+const ordinaryCanonicalHtml = search('stürzen', 'Elektra stürzt zusammen');
+assert.ok(
+  ordinaryCanonicalHtml.includes('該当するデータが見つかりませんでした。'),
+  'ordinary direct search should not expand registered forms yet'
+);
+
 console.log('term highlight tests: OK');
