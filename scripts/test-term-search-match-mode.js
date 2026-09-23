@@ -85,11 +85,7 @@ cases.forEach(([value, query, mode, expected]) => {
   const page = read(relativePath);
   assert.match(page, /name="termMatchMode" value="partial" checked/);
   assert.match(page, /name="termMatchMode" value="exact"/);
-  assert.match(page, /window\.matchesTermQuery\(entry\.normalized, normalizedInput, 'partial'\)/);
-  assert.ok(
-    !page.includes('window.matchesTermQuery(entry.normalized, normalizedInput, matchMode)'),
-    `${relativePath} suggestions must not inherit the selected result match mode`
-  );
+  assert.match(page, /window\.matchesTermQuery\(entry\.normalized, normalizedInput, matchMode\)/);
   assert.ok(page.includes(`${localFunction}(query, resultMeta, matchMode)`));
   assert.match(page, /js\/app\.js\?v=[a-f0-9]{12}/);
 });

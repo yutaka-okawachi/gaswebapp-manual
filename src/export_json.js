@@ -1,58 +1,5 @@
 // SPREADSHEET_ID is defined in mahler.js
 
-const DICTIONARY_EXPORT_SOURCES = {
-    production: {
-        notesSheetName: 'Notes',
-        aliasSheetName: '語形対応',
-        requireAliasSheet: true
-    },
-    normalizationTest: {
-        notesSheetName: 'Notes_正規化テスト',
-        aliasSheetName: '語形対応_正規化テスト',
-        requireAliasSheet: true
-    }
-};
-
-function getDictionaryExportSource_(exportOptions) {
-    const sourceName = String((exportOptions && exportOptions.dictionarySource) || 'production');
-    const source = DICTIONARY_EXPORT_SOURCES[sourceName];
-    if (!source) throw new Error('未対応の辞書データ元です: ' + sourceName);
-    return Object.assign({ name: sourceName }, source);
-}
-
-function readDictionaryExportData_(ss, exportOptions) {
-    const source = getDictionaryExportSource_(exportOptions);
-    const notesSheet = ss.getSheetByName(source.notesSheetName);
-    if (!notesSheet) throw new Error('辞書シートが欠落しています: ' + source.notesSheetName);
-
-    const notesValues = notesSheet.getDataRange().getValues();
-    if (!notesValues.length || notesValues[0].length < 3) {
-        throw new Error('辞書シートの必須列が不足しています: ' + source.notesSheetName);
-    }
-    const notesData = notesValues.slice(1).map(row => [row[0], row[1], row[2]]);
-
-    let aliasData = [];
-    if (source.aliasSheetName) {
-        const aliasSheet = ss.getSheetByName(source.aliasSheetName);
-        if (!aliasSheet) {
-            if (source.requireAliasSheet) {
-                throw new Error('語形対応シートが欠落しています: ' + source.aliasSheetName);
-            }
-        } else {
-            const aliasValues = aliasSheet.getDataRange().getValues();
-            const header = (aliasValues[0] || []).slice(0, 2).map(value => String(value).trim());
-            if (header[0] !== '語形・別綴り' || header[1] !== '正規見出し') {
-                throw new Error('語形対応シートの列名が不正です: ' + source.aliasSheetName);
-            }
-            aliasData = aliasValues.slice(1)
-                .map(row => [row[0], row[1], row[2], row[3]])
-                .filter(row => String(row[0] || '').trim() && String(row[1] || '').trim());
-        }
-    }
-
-    return { source, notesData, aliasData };
-}
-
 function exportAllDataToJson(options) {
     const settings = options || {};
     const lock = LockService.getScriptLock();
@@ -84,7 +31,6 @@ function buildExportSnapshot_(exportOptions) {
     
     const ss = SpreadsheetApp.openById(SPREADSHEET_ID);
     validateExportSheets_(ss);
-    const dictionaryExport = readDictionaryExportData_(ss, exportOptions);
 
     // 0. Score Info (楽譜情報) - Load first for Publisher info
     const scoreSheet = ss.getSheetByName('楽譜情報');
@@ -257,12 +203,14 @@ function buildExportSnapshot_(exportOptions) {
         });
     }
 
-    // 7. Dictionary Notes and aliases
-    // 通常同期では production（Notes）のみを使う．実験用タブは明示した内部テストでだけ選択できる．
-    const dicNotesJson = dictionaryExport.notesData;
-    const dictionaryAliases = dictionaryExport.aliasData;
-    Logger.log('辞書データ元: ' + dictionaryExport.source.notesSheetName);
-    Logger.log('語形対応データ: ' + dictionaryAliases.length + ' 行');
+    // 7. Dictionary Notes (Notes sheet)
+    const dicNotesSheet = ss.getSheetByName('Notes');
+    let dicNotesJson = [];
+    if (dicNotesSheet) {
+        const data = dicNotesSheet.getDataRange().getValues();
+        // dic.html uses columns A, B, C (German, Translation, Source)
+        dicNotesJson = data.slice(1).map(row => [row[0], row[1], row[2]]);
+    }
 
     // 8. Abbreviation List (略記一覧)
     const abbrSheet = ss.getSheetByName('略記一覧');
@@ -278,16 +226,16 @@ function buildExportSnapshot_(exportOptions) {
         mahler: mahlerJson,
         wagner: rwJson,
         strauss: rsJson
-    }, dictionaryAliases);
+    });
     Logger.log('実例検索用JSON生成完了: ' + Object.keys(dictionaryExampleData.files).length + ' ファイル');
 
     // 10. Generate dic.html (静的HTML生成 - リンク機能付き)
     Logger.log('=== dic.htmlを生成中（リンク機能付き） ===');
-    const dicHtml = generateDicHtml(dicNotesJson, abbrJson, dictionaryExampleData.queryIndex, dictionaryAliases);
+    const dicHtml = generateDicHtml(dicNotesJson, abbrJson, dictionaryExampleData.queryIndex);
     Logger.log('dic.html生成完了: ' + Math.round(dicHtml.length / 1024) + ' KB');
     
     // 11. 用語インデックスを生成
-    const termsIndex = generateDicTermsIndex(dicNotesJson, dictionaryAliases);
+    const termsIndex = generateDicTermsIndex(dicNotesJson);
     Logger.log('dic_terms_index.json生成完了: ' + Object.keys(termsIndex).length + ' 件');
 
     // キャッシュを無効化（サーバーサイド検索用）

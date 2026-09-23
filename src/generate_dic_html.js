@@ -27,10 +27,9 @@ function normalizeForId(term) {
 /**
  * 用語インデックスを生成
  * @param {Array} dicData - 用語データ [[german, translation, source], ...]
- * @param {Array} aliasData - 語形対応データ [[alias, canonical, type, note], ...]
  * @return {Object} 用語インデックス（正規化キー → ID）
  */
-function generateDicTermsIndex(dicData, aliasData) {
+function generateDicTermsIndex(dicData) {
   const termsIndex = {};
   if (!dicData || dicData.length === 0) return termsIndex;
   
@@ -45,27 +44,6 @@ function generateDicTermsIndex(dicData, aliasData) {
           : termId;
       }
     }
-  });
-
-  // 正規見出しを先に登録し，対応先が実在する語形だけを追加する．
-  // 語形側のキーが正規見出しと衝突する場合は，正規見出しを優先する．
-  (aliasData || []).forEach(row => {
-    const alias = String(row && row[0] || '').trim();
-    const canonical = String(row && row[1] || '').trim();
-    const aliasKey = normalizeForId(alias);
-    const canonicalKey = normalizeForId(canonical);
-    const canonicalEntry = termsIndex[canonicalKey];
-    const canonicalId = typeof canonicalEntry === 'string'
-      ? canonicalEntry
-      : canonicalEntry && canonicalEntry.id;
-
-    if (!aliasKey || !canonicalId || termsIndex[aliasKey]) return;
-    termsIndex[aliasKey] = {
-      id: canonicalId,
-      original: alias,
-      canonical,
-      type: String(row && row[2] || '').trim()
-    };
   });
   
   return termsIndex;
@@ -535,13 +513,11 @@ function generateAbbrListHtml(abbrData) {
  * 完全なdic.htmlを生成（リンク機能付き）
  * @param {Array} dicData - 用語データ
  * @param {Array} abbrData - 略記データ
- * @param {Object} dictionaryExampleIndex - 実例検索用インデックス
- * @param {Array} aliasData - 語形対応データ
  * @return {string} 完全なHTMLファイルの内容
  */
-function generateDicHtml(dicData, abbrData, dictionaryExampleIndex, aliasData) {
+function generateDicHtml(dicData, abbrData, dictionaryExampleIndex) {
   // 用語インデックスを生成
-  const termsIndex = generateDicTermsIndex(dicData, aliasData);
+  const termsIndex = generateDicTermsIndex(dicData);
   const abbreviationIndex = generateAbbreviationIndex(abbrData);
   
   const dicListHtml = generateDicListHtml(dicData, termsIndex, abbreviationIndex, dictionaryExampleIndex);

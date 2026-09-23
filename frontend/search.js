@@ -239,17 +239,15 @@ window.searchMahlerTermsLocal = function (query, resultMeta, matchMode) {
     const data = window.appData.mahler;
     if (!data) return '<div class="result-message">データが読み込まれていません。</div>';
 
-    const isDictionaryExample = new URLSearchParams(window.location.search).get('source') === 'dictionary_example';
-    const searchQueries = getDictionaryExampleSearchQueries(query, window.appData.dic_terms_index, isDictionaryExample);
+    const normalizedQuery = normalizeString(query);
     const results = data.filter(row => {
         const deNormalized = row.de_normalized || row[1];
-        return deNormalized && matchesAnyTermQuery(deNormalized, searchQueries, matchMode);
+        return deNormalized && matchesTermQuery(deNormalized, normalizedQuery, matchMode);
     });
 
     if (results.length === 0) {
         if (resultMeta) resultMeta.resultCount = 0;
-        const notice = buildTermResolutionNotice(query, window.appData.dic_terms_index, 0);
-        return `${notice}<div class="result-message">該当するデータが見つかりませんでした。</div>`;
+        return '<div class="result-message">該当するデータが見つかりませんでした。</div>';
     }
 
     let resultHTML = '';
@@ -299,10 +297,7 @@ window.searchMahlerTermsLocal = function (query, resultMeta, matchMode) {
     }
 
     if (resultMeta) resultMeta.resultCount = totalMatches;
-    const notice = buildTermResolutionNotice(query, window.appData.dic_terms_index, totalMatches);
-    return totalMatches === 0
-        ? `${notice}<div class="result-message">該当するデータが見つかりませんでした。</div>`
-        : `${notice}<div>${totalMatches}件ありました。</div>${resultHTML}`;
+    return totalMatches === 0 ? '<div class="result-message">該当するデータが見つかりませんでした。</div>' : `<div>${totalMatches}件ありました。</div>${resultHTML}`;
 };
 
 // RS Terms Search Local
@@ -321,24 +316,22 @@ function searchGenericTermsLocal(query, dataKey, type, resultMeta, matchMode) {
     const data = window.appData[dataKey];
     if (!data) return '<div class="result-message">データが読み込まれていません。</div>';
 
-    const isDictionaryExample = new URLSearchParams(window.location.search).get('source') === 'dictionary_example';
-    const searchQueries = getDictionaryExampleSearchQueries(query, window.appData.dic_terms_index, isDictionaryExample);
+    const normalizedQuery = normalizeString(query);
     
     // Filter data
     const filteredData = data.filter(row => {
         const de = row.de || '';
         const deNormalized = row.de_normalized || normalizeString(de);
         const pageExists = row.page !== null && row.page !== undefined && String(row.page).trim() !== '';
-        return matchesAnyTermQuery(deNormalized, searchQueries, matchMode) && pageExists;
+        return matchesTermQuery(deNormalized, normalizedQuery, matchMode) && pageExists;
     });
 
     if (filteredData.length === 0) {
         if (resultMeta) resultMeta.resultCount = 0;
-        const notice = buildTermResolutionNotice(query, window.appData.dic_terms_index, 0);
-        return `${notice}<div class="result-message">該当するデータが見つかりませんでした。</div>`;
+        return '<div class="result-message">該当するデータが見つかりませんでした。</div>';
     }
 
-    const highlightRegex = createTermHighlightRegexForQueries(searchQueries, matchMode);
+    const highlightRegex = createTermHighlightRegex(normalizedQuery, matchMode);
 
     // Group by 'de' text
     const groupedByDe = filteredData.reduce((acc, row) => {
@@ -353,8 +346,7 @@ function searchGenericTermsLocal(query, dataKey, type, resultMeta, matchMode) {
     // 見出し語の件数を表示
     const headwordCount = Object.keys(groupedByDe).length;
     if (resultMeta) resultMeta.resultCount = headwordCount;
-    const notice = buildTermResolutionNotice(query, window.appData.dic_terms_index, headwordCount);
-    let html = `${notice}<div class="result-message">${headwordCount}件ありました。</div>`;
+    let html = `<div class="result-message">${headwordCount}件ありました。</div>`;
     
     const sortedDeKeys = Object.keys(groupedByDe).sort((a, b) => a.localeCompare(b, 'de'));
     
@@ -381,7 +373,7 @@ function searchGenericTermsLocal(query, dataKey, type, resultMeta, matchMode) {
         let resultDe = linkTermsInTranslation(de, window.appData.dic_terms_index);
         
         // Apply Highlight
-        if (searchQueries.some(searchQuery => normalizeString(searchQuery).length >= 2)) {
+        if (normalizedQuery.length >= 2) {
              resultDe = resultDe.replace(highlightRegex, '<span style="color: red;">$1</span>');
         }
 

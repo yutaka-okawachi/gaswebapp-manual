@@ -19,33 +19,20 @@ function previewHtml(html, token, approval, phase = 'publish') {
     const phasedNotice = phase === 'prepare' ? notice.replace('確認しました。この内容を公開する', '確認しました。GAS更新と最新データの取得に進む').replace('公開前プレビュー</strong>', 'GAS更新前のプレビュー</strong> — 現在保存されているデータを表示しています。最新データ取得後にもう一度確認できます。') : notice;
     return html.replace(/<head([^>]*)>/i, '<head$1>' + optout).replace(/<body([^>]*)>/i, '<body$1>' + phasedNotice);
 }
-async function startPreview({ approval = false, open = false, phase = 'publish', dictionaryData = null, aliasData = null } = {}) {
+async function startPreview({ approval = false, open = false, phase = 'publish' } = {}) {
     const token = crypto.randomBytes(24).toString('hex');
     let approve;
     const approved = new Promise(resolve => { approve = resolve; });
     let dictionaryHtml;
-    const previewFiles = {};
     if (!approval || phase === 'prepare') {
         const context = vm.createContext({ console });
         for (const file of ['src/dictionary_example_shards.js', 'src/generate_dic_html.js']) {
             vm.runInContext(fs.readFileSync(path.join(root, file), 'utf8'), context);
         }
-        if (dictionaryData) {
-            const data = name => JSON.parse(fs.readFileSync(path.join(root, 'mahler-search-app/data', name + '.json'), 'utf8'));
-            const examples = context.buildDictionaryExampleShardFiles(dictionaryData, {
-                mahler: data('mahler'),
-                wagner: data('richard_wagner'),
-                strauss: data('richard_strauss')
-            }, aliasData || []);
-            dictionaryHtml = context.generateDicHtml(dictionaryData, data('abbr_list'), examples.queryIndex, aliasData || []);
-            Object.assign(previewFiles, examples.files);
-            previewFiles['mahler-search-app/data/dic_terms_index.json'] = context.generateDicTermsIndex(dictionaryData, aliasData || []);
-        } else {
-            const data = name => JSON.parse(fs.readFileSync(path.join(root, 'mahler-search-app/data', name + '.json'), 'utf8'));
-            const notes = data('dic_notes');
-            const examples = context.buildDictionaryExampleShardFiles(notes, { mahler: data('mahler'), wagner: data('richard_wagner'), strauss: data('richard_strauss') });
-            dictionaryHtml = context.generateDicHtml(notes, data('abbr_list'), examples.queryIndex);
-        }
+        const data = name => JSON.parse(fs.readFileSync(path.join(root, 'mahler-search-app/data', name + '.json'), 'utf8'));
+        const notes = data('dic_notes');
+        const examples = context.buildDictionaryExampleShardFiles(notes, { mahler: data('mahler'), wagner: data('richard_wagner'), strauss: data('richard_strauss') });
+        dictionaryHtml = context.generateDicHtml(notes, data('abbr_list'), examples.queryIndex);
     }
     const server = http.createServer(async (req, res) => {
         res.setHeader('Cache-Control', 'no-store');
@@ -66,13 +53,7 @@ async function startPreview({ approval = false, open = false, phase = 'publish',
         if (!realFile.startsWith(root + path.sep)) { res.writeHead(403); res.end(); return; }
         const extension = path.extname(file);
         res.setHeader('Content-Type', mime[extension] || 'application/octet-stream');
-        const relativeFile = path.relative(root, file).replace(/\\/g, '/');
-        const previewData = previewFiles[relativeFile];
-        const data = dictionaryHtml && file === path.join(root, 'mahler-search-app/dic.html')
-            ? Buffer.from(dictionaryHtml)
-            : previewData !== undefined
-                ? Buffer.from(JSON.stringify(previewData))
-                : fs.readFileSync(file);
+        const data = dictionaryHtml && file === path.join(root, 'mahler-search-app/dic.html') ? Buffer.from(dictionaryHtml) : fs.readFileSync(file);
         res.end(extension === '.html' ? previewHtml(data.toString('utf8'), token, approval, phase) : data);
     });
     await new Promise(resolve => server.listen(0, '127.0.0.1', resolve));

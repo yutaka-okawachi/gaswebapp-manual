@@ -1,17 +1,17 @@
 {
   "ab": "term-ab",
   "abdaempfen": "term-abdaempfen",
-  "abgestimmt": "term-abgestimmt",
+  "abgestimmte": "term-abgestimmte",
   "abnehmen": "term-abnehmen",
   "abreissen": "term-abreissen",
   "abstieg": "term-abstieg",
   "abstossen": "term-abstossen",
-  "abstufung": "term-abstufung",
+  "abstufungen": "term-abstufungen",
   "abwaerts": "term-abwaerts",
   "abweichen": "term-abweichen",
   "achtel": "term-achtel",
   "achten": "term-achten",
-  "akzent": "term-akzent",
+  "akzente": "term-akzente",
   "alle-in-den-blaesern-als-notirten-stellen-sind-mit-zungenschlag-auszufuehren": {
     "id": "term-alle-in-den-blaesern-als-notirten-stellen-sind-mit-zungenschlag-auszufuehren",
     "original": "alle in den Bläsern als トレモロ音符 notirten Stellen sind mit Zungenschlag auszuführen."
@@ -75,9 +75,9 @@
   "aeusserst": "term-aeusserst",
   "auswahl": "term-auswahl",
   "av": "term-av",
-  "bach": "term-bach",
+  "bache": "term-bache",
   "bald": "term-bald",
-  "band": "term-band",
+  "bandes": "term-bandes",
   "barsch": "term-barsch",
   "bassclarinette-fagotte-hoerner-violoncelle-muessen-so-leise-sein-dass-die-fuehrende-stimme-oboe-und-solovioline-muehelos-hervortritt": "term-bassclarinette-fagotte-hoerner-violoncelle-muessen-so-leise-sein-dass-die-fuehrende-stimme-oboe-und-solovioline-muehelos-hervortritt",
   "baesse-violen-u-celli-deutlich-hervortretend-immer-fort": {
@@ -88,11 +88,11 @@
     "id": "term-baesse-jedoch-deutlich-hervortretend-celli-u-violen",
     "original": "Bässe jedoch deutlich hervortretend (Celli u. Violen)"
   },
-  "beaengstigt": "term-beaengstigt",
+  "beaengstigtem": "term-beaengstigtem",
   "bedaechtig": "term-bedaechtig",
   "bedeutend": "term-bedeutend",
   "bedeutungsvoll": "term-bedeutungsvoll",
-  "bedienter": "term-bedienter",
+  "bediente": "term-bediente",
   "befehlend": "term-befehlend",
   "befremdet": "term-befremdet",
   "befremdung": "term-befremdung",
@@ -153,6 +153,7 @@
   },
   "choral-bis-zum-ende-fff": "term-choral-bis-zum-ende-fff",
   "componist": "term-componist",
+  "consonanten": "term-consonanten",
   "cuivrez": "term-cuivrez",
   "d-h": {
     "id": "term-d-h",
@@ -282,6 +283,7 @@
   "ebenfalls": "term-ebenfalls",
   "ebenso": "term-ebenso",
   "edel": "term-edel",
+  "edlen": "term-edlen",
   "eifersuechtig": "term-eifersuechtig",
   "eigenhaendig": "term-eigenhaendig",
   "eigensinnig": "term-eigensinnig",
@@ -304,12 +306,13 @@
   "einzuhalten": "term-einzuhalten",
   "elastisch": "term-elastisch",
   "elegie": "term-elegie",
-  "elegisch": "term-elegisch",
+  "elegischem": "term-elegischem",
   "empfindung": "term-empfindung",
   "empfohlen": "term-empfohlen",
   "empfunden": "term-empfunden",
   "endend": "term-endend",
-  "endgueltig": "term-endgueltig",
+  "endgiltige": "term-endgiltige",
+  "endgueltige": "term-endgueltige",
   "endlich": "term-endlich",
   "engelkonzert": "term-engelkonzert",
   "entfernung": "term-entfernung",
@@ -321,8 +324,8 @@
   "entstellt": "term-entstellt",
   "entzueckt": "term-entzueckt",
   "ergriffen": "term-ergriffen",
-  "erhoben": "term-erhoben",
   "erhobener": "term-erhobener",
+  "erhobner": "term-erhobner",
   "erleichtert": "term-erleichtert",
   "erleichterung": "term-erleichterung",
   "erloeschen": "term-erloeschen",
@@ -354,10 +357,11 @@
   "fassung": "term-fassung",
   "fast": "term-fast",
   "feierlich": "term-feierlich",
-  "fern": "term-fern",
+  "ferne": "term-ferne",
   "fernerhin": "term-fernerhin",
   "fest": "term-fest",
   "fest-im-gewonnenen-lebhaften-zeitmass": "term-fest-im-gewonnenen-lebhaften-zeitmass",
+  "festes": "term-festes",
   "festes-zeitmass-maessig-langsam": "term-festes-zeitmass-maessig-langsam",
   "feurig": "term-feurig",
   "ff": {
@@ -401,7 +405,7 @@
   "gedaechtnis": "term-gedaechtnis",
   "gedaempft": "term-gedaempft",
   "gedehnt": "term-gedehnt",
-  "gefahrvoll": "term-gefahrvoll",
+  "gefahrvolle": "term-gefahrvolle",
   "gefluester": "term-gefluester",
   "gefolge": "term-gefolge",
   "gefuehl": "term-gefuehl",
@@ -424,7 +428,7 @@
   "gerissen": "term-gerissen",
   "geruehrt": "term-geruehrt",
   "gesangsperiode": "term-gesangsperiode",
-  "gesaettigt": "term-gesaettigt",
+  "gesaettigten": "term-gesaettigten",
   "geschehen": "term-geschehen",
   "geschliffen": "term-geschliffen",
   "geschmeidig": "term-geschmeidig",
@@ -461,6 +465,7 @@
   "gewitter": "term-gewitter",
   "gewoehnlich": "term-gewoehnlich",
   "gewonnen": "term-gewonnen",
+  "gewonnenen": "term-gewonnenen",
   "geziert": "term-geziert",
   "gezogen": "term-gezogen",
   "glaenzend": "term-glaenzend",
@@ -484,7 +489,7 @@
   "gross": "term-gross",
   "grund": "term-grund",
   "hab-lumbedruwwel-mit-me-lumbeschatz": "term-hab-lumbedruwwel-mit-me-lumbeschatz",
-  "halb": "term-halb",
+  "halbe": "term-halbe",
   "halblaut": "term-halblaut",
   "hallend": "term-hallend",
   "haltebogen": "term-haltebogen",
@@ -500,7 +505,7 @@
   "haushofmeister": "term-haushofmeister",
   "hausknecht": "term-hausknecht",
   "heftig": "term-heftig",
-  "heilige": "term-heilige",
+  "heiligen": "term-heiligen",
   "heimlich": "term-heimlich",
   "heiter": "term-heiter",
   "heraus": "term-heraus",
@@ -567,7 +572,7 @@
   "ins": "term-ins",
   "instaendig": "term-instaendig",
   "intensiv": "term-intensiv",
-  "irrweg": "term-irrweg",
+  "irrwegen": "term-irrwegen",
   "jagd": "term-jagd",
   "jagthoerner": "term-jagthoerner",
   "jaeh": "term-jaeh",
@@ -578,6 +583,7 @@
     "original": "je nach dem Grundcharakter der verschiedenen Themen reich zu modificiren."
   },
   "jeder": "term-jeder",
+  "jedes": "term-jedes",
   "jedoch": "term-jedoch",
   "kammerdiener": "term-kammerdiener",
   "kammerlakai": "term-kammerlakai",
@@ -589,7 +595,7 @@
   "kellner": "term-kellner",
   "klagend": "term-klagend",
   "klaeglich": "term-klaeglich",
-  "klammer": "term-klammer",
+  "klammern": "term-klammern",
   "klangvoll": "term-klangvoll",
   "klappe": "term-klappe",
   "klavierauszug": "term-klavierauszug",
@@ -602,7 +608,6 @@
   "knix": "term-knix",
   "kokett": "term-kokett",
   "kondukt": "term-kondukt",
-  "konsonant": "term-konsonant",
   "kontrabaesse-u-celli-deutlich-pizz": {
     "id": "term-kontrabaesse-u-celli-deutlich-pizz",
     "original": "Kontrabässe u. Celli deutlich pizz."
@@ -611,7 +616,7 @@
   "kraeftig": "term-kraeftig",
   "kreischen": "term-kreischen",
   "kriegerisch": "term-kriegerisch",
-  "kuenftig": "term-kuenftig",
+  "kuenftigen": "term-kuenftigen",
   "kurz": "term-kurz",
   "lachend": "term-lachend",
   "lady-macbeth-o-eile-eile-her-damit-ich-meinen-geist-in-deinen-giesse-durch-meine-tapfere-zunge-diese-zweifel-und-furchtgespenster-aus-dem-felde-schlage-die-dich-wegschrecken-von-dem-goldnen-reif-womit-das-glueck-dich-gern-bekroenen-moechte": {
@@ -619,7 +624,7 @@
     "original": "Lady Macbeth. O, eile! Eile her! damit ich meinen Geist in deinen giesse, durch meine tapfere Zunge diese Zweifel und Furchtgespenster aus dem Felde schlage, die dich wegschrecken von dem goldnen Reif, womit das Glück dich gern bekrönen möchte."
   },
   "lakai": "term-lakai",
-  "landlaeufig": "term-landlaeufig",
+  "landlaeufigen": "term-landlaeufigen",
   "laendler": "term-laendler",
   "langsam": "term-langsam",
   "langsamer-wie-bei-der-gesangsperiode-im-1-teile": {
@@ -632,7 +637,7 @@
   "lautet": "term-lautet",
   "lebendig": "term-lebendig",
   "lebhaft": "term-lebhaft",
-  "leer": "term-leer",
+  "leere": "term-leere",
   "leibjaeger": "term-leibjaeger",
   "leibkammerdiener": "term-leibkammerdiener",
   "leiblakai": "term-leiblakai",
@@ -646,7 +651,7 @@
     "id": "term-leise-bewegt-doch-nicht-brillant",
     "original": "Leise bewegt, doch nicht brillant."
   },
-  "leseart": "term-leseart",
+  "lesearten": "term-lesearten",
   "leute": "term-leute",
   "liebegluehend": "term-liebegluehend",
   "liebenswuerdig": "term-liebenswuerdig",
@@ -674,9 +679,9 @@
   "macht": "term-macht",
   "maechtig": "term-maechtig",
   "magd": "term-magd",
-  "majestaetisch": "term-majestaetisch",
+  "majestaetisch-majestaetische": "term-majestaetisch-majestaetische",
   "markant": "term-markant",
-  "markieren": "term-markieren",
+  "markieren-markiert-marcirt-markirt": "term-markieren-markiert-marcirt-markirt",
   "markig": "term-markig",
   "maessig": "term-maessig",
   "maessige-viertel": "term-maessige-viertel",
@@ -722,7 +727,7 @@
   },
   "nach-und-nach": "term-nach-und-nach",
   "nachahmung": "term-nachahmung",
-  "nachfolgend": "term-nachfolgend",
+  "nachfolgenden": "term-nachfolgenden",
   "nachgeben": "term-nachgeben",
   "nachlassen": "term-nachlassen",
   "nachschlag": "term-nachschlag",
@@ -783,7 +788,7 @@
   "ploetzlich-leidenschaftlich-anschlagend": "term-ploetzlich-leidenschaftlich-anschlagend",
   "plump": "term-plump",
   "pompoes": "term-pompoes",
-  "posaunensatz": "term-posaunensatz",
+  "posaunensaetze": "term-posaunensaetze",
   "potpourri": "term-potpourri",
   "praecis": "term-praecis",
   "praecis-sehr-leicht-markieren": "term-praecis-sehr-leicht-markieren",
@@ -805,9 +810,9 @@
     "original": "rep."
   },
   "resonanz": "term-resonanz",
-  "revidiert": "term-revidiert",
+  "revidierte": "term-revidierte",
   "rezitativisch-frei": "term-rezitativisch-frei",
-  "riese": "term-riese",
+  "riesen": "term-riesen",
   "riesenhaft": "term-riesenhaft",
   "ritter": "term-ritter",
   "ritterlich": "term-ritterlich",
@@ -923,7 +928,7 @@
   "stets": "term-stets",
   "stets-sehr-virtuos-aber-ohne-anstrengung": "term-stets-sehr-virtuos-aber-ohne-anstrengung",
   "stille": "term-stille",
-  "stock": "term-stock",
+  "stoecken": "term-stoecken",
   "stolz": "term-stolz",
   "straff": "term-straff",
   "strahlen": "term-strahlen",
@@ -944,20 +949,20 @@
   "streng": "term-streng",
   "strepitoso": "term-strepitoso",
   "strich-fuer-strich": "term-strich-fuer-strich",
-  "strichart": "term-strichart",
+  "stricharten": "term-stricharten",
   "stricknadel": "term-stricknadel",
   "sturm": "term-sturm",
-  "stuerzen": "term-stuerzen",
+  "stuerzt": "term-stuerzt",
   "summend": "term-summend",
   "tactig": "term-tactig",
   "takt": "term-takt",
   "tal": "term-tal",
   "taeppisch": "term-taeppisch",
-  "taetig": "term-taetig",
   "tempo-v-d-introduction": {
     "id": "term-tempo-v-d-introduction",
     "original": "Tempo v.d. Introduction"
   },
+  "thaetig": "term-thaetig",
   "tief": "term-tief",
   "tobend": "term-tobend",
   "ton": "term-ton",
@@ -1007,7 +1012,7 @@
   "unterbrechung": "term-unterbrechung",
   "untersagt": "term-untersagt",
   "unwillkuerlich": "term-unwillkuerlich",
-  "urspruenglich": "term-urspruenglich",
+  "urspruengliche": "term-urspruengliche",
   "variante": "term-variante",
   "variationen-seid-ihr-nicht-der-schwanendreher": "term-variationen-seid-ihr-nicht-der-schwanendreher",
   "vehemenz": "term-vehemenz",
@@ -1023,7 +1028,7 @@
   "verklingend": "term-verklingend",
   "verlangsamen": "term-verlangsamen",
   "verlauf": "term-verlauf",
-  "verleger": "term-verleger",
+  "verlegers": "term-verlegers",
   "verloeschen": "term-verloeschen",
   "vernehmbar": "term-vernehmbar",
   "vernehmlich": "term-vernehmlich",
@@ -1063,7 +1068,7 @@
   "visionaer": "term-visionaer",
   "volkslied": "term-volkslied",
   "voll-sehnsucht": "term-voll-sehnsucht",
-  "vollausladend": "term-vollausladend",
+  "vollausladendem": "term-vollausladendem",
   "vollendet": "term-vollendet",
   "volles-werk": "term-volles-werk",
   "volles-zeitmass": "term-volles-zeitmass",
@@ -1080,9 +1085,9 @@
   "vordergrund": "term-vordergrund",
   "vorhang": "term-vorhang",
   "vorher": "term-vorher",
-  "vorherig": "term-vorherig",
-  "vorig": "term-vorig",
-  "vorliegend": "term-vorliegend",
+  "vorherigen": "term-vorherigen",
+  "vorigen": "term-vorigen",
+  "vorliegenden": "term-vorliegenden",
   "vorschlag": "term-vorschlag",
   "vortrag": "term-vortrag",
   "vorwaerts": "term-vorwaerts",
@@ -1174,293 +1179,5 @@
   "bedeutet-vom-einem-ton-zum-andern-schleifen-portamento": "term-bedeutet-vom-einem-ton-zum-andern-schleifen-portamento",
   "3-teilig": "term-3-teilig",
   "4tel-note-im-jagdthema-laenger": "term-4tel-note-im-jagdthema-laenger",
-  "5-volle-takte-lang": "term-5-volle-takte-lang",
-  "abgestimmte": {
-    "id": "term-abgestimmt",
-    "original": "abgestimmte",
-    "canonical": "abgestimmt",
-    "type": "格変化形"
-  },
-  "abstufungen": {
-    "id": "term-abstufung",
-    "original": "Abstufungen",
-    "canonical": "Abstufung",
-    "type": "複数形"
-  },
-  "beaengstigtem": {
-    "id": "term-beaengstigt",
-    "original": "beängstigtem",
-    "canonical": "beängstigt",
-    "type": "格変化形"
-  },
-  "endgueltige": {
-    "id": "term-endgueltig",
-    "original": "endgültige",
-    "canonical": "endgültig",
-    "type": "格変化形"
-  },
-  "irrwegen": {
-    "id": "term-irrweg",
-    "original": "Irrwegen",
-    "canonical": "Irrweg",
-    "type": "複数形"
-  },
-  "klammern": {
-    "id": "term-klammer",
-    "original": "Klammern",
-    "canonical": "Klammer",
-    "type": "複数形"
-  },
-  "majestaetische": {
-    "id": "term-majestaetisch",
-    "original": "majestätische",
-    "canonical": "majestätisch",
-    "type": "格変化形"
-  },
-  "markiert": {
-    "id": "term-markieren",
-    "original": "markiert",
-    "canonical": "markieren",
-    "type": "過去分詞"
-  },
-  "marcirt": {
-    "id": "term-markieren",
-    "original": "marcirt",
-    "canonical": "markieren",
-    "type": "旧綴り"
-  },
-  "markirt": {
-    "id": "term-markieren",
-    "original": "markirt",
-    "canonical": "markieren",
-    "type": "旧綴り"
-  },
-  "stuerzt": {
-    "id": "term-stuerzen",
-    "original": "stürzt",
-    "canonical": "stürzen",
-    "type": "活用形"
-  },
-  "thaetig": {
-    "id": "term-taetig",
-    "original": "thätig",
-    "canonical": "tätig",
-    "type": "旧綴り"
-  },
-  "akzente": {
-    "id": "term-akzent",
-    "original": "Akzente",
-    "canonical": "Akzent",
-    "type": "複数形"
-  },
-  "bandes": {
-    "id": "term-band",
-    "original": "Bandes",
-    "canonical": "Band",
-    "type": "格変化形"
-  },
-  "lesearten": {
-    "id": "term-leseart",
-    "original": "Lesearten",
-    "canonical": "Leseart",
-    "type": "複数形"
-  },
-  "posaunensaetze": {
-    "id": "term-posaunensatz",
-    "original": "Posaunensätze",
-    "canonical": "Posaunensatz",
-    "type": "複数形"
-  },
-  "stoecken": {
-    "id": "term-stock",
-    "original": "Stöcken",
-    "canonical": "Stock",
-    "type": "格変化形"
-  },
-  "bache": {
-    "id": "term-bach",
-    "original": "Bache",
-    "canonical": "Bach",
-    "type": "格変化形"
-  },
-  "bediente": {
-    "id": "term-bedienter",
-    "original": "Bediente",
-    "canonical": "Bedienter",
-    "type": "格変化形"
-  },
-  "consonanten": {
-    "id": "term-konsonant",
-    "original": "Consonanten",
-    "canonical": "Konsonant",
-    "type": "旧綴り"
-  },
-  "konsonanten": {
-    "id": "term-konsonant",
-    "original": "Konsonanten",
-    "canonical": "Konsonant",
-    "type": "複数形"
-  },
-  "stricharten": {
-    "id": "term-strichart",
-    "original": "Stricharten",
-    "canonical": "Strichart",
-    "type": "複数形"
-  },
-  "verlegers": {
-    "id": "term-verleger",
-    "original": "Verlegers",
-    "canonical": "Verleger",
-    "type": "格変化形"
-  },
-  "edlen": {
-    "id": "term-edel",
-    "original": "edlen",
-    "canonical": "edel",
-    "type": "格変化形"
-  },
-  "festes": {
-    "id": "term-fest",
-    "original": "festes",
-    "canonical": "fest",
-    "type": "格変化形"
-  },
-  "elegischem": {
-    "id": "term-elegisch",
-    "original": "elegischem",
-    "canonical": "elegisch",
-    "type": "格変化形"
-  },
-  "gefahrvolle": {
-    "id": "term-gefahrvoll",
-    "original": "gefahrvolle",
-    "canonical": "gefahrvoll",
-    "type": "格変化形"
-  },
-  "urspruengliche": {
-    "id": "term-urspruenglich",
-    "original": "ursprüngliche",
-    "canonical": "ursprünglich",
-    "type": "格変化形"
-  },
-  "vollausladendem": {
-    "id": "term-vollausladend",
-    "original": "vollausladendem",
-    "canonical": "vollausladend",
-    "type": "格変化形"
-  },
-  "kraeftigen": {
-    "id": "term-kraeftig",
-    "original": "kräftigen",
-    "canonical": "kräftig",
-    "type": "格変化形"
-  },
-  "daempfern": {
-    "id": "term-daempfer",
-    "original": "Dämpfern",
-    "canonical": "Dämpfer",
-    "type": "格変化形"
-  },
-  "endgiltige": {
-    "id": "term-endgueltig",
-    "original": "endgiltige",
-    "canonical": "endgültig",
-    "type": "旧綴り"
-  },
-  "erhobner": {
-    "id": "term-erhoben",
-    "original": "erhobner",
-    "canonical": "erhoben",
-    "type": "格変化形"
-  },
-  "gesaettigten": {
-    "id": "term-gesaettigt",
-    "original": "gesättigten",
-    "canonical": "gesättigt",
-    "type": "格変化形"
-  },
-  "gewonnenen": {
-    "id": "term-gewonnen",
-    "original": "gewonnenen",
-    "canonical": "gewonnen",
-    "type": "格変化形"
-  },
-  "ferne": {
-    "id": "term-fern",
-    "original": "ferne",
-    "canonical": "fern",
-    "type": "格変化形"
-  },
-  "halbe": {
-    "id": "term-halb",
-    "original": "halbe",
-    "canonical": "halb",
-    "type": "格変化形"
-  },
-  "kuenftigen": {
-    "id": "term-kuenftig",
-    "original": "künftigen",
-    "canonical": "künftig",
-    "type": "格変化形"
-  },
-  "landlaeufigen": {
-    "id": "term-landlaeufig",
-    "original": "landläufigen",
-    "canonical": "landläufig",
-    "type": "格変化形"
-  },
-  "leere": {
-    "id": "term-leer",
-    "original": "leere",
-    "canonical": "leer",
-    "type": "格変化形"
-  },
-  "nachfolgenden": {
-    "id": "term-nachfolgend",
-    "original": "nachfolgenden",
-    "canonical": "nachfolgend",
-    "type": "格変化形"
-  },
-  "revidierte": {
-    "id": "term-revidiert",
-    "original": "revidierte",
-    "canonical": "revidiert",
-    "type": "格変化形"
-  },
-  "riesen": {
-    "id": "term-riese",
-    "original": "Riesen",
-    "canonical": "Riese",
-    "type": "複数形"
-  },
-  "vorherigen": {
-    "id": "term-vorherig",
-    "original": "vorherigen",
-    "canonical": "vorherig",
-    "type": "格変化形"
-  },
-  "vorigen": {
-    "id": "term-vorig",
-    "original": "vorigen",
-    "canonical": "vorig",
-    "type": "格変化形"
-  },
-  "vorliegenden": {
-    "id": "term-vorliegend",
-    "original": "vorliegenden",
-    "canonical": "vorliegend",
-    "type": "格変化形"
-  },
-  "heiligen": {
-    "id": "term-heilige",
-    "original": "Heiligen",
-    "canonical": "Heilige",
-    "type": "格変化形"
-  },
-  "jedes": {
-    "id": "term-jeder",
-    "original": "jedes",
-    "canonical": "jeder",
-    "type": "格変化形"
-  }
+  "5-volle-takte-lang": "term-5-volle-takte-lang"
 }
