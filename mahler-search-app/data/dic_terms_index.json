@@ -1,17 +1,32 @@
 {
   "ab": "term-ab",
   "abdaempfen": "term-abdaempfen",
-  "abgestimmte": "term-abgestimmte",
+  "abgestimmte": {
+    "id": "term-abgestimmte",
+    "exampleVariants": [
+      "abgestimmt"
+    ]
+  },
   "abnehmen": "term-abnehmen",
   "abreissen": "term-abreissen",
   "abstieg": "term-abstieg",
   "abstossen": "term-abstossen",
-  "abstufungen": "term-abstufungen",
+  "abstufungen": {
+    "id": "term-abstufungen",
+    "exampleVariants": [
+      "Abstufung"
+    ]
+  },
   "abwaerts": "term-abwaerts",
   "abweichen": "term-abweichen",
   "achtel": "term-achtel",
   "achten": "term-achten",
-  "akzente": "term-akzente",
+  "akzente": {
+    "id": "term-akzente",
+    "exampleVariants": [
+      "Akzent"
+    ]
+  },
   "alle-in-den-blaesern-als-notirten-stellen-sind-mit-zungenschlag-auszufuehren": {
     "id": "term-alle-in-den-blaesern-als-notirten-stellen-sind-mit-zungenschlag-auszufuehren",
     "original": "alle in den Bläsern als トレモロ音符 notirten Stellen sind mit Zungenschlag auszuführen."
@@ -31,8 +46,18 @@
   "andacht": "term-andacht",
   "anfang": "term-anfang",
   "angabe": "term-angabe",
-  "angegeben": "term-angegeben",
-  "angehalten": "term-angehalten",
+  "angegeben": {
+    "id": "term-angegeben",
+    "exampleVariants": [
+      "angegeben"
+    ]
+  },
+  "angehalten": {
+    "id": "term-angehalten",
+    "exampleVariants": [
+      "angehalten"
+    ]
+  },
   "angst": "term-angst",
   "aengstlich": "term-aengstlich",
   "anhalten": "term-anhalten",
@@ -54,30 +79,75 @@
   "auf-der-buehne": "term-auf-der-buehne",
   "auf-und-ab": "term-auf-und-ab",
   "aufdringlich": "term-aufdringlich",
-  "auffahrend": "term-auffahrend",
+  "auffahrend": {
+    "id": "term-auffahrend",
+    "exampleVariants": [
+      "auffahrend"
+    ]
+  },
   "auffallen": "term-auffallen",
-  "aufgeregt": "term-aufgeregt",
+  "aufgeregt": {
+    "id": "term-aufgeregt",
+    "exampleVariants": [
+      "aufgeregt"
+    ]
+  },
   "aufschwung": "term-aufschwung",
   "aufstellen": "term-aufstellen",
-  "aufzufassen": "term-aufzufassen",
-  "aufzustellen": "term-aufzustellen",
+  "aufzufassen": {
+    "id": "term-aufzufassen",
+    "exampleVariants": [
+      "aufzufassen"
+    ]
+  },
+  "aufzustellen": {
+    "id": "term-aufzustellen",
+    "exampleVariants": [
+      "aufzustellen"
+    ]
+  },
   "augenblick": "term-augenblick",
   "ausbrechen": "term-ausbrechen",
-  "ausbreitend": "term-ausbreitend",
+  "ausbreitend": {
+    "id": "term-ausbreitend",
+    "exampleVariants": [
+      "ausbreitend"
+    ]
+  },
   "ausdruck": "term-ausdruck",
   "ausdrucksvoll": "term-ausdrucksvoll",
-  "ausgelassen": "term-ausgelassen",
+  "ausgelassen": {
+    "id": "term-ausgelassen",
+    "exampleVariants": [
+      "ausgelassen"
+    ]
+  },
   "aushalten": "term-aushalten",
   "ausholen": "term-ausholen",
   "ausklang": "term-ausklang",
   "auslaufen": "term-auslaufen",
   "ausser-sich": "term-ausser-sich",
-  "aeusserst": "term-aeusserst",
+  "aeusserst": {
+    "id": "term-aeusserst",
+    "exampleVariants": [
+      "äußerst"
+    ]
+  },
   "auswahl": "term-auswahl",
   "av": "term-av",
-  "bache": "term-bache",
+  "bache": {
+    "id": "term-bache",
+    "exampleVariants": [
+      "Bach"
+    ]
+  },
   "bald": "term-bald",
-  "bandes": "term-bandes",
+  "bandes": {
+    "id": "term-bandes",
+    "exampleVariants": [
+      "Band"
+    ]
+  },
   "barsch": "term-barsch",
   "bassclarinette-fagotte-hoerner-violoncelle-muessen-so-leise-sein-dass-die-fuehrende-stimme-oboe-und-solovioline-muehelos-hervortritt": "term-bassclarinette-fagotte-hoerner-violoncelle-muessen-so-leise-sein-dass-die-fuehrende-stimme-oboe-und-solovioline-muehelos-hervortritt",
   "baesse-violen-u-celli-deutlich-hervortretend-immer-fort": {
@@ -88,16 +158,46 @@
     "id": "term-baesse-jedoch-deutlich-hervortretend-celli-u-violen",
     "original": "Bässe jedoch deutlich hervortretend (Celli u. Violen)"
   },
-  "beaengstigtem": "term-beaengstigtem",
+  "beaengstigtem": {
+    "id": "term-beaengstigtem",
+    "exampleVariants": [
+      "beängstigt"
+    ]
+  },
   "bedaechtig": "term-bedaechtig",
-  "bedeutend": "term-bedeutend",
+  "bedeutend": {
+    "id": "term-bedeutend",
+    "exampleVariants": [
+      "bedeutend"
+    ]
+  },
   "bedeutungsvoll": "term-bedeutungsvoll",
-  "bediente": "term-bediente",
-  "befehlend": "term-befehlend",
-  "befremdet": "term-befremdet",
+  "bediente": {
+    "id": "term-bediente",
+    "exampleVariants": [
+      "Bediente"
+    ]
+  },
+  "befehlend": {
+    "id": "term-befehlend",
+    "exampleVariants": [
+      "befehlend"
+    ]
+  },
+  "befremdet": {
+    "id": "term-befremdet",
+    "exampleVariants": [
+      "befremdet"
+    ]
+  },
   "befremdung": "term-befremdung",
   "begeisterung": "term-begeisterung",
-  "begleitend": "term-begleitend",
+  "begleitend": {
+    "id": "term-begleitend",
+    "exampleVariants": [
+      "begleitend"
+    ]
+  },
   "behaebig": "term-behaebig",
   "behaglich": "term-behaglich",
   "behutsam": "term-behutsam",
@@ -108,31 +208,76 @@
   "beinahe-doppelt-so-schnell": "term-beinahe-doppelt-so-schnell",
   "beinahe-melodie-im-gleichen-rhythmus-wie-im-allabreve-takte-jedoch-langsamer": "term-beinahe-melodie-im-gleichen-rhythmus-wie-im-allabreve-takte-jedoch-langsamer",
   "beiseite": "term-beiseite",
-  "beklommen": "term-beklommen",
-  "bemessen": "term-bemessen",
+  "beklommen": {
+    "id": "term-beklommen",
+    "exampleVariants": [
+      "beklommen"
+    ]
+  },
+  "bemessen": {
+    "id": "term-bemessen",
+    "exampleVariants": [
+      "bemessen"
+    ]
+  },
   "bereits": "term-bereits",
   "berg": "term-berg",
   "bericht": "term-bericht",
   "beruhigen": "term-beruhigen",
   "beschleunigen": "term-beschleunigen",
-  "beschwingt": "term-beschwingt",
+  "beschwingt": {
+    "id": "term-beschwingt",
+    "exampleVariants": [
+      "beschwingt"
+    ]
+  },
   "besetzen": "term-besetzen",
-  "besetzt": "term-besetzt",
+  "besetzt": {
+    "id": "term-besetzt",
+    "exampleVariants": [
+      "besetzt"
+    ]
+  },
   "besonders": "term-besonders",
-  "bestimmt": "term-bestimmt",
+  "bestimmt": {
+    "id": "term-bestimmt",
+    "exampleVariants": [
+      "bestimmt"
+    ]
+  },
   "betonung": "term-betonung",
   "betreffen": "term-betreffen",
-  "bewegt": "term-bewegt",
+  "bewegt": {
+    "id": "term-bewegt",
+    "exampleVariants": [
+      "bewegt"
+    ]
+  },
   "bewegter-im-kuenftigen-allegro-tempo": "term-bewegter-im-kuenftigen-allegro-tempo",
   "bewertung": "term-bewertung",
   "bezeichnen": "term-bezeichnen",
   "bindebogen": "term-bindebogen",
-  "bisbigliando": "term-bisbigliando",
+  "bisbigliando": {
+    "id": "term-bisbigliando",
+    "exampleVariants": [
+      "bisbigliando"
+    ]
+  },
   "bispigliando": "term-bispigliando",
-  "bitte": "term-bitte",
+  "bitte": {
+    "id": "term-bitte",
+    "exampleVariants": [
+      "bitte"
+    ]
+  },
   "bitter": "term-bitter",
   "blechblaeser": "term-blechblaeser",
-  "bleibt": "term-bleibt",
+  "bleibt": {
+    "id": "term-bleibt",
+    "exampleVariants": [
+      "bleibt"
+    ]
+  },
   "bloss": "term-bloss",
   "blumige": "term-blumige",
   "bogen": "term-bogen",
@@ -153,7 +298,13 @@
   },
   "choral-bis-zum-ende-fff": "term-choral-bis-zum-ende-fff",
   "componist": "term-componist",
-  "consonanten": "term-consonanten",
+  "consonanten": {
+    "id": "term-consonanten",
+    "exampleVariants": [
+      "Konsonant",
+      "Konsonanten"
+    ]
+  },
   "cuivrez": "term-cuivrez",
   "d-h": {
     "id": "term-d-h",
@@ -163,12 +314,27 @@
     "id": "term-d-h-d-h",
     "original": "D. H., d. H."
   },
-  "dahinhuschend": "term-dahinhuschend",
-  "daempfer": "term-daempfer",
+  "dahinhuschend": {
+    "id": "term-dahinhuschend",
+    "exampleVariants": [
+      "dahinhuschend"
+    ]
+  },
+  "daempfer": {
+    "id": "term-daempfer",
+    "exampleVariants": [
+      "Dämpfern"
+    ]
+  },
   "daempfer-ab": "term-daempfer-ab",
   "daempfer-auf": "term-daempfer-auf",
   "daempfer-weg": "term-daempfer-weg",
-  "darf": "term-darf",
+  "darf": {
+    "id": "term-darf",
+    "exampleVariants": [
+      "darf"
+    ]
+  },
   "darstellen": "term-darstellen",
   "darstellung": "term-darstellung",
   "das-dritte-und-vierte-hoernerpaar-uebernehmen-die-tuben": "term-das-dritte-und-vierte-hoernerpaar-uebernehmen-die-tuben",
@@ -178,7 +344,12 @@
   },
   "dasselbe": "term-dasselbe",
   "decken": "term-decken",
-  "declamirend": "term-declamirend",
+  "declamirend": {
+    "id": "term-declamirend",
+    "exampleVariants": [
+      "declamirend"
+    ]
+  },
   "demnach": "term-demnach",
   "demuetig": "term-demuetig",
   "den-manen-des-unsterblichen-mozart-am-ende-eines-dankerfuellten-lebens": "term-den-manen-des-unsterblichen-mozart-am-ende-eines-dankerfuellten-lebens",
@@ -231,7 +402,12 @@
   "die-viertelnote-im-jagdthema-immer-etwas-laenger": "term-die-viertelnote-im-jagdthema-immer-etwas-laenger",
   "diener": "term-diener",
   "dienerschaft": "term-dienerschaft",
-  "dient": "term-dient",
+  "dient": {
+    "id": "term-dient",
+    "exampleVariants": [
+      "dient"
+    ]
+  },
   "diese-3-b-schlaege-nur-fuer-chromatische-pauken-ausserdem-wegzulassen": {
     "id": "term-diese-3-b-schlaege-nur-fuer-chromatische-pauken-ausserdem-wegzulassen",
     "original": "Diese 3 B-schläge nur für chromatische Pauken, außerdem wegzulassen."
@@ -259,7 +435,12 @@
   "doppelfuge": "term-doppelfuge",
   "doppelt": "term-doppelt",
   "dpfr": "term-dpfr",
-  "draengend": "term-draengend",
+  "draengend": {
+    "id": "term-draengend",
+    "exampleVariants": [
+      "drängend"
+    ]
+  },
   "dreien": "term-dreien",
   "dreifach-womoeglich-zusats-d-h": {
     "id": "term-dreifach-womoeglich-zusats-d-h",
@@ -267,12 +448,22 @@
   },
   "dreinfahren": "term-dreinfahren",
   "dreitaktig-dreitaktig": "term-dreitaktig-dreitaktig",
-  "drohend": "term-drohend",
+  "drohend": {
+    "id": "term-drohend",
+    "exampleVariants": [
+      "drohend"
+    ]
+  },
   "duenna": "term-duenna",
   "duftig": "term-duftig",
   "dumpf": "term-dumpf",
   "dunkel": "term-dunkel",
-  "duennen": "term-duennen",
+  "duennen": {
+    "id": "term-duennen",
+    "exampleVariants": [
+      "dünnen"
+    ]
+  },
   "durch": "term-durch",
   "durch-dickicht-und-gestruepp-auf-irrwegen": "term-durch-dickicht-und-gestruepp-auf-irrwegen",
   "durchaus": "term-durchaus",
@@ -282,8 +473,12 @@
   "eben": "term-eben",
   "ebenfalls": "term-ebenfalls",
   "ebenso": "term-ebenso",
-  "edel": "term-edel",
-  "edlen": "term-edlen",
+  "edel": {
+    "id": "term-edel",
+    "exampleVariants": [
+      "edlen"
+    ]
+  },
   "eifersuechtig": "term-eifersuechtig",
   "eigenhaendig": "term-eigenhaendig",
   "eigensinnig": "term-eigensinnig",
@@ -294,55 +489,195 @@
   "einfach": "term-einfach",
   "eingang": "term-eingang",
   "einhalten": "term-einhalten",
-  "einige": "term-einige",
+  "einige": {
+    "id": "term-einige",
+    "exampleVariants": [
+      "einige"
+    ]
+  },
   "einleiten": "term-einleiten",
   "einleitung": "term-einleitung",
   "einsetzen": "term-einsetzen",
-  "einstudiren": "term-einstudiren",
-  "eintragung": "term-eintragung",
+  "einstudiren": {
+    "id": "term-einstudiren",
+    "exampleVariants": [
+      "Einstudiren"
+    ]
+  },
+  "eintragung": {
+    "id": "term-eintragung",
+    "exampleVariants": [
+      "Eintragung"
+    ]
+  },
   "eintritt-in-den-wald": "term-eintritt-in-den-wald",
   "einzeln": "term-einzeln",
   "einzig": "term-einzig",
-  "einzuhalten": "term-einzuhalten",
+  "einzuhalten": {
+    "id": "term-einzuhalten",
+    "exampleVariants": [
+      "einzuhalten"
+    ]
+  },
   "elastisch": "term-elastisch",
   "elegie": "term-elegie",
-  "elegischem": "term-elegischem",
-  "empfindung": "term-empfindung",
-  "empfohlen": "term-empfohlen",
-  "empfunden": "term-empfunden",
-  "endend": "term-endend",
-  "endgiltige": "term-endgiltige",
-  "endgueltige": "term-endgueltige",
+  "elegischem": {
+    "id": "term-elegischem",
+    "exampleVariants": [
+      "elegisch"
+    ]
+  },
+  "empfindung": {
+    "id": "term-empfindung",
+    "exampleVariants": [
+      "Empfindung"
+    ]
+  },
+  "empfohlen": {
+    "id": "term-empfohlen",
+    "exampleVariants": [
+      "empfohlen"
+    ]
+  },
+  "empfunden": {
+    "id": "term-empfunden",
+    "exampleVariants": [
+      "empfunden"
+    ]
+  },
+  "endend": {
+    "id": "term-endend",
+    "exampleVariants": [
+      "endend"
+    ]
+  },
+  "endgueltige": {
+    "id": "term-endgueltige",
+    "exampleVariants": [
+      "endgiltige",
+      "endgültig"
+    ]
+  },
   "endlich": "term-endlich",
   "engelkonzert": "term-engelkonzert",
   "entfernung": "term-entfernung",
-  "entruestet": "term-entruestet",
-  "entschlossen": "term-entschlossen",
-  "entschuldigend": "term-entschuldigend",
-  "entsetzt": "term-entsetzt",
+  "entruestet": {
+    "id": "term-entruestet",
+    "exampleVariants": [
+      "entrüstet"
+    ]
+  },
+  "entschlossen": {
+    "id": "term-entschlossen",
+    "exampleVariants": [
+      "entschlossen"
+    ]
+  },
+  "entschuldigend": {
+    "id": "term-entschuldigend",
+    "exampleVariants": [
+      "entschuldigend"
+    ]
+  },
+  "entsetzt": {
+    "id": "term-entsetzt",
+    "exampleVariants": [
+      "entsetzt"
+    ]
+  },
   "entsprechen": "term-entsprechen",
-  "entstellt": "term-entstellt",
-  "entzueckt": "term-entzueckt",
-  "ergriffen": "term-ergriffen",
+  "entstellt": {
+    "id": "term-entstellt",
+    "exampleVariants": [
+      "entstellt"
+    ]
+  },
+  "entzueckt": {
+    "id": "term-entzueckt",
+    "exampleVariants": [
+      "entzückt"
+    ]
+  },
+  "ergriffen": {
+    "id": "term-ergriffen",
+    "exampleVariants": [
+      "ergriffen"
+    ]
+  },
   "erhobener": "term-erhobener",
-  "erhobner": "term-erhobner",
-  "erleichtert": "term-erleichtert",
+  "erhobner": {
+    "id": "term-erhobner",
+    "exampleVariants": [
+      "erhoben"
+    ]
+  },
+  "erleichtert": {
+    "id": "term-erleichtert",
+    "exampleVariants": [
+      "erleichtert"
+    ]
+  },
   "erleichterung": "term-erleichterung",
   "erloeschen": "term-erloeschen",
-  "ermattend": "term-ermattend",
-  "ermuedet": "term-ermuedet",
+  "ermattend": {
+    "id": "term-ermattend",
+    "exampleVariants": [
+      "ermattend"
+    ]
+  },
+  "ermuedet": {
+    "id": "term-ermuedet",
+    "exampleVariants": [
+      "ermüdet"
+    ]
+  },
   "ernst": "term-ernst",
-  "erregt": "term-erregt",
-  "erreicht": "term-erreicht",
+  "erregt": {
+    "id": "term-erregt",
+    "exampleVariants": [
+      "erregt"
+    ]
+  },
+  "erreicht": {
+    "id": "term-erreicht",
+    "exampleVariants": [
+      "erreicht"
+    ]
+  },
   "erscheinen": "term-erscheinen",
   "erscheinung": "term-erscheinung",
-  "erschoepft": "term-erschoepft",
-  "erschreckt": "term-erschreckt",
-  "erschrocken": "term-erschrocken",
-  "erschuettert": "term-erschuettert",
+  "erschoepft": {
+    "id": "term-erschoepft",
+    "exampleVariants": [
+      "erschöpft"
+    ]
+  },
+  "erschreckt": {
+    "id": "term-erschreckt",
+    "exampleVariants": [
+      "erschreckt"
+    ]
+  },
+  "erschrocken": {
+    "id": "term-erschrocken",
+    "exampleVariants": [
+      "erschrocken"
+    ]
+  },
+  "erschuettert": {
+    "id": "term-erschuettert",
+    "exampleVariants": [
+      "erschüttert"
+    ]
+  },
   "erschuetterung": "term-erschuetterung",
   "erst": "term-erst",
-  "ersterbend": "term-ersterbend",
+  "ersterbend": {
+    "id": "term-ersterbend",
+    "exampleVariants": [
+      "ersterbend"
+    ]
+  },
   "erstes-zeitmass-beschleunigt": "term-erstes-zeitmass-beschleunigt",
   "erzaehlen": "term-erzaehlen",
   "erzaehlung": "term-erzaehlung",
@@ -357,24 +692,48 @@
   "fassung": "term-fassung",
   "fast": "term-fast",
   "feierlich": "term-feierlich",
-  "ferne": "term-ferne",
+  "ferne": {
+    "id": "term-ferne",
+    "exampleVariants": [
+      "fern"
+    ]
+  },
   "fernerhin": "term-fernerhin",
-  "fest": "term-fest",
+  "fest": {
+    "id": "term-fest",
+    "exampleVariants": [
+      "festes"
+    ]
+  },
   "fest-im-gewonnenen-lebhaften-zeitmass": "term-fest-im-gewonnenen-lebhaften-zeitmass",
-  "festes": "term-festes",
   "festes-zeitmass-maessig-langsam": "term-festes-zeitmass-maessig-langsam",
   "feurig": "term-feurig",
   "ff": {
     "id": "term-ff",
     "original": "ff."
   },
-  "findet-sich": "term-findet-sich",
+  "findet-sich": {
+    "id": "term-findet-sich",
+    "exampleVariants": [
+      "findet sich"
+    ]
+  },
   "flebile": "term-flebile",
-  "fliessend": "term-fliessend",
+  "fliessend": {
+    "id": "term-fliessend",
+    "exampleVariants": [
+      "fließend"
+    ]
+  },
   "fluechtig": "term-fluechtig",
   "fluessig": "term-fluessig",
   "fluestern": "term-fluestern",
-  "folgt": "term-folgt",
+  "folgt": {
+    "id": "term-folgt",
+    "exampleVariants": [
+      "folgt"
+    ]
+  },
   "folgt-sofort-der-naechste-satz": "term-folgt-sofort-der-naechste-satz",
   "fort": "term-fort",
   "fort-u-fort": {
@@ -385,55 +744,165 @@
     "id": "term-fort-u-fort-getragen",
     "original": "fort u. fort getragen"
   },
-  "fortlaufend": "term-fortlaufend",
+  "fortlaufend": {
+    "id": "term-fortlaufend",
+    "exampleVariants": [
+      "fortlaufend"
+    ]
+  },
   "frech": "term-frech",
   "frei-im-vortrag": "term-frei-im-vortrag",
-  "freihaengend": "term-freihaengend",
+  "freihaengend": {
+    "id": "term-freihaengend",
+    "exampleVariants": [
+      "freihängend"
+    ]
+  },
   "frisch": "term-frisch",
   "froehlich": "term-froehlich",
   "frosch": "term-frosch",
-  "frueher": "term-frueher",
-  "fuehrend": "term-fuehrend",
+  "frueher": {
+    "id": "term-frueher",
+    "exampleVariants": [
+      "früher"
+    ]
+  },
+  "fuehrend": {
+    "id": "term-fuehrend",
+    "exampleVariants": [
+      "führend"
+    ]
+  },
   "fuer-sich": "term-fuer-sich",
   "furchtbar": "term-furchtbar",
   "g-saite-anfangs": "term-g-saite-anfangs",
   "g-saite-wieder-normale-stimmung": "term-g-saite-wieder-normale-stimmung",
   "galant": "term-galant",
   "ganz": "term-ganz",
-  "gebrochen": "term-gebrochen",
-  "gebunden": "term-gebunden",
+  "gebrochen": {
+    "id": "term-gebrochen",
+    "exampleVariants": [
+      "gebrochen"
+    ]
+  },
+  "gebunden": {
+    "id": "term-gebunden",
+    "exampleVariants": [
+      "gebunden"
+    ]
+  },
   "gedaechtnis": "term-gedaechtnis",
-  "gedaempft": "term-gedaempft",
-  "gedehnt": "term-gedehnt",
-  "gefahrvolle": "term-gefahrvolle",
+  "gedaempft": {
+    "id": "term-gedaempft",
+    "exampleVariants": [
+      "gedämpft"
+    ]
+  },
+  "gedehnt": {
+    "id": "term-gedehnt",
+    "exampleVariants": [
+      "gedehnt"
+    ]
+  },
+  "gefahrvolle": {
+    "id": "term-gefahrvolle",
+    "exampleVariants": [
+      "gefahrvoll"
+    ]
+  },
   "gefluester": "term-gefluester",
   "gefolge": "term-gefolge",
   "gefuehl": "term-gefuehl",
   "gefuehlvoll": "term-gefuehlvoll",
   "gegen": "term-gegen",
-  "gehalten": "term-gehalten",
+  "gehalten": {
+    "id": "term-gehalten",
+    "exampleVariants": [
+      "gehalten"
+    ]
+  },
   "geheimnisvoll": "term-geheimnisvoll",
-  "gehend": "term-gehend",
+  "gehend": {
+    "id": "term-gehend",
+    "exampleVariants": [
+      "gehend"
+    ]
+  },
   "geiger": "term-geiger",
   "gelaeufig": "term-gelaeufig",
   "gemaechlich": "term-gemaechlich",
-  "gemaessigt": "term-gemaessigt",
+  "gemaessigt": {
+    "id": "term-gemaessigt",
+    "exampleVariants": [
+      "gemässigt"
+    ]
+  },
   "gemein": "term-gemein",
-  "gemessen": "term-gemessen",
+  "gemessen": {
+    "id": "term-gemessen",
+    "exampleVariants": [
+      "gemessen"
+    ]
+  },
   "gemuetlich": "term-gemuetlich",
   "genau": "term-genau",
   "genehmigung": "term-genehmigung",
-  "genesende": "term-genesende",
-  "gerieben": "term-gerieben",
-  "gerissen": "term-gerissen",
-  "geruehrt": "term-geruehrt",
+  "genesende": {
+    "id": "term-genesende",
+    "exampleVariants": [
+      "Genesende"
+    ]
+  },
+  "gerieben": {
+    "id": "term-gerieben",
+    "exampleVariants": [
+      "gerieben"
+    ]
+  },
+  "gerissen": {
+    "id": "term-gerissen",
+    "exampleVariants": [
+      "gerissen"
+    ]
+  },
+  "geruehrt": {
+    "id": "term-geruehrt",
+    "exampleVariants": [
+      "gerührt"
+    ]
+  },
   "gesangsperiode": "term-gesangsperiode",
-  "gesaettigten": "term-gesaettigten",
-  "geschehen": "term-geschehen",
-  "geschliffen": "term-geschliffen",
+  "gesaettigten": {
+    "id": "term-gesaettigten",
+    "exampleVariants": [
+      "gesättigt"
+    ]
+  },
+  "geschehen": {
+    "id": "term-geschehen",
+    "exampleVariants": [
+      "geschehen"
+    ]
+  },
+  "geschliffen": {
+    "id": "term-geschliffen",
+    "exampleVariants": [
+      "geschliffen"
+    ]
+  },
   "geschmeidig": "term-geschmeidig",
-  "geschrieen": "term-geschrieen",
-  "geschrien": "term-geschrien",
+  "geschrieen": {
+    "id": "term-geschrieen",
+    "exampleVariants": [
+      "geschrieen"
+    ]
+  },
+  "geschrien": {
+    "id": "term-geschrien",
+    "exampleVariants": [
+      "geschrien"
+    ]
+  },
   "geschwaetzig": "term-geschwaetzig",
   "geschwind": "term-geschwind",
   "geschwindmarsch": "term-geschwindmarsch",
@@ -441,38 +910,103 @@
     "id": "term-gespr",
     "original": "gespr."
   },
-  "gesprochen": "term-gesprochen",
+  "gesprochen": {
+    "id": "term-gesprochen",
+    "exampleVariants": [
+      "gesprochen"
+    ]
+  },
   "gestalt": "term-gestalt",
-  "gestossen": "term-gestossen",
-  "gestrichen": "term-gestrichen",
+  "gestossen": {
+    "id": "term-gestossen",
+    "exampleVariants": [
+      "gestoßen"
+    ]
+  },
+  "gestrichen": {
+    "id": "term-gestrichen",
+    "exampleVariants": [
+      "gestrichen"
+    ]
+  },
   "gestruepp": "term-gestruepp",
   "get": {
     "id": "term-get",
     "original": "get."
   },
-  "geteilt": "term-geteilt",
+  "geteilt": {
+    "id": "term-geteilt",
+    "exampleVariants": [
+      "geteilt"
+    ]
+  },
   "geth": {
     "id": "term-geth",
     "original": "geth."
   },
   "getheilt": "term-getheilt",
-  "getragen": "term-getragen",
+  "getragen": {
+    "id": "term-getragen",
+    "exampleVariants": [
+      "getragen"
+    ]
+  },
   "gewalt": "term-gewalt",
   "gewichtig": "term-gewichtig",
-  "gewidmet": "term-gewidmet",
+  "gewidmet": {
+    "id": "term-gewidmet",
+    "exampleVariants": [
+      "gewidmet"
+    ]
+  },
   "gewinnen": "term-gewinnen",
-  "gewirbelt": "term-gewirbelt",
+  "gewirbelt": {
+    "id": "term-gewirbelt",
+    "exampleVariants": [
+      "gewirbelt"
+    ]
+  },
   "gewitter": "term-gewitter",
   "gewoehnlich": "term-gewoehnlich",
-  "gewonnen": "term-gewonnen",
-  "gewonnenen": "term-gewonnenen",
-  "geziert": "term-geziert",
-  "gezogen": "term-gezogen",
-  "glaenzend": "term-glaenzend",
+  "gewonnen": {
+    "id": "term-gewonnen",
+    "exampleVariants": [
+      "gewonnen"
+    ]
+  },
+  "gewonnenen": {
+    "id": "term-gewonnenen",
+    "exampleVariants": [
+      "gewonnen"
+    ]
+  },
+  "geziert": {
+    "id": "term-geziert",
+    "exampleVariants": [
+      "geziert"
+    ]
+  },
+  "gezogen": {
+    "id": "term-gezogen",
+    "exampleVariants": [
+      "gezogen"
+    ]
+  },
+  "glaenzend": {
+    "id": "term-glaenzend",
+    "exampleVariants": [
+      "glänzend"
+    ]
+  },
   "gleich": "term-gleich",
   "gleich-weiter": "term-gleich-weiter",
   "gleichgueltig": "term-gleichgueltig",
-  "gleichmaessig": "term-gleichmaessig",
+  "gleichmaessig": {
+    "id": "term-gleichmaessig",
+    "exampleVariants": [
+      "gleichmäßig"
+    ]
+  },
   "gletscher": "term-gletscher",
   "glissando-ueber-die-ganze-griffbrett": "term-glissando-ueber-die-ganze-griffbrett",
   "glissando-ueber-die-ganze-klaviatur": "term-glissando-ueber-die-ganze-klaviatur",
@@ -489,11 +1023,26 @@
   "gross": "term-gross",
   "grund": "term-grund",
   "hab-lumbedruwwel-mit-me-lumbeschatz": "term-hab-lumbedruwwel-mit-me-lumbeschatz",
-  "halbe": "term-halbe",
+  "halbe": {
+    "id": "term-halbe",
+    "exampleVariants": [
+      "halb"
+    ]
+  },
   "halblaut": "term-halblaut",
-  "hallend": "term-hallend",
+  "hallend": {
+    "id": "term-hallend",
+    "exampleVariants": [
+      "hallend"
+    ]
+  },
   "haltebogen": "term-haltebogen",
-  "haemmernd": "term-haemmernd",
+  "haemmernd": {
+    "id": "term-haemmernd",
+    "exampleVariants": [
+      "hämmernd"
+    ]
+  },
   "harpeggirt-harpegg": {
     "id": "term-harpeggirt-harpegg",
     "original": "harpeggirt, harpegg."
@@ -505,24 +1054,59 @@
   "haushofmeister": "term-haushofmeister",
   "hausknecht": "term-hausknecht",
   "heftig": "term-heftig",
-  "heiligen": "term-heiligen",
+  "heiligen": {
+    "id": "term-heiligen",
+    "exampleVariants": [
+      "Heilige"
+    ]
+  },
   "heimlich": "term-heimlich",
   "heiter": "term-heiter",
   "heraus": "term-heraus",
   "herausgebevorschlag": "term-herausgebevorschlag",
-  "herausgestossen": "term-herausgestossen",
-  "hervortretend": "term-hervortretend",
-  "hervortritt": "term-hervortritt",
-  "hervorzubringen": "term-hervorzubringen",
+  "herausgestossen": {
+    "id": "term-herausgestossen",
+    "exampleVariants": [
+      "herausgestossen"
+    ]
+  },
+  "hervortretend": {
+    "id": "term-hervortretend",
+    "exampleVariants": [
+      "hervortretend"
+    ]
+  },
+  "hervortritt": {
+    "id": "term-hervortritt",
+    "exampleVariants": [
+      "hervortritt"
+    ]
+  },
+  "hervorzubringen": {
+    "id": "term-hervorzubringen",
+    "exampleVariants": [
+      "hervorzubringen"
+    ]
+  },
   "hess": "term-hess",
   "heuchlerisch": "term-heuchlerisch",
-  "heulend": "term-heulend",
+  "heulend": {
+    "id": "term-heulend",
+    "exampleVariants": [
+      "heulend"
+    ]
+  },
   "hg": {
     "id": "term-hg",
     "original": "Hg."
   },
   "hinaufziehen": "term-hinaufziehen",
-  "hingerissen": "term-hingerissen",
+  "hingerissen": {
+    "id": "term-hingerissen",
+    "exampleVariants": [
+      "hingerissen"
+    ]
+  },
   "hinter-der-scene": "term-hinter-der-scene",
   "hintergrund": "term-hintergrund",
   "hinterweltlern": "term-hinterweltlern",
@@ -536,7 +1120,12 @@
   "hoellisch": "term-hoellisch",
   "holzblaeser": "term-holzblaeser",
   "hoerbar": "term-hoerbar",
-  "horcht": "term-horcht",
+  "horcht": {
+    "id": "term-horcht",
+    "exampleVariants": [
+      "horcht"
+    ]
+  },
   "humorvoll": "term-humorvoll",
   "ii-cello-am-i-pult-mit-dem-v-pult": {
     "id": "term-ii-cello-am-i-pult-mit-dem-v-pult",
@@ -572,7 +1161,12 @@
   "ins": "term-ins",
   "instaendig": "term-instaendig",
   "intensiv": "term-intensiv",
-  "irrwegen": "term-irrwegen",
+  "irrwegen": {
+    "id": "term-irrwegen",
+    "exampleVariants": [
+      "Irrwegen"
+    ]
+  },
   "jagd": "term-jagd",
   "jagthoerner": "term-jagthoerner",
   "jaeh": "term-jaeh",
@@ -582,20 +1176,39 @@
     "id": "term-je-nach-dem-grundcharakter-der-verschiedenen-themen-reich-zu-modificiren",
     "original": "je nach dem Grundcharakter der verschiedenen Themen reich zu modificiren."
   },
-  "jeder": "term-jeder",
-  "jedes": "term-jedes",
+  "jeder": {
+    "id": "term-jeder",
+    "exampleVariants": [
+      "jedes"
+    ]
+  },
   "jedoch": "term-jedoch",
   "kammerdiener": "term-kammerdiener",
   "kammerlakai": "term-kammerlakai",
   "kaprizioes": "term-kaprizioes",
   "kaum": "term-kaum",
   "keck": "term-keck",
-  "keifend": "term-keifend",
+  "keifend": {
+    "id": "term-keifend",
+    "exampleVariants": [
+      "keifend"
+    ]
+  },
   "keinesfalls": "term-keinesfalls",
   "kellner": "term-kellner",
-  "klagend": "term-klagend",
+  "klagend": {
+    "id": "term-klagend",
+    "exampleVariants": [
+      "klagend"
+    ]
+  },
   "klaeglich": "term-klaeglich",
-  "klammern": "term-klammern",
+  "klammern": {
+    "id": "term-klammern",
+    "exampleVariants": [
+      "Klammern"
+    ]
+  },
   "klangvoll": "term-klangvoll",
   "klappe": "term-klappe",
   "klavierauszug": "term-klavierauszug",
@@ -604,8 +1217,18 @@
   "kloeppel": "term-kloeppel",
   "kluft": "term-kluft",
   "knapp": "term-knapp",
-  "knappe": "term-knappe",
-  "knix": "term-knix",
+  "knappe": {
+    "id": "term-knappe",
+    "exampleVariants": [
+      "Knappen"
+    ]
+  },
+  "knix": {
+    "id": "term-knix",
+    "exampleVariants": [
+      "Knix"
+    ]
+  },
   "kokett": "term-kokett",
   "kondukt": "term-kondukt",
   "kontrabaesse-u-celli-deutlich-pizz": {
@@ -613,18 +1236,38 @@
     "original": "Kontrabässe u. Celli deutlich pizz."
   },
   "kopfstimme": "term-kopfstimme",
-  "kraeftig": "term-kraeftig",
+  "kraeftig": {
+    "id": "term-kraeftig",
+    "exampleVariants": [
+      "kräftigen"
+    ]
+  },
   "kreischen": "term-kreischen",
   "kriegerisch": "term-kriegerisch",
-  "kuenftigen": "term-kuenftigen",
+  "kuenftigen": {
+    "id": "term-kuenftigen",
+    "exampleVariants": [
+      "künftig"
+    ]
+  },
   "kurz": "term-kurz",
-  "lachend": "term-lachend",
+  "lachend": {
+    "id": "term-lachend",
+    "exampleVariants": [
+      "lachend"
+    ]
+  },
   "lady-macbeth-o-eile-eile-her-damit-ich-meinen-geist-in-deinen-giesse-durch-meine-tapfere-zunge-diese-zweifel-und-furchtgespenster-aus-dem-felde-schlage-die-dich-wegschrecken-von-dem-goldnen-reif-womit-das-glueck-dich-gern-bekroenen-moechte": {
     "id": "term-lady-macbeth-o-eile-eile-her-damit-ich-meinen-geist-in-deinen-giesse-durch-meine-tapfere-zunge-diese-zweifel-und-furchtgespenster-aus-dem-felde-schlage-die-dich-wegschrecken-von-dem-goldnen-reif-womit-das-glueck-dich-gern-bekroenen-moechte",
     "original": "Lady Macbeth. O, eile! Eile her! damit ich meinen Geist in deinen giesse, durch meine tapfere Zunge diese Zweifel und Furchtgespenster aus dem Felde schlage, die dich wegschrecken von dem goldnen Reif, womit das Glück dich gern bekrönen möchte."
   },
   "lakai": "term-lakai",
-  "landlaeufigen": "term-landlaeufigen",
+  "landlaeufigen": {
+    "id": "term-landlaeufigen",
+    "exampleVariants": [
+      "landläufig"
+    ]
+  },
   "laendler": "term-laendler",
   "langsam": "term-langsam",
   "langsamer-wie-bei-der-gesangsperiode-im-1-teile": {
@@ -634,10 +1277,20 @@
   "launig": "term-launig",
   "laut": "term-laut",
   "laute": "term-laute",
-  "lautet": "term-lautet",
+  "lautet": {
+    "id": "term-lautet",
+    "exampleVariants": [
+      "lautet"
+    ]
+  },
   "lebendig": "term-lebendig",
   "lebhaft": "term-lebhaft",
-  "leere": "term-leere",
+  "leere": {
+    "id": "term-leere",
+    "exampleVariants": [
+      "leer"
+    ]
+  },
   "leibjaeger": "term-leibjaeger",
   "leibkammerdiener": "term-leibkammerdiener",
   "leiblakai": "term-leiblakai",
@@ -651,9 +1304,19 @@
     "id": "term-leise-bewegt-doch-nicht-brillant",
     "original": "Leise bewegt, doch nicht brillant."
   },
-  "lesearten": "term-lesearten",
+  "lesearten": {
+    "id": "term-lesearten",
+    "exampleVariants": [
+      "Leseart"
+    ]
+  },
   "leute": "term-leute",
-  "liebegluehend": "term-liebegluehend",
+  "liebegluehend": {
+    "id": "term-liebegluehend",
+    "exampleVariants": [
+      "liebeglühend"
+    ]
+  },
   "liebenswuerdig": "term-liebenswuerdig",
   "liebevoll": "term-liebevoll",
   "lieblich": "term-lieblich",
@@ -679,9 +1342,22 @@
   "macht": "term-macht",
   "maechtig": "term-maechtig",
   "magd": "term-magd",
-  "majestaetisch-majestaetische": "term-majestaetisch-majestaetische",
+  "majestaetisch-majestaetische": {
+    "id": "term-majestaetisch-majestaetische",
+    "exampleVariants": [
+      "majestätische"
+    ]
+  },
   "markant": "term-markant",
-  "markieren-markiert-marcirt-markirt": "term-markieren-markiert-marcirt-markirt",
+  "markieren-markiert-marcirt-markirt": {
+    "id": "term-markieren-markiert-marcirt-markirt",
+    "exampleVariants": [
+      "marcirt",
+      "markiert",
+      "markirt",
+      "markieren"
+    ]
+  },
   "markig": "term-markig",
   "maessig": "term-maessig",
   "maessige-viertel": "term-maessige-viertel",
@@ -707,7 +1383,12 @@
   "mit-kraft-maessig-schnell-viertel-ohne-pathos-und-stets-lebendig": "term-mit-kraft-maessig-schnell-viertel-ohne-pathos-und-stets-lebendig",
   "mit-vollausladendem-ton": "term-mit-vollausladendem-ton",
   "mit-vollster-kraft-im-tempo-etwas-verzoegernd-und-auch-so-bleiben-bis-tempo-i": "term-mit-vollster-kraft-im-tempo-etwas-verzoegernd-und-auch-so-bleiben-bis-tempo-i",
-  "modificiren": "term-modificiren",
+  "modificiren": {
+    "id": "term-modificiren",
+    "exampleVariants": [
+      "modificiren"
+    ]
+  },
   "moeglicherweise": "term-moeglicherweise",
   "moeglichst-auf-der-g-saite-zu-spielen": "term-moeglichst-auf-der-g-saite-zu-spielen",
   "moeglichst-g-saite": "term-moeglichst-g-saite",
@@ -727,7 +1408,12 @@
   },
   "nach-und-nach": "term-nach-und-nach",
   "nachahmung": "term-nachahmung",
-  "nachfolgenden": "term-nachfolgenden",
+  "nachfolgenden": {
+    "id": "term-nachfolgenden",
+    "exampleVariants": [
+      "nachfolgend"
+    ]
+  },
   "nachgeben": "term-nachgeben",
   "nachlassen": "term-nachlassen",
   "nachschlag": "term-nachschlag",
@@ -736,7 +1422,12 @@
   "nadelscharf": "term-nadelscharf",
   "naiv": "term-naiv",
   "naemlich": "term-naemlich",
-  "naeselnd": "term-naeselnd",
+  "naeselnd": {
+    "id": "term-naeselnd",
+    "exampleVariants": [
+      "näselnd"
+    ]
+  },
   "naturlaut": "term-naturlaut",
   "nb": "term-nb",
   "nb-2te-trompete-und-1tes-2tes-horn-immer-marcirt-bis-zum-legato": "term-nb-2te-trompete-und-1tes-2tes-horn-immer-marcirt-bis-zum-legato",
@@ -757,7 +1448,14 @@
   "neapolitanisches-volkslied": "term-neapolitanisches-volkslied",
   "nebel": "term-nebel",
   "neckisch": "term-neckisch",
-  "nehmen": "term-nehmen",
+  "nehmen": {
+    "id": "term-nehmen",
+    "exampleVariants": [
+      "genommen",
+      "nahm",
+      "nimmt"
+    ]
+  },
   "nicht-das-leere-a-nehmen": "term-nicht-das-leere-a-nehmen",
   "nicht-mehr": "term-nicht-mehr",
   "nicht-schleppen-ohne-jedes-pathos": "term-nicht-schleppen-ohne-jedes-pathos",
@@ -766,7 +1464,12 @@
     "original": "Nicht zu schnell. Keinefalls schleppend"
   },
   "nie": "term-nie",
-  "nimmt": "term-nimmt",
+  "nimmt": {
+    "id": "term-nimmt",
+    "exampleVariants": [
+      "nimmt"
+    ]
+  },
   "noch": "term-noch",
   "noch-einmal": "term-noch-einmal",
   "noch-immer": "term-noch-immer",
@@ -783,24 +1486,49 @@
   "paar": "term-paar",
   "pastos": "term-pastos",
   "pathos": "term-pathos",
-  "pikiert": "term-pikiert",
+  "pikiert": {
+    "id": "term-pikiert",
+    "exampleVariants": [
+      "pikiert"
+    ]
+  },
   "ploetzlich": "term-ploetzlich",
   "ploetzlich-leidenschaftlich-anschlagend": "term-ploetzlich-leidenschaftlich-anschlagend",
   "plump": "term-plump",
   "pompoes": "term-pompoes",
-  "posaunensaetze": "term-posaunensaetze",
+  "posaunensaetze": {
+    "id": "term-posaunensaetze",
+    "exampleVariants": [
+      "Posaunensatz"
+    ]
+  },
   "potpourri": "term-potpourri",
   "praecis": "term-praecis",
   "praecis-sehr-leicht-markieren": "term-praecis-sehr-leicht-markieren",
   "praegnant": "term-praegnant",
   "prickelnd": "term-prickelnd",
-  "proportioniert": "term-proportioniert",
+  "proportioniert": {
+    "id": "term-proportioniert",
+    "exampleVariants": [
+      "proportioniert"
+    ]
+  },
   "pult": "term-pult",
   "pultweise": "term-pultweise",
   "quelle": "term-quelle",
   "rand": "term-rand",
-  "rasend": "term-rasend",
-  "rauschend": "term-rauschend",
+  "rasend": {
+    "id": "term-rasend",
+    "exampleVariants": [
+      "rasend"
+    ]
+  },
+  "rauschend": {
+    "id": "term-rauschend",
+    "exampleVariants": [
+      "rauschend"
+    ]
+  },
   "recht": "term-recht",
   "reich": "term-reich",
   "reichlich": "term-reichlich",
@@ -810,9 +1538,19 @@
     "original": "rep."
   },
   "resonanz": "term-resonanz",
-  "revidierte": "term-revidierte",
+  "revidierte": {
+    "id": "term-revidierte",
+    "exampleVariants": [
+      "revidiert"
+    ]
+  },
   "rezitativisch-frei": "term-rezitativisch-frei",
-  "riesen": "term-riesen",
+  "riesen": {
+    "id": "term-riesen",
+    "exampleVariants": [
+      "Riese"
+    ]
+  },
   "riesenhaft": "term-riesenhaft",
   "ritter": "term-ritter",
   "ritterlich": "term-ritterlich",
@@ -828,16 +1566,36 @@
   "saemtlich": "term-saemtlich",
   "saemtliche-streicher-die-3-letzten-noten-des-themas-immerfort-abwaerts-gestrichen": "term-saemtliche-streicher-die-3-letzten-noten-des-themas-immerfort-abwaerts-gestrichen",
   "sanft": "term-sanft",
-  "scalen": "term-scalen",
+  "scalen": {
+    "id": "term-scalen",
+    "exampleVariants": [
+      "Scalen"
+    ]
+  },
   "schallbecher": "term-schallbecher",
   "schalltrichter": "term-schalltrichter",
   "scharf": "term-scharf",
-  "scharrend": "term-scharrend",
+  "scharrend": {
+    "id": "term-scharrend",
+    "exampleVariants": [
+      "scharrend"
+    ]
+  },
   "schattenhaft": "term-schattenhaft",
-  "schaudernd": "term-schaudernd",
+  "schaudernd": {
+    "id": "term-schaudernd",
+    "exampleVariants": [
+      "schaudernd"
+    ]
+  },
   "schauerlich": "term-schauerlich",
   "schauern": "term-schauern",
-  "schaeumend": "term-schaeumend",
+  "schaeumend": {
+    "id": "term-schaeumend",
+    "exampleVariants": [
+      "schäumend"
+    ]
+  },
   "schelmisch": "term-schelmisch",
   "schlag": "term-schlag",
   "schlaegelstock": "term-schlaegelstock",
@@ -849,12 +1607,37 @@
     "id": "term-schluss-der-1-fassung",
     "original": "Schluß der 1. Fassung"
   },
-  "schmachtend": "term-schmachtend",
+  "schmachtend": {
+    "id": "term-schmachtend",
+    "exampleVariants": [
+      "schmachtend"
+    ]
+  },
   "schmeicheln": "term-schmeicheln",
-  "schmetternd": "term-schmetternd",
-  "schmunzelnd": "term-schmunzelnd",
-  "schnarchend": "term-schnarchend",
-  "schnarrend": "term-schnarrend",
+  "schmetternd": {
+    "id": "term-schmetternd",
+    "exampleVariants": [
+      "schmetternd"
+    ]
+  },
+  "schmunzelnd": {
+    "id": "term-schmunzelnd",
+    "exampleVariants": [
+      "schmunzelnd"
+    ]
+  },
+  "schnarchend": {
+    "id": "term-schnarchend",
+    "exampleVariants": [
+      "schnarchend"
+    ]
+  },
+  "schnarrend": {
+    "id": "term-schnarrend",
+    "exampleVariants": [
+      "schnarrend"
+    ]
+  },
   "schnell": "term-schnell",
   "schnippchen": "term-schnippchen",
   "schnippisch": "term-schnippisch",
@@ -874,7 +1657,12 @@
   "schwingung": "term-schwingung",
   "schwung": "term-schwung",
   "scioltamente": "term-scioltamente",
-  "scorrevole": "term-scorrevole",
+  "scorrevole": {
+    "id": "term-scorrevole",
+    "exampleVariants": [
+      "scorrevole"
+    ]
+  },
   "sechs-spieler": "term-sechs-spieler",
   "seelenvoll": "term-seelenvoll",
   "sehnsucht": "term-sehnsucht",
@@ -893,8 +1681,18 @@
   "sehr-ruhige-und-gemessen-schreitende-viertel": "term-sehr-ruhige-und-gemessen-schreitende-viertel",
   "sehr-scharf-und-spitzig": "term-sehr-scharf-und-spitzig",
   "selig": "term-selig",
-  "seufzend": "term-seufzend",
-  "singend": "term-singend",
+  "seufzend": {
+    "id": "term-seufzend",
+    "exampleVariants": [
+      "seufzend"
+    ]
+  },
+  "singend": {
+    "id": "term-singend",
+    "exampleVariants": [
+      "singend"
+    ]
+  },
   "sinnen": "term-sinnen",
   "so-als": "term-so-als",
   "sofort-weiter": "term-sofort-weiter",
@@ -907,35 +1705,75 @@
   "sonnenaufgang": "term-sonnenaufgang",
   "sonnenuntergang": "term-sonnenuntergang",
   "sorgfaeltig": "term-sorgfaeltig",
-  "spaeter": "term-spaeter",
-  "spielend": "term-spielend",
+  "spaeter": {
+    "id": "term-spaeter",
+    "exampleVariants": [
+      "später"
+    ]
+  },
+  "spielend": {
+    "id": "term-spielend",
+    "exampleVariants": [
+      "spielend"
+    ]
+  },
   "spitz": "term-spitz",
   "spitzig": "term-spitzig",
-  "spottend": "term-spottend",
+  "spottend": {
+    "id": "term-spottend",
+    "exampleVariants": [
+      "spottend"
+    ]
+  },
   "spoettisch": "term-spoettisch",
   "sprachrohr": "term-sprachrohr",
   "sprechgesang": "term-sprechgesang",
-  "spruehend": "term-spruehend",
+  "spruehend": {
+    "id": "term-spruehend",
+    "exampleVariants": [
+      "sprühend"
+    ]
+  },
   "sprung": "term-sprung",
   "stab": "term-stab",
   "stahlstab": "term-stahlstab",
   "stark": "term-stark",
   "staerker-einsetzen": "term-staerker-einsetzen",
   "steg": "term-steg",
-  "steigen": "term-steigen",
+  "steigen": {
+    "id": "term-steigen",
+    "exampleVariants": [
+      "steigen"
+    ]
+  },
   "steigern": "term-steigern",
   "stetig": "term-stetig",
   "stets": "term-stets",
   "stets-sehr-virtuos-aber-ohne-anstrengung": "term-stets-sehr-virtuos-aber-ohne-anstrengung",
   "stille": "term-stille",
-  "stoecken": "term-stoecken",
+  "stoecken": {
+    "id": "term-stoecken",
+    "exampleVariants": [
+      "Stock"
+    ]
+  },
   "stolz": "term-stolz",
   "straff": "term-straff",
   "strahlen": "term-strahlen",
   "strascicando": "term-strascicando",
-  "streiche": "term-streiche",
+  "streiche": {
+    "id": "term-streiche",
+    "exampleVariants": [
+      "Streiche"
+    ]
+  },
   "streicheln": "term-streicheln",
-  "streichelt": "term-streichelt",
+  "streichelt": {
+    "id": "term-streichelt",
+    "exampleVariants": [
+      "streichelt"
+    ]
+  },
   "streicher": "term-streicher",
   "streicher-abwaerts-kurz-immer-die-3-letzten-noten-des-themas-no-1-hauptthema": {
     "id": "term-streicher-abwaerts-kurz-immer-die-3-letzten-noten-des-themas-no-1-hauptthema",
@@ -949,12 +1787,32 @@
   "streng": "term-streng",
   "strepitoso": "term-strepitoso",
   "strich-fuer-strich": "term-strich-fuer-strich",
-  "stricharten": "term-stricharten",
+  "stricharten": {
+    "id": "term-stricharten",
+    "exampleVariants": [
+      "Strichart"
+    ]
+  },
   "stricknadel": "term-stricknadel",
   "sturm": "term-sturm",
-  "stuerzt": "term-stuerzt",
-  "summend": "term-summend",
-  "tactig": "term-tactig",
+  "stuerzt": {
+    "id": "term-stuerzt",
+    "exampleVariants": [
+      "stürzen"
+    ]
+  },
+  "summend": {
+    "id": "term-summend",
+    "exampleVariants": [
+      "summend"
+    ]
+  },
+  "tactig": {
+    "id": "term-tactig",
+    "exampleVariants": [
+      "tactig"
+    ]
+  },
   "takt": "term-takt",
   "tal": "term-tal",
   "taeppisch": "term-taeppisch",
@@ -962,16 +1820,36 @@
     "id": "term-tempo-v-d-introduction",
     "original": "Tempo v.d. Introduction"
   },
-  "thaetig": "term-thaetig",
+  "thaetig": {
+    "id": "term-thaetig",
+    "exampleVariants": [
+      "tätig"
+    ]
+  },
   "tief": "term-tief",
-  "tobend": "term-tobend",
+  "tobend": {
+    "id": "term-tobend",
+    "exampleVariants": [
+      "tobend"
+    ]
+  },
   "ton": "term-ton",
   "tongebung": "term-tongebung",
   "tonlos": "term-tonlos",
   "transposition": "term-transposition",
-  "traeumend": "term-traeumend",
+  "traeumend": {
+    "id": "term-traeumend",
+    "exampleVariants": [
+      "träumend"
+    ]
+  },
   "traurig": "term-traurig",
-  "treibend": "term-treibend",
+  "treibend": {
+    "id": "term-treibend",
+    "exampleVariants": [
+      "treibend"
+    ]
+  },
   "trio-in-g-dur-dann-scherzo-rep-u-coda": {
     "id": "term-trio-in-g-dur-dann-scherzo-rep-u-coda",
     "original": "Trio in G dur, dann Scherzo rep. u. Coda"
@@ -987,18 +1865,59 @@
   "tumult": "term-tumult",
   "tuer": "term-tuer",
   "ueber-hinaus": "term-ueber-hinaus",
-  "uebergehen": "term-uebergehen",
-  "ueberhetzt": "term-ueberhetzt",
+  "uebergehen": {
+    "id": "term-uebergehen",
+    "exampleVariants": [
+      "übergehen"
+    ]
+  },
+  "ueberhetzt": {
+    "id": "term-ueberhetzt",
+    "exampleVariants": [
+      "überhetzt"
+    ]
+  },
   "uebermuethig": "term-uebermuethig",
   "uebermuetig": "term-uebermuetig",
-  "uebernehmen": "term-uebernehmen",
+  "uebernehmen": {
+    "id": "term-uebernehmen",
+    "exampleVariants": [
+      "ubernimmt",
+      "übernommen"
+    ]
+  },
   "uebernimmt": "term-uebernimmt",
-  "uebernommen": "term-uebernommen",
-  "ueberreicht": "term-ueberreicht",
-  "ueberstuerzend": "term-ueberstuerzend",
+  "uebernommen": {
+    "id": "term-uebernommen",
+    "exampleVariants": [
+      "übernommen"
+    ]
+  },
+  "ueberreicht": {
+    "id": "term-ueberreicht",
+    "exampleVariants": [
+      "überreicht"
+    ]
+  },
+  "ueberstuerzend": {
+    "id": "term-ueberstuerzend",
+    "exampleVariants": [
+      "überstürzend"
+    ]
+  },
   "uebrig": "term-uebrig",
-  "umstand": "term-umstand",
-  "umstaende": "term-umstaende",
+  "umstand": {
+    "id": "term-umstand",
+    "exampleVariants": [
+      "Umstände"
+    ]
+  },
+  "umstaende": {
+    "id": "term-umstaende",
+    "exampleVariants": [
+      "Umstände"
+    ]
+  },
   "umstimmen": "term-umstimmen",
   "ungeduldig": "term-ungeduldig",
   "ungefaehr": "term-ungefaehr",
@@ -1010,42 +1929,127 @@
   "unsichtbar": "term-unsichtbar",
   "unterbrechen": "term-unterbrechen",
   "unterbrechung": "term-unterbrechung",
-  "untersagt": "term-untersagt",
+  "untersagt": {
+    "id": "term-untersagt",
+    "exampleVariants": [
+      "untersagt"
+    ]
+  },
   "unwillkuerlich": "term-unwillkuerlich",
-  "urspruengliche": "term-urspruengliche",
+  "urspruengliche": {
+    "id": "term-urspruengliche",
+    "exampleVariants": [
+      "ursprünglich"
+    ]
+  },
   "variante": "term-variante",
   "variationen-seid-ihr-nicht-der-schwanendreher": "term-variationen-seid-ihr-nicht-der-schwanendreher",
   "vehemenz": "term-vehemenz",
   "verbeugung": "term-verbeugung",
   "verbreitern": "term-verbreitern",
-  "verduestert": "term-verduestert",
-  "verdutzt": "term-verdutzt",
-  "vereinigt": "term-vereinigt",
-  "verfuegung": "term-verfuegung",
-  "verhallend": "term-verhallend",
+  "verduestert": {
+    "id": "term-verduestert",
+    "exampleVariants": [
+      "verdüstert"
+    ]
+  },
+  "verdutzt": {
+    "id": "term-verdutzt",
+    "exampleVariants": [
+      "verdutzt"
+    ]
+  },
+  "vereinigt": {
+    "id": "term-vereinigt",
+    "exampleVariants": [
+      "vereinigt"
+    ]
+  },
+  "verfuegung": {
+    "id": "term-verfuegung",
+    "exampleVariants": [
+      "Verfügung"
+    ]
+  },
+  "verhallend": {
+    "id": "term-verhallend",
+    "exampleVariants": [
+      "verhallend"
+    ]
+  },
   "verhallend-doch-straff-im-tempo": "term-verhallend-doch-straff-im-tempo",
   "verhalten": "term-verhalten",
-  "verklingend": "term-verklingend",
-  "verlangsamen": "term-verlangsamen",
+  "verklingend": {
+    "id": "term-verklingend",
+    "exampleVariants": [
+      "verklingend"
+    ]
+  },
+  "verlangsamen": {
+    "id": "term-verlangsamen",
+    "exampleVariants": [
+      "Verlangsamen"
+    ]
+  },
   "verlauf": "term-verlauf",
-  "verlegers": "term-verlegers",
+  "verlegers": {
+    "id": "term-verlegers",
+    "exampleVariants": [
+      "Verleger"
+    ]
+  },
   "verloeschen": "term-verloeschen",
   "vernehmbar": "term-vernehmbar",
   "vernehmlich": "term-vernehmlich",
-  "verschiebung": "term-verschiebung",
+  "verschiebung": {
+    "id": "term-verschiebung",
+    "exampleVariants": [
+      "Verschiebung"
+    ]
+  },
   "verschwinden": "term-verschwinden",
-  "versehen": "term-versehen",
+  "versehen": {
+    "id": "term-versehen",
+    "exampleVariants": [
+      "versehen"
+    ]
+  },
   "versetzen": "term-versetzen",
-  "verstoert": "term-verstoert",
-  "versucht": "term-versucht",
+  "verstoert": {
+    "id": "term-verstoert",
+    "exampleVariants": [
+      "verstört"
+    ]
+  },
+  "versucht": {
+    "id": "term-versucht",
+    "exampleVariants": [
+      "versucht"
+    ]
+  },
   "versuchung": "term-versuchung",
   "vertraulich": "term-vertraulich",
   "vertreter": "term-vertreter",
   "verwegen": "term-verwegen",
-  "verweht": "term-verweht",
+  "verweht": {
+    "id": "term-verweht",
+    "exampleVariants": [
+      "verweht"
+    ]
+  },
   "verzoegern": "term-verzoegern",
-  "verzweifelt": "term-verzweifelt",
-  "verzweiflung": "term-verzweiflung",
+  "verzweifelt": {
+    "id": "term-verzweifelt",
+    "exampleVariants": [
+      "verzweifelt"
+    ]
+  },
+  "verzweiflung": {
+    "id": "term-verzweiflung",
+    "exampleVariants": [
+      "Verzweiflung"
+    ]
+  },
   "vgl": {
     "id": "term-vgl",
     "original": "vgl."
@@ -1058,7 +2062,12 @@
     "id": "term-vgl-kritischer-bericht-lesaerten",
     "original": "Vgl. Kritischer Bericht: Lesaerten"
   },
-  "vide": "term-vide",
+  "vide": {
+    "id": "term-vide",
+    "exampleVariants": [
+      "vide"
+    ]
+  },
   "viel": "term-viel",
   "viertel": "term-viertel",
   "viertelnote-laenger": "term-viertelnote-laenger",
@@ -1068,8 +2077,18 @@
   "visionaer": "term-visionaer",
   "volkslied": "term-volkslied",
   "voll-sehnsucht": "term-voll-sehnsucht",
-  "vollausladendem": "term-vollausladendem",
-  "vollendet": "term-vollendet",
+  "vollausladendem": {
+    "id": "term-vollausladendem",
+    "exampleVariants": [
+      "vollausladend"
+    ]
+  },
+  "vollendet": {
+    "id": "term-vollendet",
+    "exampleVariants": [
+      "vollendet"
+    ]
+  },
   "volles-werk": "term-volles-werk",
   "volles-zeitmass": "term-volles-zeitmass",
   "vollkommen": "term-vollkommen",
@@ -1085,14 +2104,39 @@
   "vordergrund": "term-vordergrund",
   "vorhang": "term-vorhang",
   "vorher": "term-vorher",
-  "vorherigen": "term-vorherigen",
-  "vorigen": "term-vorigen",
-  "vorliegenden": "term-vorliegenden",
-  "vorschlag": "term-vorschlag",
+  "vorherigen": {
+    "id": "term-vorherigen",
+    "exampleVariants": [
+      "vorherig"
+    ]
+  },
+  "vorigen": {
+    "id": "term-vorigen",
+    "exampleVariants": [
+      "vorig"
+    ]
+  },
+  "vorliegenden": {
+    "id": "term-vorliegenden",
+    "exampleVariants": [
+      "vorliegend"
+    ]
+  },
+  "vorschlag": {
+    "id": "term-vorschlag",
+    "exampleVariants": [
+      "Vorschläge"
+    ]
+  },
   "vortrag": "term-vortrag",
   "vorwaerts": "term-vorwaerts",
   "vorwurfsvoll": "term-vorwurfsvoll",
-  "vorzutragen": "term-vorzutragen",
+  "vorzutragen": {
+    "id": "term-vorzutragen",
+    "exampleVariants": [
+      "vorzutragen"
+    ]
+  },
   "wahnsinn": "term-wahnsinn",
   "wald": "term-wald",
   "wanderung": "term-wanderung",
@@ -1120,10 +2164,25 @@
   "wie-frueher-sehr-leicht-und-schwach": "term-wie-frueher-sehr-leicht-und-schwach",
   "wie-ganz-von-ferne": "term-wie-ganz-von-ferne",
   "wieder-ins-erste-zeitmass-gehen": "term-wieder-ins-erste-zeitmass-gehen",
-  "wiederholung": "term-wiederholung",
-  "wiegend": "term-wiegend",
+  "wiederholung": {
+    "id": "term-wiederholung",
+    "exampleVariants": [
+      "Wiederholung"
+    ]
+  },
+  "wiegend": {
+    "id": "term-wiegend",
+    "exampleVariants": [
+      "wiegend"
+    ]
+  },
   "wiegenlied": "term-wiegenlied",
-  "wiehernd": "term-wiehernd",
+  "wiehernd": {
+    "id": "term-wiehernd",
+    "exampleVariants": [
+      "wiehernd"
+    ]
+  },
   "wiesen": "term-wiesen",
   "wild": "term-wild",
   "wirklich": "term-wirklich",
@@ -1135,7 +2194,12 @@
   "wuchtig": "term-wuchtig",
   "wurf": "term-wurf",
   "wut": "term-wut",
-  "wuetend": "term-wuetend",
+  "wuetend": {
+    "id": "term-wuetend",
+    "exampleVariants": [
+      "wütend"
+    ]
+  },
   "z-b": {
     "id": "term-z-b",
     "original": "z. B."
@@ -1147,21 +2211,41 @@
   "zeichen": "term-zeichen",
   "zeit-lassen": "term-zeit-lassen",
   "zeitmass": "term-zeitmass",
-  "zerstreut": "term-zerstreut",
+  "zerstreut": {
+    "id": "term-zerstreut",
+    "exampleVariants": [
+      "zerstreut"
+    ]
+  },
   "ziemlich": "term-ziemlich",
   "zierlich": "term-zierlich",
   "ziffer": "term-ziffer",
-  "zischend": "term-zischend",
+  "zischend": {
+    "id": "term-zischend",
+    "exampleVariants": [
+      "zischend"
+    ]
+  },
   "zitat": "term-zitat",
   "zofe": "term-zofe",
-  "zoegernd": "term-zoegernd",
+  "zoegernd": {
+    "id": "term-zoegernd",
+    "exampleVariants": [
+      "zögernd"
+    ]
+  },
   "zornig": "term-zornig",
   "zu": "term-zu",
   "zug": "term-zug",
   "zungenschlag": "term-zungenschlag",
   "zungenstoss": "term-zungenstoss",
   "zurueck": "term-zurueck",
-  "zurueckhaltend": "term-zurueckhaltend",
+  "zurueckhaltend": {
+    "id": "term-zurueckhaltend",
+    "exampleVariants": [
+      "zurückhaltend"
+    ]
+  },
   "zurueckkehren": "term-zurueckkehren",
   "zus": {
     "id": "term-zus",
@@ -1179,5 +2263,305 @@
   "bedeutet-vom-einem-ton-zum-andern-schleifen-portamento": "term-bedeutet-vom-einem-ton-zum-andern-schleifen-portamento",
   "3-teilig": "term-3-teilig",
   "4tel-note-im-jagdthema-laenger": "term-4tel-note-im-jagdthema-laenger",
-  "5-volle-takte-lang": "term-5-volle-takte-lang"
+  "5-volle-takte-lang": "term-5-volle-takte-lang",
+  "abgestimmt": {
+    "id": "term-abgestimmte",
+    "original": "abgestimmt",
+    "canonical": "abgestimmte",
+    "type": "過去分詞の基本形"
+  },
+  "abstufung": {
+    "id": "term-abstufungen",
+    "original": "Abstufung",
+    "canonical": "Abstufungen",
+    "type": "単数形"
+  },
+  "akzent": {
+    "id": "term-akzente",
+    "original": "Akzent",
+    "canonical": "Akzente",
+    "type": "単数形"
+  },
+  "bach": {
+    "id": "term-bache",
+    "original": "Bach",
+    "canonical": "Bache",
+    "type": "単数主格"
+  },
+  "band": {
+    "id": "term-bandes",
+    "original": "Band",
+    "canonical": "Bandes",
+    "type": "単数主格"
+  },
+  "beaengstigt": {
+    "id": "term-beaengstigtem",
+    "original": "beängstigt",
+    "canonical": "beängstigtem",
+    "type": "過去分詞の基本形"
+  },
+  "daempfern": {
+    "id": "term-daempfer",
+    "original": "Dämpfern",
+    "canonical": "Dämpfer",
+    "type": "格変化形"
+  },
+  "edlen": {
+    "id": "term-edel",
+    "original": "edlen",
+    "canonical": "edel",
+    "type": "格変化形"
+  },
+  "elegisch": {
+    "id": "term-elegischem",
+    "original": "elegisch",
+    "canonical": "elegischem",
+    "type": "形容詞の基本形"
+  },
+  "endgiltige": {
+    "id": "term-endgueltige",
+    "original": "endgiltige",
+    "canonical": "endgültige",
+    "type": "旧綴り"
+  },
+  "erhoben": {
+    "id": "term-erhobner",
+    "original": "erhoben",
+    "canonical": "erhobner",
+    "type": "過去分詞の基本形"
+  },
+  "fern": {
+    "id": "term-ferne",
+    "original": "fern",
+    "canonical": "ferne",
+    "type": "形容詞の基本形"
+  },
+  "festes": {
+    "id": "term-fest",
+    "original": "festes",
+    "canonical": "fest",
+    "type": "格変化形"
+  },
+  "gefahrvoll": {
+    "id": "term-gefahrvolle",
+    "original": "gefahrvoll",
+    "canonical": "gefahrvolle",
+    "type": "形容詞の基本形"
+  },
+  "gesaettigt": {
+    "id": "term-gesaettigten",
+    "original": "gesättigt",
+    "canonical": "gesättigten",
+    "type": "過去分詞の基本形"
+  },
+  "halb": {
+    "id": "term-halbe",
+    "original": "halb",
+    "canonical": "halbe",
+    "type": "形容詞の基本形"
+  },
+  "heilige": {
+    "id": "term-heiligen",
+    "original": "Heilige",
+    "canonical": "Heiligen",
+    "type": "名詞化形の基本形"
+  },
+  "jedes": {
+    "id": "term-jeder",
+    "original": "jedes",
+    "canonical": "jeder",
+    "type": "格変化形"
+  },
+  "knappen": {
+    "id": "term-knappe",
+    "original": "Knappen",
+    "canonical": "Knappe",
+    "type": "複数形・弱変化形"
+  },
+  "konsonant": {
+    "id": "term-consonanten",
+    "original": "Konsonant",
+    "canonical": "Consonanten",
+    "type": "現代綴りの単数形"
+  },
+  "konsonanten": {
+    "id": "term-consonanten",
+    "original": "Konsonanten",
+    "canonical": "Consonanten",
+    "type": "現代綴りの複数形"
+  },
+  "kraeftigen": {
+    "id": "term-kraeftig",
+    "original": "kräftigen",
+    "canonical": "kräftig",
+    "type": "格変化形"
+  },
+  "kuenftig": {
+    "id": "term-kuenftigen",
+    "original": "künftig",
+    "canonical": "künftigen",
+    "type": "形容詞の基本形"
+  },
+  "landlaeufig": {
+    "id": "term-landlaeufigen",
+    "original": "landläufig",
+    "canonical": "landläufigen",
+    "type": "形容詞の基本形"
+  },
+  "leer": {
+    "id": "term-leere",
+    "original": "leer",
+    "canonical": "leere",
+    "type": "形容詞の基本形"
+  },
+  "leseart": {
+    "id": "term-lesearten",
+    "original": "Leseart",
+    "canonical": "Lesearten",
+    "type": "単数形"
+  },
+  "majestaetische": {
+    "id": "term-majestaetisch-majestaetische",
+    "original": "majestätische",
+    "canonical": "majestätisch, majestätische",
+    "type": "格変化形"
+  },
+  "marcirt": {
+    "id": "term-markieren-markiert-marcirt-markirt",
+    "original": "marcirt",
+    "canonical": "markieren, markiert, marcirt, markirt",
+    "type": "旧綴り"
+  },
+  "markiert": {
+    "id": "term-markieren-markiert-marcirt-markirt",
+    "original": "markiert",
+    "canonical": "markieren, markiert, marcirt, markirt",
+    "type": "過去分詞"
+  },
+  "markirt": {
+    "id": "term-markieren-markiert-marcirt-markirt",
+    "original": "markirt",
+    "canonical": "markieren, markiert, marcirt, markirt",
+    "type": "旧綴り"
+  },
+  "nachfolgend": {
+    "id": "term-nachfolgenden",
+    "original": "nachfolgend",
+    "canonical": "nachfolgenden",
+    "type": "現在分詞の基本形"
+  },
+  "genommen": {
+    "id": "term-nehmen",
+    "original": "genommen",
+    "canonical": "nehmen",
+    "type": "過去分詞"
+  },
+  "nahm": {
+    "id": "term-nehmen",
+    "original": "nahm",
+    "canonical": "nehmen",
+    "type": "過去形"
+  },
+  "posaunensatz": {
+    "id": "term-posaunensaetze",
+    "original": "Posaunensatz",
+    "canonical": "Posaunensätze",
+    "type": "単数形"
+  },
+  "revidiert": {
+    "id": "term-revidierte",
+    "original": "revidiert",
+    "canonical": "revidierte",
+    "type": "過去分詞の基本形"
+  },
+  "riese": {
+    "id": "term-riesen",
+    "original": "Riese",
+    "canonical": "Riesen",
+    "type": "単数形"
+  },
+  "stock": {
+    "id": "term-stoecken",
+    "original": "Stock",
+    "canonical": "Stöcken",
+    "type": "単数主格"
+  },
+  "strichart": {
+    "id": "term-stricharten",
+    "original": "Strichart",
+    "canonical": "Stricharten",
+    "type": "単数形"
+  },
+  "stuerzen": {
+    "id": "term-stuerzt",
+    "original": "stürzen",
+    "canonical": "stürzt",
+    "type": "不定詞"
+  },
+  "taetig": {
+    "id": "term-thaetig",
+    "original": "tätig",
+    "canonical": "thätig",
+    "type": "現代綴り"
+  },
+  "ubernimmt": {
+    "id": "term-uebernehmen",
+    "original": "ubernimmt",
+    "canonical": "übernehmen",
+    "type": "活用形・表記揺れ"
+  },
+  "urspruenglich": {
+    "id": "term-urspruengliche",
+    "original": "ursprünglich",
+    "canonical": "ursprüngliche",
+    "type": "形容詞の基本形"
+  },
+  "verleger": {
+    "id": "term-verlegers",
+    "original": "Verleger",
+    "canonical": "Verlegers",
+    "type": "単数主格"
+  },
+  "vollausladend": {
+    "id": "term-vollausladendem",
+    "original": "vollausladend",
+    "canonical": "vollausladendem",
+    "type": "形容詞の基本形"
+  },
+  "vorherig": {
+    "id": "term-vorherigen",
+    "original": "vorherig",
+    "canonical": "vorherigen",
+    "type": "形容詞の基本形"
+  },
+  "vorig": {
+    "id": "term-vorigen",
+    "original": "vorig",
+    "canonical": "vorigen",
+    "type": "形容詞の基本形"
+  },
+  "vorliegend": {
+    "id": "term-vorliegenden",
+    "original": "vorliegend",
+    "canonical": "vorliegenden",
+    "type": "現在分詞の基本形"
+  },
+  "vorschlaege": {
+    "id": "term-vorschlag",
+    "original": "Vorschläge",
+    "canonical": "Vorschlag",
+    "type": "複数形"
+  },
+  "endgueltig": {
+    "id": "term-endgueltige",
+    "original": "endgültig",
+    "canonical": "endgültige",
+    "type": "形容詞の基本形"
+  },
+  "markieren": {
+    "id": "term-markieren-markiert-marcirt-markirt",
+    "original": "markieren",
+    "canonical": "markieren, markiert, marcirt, markirt",
+    "type": "不定詞"
+  }
 }
