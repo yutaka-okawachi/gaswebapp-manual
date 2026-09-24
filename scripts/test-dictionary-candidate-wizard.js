@@ -29,6 +29,22 @@ assert.ok(body.startsWith('(≒ side, page / lato, pagina)\nSeite は名詞の�
 assert.ok(body.includes('① 側，脇．\n② ページ．'));
 assert.ok(body.includes('【音楽用語としての訳例】\n「舞台の脇で」，「楽譜の105ページ」'));
 assert.ok(!body.includes('未確認'));
+const nounBody = context.candidateWizardSuggestedBody({ english: 'side', italian: 'lato',
+  partOfSpeech: '女性名詞',
+  inflections: 'Seite は女性名詞の単数主格（die Seite）．単数属格は der Seite，複数主格は die Seiten．',
+  translation: '側', musicExamples: '一方から', comment: '' });
+assert.ok(nounBody.includes('\nSeite は女性名詞の単数主格（die Seite）．単数属格は der Seite，複数主格は die Seiten．\n'));
+assert.ok(!nounBody.includes('女性名詞．Seite'));
+assert.throws(() => context.candidateWizardValidateMorphology('Substantiv，feminin', ''), /品詞は日本語/);
+assert.throws(() => context.candidateWizardValidateMorphology('', 'die Seite，der Seite，die Seiten'), /語形・格変化/);
+assert.doesNotThrow(() => context.candidateWizardValidateMorphology('女性名詞', 'Seite は女性名詞の単数主格．'));
+assert.strictEqual(context.candidateWizardFormatInflections([
+  'Seite は女性名詞の単数主格．', '単数属格は der Seite．', '複数主格は die Seiten．'
+]), 'Seite は女性名詞の単数主格．単数属格は der Seite．複数主格は die Seiten．');
+assert.throws(() => context.candidateWizardFormatInflections(['die Seite', 'der Seite']), /語形・格変化/);
+assert.throws(() => context.candidateWizardValidateBodyMorphology(
+  '(≒ side / lato)\nSubstantiv，feminin．die Seite，der Seite，die Seiten\n【一般的な意味】\n① 側．'), /語形・格変化/);
+assert.doesNotThrow(() => context.candidateWizardValidateBodyMorphology(nounBody));
 assert.strictEqual(context.candidateWizardDraftDetails(JSON.stringify({
   english: 'side', italian: 'lato', musicExamples: '舞台の脇で', comment: ''
 })).italian, 'lato');

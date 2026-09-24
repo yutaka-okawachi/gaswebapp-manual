@@ -240,7 +240,8 @@ function candidateWizardCreateDraft(id, confirmed) {
       'general_meaningsは本質的に異なる意味だけを別要素にし，同義語は同じ要素にまとめる．' +
       'music_examplesは実例に適した訳例だけを書く．英語・イタリア語の対応語は確信できるものだけ示し，不明なら空配列にする．' +
       '格変化形や出典を推測で補わない．未確定事項はuncertaintiesに書き，本文のコメントは作らない．' +
-      '日本語句読点は「．」「，」を使う．原形が確実な場合はinflectionsにも記す．',
+      'part_of_speechは日本語で書く（例：女性名詞）．inflectionsの各要素は見出しとの関係や格・数を示す日本語の説明文にし，' +
+      'ドイツ語の品詞名や語形だけの羅列にしない．確実な語形だけを記す．日本語句読点は「．」「，」を使う．',
     input: JSON.stringify({ search_term: found.row[1], german_example: example.german,
       japanese_example: example.japanese, corpus: example.source }),
     text: { format: { type: 'json_schema', name: 'german_music_term_draft',
@@ -278,7 +279,7 @@ function candidateWizardCreateDraft(id, confirmed) {
   }
   const fields = {
     headword: draft.headword, partOfSpeech: draft.part_of_speech,
-    inflections: Array.isArray(draft.inflections) ? draft.inflections.join('，') : '',
+    inflections: '',
     translation: draft.general_meanings.join('\n'), description: '', category: draft.category,
     similar: Array.isArray(draft.similar_terms) ? draft.similar_terms.join('，') : '',
     notes: [draft.notes, ...(Array.isArray(draft.uncertainties) ? draft.uncertainties : [])]
@@ -287,6 +288,7 @@ function candidateWizardCreateDraft(id, confirmed) {
     musicExamples: draft.music_examples.join('\n'), comment: ''
   };
   try {
+    fields.inflections = candidateWizardFormatInflections(draft.inflections);
     candidateWizardSaveDraft(id, fields, 'OpenAI API：' + model, JSON.stringify(draft));
   } catch (_) {
     sheet.getRange(linked.rowNumber, 13, 1, 2).setValues([['結果要確認', JSON.stringify(draft)]]);
@@ -310,6 +312,7 @@ function candidateWizardSaveDraft(id, fields, provenance, raw) {
   const maxima = [120, 100, 500, 500, 2000, 120, 500, 1200];
   const values = names.map((name, i) => candidateWizardSafeText(fields && fields[name],
     name, maxima[i], name === 'headword' || name === 'translation'));
+  candidateWizardValidateMorphology(values[1], values[2]);
   const details = {
     english: candidateWizardSafeText(fields && fields.english, '英語の類語', 500, false),
     italian: candidateWizardSafeText(fields && fields.italian, 'イタリア語の類語', 500, false),
@@ -342,6 +345,33 @@ function candidateWizardSaveDraft(id, fields, provenance, raw) {
   return candidateWizardState(id);
 }
 
+function candidateWizardValidateMorphology(partOfSpeech, inflections) {
+  const hasJapanese = value => /[\u3040-\u30ff\u3400-\u9fff]/.test(String(value || ''));
+  if (partOfSpeech && !hasJapanese(partOfSpeech)) {
+    throw new Error('品詞は日本語で記述してください（例：女性名詞）．');
+  }
+  if (inflections && !hasJapanese(inflections)) {
+    throw new Error('語形・格変化は日本語の説明文で記述してください（例：Seite は女性名詞の単数主格）．');
+  }
+}
+
+function candidateWizardFormatInflections(items) {
+  if (!Array.isArray(items)) return '';
+  const descriptions = items.map(value => String(value || '').trim()).filter(Boolean);
+  for (const description of descriptions) candidateWizardValidateMorphology('', description);
+  return descriptions.length
+    ? descriptions.map(value => value.replace(/[．。]+$/, '')).join('．') + '．' : '';
+}
+
+function candidateWizardValidateBodyMorphology(body) {
+  const lines = String(body || '').split(/\r?\n/);
+  const meaningIndex = lines.findIndex(line => line.trim() === '【一般的な意味】');
+  if (meaningIndex < 0) throw new Error('B列本文に【一般的な意味】がありません．');
+  for (const line of lines.slice(1, meaningIndex)) {
+    candidateWizardValidateMorphology('', line.trim());
+  }
+}
+
 function candidateWizardSuggestedBody(candidate) {
   const meanings = String(candidate.translation || '').split(/\r?\n/).map(x => x.trim()).filter(Boolean);
   const numbers = '①②③④⑤⑥⑦⑧⑨⑩';
@@ -350,9 +380,12 @@ function candidateWizardSuggestedBody(candidate) {
     line.replace(/^[①-⑩]\s*/, '').replace(/[．。]+$/, '') + '．').join('\n');
   const music = String(candidate.musicExamples || '').split(/\r?\n/).map(x => x.trim()).filter(Boolean)
     .map(x => '「' + x.replace(/^[「」]+|[「」]+$/g, '').replace(/[．。]+$/, '') + '」').join('，');
-  const morphology = [candidate.partOfSpeech, candidate.inflections].filter(Boolean).join('．');
+  const partOfSpeech = String(candidate.partOfSpeech || '').trim().replace(/[．。]+$/, '');
+  const inflections = String(candidate.inflections || '').trim().replace(/[．。]+$/, '');
+  const morphology = (inflections && partOfSpeech && inflections.includes(partOfSpeech)
+    ? inflections : [partOfSpeech, inflections].filter(Boolean).join('．'));
   return '(≒ ' + candidate.english + ' / ' + candidate.italian + ')' +
-    (morphology ? '\n' + morphology : '') +
+    (morphology ? '\n' + morphology + '．' : '') +
     '\n【一般的な意味】\n' + numbered +
     '\n【音楽用語としての訳例】\n' + music +
     (candidate.comment ? '\n\n' + candidate.comment : '');
@@ -384,6 +417,7 @@ function candidateWizardRegisterExperimental(id, body, source, confirmed) {
   if (!safeBody.startsWith('(≒ ') || !/[①-⑩]/.test(safeBody) || !/「[^」]+」/.test(safeBody)) {
     throw new Error('B列本文の類語・番号付きの意味・音楽用語としての訳例を確認してください．');
   }
+  candidateWizardValidateBodyMorphology(safeBody);
   const lock = LockService.getScriptLock();
   if (!lock.tryLock(10000)) throw new Error('辞書の更新ロックを取得できませんでした．');
   try {

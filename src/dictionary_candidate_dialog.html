@@ -74,10 +74,10 @@
     <p class="muted">OpenAI API草案は任意．手動入力・修正もできる．API呼出しの直前に別途課金確認を行う．</p>
     <button id="runDraft">OpenAI APIで草案を作る</button>
     <div class="grid"><div><label for="draftHeadword">見出し</label><input id="draftHeadword" maxlength="120"></div>
-      <div><label for="partOfSpeech">品詞</label><input id="partOfSpeech" maxlength="100"></div></div>
+      <div><label for="partOfSpeech">品詞（日本語）</label><input id="partOfSpeech" maxlength="100" placeholder="例：女性名詞"></div></div>
     <div class="grid"><div><label for="english">英語の類語</label><input id="english" maxlength="500"></div>
       <div><label for="italian">イタリア語の類語</label><input id="italian" maxlength="500"></div></div>
-    <label for="inflections">原形・格変化形などの記述</label><input id="inflections" maxlength="500">
+    <label for="inflections">原形・格変化形などの説明（日本語の文章）</label><input id="inflections" maxlength="500" placeholder="例：Seite は女性名詞の単数主格（die Seite）．単数属格は der Seite，複数主格は die Seiten．">
     <label for="translation">一般的な意味（本質的に異なる意味を1行ずつ）</label><textarea id="translation" maxlength="500"></textarea>
     <label for="musicExamples">音楽用語としての訳例（訳例を1行ずつ）</label><textarea id="musicExamples" maxlength="1500"></textarea>
     <div class="grid"><div><label for="draftCategory">分類</label><input id="draftCategory" maxlength="120"></div>
@@ -89,7 +89,7 @@
 
   <section class="panel warning" id="entryPanel" hidden>
     <h2>5．B列本文を目視確認し，Notesに登録</h2>
-    <p class="muted">類語と訳例，①②…の意味区分を確認する．未確認事項は本文に入れない．コメントは任意．重複見出しは登録しない．</p>
+    <p class="muted">類語と訳例，①②…の意味区分を確認する．語形・格変化はドイツ語の羅列ではなく，日本語の説明文にする．未確認事項は本文に入れない．コメントは任意．重複見出しは登録しない．</p>
     <label for="entryBody">NotesのB列</label><textarea id="entryBody" rows="9" maxlength="6000"></textarea>
     <label for="source">C列の出典</label><select id="source"><option>[RW: Oper]</option>
       <option>[RS: Oper]</option><option>[GM]</option></select>
