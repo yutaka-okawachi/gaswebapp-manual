@@ -778,6 +778,23 @@ button.clear-input-btn:hover {
     padding: 20px;
 }
 
+.dictionary-example-alias-notice,
+.term-resolution-notice {
+    max-width: 720px;
+    margin: 0 auto 12px;
+    padding: 10px 12px;
+    border-left: 4px solid var(--button-bg);
+    background: #eef6ff;
+    color: #27364a;
+    font-family: var(--font-sans);
+    font-size: 0.9rem;
+    line-height: 1.6;
+}
+
+.term-resolution-suggestion a {
+    font-weight: 700;
+}
+
 #results {
     margin-top: 20px;
     background-color: var(--results-bg);

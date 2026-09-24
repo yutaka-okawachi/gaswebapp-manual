@@ -10,6 +10,7 @@ const sheets = {
     RS: [headers, ['test', '1', '1', '1', 'Alle', 'langsam', 'langsam', 'ゆっくり']],
     RW: [headers, ['test', '1', '1', '1', 'Alle', 'langsam', 'langsam', 'ゆっくり']],
     Notes: [['用語', '訳', '出典'], ['langsam', 'ゆっくり', '[GM], [RW], [RS]']],
+    '語形対応': [['見出し', '関連語形', '語形区分', '用語検索', '実例検索', '補足'], ['langsam', 'langsamer', '比較級', '対象', '対象', '']],
     '略記一覧': [['番号', '略記', '説明'], ['', 'N.B.', '注意']],
     'RS幕構成': [['Oper', 'Aufzug', 'Szene', '日本語'], ['test', '1', '1', '場面']],
     'RW幕構成': [['Oper', 'Aufzug', 'Szene', '日本語'], ['test', '1', '1', '場面']],
@@ -30,6 +31,7 @@ validateSnapshot(first, 'fixture');
 assert.strictEqual(first.files['mahler-search-app/data/richard_wagner.json'][0]['楽譜情報'], '出版社');
 assert.strictEqual(first.files['mahler-search-app/data/richard_wagner.json'][0]['場面タイトル'], '場面');
 assert.strictEqual(first.files['mahler-search-app/data/whom_list.json'].test[0], 'Alle');
+assert.strictEqual(first.files['mahler-search-app/data/dic_terms_index.json'].langsamer.id, 'term-langsam');
 assert.strictEqual((first.files['mahler-search-app/dic.html'].match(/<script src="js\/analytics\.js"><\/script>/g) || []).length, 1,
     'GAS must emit one cache-neutral analytics script; build-site adds its public version locally');
 const second = JSON.parse(JSON.stringify(context.exportAllDataToJson({ requestId: 'fixture' })));

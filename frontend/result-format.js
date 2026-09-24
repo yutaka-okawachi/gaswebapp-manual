@@ -165,7 +165,9 @@ function linkTermsInTranslation(text, termsIndex) {
     terms.forEach((term) => {
         const termEntry = termsIndex[term];
         const termId = typeof termEntry === 'string' ? termEntry : termEntry && termEntry.id;
-        const originalTerm = typeof termEntry === 'object' && termEntry ? termEntry.original : '';
+        const originalTerm = typeof termEntry === 'object' && termEntry
+            ? String(termEntry.original || '')
+            : '';
         if (Math.max(term.length, originalTerm.length) < 3 || !termId) return;
         const termPattern = generateTermPattern(term, originalTerm);
         if (!termPattern) return;

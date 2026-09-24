@@ -221,6 +221,12 @@ function doPost(e) {
     if (data.api === 'dashboard') {
         return handleDashboardAnalyticsRequest(data);
     }
+
+    // 検索結果が1件以上ある辞書未登録語を実験用タブへ記録する．
+    // メール通知と本番の検索履歴とは独立した経路で処理する．
+    if (data.action === 'observe_unregistered_result_term' && !data.token) {
+        return handleUnregisteredResultTermObservation(data);
+    }
     
     // Route 1: Search Notification
     if (data.work && data.page && !data.token && !data.action) {
@@ -257,6 +263,8 @@ function handleRequest(params) {
       result = Object.assign({ status: 'success' }, exportAllDataToJson({ requestId: params.requestId }));
     } else if (action === 'syncInfo') {
       result = { status: 'success', schemaVersion: 1, sourceHash: SYNC_SOURCE_HASH };
+    } else if (action === 'promoteApprovedDictionaryCandidates') {
+      result = Object.assign({ status: 'success' }, promoteApprovedDictionaryCandidates());
     } else if (action === 'exportDic' || action === 'exportAllDataToJson') {
       throw new Error('公開処理はPCの sync-data.ps1 から実行してください。');
     } else if (action === "ping") {

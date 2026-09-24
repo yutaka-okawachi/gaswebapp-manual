@@ -28,6 +28,25 @@ function getDictionaryExampleShardNumber(value) {
   return (hash >>> 0) % DICTIONARY_EXAMPLE_SHARD_COUNT;
 }
 
+function matchesDictionaryExampleQuery(value, query, matchMode) {
+  const normalizedValue = normalizeDictionaryExampleTerm(value);
+  const normalizedQuery = normalizeDictionaryExampleTerm(query);
+  if (!normalizedQuery) return false;
+  if (matchMode !== 'exact') return normalizedValue.includes(normalizedQuery);
+
+  let searchFrom = 0;
+  while (searchFrom <= normalizedValue.length - normalizedQuery.length) {
+    const matchIndex = normalizedValue.indexOf(normalizedQuery, searchFrom);
+    if (matchIndex === -1) return false;
+    const before = matchIndex > 0 ? normalizedValue.charAt(matchIndex - 1) : '';
+    const afterIndex = matchIndex + normalizedQuery.length;
+    const after = afterIndex < normalizedValue.length ? normalizedValue.charAt(afterIndex) : '';
+    if (!/[a-z0-9]/i.test(before) && !/[a-z0-9]/i.test(after)) return true;
+    searchFrom = matchIndex + 1;
+  }
+  return false;
+}
+
 function buildDictionaryExampleComposerShards(rows, queries, options) {
   const settings = options || {};
   const requirePage = Boolean(settings.requirePage);
@@ -53,22 +72,38 @@ function buildDictionaryExampleComposerShards(rows, queries, options) {
     normalizedTermsByShard[shardNumber].add(normalizedTerm);
   });
 
+  const normalizedQuerySpecs = new Map();
+  (queries || []).forEach(querySpec => {
+    const query = querySpec && typeof querySpec === 'object' ? querySpec.query : querySpec;
+    const variants = querySpec && typeof querySpec === 'object' ? querySpec.variants : [query];
+    const normalizedQuery = normalizeDictionaryExampleTerm(query);
+    if (!normalizedQuery) return;
+    if (!normalizedQuerySpecs.has(normalizedQuery)) {
+      normalizedQuerySpecs.set(normalizedQuery, {
+        variants: new Set(),
+        matchMode: querySpec && typeof querySpec === 'object' ? querySpec.matchMode : 'partial'
+      });
+    }
+    (variants || []).map(normalizeDictionaryExampleTerm).filter(Boolean)
+      .forEach(variant => normalizedQuerySpecs.get(normalizedQuery).variants.add(variant));
+  });
+
   const queryIndex = {};
-  Array.from(new Set((queries || []).map(normalizeDictionaryExampleTerm).filter(Boolean)))
-    .forEach(query => {
+  normalizedQuerySpecs.forEach((querySpec, query) => {
       const shardNumbers = [];
       normalizedTermsByShard.forEach((terms, shardNumber) => {
-        if (Array.from(terms).some(term => term.includes(query))) {
+        if (Array.from(terms).some(term => Array.from(querySpec.variants)
+          .some(variant => matchesDictionaryExampleQuery(term, variant, querySpec.matchMode)))) {
           shardNumbers.push(shardNumber);
         }
       });
       queryIndex[query] = shardNumbers;
-    });
+  });
 
   return { shards, queryIndex };
 }
 
-function buildDictionaryExampleShardFiles(dicData, composerData) {
+function buildDictionaryExampleShardFiles(dicData, composerData, mappingData) {
   const composerSettings = {
     gm: { marker: '[GM]', rows: composerData.mahler || [], requirePage: false },
     rw: { marker: '[RW: Oper]', rows: composerData.wagner || [], requirePage: true },
@@ -76,12 +111,38 @@ function buildDictionaryExampleShardFiles(dicData, composerData) {
   };
   const files = {};
   const queryIndex = {};
+  const dictionaryKeys = new Set(
+    (dicData || []).map(row => normalizeDictionaryExampleTerm(row && row[0])).filter(Boolean)
+  );
+  const exampleFormsByHeadword = {};
+  (mappingData || []).forEach(row => {
+    const headword = String(row && row[0] || '').trim();
+    const related = String(row && row[1] || '').trim();
+    const headwordKey = normalizeDictionaryExampleTerm(headword);
+    const relatedKey = normalizeDictionaryExampleTerm(related);
+    if (
+      !headwordKey || !relatedKey || !dictionaryKeys.has(headwordKey) ||
+      String(row && row[4] || '').trim() !== '対象'
+    ) return;
+    if (!exampleFormsByHeadword[headwordKey]) exampleFormsByHeadword[headwordKey] = [];
+    if (!exampleFormsByHeadword[headwordKey].some(value =>
+      normalizeDictionaryExampleTerm(value) === relatedKey
+    )) exampleFormsByHeadword[headwordKey].push(related);
+  });
 
   Object.keys(composerSettings).forEach(composer => {
     const settings = composerSettings[composer];
     const queries = (dicData || [])
       .filter(row => String((row && row[2]) || '').includes(settings.marker))
-      .map(row => row && row[0]);
+      .map(row => {
+        const query = row && row[0];
+        const variants = exampleFormsByHeadword[normalizeDictionaryExampleTerm(query)] || [];
+        return {
+          query,
+          variants: [query].concat(variants),
+          matchMode: variants.length > 0 ? 'exact' : 'partial'
+        };
+      });
     const built = buildDictionaryExampleComposerShards(settings.rows, queries, settings);
     queryIndex[composer] = built.queryIndex;
 

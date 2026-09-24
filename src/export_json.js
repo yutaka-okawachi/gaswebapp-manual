@@ -212,6 +212,14 @@ function buildExportSnapshot_(exportOptions) {
         dicNotesJson = data.slice(1).map(row => [row[0], row[1], row[2]]);
     }
 
+    // 本番用の見出し・関連語形対応（A:F）
+    const termMappingSheet = ss.getSheetByName('語形対応');
+    const termMappingData = termMappingSheet.getDataRange().getValues()
+        .slice(1)
+        .filter(row => String(row[0] || '').trim() && String(row[1] || '').trim())
+        .map(row => row.slice(0, 6));
+    validateDictionaryTermMapping_(dicNotesJson, termMappingData);
+
     // 8. Abbreviation List (略記一覧)
     const abbrSheet = ss.getSheetByName('略記一覧');
     let abbrJson = [];
@@ -226,16 +234,16 @@ function buildExportSnapshot_(exportOptions) {
         mahler: mahlerJson,
         wagner: rwJson,
         strauss: rsJson
-    });
+    }, termMappingData);
     Logger.log('実例検索用JSON生成完了: ' + Object.keys(dictionaryExampleData.files).length + ' ファイル');
 
     // 10. Generate dic.html (静的HTML生成 - リンク機能付き)
     Logger.log('=== dic.htmlを生成中（リンク機能付き） ===');
-    const dicHtml = generateDicHtml(dicNotesJson, abbrJson, dictionaryExampleData.queryIndex);
+    const dicHtml = generateDicHtml(dicNotesJson, abbrJson, dictionaryExampleData.queryIndex, termMappingData);
     Logger.log('dic.html生成完了: ' + Math.round(dicHtml.length / 1024) + ' KB');
     
     // 11. 用語インデックスを生成
-    const termsIndex = generateDicTermsIndex(dicNotesJson);
+    const termsIndex = generateDicTermsIndex(dicNotesJson, termMappingData);
     Logger.log('dic_terms_index.json生成完了: ' + Object.keys(termsIndex).length + ' 件');
 
     // キャッシュを無効化（サーバーサイド検索用）
@@ -267,7 +275,7 @@ function buildExportSnapshot_(exportOptions) {
 
 function validateExportSheets_(ss) {
     const required = {
-        GM: 4, RS: 8, RW: 8, Notes: 3, '略記一覧': 3,
+        GM: 4, RS: 8, RW: 8, Notes: 3, '語形対応': 6, '略記一覧': 3,
         'RS幕構成': 4, 'RW幕構成': 4, '楽譜情報': 5
     };
     Object.keys(required).forEach(name => {
@@ -281,6 +289,23 @@ function validateExportSheets_(ss) {
                 if (header.indexOf(key) === -1) throw new Error('必須列が不足しています: ' + name + ':' + key);
             });
             if (new Set(header).size !== header.length) throw new Error('列名が重複しています: ' + name);
+        }
+    });
+}
+
+function validateDictionaryTermMapping_(dicNotesData, mappingData) {
+    const headings = new Set(dicNotesData.map(row => normalizeForId(String(row[0] || ''))).filter(Boolean));
+    const pairs = new Set();
+    mappingData.forEach((row, index) => {
+        const heading = normalizeForId(String(row[0] || ''));
+        const related = normalizeForId(String(row[1] || ''));
+        const pair = `${heading}\u0000${related}`;
+        if (!headings.has(heading)) throw new Error(`語形対応の見出しがNotesにありません: ${index + 2}`);
+        if (pairs.has(pair)) throw new Error(`語形対応の組合せが重複しています: ${index + 2}`);
+        pairs.add(pair);
+        if (!['対象', '対象外'].includes(String(row[3] || '').trim()) ||
+            !['対象', '対象外'].includes(String(row[4] || '').trim())) {
+            throw new Error(`語形対応の検索対象指定が不正です: ${index + 2}`);
         }
     });
 }

@@ -47,4 +47,8 @@ function onOpen() {
   ui.createMenu('📊 検索履歴グラフ')
     .addItem('🔄 グラフを最新に更新する', 'updateSearchHistoryCharts')
     .addToUi();
+
+  ui.createMenu('📚 辞書候補')
+    .addItem('採用済み判定を実験用タブへ反映', 'promoteApprovedDictionaryCandidatesFromMenu')
+    .addToUi();
 }

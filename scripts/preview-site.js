@@ -13,26 +13,41 @@ function publicPath(url) {
     const resolved = path.resolve(root, relative);
     return resolved.startsWith(root + path.sep) ? resolved : null;
 }
-function previewHtml(html, token, approval, phase = 'publish') {
-    const notice = `<aside style="position:relative;z-index:1;margin:12px;padding:16px;border:2px solid #8a6500;border-radius:8px;background:#fff7db;color:#242424;font:16px/1.6 sans-serif"><strong>公開前プレビュー</strong> — アクセス計測・検索通知は送信されません。<br><a href="/">トップ</a> · <a href="/mahler-search-app/dic.html">用語集</a> · <a href="/mahler-search-app/terms_search.html">GM用語検索</a> · <a href="/mahler-search-app/rw_terms_search.html">RW用語検索</a> · <a href="/mahler-search-app/rs_terms_search.html">RS用語検索</a>${approval ? `<form method="post" action="/__approve"><input type="hidden" name="token" value="${token}"><button style="margin-top:12px;padding:10px 18px" type="submit">確認しました。この内容を公開する</button></form>` : '<br>この確認画面から本番へ公開することはありません。'}</aside>`;
+function previewHtml(html, token, approval, phase = 'publish', experimental = false) {
+    const previewTitle = experimental ? '辞書語形・検索対応の実験サイト' : '公開前プレビュー';
+    const previewDescription = experimental
+        ? 'Notes_正規化テストと辞書語形・検索対応_実験を使用中．本番データではありません．'
+        : 'アクセス計測・検索通知は送信されません。';
+    const notice = `<aside style="position:relative;z-index:1;margin:12px;padding:16px;border:2px solid #8a6500;border-radius:8px;background:#fff7db;color:#242424;font:16px/1.6 sans-serif"><strong>${previewTitle}</strong> — ${previewDescription}<br><a href="/">トップ</a> · <a href="/mahler-search-app/dic.html">用語集</a> · <a href="/mahler-search-app/terms_search.html">GM用語検索</a> · <a href="/mahler-search-app/rw_terms_search.html">RW用語検索</a> · <a href="/mahler-search-app/rs_terms_search.html">RS用語検索</a>${approval ? `<form method="post" action="/__approve"><input type="hidden" name="token" value="${token}"><button style="margin-top:12px;padding:10px 18px" type="submit">確認しました。この内容を公開する</button></form>` : '<br>この確認画面から本番へ公開することはありません。'}</aside>`;
     const optout = `<script>try {localStorage.setItem('gmt_admin_device_optout','1');} catch(e) {} window.__LOCAL_PREVIEW__=true;</script>`;
     const phasedNotice = phase === 'prepare' ? notice.replace('確認しました。この内容を公開する', '確認しました。GAS更新と最新データの取得に進む').replace('公開前プレビュー</strong>', 'GAS更新前のプレビュー</strong> — 現在保存されているデータを表示しています。最新データ取得後にもう一度確認できます。') : notice;
     return html.replace(/<head([^>]*)>/i, '<head$1>' + optout).replace(/<body([^>]*)>/i, '<body$1>' + phasedNotice);
 }
-async function startPreview({ approval = false, open = false, phase = 'publish' } = {}) {
+async function startPreview({ approval = false, open = false, phase = 'publish', dictionaryData = null, mappingData = null } = {}) {
     const token = crypto.randomBytes(24).toString('hex');
     let approve;
     const approved = new Promise(resolve => { approve = resolve; });
     let dictionaryHtml;
+    const previewFiles = {};
     if (!approval || phase === 'prepare') {
         const context = vm.createContext({ console });
         for (const file of ['src/dictionary_example_shards.js', 'src/generate_dic_html.js']) {
             vm.runInContext(fs.readFileSync(path.join(root, file), 'utf8'), context);
         }
         const data = name => JSON.parse(fs.readFileSync(path.join(root, 'mahler-search-app/data', name + '.json'), 'utf8'));
-        const notes = data('dic_notes');
-        const examples = context.buildDictionaryExampleShardFiles(notes, { mahler: data('mahler'), wagner: data('richard_wagner'), strauss: data('richard_strauss') });
-        dictionaryHtml = context.generateDicHtml(notes, data('abbr_list'), examples.queryIndex);
+        const notes = dictionaryData || data('dic_notes');
+        const mappings = mappingData || [];
+        const examples = context.buildDictionaryExampleShardFiles(notes, {
+            mahler: data('mahler'),
+            wagner: data('richard_wagner'),
+            strauss: data('richard_strauss')
+        }, mappings);
+        dictionaryHtml = context.generateDicHtml(notes, data('abbr_list'), examples.queryIndex, mappings);
+        if (dictionaryData) {
+            Object.assign(previewFiles, examples.files);
+            previewFiles['mahler-search-app/data/dic_notes.json'] = notes;
+            previewFiles['mahler-search-app/data/dic_terms_index.json'] = context.generateDicTermsIndex(notes, mappings);
+        }
     }
     const server = http.createServer(async (req, res) => {
         res.setHeader('Cache-Control', 'no-store');
@@ -53,8 +68,16 @@ async function startPreview({ approval = false, open = false, phase = 'publish' 
         if (!realFile.startsWith(root + path.sep)) { res.writeHead(403); res.end(); return; }
         const extension = path.extname(file);
         res.setHeader('Content-Type', mime[extension] || 'application/octet-stream');
-        const data = dictionaryHtml && file === path.join(root, 'mahler-search-app/dic.html') ? Buffer.from(dictionaryHtml) : fs.readFileSync(file);
-        res.end(extension === '.html' ? previewHtml(data.toString('utf8'), token, approval, phase) : data);
+        const relativeFile = path.relative(root, file).replace(/\\/g, '/');
+        const previewData = previewFiles[relativeFile];
+        const data = dictionaryHtml && file === path.join(root, 'mahler-search-app/dic.html')
+            ? Buffer.from(dictionaryHtml)
+            : previewData !== undefined
+                ? Buffer.from(JSON.stringify(previewData))
+                : fs.readFileSync(file);
+        res.end(extension === '.html'
+            ? previewHtml(data.toString('utf8'), token, approval, phase, Boolean(dictionaryData))
+            : data);
     });
     await new Promise(resolve => server.listen(0, '127.0.0.1', resolve));
     const url = `http://127.0.0.1:${server.address().port}/?admin=1`;

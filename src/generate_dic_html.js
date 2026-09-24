@@ -27,9 +27,10 @@ function normalizeForId(term) {
 /**
  * 用語インデックスを生成
  * @param {Array} dicData - 用語データ [[german, translation, source], ...]
- * @return {Object} 用語インデックス（正規化キー → ID）
+ * @param {Array} mappingData - 検索対応 [[headword, related, type, termSearch, exampleSearch, note], ...]
+ * @return {Object} 用語インデックス（正規化キー → IDまたは検索対応情報）
  */
-function generateDicTermsIndex(dicData) {
+function generateDicTermsIndex(dicData, mappingData) {
   const termsIndex = {};
   if (!dicData || dicData.length === 0) return termsIndex;
   
@@ -44,6 +45,50 @@ function generateDicTermsIndex(dicData) {
           : termId;
       }
     }
+  });
+
+  const entryId = entry => typeof entry === 'string' ? entry : entry && entry.id;
+  const exampleVariantsByHeadword = new Map();
+  (mappingData || []).forEach(row => {
+    const headword = String(row && row[0] || '').trim();
+    const related = String(row && row[1] || '').trim();
+    if (!headword || !related || String(row && row[4] || '').trim() !== '対象') return;
+    const headwordKey = normalizeForId(headword);
+    if (!headwordKey || !entryId(termsIndex[headwordKey])) return;
+    const variants = exampleVariantsByHeadword.get(headwordKey) || [];
+    if (!variants.some(value => normalizeForId(value) === normalizeForId(related))) variants.push(related);
+    exampleVariantsByHeadword.set(headwordKey, variants);
+  });
+
+  exampleVariantsByHeadword.forEach((variants, headwordKey) => {
+    const current = termsIndex[headwordKey];
+    const id = entryId(current);
+    if (!id) return;
+    termsIndex[headwordKey] = Object.assign(
+      typeof current === 'object' && current ? current : { id },
+      { exampleVariants: variants }
+    );
+  });
+
+  // 用語検索が「対象」の関連語形だけを見出しへ結び付ける．
+  // 関連語形自体が独立見出しの場合は，独立見出しを常に優先する．
+  (mappingData || []).forEach(row => {
+    const headword = String(row && row[0] || '').trim();
+    const related = String(row && row[1] || '').trim();
+    const relatedKey = normalizeForId(related);
+    const headwordKey = normalizeForId(headword);
+    const canonicalEntry = termsIndex[headwordKey];
+    const canonicalId = entryId(canonicalEntry);
+    if (
+      !relatedKey || !canonicalId || termsIndex[relatedKey] ||
+      String(row && row[3] || '').trim() !== '対象'
+    ) return;
+    termsIndex[relatedKey] = {
+      id: canonicalId,
+      original: related,
+      canonical: headword,
+      type: String(row && row[2] || '').trim()
+    };
   });
   
   return termsIndex;
@@ -250,7 +295,9 @@ function linkTermsInTranslation(text, termsIndex) {
   terms.forEach((term) => {
     const termEntry = termsIndex[term];
     const termId = typeof termEntry === 'string' ? termEntry : termEntry && termEntry.id;
-    const originalTerm = typeof termEntry === 'object' && termEntry ? termEntry.original : '';
+    const originalTerm = typeof termEntry === 'object' && termEntry
+      ? String(termEntry.original || '')
+      : '';
     if (Math.max(term.length, originalTerm.length) < 3 || !termId) return;
     const termPattern = generateTermPattern(term, originalTerm);
     if (!termPattern) return;
@@ -513,11 +560,12 @@ function generateAbbrListHtml(abbrData) {
  * 完全なdic.htmlを生成（リンク機能付き）
  * @param {Array} dicData - 用語データ
  * @param {Array} abbrData - 略記データ
+ * @param {Array} mappingData - 検索対応データ
  * @return {string} 完全なHTMLファイルの内容
  */
-function generateDicHtml(dicData, abbrData, dictionaryExampleIndex) {
+function generateDicHtml(dicData, abbrData, dictionaryExampleIndex, mappingData) {
   // 用語インデックスを生成
-  const termsIndex = generateDicTermsIndex(dicData);
+  const termsIndex = generateDicTermsIndex(dicData, mappingData);
   const abbreviationIndex = generateAbbreviationIndex(abbrData);
   
   const dicListHtml = generateDicListHtml(dicData, termsIndex, abbreviationIndex, dictionaryExampleIndex);
@@ -1770,6 +1818,13 @@ function generateDicHtmlFromSpreadsheet() {
     // ヘッダー行をスキップして、A, B, C列のみ取得
     dicNotesData = data.slice(1).map(row => [row[0], row[1], row[2]]);
   }
+
+  const termMappingSheet = ss.getSheetByName('語形対応');
+  const termMappingData = termMappingSheet
+    ? termMappingSheet.getDataRange().getValues().slice(1)
+      .filter(row => String(row[0] || '').trim() && String(row[1] || '').trim())
+      .map(row => row.slice(0, 6))
+    : [];
   
   // 略記一覧シートからデータを取得
   const abbrSheet = ss.getSheetByName('略記一覧');
@@ -1786,7 +1841,7 @@ function generateDicHtmlFromSpreadsheet() {
   Logger.log('');
   
   // HTML生成
-  const html = generateDicHtml(dicNotesData, abbrData);
+  const html = generateDicHtml(dicNotesData, abbrData, null, termMappingData);
   
   Logger.log('=== HTML生成完了 ===');
   Logger.log('HTML長さ: ' + html.length + ' 文字 (' + Math.round(html.length / 1024) + ' KB)');

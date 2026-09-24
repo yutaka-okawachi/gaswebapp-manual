@@ -85,6 +85,12 @@ cases.forEach(([value, query, mode, expected]) => {
   const page = read(relativePath);
   assert.match(page, /name="termMatchMode" value="partial" checked/);
   assert.match(page, /name="termMatchMode" value="exact"/);
+  assert.match(page, /id="dictionaryExampleAliasNotice"/);
+  assert.match(page, /if \(rawQuery && new URLSearchParams\(window\.location\.search\)\.get\('source'\) === 'dictionary_example'\)/);
+  assert.match(page, /用語集から移動した検索では，検索欄の見出し語に加え，登録済みの語形・別綴りも独立した単語として検索対象となる/);
+  assert.match(page, /if \(exampleQueries\.length > 1\)/);
+  assert.match(page, /get\('source'\) === 'dictionary_example'/);
+  assert.match(page, /input\[name="termMatchMode"\]\[value="exact"\]/);
   assert.match(page, /window\.matchesTermQuery\(entry\.normalized, normalizedInput, matchMode\)/);
   assert.ok(page.includes(`${localFunction}(query, resultMeta, matchMode)`));
   assert.match(page, /js\/app\.js\?v=[a-f0-9]{12}/);
