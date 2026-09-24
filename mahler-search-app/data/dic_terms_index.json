@@ -1685,7 +1685,12 @@
   "sehr-leicht-und-schwach-markieren": "term-sehr-leicht-und-schwach-markieren",
   "sehr-ruhige-und-gemessen-schreitende-viertel": "term-sehr-ruhige-und-gemessen-schreitende-viertel",
   "sehr-scharf-und-spitzig": "term-sehr-scharf-und-spitzig",
-  "seite": "term-seite",
+  "seite": {
+    "id": "term-seite",
+    "exampleVariants": [
+      "seiten"
+    ]
+  },
   "selig": "term-selig",
   "seufzend": {
     "id": "term-seufzend",
@@ -2575,5 +2580,11 @@
     "original": "aufgestellt",
     "canonical": "aufstellen",
     "type": "過去分詞"
+  },
+  "seiten": {
+    "id": "term-seite",
+    "original": "seiten",
+    "canonical": "Seite",
+    "type": "語形変化（要分類）"
   }
 }
