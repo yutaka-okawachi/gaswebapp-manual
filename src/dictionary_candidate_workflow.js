@@ -1,17 +1,17 @@
 /**
- * 実験用の辞書候補ワークフロー．
+ * 本番用の辞書候補ワークフロー．
  *
  * 公開検索からは，検索結果が1件以上あり，かつ辞書見出し・登録済み語形に
  * 一致しない検索語だけを観測する．Jev判定後も自動採用せず，人が
- * 「採用」にした行だけを実験用タブへ反映する．本番Notesや本番語形対応は
- * このファイルから更新しない．
+ * 「採用」にした行だけを候補タブへ移す．新規見出しは対話画面で確認後に
+ * Notesへ，関連語形は確認後に語形対応へ反映する．
  */
 
-const UNREGISTERED_RESULT_TERM_SHEET_NAME = '検索結果未登録語_正規化テスト';
-const UNREGISTERED_TERM_CANDIDATE_SHEET_NAME = '未登録語候補_正規化テスト';
-const JEV_REVIEW_SHEET_NAME = 'Jev判定_正規化テスト';
-const EXPERIMENTAL_TERM_MAPPING_SHEET_NAME = '辞書語形・検索対応_実験';
-const EXPERIMENTAL_NOTES_SHEET_NAME = 'Notes_正規化テスト';
+const UNREGISTERED_RESULT_TERM_SHEET_NAME = '検索結果未登録語';
+const UNREGISTERED_TERM_CANDIDATE_SHEET_NAME = '未登録語候補';
+const JEV_REVIEW_SHEET_NAME = 'Jev判定';
+const EXPERIMENTAL_TERM_MAPPING_SHEET_NAME = '語形対応';
+const EXPERIMENTAL_NOTES_SHEET_NAME = 'Notes';
 
 const UNREGISTERED_RESULT_TERM_HEADERS = [
   '観測ID', '検索語', '正規化語形', '初回検索日時', '最終検索日時',
@@ -55,7 +55,7 @@ function normalizeObservedTerm(value) {
 
 function requireSheetWithHeaders(spreadsheet, sheetName, requiredHeaders) {
   const sheet = spreadsheet.getSheetByName(sheetName);
-  if (!sheet) throw new Error('必要な実験用タブがありません：' + sheetName);
+  if (!sheet) throw new Error('必要なタブがありません：' + sheetName);
   const actual = sheet.getRange(1, 1, 1, requiredHeaders.length).getValues()[0];
   requiredHeaders.forEach((header, index) => {
     if (actual[index] !== header) {
@@ -251,7 +251,7 @@ function promoteApprovedDictionaryCandidates() {
       spreadsheet, UNREGISTERED_TERM_CANDIDATE_SHEET_NAME, UNREGISTERED_TERM_CANDIDATE_HEADERS
     );
     const notesSheet = spreadsheet.getSheetByName(EXPERIMENTAL_NOTES_SHEET_NAME);
-    if (!notesSheet) throw new Error('必要な実験用タブがありません：' + EXPERIMENTAL_NOTES_SHEET_NAME);
+    if (!notesSheet) throw new Error('必要なタブがありません：' + EXPERIMENTAL_NOTES_SHEET_NAME);
 
     const notesHeadwords = new Set(
       readSheetRows(notesSheet, 1).map(row => normalizeObservedTerm(row[0])).filter(Boolean)
@@ -308,18 +308,72 @@ function promoteApprovedDictionaryCandidates() {
   }
 }
 
+/** ダイアログで確認した1件だけを移送する．既存の一括メニューは変更しない． */
+function promoteApprovedDictionaryCandidateByReviewId(reviewId) {
+  const lock = LockService.getScriptLock();
+  if (!lock.tryLock(10000)) throw new Error('辞書候補の更新ロックを取得できませんでした．');
+  try {
+    const spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
+    const observationSheet = requireSheetWithHeaders(spreadsheet,
+      UNREGISTERED_RESULT_TERM_SHEET_NAME, UNREGISTERED_RESULT_TERM_HEADERS);
+    const reviewSheet = requireSheetWithHeaders(spreadsheet, JEV_REVIEW_SHEET_NAME, JEV_REVIEW_HEADERS);
+    const mappingSheet = requireSheetWithHeaders(spreadsheet,
+      EXPERIMENTAL_TERM_MAPPING_SHEET_NAME, EXPERIMENTAL_TERM_MAPPING_HEADERS);
+    const candidateSheet = requireSheetWithHeaders(spreadsheet,
+      UNREGISTERED_TERM_CANDIDATE_SHEET_NAME, UNREGISTERED_TERM_CANDIDATE_HEADERS);
+    const notesSheet = spreadsheet.getSheetByName(EXPERIMENTAL_NOTES_SHEET_NAME);
+    if (!notesSheet) throw new Error('Notesがありません．');
+    const review = readSheetRows(reviewSheet, JEV_REVIEW_HEADERS.length)
+      .find(row => String(row[0] || '') === String(reviewId || ''));
+    if (!review || review[4] !== 'Jev' || review[5] !== 'ADVISORY' || review[12] !== '採用') {
+      throw new Error('人が採用したJev判定を1件選択してください．');
+    }
+    if (review[6] === 'NEW_TERM_CANDIDATE') {
+      const normalized = normalizeObservedTerm(review[3] || review[1]);
+      const observationRows = readSheetRows(observationSheet, UNREGISTERED_RESULT_TERM_HEADERS.length);
+      const observationIndex = observationRows.findIndex(row =>
+        normalizeObservedTerm(row[2] || row[1]) === normalized && String(row[9] || '') === reviewId);
+      if (observationIndex < 0) throw new Error('対応する観測行が見つかりません．');
+      const candidateRows = readSheetRows(candidateSheet, UNREGISTERED_TERM_CANDIDATE_HEADERS.length);
+      const candidateIndex = candidateRows.findIndex(row => normalizeObservedTerm(row[2] || row[1]) === normalized);
+      if (candidateIndex >= 0 && candidateRows[candidateIndex][10] === 'Notes反映済み') {
+        return { status: 'duplicate', destination: UNREGISTERED_TERM_CANDIDATE_SHEET_NAME };
+      }
+      const byNormalized = new Map();
+      if (candidateIndex >= 0) byNormalized.set(normalized,
+        { row: candidateRows[candidateIndex], sheetRow: candidateIndex + 2 });
+      const observationByNormalized = new Map([[normalized, {
+        row: observationRows[observationIndex], sheetRow: observationIndex + 2, sheet: observationSheet
+      }]]);
+      const status = appendApprovedNewTermCandidate(review, observationByNormalized,
+        candidateSheet, byNormalized);
+      return { status, destination: UNREGISTERED_TERM_CANDIDATE_SHEET_NAME };
+    }
+    const notesHeadwords = new Set(readSheetRows(notesSheet, 1)
+      .map(row => normalizeObservedTerm(row[0])).filter(Boolean));
+    const pairs = new Set(readSheetRows(mappingSheet, 2).map(row =>
+      normalizeObservedTerm(row[0]) + '\u0000' + normalizeObservedTerm(row[1])));
+    const status = appendApprovedRelatedForm(review, mappingSheet, notesHeadwords, pairs);
+    if (status === 'skipped') throw new Error('対応見出しがNotesにないか，分類が対象外です．');
+    const observationRows = readSheetRows(observationSheet, UNREGISTERED_RESULT_TERM_HEADERS.length);
+    const observationIndex = observationRows.findIndex(row => String(row[9] || '') === reviewId);
+    if (observationIndex >= 0) observationSheet.getRange(observationIndex + 2, 9).setValue('候補移送済み');
+    return { status, destination: EXPERIMENTAL_TERM_MAPPING_SHEET_NAME };
+  } finally { lock.releaseLock(); }
+}
+
 function promoteApprovedDictionaryCandidatesFromMenu() {
   const ui = SpreadsheetApp.getUi();
   try {
     const result = promoteApprovedDictionaryCandidates();
     ui.alert(
-      '実験用タブへの反映完了',
+      '辞書候補の反映完了',
       '関連語形の追加：' + result.relatedFormsInserted + '件\n' +
       '関連語形の重複：' + result.relatedFormsDuplicate + '件\n' +
       '新規用語候補の追加：' + result.newTermsInserted + '件\n' +
       '新規用語候補の更新：' + result.newTermsUpdated + '件\n' +
       '要確認：' + result.skipped + '件\n\n' +
-      '本番Notesと本番語形対応には反映していません．',
+      '新規見出しは未登録語候補で確認後にNotesへ登録します．関連語形は語形対応へ反映済みです．公開サイトへの反映にはsync-dataが必要です．',
       ui.ButtonSet.OK
     );
   } catch (error) {

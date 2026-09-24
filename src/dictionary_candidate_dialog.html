@@ -1,0 +1,242 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <base target="_top">
+  <style>
+    body { font: 14px/1.5 Arial, sans-serif; color: #1d2939; margin: 0; padding: 16px; }
+    h1 { font-size: 18px; margin: 0 0 8px; }
+    h2 { font-size: 15px; margin: 0 0 8px; }
+    p { margin: 6px 0; }
+    .muted { color: #596579; }
+    .panel { border: 1px solid #cad4e3; border-radius: 8px; padding: 12px; margin: 12px 0; }
+    .warning { border-color: #c77a3d; background: #fff8ed; }
+    .success { border-color: #73a18a; background: #f0faf4; }
+    .row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+    label { display: block; font-weight: 600; margin: 8px 0 3px; }
+    input, select, textarea { box-sizing: border-box; width: 100%; padding: 7px; border: 1px solid #aab8c8;
+      border-radius: 5px; background: white; color: #1d2939; font: inherit; }
+    textarea { resize: vertical; min-height: 56px; }
+    button { cursor: pointer; border: 1px solid #3167a8; background: #2968bd; color: white;
+      border-radius: 5px; padding: 7px 12px; font: inherit; margin: 5px 5px 3px 0; }
+    button.secondary { background: white; color: #21508c; }
+    button:disabled { opacity: .5; cursor: not-allowed; }
+    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0 10px; }
+    .context { white-space: pre-wrap; border-left: 3px solid #9aacc8; padding-left: 9px; max-height: 100px; overflow: auto; }
+    #confirmBox { position: fixed; inset: 0; background: #0008; display: none; align-items: center;
+      justify-content: center; padding: 24px; }
+    #confirmBox > div { background: white; border-radius: 8px; max-width: 480px; padding: 18px; }
+    #message { min-height: 22px; white-space: pre-wrap; }
+    [hidden] { display: none !important; }
+  </style>
+</head>
+<body>
+  <h1>未登録語の確認</h1>
+  <p class="muted">各段階で保存・反映を確認する．Notesと語形対応への反映後も，公開サイトの更新にはsync-dataが必要．</p>
+  <label for="observation">処理する検索語</label>
+  <div class="row"><select id="observation" style="flex:1"></select><button class="secondary" id="refresh">更新</button></div>
+  <p id="message" role="status" aria-live="polite"></p>
+
+  <section class="panel" id="observationPanel" hidden>
+    <h2>1．検索結果を確認</h2>
+    <p id="summary"></p><p class="context" id="context"></p>
+    <div id="jevArea">
+      <p class="muted">Jevによる分類は助言．API呼出しの直前に課金確認を行う．</p>
+      <button id="runJev">Jevで判定する</button>
+    </div>
+  </section>
+
+  <section class="panel" id="reviewPanel" hidden>
+    <h2>2．Jev判定を人が確認</h2>
+    <p id="reviewSummary"></p><p class="muted" id="candidateList"></p>
+    <div class="grid"><div><label for="category">分類</label><select id="category">
+      <option value="INFLECTION">格変化・活用形など</option>
+      <option value="ORTHOGRAPHIC_VARIANT">別綴り・旧綴り</option>
+      <option value="TYPO">誤記候補</option>
+      <option value="NEW_TERM_CANDIDATE">新しい見出し候補</option>
+      <option value="UNCERTAIN">判断保留</option>
+    </select></div><div><label for="headword">対応する既存見出し（新規候補では空欄）</label>
+      <input id="headword" maxlength="120"></div></div>
+    <label for="reviewMemo">確認メモ</label><textarea id="reviewMemo" maxlength="500"></textarea>
+    <div class="row"><button id="accept">採用</button><button class="secondary" id="hold">保留</button>
+      <button class="secondary" id="reject">却下</button></div>
+    <p class="muted">ここでは候補をまだ反映しない．</p>
+  </section>
+
+  <section class="panel" id="transferPanel" hidden>
+    <h2>3．候補を反映</h2>
+    <p id="transferSummary"></p>
+    <button id="promote">この1件だけを移送する</button>
+  </section>
+
+  <section class="panel" id="draftPanel" hidden>
+    <h2>4．新しい見出しの草案</h2>
+    <p class="muted">OpenAI API草案は任意．手動入力・修正もできる．API呼出しの直前に別途課金確認を行う．</p>
+    <button id="runDraft">OpenAI APIで草案を作る</button>
+    <div class="grid"><div><label for="draftHeadword">見出し</label><input id="draftHeadword" maxlength="120"></div>
+      <div><label for="partOfSpeech">品詞</label><input id="partOfSpeech" maxlength="100"></div></div>
+    <div class="grid"><div><label for="english">英語の類語</label><input id="english" maxlength="500"></div>
+      <div><label for="italian">イタリア語の類語</label><input id="italian" maxlength="500"></div></div>
+    <label for="inflections">原形・格変化形などの記述</label><input id="inflections" maxlength="500">
+    <label for="translation">一般的な意味（本質的に異なる意味を1行ずつ）</label><textarea id="translation" maxlength="500"></textarea>
+    <label for="musicExamples">音楽用語としての訳例（訳例を1行ずつ）</label><textarea id="musicExamples" maxlength="1500"></textarea>
+    <div class="grid"><div><label for="draftCategory">分類</label><input id="draftCategory" maxlength="120"></div>
+      <div><label for="similar">類似語</label><input id="similar" maxlength="500"></div></div>
+    <label for="draftNotes">草案作成時の未確認事項（B列には入れない）</label><textarea id="draftNotes" maxlength="1200"></textarea>
+    <label for="comment">任意のコメント（必要ならご自身で記入）</label><textarea id="comment" maxlength="1200"></textarea>
+    <button id="saveDraft">草案を保存する</button>
+  </section>
+
+  <section class="panel warning" id="entryPanel" hidden>
+    <h2>5．B列本文を目視確認し，Notesに登録</h2>
+    <p class="muted">類語と訳例，①②…の意味区分を確認する．未確認事項は本文に入れない．コメントは任意．重複見出しは登録しない．</p>
+    <label for="entryBody">NotesのB列</label><textarea id="entryBody" rows="9" maxlength="6000"></textarea>
+    <label for="source">C列の出典</label><select id="source"><option>[RW: Oper]</option>
+      <option>[RS: Oper]</option><option>[GM]</option></select>
+    <button id="register">この内容でNotesに登録する</button>
+  </section>
+  <section class="panel success" id="donePanel" hidden><h2 id="doneTitle">反映済み</h2>
+    <p>公開サイトへのsync-dataは行っていない．</p>
+    <button id="reopen" hidden>この候補の編集を再開する</button></section>
+
+  <div id="confirmBox" role="dialog" aria-modal="true" aria-labelledby="confirmText"><div>
+    <p id="confirmText"></p><button id="confirmYes">実行する</button>
+    <button class="secondary" id="confirmNo">戻る</button></div></div>
+  <script>
+    const $ = id => document.getElementById(id);
+    let state = null;
+    let busy = false;
+    const call = (name, ...args) => new Promise((resolve, reject) =>
+      google.script.run.withSuccessHandler(resolve).withFailureHandler(reject)[name](...args));
+    const message = text => { $('message').textContent = text || ''; };
+    const visible = (id, show) => { $(id).hidden = !show; };
+    function confirmation(text) {
+      $('confirmText').textContent = text;
+      $('confirmBox').style.display = 'flex';
+      return new Promise(resolve => {
+        const close = answer => { $('confirmBox').style.display = 'none'; resolve(answer); };
+        $('confirmYes').onclick = () => close(true);
+        $('confirmNo').onclick = () => close(false);
+      });
+    }
+    async function operation(action, success) {
+      if (busy) return;
+      busy = true; message('処理中…');
+      try { const result = await action(); if (result) {
+        if (result.state) state = result.state;
+        else if (result.observation) state = result;
+      } render(); message(success); }
+      catch (error) { message((error && error.message) || String(error)); }
+      finally { busy = false; }
+    }
+    async function refreshList() {
+      const prior = $('observation').value;
+      await operation(async () => {
+        const rows = await call('candidateWizardBootstrap');
+        $('observation').replaceChildren();
+        for (const row of rows) {
+          const option = document.createElement('option');
+          option.value = row.id;
+          option.textContent = row.term + '（' + row.status + '，' + row.count + '回）';
+          $('observation').append(option);
+        }
+        if (rows.some(row => row.id === prior)) $('observation').value = prior;
+        return $('observation').value ? call('candidateWizardState', $('observation').value) : null;
+      }, '');
+    }
+    function draftFields() { return { headword: $('draftHeadword').value,
+      partOfSpeech: $('partOfSpeech').value, inflections: $('inflections').value,
+      translation: $('translation').value, description: '',
+      category: $('draftCategory').value, similar: $('similar').value, notes: $('draftNotes').value,
+      english: $('english').value, italian: $('italian').value,
+      musicExamples: $('musicExamples').value, comment: $('comment').value }; }
+    function render() {
+      for (const id of ['observationPanel', 'reviewPanel', 'transferPanel', 'draftPanel',
+        'entryPanel', 'donePanel']) visible(id, false);
+      if (!state) return;
+      const o = state.observation, r = state.review, c = state.candidate;
+      visible('observationPanel', true);
+      $('summary').textContent = o.term + '／' + o.page + '／検索 ' + o.count + '回／最大 ' +
+        o.results + '件／状態：' + o.status;
+      $('context').textContent = state.context || '原文の文脈が取得できないため，Jev判定は課金前に停止する．';
+      visible('jevArea', !r);
+      $('runJev').disabled = !state.jevReady || !state.context || o.status !== '未判定';
+      if (r) {
+        visible('reviewPanel', true);
+        $('reviewSummary').textContent = 'Jevの助言：' + r.category + '／確信度 ' +
+          Math.round(r.confidence * 100) + '%／人による確認：' + r.decision;
+        $('candidateList').textContent = r.candidates;
+        $('category').value = r.category;
+        $('headword').value = r.headword;
+        $('reviewMemo').value = r.memo;
+        for (const key of ['accept', 'hold', 'reject']) $(key).disabled = o.status === '候補移送済み';
+        visible('transferPanel', r.decision === '採用' && o.status !== '候補移送済み');
+        $('transferSummary').textContent = r.category === 'NEW_TERM_CANDIDATE'
+          ? '新しい見出し候補を「未登録語候補」に移送する．'
+          : '関連語形を「語形対応」に反映する．';
+      }
+      if (c && c.status === 'Notes反映済み') {
+        $('doneTitle').textContent = c.canReopen ? 'Notesから見出しが削除された' :
+          'Notesに登録済み';
+        visible('reopen', c.canReopen); visible('donePanel', true); return;
+      }
+      if (o.status === '候補移送済み' && r && r.category !== 'NEW_TERM_CANDIDATE') {
+        $('doneTitle').textContent = '関連語形を語形対応に反映済み'; visible('donePanel', true); return;
+      }
+      if (c) {
+        visible('draftPanel', true);
+        $('runDraft').disabled = !state.draftReady || c.draftStatus === '生成中' ||
+          c.draftStatus === '結果要確認';
+        const map = { draftHeadword: c.headword, partOfSpeech: c.partOfSpeech,
+          inflections: c.inflections, translation: c.translation,
+          draftCategory: c.category, similar: c.similar, draftNotes: c.notes,
+          english: c.english, italian: c.italian, musicExamples: c.musicExamples,
+          comment: c.comment };
+        for (const [id, value] of Object.entries(map)) $(id).value = value;
+        visible('entryPanel', Boolean(c.headword && c.translation && c.english && c.italian && c.musicExamples));
+        if (c.headword && c.translation && c.english && c.italian && c.musicExamples) {
+          $('entryBody').value = c.suggestedBody;
+          $('source').value = o.page.includes('RW') ? '[RW: Oper]' :
+            o.page.includes('RS') ? '[RS: Oper]' : '[GM]';
+        }
+      }
+    }
+    $('observation').onchange = () => operation(() => call('candidateWizardState',
+      $('observation').value), '');
+    $('refresh').onclick = refreshList;
+    $('runJev').onclick = async () => {
+      if (!await confirmation('Jev APIを1回呼び出す．課金が発生する可能性がある．続けますか．')) return;
+      operation(() => call('candidateWizardRunJev', state.observation.id, true), 'Jev判定を保存した．');
+    };
+    for (const [button, decision] of [['accept', '採用'], ['hold', '保留'], ['reject', '却下']]) {
+      $(button).onclick = async () => {
+        if (!await confirmation('分類「' + $('category').value + '」を「' + decision + '」として保存しますか．')) return;
+        operation(() => call('candidateWizardSaveReview', state.observation.id, decision,
+          $('category').value, $('headword').value, $('reviewMemo').value), '人による確認を保存した．');
+      };
+    }
+    $('promote').onclick = async () => {
+      if (!await confirmation('この1件だけを反映しますか．関連語形の場合は語形対応を更新します．公開サイトの更新にはsync-dataが必要です．')) return;
+      operation(() => call('candidateWizardPromote', state.observation.id, true), '移送した．');
+    };
+    $('reopen').onclick = async () => {
+      if (!await confirmation('Notesから見出しが削除されたことを確認した．Jev判定と旧草案を残して，再編集を始めますか．APIは自動実行しません．')) return;
+      operation(() => call('candidateWizardReopenExperimental', state.observation.id, true),
+        '編集を再開した．草案を確認してください．');
+    };
+    $('runDraft').onclick = async () => {
+      if (!await confirmation('OpenAI APIで草案を1回生成する．課金が発生する可能性がある．既存草案は上書きされる．続けますか．')) return;
+      operation(() => call('candidateWizardCreateDraft', state.observation.id, true), '草案を保存した．内容を確認・修正してください．');
+    };
+    $('saveDraft').onclick = () => operation(() => call('candidateWizardSaveDraft',
+      state.observation.id, draftFields(), 'ダイアログで手動編集．API未使用．', ''),
+      '草案を保存した．B列本文を確認してください．');
+    $('register').onclick = async () => {
+      if (!await confirmation('表示されたB列本文とC列出典を，Notesに見出し順で登録しますか．公開サイトの更新にはsync-dataが必要です．')) return;
+      operation(() => call('candidateWizardRegisterExperimental', state.observation.id,
+        $('entryBody').value, $('source').value, true), 'Notesに登録した．公開サイトには未反映です．');
+    };
+    refreshList();
+  </script>
+</body>
+</html>

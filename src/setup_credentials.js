@@ -49,6 +49,7 @@ function onOpen() {
     .addToUi();
 
   ui.createMenu('📚 辞書候補')
-    .addItem('採用済み判定を実験用タブへ反映', 'promoteApprovedDictionaryCandidatesFromMenu')
+    .addItem('未登録語を対話形式で処理', 'showDictionaryCandidateWizard')
+    .addItem('選択行をJevで判定', 'createJevReviewForSelectedObservationFromMenu')
     .addToUi();
 }

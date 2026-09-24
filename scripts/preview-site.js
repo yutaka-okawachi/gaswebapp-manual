@@ -16,10 +16,10 @@ function publicPath(url) {
 function previewHtml(html, token, approval, phase = 'publish', experimental = false) {
     const previewTitle = experimental ? '辞書語形・検索対応の実験サイト' : '公開前プレビュー';
     const previewDescription = experimental
-        ? 'Notes_正規化テストと辞書語形・検索対応_実験を使用中．本番データではありません．'
+        ? 'Notes_正規化テストと辞書語形・検索対応_実験を使用中．本番データではありません．候補観測を明示的にONにすると，検索結果未登録語_正規化テストへ記録します．'
         : 'アクセス計測・検索通知は送信されません。';
     const notice = `<aside style="position:relative;z-index:1;margin:12px;padding:16px;border:2px solid #8a6500;border-radius:8px;background:#fff7db;color:#242424;font:16px/1.6 sans-serif"><strong>${previewTitle}</strong> — ${previewDescription}<br><a href="/">トップ</a> · <a href="/mahler-search-app/dic.html">用語集</a> · <a href="/mahler-search-app/terms_search.html">GM用語検索</a> · <a href="/mahler-search-app/rw_terms_search.html">RW用語検索</a> · <a href="/mahler-search-app/rs_terms_search.html">RS用語検索</a>${approval ? `<form method="post" action="/__approve"><input type="hidden" name="token" value="${token}"><button style="margin-top:12px;padding:10px 18px" type="submit">確認しました。この内容を公開する</button></form>` : '<br>この確認画面から本番へ公開することはありません。'}</aside>`;
-    const optout = `<script>try {localStorage.setItem('gmt_admin_device_optout','1');} catch(e) {} window.__LOCAL_PREVIEW__=true;</script>`;
+    const optout = `<script>try {localStorage.setItem('gmt_admin_device_optout','1');} catch(e) {} window.__LOCAL_PREVIEW__=true;${experimental ? 'window.__ALLOW_EXPERIMENTAL_CANDIDATE_OBSERVATION__=true;' : ''}</script>`;
     const phasedNotice = phase === 'prepare' ? notice.replace('確認しました。この内容を公開する', '確認しました。GAS更新と最新データの取得に進む').replace('公開前プレビュー</strong>', 'GAS更新前のプレビュー</strong> — 現在保存されているデータを表示しています。最新データ取得後にもう一度確認できます。') : notice;
     return html.replace(/<head([^>]*)>/i, '<head$1>' + optout).replace(/<body([^>]*)>/i, '<body$1>' + phasedNotice);
 }
@@ -51,7 +51,10 @@ async function startPreview({ approval = false, open = false, phase = 'publish',
     }
     const server = http.createServer(async (req, res) => {
         res.setHeader('Cache-Control', 'no-store');
-        res.setHeader('Content-Security-Policy', "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self'; form-action 'self'; frame-ancestors 'none'");
+        const connectSources = dictionaryData
+            ? "'self' https://script.google.com https://script.googleusercontent.com"
+            : "'self'";
+        res.setHeader('Content-Security-Policy', `default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src ${connectSources}; form-action 'self'; frame-ancestors 'none'`);
         if (req.method === 'POST' && req.url === '/__approve' && approval) {
             let body = '';
             for await (const chunk of req) { body += chunk; if (body.length > 1024) { res.writeHead(413); res.end(); return; } }

@@ -190,25 +190,91 @@ function testRelatedFormPromotionHelper() {
   assert.strictEqual(appended[1][3], '対象外');
 }
 
+function testJevCandidateRequest() {
+  const context = {
+    console,
+    normalizeObservedTerm: value => String(value || '').toLowerCase()
+      .replace(/ä/g, 'ae').replace(/ö/g, 'oe').replace(/ü/g, 'ue').replace(/ß/g, 'ss')
+  };
+  vm.createContext(context);
+  vm.runInContext(read('src/jev_candidate_review.js'), context, {
+    filename: 'src/jev_candidate_review.js'
+  });
+  const candidates = context.jevCandidateHeadwords([
+    ['aufstellen', '設置する．', '[RW]'],
+    ['stehen', '立つ．', '[GM]'],
+    ['singen', '歌う．', '[RS]']
+  ], 'aufgestellt');
+  assert.strictEqual(candidates.length, 3);
+  assert.strictEqual(candidates[0].headword, 'aufstellen');
+  assert.strictEqual(candidates[0].dictionaryId, 'term-aufstellen');
+  const request = context.buildJevCandidateRequest('aufgestellt', 'ist aufgestellt', candidates);
+  assert.strictEqual(request.model, 'jev-latest');
+  assert.strictEqual(request.state.german_context, 'ist aufgestellt');
+  assert.strictEqual(request.questions.category.type, 'choice');
+  assert.strictEqual(request.questions.target.criteria.candidate_1.headword, 'aufstellen');
+  assert.strictEqual(request.state.email, undefined);
+  assert.strictEqual(context.jevCandidateSheetText('=1+1'), "'=1+1");
+  const ranges = [];
+  const phrase = 'Man hört das Kriegsgewühl aus der Ferne.';
+  const sourceSheet = {
+    getLastRow: () => 500,
+    getLastColumn: () => 8,
+    getRange(row, column, count) {
+      ranges.push([row, column, count]);
+      if (row === 1) return { getValues: () => [[
+        'Oper', 'Aufzug', 'Szene', 'page', 'whom', 'de', 'de_normalized', 'ja'
+      ]] };
+      if (row === 2 && column === 7) return {
+        createTextFinder(term) {
+          assert.strictEqual(term, 'kriegsgewuehl');
+          return { matchCase: () => ({ findNext: () => ({ getRow: () => 420 }) }) };
+        }
+      };
+      if (row === 420 && column === 6) return { getValue: () => phrase };
+      throw new Error('予期しない範囲');
+    }
+  };
+  assert.strictEqual(context.jevCandidateContext({
+    getSheetByName: name => name === 'RW' ? sourceSheet : null
+  }, ['', 'kriegsgewuehl', 'kriegsgewuehl', '', '', '', '用語から検索 (RW)']), phrase);
+  assert.ok(ranges.some(([, column]) => column === 7));
+  assert.throws(() => context.validateJevCandidateChoice({
+    type: 'choice', choice: 'candidate_9', confidence: 0.8
+  }, ['candidate_1']), /回答形式/);
+  assert.strictEqual(context.validateJevCandidateChoice({
+    type: 'choice', choice: 'candidate_1', confidence: 0.8
+  }, ['candidate_1']).choice, 'candidate_1');
+}
+
 function testWiring() {
   const gas = read('src/web_trigger.js');
   assert.ok(gas.includes("data.action === 'observe_unregistered_result_term'"));
-  assert.ok(gas.includes("action === 'promoteApprovedDictionaryCandidates'"));
+  assert.strictEqual(gas.includes("action === 'promoteApprovedDictionaryCandidates'"), false);
   for (const page of ['terms_search.html', 'rs_terms_search.html', 'rw_terms_search.html']) {
     const source = read(path.join('mahler-search-app', page));
     assert.ok(source.includes('window.observeUnregisteredResultTermSearch({'));
     assert.ok(source.includes('termsIndex: window.appData.dic_terms_index'));
   }
   const workflow = read('src/dictionary_candidate_workflow.js');
-  assert.ok(workflow.includes("EXPERIMENTAL_TERM_MAPPING_SHEET_NAME = '辞書語形・検索対応_実験'"));
-  assert.strictEqual(workflow.includes("getSheetByName('Notes')"), false);
-  assert.strictEqual(workflow.includes("getSheetByName('語形対応')"), false);
+  const menu = read('src/setup_credentials.js');
+  const jev = read('src/jev_candidate_review.js');
+  assert.ok(menu.includes("'選択行をJevで判定', 'createJevReviewForSelectedObservationFromMenu'"));
+  assert.ok(jev.includes("getProperty('TYPESAFE_API_KEY')"));
+  assert.ok(jev.includes("'Jev判定待ち'"));
+  assert.ok(jev.includes("'Jev判定済み'"));
+  assert.ok(workflow.includes("EXPERIMENTAL_TERM_MAPPING_SHEET_NAME = '語形対応'"));
+  assert.ok(workflow.includes("EXPERIMENTAL_NOTES_SHEET_NAME = 'Notes'"));
+  assert.ok(workflow.includes("UNREGISTERED_RESULT_TERM_SHEET_NAME = '検索結果未登録語'"));
+  assert.strictEqual(workflow.includes('Notes_正規化テスト'), false);
+  assert.strictEqual(workflow.includes('辞書語形・検索対応_実験'), false);
 }
 
 Promise.resolve()
   .then(testFrontendObservation)
   .then(testAdminCandidateObservationMode)
   .then(testRelatedFormPromotionHelper)
+  .then(testJevCandidateRequest)
   .then(testWiring)
   .then(() => console.log('辞書候補ワークフローのテストに成功しました．'))
   .catch(error => {

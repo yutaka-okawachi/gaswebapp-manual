@@ -341,9 +341,12 @@ function createUnregisteredResultTermObservationEventId() {
 
 async function observeUnregisteredResultTermSearch(options, pageName) {
     if (!shouldObserveUnregisteredResultTermSearch(options)) return false;
-    if (window.__LOCAL_PREVIEW__) return false;
-    if (typeof window.isAdminDeviceOptOut === 'function' && window.isAdminDeviceOptOut() &&
-        !(typeof window.isAdminCandidateObservationEnabled === 'function' && window.isAdminCandidateObservationEnabled())) return false;
+    const adminOptOut = typeof window.isAdminDeviceOptOut === 'function' && window.isAdminDeviceOptOut();
+    const candidateObservationEnabled = typeof window.isAdminCandidateObservationEnabled === 'function' &&
+        window.isAdminCandidateObservationEnabled();
+    if (window.__LOCAL_PREVIEW__ &&
+        (window.__ALLOW_EXPERIMENTAL_CANDIDATE_OBSERVATION__ !== true || !candidateObservationEnabled)) return false;
+    if (adminOptOut && !candidateObservationEnabled) return false;
     if (GAS_NOTIFICATION_URL === 'YOUR_GAS_WEB_APP_URL_HERE' || !GAS_NOTIFICATION_URL) return false;
     try {
         await fetch(GAS_NOTIFICATION_URL, {
