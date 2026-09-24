@@ -3,6 +3,7 @@
 
     const GA_MEASUREMENT_ID = 'G-ZT6MPW5MNG';
     const ADMIN_DEVICE_KEY = 'gmt_admin_device_optout';
+    const ADMIN_CANDIDATE_OBSERVATION_KEY = 'gmt_admin_candidate_observation';
     const DICTIONARY_EXAMPLE_TIMING_KEY = 'gmt_dictionary_example_timing';
     const SEARCH_PAGE_PATHS = Object.freeze({
         'mahler.html': '/gaswebapp-manual/mahler-search-app/mahler.html',
@@ -49,6 +50,15 @@
         }
     }
 
+    function isAdminCandidateObservationEnabled() {
+        if (!isAdminDeviceOptOut()) return false;
+        try {
+            return window.sessionStorage.getItem(ADMIN_CANDIDATE_OBSERVATION_KEY) === '1';
+        } catch (error) {
+            return false;
+        }
+    }
+
     function applyAdminDeviceUrlCommand() {
         try {
             const params = new URLSearchParams(window.location.search);
@@ -57,6 +67,12 @@
                 setAdminDeviceOptOut(true);
             } else if (adminValue === '0') {
                 setAdminDeviceOptOut(false);
+            }
+            const candidateValue = params.get('candidate_observe');
+            if (adminValue === '0' || candidateValue === '0') {
+                window.sessionStorage.removeItem(ADMIN_CANDIDATE_OBSERVATION_KEY);
+            } else if (candidateValue === '1' && isAdminDeviceOptOut()) {
+                window.sessionStorage.setItem(ADMIN_CANDIDATE_OBSERVATION_KEY, '1');
             }
         } catch (error) {
             // URL handling must never block the page.
@@ -73,7 +89,9 @@
         if (!isAdminDeviceOptOut() || document.getElementById('admin-device-optout-badge')) return;
         const badge = document.createElement('div');
         badge.id = 'admin-device-optout-badge';
-        badge.textContent = '管理者モード：解析・検索記録 OFF';
+        badge.textContent = isAdminCandidateObservationEnabled()
+            ? '管理者モード：解析・通知・検索履歴 OFF\n未登録語候補のみ ON'
+            : '管理者モード：解析・検索記録 OFF';
         badge.setAttribute('role', 'status');
         badge.style.position = 'fixed';
         badge.style.right = '10px';
@@ -85,6 +103,8 @@
         badge.style.color = '#fff';
         badge.style.fontSize = '12px';
         badge.style.lineHeight = '1.4';
+        badge.style.whiteSpace = 'pre-line';
+        badge.style.maxWidth = 'calc(100vw - 20px)';
         badge.style.boxShadow = '0 2px 8px rgba(0, 0, 0, 0.25)';
         badge.style.pointerEvents = 'none';
         document.body.appendChild(badge);
@@ -147,6 +167,7 @@
     disableGoogleAnalyticsForAdminDevice();
 
     window.isAdminDeviceOptOut = isAdminDeviceOptOut;
+    window.isAdminCandidateObservationEnabled = isAdminCandidateObservationEnabled;
     window.setAdminDeviceOptOut = function (enabled) {
         const changed = setAdminDeviceOptOut(Boolean(enabled));
         disableGoogleAnalyticsForAdminDevice();

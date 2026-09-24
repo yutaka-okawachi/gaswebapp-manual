@@ -191,7 +191,8 @@ function createUnregisteredResultTermObservationEventId() {
 async function observeUnregisteredResultTermSearch(options, pageName) {
     if (!shouldObserveUnregisteredResultTermSearch(options)) return false;
     if (window.__LOCAL_PREVIEW__) return false;
-    if (typeof window.isAdminDeviceOptOut === 'function' && window.isAdminDeviceOptOut()) return false;
+    if (typeof window.isAdminDeviceOptOut === 'function' && window.isAdminDeviceOptOut() &&
+        !(typeof window.isAdminCandidateObservationEnabled === 'function' && window.isAdminCandidateObservationEnabled())) return false;
     if (GAS_NOTIFICATION_URL === 'YOUR_GAS_WEB_APP_URL_HERE' || !GAS_NOTIFICATION_URL) return false;
     try {
         await fetch(GAS_NOTIFICATION_URL, {

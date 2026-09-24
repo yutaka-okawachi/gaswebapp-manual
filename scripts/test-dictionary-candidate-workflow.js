@@ -63,6 +63,85 @@ async function testFrontendObservation() {
     searchTerm: 'Geistern', resultCount: 2, termsIndex: {}
   }, 'terms_search.html');
   assert.strictEqual(requests.length, 1);
+
+  context.window.isAdminCandidateObservationEnabled = () => true;
+  await context.window.observeUnregisteredResultTermSearch({
+    searchTerm: 'Geistern', resultCount: 2, termsIndex: {}
+  }, 'terms_search.html');
+  assert.strictEqual(requests.length, 2);
+
+  context.window.__LOCAL_PREVIEW__ = true;
+  await context.window.observeUnregisteredResultTermSearch({
+    searchTerm: 'Geistern', resultCount: 2, termsIndex: {}
+  }, 'terms_search.html');
+  assert.strictEqual(requests.length, 2);
+}
+
+function testAdminCandidateObservationMode() {
+  const local = new Map();
+  const session = new Map();
+  const storage = values => ({
+    getItem: key => values.has(key) ? values.get(key) : null,
+    setItem: (key, value) => values.set(key, value),
+    removeItem: key => values.delete(key)
+  });
+  const source = read('mahler-search-app/js/analytics.js');
+  const load = search => {
+    const listeners = {};
+    const appended = [];
+    let notifications = 0;
+    const context = {
+      URLSearchParams,
+      console,
+      document: {
+        addEventListener: (name, callback) => { listeners[name] = callback; },
+        getElementById: () => null,
+        createElement: () => ({ style: {}, setAttribute() {} }),
+        body: { appendChild: element => appended.push(element) },
+        querySelector: () => ({})
+      },
+      window: {
+        localStorage: storage(local),
+        sessionStorage: storage(session),
+        location: { search, pathname: '/gaswebapp-manual/mahler-search-app/terms_search.html' },
+        addEventListener() {},
+        setTimeout() {},
+        sendSearchNotification: () => { notifications++; }
+      }
+    };
+    vm.createContext(context);
+    vm.runInContext(source, context, { filename: 'mahler-search-app/js/analytics.js' });
+    return { window: context.window, listeners, appended, notificationCount: () => notifications };
+  };
+
+  let page = load('?candidate_observe=1');
+  assert.strictEqual(page.window.isAdminCandidateObservationEnabled(), false);
+  assert.strictEqual(session.has('gmt_admin_candidate_observation'), false);
+
+  page = load('?admin=1');
+  assert.strictEqual(page.window.isAdminDeviceOptOut(), true);
+  assert.strictEqual(page.window.isAdminCandidateObservationEnabled(), false);
+
+  page = load('?candidate_observe=1');
+  assert.strictEqual(page.window.isAdminCandidateObservationEnabled(), true);
+  assert.strictEqual(page.window['ga-disable-G-ZT6MPW5MNG'], true);
+  page.listeners.DOMContentLoaded();
+  assert.ok(page.appended[0].textContent.includes('未登録語候補のみ ON'));
+  page.window.sendSearchNotification({}, 'terms_search.html');
+  assert.strictEqual(page.notificationCount(), 0);
+
+  page = load('');
+  assert.strictEqual(page.window.isAdminCandidateObservationEnabled(), true);
+
+  page = load('?candidate_observe=0');
+  assert.strictEqual(page.window.isAdminDeviceOptOut(), true);
+  assert.strictEqual(page.window.isAdminCandidateObservationEnabled(), false);
+
+  load('?admin=1&candidate_observe=1');
+  page = load('?admin=0');
+  assert.strictEqual(page.window.isAdminDeviceOptOut(), false);
+  assert.strictEqual(page.window.isAdminCandidateObservationEnabled(), false);
+  assert.strictEqual(session.has('gmt_admin_candidate_observation'), false);
 }
 
 function testRelatedFormPromotionHelper() {
@@ -128,6 +207,7 @@ function testWiring() {
 
 Promise.resolve()
   .then(testFrontendObservation)
+  .then(testAdminCandidateObservationMode)
   .then(testRelatedFormPromotionHelper)
   .then(testWiring)
   .then(() => console.log('辞書候補ワークフローのテストに成功しました．'))
