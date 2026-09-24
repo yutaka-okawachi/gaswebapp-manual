@@ -93,7 +93,12 @@
     ]
   },
   "aufschwung": "term-aufschwung",
-  "aufstellen": "term-aufstellen",
+  "aufstellen": {
+    "id": "term-aufstellen",
+    "exampleVariants": [
+      "aufgestellt"
+    ]
+  },
   "aufzufassen": {
     "id": "term-aufzufassen",
     "exampleVariants": [
@@ -2563,5 +2568,11 @@
     "original": "markieren",
     "canonical": "markieren, markiert, marcirt, markirt",
     "type": "不定詞"
+  },
+  "aufgestellt": {
+    "id": "term-aufstellen",
+    "original": "aufgestellt",
+    "canonical": "aufstellen",
+    "type": "過去分詞"
   }
 }
