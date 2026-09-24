@@ -51,5 +51,6 @@ function onOpen() {
   ui.createMenu('📚 辞書候補')
     .addItem('未登録語を対話形式で処理', 'showDictionaryCandidateWizard')
     .addItem('選択行をJevで判定', 'createJevReviewForSelectedObservationFromMenu')
+    .addItem('既存語形対応の出典を調査', 'refreshDictionarySourceMarkersForMappingsFromMenu')
     .addToUi();
 }

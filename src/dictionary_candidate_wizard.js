@@ -373,26 +373,7 @@ function candidateWizardValidateBodyMorphology(body) {
 }
 
 function candidateWizardSourceMarkers(spreadsheet, headword) {
-  const target = normalizeObservedTerm(headword);
-  if (!target) return [];
-  const definitions = [
-    ['RS', '[RS: Oper]'],
-    ['RW', '[RW: Oper]'],
-    ['GM', '[GM]']
-  ];
-  const escapeRegExp = value => String(value).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-  const pattern = new RegExp('(^|[^a-z0-9])' + escapeRegExp(target) + '($|[^a-z0-9])', 'i');
-  return definitions.filter(([sheetName]) => {
-    const sheet = spreadsheet.getSheetByName(sheetName);
-    if (!sheet || sheet.getLastRow() < 2) return false;
-    const headers = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getValues()[0];
-    const normalizedColumn = headers.indexOf('de_normalized') + 1;
-    const deColumn = headers.indexOf('de') + 1;
-    const column = normalizedColumn || deColumn;
-    if (!column) return false;
-    const values = sheet.getRange(2, column, sheet.getLastRow() - 1, 1).getValues();
-    return values.some(row => pattern.test(normalizeObservedTerm(row[0])));
-  }).map(([, marker]) => marker);
+  return dictionarySourceMarkers(spreadsheet, headword);
 }
 
 function candidateWizardSuggestedBody(candidate) {

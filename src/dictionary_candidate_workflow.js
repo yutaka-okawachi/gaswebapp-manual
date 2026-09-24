@@ -53,6 +53,91 @@ function normalizeObservedTerm(value) {
     .trim();
 }
 
+function dictionarySourceMarkers(spreadsheet, term) {
+  const target = normalizeObservedTerm(term);
+  if (!target) return [];
+  const definitions = [
+    ['RS', '[RS: Oper]'],
+    ['RW', '[RW: Oper]'],
+    ['GM', '[GM]']
+  ];
+  const escapeRegExp = value => String(value).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const pattern = new RegExp('(^|[^a-z0-9])' + escapeRegExp(target) + '($|[^a-z0-9])', 'i');
+  return definitions.filter(([sheetName]) => {
+    const sheet = spreadsheet.getSheetByName(sheetName);
+    if (!sheet || sheet.getLastRow() < 2) return false;
+    const headers = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getValues()[0];
+    const normalizedColumn = headers.indexOf('de_normalized') + 1;
+    const deColumn = headers.indexOf('de') + 1;
+    const column = normalizedColumn || deColumn;
+    if (!column) return false;
+    return sheet.getRange(2, column, sheet.getLastRow() - 1, 1).getValues()
+      .some(row => pattern.test(normalizeObservedTerm(row[0])));
+  }).map(([, marker]) => marker);
+}
+
+function mergeDictionarySourceMarkers(existing, markers) {
+  const current = String(existing || '').split(',').map(value => value.trim()).filter(Boolean);
+  const canonical = value => value.replace(/\s+\]/g, ']');
+  const seen = new Set(current.map(canonical));
+  markers.forEach(marker => {
+    if (!seen.has(canonical(marker))) {
+      current.push(marker);
+      seen.add(canonical(marker));
+    }
+  });
+  return current.join(', ');
+}
+
+function updateNotesSourceMarkersForHeadword(spreadsheet, notesSheet, headword, markers) {
+  if (!markers.length) return false;
+  const rows = readSheetRows(notesSheet, 3);
+  const rowIndex = rows.findIndex(row => normalizeObservedTerm(row[0]) === normalizeObservedTerm(headword));
+  if (rowIndex < 0) return false;
+  const current = String(rows[rowIndex][2] || '');
+  const merged = mergeDictionarySourceMarkers(current, markers);
+  if (merged === current) return false;
+  notesSheet.getRange(rowIndex + 2, 3).setValue(merged);
+  return true;
+}
+
+function refreshDictionarySourceMarkersForMappings() {
+  const spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
+  const notesSheet = requireSheetWithHeaders(spreadsheet, EXPERIMENTAL_NOTES_SHEET_NAME, ['見出し', '本文', '出典']);
+  const mappingSheet = requireSheetWithHeaders(spreadsheet, EXPERIMENTAL_TERM_MAPPING_SHEET_NAME, EXPERIMENTAL_TERM_MAPPING_HEADERS);
+  const rows = readSheetRows(mappingSheet, EXPERIMENTAL_TERM_MAPPING_HEADERS.length);
+  const mappingKeys = new Set();
+  let updated = 0;
+  let mappingsWithExamples = 0;
+  rows.forEach(row => {
+    const headword = String(row[0] || '').trim();
+    const relatedForm = String(row[1] || '').trim();
+    if (!headword || !relatedForm) return;
+    const key = normalizeObservedTerm(headword) + '\u0000' + normalizeObservedTerm(relatedForm);
+    if (mappingKeys.has(key)) return;
+    mappingKeys.add(key);
+    const markers = dictionarySourceMarkers(spreadsheet, relatedForm);
+    if (markers.length) mappingsWithExamples += 1;
+    if (updateNotesSourceMarkersForHeadword(spreadsheet, notesSheet, headword, markers)) updated += 1;
+  });
+  return { mappingsChecked: rows.length, headingsChecked: new Set(rows.map(row => normalizeObservedTerm(row[0])).filter(Boolean)).size, mappingsWithExamples, notesUpdated: updated };
+}
+
+function refreshDictionarySourceMarkersForMappingsFromMenu() {
+  const ui = SpreadsheetApp.getUi();
+  try {
+    const result = refreshDictionarySourceMarkersForMappings();
+    ui.alert('語形対応の出典調査完了',
+      '語形対応行：' + result.mappingsChecked + '件\n' +
+      '見出し確認：' + result.headingsChecked + '件\n' +
+      '関連語形の実例を確認できた対応：' + result.mappingsWithExamples + '件\n' +
+      'NotesのC列更新：' + result.notesUpdated + '件\n\n' +
+      '既存の記載と同じ出典は重複追記していません．', ui.ButtonSet.OK);
+  } catch (error) {
+    ui.alert('出典調査に失敗しました', String(error && error.message || error), ui.ButtonSet.OK);
+  }
+}
+
 function requireSheetWithHeaders(spreadsheet, sheetName, requiredHeaders) {
   const sheet = spreadsheet.getSheetByName(sheetName);
   if (!sheet) throw new Error('必要なタブがありません：' + sheetName);
@@ -195,6 +280,18 @@ function appendApprovedRelatedForm(review, mappingSheet, notesHeadwords, existin
     '対象',
     noteParts.join(' ')
   ]);
+  if (typeof mappingSheet.getParent === 'function') {
+    const spreadsheet = mappingSheet.getParent();
+    const notesSheet = spreadsheet.getSheetByName(EXPERIMENTAL_NOTES_SHEET_NAME);
+    if (notesSheet) {
+      updateNotesSourceMarkersForHeadword(
+        spreadsheet,
+        notesSheet,
+        headword,
+        dictionarySourceMarkers(spreadsheet, relatedForm)
+      );
+    }
+  }
   existingPairs.add(pairKey);
   return 'inserted';
 }
