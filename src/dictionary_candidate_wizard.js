@@ -372,6 +372,29 @@ function candidateWizardValidateBodyMorphology(body) {
   }
 }
 
+function candidateWizardSourceMarkers(spreadsheet, headword) {
+  const target = normalizeObservedTerm(headword);
+  if (!target) return [];
+  const definitions = [
+    ['RS', '[RS: Oper]'],
+    ['RW', '[RW: Oper]'],
+    ['GM', '[GM]']
+  ];
+  const escapeRegExp = value => String(value).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const pattern = new RegExp('(^|[^a-z0-9])' + escapeRegExp(target) + '($|[^a-z0-9])', 'i');
+  return definitions.filter(([sheetName]) => {
+    const sheet = spreadsheet.getSheetByName(sheetName);
+    if (!sheet || sheet.getLastRow() < 2) return false;
+    const headers = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getValues()[0];
+    const normalizedColumn = headers.indexOf('de_normalized') + 1;
+    const deColumn = headers.indexOf('de') + 1;
+    const column = normalizedColumn || deColumn;
+    if (!column) return false;
+    const values = sheet.getRange(2, column, sheet.getLastRow() - 1, 1).getValues();
+    return values.some(row => pattern.test(normalizeObservedTerm(row[0])));
+  }).map(([, marker]) => marker);
+}
+
 function candidateWizardSuggestedBody(candidate) {
   const meanings = String(candidate.translation || '').split(/\r?\n/).map(x => x.trim()).filter(Boolean);
   const numbers = '①②③④⑤⑥⑦⑧⑨⑩';
@@ -394,8 +417,6 @@ function candidateWizardSuggestedBody(candidate) {
 function candidateWizardRegisterExperimental(id, body, source, confirmed) {
   if (confirmed !== true) throw new Error('Notesへの登録確認が必要です．');
   const safeBody = candidateWizardSafeText(body, 'B列本文', 6000, true);
-  const safeSource = candidateWizardSafeText(source, '出典', 120, true);
-  if (!/^\[(GM|RW: Oper|RS: Oper)\]$/.test(safeSource)) throw new Error('出典記号を確認してください．');
   const found = candidateWizardFindObservation(id);
   const sheet = requireSheetWithHeaders(found.spreadsheet,
     UNREGISTERED_TERM_CANDIDATE_SHEET_NAME, UNREGISTERED_TERM_CANDIDATE_HEADERS);
@@ -407,6 +428,9 @@ function candidateWizardRegisterExperimental(id, body, source, confirmed) {
   const notes = found.spreadsheet.getSheetByName(EXPERIMENTAL_NOTES_SHEET_NAME);
   if (!notes) throw new Error('Notesがありません．');
   const headword = candidateWizardSafeText(linked.row[16], '見出し', 120, true);
+  const sourceMarkers = candidateWizardSourceMarkers(found.spreadsheet, headword);
+  if (!sourceMarkers.length) throw new Error('RS・RW・GMの実例から出典を確認できませんでした．登録を中止しました．');
+  const safeSource = sourceMarkers.join(', ');
   const details = candidateWizardDraftDetails(linked.row[13]);
   if (!details.english || !details.italian || !details.musicExamples) {
     throw new Error('英語・イタリア語の類語と音楽用語としての訳例を確認してください．');

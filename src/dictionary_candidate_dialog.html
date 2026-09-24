@@ -91,8 +91,7 @@
     <h2>5．B列本文を目視確認し，Notesに登録</h2>
     <p class="muted">類語と訳例，①②…の意味区分を確認する．語形・格変化はドイツ語の羅列ではなく，日本語の説明文にする．未確認事項は本文に入れない．コメントは任意．重複見出しは登録しない．</p>
     <label for="entryBody">NotesのB列</label><textarea id="entryBody" rows="9" maxlength="6000"></textarea>
-    <label for="source">C列の出典</label><select id="source"><option>[RW: Oper]</option>
-      <option>[RS: Oper]</option><option>[GM]</option></select>
+    <label for="sourcePreview">C列の出典（RS・RW・GMを自動調査）</label><p id="sourcePreview" class="muted">登録時に実例を確認し，該当する出典を半角カンマ区切りで設定する．</p>
     <button id="register">この内容でNotesに登録する</button>
   </section>
   <section class="panel success" id="donePanel" hidden><h2 id="doneTitle">反映済み</h2>
@@ -196,8 +195,7 @@
         visible('entryPanel', Boolean(c.headword && c.translation && c.english && c.italian && c.musicExamples));
         if (c.headword && c.translation && c.english && c.italian && c.musicExamples) {
           $('entryBody').value = c.suggestedBody;
-          $('source').value = o.page.includes('RW') ? '[RW: Oper]' :
-            o.page.includes('RS') ? '[RS: Oper]' : '[GM]';
+          $('sourcePreview').textContent = '登録時にRS・RW・GMの実例を調査して自動設定する．';
         }
       }
     }
@@ -234,7 +232,7 @@
     $('register').onclick = async () => {
       if (!await confirmation('表示されたB列本文とC列出典を，Notesに見出し順で登録しますか．公開サイトの更新にはsync-dataが必要です．')) return;
       operation(() => call('candidateWizardRegisterExperimental', state.observation.id,
-        $('entryBody').value, $('source').value, true), 'Notesに登録した．公開サイトには未反映です．');
+        $('entryBody').value, '', true), 'Notesに登録した．公開サイトには未反映です．');
     };
     refreshList();
   </script>
