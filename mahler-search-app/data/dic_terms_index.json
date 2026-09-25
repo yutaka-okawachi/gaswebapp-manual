@@ -239,11 +239,16 @@
   "anschwellen": {
     "id": "term-anschwellen",
     "exampleVariants": [
-      "anschwellenden"
+      "anschwellenden",
+      "angeschwollen"
     ],
     "exampleVariantDetails": [
       {
         "form": "anschwellenden",
+        "type": "分詞"
+      },
+      {
+        "form": "angeschwollen",
         "type": "分詞"
       }
     ]
@@ -267,13 +272,35 @@
       }
     ]
   },
-  "anwachsen": "term-anwachsen",
+  "anwachsen": {
+    "id": "term-anwachsen",
+    "exampleVariants": [
+      "anwachsendes"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "anwachsendes",
+        "type": "分詞"
+      }
+    ]
+  },
   "anweisung": "term-anweisung",
   "atmen": "term-atmen",
   "auf-blumige-wiesen": "term-auf-blumige-wiesen",
   "auf-der-buehne": "term-auf-der-buehne",
   "auf-und-ab": "term-auf-und-ab",
-  "aufdringlich": "term-aufdringlich",
+  "aufdringlich": {
+    "id": "term-aufdringlich",
+    "exampleVariants": [
+      "aufdringlicher"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "aufdringlicher",
+        "type": "形容詞・副詞の変化"
+      }
+    ]
+  },
   "auffahrend": {
     "id": "term-auffahrend",
     "exampleVariants": [
@@ -290,12 +317,27 @@
   "aufgeregt": {
     "id": "term-aufgeregt",
     "exampleVariants": [
-      "aufgeregt"
+      "aufgeregt",
+      "aufgeregten",
+      "aufgeregter",
+      "aufgeregte"
     ],
     "exampleVariantDetails": [
       {
         "form": "aufgeregt",
         "type": "過去分詞"
+      },
+      {
+        "form": "aufgeregten",
+        "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "aufgeregter",
+        "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "aufgeregte",
+        "type": "形容詞・副詞の変化"
       }
     ]
   },
@@ -303,12 +345,17 @@
   "aufstellen": {
     "id": "term-aufstellen",
     "exampleVariants": [
-      "aufgestellt"
+      "aufgestellt",
+      "aufgestellen"
     ],
     "exampleVariantDetails": [
       {
         "form": "aufgestellt",
         "type": "過去分詞"
+      },
+      {
+        "form": "aufgestellen",
+        "type": "分詞"
       }
     ]
   },
@@ -327,57 +374,126 @@
   "aufzustellen": {
     "id": "term-aufzustellen",
     "exampleVariants": [
-      "aufzustellen"
+      "aufzustellen",
+      "aufgestellen"
     ],
     "exampleVariantDetails": [
       {
         "form": "aufzustellen",
         "type": "zu不定詞"
+      },
+      {
+        "form": "aufgestellen",
+        "type": "分詞"
       }
     ]
   },
   "augenblick": "term-augenblick",
-  "ausbrechen": "term-ausbrechen",
+  "ausbrechen": {
+    "id": "term-ausbrechen",
+    "exampleVariants": [
+      "ausbrechendem"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "ausbrechendem",
+        "type": "分詞"
+      }
+    ]
+  },
   "ausbreitend": {
     "id": "term-ausbreitend",
     "exampleVariants": [
-      "ausbreitend"
+      "ausbreitend",
+      "ausbreitet"
     ],
     "exampleVariantDetails": [
       {
         "form": "ausbreitend",
         "type": "現在分詞"
+      },
+      {
+        "form": "ausbreitet",
+        "type": "動詞の活用"
       }
     ]
   },
   "ausdruck": "term-ausdruck",
-  "ausdrucksvoll": "term-ausdrucksvoll",
+  "ausdrucksvoll": {
+    "id": "term-ausdrucksvoll",
+    "exampleVariants": [
+      "ausdrucksvoller"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "ausdrucksvoller",
+        "type": "形容詞・副詞の変化"
+      }
+    ]
+  },
   "ausgelassen": {
     "id": "term-ausgelassen",
     "exampleVariants": [
-      "ausgelassen"
+      "ausgelassen",
+      "ausgelassenem",
+      "ausgelasserner"
     ],
     "exampleVariantDetails": [
       {
         "form": "ausgelassen",
         "type": "過去分詞・形容詞"
+      },
+      {
+        "form": "ausgelassenem",
+        "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "ausgelasserner",
+        "type": "形容詞・副詞の変化"
       }
     ]
   },
-  "aushalten": "term-aushalten",
-  "ausholen": "term-ausholen",
+  "aushalten": {
+    "id": "term-aushalten",
+    "exampleVariants": [
+      "ausgehalten"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "ausgehalten",
+        "type": "分詞"
+      }
+    ]
+  },
+  "ausholen": {
+    "id": "term-ausholen",
+    "exampleVariants": [
+      "ausholend"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "ausholend",
+        "type": "分詞"
+      }
+    ]
+  },
   "ausklang": "term-ausklang",
   "auslaufen": "term-auslaufen",
   "ausser-sich": "term-ausser-sich",
   "aeusserst": {
     "id": "term-aeusserst",
     "exampleVariants": [
-      "äußerst"
+      "äußerst",
+      "äußerster"
     ],
     "exampleVariantDetails": [
       {
         "form": "äußerst",
         "type": "最上級由来形"
+      },
+      {
+        "form": "äußerster",
+        "type": "形容詞・副詞の変化"
       }
     ]
   },
@@ -4257,5 +4373,95 @@
     "original": "anschwellenden",
     "canonical": "anschwellen",
     "type": "分詞"
+  },
+  "angeschwollen": {
+    "id": "term-anschwellen",
+    "original": "angeschwollen",
+    "canonical": "anschwellen",
+    "type": "分詞"
+  },
+  "anwachsendes": {
+    "id": "term-anwachsen",
+    "original": "anwachsendes",
+    "canonical": "anwachsen",
+    "type": "分詞"
+  },
+  "aufdringlicher": {
+    "id": "term-aufdringlich",
+    "original": "aufdringlicher",
+    "canonical": "aufdringlich",
+    "type": "形容詞・副詞の変化"
+  },
+  "aufgeregten": {
+    "id": "term-aufgeregt",
+    "original": "aufgeregten",
+    "canonical": "aufgeregt",
+    "type": "形容詞・副詞の変化"
+  },
+  "aufgeregter": {
+    "id": "term-aufgeregt",
+    "original": "aufgeregter",
+    "canonical": "aufgeregt",
+    "type": "形容詞・副詞の変化"
+  },
+  "aufgeregte": {
+    "id": "term-aufgeregt",
+    "original": "aufgeregte",
+    "canonical": "aufgeregt",
+    "type": "形容詞・副詞の変化"
+  },
+  "aufgestellen": {
+    "id": "term-aufstellen",
+    "original": "aufgestellen",
+    "canonical": "aufstellen",
+    "type": "分詞"
+  },
+  "ausbrechendem": {
+    "id": "term-ausbrechen",
+    "original": "ausbrechendem",
+    "canonical": "ausbrechen",
+    "type": "分詞"
+  },
+  "ausbreitet": {
+    "id": "term-ausbreitend",
+    "original": "ausbreitet",
+    "canonical": "ausbreitend",
+    "type": "動詞の活用"
+  },
+  "ausdrucksvoller": {
+    "id": "term-ausdrucksvoll",
+    "original": "ausdrucksvoller",
+    "canonical": "ausdrucksvoll",
+    "type": "形容詞・副詞の変化"
+  },
+  "ausgelassenem": {
+    "id": "term-ausgelassen",
+    "original": "ausgelassenem",
+    "canonical": "ausgelassen",
+    "type": "形容詞・副詞の変化"
+  },
+  "ausgelasserner": {
+    "id": "term-ausgelassen",
+    "original": "ausgelasserner",
+    "canonical": "ausgelassen",
+    "type": "形容詞・副詞の変化"
+  },
+  "ausgehalten": {
+    "id": "term-aushalten",
+    "original": "ausgehalten",
+    "canonical": "aushalten",
+    "type": "分詞"
+  },
+  "ausholend": {
+    "id": "term-ausholen",
+    "original": "ausholend",
+    "canonical": "ausholen",
+    "type": "分詞"
+  },
+  "aeusserster": {
+    "id": "term-aeusserst",
+    "original": "äußerster",
+    "canonical": "äußerst",
+    "type": "形容詞・副詞の変化"
   }
 }
