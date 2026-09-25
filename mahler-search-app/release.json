@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "releaseId": "3f11455fb162100982f227958175ebf0b028793d0eb7b7783e3a3dcb453ea61f",
+  "releaseId": "5a4b3743512db4980680c86433c2cd6c0a9fcb63e974368f411747772cc9bd7a",
   "hashes": {
     "index.html": "cc30cb1d29d27428cb12a3713f35147ff6bc47c1f56e1049f1274bc20f2337e2",
     "license.html": "1265ab0bacfc4e5711771090c6b626bfcf79fe1f6760bf5d0e07e70069bd0642",
@@ -8,8 +8,8 @@
     "mahler-search-app/css/common_terms.css": "30f34aafa29c8c7f63e805717d26e03e438c61e9d71598094ec6032ad0eee666",
     "mahler-search-app/css/style.css": "b91d1b5764cc3031156a75e7456faeb351eb92f4a28f01981f9a9aaa242392c8",
     "mahler-search-app/data/abbr_list.json": "084237801872d97357d7d03da592c32282950c3da06fefd06b0ae06019974d17",
-    "mahler-search-app/data/dic_notes.json": "2ea1f739130fc4c9cd126897aec9226509e85463f126bebbd6f9da0afc4df7cb",
-    "mahler-search-app/data/dic_terms_index.json": "a2d96affc3bdd065c3d1d522d76a40e1c2e25d68b3e752090509f4f3a66f3473",
+    "mahler-search-app/data/dic_notes.json": "fa8a743605d716f28564c5d54c5b39ab78240a41a444c81dcb239c7abdeb962f",
+    "mahler-search-app/data/dic_terms_index.json": "6b22d42f2ba7d8014eb4989c0f1ef496df73a3e7d2356231c0e653ffbf58fd05",
     "mahler-search-app/data/dictionary-examples/gm-00.json": "9e583545c7f475da7a6431e5435eedbd4783e5f957af14a54257e914e68afdcc",
     "mahler-search-app/data/dictionary-examples/gm-01.json": "53ab4719472dfba68fab61a244d4e5aa9537bd51212b72152d4de314745e0040",
     "mahler-search-app/data/dictionary-examples/gm-02.json": "932f021357c4d4aea67b64c54fb4bc95cd67e7cbbdeef13a394d06067eb6da9f",
@@ -64,7 +64,7 @@
     "mahler-search-app/data/rs_scenes.json": "a980504cc562139eefd611ba0ec3def24861fb1eac6c31c9dcc56c5a9b5138ff",
     "mahler-search-app/data/rw_scenes.json": "cc72ce69726c9fe69c9b25d082956e93c61cf976a72e2d8f71ddcc4d42493ae4",
     "mahler-search-app/data/whom_list.json": "09e0705440e4ef70a3b697f3a2d2cbaefd2b03890576febc93fe20fc986b52ee",
-    "mahler-search-app/dic.html": "371aefeb91f61854e19872b03ff8bb338e7088b1e055b34b954992b6a31a7632",
+    "mahler-search-app/dic.html": "1d59e3b1eabe7a3a33ea000473b0d23ce277d0b227ade3bdbd9f5066562e6ac9",
     "mahler-search-app/home.html": "c69ca3995d2fe49f29882d93d9cc99a743139e668c57d36429582c03711f6a53",
     "mahler-search-app/index.html": "b6714bffb514e761df40d62395731bcaa6ffe8e1218514acd6f7f4be5114837d",
     "mahler-search-app/js/analytics.js": "746f74d1d517a3906e6361272ff2c5c5c9bf9b286b5a1bf1add121f8ab973252",
