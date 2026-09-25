@@ -109,10 +109,6 @@
       $(button).onclick = () => {
         if (!state || !state.candidate) return;
         const row = state.candidate;
-        const text = decision === '採用'
-          ? row.headword + ' → ' + row.form + ' を語形対応に登録し，調査行を削除しますか？'
-          : row.headword + ' → ' + row.form + ' を「' + decision + '」として記録しますか？';
-        if (!confirm(text)) return;
         update(() => decide(state.sheetId, row.id, decision,
           { category: $('category').value, memo: $('memo').value }),
         decision === '採用' ? '語形対応に登録し，調査行を削除しました．' : '判断を記録しました．');
@@ -121,7 +117,6 @@
     $('tidy').onclick = () => {
       if (!state || !state.candidate) return;
       const row = state.candidate;
-      if (!confirm('登録済みの組合せを確認し，この調査行だけを削除しますか？')) return;
       update(() => decide(state.sheetId, row.id, '登録済み行を整理', {}),
         '登録済みの調査行を削除しました．');
     };
