@@ -4,6 +4,7 @@ const { root, sha256, normalizeText, request, delay, writeIfChanged } = require(
 const { runClasp, run: deploy } = require('../../src/manage_deploy');
 const DEPLOYMENT_VERIFY_DELAYS_MS = [0, 2000, 5000, 10000, 20000];
 const INSPECTION_RETRY_DELAYS_MS = [0, 2000, 5000, 10000];
+const SNAPSHOT_SOURCE_RETRY_DELAYS_MS = [0, 5000, 15000, 30000];
 function configuration() {
     const file = path.join(root, '.env');
     const settings = { ...process.env };
@@ -42,6 +43,21 @@ async function exportSnapshot(settings, requestId) {
         catch (e) { error = e; if (/validation|必須|列|空|欠落/i.test(e.message)) throw e; }
     }
     throw error;
+}
+async function exportSnapshotForSource(settings, requestId, expectedHash, options = {}) {
+    const fetchSnapshot = options.fetchSnapshot || exportSnapshot;
+    const wait = options.delay || delay;
+    const delays = options.delays || SNAPSHOT_SOURCE_RETRY_DELAYS_MS;
+    let observedHash = '';
+    for (let attempt = 0; attempt < delays.length; attempt++) {
+        const waitMs = delays[attempt];
+        await wait(waitMs);
+        const snapshot = await fetchSnapshot(settings, requestId);
+        observedHash = snapshot.sourceHash || '';
+        if (observedHash === expectedHash) return snapshot;
+        if (attempt < delays.length - 1) console.warn('GAS のスナップショットが異なるソースから返されました。反映を待って再取得します。');
+    }
+    throw new Error(`GAS 生成元とローカルソースが一致しません。期待値: ${expectedHash}、確認値: ${observedHash || '取得できず'}。固定デプロイとローカルソースを確認してください。`);
 }
 async function inspectOnce(settings) {
     try { return await call(settings, 'syncInfo'); }
@@ -96,4 +112,4 @@ async function ensureDeployment(settings, state, save, observed) {
     save();
     return hash;
 }
-module.exports = { configuration, fingerprint, prepareBuild, inspect, call, exportSnapshot, waitForSourceHash, ensureDeployment, DEPLOYMENT_VERIFY_DELAYS_MS, INSPECTION_RETRY_DELAYS_MS };
+module.exports = { configuration, fingerprint, prepareBuild, inspect, call, exportSnapshot, exportSnapshotForSource, waitForSourceHash, ensureDeployment, DEPLOYMENT_VERIFY_DELAYS_MS, INSPECTION_RETRY_DELAYS_MS, SNAPSHOT_SOURCE_RETRY_DELAYS_MS };

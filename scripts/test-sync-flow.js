@@ -29,7 +29,7 @@ async function scenario({ failCheck = false, failSnapshot = false, failPublish =
                 configuration: () => ({ GAS_DEPLOY_URL: 'https://example.test' }), fingerprint: () => 'hash',
                 prepareBuild: () => {}, inspect: async () => ({ sourceHash: 'old' }),
                 ensureDeployment: async (settings, state, save) => { events.push('deploy'); state.gasHash = 'hash'; save(); },
-                exportSnapshot: async () => { events.push('snapshot'); return { sourceHash: 'hash' }; }
+                exportSnapshotForSource: async () => { events.push('snapshot'); return { sourceHash: 'hash' }; }
             },
             './artifacts': {
                 previousData: () => ({}),

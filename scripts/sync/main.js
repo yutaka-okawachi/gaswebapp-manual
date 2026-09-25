@@ -154,8 +154,7 @@ async function main(args = process.argv.slice(2)) {
         if (selected.data) {
             logger.info('Google スプレッドシートから最新データを取得中…');
             const requestId = crypto.randomUUID();
-            const snapshot = await gas.exportSnapshot(settings, requestId);
-            if (snapshot.sourceHash !== gas.fingerprint()) throw new Error('GAS 生成元とローカルソースが一致しません。');
+            const snapshot = await gas.exportSnapshotForSource(settings, requestId, gas.fingerprint());
             logger.success('スナップショットを受信しました。データ整合性を検証中…');
             const values = artifacts.validateSnapshot(snapshot, requestId, artifacts.previousData(), opt.allowRemoval);
             logger.sub(`検証合格: 全 ${Object.keys(values).length} ファイル (辞書・実例48分割シャード整合)`);

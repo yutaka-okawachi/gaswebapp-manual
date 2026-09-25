@@ -1,5 +1,5 @@
 const assert = require('assert');
-const { inspect, waitForSourceHash, DEPLOYMENT_VERIFY_DELAYS_MS, INSPECTION_RETRY_DELAYS_MS } = require('./sync/gas');
+const { inspect, exportSnapshotForSource, waitForSourceHash, DEPLOYMENT_VERIFY_DELAYS_MS, INSPECTION_RETRY_DELAYS_MS, SNAPSHOT_SOURCE_RETRY_DELAYS_MS } = require('./sync/gas');
 
 async function main() {
     let inspectionCalls = 0;
@@ -39,6 +39,21 @@ async function main() {
     await assert.rejects(() => waitForSourceHash({}, 'expected', {
         delays: [0], delay: async () => {}, inspect: async () => { throw new Error('timeout'); }
     }), /最後のエラー: timeout/);
+
+    const snapshotWaits = [];
+    const snapshotIds = [];
+    const snapshots = [{ sourceHash: 'old' }, { sourceHash: 'expected' }];
+    const snapshot = await exportSnapshotForSource({}, 'request-id', 'expected', {
+        delays: [0, 1], delay: async ms => snapshotWaits.push(ms),
+        fetchSnapshot: async (settings, requestId) => { snapshotIds.push(requestId); return snapshots.shift(); }
+    });
+    assert.strictEqual(snapshot.sourceHash, 'expected');
+    assert.deepStrictEqual(snapshotWaits, [0, 1]);
+    assert.deepStrictEqual(snapshotIds, ['request-id', 'request-id']);
+    assert.deepStrictEqual(SNAPSHOT_SOURCE_RETRY_DELAYS_MS, [0, 5000, 15000, 30000]);
+    await assert.rejects(() => exportSnapshotForSource({}, 'request-id', 'expected', {
+        delays: [0, 1], delay: async () => {}, fetchSnapshot: async () => ({ sourceHash: 'old' })
+    }), /期待値: expected、確認値: old/);
     console.log('GAS deployment retry tests: OK');
 }
 
