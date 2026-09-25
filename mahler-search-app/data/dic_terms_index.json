@@ -71,7 +71,12 @@
   "anschwellen": "term-anschwellen",
   "anstieg": "term-anstieg",
   "anstrengung": "term-anstrengung",
-  "antworten": "term-antworten",
+  "antworten": {
+    "id": "term-antworten",
+    "exampleVariants": [
+      "antwortet"
+    ]
+  },
   "anwachsen": "term-anwachsen",
   "anweisung": "term-anweisung",
   "atmen": "term-atmen",
@@ -170,7 +175,12 @@
     ]
   },
   "bedaechtig": "term-bedaechtig",
-  "bedeuten": "term-bedeuten",
+  "bedeuten": {
+    "id": "term-bedeuten",
+    "exampleVariants": [
+      "bedeutet"
+    ]
+  },
   "bedeutend": {
     "id": "term-bedeutend",
     "exampleVariants": [
@@ -2600,6 +2610,18 @@
     "id": "term-schritt",
     "original": "Schritte",
     "canonical": "Schritt",
+    "type": "語形変化（要分類）"
+  },
+  "bedeutet": {
+    "id": "term-bedeuten",
+    "original": "bedeutet",
+    "canonical": "bedeuten",
+    "type": "語形変化（要分類）"
+  },
+  "antwortet": {
+    "id": "term-antworten",
+    "original": "antwortet",
+    "canonical": "antworten",
     "type": "語形変化（要分類）"
   }
 }
