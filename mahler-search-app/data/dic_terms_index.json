@@ -5,6 +5,12 @@
     "id": "term-abgestimmte",
     "exampleVariants": [
       "abgestimmt"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "abgestimmt",
+        "type": "過去分詞の基本形"
+      }
     ]
   },
   "abnehmen": "term-abnehmen",
@@ -15,6 +21,12 @@
     "id": "term-abstufungen",
     "exampleVariants": [
       "Abstufung"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "Abstufung",
+        "type": "単数形"
+      }
     ]
   },
   "abwaerts": "term-abwaerts",
@@ -25,6 +37,12 @@
     "id": "term-akzente",
     "exampleVariants": [
       "Akzent"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "Akzent",
+        "type": "単数形"
+      }
     ]
   },
   "alle-in-den-blaesern-als-notirten-stellen-sind-mit-zungenschlag-auszufuehren": {
@@ -50,12 +68,24 @@
     "id": "term-angegeben",
     "exampleVariants": [
       "angegeben"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "angegeben",
+        "type": "過去分詞"
+      }
     ]
   },
   "angehalten": {
     "id": "term-angehalten",
     "exampleVariants": [
       "angehalten"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "angehalten",
+        "type": "過去分詞"
+      }
     ]
   },
   "angst": "term-angst",
@@ -74,7 +104,18 @@
   "antworten": {
     "id": "term-antworten",
     "exampleVariants": [
-      "antwortet"
+      "antwortet",
+      "antwortend"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "antwortet",
+        "type": "語形変化（要分類）"
+      },
+      {
+        "form": "antwortend",
+        "type": "語形変化（要分類）"
+      }
     ]
   },
   "anwachsen": "term-anwachsen",
@@ -88,6 +129,12 @@
     "id": "term-auffahrend",
     "exampleVariants": [
       "auffahrend"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "auffahrend",
+        "type": "現在分詞"
+      }
     ]
   },
   "auffallen": "term-auffallen",
@@ -95,6 +142,12 @@
     "id": "term-aufgeregt",
     "exampleVariants": [
       "aufgeregt"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "aufgeregt",
+        "type": "過去分詞"
+      }
     ]
   },
   "aufschwung": "term-aufschwung",
@@ -102,18 +155,36 @@
     "id": "term-aufstellen",
     "exampleVariants": [
       "aufgestellt"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "aufgestellt",
+        "type": "過去分詞"
+      }
     ]
   },
   "aufzufassen": {
     "id": "term-aufzufassen",
     "exampleVariants": [
       "aufzufassen"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "aufzufassen",
+        "type": "zu不定詞"
+      }
     ]
   },
   "aufzustellen": {
     "id": "term-aufzustellen",
     "exampleVariants": [
       "aufzustellen"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "aufzustellen",
+        "type": "zu不定詞"
+      }
     ]
   },
   "augenblick": "term-augenblick",
@@ -122,6 +193,12 @@
     "id": "term-ausbreitend",
     "exampleVariants": [
       "ausbreitend"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "ausbreitend",
+        "type": "現在分詞"
+      }
     ]
   },
   "ausdruck": "term-ausdruck",
@@ -130,6 +207,12 @@
     "id": "term-ausgelassen",
     "exampleVariants": [
       "ausgelassen"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "ausgelassen",
+        "type": "過去分詞・形容詞"
+      }
     ]
   },
   "aushalten": "term-aushalten",
@@ -141,6 +224,12 @@
     "id": "term-aeusserst",
     "exampleVariants": [
       "äußerst"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "äußerst",
+        "type": "最上級由来形"
+      }
     ]
   },
   "auswahl": "term-auswahl",
@@ -149,6 +238,12 @@
     "id": "term-bache",
     "exampleVariants": [
       "Bach"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "Bach",
+        "type": "単数主格"
+      }
     ]
   },
   "bald": "term-bald",
@@ -156,6 +251,12 @@
     "id": "term-bandes",
     "exampleVariants": [
       "Band"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "Band",
+        "type": "単数主格"
+      }
     ]
   },
   "barsch": "term-barsch",
@@ -172,6 +273,12 @@
     "id": "term-beaengstigtem",
     "exampleVariants": [
       "beängstigt"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "beängstigt",
+        "type": "過去分詞の基本形"
+      }
     ]
   },
   "bedaechtig": "term-bedaechtig",
@@ -179,12 +286,24 @@
     "id": "term-bedeuten",
     "exampleVariants": [
       "bedeutet"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "bedeutet",
+        "type": "語形変化（要分類）"
+      }
     ]
   },
   "bedeutend": {
     "id": "term-bedeutend",
     "exampleVariants": [
       "bedeutend"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "bedeutend",
+        "type": "現在分詞"
+      }
     ]
   },
   "bedeutungsvoll": "term-bedeutungsvoll",
@@ -192,18 +311,36 @@
     "id": "term-bediente",
     "exampleVariants": [
       "Bediente"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "Bediente",
+        "type": "名詞化形"
+      }
     ]
   },
   "befehlend": {
     "id": "term-befehlend",
     "exampleVariants": [
       "befehlend"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "befehlend",
+        "type": "現在分詞"
+      }
     ]
   },
   "befremdet": {
     "id": "term-befremdet",
     "exampleVariants": [
       "befremdet"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "befremdet",
+        "type": "過去分詞・活用形"
+      }
     ]
   },
   "befremdung": "term-befremdung",
@@ -212,8 +349,15 @@
     "id": "term-begleitend",
     "exampleVariants": [
       "begleitend"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "begleitend",
+        "type": "現在分詞"
+      }
     ]
   },
+  "begriff": "term-begriff",
   "behaebig": "term-behaebig",
   "behaglich": "term-behaglich",
   "behutsam": "term-behutsam",
@@ -228,12 +372,24 @@
     "id": "term-beklommen",
     "exampleVariants": [
       "beklommen"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "beklommen",
+        "type": "過去分詞"
+      }
     ]
   },
   "bemessen": {
     "id": "term-bemessen",
     "exampleVariants": [
       "bemessen"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "bemessen",
+        "type": "過去分詞"
+      }
     ]
   },
   "bereits": "term-bereits",
@@ -245,6 +401,12 @@
     "id": "term-beschwingt",
     "exampleVariants": [
       "beschwingt"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "beschwingt",
+        "type": "過去分詞"
+      }
     ]
   },
   "besetzen": "term-besetzen",
@@ -252,6 +414,12 @@
     "id": "term-besetzt",
     "exampleVariants": [
       "besetzt"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "besetzt",
+        "type": "過去分詞"
+      }
     ]
   },
   "besonders": "term-besonders",
@@ -259,6 +427,12 @@
     "id": "term-bestimmt",
     "exampleVariants": [
       "bestimmt"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "bestimmt",
+        "type": "過去分詞"
+      }
     ]
   },
   "betonung": "term-betonung",
@@ -267,6 +441,12 @@
     "id": "term-bewegt",
     "exampleVariants": [
       "bewegt"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "bewegt",
+        "type": "過去分詞"
+      }
     ]
   },
   "bewegter-im-kuenftigen-allegro-tempo": "term-bewegter-im-kuenftigen-allegro-tempo",
@@ -278,6 +458,12 @@
     "id": "term-bisbigliando",
     "exampleVariants": [
       "bisbigliando"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "bisbigliando",
+        "type": "現在分詞"
+      }
     ]
   },
   "bispigliando": "term-bispigliando",
@@ -285,6 +471,12 @@
     "id": "term-bitte",
     "exampleVariants": [
       "bitte"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "bitte",
+        "type": "活用形・不変化詞"
+      }
     ]
   },
   "bitter": "term-bitter",
@@ -293,6 +485,12 @@
     "id": "term-bleibt",
     "exampleVariants": [
       "bleibt"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "bleibt",
+        "type": "活用形"
+      }
     ]
   },
   "bloss": "term-bloss",
@@ -320,6 +518,16 @@
     "exampleVariants": [
       "Konsonant",
       "Konsonanten"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "Konsonant",
+        "type": "現代綴りの単数形"
+      },
+      {
+        "form": "Konsonanten",
+        "type": "現代綴りの複数形"
+      }
     ]
   },
   "cuivrez": "term-cuivrez",
@@ -335,12 +543,24 @@
     "id": "term-dahinhuschend",
     "exampleVariants": [
       "dahinhuschend"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "dahinhuschend",
+        "type": "現在分詞"
+      }
     ]
   },
   "daempfer": {
     "id": "term-daempfer",
     "exampleVariants": [
       "Dämpfern"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "Dämpfern",
+        "type": "格変化形"
+      }
     ]
   },
   "daempfer-ab": "term-daempfer-ab",
@@ -350,6 +570,12 @@
     "id": "term-darf",
     "exampleVariants": [
       "darf"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "darf",
+        "type": "活用形"
+      }
     ]
   },
   "darstellen": "term-darstellen",
@@ -365,6 +591,12 @@
     "id": "term-declamirend",
     "exampleVariants": [
       "declamirend"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "declamirend",
+        "type": "現在分詞・旧綴り"
+      }
     ]
   },
   "demnach": "term-demnach",
@@ -423,6 +655,12 @@
     "id": "term-dient",
     "exampleVariants": [
       "dient"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "dient",
+        "type": "活用形"
+      }
     ]
   },
   "diese-3-b-schlaege-nur-fuer-chromatische-pauken-ausserdem-wegzulassen": {
@@ -456,6 +694,12 @@
     "id": "term-draengend",
     "exampleVariants": [
       "drängend"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "drängend",
+        "type": "現在分詞"
+      }
     ]
   },
   "dreien": "term-dreien",
@@ -469,6 +713,12 @@
     "id": "term-drohend",
     "exampleVariants": [
       "drohend"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "drohend",
+        "type": "現在分詞"
+      }
     ]
   },
   "duenna": "term-duenna",
@@ -479,6 +729,12 @@
     "id": "term-duennen",
     "exampleVariants": [
       "dünnen"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "dünnen",
+        "type": "格変化形・動詞"
+      }
     ]
   },
   "durch": "term-durch",
@@ -494,6 +750,12 @@
     "id": "term-edel",
     "exampleVariants": [
       "edlen"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "edlen",
+        "type": "格変化形"
+      }
     ]
   },
   "eifersuechtig": "term-eifersuechtig",
@@ -510,6 +772,12 @@
     "id": "term-einige",
     "exampleVariants": [
       "einige"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "einige",
+        "type": "格変化形"
+      }
     ]
   },
   "einleiten": "term-einleiten",
@@ -519,12 +787,24 @@
     "id": "term-einstudiren",
     "exampleVariants": [
       "Einstudiren"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "Einstudiren",
+        "type": "旧綴り"
+      }
     ]
   },
   "eintragung": {
     "id": "term-eintragung",
     "exampleVariants": [
       "Eintragung"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "Eintragung",
+        "type": "名詞化形"
+      }
     ]
   },
   "eintritt-in-den-wald": "term-eintritt-in-den-wald",
@@ -534,6 +814,12 @@
     "id": "term-einzuhalten",
     "exampleVariants": [
       "einzuhalten"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "einzuhalten",
+        "type": "zu不定詞"
+      }
     ]
   },
   "elastisch": "term-elastisch",
@@ -542,30 +828,60 @@
     "id": "term-elegischem",
     "exampleVariants": [
       "elegisch"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "elegisch",
+        "type": "形容詞の基本形"
+      }
     ]
   },
   "empfindung": {
     "id": "term-empfindung",
     "exampleVariants": [
       "Empfindung"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "Empfindung",
+        "type": "名詞化形"
+      }
     ]
   },
   "empfohlen": {
     "id": "term-empfohlen",
     "exampleVariants": [
       "empfohlen"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "empfohlen",
+        "type": "過去分詞"
+      }
     ]
   },
   "empfunden": {
     "id": "term-empfunden",
     "exampleVariants": [
       "empfunden"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "empfunden",
+        "type": "過去分詞"
+      }
     ]
   },
   "endend": {
     "id": "term-endend",
     "exampleVariants": [
       "endend"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "endend",
+        "type": "現在分詞"
+      }
     ]
   },
   "endgueltige": {
@@ -573,6 +889,16 @@
     "exampleVariants": [
       "endgiltige",
       "endgültig"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "endgiltige",
+        "type": "旧綴り"
+      },
+      {
+        "form": "endgültig",
+        "type": "形容詞の基本形"
+      }
     ]
   },
   "endlich": "term-endlich",
@@ -582,24 +908,48 @@
     "id": "term-entruestet",
     "exampleVariants": [
       "entrüstet"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "entrüstet",
+        "type": "過去分詞"
+      }
     ]
   },
   "entschlossen": {
     "id": "term-entschlossen",
     "exampleVariants": [
       "entschlossen"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "entschlossen",
+        "type": "過去分詞"
+      }
     ]
   },
   "entschuldigend": {
     "id": "term-entschuldigend",
     "exampleVariants": [
       "entschuldigend"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "entschuldigend",
+        "type": "現在分詞"
+      }
     ]
   },
   "entsetzt": {
     "id": "term-entsetzt",
     "exampleVariants": [
       "entsetzt"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "entsetzt",
+        "type": "過去分詞"
+      }
     ]
   },
   "entsprechen": "term-entsprechen",
@@ -607,18 +957,36 @@
     "id": "term-entstellt",
     "exampleVariants": [
       "entstellt"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "entstellt",
+        "type": "過去分詞"
+      }
     ]
   },
   "entzueckt": {
     "id": "term-entzueckt",
     "exampleVariants": [
       "entzückt"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "entzückt",
+        "type": "過去分詞"
+      }
     ]
   },
   "ergriffen": {
     "id": "term-ergriffen",
     "exampleVariants": [
       "ergriffen"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "ergriffen",
+        "type": "過去分詞"
+      }
     ]
   },
   "erhobener": "term-erhobener",
@@ -626,12 +994,24 @@
     "id": "term-erhobner",
     "exampleVariants": [
       "erhoben"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "erhoben",
+        "type": "過去分詞の基本形"
+      }
     ]
   },
   "erleichtert": {
     "id": "term-erleichtert",
     "exampleVariants": [
       "erleichtert"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "erleichtert",
+        "type": "過去分詞"
+      }
     ]
   },
   "erleichterung": "term-erleichterung",
@@ -640,12 +1020,24 @@
     "id": "term-ermattend",
     "exampleVariants": [
       "ermattend"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "ermattend",
+        "type": "現在分詞"
+      }
     ]
   },
   "ermuedet": {
     "id": "term-ermuedet",
     "exampleVariants": [
       "ermüdet"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "ermüdet",
+        "type": "過去分詞"
+      }
     ]
   },
   "ernst": "term-ernst",
@@ -653,12 +1045,24 @@
     "id": "term-erregt",
     "exampleVariants": [
       "erregt"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "erregt",
+        "type": "過去分詞"
+      }
     ]
   },
   "erreicht": {
     "id": "term-erreicht",
     "exampleVariants": [
       "erreicht"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "erreicht",
+        "type": "過去分詞"
+      }
     ]
   },
   "erscheinen": "term-erscheinen",
@@ -667,24 +1071,48 @@
     "id": "term-erschoepft",
     "exampleVariants": [
       "erschöpft"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "erschöpft",
+        "type": "過去分詞"
+      }
     ]
   },
   "erschreckt": {
     "id": "term-erschreckt",
     "exampleVariants": [
       "erschreckt"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "erschreckt",
+        "type": "過去分詞"
+      }
     ]
   },
   "erschrocken": {
     "id": "term-erschrocken",
     "exampleVariants": [
       "erschrocken"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "erschrocken",
+        "type": "過去分詞"
+      }
     ]
   },
   "erschuettert": {
     "id": "term-erschuettert",
     "exampleVariants": [
       "erschüttert"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "erschüttert",
+        "type": "過去分詞"
+      }
     ]
   },
   "erschuetterung": "term-erschuetterung",
@@ -693,6 +1121,12 @@
     "id": "term-ersterbend",
     "exampleVariants": [
       "ersterbend"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "ersterbend",
+        "type": "現在分詞"
+      }
     ]
   },
   "erstes-zeitmass-beschleunigt": "term-erstes-zeitmass-beschleunigt",
@@ -713,6 +1147,12 @@
     "id": "term-ferne",
     "exampleVariants": [
       "fern"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "fern",
+        "type": "形容詞の基本形"
+      }
     ]
   },
   "fernerhin": "term-fernerhin",
@@ -720,6 +1160,12 @@
     "id": "term-fest",
     "exampleVariants": [
       "festes"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "festes",
+        "type": "格変化形"
+      }
     ]
   },
   "fest-im-gewonnenen-lebhaften-zeitmass": "term-fest-im-gewonnenen-lebhaften-zeitmass",
@@ -733,6 +1179,12 @@
     "id": "term-findet-sich",
     "exampleVariants": [
       "findet sich"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "findet sich",
+        "type": "活用形・再帰表現"
+      }
     ]
   },
   "flebile": "term-flebile",
@@ -740,6 +1192,12 @@
     "id": "term-fliessend",
     "exampleVariants": [
       "fließend"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "fließend",
+        "type": "現在分詞"
+      }
     ]
   },
   "fluechtig": "term-fluechtig",
@@ -749,6 +1207,12 @@
     "id": "term-folgt",
     "exampleVariants": [
       "folgt"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "folgt",
+        "type": "活用形"
+      }
     ]
   },
   "folgt-sofort-der-naechste-satz": "term-folgt-sofort-der-naechste-satz",
@@ -765,6 +1229,12 @@
     "id": "term-fortlaufend",
     "exampleVariants": [
       "fortlaufend"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "fortlaufend",
+        "type": "現在分詞"
+      }
     ]
   },
   "frech": "term-frech",
@@ -773,6 +1243,12 @@
     "id": "term-freihaengend",
     "exampleVariants": [
       "freihängend"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "freihängend",
+        "type": "現在分詞・形容詞"
+      }
     ]
   },
   "frisch": "term-frisch",
@@ -782,12 +1258,24 @@
     "id": "term-frueher",
     "exampleVariants": [
       "früher"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "früher",
+        "type": "比較級"
+      }
     ]
   },
   "fuehrend": {
     "id": "term-fuehrend",
     "exampleVariants": [
       "führend"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "führend",
+        "type": "現在分詞"
+      }
     ]
   },
   "fuer-sich": "term-fuer-sich",
@@ -800,12 +1288,24 @@
     "id": "term-gebrochen",
     "exampleVariants": [
       "gebrochen"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "gebrochen",
+        "type": "過去分詞"
+      }
     ]
   },
   "gebunden": {
     "id": "term-gebunden",
     "exampleVariants": [
       "gebunden"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "gebunden",
+        "type": "過去分詞"
+      }
     ]
   },
   "gedaechtnis": "term-gedaechtnis",
@@ -813,18 +1313,36 @@
     "id": "term-gedaempft",
     "exampleVariants": [
       "gedämpft"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "gedämpft",
+        "type": "過去分詞"
+      }
     ]
   },
   "gedehnt": {
     "id": "term-gedehnt",
     "exampleVariants": [
       "gedehnt"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "gedehnt",
+        "type": "過去分詞"
+      }
     ]
   },
   "gefahrvolle": {
     "id": "term-gefahrvolle",
     "exampleVariants": [
       "gefahrvoll"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "gefahrvoll",
+        "type": "形容詞の基本形"
+      }
     ]
   },
   "gefluester": "term-gefluester",
@@ -836,6 +1354,12 @@
     "id": "term-gehalten",
     "exampleVariants": [
       "gehalten"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "gehalten",
+        "type": "過去分詞"
+      }
     ]
   },
   "geheimnisvoll": "term-geheimnisvoll",
@@ -843,6 +1367,12 @@
     "id": "term-gehend",
     "exampleVariants": [
       "gehend"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "gehend",
+        "type": "現在分詞"
+      }
     ]
   },
   "geiger": "term-geiger",
@@ -852,6 +1382,12 @@
     "id": "term-gemaessigt",
     "exampleVariants": [
       "gemässigt"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "gemässigt",
+        "type": "過去分詞・旧綴り"
+      }
     ]
   },
   "gemein": "term-gemein",
@@ -859,6 +1395,12 @@
     "id": "term-gemessen",
     "exampleVariants": [
       "gemessen"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "gemessen",
+        "type": "過去分詞"
+      }
     ]
   },
   "gemuetlich": "term-gemuetlich",
@@ -868,24 +1410,48 @@
     "id": "term-genesende",
     "exampleVariants": [
       "Genesende"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "Genesende",
+        "type": "名詞化形"
+      }
     ]
   },
   "gerieben": {
     "id": "term-gerieben",
     "exampleVariants": [
       "gerieben"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "gerieben",
+        "type": "過去分詞"
+      }
     ]
   },
   "gerissen": {
     "id": "term-gerissen",
     "exampleVariants": [
       "gerissen"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "gerissen",
+        "type": "過去分詞"
+      }
     ]
   },
   "geruehrt": {
     "id": "term-geruehrt",
     "exampleVariants": [
       "gerührt"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "gerührt",
+        "type": "過去分詞"
+      }
     ]
   },
   "gesangsperiode": "term-gesangsperiode",
@@ -893,18 +1459,36 @@
     "id": "term-gesaettigten",
     "exampleVariants": [
       "gesättigt"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "gesättigt",
+        "type": "過去分詞の基本形"
+      }
     ]
   },
   "geschehen": {
     "id": "term-geschehen",
     "exampleVariants": [
       "geschehen"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "geschehen",
+        "type": "不定詞・過去分詞"
+      }
     ]
   },
   "geschliffen": {
     "id": "term-geschliffen",
     "exampleVariants": [
       "geschliffen"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "geschliffen",
+        "type": "過去分詞"
+      }
     ]
   },
   "geschmeidig": "term-geschmeidig",
@@ -912,12 +1496,24 @@
     "id": "term-geschrieen",
     "exampleVariants": [
       "geschrieen"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "geschrieen",
+        "type": "過去分詞・旧綴り"
+      }
     ]
   },
   "geschrien": {
     "id": "term-geschrien",
     "exampleVariants": [
       "geschrien"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "geschrien",
+        "type": "過去分詞"
+      }
     ]
   },
   "geschwaetzig": "term-geschwaetzig",
@@ -931,6 +1527,12 @@
     "id": "term-gesprochen",
     "exampleVariants": [
       "gesprochen"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "gesprochen",
+        "type": "過去分詞"
+      }
     ]
   },
   "gestalt": "term-gestalt",
@@ -938,12 +1540,24 @@
     "id": "term-gestossen",
     "exampleVariants": [
       "gestoßen"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "gestoßen",
+        "type": "過去分詞"
+      }
     ]
   },
   "gestrichen": {
     "id": "term-gestrichen",
     "exampleVariants": [
       "gestrichen"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "gestrichen",
+        "type": "過去分詞"
+      }
     ]
   },
   "gestruepp": "term-gestruepp",
@@ -955,6 +1569,12 @@
     "id": "term-geteilt",
     "exampleVariants": [
       "geteilt"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "geteilt",
+        "type": "過去分詞"
+      }
     ]
   },
   "geth": {
@@ -966,6 +1586,12 @@
     "id": "term-getragen",
     "exampleVariants": [
       "getragen"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "getragen",
+        "type": "過去分詞"
+      }
     ]
   },
   "gewalt": "term-gewalt",
@@ -974,6 +1600,12 @@
     "id": "term-gewidmet",
     "exampleVariants": [
       "gewidmet"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "gewidmet",
+        "type": "過去分詞"
+      }
     ]
   },
   "gewinnen": "term-gewinnen",
@@ -981,6 +1613,12 @@
     "id": "term-gewirbelt",
     "exampleVariants": [
       "gewirbelt"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "gewirbelt",
+        "type": "過去分詞"
+      }
     ]
   },
   "gewitter": "term-gewitter",
@@ -989,30 +1627,60 @@
     "id": "term-gewonnen",
     "exampleVariants": [
       "gewonnen"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "gewonnen",
+        "type": "過去分詞"
+      }
     ]
   },
   "gewonnenen": {
     "id": "term-gewonnenen",
     "exampleVariants": [
       "gewonnen"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "gewonnen",
+        "type": "過去分詞の基本形"
+      }
     ]
   },
   "geziert": {
     "id": "term-geziert",
     "exampleVariants": [
       "geziert"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "geziert",
+        "type": "過去分詞・形容詞"
+      }
     ]
   },
   "gezogen": {
     "id": "term-gezogen",
     "exampleVariants": [
       "gezogen"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "gezogen",
+        "type": "過去分詞"
+      }
     ]
   },
   "glaenzend": {
     "id": "term-glaenzend",
     "exampleVariants": [
       "glänzend"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "glänzend",
+        "type": "現在分詞"
+      }
     ]
   },
   "gleich": "term-gleich",
@@ -1022,6 +1690,12 @@
     "id": "term-gleichmaessig",
     "exampleVariants": [
       "gleichmäßig"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "gleichmäßig",
+        "type": "現代綴り"
+      }
     ]
   },
   "gletscher": "term-gletscher",
@@ -1044,6 +1718,12 @@
     "id": "term-halbe",
     "exampleVariants": [
       "halb"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "halb",
+        "type": "形容詞の基本形"
+      }
     ]
   },
   "halblaut": "term-halblaut",
@@ -1051,6 +1731,12 @@
     "id": "term-hallend",
     "exampleVariants": [
       "hallend"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "hallend",
+        "type": "現在分詞"
+      }
     ]
   },
   "haltebogen": "term-haltebogen",
@@ -1058,6 +1744,12 @@
     "id": "term-haemmernd",
     "exampleVariants": [
       "hämmernd"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "hämmernd",
+        "type": "現在分詞"
+      }
     ]
   },
   "harpeggirt-harpegg": {
@@ -1075,6 +1767,12 @@
     "id": "term-heiligen",
     "exampleVariants": [
       "Heilige"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "Heilige",
+        "type": "名詞化形の基本形"
+      }
     ]
   },
   "heimlich": "term-heimlich",
@@ -1085,24 +1783,48 @@
     "id": "term-herausgestossen",
     "exampleVariants": [
       "herausgestossen"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "herausgestossen",
+        "type": "過去分詞・旧綴り"
+      }
     ]
   },
   "hervortretend": {
     "id": "term-hervortretend",
     "exampleVariants": [
       "hervortretend"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "hervortretend",
+        "type": "現在分詞"
+      }
     ]
   },
   "hervortritt": {
     "id": "term-hervortritt",
     "exampleVariants": [
       "hervortritt"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "hervortritt",
+        "type": "活用形"
+      }
     ]
   },
   "hervorzubringen": {
     "id": "term-hervorzubringen",
     "exampleVariants": [
       "hervorzubringen"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "hervorzubringen",
+        "type": "zu不定詞"
+      }
     ]
   },
   "hess": "term-hess",
@@ -1111,6 +1833,12 @@
     "id": "term-heulend",
     "exampleVariants": [
       "heulend"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "heulend",
+        "type": "現在分詞"
+      }
     ]
   },
   "hg": {
@@ -1122,6 +1850,12 @@
     "id": "term-hingerissen",
     "exampleVariants": [
       "hingerissen"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "hingerissen",
+        "type": "過去分詞"
+      }
     ]
   },
   "hinter-der-scene": "term-hinter-der-scene",
@@ -1141,6 +1875,12 @@
     "id": "term-horcht",
     "exampleVariants": [
       "horcht"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "horcht",
+        "type": "活用形"
+      }
     ]
   },
   "humorvoll": "term-humorvoll",
@@ -1182,6 +1922,12 @@
     "id": "term-irrwegen",
     "exampleVariants": [
       "Irrwegen"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "Irrwegen",
+        "type": "複数形"
+      }
     ]
   },
   "jagd": "term-jagd",
@@ -1197,6 +1943,12 @@
     "id": "term-jeder",
     "exampleVariants": [
       "jedes"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "jedes",
+        "type": "格変化形"
+      }
     ]
   },
   "jedoch": "term-jedoch",
@@ -1209,6 +1961,12 @@
     "id": "term-keifend",
     "exampleVariants": [
       "keifend"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "keifend",
+        "type": "現在分詞"
+      }
     ]
   },
   "keinesfalls": "term-keinesfalls",
@@ -1217,6 +1975,12 @@
     "id": "term-klagend",
     "exampleVariants": [
       "klagend"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "klagend",
+        "type": "現在分詞"
+      }
     ]
   },
   "klaeglich": "term-klaeglich",
@@ -1224,6 +1988,12 @@
     "id": "term-klammern",
     "exampleVariants": [
       "Klammern"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "Klammern",
+        "type": "複数形"
+      }
     ]
   },
   "klangvoll": "term-klangvoll",
@@ -1238,12 +2008,24 @@
     "id": "term-knappe",
     "exampleVariants": [
       "Knappen"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "Knappen",
+        "type": "複数形・弱変化形"
+      }
     ]
   },
   "knix": {
     "id": "term-knix",
     "exampleVariants": [
       "Knix"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "Knix",
+        "type": "別綴り"
+      }
     ]
   },
   "kokett": "term-kokett",
@@ -1257,6 +2039,12 @@
     "id": "term-kraeftig",
     "exampleVariants": [
       "kräftigen"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "kräftigen",
+        "type": "格変化形"
+      }
     ]
   },
   "kreischen": "term-kreischen",
@@ -1265,6 +2053,12 @@
     "id": "term-kuenftigen",
     "exampleVariants": [
       "künftig"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "künftig",
+        "type": "形容詞の基本形"
+      }
     ]
   },
   "kurz": "term-kurz",
@@ -1272,6 +2066,12 @@
     "id": "term-lachend",
     "exampleVariants": [
       "lachend"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "lachend",
+        "type": "現在分詞"
+      }
     ]
   },
   "lady-macbeth-o-eile-eile-her-damit-ich-meinen-geist-in-deinen-giesse-durch-meine-tapfere-zunge-diese-zweifel-und-furchtgespenster-aus-dem-felde-schlage-die-dich-wegschrecken-von-dem-goldnen-reif-womit-das-glueck-dich-gern-bekroenen-moechte": {
@@ -1283,6 +2083,12 @@
     "id": "term-landlaeufigen",
     "exampleVariants": [
       "landläufig"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "landläufig",
+        "type": "形容詞の基本形"
+      }
     ]
   },
   "laendler": "term-laendler",
@@ -1298,6 +2104,12 @@
     "id": "term-lautet",
     "exampleVariants": [
       "lautet"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "lautet",
+        "type": "活用形"
+      }
     ]
   },
   "lebendig": "term-lebendig",
@@ -1306,6 +2118,12 @@
     "id": "term-leere",
     "exampleVariants": [
       "leer"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "leer",
+        "type": "形容詞の基本形"
+      }
     ]
   },
   "leibjaeger": "term-leibjaeger",
@@ -1325,6 +2143,12 @@
     "id": "term-lesearten",
     "exampleVariants": [
       "Leseart"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "Leseart",
+        "type": "単数形"
+      }
     ]
   },
   "leute": "term-leute",
@@ -1332,6 +2156,12 @@
     "id": "term-liebegluehend",
     "exampleVariants": [
       "liebeglühend"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "liebeglühend",
+        "type": "複合形容詞"
+      }
     ]
   },
   "liebenswuerdig": "term-liebenswuerdig",
@@ -1363,6 +2193,12 @@
     "id": "term-majestaetisch-majestaetische",
     "exampleVariants": [
       "majestätische"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "majestätische",
+        "type": "格変化形"
+      }
     ]
   },
   "markant": "term-markant",
@@ -1373,6 +2209,24 @@
       "markiert",
       "markirt",
       "markieren"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "marcirt",
+        "type": "旧綴り"
+      },
+      {
+        "form": "markiert",
+        "type": "過去分詞"
+      },
+      {
+        "form": "markirt",
+        "type": "旧綴り"
+      },
+      {
+        "form": "markieren",
+        "type": "不定詞"
+      }
     ]
   },
   "markig": "term-markig",
@@ -1404,6 +2258,12 @@
     "id": "term-modificiren",
     "exampleVariants": [
       "modificiren"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "modificiren",
+        "type": "不定詞・旧綴り"
+      }
     ]
   },
   "moeglicherweise": "term-moeglicherweise",
@@ -1429,6 +2289,12 @@
     "id": "term-nachfolgenden",
     "exampleVariants": [
       "nachfolgend"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "nachfolgend",
+        "type": "現在分詞の基本形"
+      }
     ]
   },
   "nachgeben": "term-nachgeben",
@@ -1443,6 +2309,12 @@
     "id": "term-naeselnd",
     "exampleVariants": [
       "näselnd"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "näselnd",
+        "type": "現在分詞"
+      }
     ]
   },
   "naturlaut": "term-naturlaut",
@@ -1471,6 +2343,20 @@
       "genommen",
       "nahm",
       "nimmt"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "genommen",
+        "type": "過去分詞"
+      },
+      {
+        "form": "nahm",
+        "type": "過去形"
+      },
+      {
+        "form": "nimmt",
+        "type": "活用形"
+      }
     ]
   },
   "nicht-das-leere-a-nehmen": "term-nicht-das-leere-a-nehmen",
@@ -1485,6 +2371,12 @@
     "id": "term-nimmt",
     "exampleVariants": [
       "nimmt"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "nimmt",
+        "type": "活用形"
+      }
     ]
   },
   "noch": "term-noch",
@@ -1507,6 +2399,12 @@
     "id": "term-pikiert",
     "exampleVariants": [
       "pikiert"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "pikiert",
+        "type": "過去分詞"
+      }
     ]
   },
   "ploetzlich": "term-ploetzlich",
@@ -1517,6 +2415,12 @@
     "id": "term-posaunensaetze",
     "exampleVariants": [
       "Posaunensatz"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "Posaunensatz",
+        "type": "単数形"
+      }
     ]
   },
   "potpourri": "term-potpourri",
@@ -1528,6 +2432,12 @@
     "id": "term-proportioniert",
     "exampleVariants": [
       "proportioniert"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "proportioniert",
+        "type": "過去分詞"
+      }
     ]
   },
   "pult": "term-pult",
@@ -1538,12 +2448,24 @@
     "id": "term-rasend",
     "exampleVariants": [
       "rasend"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "rasend",
+        "type": "現在分詞"
+      }
     ]
   },
   "rauschend": {
     "id": "term-rauschend",
     "exampleVariants": [
       "rauschend"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "rauschend",
+        "type": "現在分詞"
+      }
     ]
   },
   "recht": "term-recht",
@@ -1559,6 +2481,12 @@
     "id": "term-revidierte",
     "exampleVariants": [
       "revidiert"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "revidiert",
+        "type": "過去分詞の基本形"
+      }
     ]
   },
   "rezitativisch-frei": "term-rezitativisch-frei",
@@ -1566,6 +2494,12 @@
     "id": "term-riesen",
     "exampleVariants": [
       "Riese"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "Riese",
+        "type": "単数形"
+      }
     ]
   },
   "riesenhaft": "term-riesenhaft",
@@ -1587,6 +2521,12 @@
     "id": "term-scalen",
     "exampleVariants": [
       "Scalen"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "Scalen",
+        "type": "複数形"
+      }
     ]
   },
   "schallbecher": "term-schallbecher",
@@ -1596,6 +2536,12 @@
     "id": "term-scharrend",
     "exampleVariants": [
       "scharrend"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "scharrend",
+        "type": "現在分詞"
+      }
     ]
   },
   "schattenhaft": "term-schattenhaft",
@@ -1603,6 +2549,12 @@
     "id": "term-schaudernd",
     "exampleVariants": [
       "schaudernd"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "schaudernd",
+        "type": "現在分詞"
+      }
     ]
   },
   "schauerlich": "term-schauerlich",
@@ -1611,6 +2563,12 @@
     "id": "term-schaeumend",
     "exampleVariants": [
       "schäumend"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "schäumend",
+        "type": "現在分詞"
+      }
     ]
   },
   "schelmisch": "term-schelmisch",
@@ -1628,6 +2586,12 @@
     "id": "term-schmachtend",
     "exampleVariants": [
       "schmachtend"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "schmachtend",
+        "type": "現在分詞"
+      }
     ]
   },
   "schmeicheln": "term-schmeicheln",
@@ -1635,24 +2599,48 @@
     "id": "term-schmetternd",
     "exampleVariants": [
       "schmetternd"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "schmetternd",
+        "type": "現在分詞"
+      }
     ]
   },
   "schmunzelnd": {
     "id": "term-schmunzelnd",
     "exampleVariants": [
       "schmunzelnd"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "schmunzelnd",
+        "type": "現在分詞"
+      }
     ]
   },
   "schnarchend": {
     "id": "term-schnarchend",
     "exampleVariants": [
       "schnarchend"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "schnarchend",
+        "type": "現在分詞"
+      }
     ]
   },
   "schnarrend": {
     "id": "term-schnarrend",
     "exampleVariants": [
       "schnarrend"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "schnarrend",
+        "type": "現在分詞"
+      }
     ]
   },
   "schnell": "term-schnell",
@@ -1666,6 +2654,12 @@
     "id": "term-schritt",
     "exampleVariants": [
       "Schritte"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "Schritte",
+        "type": "語形変化（要分類）"
+      }
     ]
   },
   "schuechtern": "term-schuechtern",
@@ -1683,6 +2677,12 @@
     "id": "term-scorrevole",
     "exampleVariants": [
       "scorrevole"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "scorrevole",
+        "type": "分詞由来形容詞"
+      }
     ]
   },
   "sechs-spieler": "term-sechs-spieler",
@@ -1706,6 +2706,12 @@
     "id": "term-seite",
     "exampleVariants": [
       "seiten"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "seiten",
+        "type": "語形変化（要分類）"
+      }
     ]
   },
   "selig": "term-selig",
@@ -1713,12 +2719,24 @@
     "id": "term-seufzend",
     "exampleVariants": [
       "seufzend"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "seufzend",
+        "type": "現在分詞"
+      }
     ]
   },
   "singend": {
     "id": "term-singend",
     "exampleVariants": [
       "singend"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "singend",
+        "type": "現在分詞"
+      }
     ]
   },
   "sinnen": "term-sinnen",
@@ -1737,12 +2755,24 @@
     "id": "term-spaeter",
     "exampleVariants": [
       "später"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "später",
+        "type": "比較級"
+      }
     ]
   },
   "spielend": {
     "id": "term-spielend",
     "exampleVariants": [
       "spielend"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "spielend",
+        "type": "現在分詞"
+      }
     ]
   },
   "spitz": "term-spitz",
@@ -1751,6 +2781,12 @@
     "id": "term-spottend",
     "exampleVariants": [
       "spottend"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "spottend",
+        "type": "現在分詞"
+      }
     ]
   },
   "spoettisch": "term-spoettisch",
@@ -1760,6 +2796,12 @@
     "id": "term-spruehend",
     "exampleVariants": [
       "sprühend"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "sprühend",
+        "type": "現在分詞"
+      }
     ]
   },
   "sprung": "term-sprung",
@@ -1772,6 +2814,12 @@
     "id": "term-steigen",
     "exampleVariants": [
       "steigen"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "steigen",
+        "type": "不定詞"
+      }
     ]
   },
   "steigern": "term-steigern",
@@ -1783,6 +2831,12 @@
     "id": "term-stoecken",
     "exampleVariants": [
       "Stock"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "Stock",
+        "type": "単数主格"
+      }
     ]
   },
   "stolz": "term-stolz",
@@ -1793,6 +2847,12 @@
     "id": "term-streiche",
     "exampleVariants": [
       "Streiche"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "Streiche",
+        "type": "複数形"
+      }
     ]
   },
   "streicheln": "term-streicheln",
@@ -1800,6 +2860,12 @@
     "id": "term-streichelt",
     "exampleVariants": [
       "streichelt"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "streichelt",
+        "type": "活用形"
+      }
     ]
   },
   "streicher": "term-streicher",
@@ -1819,6 +2885,12 @@
     "id": "term-stricharten",
     "exampleVariants": [
       "Strichart"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "Strichart",
+        "type": "単数形"
+      }
     ]
   },
   "stricknadel": "term-stricknadel",
@@ -1827,18 +2899,36 @@
     "id": "term-stuerzt",
     "exampleVariants": [
       "stürzen"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "stürzen",
+        "type": "不定詞"
+      }
     ]
   },
   "summend": {
     "id": "term-summend",
     "exampleVariants": [
       "summend"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "summend",
+        "type": "現在分詞"
+      }
     ]
   },
   "tactig": {
     "id": "term-tactig",
     "exampleVariants": [
       "tactig"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "tactig",
+        "type": "旧綴り・誤記候補"
+      }
     ]
   },
   "takt": "term-takt",
@@ -1852,6 +2942,12 @@
     "id": "term-thaetig",
     "exampleVariants": [
       "tätig"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "tätig",
+        "type": "現代綴り"
+      }
     ]
   },
   "tief": "term-tief",
@@ -1859,6 +2955,12 @@
     "id": "term-tobend",
     "exampleVariants": [
       "tobend"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "tobend",
+        "type": "現在分詞"
+      }
     ]
   },
   "ton": "term-ton",
@@ -1869,6 +2971,12 @@
     "id": "term-traeumend",
     "exampleVariants": [
       "träumend"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "träumend",
+        "type": "現在分詞"
+      }
     ]
   },
   "traurig": "term-traurig",
@@ -1876,6 +2984,12 @@
     "id": "term-treibend",
     "exampleVariants": [
       "treibend"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "treibend",
+        "type": "現在分詞"
+      }
     ]
   },
   "treten": "term-treten",
@@ -1899,12 +3013,24 @@
     "id": "term-uebergehen",
     "exampleVariants": [
       "übergehen"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "übergehen",
+        "type": "不定詞"
+      }
     ]
   },
   "ueberhetzt": {
     "id": "term-ueberhetzt",
     "exampleVariants": [
       "überhetzt"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "überhetzt",
+        "type": "過去分詞"
+      }
     ]
   },
   "uebermuethig": "term-uebermuethig",
@@ -1914,6 +3040,16 @@
     "exampleVariants": [
       "ubernimmt",
       "übernommen"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "ubernimmt",
+        "type": "活用形・表記揺れ"
+      },
+      {
+        "form": "übernommen",
+        "type": "過去分詞"
+      }
     ]
   },
   "uebernimmt": "term-uebernimmt",
@@ -1921,18 +3057,36 @@
     "id": "term-uebernommen",
     "exampleVariants": [
       "übernommen"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "übernommen",
+        "type": "過去分詞"
+      }
     ]
   },
   "ueberreicht": {
     "id": "term-ueberreicht",
     "exampleVariants": [
       "überreicht"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "überreicht",
+        "type": "過去分詞"
+      }
     ]
   },
   "ueberstuerzend": {
     "id": "term-ueberstuerzend",
     "exampleVariants": [
       "überstürzend"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "überstürzend",
+        "type": "現在分詞"
+      }
     ]
   },
   "uebrig": "term-uebrig",
@@ -1940,12 +3094,24 @@
     "id": "term-umstand",
     "exampleVariants": [
       "Umstände"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "Umstände",
+        "type": "複数形"
+      }
     ]
   },
   "umstaende": {
     "id": "term-umstaende",
     "exampleVariants": [
       "Umstände"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "Umstände",
+        "type": "複数形"
+      }
     ]
   },
   "umstimmen": "term-umstimmen",
@@ -1963,6 +3129,12 @@
     "id": "term-untersagt",
     "exampleVariants": [
       "untersagt"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "untersagt",
+        "type": "過去分詞"
+      }
     ]
   },
   "unwillkuerlich": "term-unwillkuerlich",
@@ -1970,6 +3142,12 @@
     "id": "term-urspruengliche",
     "exampleVariants": [
       "ursprünglich"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "ursprünglich",
+        "type": "形容詞の基本形"
+      }
     ]
   },
   "variante": "term-variante",
@@ -1981,30 +3159,60 @@
     "id": "term-verduestert",
     "exampleVariants": [
       "verdüstert"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "verdüstert",
+        "type": "過去分詞"
+      }
     ]
   },
   "verdutzt": {
     "id": "term-verdutzt",
     "exampleVariants": [
       "verdutzt"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "verdutzt",
+        "type": "過去分詞"
+      }
     ]
   },
   "vereinigt": {
     "id": "term-vereinigt",
     "exampleVariants": [
       "vereinigt"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "vereinigt",
+        "type": "過去分詞"
+      }
     ]
   },
   "verfuegung": {
     "id": "term-verfuegung",
     "exampleVariants": [
       "Verfügung"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "Verfügung",
+        "type": "名詞化形"
+      }
     ]
   },
   "verhallend": {
     "id": "term-verhallend",
     "exampleVariants": [
       "verhallend"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "verhallend",
+        "type": "現在分詞"
+      }
     ]
   },
   "verhallend-doch-straff-im-tempo": "term-verhallend-doch-straff-im-tempo",
@@ -2013,12 +3221,24 @@
     "id": "term-verklingend",
     "exampleVariants": [
       "verklingend"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "verklingend",
+        "type": "現在分詞"
+      }
     ]
   },
   "verlangsamen": {
     "id": "term-verlangsamen",
     "exampleVariants": [
       "Verlangsamen"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "Verlangsamen",
+        "type": "不定詞"
+      }
     ]
   },
   "verlauf": "term-verlauf",
@@ -2026,6 +3246,12 @@
     "id": "term-verlegers",
     "exampleVariants": [
       "Verleger"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "Verleger",
+        "type": "単数主格"
+      }
     ]
   },
   "verloeschen": "term-verloeschen",
@@ -2035,6 +3261,12 @@
     "id": "term-verschiebung",
     "exampleVariants": [
       "Verschiebung"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "Verschiebung",
+        "type": "名詞化形"
+      }
     ]
   },
   "verschwinden": "term-verschwinden",
@@ -2042,6 +3274,12 @@
     "id": "term-versehen",
     "exampleVariants": [
       "versehen"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "versehen",
+        "type": "不定詞・過去分詞"
+      }
     ]
   },
   "versetzen": "term-versetzen",
@@ -2049,12 +3287,24 @@
     "id": "term-verstoert",
     "exampleVariants": [
       "verstört"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "verstört",
+        "type": "過去分詞"
+      }
     ]
   },
   "versucht": {
     "id": "term-versucht",
     "exampleVariants": [
       "versucht"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "versucht",
+        "type": "過去分詞・活用形"
+      }
     ]
   },
   "versuchung": "term-versuchung",
@@ -2065,6 +3315,12 @@
     "id": "term-verweht",
     "exampleVariants": [
       "verweht"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "verweht",
+        "type": "過去分詞"
+      }
     ]
   },
   "verzoegern": "term-verzoegern",
@@ -2072,12 +3328,24 @@
     "id": "term-verzweifelt",
     "exampleVariants": [
       "verzweifelt"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "verzweifelt",
+        "type": "過去分詞"
+      }
     ]
   },
   "verzweiflung": {
     "id": "term-verzweiflung",
     "exampleVariants": [
       "Verzweiflung"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "Verzweiflung",
+        "type": "名詞化形"
+      }
     ]
   },
   "vgl": {
@@ -2096,6 +3364,12 @@
     "id": "term-vide",
     "exampleVariants": [
       "vide"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "vide",
+        "type": "命令形"
+      }
     ]
   },
   "viel": "term-viel",
@@ -2111,12 +3385,24 @@
     "id": "term-vollausladendem",
     "exampleVariants": [
       "vollausladend"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "vollausladend",
+        "type": "形容詞の基本形"
+      }
     ]
   },
   "vollendet": {
     "id": "term-vollendet",
     "exampleVariants": [
       "vollendet"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "vollendet",
+        "type": "過去分詞"
+      }
     ]
   },
   "volles-werk": "term-volles-werk",
@@ -2138,24 +3424,48 @@
     "id": "term-vorherigen",
     "exampleVariants": [
       "vorherig"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "vorherig",
+        "type": "形容詞の基本形"
+      }
     ]
   },
   "vorigen": {
     "id": "term-vorigen",
     "exampleVariants": [
       "vorig"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "vorig",
+        "type": "形容詞の基本形"
+      }
     ]
   },
   "vorliegenden": {
     "id": "term-vorliegenden",
     "exampleVariants": [
       "vorliegend"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "vorliegend",
+        "type": "現在分詞の基本形"
+      }
     ]
   },
   "vorschlag": {
     "id": "term-vorschlag",
     "exampleVariants": [
       "Vorschläge"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "Vorschläge",
+        "type": "複数形"
+      }
     ]
   },
   "vortrag": "term-vortrag",
@@ -2165,6 +3475,12 @@
     "id": "term-vorzutragen",
     "exampleVariants": [
       "vorzutragen"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "vorzutragen",
+        "type": "zu不定詞"
+      }
     ]
   },
   "wahnsinn": "term-wahnsinn",
@@ -2198,12 +3514,24 @@
     "id": "term-wiederholung",
     "exampleVariants": [
       "Wiederholung"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "Wiederholung",
+        "type": "名詞化形"
+      }
     ]
   },
   "wiegend": {
     "id": "term-wiegend",
     "exampleVariants": [
       "wiegend"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "wiegend",
+        "type": "現在分詞"
+      }
     ]
   },
   "wiegenlied": "term-wiegenlied",
@@ -2211,6 +3539,12 @@
     "id": "term-wiehernd",
     "exampleVariants": [
       "wiehernd"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "wiehernd",
+        "type": "現在分詞"
+      }
     ]
   },
   "wiesen": "term-wiesen",
@@ -2228,6 +3562,12 @@
     "id": "term-wuetend",
     "exampleVariants": [
       "wütend"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "wütend",
+        "type": "現在分詞・形容詞"
+      }
     ]
   },
   "z-b": {
@@ -2245,6 +3585,12 @@
     "id": "term-zerstreut",
     "exampleVariants": [
       "zerstreut"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "zerstreut",
+        "type": "過去分詞"
+      }
     ]
   },
   "ziemlich": "term-ziemlich",
@@ -2254,6 +3600,12 @@
     "id": "term-zischend",
     "exampleVariants": [
       "zischend"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "zischend",
+        "type": "現在分詞"
+      }
     ]
   },
   "zitat": "term-zitat",
@@ -2262,6 +3614,12 @@
     "id": "term-zoegernd",
     "exampleVariants": [
       "zögernd"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "zögernd",
+        "type": "現在分詞"
+      }
     ]
   },
   "zornig": "term-zornig",
@@ -2274,6 +3632,12 @@
     "id": "term-zurueckhaltend",
     "exampleVariants": [
       "zurückhaltend"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "zurückhaltend",
+        "type": "現在分詞"
+      }
     ]
   },
   "zurueckkehren": "term-zurueckkehren",
@@ -2281,6 +3645,7 @@
     "id": "term-zus",
     "original": "zus."
   },
+  "zusammen": "term-zusammen",
   "zusatz": "term-zusatz",
   "zwei-holztrommeln-von-verschiedener-groesse": "term-zwei-holztrommeln-von-verschiedener-groesse",
   "zweitaktig-zweitaktig": "term-zweitaktig-zweitaktig",
@@ -2621,6 +3986,12 @@
   "antwortet": {
     "id": "term-antworten",
     "original": "antwortet",
+    "canonical": "antworten",
+    "type": "語形変化（要分類）"
+  },
+  "antwortend": {
+    "id": "term-antworten",
+    "original": "antwortend",
     "canonical": "antworten",
     "type": "語形変化（要分類）"
   }
