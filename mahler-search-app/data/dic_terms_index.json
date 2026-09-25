@@ -259,6 +259,7 @@
     ]
   },
   "bewegter-im-kuenftigen-allegro-tempo": "term-bewegter-im-kuenftigen-allegro-tempo",
+  "bewegung": "term-bewegung",
   "bewertung": "term-bewertung",
   "bezeichnen": "term-bezeichnen",
   "bindebogen": "term-bindebogen",
@@ -1650,7 +1651,12 @@
   "schonen": "term-schonen",
   "schreien": "term-schreien",
   "schreiten": "term-schreiten",
-  "schritt": "term-schritt",
+  "schritt": {
+    "id": "term-schritt",
+    "exampleVariants": [
+      "Schritte"
+    ]
+  },
   "schuechtern": "term-schuechtern",
   "schwach": "term-schwach",
   "schwanendreher": "term-schwanendreher",
@@ -1861,6 +1867,7 @@
       "treibend"
     ]
   },
+  "treten": "term-treten",
   "trio-in-g-dur-dann-scherzo-rep-u-coda": {
     "id": "term-trio-in-g-dur-dann-scherzo-rep-u-coda",
     "original": "Trio in G dur, dann Scherzo rep. u. Coda"
@@ -2585,6 +2592,12 @@
     "id": "term-seite",
     "original": "seiten",
     "canonical": "Seite",
+    "type": "語形変化（要分類）"
+  },
+  "schritte": {
+    "id": "term-schritt",
+    "original": "Schritte",
+    "canonical": "Schritt",
     "type": "語形変化（要分類）"
   }
 }
