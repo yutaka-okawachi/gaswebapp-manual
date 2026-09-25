@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <base target="_top">
+  <style>
+    body { font: 14px/1.55 Arial, sans-serif; color: #1d2939; margin: 0; padding: 18px; }
+    h1 { font-size: 18px; margin: 0 0 8px; }
+    p { margin: 7px 0; }
+    .muted { color: #576579; }
+    .panel { border: 1px solid #c8d3e1; border-radius: 8px; padding: 12px; margin: 12px 0; }
+    .context { white-space: pre-wrap; max-height: 120px; overflow: auto; }
+    label { display: block; font-weight: 600; margin: 10px 0 4px; }
+    select, input, textarea { box-sizing: border-box; width: 100%; padding: 8px;
+      border: 1px solid #aab8c8; border-radius: 5px; font: inherit; }
+    textarea { min-height: 65px; resize: vertical; }
+    button { background: #2765af; color: white; border: 1px solid #235b9e;
+      border-radius: 5px; font: inherit; padding: 8px 12px; margin: 6px 6px 0 0; cursor: pointer; }
+    button.secondary { background: white; color: #225893; }
+    button:disabled { opacity: .5; cursor: not-allowed; }
+    #message { min-height: 22px; white-space: pre-wrap; }
+    [hidden] { display: none !important; }
+  </style>
+</head>
+<body>
+  <h1>一括調査の語形対応を確認</h1>
+  <p class="muted">Jevの判定は助言です．採用する語形を1件ずつ確認してください．この画面ではAPIを呼び出しません．</p>
+  <label for="sheet">調査タブ</label><select id="sheet"></select>
+  <p id="count" class="muted"></p>
+  <p id="message" role="status" aria-live="polite"></p>
+  <section id="candidate" class="panel" hidden>
+    <p><strong id="pair"></strong></p>
+    <p id="details"></p>
+    <p id="source"></p>
+    <p class="context" id="context"></p>
+    <p id="other" class="muted"></p>
+    <div id="newEntry">
+      <label for="category">語形対応のC列：語形区分</label>
+      <input id="category" maxlength="120" required>
+      <p class="muted">分詞，格変化形，活用形などは実例を確認して具体的に記入してください．分類が確定しない場合は「語形変化（要分類）」のまま採用できます．</p>
+      <label for="memo">語形対応のF列：補足（任意）</label>
+      <textarea id="memo" maxlength="500"></textarea>
+      <p class="muted">用語検索・実例検索の設定は既存の登録規則に従います．</p>
+      <button id="accept">この語形を採用して登録</button>
+      <button class="secondary" id="hold">保留</button>
+      <button class="secondary" id="reject">却下</button>
+    </div>
+    <div id="registered" hidden>
+      <p class="muted">この見出しと関連語形の組合せは，すでに語形対応にあります．</p>
+      <button class="secondary" id="tidy">登録済みの調査行を削除</button>
+    </div>
+  </section>
+  <p id="done" class="panel" hidden>確認待ちの候補はありません．保留・却下した行は調査タブに残ります．公開サイトへの反映には通常のsync-dataが必要です．</p>
+  <script>
+    const $ = id => document.getElementById(id);
+    const call = (name, ...args) => new Promise((resolve, reject) =>
+      google.script.run.withSuccessHandler(resolve).withFailureHandler(reject)[name](...args));
+    async function decide(...args) {
+      for (let attempt = 0; attempt < 3; attempt++) {
+        const result = await call('morphologySurveyDecide', ...args);
+        if (!result.busy) return result;
+        if (attempt < 2) $('message').textContent =
+          'ほかの更新処理が終わるのを待っています…（再試行 ' + (attempt + 1) + '/2）';
+      }
+      throw new Error('ほかの更新処理が続いているため，今回は登録していません．少し待ってからもう一度押してください．');
+    }
+    let state = null;
+    let busy = false;
+    function render() {
+      $('candidate').hidden = !state || !state.candidate;
+      $('done').hidden = Boolean(state && state.candidate);
+      $('count').textContent = state ? '確認待ち：' + state.remaining + '件' : '';
+      if (!state || !state.candidate) return;
+      const row = state.candidate;
+      $('pair').textContent = row.headword + ' → ' + row.form;
+      $('details').textContent = 'Jev：' + row.relation + '／確信度 ' +
+        Math.round(row.confidence * 100) + '%／文法区分 ' + row.grammar +
+        '／実例 ' + row.examples + '行';
+      $('source').textContent = '実例位置：' + row.source;
+      $('context').textContent = row.context;
+      $('other').textContent = row.otherHeadword ?
+        '別のNotes見出し：' + row.otherHeadword : '';
+      $('category').value = row.grammar && row.grammar !== '不明' ?
+        row.grammar : '語形変化（要分類）';
+      $('memo').value = '';
+      $('newEntry').hidden = row.registered;
+      $('registered').hidden = !row.registered;
+    }
+    async function update(action, success) {
+      if (busy) return;
+      busy = true;
+      $('sheet').disabled = true;
+      $('message').textContent = '処理中…';
+      for (const button of document.querySelectorAll('button')) button.disabled = true;
+      try {
+        state = await action();
+        render();
+        $('message').textContent = success || '';
+      } catch (error) {
+        $('message').textContent = error && error.message || String(error);
+      } finally {
+        busy = false;
+        $('sheet').disabled = false;
+        for (const button of document.querySelectorAll('button')) button.disabled = false;
+      }
+    }
+    $('sheet').onchange = () => update(() => call('morphologySurveyState', Number($('sheet').value)), '');
+    for (const [button, decision] of [['accept', '採用'], ['hold', '保留'], ['reject', '却下']]) {
+      $(button).onclick = () => {
+        if (!state || !state.candidate) return;
+        const row = state.candidate;
+        const text = decision === '採用'
+          ? row.headword + ' → ' + row.form + ' を語形対応に登録し，調査行を削除しますか？'
+          : row.headword + ' → ' + row.form + ' を「' + decision + '」として記録しますか？';
+        if (!confirm(text)) return;
+        update(() => decide(state.sheetId, row.id, decision,
+          { category: $('category').value, memo: $('memo').value }),
+        decision === '採用' ? '語形対応に登録し，調査行を削除しました．' : '判断を記録しました．');
+      };
+    }
+    $('tidy').onclick = () => {
+      if (!state || !state.candidate) return;
+      const row = state.candidate;
+      if (!confirm('登録済みの組合せを確認し，この調査行だけを削除しますか？')) return;
+      update(() => decide(state.sheetId, row.id, '登録済み行を整理', {}),
+        '登録済みの調査行を削除しました．');
+    };
+    update(async () => {
+      const bootstrap = await call('morphologySurveyBootstrap');
+      $('sheet').replaceChildren();
+      for (const sheet of bootstrap.sheets) {
+        const option = document.createElement('option');
+        option.value = sheet.id;
+        option.textContent = sheet.name;
+        $('sheet').append(option);
+      }
+      $('sheet').value = bootstrap.selectedId;
+      return call('morphologySurveyState', bootstrap.selectedId);
+    }, '');
+  </script>
+</body>
+</html>
