@@ -35,6 +35,10 @@ assert.strictEqual(context.getDictionaryTermResolution('Abstufung', termsIndex).
 assert.strictEqual(context.buildTermResolutionNotice('Abstufung', termsIndex, 1), '');
 assert.strictEqual(context.buildTermResolutionNotice('stuerzen', termsIndex, 18), '');
 assert.match(context.buildTermResolutionNotice('stuerzen', termsIndex, 18, true), /検索対象は見出しと登録済みの語形・別綴りに一致する実例．/);
+assert.strictEqual(
+  context.buildDictionaryExampleAliasNotice('stürzt', termsIndex),
+  '「stürzen」も，見出し「stürzt」に登録された語形変化として検索対象としている．'
+);
 assert.deepStrictEqual(Array.from(context.getDictionaryExampleSearchQueries('stuerzen', termsIndex, false)), ['stuerzen']);
 context.window = { location: { search: '?q=st%C3%BCrzt&source=dictionary_example' } };
 context.document = { getElementById: () => ({ hidden: false }) };
@@ -51,6 +55,10 @@ assert.deepStrictEqual(
   Array.from(termsIndex.nehmen.exampleVariants),
   ['nimmt'],
   '用語検索対象外でも実例検索対象には含める'
+);
+assert.deepStrictEqual(
+  JSON.parse(JSON.stringify(termsIndex.nehmen.exampleVariantDetails)),
+  [{ form: 'nimmt', type: '活用形' }]
 );
 
 const exampleQueries = context.getDictionaryExampleSearchQueries('nehmen', termsIndex, true);

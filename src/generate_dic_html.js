@@ -56,7 +56,9 @@ function generateDicTermsIndex(dicData, mappingData) {
     const headwordKey = normalizeForId(headword);
     if (!headwordKey || !entryId(termsIndex[headwordKey])) return;
     const variants = exampleVariantsByHeadword.get(headwordKey) || [];
-    if (!variants.some(value => normalizeForId(value) === normalizeForId(related))) variants.push(related);
+    if (!variants.some(item => normalizeForId(item.form) === normalizeForId(related))) {
+      variants.push({ form: related, type: String(row && row[2] || '').trim() });
+    }
     exampleVariantsByHeadword.set(headwordKey, variants);
   });
 
@@ -66,7 +68,10 @@ function generateDicTermsIndex(dicData, mappingData) {
     if (!id) return;
     termsIndex[headwordKey] = Object.assign(
       typeof current === 'object' && current ? current : { id },
-      { exampleVariants: variants }
+      {
+        exampleVariants: variants.map(item => item.form),
+        exampleVariantDetails: variants
+      }
     );
   });
 

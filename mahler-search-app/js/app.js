@@ -111,6 +111,60 @@ function buildTermResolutionNotice(query, termsIndex, resultCount, isDictionaryE
   return `<p class="term-resolution-notice">「${escapedQuery}」は見出し「${escapedCanonical}」の${relation}．検索対象は見出しと登録済みの語形・別綴りに一致する実例．</p>`;
 }
 
+function dictionaryExampleVariantCategory(type) {
+  const rawType = String(type || '').trim();
+  const upperType = rawType.toUpperCase();
+  if (
+    /格変化形|複数形|単数形|単数主格|基本形|弱変化形|過去形|過去分詞|現在分詞|活用形|比較級|最上級|不定詞|命令形|語形/.test(rawType) ||
+    upperType === 'INFLECTION'
+  ) return 'INFLECTION';
+  if (
+    /旧綴り|現代綴り|別綴り|表記ゆれ|表記揺れ|異綴り/.test(rawType) ||
+    upperType === 'ORTHOGRAPHIC_VARIANT'
+  ) return 'ORTHOGRAPHIC_VARIANT';
+  return 'RELATED';
+}
+
+function buildDictionaryExampleAliasNotice(query, termsIndex) {
+  const originalQuery = String(query || '').trim();
+  const queryKey = dictionaryTermIndexKey(originalQuery);
+  const entry = queryKey && termsIndex ? termsIndex[queryKey] : null;
+  const targetId = dictionaryTermEntryId(entry);
+  if (!originalQuery || !targetId) return '';
+
+  let canonicalEntry = entry;
+  let canonical = entry && typeof entry === 'object' && entry.canonical
+    ? String(entry.canonical) : originalQuery;
+  Object.keys(termsIndex).some(key => {
+    const candidate = termsIndex[key];
+    if (dictionaryTermEntryId(candidate) !== targetId || !candidate || typeof candidate !== 'object' ||
+        !Array.isArray(candidate.exampleVariantDetails)) return false;
+    canonicalEntry = candidate;
+    if (candidate.canonical) canonical = String(candidate.canonical);
+    return true;
+  });
+
+  const details = canonicalEntry && Array.isArray(canonicalEntry.exampleVariantDetails)
+    ? canonicalEntry.exampleVariantDetails : [];
+  const seen = new Set([normalizeString(originalQuery)]);
+  const variants = details.filter(item => {
+    const normalized = normalizeString(item && item.form);
+    if (!normalized || seen.has(normalized)) return false;
+    seen.add(normalized);
+    return true;
+  });
+  if (!variants.length) return '';
+
+  const categories = new Set(variants.map(item => dictionaryExampleVariantCategory(item.type)));
+  const relation = categories.size === 1 && categories.has('INFLECTION')
+    ? '語形変化'
+    : categories.size === 1 && categories.has('ORTHOGRAPHIC_VARIANT')
+      ? '別綴り'
+      : '関連語形・別綴り';
+  const forms = variants.map(item => `「${escapeTermResolutionHtml(item.form)}」`).join('，');
+  return `${forms}も，見出し「${escapeTermResolutionHtml(canonical)}」に登録された${relation}として検索対象としている．`;
+}
+
 function getDictionaryExampleSearchQueries(query, termsIndex, isDictionaryExample) {
   const originalQuery = String(query || '').trim();
   if (!originalQuery || !isDictionaryExample || !termsIndex) return originalQuery ? [originalQuery] : [];
@@ -142,6 +196,7 @@ function matchesAnyTermQuery(value, queries, matchMode) {
 if (typeof window !== 'undefined') {
   window.getDictionaryTermResolution = getDictionaryTermResolution;
   window.buildTermResolutionNotice = buildTermResolutionNotice;
+  window.buildDictionaryExampleAliasNotice = buildDictionaryExampleAliasNotice;
   window.isDictionaryExampleSearch = isDictionaryExampleSearch;
   window.getDictionaryExampleSearchQueries = getDictionaryExampleSearchQueries;
   window.matchesAnyTermQuery = matchesAnyTermQuery;

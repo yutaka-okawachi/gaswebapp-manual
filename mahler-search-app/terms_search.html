@@ -69,7 +69,7 @@
     <link rel="apple-touch-icon" href="https://yutaka-okawachi.github.io/gaswebapp-manual/apple-touch-icon.png">
     <link rel="preload" href="css/common.css?v=c86bc2885119" as="style">
     <link rel="stylesheet" href="css/common.css?v=c86bc2885119">
-    <script src="js/app.js?v=5c141489df4f"></script>
+    <script src="js/app.js?v=166e958c8fe5"></script>
 
     <script>
         /*******************************************************************
@@ -288,7 +288,11 @@
                     if (exactRadio) exactRadio.checked = true;
                 }
                 const aliasNotice = document.getElementById('dictionaryExampleAliasNotice');
-                if (aliasNotice) aliasNotice.hidden = false;
+                if (aliasNotice) {
+                    const noticeText = window.buildDictionaryExampleAliasNotice(rawQuery, window.appData.dic_terms_index);
+                    aliasNotice.textContent = noticeText;
+                    aliasNotice.hidden = !noticeText;
+                }
             }
 
             // ページ読み込み時に全用語リストを取得
