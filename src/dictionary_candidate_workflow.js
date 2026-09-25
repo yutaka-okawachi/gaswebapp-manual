@@ -53,27 +53,37 @@ function normalizeObservedTerm(value) {
     .trim();
 }
 
-function dictionarySourceMarkers(spreadsheet, term) {
-  const target = normalizeObservedTerm(term);
-  if (!target) return [];
+function dictionarySourceCorpus(spreadsheet) {
   const definitions = [
     ['RS', '[RS: Oper]'],
     ['RW', '[RW: Oper]'],
     ['GM', '[GM]']
   ];
-  const escapeRegExp = value => String(value).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-  const pattern = new RegExp('(^|[^a-z0-9])' + escapeRegExp(target) + '($|[^a-z0-9])', 'i');
-  return definitions.filter(([sheetName]) => {
+  return definitions.map(([sheetName, marker]) => {
     const sheet = spreadsheet.getSheetByName(sheetName);
-    if (!sheet || sheet.getLastRow() < 2) return false;
+    if (!sheet || sheet.getLastRow() < 2) return { marker, values: [] };
     const headers = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getValues()[0];
     const normalizedColumn = headers.indexOf('de_normalized') + 1;
     const deColumn = headers.indexOf('de') + 1;
     const column = normalizedColumn || deColumn;
-    if (!column) return false;
-    return sheet.getRange(2, column, sheet.getLastRow() - 1, 1).getValues()
-      .some(row => pattern.test(normalizeObservedTerm(row[0])));
-  }).map(([, marker]) => marker);
+    if (!column) return { marker, values: [] };
+    const values = sheet.getRange(2, column, sheet.getLastRow() - 1, 1).getValues()
+      .map(row => normalizeObservedTerm(row[0])).filter(Boolean);
+    return { marker, values };
+  });
+}
+
+function dictionarySourceMarkersFromCorpus(corpus, term) {
+  const target = normalizeObservedTerm(term);
+  if (!target) return [];
+  const escapeRegExp = value => String(value).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const pattern = new RegExp('(^|[^a-z0-9])' + escapeRegExp(target) + '($|[^a-z0-9])', 'i');
+  return corpus.filter(item => item.values.some(value => pattern.test(value)))
+    .map(item => item.marker);
+}
+
+function dictionarySourceMarkers(spreadsheet, term) {
+  return dictionarySourceMarkersFromCorpus(dictionarySourceCorpus(spreadsheet), term);
 }
 
 function mergeDictionarySourceMarkers(existing, markers) {
@@ -110,21 +120,40 @@ function refreshDictionarySourceMarkersForMappings() {
   );
   const mappingSheet = requireSheetWithHeaders(spreadsheet, EXPERIMENTAL_TERM_MAPPING_SHEET_NAME, EXPERIMENTAL_TERM_MAPPING_HEADERS);
   const rows = readSheetRows(mappingSheet, EXPERIMENTAL_TERM_MAPPING_HEADERS.length);
+  const notesRows = readSheetRows(notesSheet, 3);
+  const notesIndex = new Map();
+  notesRows.forEach((row, index) => {
+    const normalized = normalizeObservedTerm(row[0]);
+    if (normalized && !notesIndex.has(normalized)) notesIndex.set(normalized, index);
+  });
+  const sources = notesRows.map(row => String(row[2] || ''));
+  const corpus = dictionarySourceCorpus(spreadsheet);
   const mappingKeys = new Set();
-  let updated = 0;
+  const mappingHeadwords = new Set();
+  const updatedRows = new Set();
   let mappingsWithExamples = 0;
   rows.forEach(row => {
     const headword = String(row[0] || '').trim();
     const relatedForm = String(row[1] || '').trim();
     if (!headword || !relatedForm) return;
+    mappingHeadwords.add(normalizeObservedTerm(headword));
     const key = normalizeObservedTerm(headword) + '\u0000' + normalizeObservedTerm(relatedForm);
     if (mappingKeys.has(key)) return;
     mappingKeys.add(key);
-    const markers = dictionarySourceMarkers(spreadsheet, relatedForm);
+    const markers = dictionarySourceMarkersFromCorpus(corpus, relatedForm);
     if (markers.length) mappingsWithExamples += 1;
-    if (updateNotesSourceMarkersForHeadword(spreadsheet, notesSheet, headword, markers)) updated += 1;
+    const notesRowIndex = notesIndex.get(normalizeObservedTerm(headword));
+    if (notesRowIndex === undefined || !markers.length) return;
+    const merged = mergeDictionarySourceMarkers(sources[notesRowIndex], markers);
+    if (merged !== sources[notesRowIndex]) {
+      sources[notesRowIndex] = merged;
+      updatedRows.add(notesRowIndex);
+    }
   });
-  return { mappingsChecked: rows.length, headingsChecked: new Set(rows.map(row => normalizeObservedTerm(row[0])).filter(Boolean)).size, mappingsWithExamples, notesUpdated: updated };
+  if (updatedRows.size) {
+    notesSheet.getRange(2, 3, sources.length, 1).setValues(sources.map(value => [value]));
+  }
+  return { mappingsChecked: rows.length, headingsChecked: mappingHeadwords.size, mappingsWithExamples, notesUpdated: updatedRows.size };
 }
 
 function refreshDictionarySourceMarkersForMappingsFromMenu() {
