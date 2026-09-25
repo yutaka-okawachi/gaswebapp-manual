@@ -266,6 +266,8 @@ function testWiring() {
   assert.ok(workflow.includes("EXPERIMENTAL_TERM_MAPPING_SHEET_NAME = '語形対応'"));
   assert.ok(workflow.includes("EXPERIMENTAL_NOTES_SHEET_NAME = 'Notes'"));
   assert.ok(workflow.includes("UNREGISTERED_RESULT_TERM_SHEET_NAME = '検索結果未登録語'"));
+  assert.ok(workflow.includes("['de', 'ja', 'source']"));
+  assert.strictEqual(workflow.includes("['見出し', '本文', '出典']"), false);
   assert.strictEqual(workflow.includes('Notes_正規化テスト'), false);
   assert.strictEqual(workflow.includes('辞書語形・検索対応_実験'), false);
 }

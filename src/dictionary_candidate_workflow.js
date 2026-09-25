@@ -103,7 +103,11 @@ function updateNotesSourceMarkersForHeadword(spreadsheet, notesSheet, headword, 
 
 function refreshDictionarySourceMarkersForMappings() {
   const spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
-  const notesSheet = requireSheetWithHeaders(spreadsheet, EXPERIMENTAL_NOTES_SHEET_NAME, ['見出し', '本文', '出典']);
+  const notesSheet = requireSheetWithHeaders(
+    spreadsheet,
+    EXPERIMENTAL_NOTES_SHEET_NAME,
+    ['de', 'ja', 'source']
+  );
   const mappingSheet = requireSheetWithHeaders(spreadsheet, EXPERIMENTAL_TERM_MAPPING_SHEET_NAME, EXPERIMENTAL_TERM_MAPPING_HEADERS);
   const rows = readSheetRows(mappingSheet, EXPERIMENTAL_TERM_MAPPING_HEADERS.length);
   const mappingKeys = new Set();
