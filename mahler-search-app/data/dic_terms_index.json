@@ -14,7 +14,23 @@
     ]
   },
   "abnehmen": "term-abnehmen",
-  "abreissen": "term-abreissen",
+  "abreissen": {
+    "id": "term-abreissen",
+    "exampleVariants": [
+      "abreißend",
+      "abgerissen"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "abreißend",
+        "type": "分詞"
+      },
+      {
+        "form": "abgerissen",
+        "type": "分詞"
+      }
+    ]
+  },
   "abstieg": "term-abstieg",
   "abstossen": "term-abstossen",
   "abstufungen": {
@@ -30,8 +46,30 @@
     ]
   },
   "abwaerts": "term-abwaerts",
-  "abweichen": "term-abweichen",
-  "achtel": "term-achtel",
+  "abweichen": {
+    "id": "term-abweichen",
+    "exampleVariants": [
+      "Abweichende"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "Abweichende",
+        "type": "分詞"
+      }
+    ]
+  },
+  "achtel": {
+    "id": "term-achtel",
+    "exampleVariants": [
+      "Achteln"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "Achteln",
+        "type": "名詞の格・数"
+      }
+    ]
+  },
   "achten": "term-achten",
   "akzente": {
     "id": "term-akzente",
@@ -50,8 +88,50 @@
     "original": "alle in den Bläsern als トレモロ音符 notirten Stellen sind mit Zungenschlag auszuführen."
   },
   "alles-sehr-stark-und-markiert": "term-alles-sehr-stark-und-markiert",
-  "allgemein": "term-allgemein",
-  "allmaehlich": "term-allmaehlich",
+  "allgemein": {
+    "id": "term-allgemein",
+    "exampleVariants": [
+      "Allgemeiner",
+      "allgemeinen"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "Allgemeiner",
+        "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "allgemeinen",
+        "type": "形容詞・副詞の変化"
+      }
+    ]
+  },
+  "allmaehlich": {
+    "id": "term-allmaehlich",
+    "exampleVariants": [
+      "allmählicher",
+      "Allmähliche",
+      "allmählichem",
+      "allmähliches"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "allmählicher",
+        "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "Allmähliche",
+        "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "allmählichem",
+        "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "allmähliches",
+        "type": "形容詞・副詞の変化"
+      }
+    ]
+  },
   "allmaehlich-alle-anderen-hinzu": "term-allmaehlich-alle-anderen-hinzu",
   "allmaehlich-an-staerke-immer-anwachsen": "term-allmaehlich-an-staerke-immer-anwachsen",
   "allmaehlich-immer-mehr-abnehmend": "term-allmaehlich-immer-mehr-abnehmend",
@@ -89,16 +169,85 @@
     ]
   },
   "angst": "term-angst",
-  "aengstlich": "term-aengstlich",
+  "aengstlich": {
+    "id": "term-aengstlich",
+    "exampleVariants": [
+      "ängstlichen",
+      "ängstlicher",
+      "ängstliche"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "ängstlichen",
+        "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "ängstlicher",
+        "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "ängstliche",
+        "type": "形容詞・副詞の変化"
+      }
+    ]
+  },
   "anhalten": "term-anhalten",
   "anhang": "term-anhang",
   "anmerkung": "term-anmerkung",
   "anmerkung-fuer-den-dirigenten-von-hier-bis-poco-a-poco-calando-ganze-takte-schlagen": "term-anmerkung-fuer-den-dirigenten-von-hier-bis-poco-a-poco-calando-ganze-takte-schlagen",
-  "anmutig": "term-anmutig",
+  "anmutig": {
+    "id": "term-anmutig",
+    "exampleVariants": [
+      "anmutigen",
+      "anmutiger",
+      "anmutigem",
+      "anmutige"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "anmutigen",
+        "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "anmutiger",
+        "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "anmutigem",
+        "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "anmutige",
+        "type": "形容詞・副詞の変化"
+      }
+    ]
+  },
   "anreissen": "term-anreissen",
-  "anschlagen": "term-anschlagen",
+  "anschlagen": {
+    "id": "term-anschlagen",
+    "exampleVariants": [
+      "angeschlagen"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "angeschlagen",
+        "type": "分詞"
+      }
+    ]
+  },
   "anschliessen": "term-anschliessen",
-  "anschwellen": "term-anschwellen",
+  "anschwellen": {
+    "id": "term-anschwellen",
+    "exampleVariants": [
+      "anschwellenden"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "anschwellenden",
+        "type": "分詞"
+      }
+    ]
+  },
   "anstieg": "term-anstieg",
   "anstrengung": "term-anstrengung",
   "antworten": {
@@ -3994,5 +4143,119 @@
     "original": "antwortend",
     "canonical": "antworten",
     "type": "語形変化（要分類）"
+  },
+  "abreissend": {
+    "id": "term-abreissen",
+    "original": "abreißend",
+    "canonical": "abreißen",
+    "type": "分詞"
+  },
+  "abgerissen": {
+    "id": "term-abreissen",
+    "original": "abgerissen",
+    "canonical": "abreißen",
+    "type": "分詞"
+  },
+  "abweichende": {
+    "id": "term-abweichen",
+    "original": "Abweichende",
+    "canonical": "abweichen",
+    "type": "分詞"
+  },
+  "achteln": {
+    "id": "term-achtel",
+    "original": "Achteln",
+    "canonical": "Achtel",
+    "type": "名詞の格・数"
+  },
+  "allgemeiner": {
+    "id": "term-allgemein",
+    "original": "Allgemeiner",
+    "canonical": "allgemein",
+    "type": "形容詞・副詞の変化"
+  },
+  "allgemeinen": {
+    "id": "term-allgemein",
+    "original": "allgemeinen",
+    "canonical": "allgemein",
+    "type": "形容詞・副詞の変化"
+  },
+  "allmaehlicher": {
+    "id": "term-allmaehlich",
+    "original": "allmählicher",
+    "canonical": "allmählich",
+    "type": "形容詞・副詞の変化"
+  },
+  "allmaehliche": {
+    "id": "term-allmaehlich",
+    "original": "Allmähliche",
+    "canonical": "allmählich",
+    "type": "形容詞・副詞の変化"
+  },
+  "allmaehlichem": {
+    "id": "term-allmaehlich",
+    "original": "allmählichem",
+    "canonical": "allmählich",
+    "type": "形容詞・副詞の変化"
+  },
+  "allmaehliches": {
+    "id": "term-allmaehlich",
+    "original": "allmähliches",
+    "canonical": "allmählich",
+    "type": "形容詞・副詞の変化"
+  },
+  "aengstlichen": {
+    "id": "term-aengstlich",
+    "original": "ängstlichen",
+    "canonical": "ängstlich",
+    "type": "形容詞・副詞の変化"
+  },
+  "aengstlicher": {
+    "id": "term-aengstlich",
+    "original": "ängstlicher",
+    "canonical": "ängstlich",
+    "type": "形容詞・副詞の変化"
+  },
+  "aengstliche": {
+    "id": "term-aengstlich",
+    "original": "ängstliche",
+    "canonical": "ängstlich",
+    "type": "形容詞・副詞の変化"
+  },
+  "anmutigen": {
+    "id": "term-anmutig",
+    "original": "anmutigen",
+    "canonical": "anmutig",
+    "type": "形容詞・副詞の変化"
+  },
+  "anmutiger": {
+    "id": "term-anmutig",
+    "original": "anmutiger",
+    "canonical": "anmutig",
+    "type": "形容詞・副詞の変化"
+  },
+  "anmutigem": {
+    "id": "term-anmutig",
+    "original": "anmutigem",
+    "canonical": "anmutig",
+    "type": "形容詞・副詞の変化"
+  },
+  "anmutige": {
+    "id": "term-anmutig",
+    "original": "anmutige",
+    "canonical": "anmutig",
+    "type": "形容詞・副詞の変化"
+  },
+  "angeschlagen": {
+    "id": "term-anschlagen",
+    "original": "angeschlagen",
+    "canonical": "anschlagen",
+    "type": "分詞"
+  },
+  "anschwellenden": {
+    "id": "term-anschwellen",
+    "original": "anschwellenden",
+    "canonical": "anschwellen",
+    "type": "分詞"
   }
 }
