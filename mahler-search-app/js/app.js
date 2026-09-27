@@ -161,8 +161,9 @@ function buildDictionaryExampleAliasNotice(query, termsIndex) {
     : categories.size === 1 && categories.has('ORTHOGRAPHIC_VARIANT')
       ? '別綴り'
       : '関連語形・別綴り';
-  const forms = variants.map(item => `「${escapeTermResolutionHtml(item.form)}」`).join('，');
-  return `${forms}も，見出し「${escapeTermResolutionHtml(canonical)}」に登録された${relation}として検索対象としている．`;
+  // 呼び出し側は textContent に設定するため、ここではHTMLエスケープしない。
+  const forms = variants.map(item => `「${String(item.form || '')}」`).join('，');
+  return `${forms}も，見出し「${canonical}」に登録された${relation}として検索対象としている．`;
 }
 
 function getDictionaryExampleSearchQueries(query, termsIndex, isDictionaryExample) {

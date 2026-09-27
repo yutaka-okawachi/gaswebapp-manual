@@ -49,13 +49,15 @@ assert.deepStrictEqual(
   { id: 'term-m-dpf', original: 'm.Dpf.' }
 );
 
+const looksLikeDottedAbbreviation = term => {
+  const segments = term.split('-');
+  return segments.length > 1 &&
+    segments.some(segment => segment.length === 1) &&
+    segments.every(segment => /^[a-z0-9]{1,3}$/i.test(segment));
+};
 const dottedAbbreviationIds = Object.keys(termsIndex)
-  .filter(term => {
-    const segments = term.split('-');
-    return segments.length > 1 &&
-      segments.some(segment => segment.length === 1) &&
-      segments.every(segment => /^[a-z0-9]{1,3}$/i.test(segment));
-  })
+  .filter(term => looksLikeDottedAbbreviation(term) &&
+    String(termsIndex[term] && termsIndex[term].original || '').includes('.'))
   .sort();
 assert.deepStrictEqual(
   dottedAbbreviationIds,
@@ -69,7 +71,7 @@ const legacyGenerateTermPattern = normalizedTerm => normalizedTerm
   .split('ss').join('(?:ss|ß)')
   .split('-').join('[\\s\\-]?');
 Object.keys(termsIndex)
-  .filter(term => !dottedAbbreviationIds.includes(term))
+  .filter(term => !looksLikeDottedAbbreviation(term))
   .forEach(term => {
     assert.strictEqual(
       context.generateTermPattern(term),
@@ -94,6 +96,12 @@ Object.entries(dottedVariants).forEach(([term, variants]) => {
   });
 });
 assert.strictEqual(new RegExp(`^${context.generateTermPattern('m-d')}$`, 'i').test('mad'), false);
+const apostropheAlias = { id: 'term-ins', original: "in's" };
+assert.strictEqual(new RegExp(`^${context.generateTermPattern('in-s', "in's")}$`, 'i').test('in.s'), false);
+assert.strictEqual(
+  context.linkTermsInTranslation("in's", { 'in-s': apostropheAlias }),
+  '<a href="#term-ins" class="term-link">in&#039;s</a>'
+);
 assert.strictEqual(
   context.linkTermsInTranslation('m.d.', { 'm-d': 'term-m-d' }),
   '<a href="#term-m-d" class="term-link">m.d.</a>'

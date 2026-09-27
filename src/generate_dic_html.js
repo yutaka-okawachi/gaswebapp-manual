@@ -263,7 +263,8 @@ function generateTermPattern(normalizedTerm, originalTerm) {
   const isDottedAbbreviation =
     abbreviationSegments.length > 1 &&
     abbreviationSegments.some(segment => segment.length === 1) &&
-    abbreviationSegments.every(segment => /^[a-z0-9]{1,3}$/i.test(segment));
+    abbreviationSegments.every(segment => /^[a-z0-9]{1,3}$/i.test(segment)) &&
+    (!originalTerm || String(originalTerm).includes('.'));
   let pattern;
   if (isDottedAbbreviation) {
     pattern = abbreviationSegments
