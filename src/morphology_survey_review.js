@@ -1,5 +1,6 @@
 /** 一括調査の高確信度語形を1件ずつ確認し，採用分だけ語形対応へ移す． */
 const MORPHOLOGY_SURVEY_PREFIX = '語形対応_一括調査_';
+const MORPHOLOGY_SURVEY_BATCH_LIMIT = 10;
 const MORPHOLOGY_SURVEY_HEADERS = [
   '調査ID', 'Notes見出し', 'Notes行', '調査区分', '関連語形', '実例行数',
   '実例位置', '実例文脈', 'Jev関係', 'Jev文法区分', 'Jev確信度',
@@ -147,6 +148,123 @@ function morphologySurveyFindRow_(sheet, surveyId) {
   const row = index < 0 ? null : sheet.getRange(index + 2, 1, 1, MORPHOLOGY_SURVEY_HEADERS.length).getValues()[0];
   if (!row || !morphologySurveyEligible(row)) {
     throw new Error('対象行が変更されたため，画面を更新してください．');
+  }
+  return { row, sheetRow: index + 2 };
+}
+
+/** R列に1が入力された行を語形対応へ移す．単純トリガーと再処理メニューで共有する． */
+function onEdit(e) {
+  const range = e && e.range;
+  if (!range || range.getColumn() > 18 || range.getLastColumn() < 18) return;
+  const sheet = range.getSheet();
+  if (!sheet.getName().startsWith(MORPHOLOGY_SURVEY_PREFIX)) return;
+  const firstRow = Math.max(2, range.getRow());
+  const lastRow = range.getLastRow();
+  if (firstRow > lastRow) return;
+  const values = sheet.getRange(firstRow, 18, lastRow - firstRow + 1, 1).getValues();
+  if (!values.some(row => morphologySurveyIsApproved_(row[0]))) return;
+  const ids = sheet.getRange(firstRow, 1, lastRow - firstRow + 1, 1).getValues()
+    .filter((row, index) => morphologySurveyIsApproved_(values[index][0]))
+    .map(row => String(row[0] || '').trim()).filter(Boolean);
+  const result = morphologySurveyProcessApprovedRows_(sheet, ids);
+  morphologySurveyToast_(result);
+}
+
+function morphologySurveyIsApproved_(value) {
+  return value === 1 || String(value || '').trim() === '1';
+}
+
+/** メニューからR列の承認済み行を再処理する． */
+function morphologySurveyProcessMarkedRowsFromMenu() {
+  const spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
+  const sheet = spreadsheet.getActiveSheet();
+  if (!sheet.getName().startsWith(MORPHOLOGY_SURVEY_PREFIX)) {
+    spreadsheet.toast('一括調査タブを開いてから実行してください．', '語形対応', 8);
+    return;
+  }
+  morphologySurveyToast_(morphologySurveyProcessApprovedRows_(sheet));
+}
+
+function morphologySurveyToast_(result) {
+  let message = '登録・整理：' + result.completed + '件';
+  if (result.remaining) message += '／未処理：' + result.remaining + '件';
+  if (result.errors.length) message += '／エラー：' + result.errors.slice(0, 3).join('；');
+  SpreadsheetApp.getActiveSpreadsheet().toast(message, '語形対応', 10);
+}
+
+function morphologySurveyProcessApprovedRows_(sheet, requestedIds) {
+  morphologySurveySheet(SpreadsheetApp.getActiveSpreadsheet(), sheet.getSheetId());
+  const rows = readSheetRows(sheet, MORPHOLOGY_SURVEY_HEADERS.length);
+  const allIds = requestedIds || rows.filter(row => morphologySurveyIsApproved_(row[17]))
+    .map(row => String(row[0] || '').trim()).filter(Boolean);
+  const ids = allIds.slice(0, MORPHOLOGY_SURVEY_BATCH_LIMIT);
+  if (!ids.length) return { completed: 0, remaining: 0, errors: [] };
+  const corpus = dictionarySourceCorpus(SpreadsheetApp.getActiveSpreadsheet());
+  const result = { completed: 0, remaining: allIds.length, errors: [] };
+  ids.forEach(id => {
+    try {
+      if (morphologySurveyTransferApprovedRow_(sheet, id, corpus)) result.completed++;
+    } catch (error) {
+      result.errors.push(id + '：' + (error && error.message || String(error)));
+    }
+  });
+  result.remaining = Math.max(0, allIds.length - result.completed);
+  return result;
+}
+
+function morphologySurveyTransferApprovedRow_(sheet, surveyId, corpus) {
+  const spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
+  const initial = morphologySurveyFindApprovedRow_(sheet, surveyId);
+  const row = initial.row;
+  const headword = morphologySurveySafeText(row[1], 120, '見出し', true);
+  const form = morphologySurveySafeText(row[4], 120, '関連語形', true);
+  const markers = dictionarySourceMarkersFromCorpus(corpus, form);
+  const lock = LockService.getScriptLock();
+  if (!lock.tryLock(5000)) throw new Error('辞書の更新中です．R列の「1」は残しましたので，メニューから再処理してください．');
+  try {
+    const current = morphologySurveyFindApprovedRow_(sheet, surveyId);
+    const currentRow = current.row;
+    if (String(currentRow[1]) !== String(row[1]) || String(currentRow[4]) !== String(row[4])) {
+      throw new Error('対象行が変更されたため登録しません．');
+    }
+    const mapping = requireSheetWithHeaders(spreadsheet,
+      EXPERIMENTAL_TERM_MAPPING_SHEET_NAME, EXPERIMENTAL_TERM_MAPPING_HEADERS);
+    const key = morphologySurveyPairKey(headword, form);
+    const registered = readSheetRows(mapping, 2).some(item =>
+      morphologySurveyPairKey(item[0], item[1]) === key);
+    const notes = requireSheetWithHeaders(spreadsheet,
+      EXPERIMENTAL_NOTES_SHEET_NAME, ['de', 'ja', 'source']);
+    const notesHeadwords = new Set(readSheetRows(notes, 1).map(item =>
+      normalizeObservedTerm(item[0])).filter(Boolean));
+    if (!notesHeadwords.has(normalizeObservedTerm(headword))) {
+      throw new Error('見出しがNotesにありません．行を残しました．');
+    }
+    if (!registered) {
+      if (!(Number(currentRow[5]) > 0)) throw new Error('実例がないため登録しません．');
+      const category = String(currentRow[9] || '').trim() || '語形変化（要分類）';
+      const safeCategory = morphologySurveySafeText(category, 120, '語形区分', true);
+      const memo = morphologySurveySafeText(currentRow[18], 500, '人のメモ', false);
+      const termSearch = notesHeadwords.has(normalizeObservedTerm(form)) &&
+        normalizeObservedTerm(form) !== normalizeObservedTerm(headword) ? '対象外' : '対象';
+      const supplement = ['一括調査ID：' + String(currentRow[0]).trim(), memo].filter(Boolean).join(' ');
+      mapping.appendRow([headword, form, safeCategory, termSearch, '対象', supplement]);
+      SpreadsheetApp.flush();
+    }
+    updateNotesSourceMarkersForHeadword(spreadsheet, notes, headword, markers);
+    SpreadsheetApp.flush();
+    sheet.deleteRow(current.sheetRow);
+    SpreadsheetApp.flush();
+    return true;
+  } finally {
+    lock.releaseLock();
+  }
+}
+
+function morphologySurveyFindApprovedRow_(sheet, surveyId) {
+  const index = readSheetRows(sheet, 1).findIndex(row => String(row[0]) === String(surveyId));
+  const row = index < 0 ? null : sheet.getRange(index + 2, 1, 1, MORPHOLOGY_SURVEY_HEADERS.length).getValues()[0];
+  if (!row || !morphologySurveyIsApproved_(row[17])) {
+    throw new Error('R列の承認が見つからないため処理しません．');
   }
   return { row, sheetRow: index + 2 };
 }
