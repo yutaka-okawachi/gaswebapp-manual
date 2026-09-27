@@ -299,7 +299,10 @@ function validateDictionaryTermMapping_(dicNotesData, mappingData) {
     mappingData.forEach((row, index) => {
         const heading = normalizeForId(String(row[0] || ''));
         const related = normalizeForId(String(row[1] || ''));
-        const pair = `${heading}\u0000${related}`;
+        // ID用正規化は別綴りや句読点の違いも潰すため、重複検査には使わない。
+        const pairHeading = String(row[0] || '').normalize('NFC').trim().toLowerCase().replace(/[\s\u3000]+/g, ' ');
+        const pairRelated = String(row[1] || '').normalize('NFC').trim().toLowerCase().replace(/[\s\u3000]+/g, ' ');
+        const pair = `${pairHeading}\u0000${pairRelated}`;
         if (!headings.has(heading)) throw new Error(`語形対応の見出しがNotesにありません: ${index + 2}`);
         if (pairs.has(pair)) throw new Error(`語形対応の組合せが重複しています: ${index + 2}`);
         pairs.add(pair);
