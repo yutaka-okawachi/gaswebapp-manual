@@ -164,12 +164,12 @@
   {"__exampleOrder":2350,"de":"Vorschläge so schnell wie möglich [Anmerkung Mahlers]","de_normalized":"vorschlaege so schnell wie moeglich [anmerkung mahlers]","ja":"前打音は可能な限り速く（マーラーによる注意）","data":"M-d-d13-89-v1,v2,va,vc,kb&M-d-d13-90-fg,cfg&"},
   {"__exampleOrder":2361,"de":"weich geblasen","de_normalized":"weich geblasen","ja":"柔らかく吹く","data":"M-9-1-266-hr&"},
   {"__exampleOrder":2376,"de":"wie aus der Ferne","de_normalized":"wie aus der ferne","ja":"遠いところからのように","data":"M-b1-t1-405-hr&"},
-  {"__exampleOrder":2431,"de":"Wieder etwas zurückhaltend","de_normalized":"wieder etwas zurueckhaltend","ja":"ふたたびいくらか速度を緩めて","data":"M-2-5-616-all&M-2-5-693-all&M-3-3-541-all&M-3-6-88-all&M-3-6-304-all&"},
-  {"__exampleOrder":2452,"de":"Wieder langsam, wie zum Anfang","de_normalized":"wieder langsam, wie zum anfang","ja":"ふたたびゆっくりと，最初のように","data":"M-2-4-60-all&"},
-  {"__exampleOrder":2469,"de":"Wieder sehr ruhig","de_normalized":"wieder sehr ruhig","ja":"ふたたびたいへん落ち着いて","data":"M-a-6-245-all&"},
-  {"__exampleOrder":2489,"de":"Wieder wie zuvor","de_normalized":"wieder wie zuvor","ja":"ふたたび前のように","data":"M-6-2-130-all&M-6-2-292-all&"},
-  {"__exampleOrder":2519,"de":"zart hervortretend","de_normalized":"zart hervortretend","ja":"繊細に，目立たせて","data":"M-1-1-231-fl&M-1-1-247-hr&M-1-2-207-ob&M-2-1-131-ob&M-3-1-505-ob&M-3-2-246-vc&M-5-2-214-hr&M-7-4-7-hr&M-8-t2-861-sv&M-8-t2-1161-tr&M-9-1-436-cl&M-a-5-31-sv&M-d-d09-85-fl&M-h-h-131-ob&"},
-  {"__exampleOrder":2569,"de":"𝅘𝅥 = wie zuletzt die 𝅗𝅥","de_normalized":"𝅘𝅥 = wie zuletzt die 𝅗𝅥","ja":"四分音符は直前の二分音符の長さで","data":"M-2-5-448-all&"},
-  {"__exampleOrder":2585,"de":"𝅗𝅥 etwas langsamer wie im letzten Takte 𝅘𝅥","de_normalized":"𝅗𝅥 etwas langsamer wie im letzten takte 𝅘𝅥","ja":"二分音符は直前の四分音符の拍の長さよりいくらかゆっくりと","data":"M-6-4-479-all&"},
-  {"__exampleOrder":2600,"de":"𝅘𝅥. = wie früher im letzten Takte die 𝅗𝅥","de_normalized":"𝅘𝅥. = wie frueher im letzten takte die 𝅗𝅥","ja":"付点四分音符は直前の二分音符の長さで","data":"M-b2-t2-36-all&"}
+  {"__exampleOrder":2430,"de":"Wieder etwas zurückhaltend","de_normalized":"wieder etwas zurueckhaltend","ja":"ふたたびいくらか速度を緩めて","data":"M-2-5-616-all&M-2-5-693-all&M-3-3-541-all&M-3-6-88-all&M-3-6-304-all&"},
+  {"__exampleOrder":2451,"de":"Wieder langsam, wie zum Anfang","de_normalized":"wieder langsam, wie zum anfang","ja":"ふたたびゆっくりと，最初のように","data":"M-2-4-60-all&"},
+  {"__exampleOrder":2468,"de":"Wieder sehr ruhig","de_normalized":"wieder sehr ruhig","ja":"ふたたびたいへん落ち着いて","data":"M-a-6-245-all&"},
+  {"__exampleOrder":2488,"de":"Wieder wie zuvor","de_normalized":"wieder wie zuvor","ja":"ふたたび前のように","data":"M-6-2-130-all&M-6-2-292-all&"},
+  {"__exampleOrder":2518,"de":"zart hervortretend","de_normalized":"zart hervortretend","ja":"繊細に，目立たせて","data":"M-1-1-231-fl&M-1-1-247-hr&M-1-2-207-ob&M-2-1-131-ob&M-3-1-505-ob&M-3-2-246-vc&M-5-2-214-hr&M-7-4-7-hr&M-8-t2-861-sv&M-8-t2-1161-tr&M-9-1-436-cl&M-a-5-31-sv&M-d-d09-85-fl&M-h-h-131-ob&"},
+  {"__exampleOrder":2568,"de":"𝅘𝅥 = wie zuletzt die 𝅗𝅥","de_normalized":"𝅘𝅥 = wie zuletzt die 𝅗𝅥","ja":"四分音符は直前の二分音符の長さで","data":"M-2-5-448-all&"},
+  {"__exampleOrder":2584,"de":"𝅗𝅥 etwas langsamer wie im letzten Takte 𝅘𝅥","de_normalized":"𝅗𝅥 etwas langsamer wie im letzten takte 𝅘𝅥","ja":"二分音符は直前の四分音符の拍の長さよりいくらかゆっくりと","data":"M-6-4-479-all&"},
+  {"__exampleOrder":2599,"de":"𝅘𝅥. = wie früher im letzten Takte die 𝅗𝅥","de_normalized":"𝅘𝅥. = wie frueher im letzten takte die 𝅗𝅥","ja":"付点四分音符は直前の二分音符の長さで","data":"M-b2-t2-36-all&"}
 ]
