@@ -1,5 +1,6 @@
 /** 一括調査の高確信度語形を1件ずつ確認し，採用分だけ語形対応へ移す． */
-const MORPHOLOGY_SURVEY_PREFIX = '語形対応_一括調査_';
+const MORPHOLOGY_SURVEY_NAME = '語形対応_一括調査';
+const MORPHOLOGY_SURVEY_PREFIX = MORPHOLOGY_SURVEY_NAME + '_';
 const MORPHOLOGY_SURVEY_BATCH_LIMIT = 10;
 const MORPHOLOGY_SURVEY_HEADERS = [
   '調査ID', 'Notes見出し', 'Notes行', '調査区分', '関連語形', '実例行数',
@@ -8,9 +9,14 @@ const MORPHOLOGY_SURVEY_HEADERS = [
   '現行実例検索', '現行補足', '人の採否', '人のメモ', 'Jev実モデル', '抽出根拠'
 ];
 
+function morphologySurveyIsSurveySheet_(sheet) {
+  return Boolean(sheet && (sheet.getName() === MORPHOLOGY_SURVEY_NAME ||
+    sheet.getName().startsWith(MORPHOLOGY_SURVEY_PREFIX)));
+}
+
 function morphologySurveySheet(spreadsheet, sheetId) {
   const sheet = spreadsheet.getSheets().find(item => item.getSheetId() === Number(sheetId));
-  if (!sheet || !sheet.getName().startsWith(MORPHOLOGY_SURVEY_PREFIX)) {
+  if (!morphologySurveyIsSurveySheet_(sheet)) {
     throw new Error('対象の一括調査タブが見つかりません．');
   }
   const actual = sheet.getRange(1, 1, 1, MORPHOLOGY_SURVEY_HEADERS.length).getValues()[0];
@@ -39,8 +45,7 @@ function morphologySurveyPairKey(headword, form) {
 
 function morphologySurveyBootstrap() {
   const spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
-  const sheets = spreadsheet.getSheets().filter(sheet =>
-    sheet.getName().startsWith(MORPHOLOGY_SURVEY_PREFIX))
+  const sheets = spreadsheet.getSheets().filter(morphologySurveyIsSurveySheet_)
     .sort((left, right) => right.getName().localeCompare(left.getName(), 'ja'));
   if (!sheets.length) throw new Error('語形対応の一括調査タブがありません．');
   const active = spreadsheet.getActiveSheet();
@@ -157,7 +162,7 @@ function onEdit(e) {
   const range = e && e.range;
   if (!range || range.getColumn() > 18 || range.getLastColumn() < 18) return;
   const sheet = range.getSheet();
-  if (!sheet.getName().startsWith(MORPHOLOGY_SURVEY_PREFIX)) return;
+  if (!morphologySurveyIsSurveySheet_(sheet)) return;
   const firstRow = Math.max(2, range.getRow());
   const lastRow = range.getLastRow();
   if (firstRow > lastRow) return;
@@ -178,7 +183,7 @@ function morphologySurveyIsApproved_(value) {
 function morphologySurveyProcessMarkedRowsFromMenu() {
   const spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
   const sheet = spreadsheet.getActiveSheet();
-  if (!sheet.getName().startsWith(MORPHOLOGY_SURVEY_PREFIX)) {
+  if (!morphologySurveyIsSurveySheet_(sheet)) {
     spreadsheet.toast('一括調査タブを開いてから実行してください．', '語形対応', 8);
     return;
   }

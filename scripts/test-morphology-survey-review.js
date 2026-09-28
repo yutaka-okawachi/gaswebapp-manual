@@ -41,7 +41,7 @@ const surveyHeaders = [
 const candidate = (id, form, confidence) => [id, 'ziehen', 12, '新規候補', form, 1,
   'RS!F23', 'Er zieht.', '語形変化 [INFLECTION]', '活用形', confidence,
   '新規：確認候補', '', '', '', '', '', '', '', 'jev-1.13.0', '実例'];
-const survey = new Sheet('語形対応_一括調査_20260925', 123,
+const survey = new Sheet('語形対応_一括調査', 123,
   [surveyHeaders, candidate('a', 'zieht', 0.95), candidate('b', 'zog', 0.91),
     candidate('c', 'ziehen', 0.89)]);
 const mapping = new Sheet('語形対応', 456,
