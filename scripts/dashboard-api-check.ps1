@@ -112,7 +112,9 @@ function Test-DashboardApiPayload {
         "dictionaryExampleMoves",
         "dictionaryExamplePerformance",
         "terms",
-        "works"
+        "works",
+        "granularity",
+        "cities"
     )
     foreach ($key in $requiredTopLevel) {
         if (-not (Test-DashboardHasProperty -Object $data -Name $key)) {
@@ -120,7 +122,7 @@ function Test-DashboardApiPayload {
         }
     }
 
-    if ([int]$data.schemaVersion -ne 7) {
+    if ([int]$data.schemaVersion -ne 8) {
         return New-DashboardApiCheckResult -Success $false -Period $ExpectedPeriod -Message "Unexpected schemaVersion"
     }
     if ([int]$data.period -ne $ExpectedPeriod) {
@@ -144,14 +146,23 @@ function Test-DashboardApiPayload {
     $dictionaryExamplePerformance = $data.dictionaryExamplePerformance
     $terms = @($data.terms)
     $works = @($data.works)
-    if ($daily.Count -ne $ExpectedPeriod) {
+    $cities = @($data.cities)
+    $expectedGranularity = if ($ExpectedPeriod -eq 180) { "week" } else { "day" }
+    if ($data.granularity -ne $expectedGranularity) {
+        return New-DashboardApiCheckResult -Success $false -Period $ExpectedPeriod -Message "granularity mismatch"
+    }
+    $expectedDailyCount = if ($ExpectedPeriod -eq 180) { 26 } else { $ExpectedPeriod }
+    if ($daily.Count -ne $expectedDailyCount) {
         return New-DashboardApiCheckResult -Success $false -Period $ExpectedPeriod -Message "daily length mismatch"
     }
     if ($pages.Count -ne 11) {
         return New-DashboardApiCheckResult -Success $false -Period $ExpectedPeriod -Message "pages length mismatch"
     }
-    if ($previousDaily.Count -ne $ExpectedPeriod) {
+    if ($previousDaily.Count -ne $expectedDailyCount) {
         return New-DashboardApiCheckResult -Success $false -Period $ExpectedPeriod -Message "previous daily length mismatch"
+    }
+    if ($cities.Count -gt 30) {
+        return New-DashboardApiCheckResult -Success $false -Period $ExpectedPeriod -Message "cities length exceeds limit"
     }
     if ($searchMethods.Count -ne 4) {
         return New-DashboardApiCheckResult -Success $false -Period $ExpectedPeriod -Message "searchMethods length mismatch"
@@ -435,6 +446,21 @@ function Test-DashboardApiPayload {
             -not (Test-DashboardNonNegativeInteger -Value $work.searches)
         ) {
             return New-DashboardApiCheckResult -Success $false -Period $ExpectedPeriod -Message "Invalid work item value"
+        }
+    }
+
+    foreach ($cityItem in $cities) {
+        foreach ($key in @("city", "country", "displayName", "users", "sessions")) {
+            if (-not (Test-DashboardHasProperty -Object $cityItem -Name $key)) {
+                return New-DashboardApiCheckResult -Success $false -Period $ExpectedPeriod -Message "Invalid city item"
+            }
+        }
+        if (
+            [string]::IsNullOrWhiteSpace([string]$cityItem.displayName) -or
+            -not (Test-DashboardNonNegativeInteger -Value $cityItem.users) -or
+            -not (Test-DashboardNonNegativeInteger -Value $cityItem.sessions)
+        ) {
+            return New-DashboardApiCheckResult -Success $false -Period $ExpectedPeriod -Message "Invalid city item value"
         }
     }
 

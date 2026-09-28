@@ -19,7 +19,7 @@ API契約の現在値は、`src/dashboard_analytics.js` の `DASHBOARD_SCHEMA_VE
 
 1. 実行前に `git status --short` で意図しない変更がないことを確認します。
 2. `sync-data.ps1` を実行します。
-3. 末尾で7・30・90日の各 `period` が `[OK]` になったことを確認します。
+3. 末尾で7・30・90・180日の各 `period` が `[OK]` になったことを確認します。
 4. 所有者アカウントでダッシュボードを再読み込みし、「最終更新」と主要な値を確認します。
 
 検索数・閲覧数・実例クリック数・「実例を見る」の表示時間・訪問経路・継続利用はGA4 Data APIの集計です。スプレッドシートの「検索履歴」タブを編集しても、これらの利用状況集計は直接変更されません。「Notes」タブは検索語の訳語補完に利用され、変更内容は `mahler-search-app/data/dic_notes.json` と生成済み `mahler-search-app/dic.html` に反映されます。`dic.html` と `data/` は生成物なので、永続的な修正はスプレッドシートまたはGAS側の生成元へ入れてください。
@@ -48,7 +48,7 @@ node --check src/dashboard_analytics.js
 git diff --check
 ```
 
-GAS公開後は `sync-data.ps1` の結果、または `scripts/dashboard-api-check.ps1` を使って、固定WebアプリURLの7・30・90日応答を検査します。ローカルテストの成功だけで本番APIの更新済みとは判断しません。
+GAS公開後は `sync-data.ps1` の結果、または `scripts/dashboard-api-check.ps1` を使って、固定WebアプリURLの7・30・90・180日応答を検査します。ローカルテストの成功だけで本番APIの更新済みとは判断しません。
 
 Sitesリポジトリでの検証：
 
@@ -110,9 +110,9 @@ GAS APIの更新とSitesの公開は別作業です。どちらか一方の成�
 
 ## 4. 計測とAPIの保守資料
 
-2026-09-19のローカル実装では `schemaVersion` は **7** です。本番が同じ版かどうかは公開後のAPI検査で確認します。古いschemaVersion 1のJSON例は使用しません。
+ローカル実装では `schemaVersion` は **8** です。本番が同じ版かどうかは公開後のAPI検査で確認します。古いschemaVersion 1のJSON例は使用しません。
 
-必須キーは `schemaVersion`、`period`、`updatedAt`、`range`、`daily`、`previous`、`searchSummary`、`searchMethods`、`retention`、`pageTrends`、`acquisition`、`pages`、`dictionaryExampleMoves`、`dictionaryExamplePerformance`、`terms`、`works` です。型・値の制約は `scripts/dashboard-api-check.ps1`、計算方法は `src/dashboard_analytics.js` とそのテストを正本とします。
+必須キーは `schemaVersion`、`period`、`updatedAt`、`range`、`granularity`、`daily`、`previous`、`searchSummary`、`searchMethods`、`retention`、`pageTrends`、`acquisition`、`pages`、`dictionaryExampleMoves`、`dictionaryExamplePerformance`、`terms`、`works`、`cities` です。型・値の制約は `scripts/dashboard-api-check.ps1`、計算方法は `src/dashboard_analytics.js` とそのテストを正本とします。
 
 ### GA4・GAS設定の引き継ぎ確認
 
@@ -124,10 +124,10 @@ GAS APIの更新とSitesの公開は別作業です。どちらか一方の成�
 
 ### 集計期間
 
-- `period` は `7`、`30`、`90` のいずれかだけを受け付ける。
+- `period` は `7`、`30`、`90`、`180` のいずれかだけを受け付ける。
 - 終了日はGA4プロパティのタイムゾーンにおける当日とする。
 - 開始日は当日を含めて `period` 日前ではなく、`period - 1` 日前とする。
-- `daily` は期間内の全日を古い日から順に返す。
+- `daily` は期間内の推移を古い順に返す。7日・30日・90日は日別推移（`granularity: 'day'`）、180日は週別推移（約26週、`granularity: 'week'`）として集約して返す。
 - データがない日も省略せず、各値を `0` として返す。
 - 日付境界はGA4プロパティとGASの双方を日本時間にそろえる。
 - 集計結果は期間ごとに15分間キャッシュする。
@@ -149,6 +149,13 @@ GAS APIの更新とSitesの公開は別作業です。どちらか一方の成�
 - 無効入力、検索中止、処理失敗は数えない。
 - 日ごとの検索実行数は `daily[].searches` に返す。
 - 1日平均検索数は、期間内の検索実行数合計を選択期間の日数で割り、ダッシュボード側で四捨五入して整数表示する。
+
+### 訪問都市ランキング（アクセス元都市）
+
+- `cities` はGA4の `city` と `country` ディメンションを集計し、訪問者数（`users` / `activeUsers`）の多い順に上位30件を返す。
+- 同数の場合は訪問回数（`sessions`）順、表示名順に並べる。
+- 国名を併記した `displayName`（例: `Tokyo (Japan)`）を提供する。
+- 地域判定が特定できないアクセス（GA4の `(not set)`）は、都市・国の判定状況に応じて `特定不能/その他 (Japan)` や `特定不能/その他` として集約する。
 
 ### 用語集の閲覧数
 

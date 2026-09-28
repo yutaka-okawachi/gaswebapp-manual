@@ -216,6 +216,16 @@ const worksReport = {
   ]
 };
 
+const citiesReport = {
+  rows: [
+    reportRow(['Tokyo', 'Japan'], [12, 35]),
+    reportRow(['Osaka', 'Japan'], [8, 20]),
+    reportRow(['Vienna', 'Austria'], [3, 9]),
+    reportRow(['(not set)', 'Japan'], [2, 5]),
+    reportRow(['(not set)', '(not set)'], [1, 2])
+  ]
+};
+
 const retentionReport = {
   rows: [
     reportRow(['month_2026_03', '0000'], [10, 10]),
@@ -551,6 +561,13 @@ const context = {
           );
           return worksReport;
         }
+        if (dimensionNames === 'city,country') {
+          assert.strictEqual(
+            request.dimensionFilter.filter.stringFilter.value,
+            'yutaka-okawachi.github.io'
+          );
+          return citiesReport;
+        }
         throw new Error(`Unexpected report dimensions: ${dimensionNames}`);
       }
     }
@@ -567,7 +584,8 @@ vm.runInContext(fs.readFileSync(sourcePath, 'utf8'), context, {
 
 assert.strictEqual(context.parseDashboardPeriod('7'), 7);
 assert.strictEqual(context.parseDashboardPeriod(90), 90);
-assert.strictEqual(context.parseDashboardPeriod(180), null);
+assert.strictEqual(context.parseDashboardPeriod(180), 180);
+assert.strictEqual(context.parseDashboardPeriod('180'), 180);
 assert.strictEqual(context.parseDashboardPeriod('14'), null);
 assert.strictEqual(context.parseDashboardPeriod('7days'), null);
 assert.strictEqual(
@@ -582,17 +600,18 @@ assert.deepStrictEqual(
   {
     error: {
       code: 'INVALID_PERIOD',
-      message: 'period must be one of 7, 30, 90'
+      message: 'period must be one of 7, 30, 90, 180'
     }
   }
 );
 assert.strictEqual(analyticsCallCount, 1);
 
 const result = context.getDashboardAnalytics(7);
-assert.strictEqual(analyticsCallCount, 19);
+assert.strictEqual(analyticsCallCount, 20);
 assert.strictEqual(lockAcquireCount, 1);
 assert.strictEqual(lockReleaseCount, 1);
-assert.strictEqual(result.schemaVersion, 7);
+assert.strictEqual(result.schemaVersion, 8);
+assert.strictEqual(result.granularity, 'day');
 assert.strictEqual(result.period, 7);
 assert.deepStrictEqual(
   JSON.parse(JSON.stringify(result.range)),
@@ -863,6 +882,46 @@ assert.deepStrictEqual(
     }
   ]
 );
+assert.deepStrictEqual(
+  JSON.parse(JSON.stringify(result.cities)),
+  [
+    {
+      city: 'Tokyo',
+      country: 'Japan',
+      displayName: 'Tokyo (Japan)',
+      users: 12,
+      sessions: 35
+    },
+    {
+      city: 'Osaka',
+      country: 'Japan',
+      displayName: 'Osaka (Japan)',
+      users: 8,
+      sessions: 20
+    },
+    {
+      city: 'Vienna',
+      country: 'Austria',
+      displayName: 'Vienna (Austria)',
+      users: 3,
+      sessions: 9
+    },
+    {
+      city: '特定不能/その他',
+      country: 'Japan',
+      displayName: '特定不能/その他 (Japan)',
+      users: 2,
+      sessions: 5
+    },
+    {
+      city: '特定不能/その他',
+      country: '(not set)',
+      displayName: '特定不能/その他',
+      users: 1,
+      sessions: 2
+    }
+  ]
+);
 
 const manyTermsReport = {
   rows: Array.from({ length: 55 }, (_, index) => reportRow([
@@ -999,7 +1058,7 @@ assert.strictEqual(
 );
 
 const cachedResult = context.getDashboardAnalytics(7);
-assert.strictEqual(analyticsCallCount, 19);
+assert.strictEqual(analyticsCallCount, 20);
 assert.strictEqual(lockAcquireCount, 1);
 assert.strictEqual(lockReleaseCount, 1);
 assert.deepStrictEqual(
@@ -1010,7 +1069,8 @@ assert.deepStrictEqual(
 [
   { period: 7, startDate: '2026-07-20' },
   { period: 30, startDate: '2026-06-27' },
-  { period: 90, startDate: '2026-04-28' }
+  { period: 90, startDate: '2026-04-28' },
+  { period: 180, startDate: '2026-01-28' }
 ].forEach(testCase => {
   const range = context.createDashboardDateRange(testCase.period);
   const previousRange = context.createDashboardPreviousDateRange(
@@ -1036,11 +1096,13 @@ assert.deepStrictEqual(
       previousActivity: {}
     }
   );
-  assert.strictEqual(emptyResponse.daily.length, testCase.period);
+  const expectedDailyLength = testCase.period === 180 ? 26 : testCase.period;
+  assert.strictEqual(emptyResponse.granularity, testCase.period === 180 ? 'week' : 'day');
+  assert.strictEqual(emptyResponse.daily.length, expectedDailyLength);
   assert.strictEqual(emptyResponse.daily[0].searches, 0);
   assert.strictEqual(emptyResponse.daily[0].views, 0);
   assert.strictEqual(emptyResponse.daily[0].exampleClicks, 0);
-  assert.strictEqual(emptyResponse.previous.daily.length, testCase.period);
+  assert.strictEqual(emptyResponse.previous.daily.length, expectedDailyLength);
   assert.strictEqual(emptyResponse.previous.daily[0].searches, 0);
   assert.strictEqual(emptyResponse.previous.daily[0].views, 0);
   assert.strictEqual(emptyResponse.previous.daily[0].exampleClicks, 0);
@@ -1083,7 +1145,7 @@ function assertFiniteNonNegativeCounts(value, key) {
   Object.keys(value).forEach(childKey => {
     const childValue = value[childKey];
     if (
-      ['searches', 'views', 'exampleClicks', 'searchMoves', 'count'].includes(childKey)
+      ['searches', 'views', 'exampleClicks', 'searchMoves', 'count', 'users', 'sessions'].includes(childKey)
     ) {
       if (childValue === null && childKey === 'searches') return;
       assert.strictEqual(Number.isFinite(childValue), true);

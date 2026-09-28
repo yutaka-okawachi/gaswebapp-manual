@@ -13,9 +13,10 @@ function Assert-True {
     }
 }
 
-foreach ($period in @(7, 30, 90)) {
+foreach ($period in @(7, 30, 90, 180)) {
     $daily = @()
-    for ($i = 0; $i -lt $period; $i++) {
+    $dailyCount = if ($period -eq 180) { 26 } else { $period }
+    for ($i = 0; $i -lt $dailyCount; $i++) {
         $daily += @{
             date = "7/26"
             searches = 0
@@ -44,8 +45,9 @@ foreach ($period in @(7, 30, 90)) {
     }
 
     $payload = @{
-        schemaVersion = 7
+        schemaVersion = 8
         period = $period
+        granularity = if ($period -eq 180) { "week" } else { "day" }
         updatedAt = "2026年7月26日 14:05"
         range = @{
             startDate = "2026-07-20"
@@ -179,6 +181,15 @@ foreach ($period in @(7, 30, 90)) {
                 searches = 1
             }
         )
+        cities = @(
+            @{
+                city = "Tokyo"
+                country = "Japan"
+                displayName = "Tokyo (Japan)"
+                users = 1
+                sessions = 2
+            }
+        )
     } | ConvertTo-Json -Depth 8
 
     $result = Test-DashboardApiPayload -Payload $payload -ExpectedPeriod $period
@@ -210,7 +221,7 @@ Assert-True `
     -Condition ($syncSource -match '@\(0, 10, 20, 40, 60\)') `
     -Message "dashboard API retries must allow propagation time"
 Assert-True `
-    -Condition ($syncSource -match '\$pending = @\(7, 30, 90\)') `
+    -Condition ($syncSource -match '\$pending = @\(7, 30, 90, 180\)') `
     -Message "all periods must share one retry schedule"
 
 Write-Output "sync dashboard API checks: OK"

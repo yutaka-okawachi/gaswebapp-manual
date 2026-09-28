@@ -1,5 +1,13 @@
 # 更新履歴
 
+## 2026-09-29（管理者ダッシュボードAPI：訪問都市ランキング追加・180日集計対応）
+
+- 管理者ダッシュボードの固定GAS APIをスキーマバージョン 8 へ更新。
+- GA4の `city` / `country` ディメンションから訪問都市ランキング（上位30件、訪問者数・訪問回数、国名併記、特定不能の集約）を取得・返却する処理を追加。
+- 集計期間に `180` 日を追加し、180日の場合は週別推移（約26週、`granularity: 'week'`）として集約して返す仕様を実装。
+- 単体テスト（`scripts/test-dashboard-analytics.js`）、API整合性検査（`scripts/dashboard-api-check.ps1`、`scripts/test-dashboard-api-check.ps1`）、および検証スクリプト（`scripts/verify-dashboard.ps1`、`scripts/sync/main.js`）をスキーマバージョン8・180日・都市ランキングに対応して更新。
+- `manuals/DASHBOARD_GUIDE.md` の仕様・検査手順・指標定義を更新。
+
 ## 2026-09-19（RW/RS説明文の整理およびGM検索結果への楽譜情報リンク追加）
 
 - リヒャルト・ワーグナー（RW）およびリヒャルト・シュトラウス（RS）の「作品から検索」ページの説明文から「条件を指定して検索．」を削除。

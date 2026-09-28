@@ -6,13 +6,14 @@
  * read or returned here.
  */
 
-const DASHBOARD_SCHEMA_VERSION = 7;
+const DASHBOARD_SCHEMA_VERSION = 8;
 const DASHBOARD_TIME_ZONE = 'Asia/Tokyo';
-const DASHBOARD_ALLOWED_PERIODS = Object.freeze([7, 30, 90]);
+const DASHBOARD_ALLOWED_PERIODS = Object.freeze([7, 30, 90, 180]);
 const DASHBOARD_CACHE_SECONDS = 900;
 const DASHBOARD_LOCK_WAIT_MILLISECONDS = 30000;
 const DASHBOARD_TERM_LIMIT = 50;
 const DASHBOARD_WORK_LIMIT = 50;
+const DASHBOARD_CITY_LIMIT = 30;
 const DASHBOARD_COMPOSER_LABELS = Object.freeze({
   GM: 'Mahler',
   RW: 'Wagner',
@@ -124,7 +125,7 @@ function handleDashboardAnalyticsRequest(params) {
     return createJsonResponse({
       error: {
         code: 'INVALID_PERIOD',
-        message: 'period must be one of 7, 30, 90'
+        message: 'period must be one of 7, 30, 90, 180'
       }
     });
   }
@@ -185,6 +186,7 @@ function getDashboardAnalytics(period) {
       searchMoves: runDashboardSearchMovesReport(propertyName, range),
       terms: runDashboardTermsReport(propertyName, range),
       works: runDashboardWorksReport(propertyName, range),
+      cities: runDashboardCitiesReport(propertyName, range),
       previousRange: previousRange,
       previousPageViews: runDashboardPageViewsReport(propertyName, previousRange),
       previousPageEngagement: runDashboardPageEngagementReport(
@@ -389,6 +391,22 @@ function runDashboardWorksReport(propertyName, range) {
     ],
     metrics: [{ name: 'eventCount' }],
     dimensionFilter: dashboardExactFilter('eventName', 'work_search_selection'),
+    limit: '100000'
+  }, propertyName);
+}
+
+function runDashboardCitiesReport(propertyName, range) {
+  return AnalyticsData.Properties.runReport({
+    dateRanges: [range],
+    dimensions: [
+      { name: 'city' },
+      { name: 'country' }
+    ],
+    metrics: [
+      { name: 'activeUsers' },
+      { name: 'sessions' }
+    ],
+    dimensionFilter: dashboardHostFilter(),
     limit: '100000'
   }, propertyName);
 }
@@ -989,15 +1007,9 @@ function dashboardAndFilter(expressions) {
 }
 
 function buildDashboardAnalyticsResponse(period, range, reports) {
-  const dailyByIso = {};
-  enumerateDashboardDates(range.startDate, period).forEach(isoDate => {
-    dailyByIso[isoDate] = {
-      date: dashboardDisplayDate(isoDate),
-      searches: 0,
-      views: 0,
-      exampleClicks: 0
-    };
-  });
+  const seriesMap = createDashboardPeriodSeriesMap(range.startDate, period);
+  const dailyByBucket = seriesMap.seriesByBucket;
+  const dateToBucketKey = seriesMap.dateToBucketKey;
 
   const pageByPath = {};
   DASHBOARD_PAGES.forEach(item => {
@@ -1025,8 +1037,9 @@ function buildDashboardAnalyticsResponse(period, range, reports) {
     if (pageByPath[path]) {
       pageByPath[path].views += count;
     }
-    if (pageByPath[path] && dailyByIso[isoDate]) {
-      dailyByIso[isoDate].views += count;
+    const bucketKey = dateToBucketKey[isoDate];
+    if (pageByPath[path] && bucketKey && dailyByBucket[bucketKey]) {
+      dailyByBucket[bucketKey].views += count;
     }
   });
 
@@ -1050,11 +1063,12 @@ function buildDashboardAnalyticsResponse(period, range, reports) {
     );
     const count = dashboardCount(row.metrics[0]);
 
-    if (dailyByIso[isoDate]) {
+    const bucketKey = dateToBucketKey[isoDate];
+    if (bucketKey && dailyByBucket[bucketKey]) {
       if (DASHBOARD_SEARCH_EVENTS.indexOf(eventName) >= 0) {
-        if (sourcePath) dailyByIso[isoDate].searches += count;
+        if (sourcePath) dailyByBucket[bucketKey].searches += count;
       } else if (eventName === 'view_example_search_results') {
-        dailyByIso[isoDate].exampleClicks += count;
+        dailyByBucket[bucketKey].exampleClicks += count;
       }
     }
 
@@ -1261,7 +1275,8 @@ function buildDashboardAnalyticsResponse(period, range, reports) {
     period: period,
     updatedAt: Utilities.formatDate(new Date(), DASHBOARD_TIME_ZONE, 'yyyy年M月d日 HH:mm'),
     range: { startDate: range.startDate, endDate: range.endDate },
-    daily: Object.keys(dailyByIso).sort().map(date => dailyByIso[date]),
+    granularity: period === 180 ? 'week' : 'day',
+    daily: seriesMap.orderedKeys.map(key => dailyByBucket[key]),
     previous: {
       range: {
         startDate: reports.previousRange
@@ -1299,8 +1314,59 @@ function buildDashboardAnalyticsResponse(period, range, reports) {
     })),
     dictionaryExamplePerformance: dictionaryExamplePerformance,
     terms: terms,
-    works: works
+    works: works,
+    cities: buildDashboardCities(reports.cities)
   };
+}
+
+function buildDashboardCities(report) {
+  const cityAggregates = {};
+  dashboardReportRows(report, 2).forEach(row => {
+    const rawCity = String(row.dimensions[0] || '').trim();
+    const rawCountry = String(row.dimensions[1] || '').trim();
+    const activeUsers = dashboardCount(row.metrics[0]);
+    const sessions = dashboardCount(row.metrics[1]);
+
+    const isCityNotSet = !rawCity || rawCity === '(not set)';
+    const isCountryNotSet = !rawCountry || rawCountry === '(not set)';
+
+    const city = isCityNotSet ? '特定不能/その他' : rawCity;
+    const country = isCountryNotSet ? '(not set)' : rawCountry;
+
+    let displayName;
+    if (isCityNotSet && isCountryNotSet) {
+      displayName = '特定不能/その他';
+    } else if (isCityNotSet) {
+      displayName = '特定不能/その他 (' + country + ')';
+    } else if (isCountryNotSet) {
+      displayName = city;
+    } else {
+      displayName = city + ' (' + country + ')';
+    }
+
+    const key = city + '|' + country;
+    if (!cityAggregates[key]) {
+      cityAggregates[key] = {
+        city: city,
+        country: country,
+        displayName: displayName,
+        users: 0,
+        sessions: 0
+      };
+    }
+    cityAggregates[key].users += activeUsers;
+    cityAggregates[key].sessions += sessions;
+  });
+
+  return Object.keys(cityAggregates)
+    .map(key => cityAggregates[key])
+    .filter(item => item.users > 0 || item.sessions > 0)
+    .sort((a, b) =>
+      b.users - a.users ||
+      b.sessions - a.sessions ||
+      a.displayName.localeCompare(b.displayName)
+    )
+    .slice(0, DASHBOARD_CITY_LIMIT);
 }
 
 function buildDashboardDictionaryExamplePerformance(report) {
@@ -1430,21 +1496,16 @@ function chooseDashboardSearchMethodKey(sourcePath, searchType) {
 }
 
 function buildDashboardDailySeries(period, range, pageViewsReport, activityReport) {
-  const dailyByIso = {};
-  enumerateDashboardDates(range.startDate, period).forEach(isoDate => {
-    dailyByIso[isoDate] = {
-      date: dashboardDisplayDate(isoDate),
-      searches: 0,
-      views: 0,
-      exampleClicks: 0
-    };
-  });
+  const seriesMap = createDashboardPeriodSeriesMap(range.startDate, period);
+  const dailyByBucket = seriesMap.seriesByBucket;
+  const dateToBucketKey = seriesMap.dateToBucketKey;
 
   dashboardReportRows(pageViewsReport, 2).forEach(row => {
     const isoDate = dashboardGaDateToIso(row.dimensions[0]);
     const path = normalizeDashboardPagePath(row.dimensions[1]);
-    if (DASHBOARD_PAGES.some(item => item.path === path) && dailyByIso[isoDate]) {
-      dailyByIso[isoDate].views += dashboardCount(row.metrics[0]);
+    const bucketKey = dateToBucketKey[isoDate];
+    if (DASHBOARD_PAGES.some(item => item.path === path) && bucketKey && dailyByBucket[bucketKey]) {
+      dailyByBucket[bucketKey].views += dashboardCount(row.metrics[0]);
     }
   });
 
@@ -1452,20 +1513,21 @@ function buildDashboardDailySeries(period, range, pageViewsReport, activityRepor
     const isoDate = dashboardGaDateToIso(row.dimensions[0]);
     const eventName = row.dimensions[1];
     const count = dashboardCount(row.metrics[0]);
-    if (!dailyByIso[isoDate]) return;
+    const bucketKey = dateToBucketKey[isoDate];
+    if (!bucketKey || !dailyByBucket[bucketKey]) return;
     if (DASHBOARD_SEARCH_EVENTS.indexOf(eventName) >= 0) {
       const sourcePath = chooseDashboardSearchSourcePath(
         row.dimensions[2],
         row.dimensions[3],
         row.dimensions[4]
       );
-      if (sourcePath) dailyByIso[isoDate].searches += count;
+      if (sourcePath) dailyByBucket[bucketKey].searches += count;
     } else if (eventName === 'view_example_search_results') {
-      dailyByIso[isoDate].exampleClicks += count;
+      dailyByBucket[bucketKey].exampleClicks += count;
     }
   });
 
-  return Object.keys(dailyByIso).sort().map(date => dailyByIso[date]);
+  return seriesMap.orderedKeys.map(key => dailyByBucket[key]);
 }
 
 function dashboardReportRows(report, dimensionCount) {
@@ -1495,6 +1557,70 @@ function enumerateDashboardDates(startDate, period) {
   return Array.from({ length: period }, (_, index) =>
     shiftDashboardIsoDate(startDate, index)
   );
+}
+
+function createDashboardWeeks(startDate, period) {
+  const weekCount = Math.ceil(period / 7);
+  return Array.from({ length: weekCount }, (_, weekIndex) => {
+    const startOffset = weekIndex * 7;
+    const endOffset = Math.min(startOffset + 6, period - 1);
+    const weekStart = shiftDashboardIsoDate(startDate, startOffset);
+    const weekEnd = shiftDashboardIsoDate(startDate, endOffset);
+    const dates = [];
+    for (let day = startOffset; day <= endOffset; day += 1) {
+      dates.push(shiftDashboardIsoDate(startDate, day));
+    }
+    return {
+      key: 'week_' + weekIndex,
+      index: weekIndex,
+      startDate: weekStart,
+      endDate: weekEnd,
+      label: dashboardDisplayDate(weekStart) + '-' + dashboardDisplayDate(weekEnd),
+      dates: dates
+    };
+  });
+}
+
+function createDashboardPeriodSeriesMap(startDate, period) {
+  if (period === 180) {
+    const weeks = createDashboardWeeks(startDate, period);
+    const seriesByBucket = {};
+    const dateToBucketKey = {};
+    weeks.forEach(week => {
+      seriesByBucket[week.key] = {
+        date: week.label,
+        searches: 0,
+        views: 0,
+        exampleClicks: 0
+      };
+      week.dates.forEach(isoDate => {
+        dateToBucketKey[isoDate] = week.key;
+      });
+    });
+    return {
+      seriesByBucket: seriesByBucket,
+      dateToBucketKey: dateToBucketKey,
+      orderedKeys: weeks.map(w => w.key)
+    };
+  }
+
+  const seriesByBucket = {};
+  const dateToBucketKey = {};
+  const orderedKeys = enumerateDashboardDates(startDate, period);
+  orderedKeys.forEach(isoDate => {
+    seriesByBucket[isoDate] = {
+      date: dashboardDisplayDate(isoDate),
+      searches: 0,
+      views: 0,
+      exampleClicks: 0
+    };
+    dateToBucketKey[isoDate] = isoDate;
+  });
+  return {
+    seriesByBucket: seriesByBucket,
+    dateToBucketKey: dateToBucketKey,
+    orderedKeys: orderedKeys
+  };
 }
 
 function dashboardGaDateToIso(value) {

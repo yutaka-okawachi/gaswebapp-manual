@@ -67,7 +67,7 @@ async function verify(state, settings, credential, slug, save) {
         logger.info('管理者ダッシュボード API の応答を検査中…');
         process.stdout.write(run(process.platform === 'win32' ? 'powershell.exe' : 'pwsh',
             ['-NoProfile', '-ExecutionPolicy', 'Bypass', '-File', 'scripts/verify-dashboard.ps1', '-BaseUrl', settings.GAS_DEPLOY_URL]));
-        logger.success('ダッシュボード API 正常性確認 (7/30/90日)');
+        logger.success('ダッシュボード API 正常性確認 (7/30/90/180日)');
     }
 
     state.lastSuccess = { commit: receipt.commit, releaseId: receipt.manifest.releaseId, gasHash: state.gasHash, verifiedAt: new Date().toISOString() };
