@@ -2581,7 +2581,8 @@
     "exampleVariants": [
       "erscheinend",
       "erscheint",
-      "erscheine"
+      "erscheine",
+      "erschienen"
     ],
     "exampleVariantDetails": [
       {
@@ -2595,6 +2596,10 @@
       {
         "form": "erscheine",
         "type": "動詞の活用"
+      },
+      {
+        "form": "erschienen",
+        "type": "分詞"
       }
     ]
   },
@@ -6516,12 +6521,17 @@
   "stark": {
     "id": "term-stark",
     "exampleVariants": [
-      "starke"
+      "starke",
+      "staerker"
     ],
     "exampleVariantDetails": [
       {
         "form": "starke",
         "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "staerker",
+        "type": "語形変化（要分類）"
       }
     ]
   },
@@ -12960,5 +12970,17 @@
     "original": "ziemlicher",
     "canonical": "ziemlich",
     "type": "形容詞・副詞の変化"
+  },
+  "erschienen": {
+    "id": "term-erscheinen",
+    "original": "erschienen",
+    "canonical": "erscheinen",
+    "type": "分詞"
+  },
+  "staerker": {
+    "id": "term-stark",
+    "original": "staerker",
+    "canonical": "stark",
+    "type": "語形変化（要分類）"
   }
 }
