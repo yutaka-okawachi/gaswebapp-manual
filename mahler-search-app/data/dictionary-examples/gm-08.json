@@ -113,6 +113,7 @@
   {"__exampleOrder":1995,"de":"schnell und schmetternd","de_normalized":"schnell und schmetternd","ja":"速く，響き渡るように","data":"M-2-5-455-tr&M-2-5-456-tr&M-2-5-465-tr&"},
   {"__exampleOrder":1997,"de":"Schnell Vierteln (3/4 ganze Takte - 4/4 Alla breve)","de_normalized":"schnell vierteln (3/4 ganze takte - 4/4 alla breve)","ja":"速い四分音符で（3/4は1つ振り，4/4は2拍子で）","data":"M-102-2-1-all&"},
   {"__exampleOrder":2020,"de":"Schwer. Marcato (ungefähr l'istesso Tempo)","de_normalized":"schwer. marcato (ungefaehr l'istesso tempo)","ja":"重く，マルカートで（だいたい同じテンポで）","data":"M-6-4-49-all&"},
+  {"__exampleOrder":2029,"de":"sehr ausdrucksvoll u. hervortretend","de_normalized":"sehr ausdrucksvoll u. hervortretend","ja":"たいへん表情豊かに，そして目立たせて","data":"M-7-2-164-ob&"},
   {"__exampleOrder":2043,"de":"Sehr energisch!","de_normalized":"sehr energisch!","ja":"たいへん力強く","data":"M-6-1-250-all&"},
   {"__exampleOrder":2045,"de":"Sehr feierlich","de_normalized":"sehr feierlich","ja":"たいへん荘厳に","data":"M-7-1-313-all&"},
   {"__exampleOrder":2048,"de":"Sehr fließend","de_normalized":"sehr fliessend","ja":"たいへん流れるように","data":"M-4-3-151-all&M-7-4-142-all&M-7-4-321-all&M-8-t2-423-all&M-8-t2-1388-all&M-9-4-118-all&"},
