@@ -151,6 +151,7 @@
   {"__exampleOrder":2431,"de":"Wieder etwas zurückhaltend (Immer Halbe)","de_normalized":"wieder etwas zurueckhaltend (immer halbe)","ja":"ふたたびいくらか速度を緩めて（変わらず2拍子で）","data":"M-6-4-520-all&"},
   {"__exampleOrder":2438,"de":"wieder gehalten","de_normalized":"wieder gehalten","ja":"再び音の長さを保って","data":"M-2-2-261-all&"},
   {"__exampleOrder":2439,"de":"Wieder gehalten","de_normalized":"wieder gehalten","ja":"ふたたび音の長さを保って","data":"M-4-3-210-all&M-7-5-241-all&M-102-3-92-all&"},
+  {"__exampleOrder":2458,"de":"Wieder plötzlich langsam und bedächtig","de_normalized":"wieder ploetzlich langsam und bedaechtig","ja":"ふたたび突然ゆっくりと，落ち着いて","data":"M-4-1-283-all&"},
   {"__exampleOrder":2464,"de":"Wieder sehr breit","de_normalized":"wieder sehr breit","ja":"ふたたびたいへん幅広く，ゆったりと","data":"M-2-5-143-all&"},
   {"__exampleOrder":2481,"de":"Wieder wie vorher (Nicht schleppend)","de_normalized":"wieder wie vorher (nicht schleppend)","ja":"ふたたび前のように（引きずらないで）","data":"M-8-t2-1506-all&"},
   {"__exampleOrder":2487,"de":"Wieder wie zuerst","de_normalized":"wieder wie zuerst","ja":"ふたたび最初のように","data":"M-c-c1-64-all&"},
