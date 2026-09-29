@@ -824,7 +824,8 @@
     "exampleVariants": [
       "bedeutungsvollem",
       "bedeutungsvollen",
-      "bedeutungsvoller"
+      "bedeutungsvoller",
+      "bedeutungsv"
     ],
     "exampleVariantDetails": [
       {
@@ -838,6 +839,10 @@
       {
         "form": "bedeutungsvoller",
         "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "bedeutungsv",
+        "type": "該当なし"
       }
     ]
   },
@@ -1404,12 +1409,22 @@
   "bloss": {
     "id": "term-bloss",
     "exampleVariants": [
-      "bloße"
+      "bloße",
+      "blos",
+      "bloss"
     ],
     "exampleVariantDetails": [
       {
         "form": "bloße",
         "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "blos",
+        "type": "該当なし"
+      },
+      {
+        "form": "bloss",
+        "type": "該当なし"
       }
     ]
   },
@@ -3613,12 +3628,17 @@
   "gestossen": {
     "id": "term-gestossen",
     "exampleVariants": [
-      "gestoßen"
+      "gestoßen",
+      "gestoss"
     ],
     "exampleVariantDetails": [
       {
         "form": "gestoßen",
         "type": "過去分詞"
+      },
+      {
+        "form": "gestoss",
+        "type": "分詞"
       }
     ]
   },
@@ -3964,12 +3984,17 @@
   "gross": {
     "id": "term-gross",
     "exampleVariants": [
-      "große"
+      "große",
+      "gross"
     ],
     "exampleVariantDetails": [
       {
         "form": "große",
         "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "gross",
+        "type": "該当なし"
       }
     ]
   },
@@ -5136,7 +5161,8 @@
     "exampleVariants": [
       "mäßiger",
       "mäßigt",
-      "mäßigen"
+      "mäßigen",
+      "mässig"
     ],
     "exampleVariantDetails": [
       {
@@ -5150,6 +5176,10 @@
       {
         "form": "mäßigen",
         "type": "動詞の活用"
+      },
+      {
+        "form": "mässig",
+        "type": "形容詞・副詞の変化"
       }
     ]
   },
@@ -6500,7 +6530,18 @@
       }
     ]
   },
-  "stab": "term-stab",
+  "stab": {
+    "id": "term-stab",
+    "exampleVariants": [
+      "Stabe"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "Stabe",
+        "type": "名詞の格・数"
+      }
+    ]
+  },
   "stahlstab": {
     "id": "term-stahlstab",
     "exampleVariants": [
@@ -8043,12 +8084,17 @@
   "weglassen": {
     "id": "term-weglassen",
     "exampleVariants": [
-      "weggelassen"
+      "weggelassen",
+      "wegzulassen"
     ],
     "exampleVariantDetails": [
       {
         "form": "weggelassen",
         "type": "分詞"
+      },
+      {
+        "form": "wegzulassen",
+        "type": "該当なし"
       }
     ]
   },
@@ -12971,5 +13017,35 @@
     "original": "zurückkehrende",
     "canonical": "zurückkehren",
     "type": "分詞"
+  },
+  "bedeutungsv": {
+    "id": "term-bedeutungsvoll",
+    "original": "bedeutungsv",
+    "canonical": "bedeutungsvoll",
+    "type": "該当なし"
+  },
+  "blos": {
+    "id": "term-bloss",
+    "original": "blos",
+    "canonical": "bloß",
+    "type": "該当なし"
+  },
+  "gestoss": {
+    "id": "term-gestossen",
+    "original": "gestoss",
+    "canonical": "gestoßen",
+    "type": "分詞"
+  },
+  "stabe": {
+    "id": "term-stab",
+    "original": "Stabe",
+    "canonical": "Stab",
+    "type": "名詞の格・数"
+  },
+  "wegzulassen": {
+    "id": "term-weglassen",
+    "original": "wegzulassen",
+    "canonical": "weglassen",
+    "type": "該当なし"
   }
 }
