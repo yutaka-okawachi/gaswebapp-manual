@@ -24,9 +24,10 @@
     .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0 10px; }
     .context { white-space: pre-wrap; border-left: 3px solid #9aacc8; padding-left: 9px; max-height: 100px; overflow: auto; }
     #confirmBox { position: fixed; inset: 0; background: #0008; display: none; align-items: center;
-      justify-content: center; padding: 24px; }
+      justify-content: center; padding: 24px; z-index: 10; }
     #confirmBox > div { background: white; border-radius: 8px; max-width: 480px; padding: 18px; }
     #message { min-height: 22px; white-space: pre-wrap; }
+    #draftMessage, #draftStatus { white-space: pre-wrap; overflow-wrap: anywhere; }
     [hidden] { display: none !important; }
   </style>
 </head>
@@ -73,6 +74,10 @@
     <h2>4．新しい見出しの草案</h2>
     <p class="muted">OpenAI API草案は任意．手動入力・修正もできる．API呼出しの直前に別途課金確認を行う．</p>
     <button id="runDraft">OpenAI APIで草案を作る</button>
+    <button id="refreshDraft" class="secondary">草案の状態を確認</button>
+    <p id="draftMessage" role="status" aria-live="polite"></p>
+    <p id="draftStatus" class="muted"></p>
+    <button id="prepareDraftRetry" class="secondary" hidden>利用状況を確認して再生成を準備</button>
     <div class="grid"><div><label for="draftHeadword">見出し</label><input id="draftHeadword" maxlength="120"></div>
       <div><label for="partOfSpeech">品詞（日本語）</label><input id="partOfSpeech" maxlength="100" placeholder="例：女性名詞"></div></div>
     <div class="grid"><div><label for="english">英語の類語</label><input id="english" maxlength="500"></div>
@@ -105,28 +110,79 @@
     const $ = id => document.getElementById(id);
     let state = null;
     let busy = false;
+    let confirming = false;
+    let draftStateUnknown = false;
     const call = (name, ...args) => new Promise((resolve, reject) =>
       google.script.run.withSuccessHandler(resolve).withFailureHandler(reject)[name](...args));
     const message = text => { $('message').textContent = text || ''; };
     const visible = (id, show) => { $(id).hidden = !show; };
     function confirmation(text) {
+      if (busy || confirming) return Promise.resolve(false);
+      confirming = true;
       $('confirmText').textContent = text;
       $('confirmBox').style.display = 'flex';
       return new Promise(resolve => {
-        const close = answer => { $('confirmBox').style.display = 'none'; resolve(answer); };
+        const close = answer => { $('confirmBox').style.display = 'none'; confirming = false; resolve(answer); };
         $('confirmYes').onclick = () => close(true);
         $('confirmNo').onclick = () => close(false);
       });
     }
-    async function operation(action, success) {
+    function renderDraftStatus() {
+      const c = state && state.candidate;
+      if (!c) return;
+      const failureDetail = c.draftFailure
+        ? ($('draftMessage').textContent.includes(c.draftFailure) ? '' : c.draftFailure + '\n')
+        : '前回の草案作成を完了できませんでした．この記録には詳しい失敗理由が残っていません．\n';
+      $('runDraft').disabled = busy || draftStateUnknown || !state.draftReady ||
+        c.draftStatus === '生成中' || c.draftStatus === '結果要確認';
+      $('runDraft').textContent = busy ? '処理中…' : 'OpenAI APIで草案を作る';
+      $('draftPanel').setAttribute('aria-busy', String(busy));
+      $('draftStatus').textContent = draftStateUnknown
+        ? '最新の状態を取得できません．「草案の状態を確認」を押してください．APIは再実行しません．'
+        : c.draftStatus === '結果要確認'
+          ? failureDetail + '利用履歴と保存済みの草案を確認するまで，再生成を停止しています．'
+          : c.draftStatus === '生成中'
+            ? '草案を生成中です．「草案の状態を確認」で保存状況を確認できます．'
+            : !state.draftReady ? '草案生成に必要なAPIキーまたはモデルが未設定です．'
+              : '草案の状態：' + (c.draftStatus || '未作成');
+      visible('prepareDraftRetry', c.draftStatus === '結果要確認');
+      $('prepareDraftRetry').disabled = busy || draftStateUnknown;
+    }
+    async function operation(action, success, draftOperation = false) {
       if (busy) return;
       busy = true; message('処理中…');
+      const controls = Array.from(document.querySelectorAll('button, input, select, textarea'));
+      const disabled = controls.map(control => control.disabled);
+      controls.forEach(control => { control.disabled = true; });
+      if (draftOperation) {
+        $('draftMessage').textContent = '処理中… 完了までお待ちください．';
+        renderDraftStatus();
+      }
+      let rendered = false;
       try { const result = await action(); if (result) {
-        if (result.state) state = result.state;
-        else if (result.observation) state = result;
-      } render(); message(success); }
-      catch (error) { message((error && error.message) || String(error)); }
-      finally { busy = false; }
+        if (result.state) { state = result.state; draftStateUnknown = false; }
+        else if (result.observation) { state = result; draftStateUnknown = false; }
+      } if (draftOperation) draftStateUnknown = false;
+        controls.forEach((control, i) => { control.disabled = disabled[i]; });
+        render(); rendered = true; message(success);
+        if (draftOperation) $('draftMessage').textContent = success;
+      }
+      catch (error) {
+        const text = (error && error.message) || String(error);
+        message(text);
+        if (draftOperation) {
+          $('draftMessage').textContent = text;
+          $('draftMessage').scrollIntoView({ block: 'nearest' });
+          // Refresh status only: retain unsaved form edits and never repeat the paid call.
+          try { state = await call('candidateWizardState', state.observation.id); draftStateUnknown = false; }
+          catch (_) { draftStateUnknown = true; }
+        } else $('message').scrollIntoView({ block: 'nearest' });
+      }
+      finally {
+        busy = false;
+        if (!rendered) controls.forEach((control, i) => { control.disabled = disabled[i]; });
+        renderDraftStatus();
+      }
     }
     async function refreshList() {
       const prior = $('observation').value;
@@ -184,8 +240,8 @@
       }
       if (c) {
         visible('draftPanel', true);
-        $('runDraft').disabled = !state.draftReady || c.draftStatus === '生成中' ||
-          c.draftStatus === '結果要確認';
+        $('draftMessage').textContent = '';
+        renderDraftStatus();
         const map = { draftHeadword: c.headword, partOfSpeech: c.partOfSpeech,
           inflections: c.inflections, translation: c.translation,
           draftCategory: c.category, similar: c.similar, draftNotes: c.notes,
@@ -223,12 +279,20 @@
         '編集を再開した．草案を確認してください．');
     };
     $('runDraft').onclick = async () => {
+      if (busy || $('runDraft').disabled) return;
       if (!await confirmation('OpenAI APIで草案を1回生成する．課金が発生する可能性がある．既存草案は上書きされる．続けますか．')) return;
-      operation(() => call('candidateWizardCreateDraft', state.observation.id, true), '草案を保存した．内容を確認・修正してください．');
+      return operation(() => call('candidateWizardCreateDraft', state.observation.id, true), '草案を保存した．内容を確認・修正してください．', true);
+    };
+    $('refreshDraft').onclick = () => operation(() => call('candidateWizardState', state.observation.id),
+      '保存済みの草案と状態を読み直しました．APIは呼び出していません．', true);
+    $('prepareDraftRetry').onclick = async () => {
+      if (!await confirmation('OpenAIの利用履歴と保存済みの草案を確認しましたか．再生成すると追加費用が発生する可能性があります．この操作では再生成の準備だけを行い，APIは呼び出しません．')) return;
+      return operation(() => call('candidateWizardPrepareDraftRetry', state.observation.id, true),
+        '再生成を準備しました．「OpenAI APIで草案を作る」を押すと課金確認に進みます．', true);
     };
     $('saveDraft').onclick = () => operation(() => call('candidateWizardSaveDraft',
       state.observation.id, draftFields(), 'ダイアログで手動編集．API未使用．', ''),
-      '草案を保存した．B列本文を確認してください．');
+      '草案を保存した．B列本文を確認してください．', true);
     $('register').onclick = async () => {
       if (!await confirmation('表示されたB列本文とC列出典を，Notesに見出し順で登録しますか．公開サイトの更新にはsync-dataが必要です．')) return;
       operation(() => call('candidateWizardRegisterExperimental', state.observation.id,

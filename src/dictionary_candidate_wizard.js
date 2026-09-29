@@ -27,8 +27,9 @@ function candidateWizardDraftDetails(raw) {
     return { english: list(data.english_equivalents || data.english),
       italian: list(data.italian_equivalents || data.italian),
       musicExamples: list(data.music_examples || data.musicExamples),
-      comment: String(data.comment || '') };
-  } catch (_) { return { english: '', italian: '', musicExamples: '', comment: '' }; }
+      comment: String(data.comment || ''),
+      draftFailure: data._draftFailure ? candidateWizardDraftFailureMessage(data._draftFailure) : '' };
+  } catch (_) { return { english: '', italian: '', musicExamples: '', comment: '', draftFailure: '' }; }
 }
 
 function candidateWizardBootstrap() {
@@ -206,6 +207,77 @@ function candidateWizardDraftSchema() {
   return { type: 'object', properties, required: Object.keys(properties), additionalProperties: false };
 }
 
+function candidateWizardDraftFailureMessage(failure) {
+  const messages = {
+    transport: 'OpenAI APIとの通信結果を確認できませんでした．',
+    http: 'OpenAI APIがエラーを返しました．',
+    incomplete: 'OpenAI APIの応答が未完了でした．',
+    response: 'OpenAI APIの応答を草案として読み取れませんでした．',
+    save: '生成した草案を入力欄に保存できませんでした．応答は「未登録語候補」のN列に保存しています．'
+  };
+  let message = Object.prototype.hasOwnProperty.call(messages, failure.stage)
+    ? messages[failure.stage] : '前回の草案作成を完了できませんでした．';
+  if (Number.isInteger(failure.httpStatus) && failure.httpStatus >= 400 && failure.httpStatus <= 599) {
+    message += '（HTTP ' + failure.httpStatus + '）';
+    const guidance = { 400: 'モデルと送信設定を確認してください．',
+      401: 'APIキーを確認してください．', 403: 'APIの利用権限を確認してください．',
+      404: '指定モデルなどの設定を確認してください．',
+      429: 'APIの利用上限・残高・混雑状況を確認してください．' };
+    message += guidance[failure.httpStatus] || '';
+  }
+  if (failure.reason === 'max_output_tokens') message += '応答の長さが設定上限に達しました．';
+  if (failure.reason === 'content_filter') message += '応答がフィルターにより停止しました．';
+  return message;
+}
+
+// Record only known diagnostic fields; never persist raw HTTP errors or credentials.
+function candidateWizardRecordDraftFailure(sheet, candidateId, stage, httpStatus, reason, draft) {
+  const failure = { stage, httpStatus: Number(httpStatus) || 0,
+    reason: ['max_output_tokens', 'content_filter'].indexOf(reason) !== -1 ? reason : '',
+    at: new Date().toISOString() };
+  const message = candidateWizardDraftFailureMessage(failure);
+  const lock = LockService.getScriptLock();
+  if (!lock.tryLock(10000)) throw new Error(message + '失敗理由の保存にも失敗しました．状態を確認してください．');
+  try {
+    const current = candidateWizardFindLinked(sheet, UNREGISTERED_TERM_CANDIDATE_HEADERS.length, candidateId);
+    if (!current || current.row[12] !== '生成中') {
+      throw new Error(message + '候補の状態が変わったため，上書きしていません．状態を確認してください．');
+    }
+    let record = draft;
+    if (!record) {
+      try { record = JSON.parse(String(current.row[13] || '{}')); } catch (_) { record = null; }
+      if (!record || typeof record !== 'object' || Array.isArray(record)) {
+        record = { _previousDraft: String(current.row[13] || '') };
+      }
+    }
+    sheet.getRange(current.rowNumber, 13, 1, 2).setValues([[
+      '結果要確認', JSON.stringify({ ...record, _draftFailure: failure })
+    ]]);
+    sheet.getRange(current.rowNumber, 16).setValue(new Date());
+  } finally { lock.releaseLock(); }
+  return message + '利用履歴と保存済みの草案を確認してください．';
+}
+
+function candidateWizardPrepareDraftRetry(id, confirmed) {
+  if (confirmed !== true) throw new Error('利用履歴と保存済みの草案の確認が必要です．');
+  const found = candidateWizardFindObservation(id);
+  const sheet = requireSheetWithHeaders(found.spreadsheet,
+    UNREGISTERED_TERM_CANDIDATE_SHEET_NAME, UNREGISTERED_TERM_CANDIDATE_HEADERS);
+  const candidateId = dictionaryCandidateRecordId('candidate', normalizeObservedTerm(found.row[2] || found.row[1]));
+  const lock = LockService.getScriptLock();
+  if (!lock.tryLock(10000)) throw new Error('草案の更新ロックを取得できませんでした．');
+  try {
+    const current = candidateWizardFindLinked(sheet, UNREGISTERED_TERM_CANDIDATE_HEADERS.length, candidateId);
+    if (!current || current.row[7] !== 'NEW_TERM_CANDIDATE' || current.row[10] === 'Notes反映済み' ||
+        current.row[12] !== '結果要確認') {
+      throw new Error('結果要確認の未登録候補だけを再生成の準備に進められます．');
+    }
+    sheet.getRange(current.rowNumber, 13).setValue('再生成待ち');
+    sheet.getRange(current.rowNumber, 16).setValue(new Date());
+  } finally { lock.releaseLock(); }
+  return candidateWizardState(id);
+}
+
 function candidateWizardCreateDraft(id, confirmed) {
   if (confirmed !== true) throw new Error('OpenAI APIの課金確認が必要です．');
   const found = candidateWizardFindObservation(id);
@@ -255,17 +327,23 @@ function candidateWizardCreateDraft(id, confirmed) {
       payload: JSON.stringify(request), muteHttpExceptions: true
     });
   } catch (_) {
-    sheet.getRange(linked.rowNumber, 13).setValue('結果要確認');
-    throw new Error('OpenAI APIの呼出し結果を確認できません．利用状況を確認するまで再実行しないでください．');
+    throw new Error(candidateWizardRecordDraftFailure(sheet, candidateId, 'transport'));
   }
   if (response.getResponseCode() < 200 || response.getResponseCode() >= 300) {
-    sheet.getRange(linked.rowNumber, 13).setValue('結果要確認');
-    throw new Error('OpenAI APIがHTTP ' + response.getResponseCode() + 'を返しました．利用状況を確認してください．');
+    throw new Error(candidateWizardRecordDraftFailure(sheet, candidateId, 'http', response.getResponseCode()));
   }
   let draft;
+  let data;
   try {
-    const data = JSON.parse(response.getContentText());
-    if (data.status !== 'completed') throw new Error('完了していません．');
+    data = JSON.parse(response.getContentText());
+  } catch (_) {
+    throw new Error(candidateWizardRecordDraftFailure(sheet, candidateId, 'response'));
+  }
+  if (!data || data.status !== 'completed') {
+    throw new Error(candidateWizardRecordDraftFailure(sheet, candidateId, 'incomplete', 0,
+      data && data.incomplete_details && data.incomplete_details.reason));
+  }
+  try {
     const text = (data.output || []).flatMap(item => item.content || [])
       .filter(part => part.type === 'output_text').map(part => part.text).join('');
     draft = JSON.parse(text);
@@ -273,9 +351,14 @@ function candidateWizardCreateDraft(id, confirmed) {
     if (!Array.isArray(draft.general_meanings) || draft.general_meanings.length === 0) {
       throw new Error('一般的な意味がありません．');
     }
+    for (const field of ['general_meanings', 'inflections', 'english_equivalents',
+      'italian_equivalents', 'music_examples', 'similar_terms', 'uncertainties']) {
+      if (!Array.isArray(draft[field]) || draft[field].some(value => typeof value !== 'string')) {
+        throw new Error('草案の配列形式が不正です．');
+      }
+    }
   } catch (_) {
-    sheet.getRange(linked.rowNumber, 13).setValue('結果要確認');
-    throw new Error('API応答から草案を確認できません．利用状況を確認するまで再実行しないでください．');
+    throw new Error(candidateWizardRecordDraftFailure(sheet, candidateId, 'response'));
   }
   const fields = {
     headword: draft.headword, partOfSpeech: draft.part_of_speech,
@@ -291,8 +374,7 @@ function candidateWizardCreateDraft(id, confirmed) {
     fields.inflections = candidateWizardFormatInflections(draft.inflections);
     candidateWizardSaveDraft(id, fields, 'OpenAI API：' + model, JSON.stringify(draft));
   } catch (_) {
-    sheet.getRange(linked.rowNumber, 13, 1, 2).setValues([['結果要確認', JSON.stringify(draft)]]);
-    throw new Error('草案のセル反映に失敗しました．API応答はN列に保存しました．内容を確認してください．');
+    throw new Error(candidateWizardRecordDraftFailure(sheet, candidateId, 'save', 0, '', draft));
   }
   sheet.getRange(linked.rowNumber, 25, 1, 2).setValues([[new Date(), model]]);
   return candidateWizardState(id);
