@@ -27,7 +27,9 @@
       justify-content: center; padding: 24px; z-index: 10; }
     #confirmBox > div { background: white; border-radius: 8px; max-width: 480px; padding: 18px; }
     #message { min-height: 22px; white-space: pre-wrap; }
-    #draftMessage, #draftStatus { white-space: pre-wrap; overflow-wrap: anywhere; }
+    .feedback, #draftStatus { white-space: pre-wrap; overflow-wrap: anywhere; }
+    .feedback:not(:empty) { border-left: 3px solid #3167a8; padding: 8px; background: #f1f6ff; }
+    .feedback[data-kind="error"] { border-color: #b42318; color: #912018; background: #fff1f0; }
     [hidden] { display: none !important; }
   </style>
 </head>
@@ -45,6 +47,7 @@
       <p class="muted">Jevによる分類は助言．API呼出しの直前に課金確認を行う．</p>
       <button id="runJev">Jevで判定する</button>
     </div>
+    <p id="jevMessage" class="feedback" role="status" aria-live="polite"></p>
   </section>
 
   <section class="panel" id="reviewPanel" hidden>
@@ -62,12 +65,14 @@
     <div class="row"><button id="accept">採用</button><button class="secondary" id="hold">保留</button>
       <button class="secondary" id="reject">却下</button></div>
     <p class="muted">ここでは候補をまだ反映しない．</p>
+    <p id="reviewMessage" class="feedback" role="status" aria-live="polite"></p>
   </section>
 
   <section class="panel" id="transferPanel" hidden>
     <h2>3．候補を反映</h2>
     <p id="transferSummary"></p>
     <button id="promote">この1件だけを移送する</button>
+    <p id="transferMessage" class="feedback" role="status" aria-live="polite"></p>
   </section>
 
   <section class="panel" id="draftPanel" hidden>
@@ -75,13 +80,13 @@
     <p class="muted">OpenAI API草案は任意．手動入力・修正もできる．API呼出しの直前に別途課金確認を行う．</p>
     <button id="runDraft">OpenAI APIで草案を作る</button>
     <button id="refreshDraft" class="secondary">草案の状態を確認</button>
-    <p id="draftMessage" role="status" aria-live="polite"></p>
+    <p id="draftMessage" class="feedback" role="status" aria-live="polite"></p>
     <p id="draftStatus" class="muted"></p>
     <button id="prepareDraftRetry" class="secondary" hidden>利用状況を確認して再生成を準備</button>
     <div class="grid"><div><label for="draftHeadword">見出し</label><input id="draftHeadword" maxlength="120"></div>
       <div><label for="partOfSpeech">品詞（日本語）</label><input id="partOfSpeech" maxlength="100" placeholder="例：女性名詞"></div></div>
-    <div class="grid"><div><label for="english">英語の類語</label><input id="english" maxlength="500"></div>
-      <div><label for="italian">イタリア語の類語</label><input id="italian" maxlength="500"></div></div>
+    <div class="grid"><div><label for="english">英語の類語（任意）</label><input id="english" maxlength="500"></div>
+      <div><label for="italian">イタリア語の類語（任意）</label><input id="italian" maxlength="500"></div></div>
     <label for="inflections">原形・格変化形などの説明（日本語の文章）</label><input id="inflections" maxlength="500" placeholder="例：Seite は女性名詞の単数主格（die Seite）．単数属格は der Seite，複数主格は die Seiten．">
     <label for="translation">一般的な意味（本質的に異なる意味を1行ずつ）</label><textarea id="translation" maxlength="500"></textarea>
     <label for="musicExamples">音楽用語としての訳例（訳例を1行ずつ）</label><textarea id="musicExamples" maxlength="1500"></textarea>
@@ -89,18 +94,23 @@
       <div><label for="similar">類似語</label><input id="similar" maxlength="500"></div></div>
     <label for="draftNotes">草案作成時の未確認事項（B列には入れない）</label><textarea id="draftNotes" maxlength="1200"></textarea>
     <label for="comment">任意のコメント（必要ならご自身で記入）</label><textarea id="comment" maxlength="1200"></textarea>
+    <p class="muted">見出しがあれば途中でも保存できます．Notesへの登録には，一般的な意味と音楽用語としての訳例も必要です．類語は不明なら空欄にしてください．</p>
     <button id="saveDraft">草案を保存する</button>
+    <p id="saveMessage" class="feedback" role="status" aria-live="polite"></p>
   </section>
 
   <section class="panel warning" id="entryPanel" hidden>
     <h2>5．B列本文を目視確認し，Notesに登録</h2>
+    <p id="entryReadiness" role="status" aria-live="polite"></p>
     <p class="muted">類語と訳例，①②…の意味区分を確認する．語形・格変化はドイツ語の羅列ではなく，日本語の説明文にする．未確認事項は本文に入れない．コメントは任意．重複見出しは登録しない．</p>
     <label for="entryBody">NotesのB列</label><textarea id="entryBody" rows="9" maxlength="6000"></textarea>
     <label for="sourcePreview">C列の出典（RS・RW・GMを自動調査）</label><p id="sourcePreview" class="muted">登録時に実例を確認し，該当する出典を半角カンマ区切りで設定する．</p>
     <button id="register">この内容でNotesに登録する</button>
+    <p id="registerMessage" class="feedback" role="status" aria-live="polite"></p>
   </section>
   <section class="panel success" id="donePanel" hidden><h2 id="doneTitle">反映済み</h2>
     <p>公開サイトへのsync-dataは行っていない．</p>
+    <p id="doneMessage" class="feedback" role="status" aria-live="polite"></p>
     <button id="reopen" hidden>この候補の編集を再開する</button></section>
 
   <div id="confirmBox" role="dialog" aria-modal="true" aria-labelledby="confirmText"><div>
@@ -115,14 +125,27 @@
     const call = (name, ...args) => new Promise((resolve, reject) =>
       google.script.run.withSuccessHandler(resolve).withFailureHandler(reject)[name](...args));
     const message = text => { $('message').textContent = text || ''; };
+    const feedbackIds = ['jevMessage', 'reviewMessage', 'transferMessage', 'draftMessage',
+      'saveMessage', 'registerMessage', 'doneMessage'];
+    function feedback(id, text, kind = 'status') {
+      message(text);
+      const element = $(id);
+      element.textContent = text;
+      element.setAttribute('data-kind', kind);
+      element.scrollIntoView({ block: 'nearest' });
+    }
     const visible = (id, show) => { $(id).hidden = !show; };
-    function confirmation(text) {
+    function confirmation(text, feedbackId = 'message') {
       if (busy || confirming) return Promise.resolve(false);
       confirming = true;
       $('confirmText').textContent = text;
       $('confirmBox').style.display = 'flex';
       return new Promise(resolve => {
-        const close = answer => { $('confirmBox').style.display = 'none'; confirming = false; resolve(answer); };
+        const close = answer => {
+          $('confirmBox').style.display = 'none'; confirming = false;
+          if (!answer) feedback(feedbackId, '操作を取り消しました．確認した処理は実行していません．');
+          resolve(answer);
+        };
         $('confirmYes').onclick = () => close(true);
         $('confirmNo').onclick = () => close(false);
       });
@@ -148,14 +171,17 @@
       visible('prepareDraftRetry', c.draftStatus === '結果要確認');
       $('prepareDraftRetry').disabled = busy || draftStateUnknown;
     }
-    async function operation(action, success, draftOperation = false) {
+    async function operation(action, success, draftOperation = false, nextPanel = '', options = {}) {
       if (busy) return;
-      busy = true; message('処理中…');
+      const feedbackId = options.feedbackId || (draftOperation ? 'draftMessage' : 'message');
+      const label = options.label || 'データの読込み';
+      busy = true;
+      for (const id of feedbackIds) $(id).textContent = '';
+      feedback(feedbackId, label + 'の処理中です．完了までお待ちください．');
       const controls = Array.from(document.querySelectorAll('button, input, select, textarea'));
       const disabled = controls.map(control => control.disabled);
       controls.forEach(control => { control.disabled = true; });
       if (draftOperation) {
-        $('draftMessage').textContent = '処理中… 完了までお待ちください．';
         renderDraftStatus();
       }
       let rendered = false;
@@ -164,19 +190,20 @@
         else if (result.observation) { state = result; draftStateUnknown = false; }
       } if (draftOperation) draftStateUnknown = false;
         controls.forEach((control, i) => { control.disabled = disabled[i]; });
-        render(); rendered = true; message(success);
-        if (draftOperation) $('draftMessage').textContent = success;
+        render(); rendered = true;
+        const successText = typeof success === 'function' ? success() : success;
+        feedback(options.successId || feedbackId, successText);
+        if (nextPanel && !$(nextPanel).hidden) $(nextPanel).scrollIntoView({ block: 'start' });
       }
       catch (error) {
         const text = (error && error.message) || String(error);
-        message(text);
+        feedback(feedbackId, label + 'を完了できませんでした．\n' + text + '\n' +
+          (options.errorHelp || '入力内容は画面に残しています．最新の状態を確認してから，次の操作を行ってください．'), 'error');
         if (draftOperation) {
-          $('draftMessage').textContent = text;
-          $('draftMessage').scrollIntoView({ block: 'nearest' });
           // Refresh status only: retain unsaved form edits and never repeat the paid call.
           try { state = await call('candidateWizardState', state.observation.id); draftStateUnknown = false; }
           catch (_) { draftStateUnknown = true; }
-        } else $('message').scrollIntoView({ block: 'nearest' });
+        }
       }
       finally {
         busy = false;
@@ -196,8 +223,9 @@
           $('observation').append(option);
         }
         if (rows.some(row => row.id === prior)) $('observation').value = prior;
-        return $('observation').value ? call('candidateWizardState', $('observation').value) : null;
-      }, '');
+        if (!$('observation').value) { state = null; return null; }
+        return call('candidateWizardState', $('observation').value);
+      }, () => state ? '一覧を更新しました．処理する検索語と現在の状態を確認してください．' : '確認対象の検索語はありません．');
     }
     function draftFields() { return { headword: $('draftHeadword').value,
       partOfSpeech: $('partOfSpeech').value, inflections: $('inflections').value,
@@ -248,55 +276,90 @@
           english: c.english, italian: c.italian, musicExamples: c.musicExamples,
           comment: c.comment };
         for (const [id, value] of Object.entries(map)) $(id).value = value;
-        visible('entryPanel', Boolean(c.headword && c.translation && c.english && c.italian && c.musicExamples));
-        if (c.headword && c.translation && c.english && c.italian && c.musicExamples) {
+        visible('entryPanel', Boolean(c.headword && c.draftStatus === '作成済み'));
+        if (!$('entryPanel').hidden) {
+          const missing = c.entryMissingFields;
+          $('register').disabled = !Array.isArray(missing) || missing.length > 0;
+          $('entryReadiness').textContent = !Array.isArray(missing)
+            ? '登録に必要な項目を確認できません．「草案の状態を確認」を押してください．'
+            : missing.length ? '草案は保存済みです．Notesへの登録には「' + missing.join('」「') +
+              '」が必要です．上の草案欄を補って，もう一度保存してください．'
+              : '草案は保存済みです．以下の本文を確認してからNotesに登録してください．';
           $('entryBody').value = c.suggestedBody;
           $('sourcePreview').textContent = '登録時にRS・RW・GMの実例を調査して自動設定する．';
         }
       }
     }
     $('observation').onchange = () => operation(() => call('candidateWizardState',
-      $('observation').value), '');
+      $('observation').value), '選択した検索語を読み込みました．現在の状態を確認してください．');
     $('refresh').onclick = refreshList;
     $('runJev').onclick = async () => {
-      if (!await confirmation('Jev APIを1回呼び出す．課金が発生する可能性がある．続けますか．')) return;
-      operation(() => call('candidateWizardRunJev', state.observation.id, true), 'Jev判定を保存した．');
+      if (!await confirmation('Jev APIを1回呼び出す．課金が発生する可能性がある．続けますか．', 'jevMessage')) return;
+      return operation(() => call('candidateWizardRunJev', state.observation.id, true),
+        'Jev判定を保存しました．分類と対応する見出しを確認し，採用・保留・却下を選んでください．', false, 'reviewPanel',
+        { feedbackId: 'jevMessage', successId: 'reviewMessage', label: 'Jev判定',
+          errorHelp: '「更新」で判定の保存状態を確認してください．API利用状況と判定タブを確認するまで再実行しないでください．' });
     };
     for (const [button, decision] of [['accept', '採用'], ['hold', '保留'], ['reject', '却下']]) {
       $(button).onclick = async () => {
-        if (!await confirmation('分類「' + $('category').value + '」を「' + decision + '」として保存しますか．')) return;
-        operation(() => call('candidateWizardSaveReview', state.observation.id, decision,
-          $('category').value, $('headword').value, $('reviewMemo').value), '人による確認を保存した．');
+        if (!await confirmation('分類「' + $('category').value + '」を「' + decision + '」として保存しますか．', 'reviewMessage')) return;
+        return operation(() => call('candidateWizardSaveReview', state.observation.id, decision,
+          $('category').value, $('headword').value, $('reviewMemo').value),
+          '「' + decision + '」を保存しました．' + (decision === '採用'
+            ? '次の欄で移送先を確認し，「この1件だけを移送する」を押してください．'
+            : '候補の移送は行っていません．別の検索語を選ぶか，後で判断を変更できます．'),
+          false, decision === '採用' ? 'transferPanel' : '',
+          { feedbackId: 'reviewMessage', successId: decision === '採用' ? 'transferMessage' : 'reviewMessage', label: '採否の保存' });
       };
     }
     $('promote').onclick = async () => {
-      if (!await confirmation('この1件だけを反映しますか．関連語形の場合は語形対応を更新します．公開サイトの更新にはsync-dataが必要です．')) return;
-      operation(() => call('candidateWizardPromote', state.observation.id, true), '移送した．');
+      if (!await confirmation('この1件だけを反映しますか．関連語形の場合は語形対応を更新します．公開サイトの更新にはsync-dataが必要です．', 'transferMessage')) return;
+      const newTerm = state.review.category === 'NEW_TERM_CANDIDATE';
+      return operation(() => call('candidateWizardPromote', state.observation.id, true), newTerm
+        ? '未登録語候補へ移送しました．草案を手動入力するか，OpenAI APIで作成してください．'
+        : '語形対応へ反映しました．公開サイトの更新にはsync-dataが必要です．', false,
+        newTerm ? 'draftPanel' : 'donePanel', { feedbackId: 'transferMessage',
+          successId: newTerm ? 'draftMessage' : 'doneMessage', label: '候補の移送' });
     };
     $('reopen').onclick = async () => {
-      if (!await confirmation('Notesから見出しが削除されたことを確認した．Jev判定と旧草案を残して，再編集を始めますか．APIは自動実行しません．')) return;
-      operation(() => call('candidateWizardReopenExperimental', state.observation.id, true),
-        '編集を再開した．草案を確認してください．');
+      if (!await confirmation('Notesから見出しが削除されたことを確認した．Jev判定と旧草案を残して，再編集を始めますか．APIは自動実行しません．', 'doneMessage')) return;
+      return operation(() => call('candidateWizardReopenExperimental', state.observation.id, true),
+        '編集を再開しました．草案を確認・修正して保存してください．APIは呼び出していません．', false, 'draftPanel',
+        { feedbackId: 'doneMessage', successId: 'draftMessage', label: '編集の再開' });
     };
     $('runDraft').onclick = async () => {
       if (busy || $('runDraft').disabled) return;
-      if (!await confirmation('OpenAI APIで草案を1回生成する．課金が発生する可能性がある．既存草案は上書きされる．続けますか．')) return;
-      return operation(() => call('candidateWizardCreateDraft', state.observation.id, true), '草案を保存した．内容を確認・修正してください．', true);
+      if (!await confirmation('OpenAI APIで草案を1回生成する．課金が発生する可能性がある．既存草案は上書きされる．続けますか．', 'draftMessage')) return;
+      return operation(() => call('candidateWizardCreateDraft', state.observation.id, true),
+        '草案を作成して保存しました．内容を確認・修正し，「草案を保存する」を押してください．', true, '',
+        { label: '草案作成', errorHelp: '保存状態を読み直します．利用履歴と保存済み草案を確認してください．APIは自動で再実行しません．' });
     };
     $('refreshDraft').onclick = () => operation(() => call('candidateWizardState', state.observation.id),
-      '保存済みの草案と状態を読み直しました．APIは呼び出していません．', true);
+      '保存済みの草案と状態を読み直しました．APIは呼び出していません．', true, '',
+      { label: '草案の状態確認', errorHelp: '時間をおいて「草案の状態を確認」を押してください．APIは再実行しません．' });
     $('prepareDraftRetry').onclick = async () => {
-      if (!await confirmation('OpenAIの利用履歴と保存済みの草案を確認しましたか．再生成すると追加費用が発生する可能性があります．この操作では再生成の準備だけを行い，APIは呼び出しません．')) return;
+      if (!await confirmation('OpenAIの利用履歴と保存済みの草案を確認しましたか．再生成すると追加費用が発生する可能性があります．この操作では再生成の準備だけを行い，APIは呼び出しません．', 'draftMessage')) return;
       return operation(() => call('candidateWizardPrepareDraftRetry', state.observation.id, true),
-        '再生成を準備しました．「OpenAI APIで草案を作る」を押すと課金確認に進みます．', true);
+        '再生成を準備しました．「OpenAI APIで草案を作る」を押すと課金確認に進みます．', true, '', { label: '再生成の準備' });
     };
-    $('saveDraft').onclick = () => operation(() => call('candidateWizardSaveDraft',
-      state.observation.id, draftFields(), 'ダイアログで手動編集．API未使用．', ''),
-      '草案を保存した．B列本文を確認してください．', true);
+    $('saveDraft').onclick = () => {
+      if (busy) return;
+      if (!$('draftHeadword').value.trim()) {
+        feedback('saveMessage', '草案を保存できません．「見出し」を入力して，もう一度「草案を保存する」を押してください．', 'error');
+        return;
+      }
+      return operation(() => call('candidateWizardSaveDraft',
+        state.observation.id, draftFields(), 'ダイアログで手動編集．API未使用．', ''),
+        () => $('entryReadiness').textContent, true, 'entryPanel',
+        { feedbackId: 'saveMessage', label: '草案の保存',
+          errorHelp: '入力内容は画面に残しています．入力エラーの場合は修正して再保存してください．通信・保存の成否が不明な場合は，入力を控えてから「草案の状態を確認」で保存結果を確認してください．' });
+    };
     $('register').onclick = async () => {
-      if (!await confirmation('表示されたB列本文とC列出典を，Notesに見出し順で登録しますか．公開サイトの更新にはsync-dataが必要です．')) return;
-      operation(() => call('candidateWizardRegisterExperimental', state.observation.id,
-        $('entryBody').value, '', true), 'Notesに登録した．公開サイトには未反映です．');
+      if (!await confirmation('表示されたB列本文とC列出典を，Notesに見出し順で登録しますか．公開サイトの更新にはsync-dataが必要です．', 'registerMessage')) return;
+      return operation(() => call('candidateWizardRegisterExperimental', state.observation.id,
+        $('entryBody').value, '', true), 'Notesに登録しました．公開サイトへ反映するにはsync-dataを実行してください．', false, 'donePanel',
+        { feedbackId: 'registerMessage', successId: 'doneMessage', label: 'Notesへの登録',
+          errorHelp: '入力した本文は画面に残しています．入力エラーは修正してください．通信・保存の成否が不明な場合は，本文を控え，Notesと「更新」で登録状態を確認してから再操作してください．' });
     };
     refreshList();
   </script>

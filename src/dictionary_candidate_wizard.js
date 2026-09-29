@@ -58,7 +58,10 @@ function candidateWizardState(id) {
     category: String(candidate.row[21] || ''), similar: String(candidate.row[22] || ''),
     notes: String(candidate.row[23] || ''), review: String(candidate.row[26] || ''),
     ...candidateWizardDraftDetails(candidate.row[13]) } : null;
-  if (draftCandidate) draftCandidate.suggestedBody = candidateWizardSuggestedBody(draftCandidate);
+  if (draftCandidate) {
+    draftCandidate.suggestedBody = candidateWizardSuggestedBody(draftCandidate);
+    draftCandidate.entryMissingFields = candidateWizardEntryMissingFields(draftCandidate);
+  }
   const notes = spreadsheet.getSheetByName(EXPERIMENTAL_NOTES_SHEET_NAME);
   const existingHeading = draftCandidate && notes && readSheetRows(notes, 1).some(row =>
     normalizeObservedTerm(row[0]) === normalizeObservedTerm(draftCandidate.headword));
@@ -392,8 +395,10 @@ function candidateWizardSaveDraft(id, fields, provenance, raw) {
   const names = ['headword', 'partOfSpeech', 'inflections', 'translation', 'description',
     'category', 'similar', 'notes'];
   const maxima = [120, 100, 500, 500, 2000, 120, 500, 1200];
+  const labels = ['見出し', '品詞', '原形・格変化形などの説明', '一般的な意味', '説明',
+    '分類', '類似語', '草案作成時の未確認事項'];
   const values = names.map((name, i) => candidateWizardSafeText(fields && fields[name],
-    name, maxima[i], name === 'headword' || name === 'translation'));
+    labels[i], maxima[i], name === 'headword'));
   candidateWizardValidateMorphology(values[1], values[2]);
   const details = {
     english: candidateWizardSafeText(fields && fields.english, '英語の類語', 500, false),
@@ -449,13 +454,19 @@ function candidateWizardValidateBodyMorphology(body) {
   const lines = String(body || '').split(/\r?\n/);
   const meaningIndex = lines.findIndex(line => line.trim() === '【一般的な意味】');
   if (meaningIndex < 0) throw new Error('B列本文に【一般的な意味】がありません．');
-  for (const line of lines.slice(1, meaningIndex)) {
+  const start = lines[0].trim().startsWith('(≒ ') ? 1 : 0;
+  for (const line of lines.slice(start, meaningIndex)) {
     candidateWizardValidateMorphology('', line.trim());
   }
 }
 
 function candidateWizardSourceMarkers(spreadsheet, headword) {
   return dictionarySourceMarkers(spreadsheet, headword);
+}
+
+function candidateWizardEntryMissingFields(candidate) {
+  return [['headword', '見出し'], ['translation', '一般的な意味'], ['musicExamples', '音楽用語としての訳例']]
+    .filter(([key]) => !String(candidate[key] || '').trim()).map(([, label]) => label);
 }
 
 function candidateWizardSuggestedBody(candidate) {
@@ -470,10 +481,11 @@ function candidateWizardSuggestedBody(candidate) {
   const inflections = String(candidate.inflections || '').trim().replace(/[．。]+$/, '');
   const morphology = (inflections && partOfSpeech && inflections.includes(partOfSpeech)
     ? inflections : [partOfSpeech, inflections].filter(Boolean).join('．'));
-  return '(≒ ' + candidate.english + ' / ' + candidate.italian + ')' +
-    (morphology ? '\n' + morphology + '．' : '') +
-    '\n【一般的な意味】\n' + numbered +
-    '\n【音楽用語としての訳例】\n' + music +
+  const equivalents = [candidate.english, candidate.italian].map(value => String(value || '').trim()).filter(Boolean);
+  return [equivalents.length ? '(≒ ' + equivalents.join(' / ') + ')' : '',
+    morphology ? morphology + '．' : '',
+    '【一般的な意味】\n' + numbered,
+    '【音楽用語としての訳例】\n' + music].filter(Boolean).join('\n') +
     (candidate.comment ? '\n\n' + candidate.comment : '');
 }
 
@@ -485,24 +497,24 @@ function candidateWizardRegisterExperimental(id, body, source, confirmed) {
     UNREGISTERED_TERM_CANDIDATE_SHEET_NAME, UNREGISTERED_TERM_CANDIDATE_HEADERS);
   const candidateId = dictionaryCandidateRecordId('candidate', normalizeObservedTerm(found.row[2] || found.row[1]));
   const linked = candidateWizardFindLinked(sheet, UNREGISTERED_TERM_CANDIDATE_HEADERS.length, candidateId);
-  if (!linked || !linked.row[16] || !linked.row[19] || linked.row[10] === 'Notes反映済み') {
+  if (!linked || linked.row[10] === 'Notes反映済み') {
     throw new Error('登録できる確認済み草案がありません．');
   }
+  const details = candidateWizardDraftDetails(linked.row[13]);
+  const missing = candidateWizardEntryMissingFields({ headword: linked.row[16], translation: linked.row[19], ...details });
+  if (missing.length) throw new Error('Notesへの登録には「' + missing.join('」「') + '」が必要です．草案を補って保存してください．');
   const notes = found.spreadsheet.getSheetByName(EXPERIMENTAL_NOTES_SHEET_NAME);
   if (!notes) throw new Error('Notesがありません．');
   const headword = candidateWizardSafeText(linked.row[16], '見出し', 120, true);
   const sourceMarkers = candidateWizardSourceMarkers(found.spreadsheet, headword);
   if (!sourceMarkers.length) throw new Error('RS・RW・GMの実例から出典を確認できませんでした．登録を中止しました．');
   const safeSource = sourceMarkers.join(', ');
-  const details = candidateWizardDraftDetails(linked.row[13]);
-  if (!details.english || !details.italian || !details.musicExamples) {
-    throw new Error('英語・イタリア語の類語と音楽用語としての訳例を確認してください．');
-  }
   for (const heading of ['【一般的な意味】', '【音楽用語としての訳例】']) {
     if (!safeBody.includes(heading)) throw new Error('B列本文に' + heading + 'がありません．');
   }
-  if (!safeBody.startsWith('(≒ ') || !/[①-⑩]/.test(safeBody) || !/「[^」]+」/.test(safeBody)) {
-    throw new Error('B列本文の類語・番号付きの意味・音楽用語としての訳例を確認してください．');
+  if (((details.english || details.italian) && !safeBody.startsWith('(≒ ')) ||
+      !/[①-⑩]/.test(safeBody) || !/「[^」]+」/.test(safeBody)) {
+    throw new Error('B列本文の類語（入力がある場合）・番号付きの意味・音楽用語としての訳例を確認してください．');
   }
   candidateWizardValidateBodyMorphology(safeBody);
   const lock = LockService.getScriptLock();
