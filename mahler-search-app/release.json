@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "releaseId": "eb5dd557d8355144ad41c1d92f7393aae8759507ab1cfa2103881606cf7a4a5f",
+  "releaseId": "3c112edaa0dd2b4fe4cb8e400482aae94377fa8f149c58c136f801eb5f350f98",
   "hashes": {
     "index.html": "cc30cb1d29d27428cb12a3713f35147ff6bc47c1f56e1049f1274bc20f2337e2",
     "license.html": "1265ab0bacfc4e5711771090c6b626bfcf79fe1f6760bf5d0e07e70069bd0642",
@@ -16,7 +16,7 @@
     "mahler-search-app/data/dictionary-examples/gm-03.json": "b13cbad92011ce267b799baea54d3c03ab2403684f37d55dd20fd28c4a8f344b",
     "mahler-search-app/data/dictionary-examples/gm-04.json": "f71b816cc80307f6730f1094aa017783b99711da4d69207b2e08f398adda25fd",
     "mahler-search-app/data/dictionary-examples/gm-05.json": "feddd1949bf720e16e39fcf09b3427690af684f62ac2c4150cb57e74c89524bb",
-    "mahler-search-app/data/dictionary-examples/gm-06.json": "2cb6cc6ef610f1c118a82f8371b4381021160e77a6f85c5c6aa529f54c57cbcd",
+    "mahler-search-app/data/dictionary-examples/gm-06.json": "0d0e6b4168411c0e7b9fb0db6ef1d28246cbc23e644f74fec9b92db3e428de90",
     "mahler-search-app/data/dictionary-examples/gm-07.json": "ab2c556cb64b9b14b7b16623a627746b2d76a856c95051d2a1bbe6ac58210e89",
     "mahler-search-app/data/dictionary-examples/gm-08.json": "2ca82c946b31fcf31469c512101a421e3824526356fa8f56dca4e8900dcd0cc7",
     "mahler-search-app/data/dictionary-examples/gm-09.json": "c1397b86f5ba0b2f2cd364380e43fb84fd89d8963e6900de93232e9673d8402f",
@@ -58,7 +58,7 @@
     "mahler-search-app/data/dictionary-examples/rw-13.json": "d11cc92c58912320bb0dd5816beccc544a19cb9bf9bbb829bb68d0c059deca6a",
     "mahler-search-app/data/dictionary-examples/rw-14.json": "6221e6fd60f3d7675042124f1f671ce19037c155ca8563f34ead6087de1de9de",
     "mahler-search-app/data/dictionary-examples/rw-15.json": "cfe7a088003634a29517f2718e19fd9c6f0dd6c727ca662d42096c3b31288652",
-    "mahler-search-app/data/mahler.json": "267252c5096a16bc8ccb01ced801620781c72eb5a25c9524a1841edaf684441e",
+    "mahler-search-app/data/mahler.json": "42738a91671458c55608409a2b295ebdc7d75733880b627a197007354d14f4fe",
     "mahler-search-app/data/richard_strauss.json": "81a6f982dba7f40a349aa423bfa4a846d47066ae39492ecbcc82aa37a5d13e39",
     "mahler-search-app/data/richard_wagner.json": "0375ea3d287bdd4170c88e9bdaf697d80bb24dc0938f6d5e66813b430f423c01",
     "mahler-search-app/data/rs_scenes.json": "a980504cc562139eefd611ba0ec3def24861fb1eac6c31c9dcc56c5a9b5138ff",
