@@ -76,7 +76,7 @@
   {"__exampleOrder":1074,"de":"Ich bin der Welt abhanden gekommen","de_normalized":"ich bin der welt abhanden gekommen","ja":"この世間からぼくは消えたのだ（わたしはこの世に忘れられ）","data":"M-f-f3-0-all&"},
   {"__exampleOrder":1094,"de":"Im Anfang schwach, dann immer deutlicher und deutlicher vernehmbar [Anmerkung in der Quelle]","de_normalized":"im anfang schwach, dann immer deutlicher und deutlicher vernehmbar [anmerkung in der quelle]","ja":"最初は弱く，そしてだんだんはっきりと聞こえてくる（自筆譜における注意）","data":"M-b1-t3-306-all&"},
   {"__exampleOrder":1104,"de":"Im Tempo etwas beruhigend","de_normalized":"im tempo etwas beruhigend","ja":"いくらか落ち着いたテンポで","data":"M-6-4-364-all&"},
-  {"__exampleOrder":1109,"de":"imme ohne Dämpfer","de_normalized":"imme ohne daempfer","ja":"変わらずミュートなしで","data":"M-6-3-31-v1&"},
+  {"__exampleOrder":1109,"de":"immer ohne Dämpfer","de_normalized":"immer ohne daempfer","ja":"変わらずミュートなしで","data":"M-6-3-31-v1&"},
   {"__exampleOrder":1111,"de":"immer 4 fach geth.","de_normalized":"immer 4 fach geth.","ja":"変わらず4グループにdivisiのままで","data":"M-2-1-129-v1&"},
   {"__exampleOrder":1112,"de":"Immer Adagio (nicht eilen!)","de_normalized":"immer adagio (nicht eilen!)","ja":"変わらずAdagioのままで（急がないで！）","data":"M-102-5-353-all&"},
   {"__exampleOrder":1122,"de":"immer Dämpfer","de_normalized":"immer daempfer","ja":"変わらずミュートをつけたままで","data":"M-3-1-484-vc&M-6-1-407-tr&M-6-3-56-v1&M-6-4-101-tr&M-8-t2-442-vc&M-8-t2-496-v1,v2&M-9-3-473-hr&"},

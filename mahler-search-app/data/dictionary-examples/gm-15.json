@@ -17,7 +17,6 @@
   {"__exampleOrder":313,"de":"am Griffbr.","de_normalized":"am griffbr.","ja":"指板の近くで","data":"M-2-1-189-va,vc&"},
   {"__exampleOrder":328,"de":"Anmerkung f. d. Dirigenten : Den letztenTakt streng ausdirigieren und nicht den geringsten Halt zulassen.","de_normalized":"anmerkung f. d. dirigenten : den letztentakt streng ausdirigieren und nicht den geringsten halt zulassen.","ja":"指揮者への注意：最後の小節は厳格なテンポで指揮し，決して止まらないこと","data":"M-3-2-279-dir&"},
   {"__exampleOrder":336,"de":"Anmerkung für den Dirigenten und Sänger : 𝄐 bedeutet hier nur ein kurzes Anhalten auf dem Taktstrich und nicht etwa eine Fermate. [Anmerkung Mahlers]","de_normalized":"anmerkung fuer den dirigenten und saenger : 𝄐 bedeutet hier nur ein kurzes anhalten auf dem taktstrich und nicht etwa eine fermate. [anmerkung mahlers]","ja":"指揮者と独唱者への注意：フェルマータ記号は小節間の短い休止を意味するだけで，まったくフェルマータではない（マーラーによる注意）","data":"M-d-d04-151-sti,dir&"},
-  {"__exampleOrder":349,"de":"Anmerkung für den Dirigenten : Dieses tiefste a muss sehr deutich wenngleich pp gespielt werden","de_normalized":"anmerkung fuer den dirigenten : dieses tiefste a muss sehr deutich wenngleich pp gespielt werden","ja":"指揮者への注意：このもっとも低いAは，ppで演奏されるのだが，たいへんはっきりと演奏されなければならない","data":"M-1-1-1-dir&"},
   {"__exampleOrder":370,"de":"antwortend","de_normalized":"antwortend","ja":"応える","data":"M-7-2-2-hr&M-7-2-6-hr&"},
   {"__exampleOrder":371,"de":"anwachsend","de_normalized":"anwachsend","ja":"高まって","data":"M-8-t2-625-ten&"},
   {"__exampleOrder":372,"de":"Anwachsend","de_normalized":"anwachsend","ja":"高まって","data":"M-9-1-350-all&"},
