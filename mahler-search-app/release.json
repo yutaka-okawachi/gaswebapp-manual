@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "releaseId": "57130738b5b698b7f5033f3ce8a9c7c968427a96910241a73acbfc935e02a9ff",
+  "releaseId": "e7abef08797788f586002c6720b79bfafb8d09908488f750d1d9f86a9751d156",
   "hashes": {
-    "index.html": "cc30cb1d29d27428cb12a3713f35147ff6bc47c1f56e1049f1274bc20f2337e2",
+    "index.html": "947cf59daa38b367f5576accd52dc1ce49091140f174208e941943c940afc4da",
     "license.html": "1265ab0bacfc4e5711771090c6b626bfcf79fe1f6760bf5d0e07e70069bd0642",
     "mahler-search-app/css/common.css": "c86bc2885119bc37e447643196c34bfbacfb74ab6d2dfefe6234b9565516ed6c",
     "mahler-search-app/css/common_terms.css": "30f34aafa29c8c7f63e805717d26e03e438c61e9d71598094ec6032ad0eee666",
@@ -83,6 +83,6 @@
     "mahler-search-app/terms_search.html": "4bab60f46a2ec9921b17ef4f3755191fe3e21db8b8e0296c55022b7724d3999f",
     "privacy.html": "55f7117e4271a4cf5043929fcc35ca28fcfbb50a08308b053b9fac7516fb596c",
     "robots.txt": "f8e564433b1070c88c346790607f4e5be1e23bb9e605359e0347f3c87855183f",
-    "sitemap.xml": "9bf1581ad621a9a46ea7e55a267264711b7b190f19e59916c06f0e3dbba33e0d"
+    "sitemap.xml": "9451d2b12024459c4a940d1cd86b924bf78b21797b8d36eea56fcc3b94ae712a"
   }
 }
