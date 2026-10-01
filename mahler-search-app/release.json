@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "releaseId": "e7abef08797788f586002c6720b79bfafb8d09908488f750d1d9f86a9751d156",
+  "releaseId": "1699fa428b2cccb5e2fadafed414b134d61ca513b93c36140a76952a3ffe18eb",
   "hashes": {
-    "index.html": "947cf59daa38b367f5576accd52dc1ce49091140f174208e941943c940afc4da",
+    "index.html": "6fcd6b356241b2ebc9e9ffefe75ed5d33ef2641bea8c7e3c1e3af8e39fd3724a",
     "license.html": "1265ab0bacfc4e5711771090c6b626bfcf79fe1f6760bf5d0e07e70069bd0642",
     "mahler-search-app/css/common.css": "c86bc2885119bc37e447643196c34bfbacfb74ab6d2dfefe6234b9565516ed6c",
     "mahler-search-app/css/common_terms.css": "30f34aafa29c8c7f63e805717d26e03e438c61e9d71598094ec6032ad0eee666",
