@@ -1,4 +1,5 @@
 [
+  {"__exampleOrder":6,"de":"1. 2. nehmen grosse Flöte","de_normalized":"1. 2. nehmen grosse floete","ja":"1st，2nd はフルートに持ち替える","data":"M-2-5-732-pic&"},
   {"__exampleOrder":61,"de":"2 fach geth.","de_normalized":"2 fach geth.","ja":"2グループにdivisi","data":"M-2-1-211-v1&M-3-1-60-v2&M-3-1-83-v1&M-3-1-87-v1&M-3-1-674-va&M-3-1-691-vc&M-3-1-696-vc&M-3-1-704-kb&M-3-2-60-v1&M-3-2-61-v1&M-3-3-328-v2&M-3-3-553-v1&M-3-3-558-va&M-3-4-104-va&"},
   {"__exampleOrder":66,"de":"2 Pauker","de_normalized":"2 pauker","ja":"2台のティンパニ","data":"M-6-1-57-pau&M-6-4-65-pau&M-6-4-530-pau&M-6-4-607-pau&M-6-4-812-pau&"},
   {"__exampleOrder":69,"de":"2 taktig","de_normalized":"2 taktig","ja":"2小節単位で","data":"M-1-4-663-all&"},
@@ -60,7 +61,6 @@
   {"__exampleOrder":999,"de":"halbes Werk.","de_normalized":"halbes werk.","ja":"ハーフストップで（一部のストップを止める）","data":"M-2-5-736-org&"},
   {"__exampleOrder":1005,"de":"hart und trocken","de_normalized":"hart und trocken","ja":"固く，乾いた音で","data":"M-7-1-429-pau&"},
   {"__exampleOrder":1013,"de":"heftiger","de_normalized":"heftiger","ja":"激しく","data":"M-e-e1-40-ob&"},
-  {"__exampleOrder":1015,"de":"Herausgebevorschlag","de_normalized":"herausgebevorschlag","ja":"編集者による提案","data":"M-b1-t3-326-tr&"},
   {"__exampleOrder":1028,"de":"Hier fehlt eine Tempoangabe. In der Revisionsfassung lautet sie : Viel langsamer","de_normalized":"hier fehlt eine tempoangabe. in der revisionsfassung lautet sie : viel langsamer","ja":"ここはテンポについての指示が欠落している，改訂版では'Viel langsamer'と書かれている","data":"M-b1-t3-142-all&"},
   {"__exampleOrder":1051,"de":"hohe","de_normalized":"hohe","ja":"高声部","data":"M-3-5-0-fchor&"},
   {"__exampleOrder":1091,"de":"Im Anfang (die ersten vier Takte) noch etwas gehalten","de_normalized":"im anfang (die ersten vier takte) noch etwas gehalten","ja":"最初は（はじめの4小節は）まだいくらか音の長さを保って","data":"M-8-t2-580-all&"},

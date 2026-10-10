@@ -1,7 +1,7 @@
 [
   {"__exampleOrder":4,"de":"1. 2. Flöte (2. auch Kleine Flöte)","de_normalized":"1. 2. floete (2. auch kleine floete)","ja":"1st，2ndフルート（2ndはピッコロと持ち替え）","data":"M-b1-t1-0-fl&"},
   {"__exampleOrder":27,"de":"1. Pk. B nach C","de_normalized":"1. pk. b nach c","ja":"1st は B を C に","data":"M-3-1-9-pau&"},
-  {"__exampleOrder":34,"de":"1. Spieler mit Dämpfer","de_normalized":"1. spieler mit daempfer","ja":"divisiの第1グループはミュートをつけて","data":"M-7-1-324-v1&"},
+  {"__exampleOrder":34,"de":"1. Spieler mit Dämpfer","de_normalized":"1. spieler mit daempfer","ja":"divisi の第1グループはミュートをつけて","data":"M-7-1-324-vc&"},
   {"__exampleOrder":59,"de":"2 engl. Hörner","de_normalized":"2 engl. hoerner","ja":"2本のイングリッシュホルンで","data":"M-6-2-359-eh&"},
   {"__exampleOrder":75,"de":"2. Es Clar. nimmt B Clar. und ist als 4. Clar. notiert","de_normalized":"2. es clar. nimmt b clar. und ist als 4. clar. notiert","ja":"2nd EsクラリネットはB管クラリネットに持ち替え，4thクラリネットと表記される","data":"M-2-3-272-escl&"},
   {"__exampleOrder":116,"de":"3 Pulte","de_normalized":"3 pulte","ja":"3プルトで","data":"M-9-1-382-vc&M-9-1-387-vc&"},

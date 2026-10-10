@@ -74,7 +74,7 @@
   {"__exampleOrder":1053,"de":"Hohe und tiefe Stimmen vereinigt","de_normalized":"hohe und tiefe stimmen vereinigt","ja":"高声部と低声部をまとめて","data":"M-8-t2-1187-kchor&"},
   {"__exampleOrder":1071,"de":"I. Spieler nimmt die As-Pauke des II. Spielers zur Benutzung dieser Stelle","de_normalized":"i. spieler nimmt die as-pauke des ii. spielers zur benutzung dieser stelle","ja":"この場所を演奏するために，1stは2ndのAsを利用する","data":"M-2-5-93-pau&"},
   {"__exampleOrder":1074,"de":"Ich bin der Welt abhanden gekommen","de_normalized":"ich bin der welt abhanden gekommen","ja":"この世間からぼくは消えたのだ（わたしはこの世に忘れられ）","data":"M-f-f3-0-all&"},
-  {"__exampleOrder":1094,"de":"Im Anfang schwach, dann immer deutlicher und deutlicher vernehmbar [Anmerkung in der Quelle]","de_normalized":"im anfang schwach, dann immer deutlicher und deutlicher vernehmbar [anmerkung in der quelle]","ja":"最初は弱く，そしてだんだんはっきりと聞こえてくる（自筆譜における注意）","data":"M-b1-t3-306-all&"},
+  {"__exampleOrder":1094,"de":"Im Anfang schwach, dann immer deutlicher und deutlicher vernehmbar [Anmerkung in der Quelle]","de_normalized":"im anfang schwach, dann immer deutlicher und deutlicher vernehmbar [anmerkung in der quelle]","ja":"最初は弱く，そしてだんだんはっきりと聞こえてくる．[資料における注記]","data":"M-b1-t3-306-all&"},
   {"__exampleOrder":1104,"de":"Im Tempo etwas beruhigend","de_normalized":"im tempo etwas beruhigend","ja":"いくらか落ち着いたテンポで","data":"M-6-4-364-all&"},
   {"__exampleOrder":1109,"de":"immer ohne Dämpfer","de_normalized":"immer ohne daempfer","ja":"変わらずミュートなしで","data":"M-6-3-31-v1&"},
   {"__exampleOrder":1111,"de":"immer 4 fach geth.","de_normalized":"immer 4 fach geth.","ja":"変わらず4グループにdivisiのままで","data":"M-2-1-129-v1&"},

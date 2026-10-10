@@ -1,6 +1,6 @@
 [
   {"__exampleOrder":19,"de":"1. natürlich","de_normalized":"1. natuerlich","ja":"1stハープは（ハーモニクス等ではなく）普通の（奏法で）","data":"M-3-2-212-hp&"},
-  {"__exampleOrder":33,"de":"1. Spieler legato, 2. Spieler non legato.","de_normalized":"1. spieler legato, 2. spieler non legato.","ja":"divisiの第1グループはレガートで（ひと弓で），第2グループはノン・レガートで（弓をかえして）","data":"M-6-1-250-v1,v2&"},
+  {"__exampleOrder":33,"de":"1. Spieler legato, 2. Spieler non legato.","de_normalized":"1. spieler legato, 2. spieler non legato.","ja":"divisi の第1グループはレガートで（ひと弓で），第2グループはノン・レガートで（弓をかえして）","data":"M-6-1-250-v1,v2&"},
   {"__exampleOrder":68,"de":"2 Pulte","de_normalized":"2 pulte","ja":"2プルトで","data":"M-2-1-433-v1&M-9-1-382-kb&M-9-1-387-kb&"},
   {"__exampleOrder":100,"de":"2. Trmp. nimmt B-Trmp.","de_normalized":"2. trmp. nimmt b-trmp.","ja":"2ndトランペットはB管トランペットに持ち替える","data":"M-3-1-783-tr&"},
   {"__exampleOrder":105,"de":"2/2 taktieren","de_normalized":"2/2 taktieren","ja":"2つ振り","data":"M-3-6-182-all&"},
