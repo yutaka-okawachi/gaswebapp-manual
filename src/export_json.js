@@ -1,5 +1,20 @@
 // SPREADSHEET_ID is defined in mahler.js
 
+// sync-dataが読む列の見出し名。列はこの名前で探すため、タブ内で列を並べ替えても結果は変わらない。
+// 配列の順序は出力JSONの項目順・位置を表す（シート上の列順とは無関係）。
+// 略記一覧は見出し行がない（1行目が空行）ため、従来どおりA:C列の位置で読む。
+const EXPORT_SHEET_HEADERS = Object.freeze({
+    GM: ['de', 'de_normalized', 'ja', 'data'],
+    RS: ['Oper', 'Aufzug', 'Szene', 'page', 'whom', 'de', 'de_normalized', 'ja'],
+    RW: ['Oper', 'Aufzug', 'Szene', 'page', 'whom', 'de', 'de_normalized', 'ja'],
+    Notes: ['de', 'ja', 'source'],
+    '語形対応': ['見出し', '関連語形', '語形区分', '用語検索', '実例検索', '補足'],
+    'RS幕構成': ['Oper', 'Aufzug', 'Szene', '日本語'],
+    'RW幕構成': ['Oper', 'Aufzug', 'Szene', '日本語'],
+    '楽譜情報': ['Oper', 'Publisher']
+});
+const EXPORT_POSITIONAL_SHEETS = Object.freeze({ '略記一覧': 3 });
+
 function exportAllDataToJson(options) {
     const settings = options || {};
     const lock = LockService.getScriptLock();
@@ -30,107 +45,59 @@ function buildExportSnapshot_(exportOptions) {
     });
     
     const ss = SpreadsheetApp.openById(SPREADSHEET_ID);
-    validateExportSheets_(ss);
+    // 各タブは1回だけ読み、見出し名から列位置を解決した結果を以降の処理で共有する
+    const tables = validateExportSheets_(ss);
 
     // 0. Score Info (楽譜情報) - Load first for Publisher info
-    const scoreSheet = ss.getSheetByName('楽譜情報');
     const scoreMap = {}; // Map for Publisher info (Opera -> Publisher)
     // sceneTitleMap will be populated from Scene Structure sheets
-
-    if (scoreSheet) {
-        const data = scoreSheet.getDataRange().getValues();
-        // Assume Row 1 is header, Data starts from Row 2
-        // Column A: Opera Name
-        // Column E: Publisher
-        data.slice(1).forEach(row => {
-            const opera = String(row[0]).toLowerCase().trim();
-            if (opera) {
-                // Publisher Info (Column E) - Last one wins if multiple
-                scoreMap[opera] = row[4];
-            }
-        });
-    }
+    pickExportRows_(tables['楽譜情報']).forEach(row => {
+        // [Oper, Publisher]
+        const opera = String(row[0]).toLowerCase().trim();
+        if (opera) {
+            // Publisher Info - Last one wins if multiple
+            scoreMap[opera] = row[1];
+        }
+    });
 
     // 0.5 Scene Title Map (from RS幕構成 / RW幕構成)
     const sceneTitleMap = {}; // Map for Scene Titles (Opera_Act_Scene -> Title)
     
     const populateSceneMap = (sheetName) => {
-        const sheet = ss.getSheetByName(sheetName);
-        if (sheet) {
-            const data = sheet.getDataRange().getValues();
-            // Assume Row 1 is header
-            data.slice(1).forEach(row => {
-                const opera = String(row[0]).toLowerCase().trim();
-                const aufzug = row[1];
-                const szene = row[2];
-                const title = row[3]; // Column D: Japanese Title
+        // [Oper, Aufzug, Szene, 日本語]
+        pickExportRows_(tables[sheetName]).forEach(row => {
+            const opera = String(row[0]).toLowerCase().trim();
+            const aufzug = row[1];
+            const szene = row[2];
+            const title = row[3]; // Japanese Title
 
-                if (opera && title) {
-                    const key = `${opera}_${aufzug}_${szene}`.toLowerCase();
-                    sceneTitleMap[key] = title;
-                }
-            });
-        }
+            if (opera && title) {
+                const key = `${opera}_${aufzug}_${szene}`.toLowerCase();
+                sceneTitleMap[key] = title;
+            }
+        });
     };
 
     populateSceneMap('RS幕構成');
     populateSceneMap('RW幕構成');
 
     // 1. Mahler Data (GM)
-    const gmSheet = ss.getSheetByName('GM');
-    const gmData = gmSheet.getDataRange().getValues();
-    // Remove header
-    const gmRows = gmData.slice(1);
     // Convert to object array for better readability/safety
-    const mahlerJson = gmRows.map(row => ({
+    const mahlerJson = pickExportRows_(tables.GM).map(row => ({
         de: row[0],
         de_normalized: row[1],
         ja: row[2],
         data: row[3]
     })).filter(item => item.de || item.data); // Filter out empty rows
 
-    // 2. Richard Strauss Data (RS)
-    const rsSheet = ss.getSheetByName('RS');
-    let rsJson = [];
-    if (rsSheet) {
-        const rsData = rsSheet.getDataRange().getValues();
-        const rsHeader = rsData[0].slice(0, 8); // Limit to columns A-H
-        const rsRows = rsData.slice(1);
-
-        // Simple mapping: map header names to values
-        rsJson = rsRows.map(row => {
+    // 2. / 3. Richard Strauss (RS) / Richard Wagner (RW)
+    // 項目順は EXPORT_SHEET_HEADERS の順に固定し、シート上の列順に左右されないようにする
+    const buildOperaRows = (sheetName) => {
+        const names = EXPORT_SHEET_HEADERS[sheetName];
+        return pickExportRows_(tables[sheetName]).map(values => {
             let obj = {};
-            rsHeader.forEach((h, i) => {
-                obj[h.toString().trim()] = row[i];
-            });
-            
-            const operKey = String(obj['Oper'] || '').toLowerCase().trim();
-            
-            // Add Score Info (Publisher)
-            obj['楽譜情報'] = scoreMap[operKey] || '';
-
-            // Add Scene Title
-            const aufzug = obj['Aufzug'];
-            const szene = obj['Szene'];
-            const sceneKey = `${operKey}_${aufzug}_${szene}`.toLowerCase();
-            obj['場面タイトル'] = sceneTitleMap[sceneKey] || '';
-            
-            return obj;
-        }).filter(item => Object.values(item).some(val => val !== '')); // Filter out empty rows
-    }
-
-    // 3. Richard Wagner Data (RW)
-    const rwSheet = ss.getSheetByName('RW');
-    let rwJson = [];
-    if (rwSheet) {
-        const rwData = rwSheet.getDataRange().getValues();
-        const rwHeader = rwData[0].slice(0, 8); // Limit to columns A-H
-        const rwRows = rwData.slice(1);
-
-        rwJson = rwRows.map(row => {
-            let obj = {};
-            rwHeader.forEach((h, i) => {
-                obj[h.toString().trim()] = row[i];
+            names.forEach((h, i) => {
+                obj[h] = values[i];
             });
 
             const operKey = String(obj['Oper'] || '').toLowerCase().trim();
@@ -146,7 +113,9 @@ function buildExportSnapshot_(exportOptions) {
 
             return obj;
         }).filter(item => Object.values(item).some(val => val !== '')); // Filter out empty rows
-    }
+    };
+    const rsJson = buildOperaRows('RS');
+    const rwJson = buildOperaRows('RW');
 
     // 5. 指示対象 (whom) の抽出: RS / RW の whom 列をオペラ毎に集計して出力
     const whomMap = {};
@@ -179,55 +148,41 @@ function buildExportSnapshot_(exportOptions) {
     });
 
     // 4. Scene Maps (RS幕構成, RW幕構成) - Export raw data as well
-    const rsSceneSheet = ss.getSheetByName('RS幕構成');
-    let rsScenes = [];
-    if (rsSceneSheet) {
-        const data = rsSceneSheet.getDataRange().getValues();
-        const header = data[0];
-        rsScenes = data.slice(1).map(row => {
+    // 必須見出しを固定順で先頭に置き、それ以外の見出し付き列（作品名など）はシート上の順で後ろに続ける
+    const buildSceneRows = (sheetName) => {
+        const table = tables[sheetName];
+        const required = EXPORT_SHEET_HEADERS[sheetName];
+        const extras = table.header
+            .map((h, i) => ({ h, i }))
+            .filter(item => item.h && required.indexOf(item.h) === -1);
+        const seen = new Set();
+        extras.forEach(item => {
+            if (seen.has(item.h)) throw new Error('列名が重複しています: ' + sheetName + ':' + item.h);
+            seen.add(item.h);
+        });
+        const order = required.map(h => ({ h, i: table.columns[h] })).concat(extras);
+        return table.values.slice(1).map(row => {
             let obj = {};
-            header.forEach((h, i) => obj[h.toString().trim()] = row[i]);
+            order.forEach(item => obj[item.h] = row[item.i]);
             return obj;
         });
-    }
-
-    const rwSceneSheet = ss.getSheetByName('RW幕構成');
-    let rwScenes = [];
-    if (rwSceneSheet) {
-        const data = rwSceneSheet.getDataRange().getValues();
-        const header = data[0];
-        rwScenes = data.slice(1).map(row => {
-            let obj = {};
-            header.forEach((h, i) => obj[h.toString().trim()] = row[i]);
-            return obj;
-        });
-    }
+    };
+    const rsScenes = buildSceneRows('RS幕構成');
+    const rwScenes = buildSceneRows('RW幕構成');
 
     // 7. Dictionary Notes (Notes sheet)
-    const dicNotesSheet = ss.getSheetByName('Notes');
-    let dicNotesJson = [];
-    if (dicNotesSheet) {
-        const data = dicNotesSheet.getDataRange().getValues();
-        // dic.html uses columns A, B, C (German, Translation, Source)
-        dicNotesJson = data.slice(1).map(row => [row[0], row[1], row[2]]);
-    }
+    // dic.html uses [German (de), Translation (ja), Source (source)]
+    const dicNotesJson = pickExportRows_(tables.Notes);
 
-    // 本番用の見出し・関連語形対応（A:F）
-    const termMappingSheet = ss.getSheetByName('語形対応');
-    const termMappingData = termMappingSheet.getDataRange().getValues()
-        .slice(1)
-        .filter(row => String(row[0] || '').trim() && String(row[1] || '').trim())
-        .map(row => row.slice(0, 6));
+    // 本番用の見出し・関連語形対応（見出し〜補足の6項目）
+    const termMappingData = pickExportRows_(tables['語形対応'])
+        .filter(row => String(row[0] || '').trim() && String(row[1] || '').trim());
     validateDictionaryTermMapping_(dicNotesJson, termMappingData);
 
     // 8. Abbreviation List (略記一覧)
-    const abbrSheet = ss.getSheetByName('略記一覧');
-    let abbrJson = [];
-    if (abbrSheet) {
-        const data = abbrSheet.getDataRange().getValues();
-        // dic.html uses columns A, B, C
-        abbrJson = data.slice(1).map(row => [row[0], row[1], row[2]]);
-    }
+    // 見出し行がないため位置で読む（1行目は空行としてスキップ）
+    // dic.html uses columns A, B, C
+    const abbrJson = tables['略記一覧'].values.slice(1).map(row => [row[0], row[1], row[2]]);
 
     // 9. 「実例を見る」用の分割データを生成
     const dictionaryExampleData = buildDictionaryExampleShardFiles(dicNotesJson, {
@@ -273,24 +228,53 @@ function buildExportSnapshot_(exportOptions) {
     };
 }
 
+/**
+ * 必須タブを読み込み、見出し名から列位置を解決する。
+ * 必須見出しの欠落・重複があれば、公開データを作る前に停止する。
+ * @return {Object<string, {values: Array[], header: string[], columns: Object<string, number>}>}
+ */
 function validateExportSheets_(ss) {
-    const required = {
-        GM: 4, RS: 8, RW: 8, Notes: 3, '語形対応': 6, '略記一覧': 3,
-        'RS幕構成': 4, 'RW幕構成': 4, '楽譜情報': 5
-    };
-    Object.keys(required).forEach(name => {
+    const tables = {};
+    const names = Object.keys(EXPORT_SHEET_HEADERS).concat(Object.keys(EXPORT_POSITIONAL_SHEETS));
+    names.forEach(name => {
         const sheet = ss.getSheetByName(name);
         if (!sheet) throw new Error('必須シートが欠落しています: ' + name);
         const values = sheet.getDataRange().getValues();
-        if (!values.length || values[0].length < required[name]) throw new Error('必須列が不足しています: ' + name);
-        if (name === 'RS' || name === 'RW') {
-            const header = values[0].slice(0, 8).map(value => String(value).trim());
-            ['Oper', 'de', 'ja', 'page', 'whom'].forEach(key => {
-                if (header.indexOf(key) === -1) throw new Error('必須列が不足しています: ' + name + ':' + key);
-            });
-            if (new Set(header).size !== header.length) throw new Error('列名が重複しています: ' + name);
+        if (!values.length) throw new Error('必須列が不足しています: ' + name);
+        if (EXPORT_POSITIONAL_SHEETS[name]) {
+            if (values[0].length < EXPORT_POSITIONAL_SHEETS[name]) throw new Error('必須列が不足しています: ' + name);
+            tables[name] = { values: values, header: [], columns: {} };
+            return;
         }
+        const header = values[0].map(normalizeExportHeader_);
+        tables[name] = { values: values, header: header, columns: resolveExportColumns_(name, header, EXPORT_SHEET_HEADERS[name]) };
     });
+    return tables;
+}
+
+function normalizeExportHeader_(value) {
+    return String(value === null || value === undefined ? '' : value).normalize('NFC').trim();
+}
+
+/** 見出し名ごとの列番号（0始まり）を返す。欠落・重複は誤った列を公開しないよう停止する。 */
+function resolveExportColumns_(sheetName, header, requiredHeaders) {
+    const columns = {};
+    requiredHeaders.forEach(name => {
+        const first = header.indexOf(name);
+        if (first === -1) throw new Error('必須列が不足しています: ' + sheetName + ':' + name);
+        if (header.indexOf(name, first + 1) !== -1) throw new Error('列名が重複しています: ' + sheetName + ':' + name);
+        columns[name] = first;
+    });
+    return columns;
+}
+
+/** データ行（2行目以降）を EXPORT_SHEET_HEADERS の順に並べた配列へ変換する。 */
+function pickExportRows_(table) {
+    const names = Object.keys(table.columns);
+    return table.values.slice(1).map(row => names.map(name => {
+        const value = row[table.columns[name]];
+        return value === undefined ? '' : value;
+    }));
 }
 
 function validateDictionaryTermMapping_(dicNotesData, mappingData) {

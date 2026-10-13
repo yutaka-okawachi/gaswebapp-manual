@@ -1816,20 +1816,22 @@ function testGenerateDicHtml() {
 function generateDicHtmlFromSpreadsheet() {
   const ss = SpreadsheetApp.openById(SPREADSHEET_ID);
   
-  // Notesシートから用語データを取得
+  // Notesシートから用語データを取得（見出し名 de / ja / source で列を特定し、列の並べ替えに追従する）
+  const readByHeaders = (sheet, name) => {
+    const values = sheet.getDataRange().getValues();
+    const header = values[0].map(normalizeExportHeader_);
+    return pickExportRows_({ values: values, columns: resolveExportColumns_(name, header, EXPORT_SHEET_HEADERS[name]) });
+  };
   const dicNotesSheet = ss.getSheetByName('Notes');
   let dicNotesData = [];
   if (dicNotesSheet) {
-    const data = dicNotesSheet.getDataRange().getValues();
-    // ヘッダー行をスキップして、A, B, C列のみ取得
-    dicNotesData = data.slice(1).map(row => [row[0], row[1], row[2]]);
+    dicNotesData = readByHeaders(dicNotesSheet, 'Notes');
   }
 
   const termMappingSheet = ss.getSheetByName('語形対応');
   const termMappingData = termMappingSheet
-    ? termMappingSheet.getDataRange().getValues().slice(1)
+    ? readByHeaders(termMappingSheet, '語形対応')
       .filter(row => String(row[0] || '').trim() && String(row[1] || '').trim())
-      .map(row => row.slice(0, 6))
     : [];
   
   // 略記一覧シートからデータを取得
