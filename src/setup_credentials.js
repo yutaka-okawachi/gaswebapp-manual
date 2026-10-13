@@ -39,6 +39,15 @@ function showSyncInstructions() {
  */
 function onOpen() {
   const ui = SpreadsheetApp.getUi();
+  addSheetRowNavigationMenu_(ui);
+  ui.createMenu('英訳作業')
+    .addItem('直接英訳を準備する（初回）', 'prepareSourceEnglishWorkflow')
+    .addItem('選択行の英訳を再生成', 'regenerateSourceEnglishSelection')
+    .addItem('自動英訳をオン', 'enableSourceEnglishAutomatic')
+    .addItem('自動英訳をオフ', 'disableSourceEnglishAutomatic')
+    .addItem('自動英訳の状態', 'showSourceEnglishStatus')
+    .addToUi();
+
   ui.createMenu('🔧 データ同期')
     .addItem('同期方法を確認', 'showSyncInstructions')
     .addItem('このシートをデータ元に設定', 'setupSpreadsheetId')
@@ -55,4 +64,5 @@ function onOpen() {
     .addItem('選択行をJevで判定', 'createJevReviewForSelectedObservationFromMenu')
     .addItem('既存語形対応の出典を調査', 'refreshDictionarySourceMarkersForMappingsFromMenu')
     .addToUi();
+
 }

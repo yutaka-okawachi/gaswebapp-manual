@@ -4,6 +4,7 @@ const crypto = require('crypto');
 const { root, git, run, atomicJson, readJson, sha256, normalizeText } = require('./core');
 const repository = require('./git');
 const gas = require('./gas');
+const editorHead = require('./gas-head');
 const artifacts = require('./artifacts');
 const publication = require('./publish');
 const logger = require('./logger');
@@ -52,6 +53,9 @@ async function verify(state, settings, credential, slug, save) {
     const receipt = state.pending;
     if (!receipt || !receipt.commit) throw new Error('再開可能な公開記録がありません。通常の sync-data を実行してください。');
     if (git('rev-parse', 'HEAD') !== receipt.commit) throw new Error('未完了の公開後に HEAD が変更されています。先に元の公開コミットの確認が必要です。');
+
+    // Verify/resume must not bypass the editor-only change check before a push.
+    await editorHead.preflight(settings);
 
     logger.header(6, 7, 'GitHub への送信');
     logger.info(`コミット ${receipt.commit.slice(0, 7)} を GitHub (origin/main) へ送信中…`);
@@ -128,6 +132,9 @@ async function main(args = process.argv.slice(2)) {
         const gasChanged = !observedGas || observedGas.sourceHash !== gas.fingerprint();
         const selected = plan(opt.mode, files, gasChanged);
 
+        // Check editor HEAD as well as the published hash, before any commit.
+        const headCheck = await editorHead.preflight(settings);
+
         logger.info(`同期モード: ${opt.mode} (GAS更新: ${selected.deploy ? '要' : '不要'}, データ取得: ${selected.data ? '要' : '不要'})`);
 
         // Save a source checkpoint before mutating the live GAS deployment.
@@ -141,12 +148,12 @@ async function main(args = process.argv.slice(2)) {
             logger.info('GAS ソースの変更を検出しました。デプロイ準備を進めます。');
             state.gasApproval = gas.fingerprint();
             save();
-            await gas.ensureDeployment(settings, state, save, observedGas);
+            await gas.ensureDeployment(settings, state, save, observedGas, headCheck);
             logger.success('GAS 固定デプロイの更新と反映を確認しました。');
         } else {
             logger.info('GAS ソースの変更はありません（デプロイ更新をスキップ）。');
             if (!selected.documentsOnly && opt.mode !== 'Site') {
-                await gas.ensureDeployment(settings, state, save, observedGas);
+                await gas.ensureDeployment(settings, state, save, observedGas, headCheck);
             }
         }
 
@@ -179,6 +186,7 @@ async function main(args = process.argv.slice(2)) {
         const artifactCommitMsg = opt.message && opt.message !== '自動同期アップデート'
             ? `同期: ${opt.message} (データおよびサイト成果物の検証・反映)`
             : '同期: データおよびサイト成果物の検証・反映';
+        await editorHead.preflight(settings);
         repository.commitChanges(artifactCommitMsg);
         logger.success(`成果物をコミットしました: "${artifactCommitMsg}"`);
 

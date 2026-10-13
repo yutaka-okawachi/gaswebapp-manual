@@ -5,6 +5,11 @@ const { spawnSync } = require('child_process');
 const root = path.resolve(__dirname, '../..');
 const sha256 = value => crypto.createHash('sha256').update(value).digest('hex');
 const normalizeText = value => value.replace(/\r\n/g, '\n');
+function gasSourceFingerprint(directory = root) {
+    const excluded = new Set(['manage_deploy.js', 'update_env.js', 'sync_build.js']);
+    const files = fs.readdirSync(path.join(directory, 'src')).filter(name => !excluded.has(name) && /\.(js|html|json)$/.test(name)).sort();
+    return sha256(files.map(name => name + '\n' + normalizeText(fs.readFileSync(path.join(directory, 'src', name), 'utf8'))).join('\n'));
+}
 function run(command, args = [], options = {}) {
     const { redactError = false, ...spawnOptions } = options;
     const result = spawnSync(command, args, {
@@ -36,4 +41,4 @@ async function request(url, options = {}, fetchImpl = fetch) {
     if (!response.ok) throw new Error(`HTTP ${response.status}: ${new URL(url).pathname}`);
     return response;
 }
-module.exports = { root, sha256, normalizeText, run, git, writeIfChanged, atomicJson, readJson, delay, request };
+module.exports = { root, sha256, normalizeText, gasSourceFingerprint, run, git, writeIfChanged, atomicJson, readJson, delay, request };
