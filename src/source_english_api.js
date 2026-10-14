@@ -41,18 +41,18 @@ function sourceEnglishWhomSave_(ctx,c,plan,snapshot){
   function held(reason){return {snapshot:snapshot,status:'HELD',reason:reason,reviewRequired:true,written:false};}
   const initialRow=sourceEnglishIndex_(ctx).byId[c.id];if(!initialRow)throw new Error('指示対象保存前の行IDを確認できません。再送しません。');
   const initial=sourceEnglishSnapshot_(ctx,initialRow);
-  if(initial.inputHash!==snapshot.inputHash){snapshot=initial;return held('本文保存後に行が編集されたためIは保持しました。');}
+  if(initial.inputHash!==snapshot.inputHash){snapshot=initial;return held('本文保存後に行が編集されたため指示対象英訳は保持しました。');}
   if(plan.status!=='READY')return held(plan.reason);
   const currentPlan=sourceEnglishWhomPlan_(ctx,snapshot);
-  if(!currentPlan||currentPlan.status!=='READY'||currentPlan.referenceHash!==plan.referenceHash||currentPlan.value!==plan.value)return held('処理中に指示対象の対応表が変わったためIは保持しました。');
+  if(!currentPlan||currentPlan.status!=='READY'||currentPlan.referenceHash!==plan.referenceHash||currentPlan.value!==plan.value)return held('処理中に指示対象の対応表が変わったため指示対象英訳は保持しました。');
   const row=sourceEnglishIndex_(ctx).byId[c.id];
   if(!row)throw new Error('指示対象保存前の行IDを確認できません。再送しません。');
   const fresh=sourceEnglishSnapshot_(ctx,row);
-  if(fresh.inputHash!==snapshot.inputHash){snapshot=fresh;return held('本文保存後に行が編集されたためIは保持しました。');}
-  notesEnglishWrite_(ctx.sheet.getRange(row,9,1,1),[plan.value]);SpreadsheetApp.flush();
+  if(fresh.inputHash!==snapshot.inputHash){snapshot=fresh;return held('本文保存後に行が編集されたため指示対象英訳は保持しました。');}
+  notesEnglishWrite_(sourceEnglishCell_(ctx,row,8,fresh),[plan.value]);SpreadsheetApp.flush();
   const afterRow=sourceEnglishIndex_(ctx).byId[c.id];if(!afterRow)throw new Error('指示対象保存後の行IDを確認できません。再送しません。');
   return {snapshot:sourceEnglishSnapshot_(ctx,afterRow),status:'UPDATED',reason:plan.reviewRequired?
-    '承認対応のない欧文表記は原表記を保持しました（英訳の確定ではありません）。':'同作品・同原語の承認済み選択をIへ保存しました。',reviewRequired:plan.reviewRequired,written:true};
+    '承認対応のない欧文表記は原表記を保持しました（英訳の確定ではありません）。':'同作品・同原語の承認済み選択を指示対象英訳へ保存しました。',reviewRequired:plan.reviewRequired,written:true};
 }
 function sourceEnglishExecute_(job){
   let data=null,result=null,failure='',responseReceivedAt=0;
@@ -80,8 +80,8 @@ function sourceEnglishExecute_(job){
       c.status='WRITING';c.reason='F_WRITE';c.responseAt=responseReceivedAt;c.at=Date.now();c.resultHash=notesEnglishHash_(result.english);sourceEnglishSave_(ctx,controls,c);
       // Re-resolve the row immediately before writing; metadata follows insertion/sorting.
       const freshIndex=sourceEnglishIndex_(ctx),writeRow=freshIndex.byId[c.id];
-      if(!writeRow||sourceEnglishSnapshot_(ctx,writeRow).inputHash!==c.inputHash){c.status='HOLD';c.reason='WRITE_CONFLICT';if(whom){c.whomStatus='HELD';c.whomReason='本文保存前の入力変更によりIは保持しました。';}sourceEnglishSave_(ctx,controls,c);completed=true;return 'held';}
-      notesEnglishWrite_(ctx.sheet.getRange(writeRow,ctx.adapter.english+1,1,1),[result.english]);SpreadsheetApp.flush();
+      if(!writeRow||sourceEnglishSnapshot_(ctx,writeRow).inputHash!==c.inputHash){c.status='HOLD';c.reason='WRITE_CONFLICT';if(whom){c.whomStatus='HELD';c.whomReason='本文保存前の入力変更により指示対象英訳は保持しました。';}sourceEnglishSave_(ctx,controls,c);completed=true;return 'held';}
+      notesEnglishWrite_(sourceEnglishCell_(ctx,writeRow,ctx.adapter.english,snap),[result.english]);SpreadsheetApp.flush();
       const afterIndex=sourceEnglishIndex_(ctx),afterRow=afterIndex.byId[c.id];if(!afterRow)throw new Error('書込み後の行IDを確認できません。再送しません。');
       let after=sourceEnglishSnapshot_(ctx,afterRow);const expected=JSON.parse(JSON.stringify(snap));expected.values[ctx.adapter.english]=result.english;
       let exact=after.inputHash===notesEnglishHash_([expected.values,expected.notes,expected.formulas]),finalSnapshot=after,log=null;
@@ -93,17 +93,17 @@ function sourceEnglishExecute_(job){
         if(whomResult.written)expected.values[8]=whom.value;
         const comparison=JSON.parse(JSON.stringify(expected));if(log){comparison.values[ctx.adapter.evidence]=after.values[ctx.adapter.evidence];comparison.notes[ctx.adapter.evidence]=after.notes[ctx.adapter.evidence];comparison.formulas[ctx.adapter.evidence]=after.formulas[ctx.adapter.evidence];}
         exact=after.inputHash===notesEnglishHash_([comparison.values,comparison.notes,comparison.formulas]);
-        advisory=advisory||whomResult.reviewRequired;reviewReason=(reviewReason?reviewReason+'\n':'')+'指示対象I：'+whomResult.reason;
+        advisory=advisory||whomResult.reviewRequired;reviewReason=(reviewReason?reviewReason+'\n':'')+'指示対象英訳：'+whomResult.reason;
       }
       if(exact&&!log){
-        log=sourceEnglishLog_(ctx,c,after,whom?'本文L保存済み・指示対象I'+(whomResult&&whomResult.status==='UPDATED'?'保存済み':'保持'):(advisory?'F保存済み・注意あり（判断は本人）':'F保存済み（判断は本人）'),whom?('本文英訳を保存しました。\n'+reviewReason):(advisory?result.reason:'英訳を保存しました。'));finalSnapshot=log.snapshot;
+        log=sourceEnglishLog_(ctx,c,after,whom?'本文英訳保存済み・指示対象英訳'+(whomResult&&whomResult.status==='UPDATED'?'保存済み':'保持'):(advisory?'英訳候補保存済み・注意あり（判断は本人）':'英訳候補保存済み（判断は本人）'),whom?('本文英訳を保存しました。\n'+reviewReason):(advisory?result.reason:'英訳を保存しました。'));finalSnapshot=log.snapshot;
         // A concurrent H-only edit must survive even after F has been saved.
         expected.values[ctx.adapter.evidence]=finalSnapshot.values[ctx.adapter.evidence];expected.notes[ctx.adapter.evidence]=finalSnapshot.notes[ctx.adapter.evidence];expected.formulas[ctx.adapter.evidence]=finalSnapshot.formulas[ctx.adapter.evidence];
         exact=finalSnapshot.inputHash===notesEnglishHash_([expected.values,expected.notes,expected.formulas]);
       }
       const final=sourceEnglishState_(ctx,c.id,finalSnapshot,c,exact?'WRITTEN':'HOLD',exact?(log&&!log.logged?'UPDATED_LOG_UNSAVED':advisory?'UPDATED_REVIEW_REQUIRED':'UPDATED_UNREVIEWED'):'WRITE_CONFLICT');
       if(exact&&advisory)final.reviewReason=whom?sourceEnglishReviewText_(reviewReason,''):result.reason;if(log)final.logStatus=log.logged?'SAVED':log.skipped;
-      if(whom){final.whomStatus=exact&&whomResult?whomResult.status:whomResult&&whomResult.written?'PENDING':'HELD';final.whomReason=exact&&whomResult?whomResult.reason:'保存時の競合により本文Lと指示対象Iの整合を確認できません。再送せず確認してください。';}
+      if(whom){final.whomStatus=exact&&whomResult?whomResult.status:whomResult&&whomResult.written?'PENDING':'HELD';final.whomReason=exact&&whomResult?whomResult.reason:'保存時の競合により本文英訳と指示対象英訳の整合を確認できません。再送せず確認してください。';}
       final.requestId=c.requestId;final.operationId=job.operationId;sourceEnglishSave_(ctx,controls,final);completed=true;
       sourceEnglishTested_(job);return exact?'written':'held';
     }finally{
@@ -173,17 +173,17 @@ function sourceEnglishLog_(ctx,c,snapshot,outcome,reason){
   const text=old+(old?'\n\n':'')+marker+'\n'+stamp+'／'+outcome+'\n'+reason+'\n【自動英訳ログ終わり】';
   if(text.length>45000)return {snapshot:current,logged:false,skipped:'H_CAPACITY'};
   if(sourceEnglishIndex_(ctx).byId[c.id]!==row||sourceEnglishSnapshot_(ctx,row).inputHash!==current.inputHash)return {snapshot:sourceEnglishSnapshot_(ctx,sourceEnglishIndex_(ctx).byId[c.id]),logged:false,skipped:'EDIT_CONFLICT'};
-  notesEnglishWrite_(ctx.sheet.getRange(row,col+1,1,1),[text]);SpreadsheetApp.flush();
+  notesEnglishWrite_(sourceEnglishCell_(ctx,row,col,current),[text]);SpreadsheetApp.flush();
   const afterRow=sourceEnglishIndex_(ctx).byId[c.id];if(!afterRow)throw new Error('ログ保存後の行IDが不明です。自動再送しません。');
   const after=sourceEnglishSnapshot_(ctx,afterRow),expected=JSON.parse(JSON.stringify(current));expected.values[col]=text;
   const exact=after.inputHash===notesEnglishHash_([expected.values,expected.notes,expected.formulas]);
   return {snapshot:after,logged:exact,skipped:exact?'':'WRITE_UNCONFIRMED'};
 }
 function sourceEnglishStop_(ctx,controls,c,snapshot,reason){
-  const messages={API_UNCONFIRMED:'APIの通信または応答形式を確認できませんでした。Fは保持しています。自動再送しません。',EMPTY_ENGLISH:'応答の英訳が空のためFを保持しました。',INPUT_LIMIT:'送信文字量の上限に達したため送信せず、Fを保持しました。',MONTHLY_LIMIT:'月の費用または回数上限に達したため送信せず、Fを保持しました。'};
-  const whom=['RW','RS'].includes(ctx.adapter.name),message=whom?messages[reason].replace(/F/g,'本文L')+' 指示対象Iも保持しました。':messages[reason];
-  const log=sourceEnglishLog_(ctx,c,snapshot,whom?'本文L・指示対象I未保存':'F未保存',message),next=sourceEnglishState_(ctx,c.id,log.logged?log.snapshot:snapshot,c,'HOLD',reason);
-  if(whom){next.whomStatus='HELD';next.whomReason='本文再生成が完了しないためIは保持しました。';}
+  const messages={API_UNCONFIRMED:'APIの通信または応答形式を確認できませんでした。英訳候補は保持しています。自動再送しません。',EMPTY_ENGLISH:'応答の英訳が空のため英訳候補を保持しました。',INPUT_LIMIT:'送信文字量の上限に達したため送信せず、英訳候補を保持しました。',MONTHLY_LIMIT:'月の費用または回数上限に達したため送信せず、英訳候補を保持しました。'};
+  const whom=['RW','RS'].includes(ctx.adapter.name),message=whom?messages[reason]+' 指示対象英訳も保持しました。':messages[reason];
+  const log=sourceEnglishLog_(ctx,c,snapshot,whom?'本文英訳・指示対象英訳未保存':'英訳候補未保存',message),next=sourceEnglishState_(ctx,c.id,log.logged?log.snapshot:snapshot,c,'HOLD',reason);
+  if(whom){next.whomStatus='HELD';next.whomReason='本文再生成が完了しないため指示対象英訳は保持しました。';}
   next.requestId=c.requestId;next.operationId=c.operationId||'';next.logStatus=log.logged?'SAVED':log.skipped;sourceEnglishSave_(ctx,controls,next);return next;
 }
 

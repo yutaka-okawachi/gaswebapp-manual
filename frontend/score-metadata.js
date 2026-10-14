@@ -143,9 +143,9 @@ const SCORE_METADATA = {
     "meister": {
         "title": "ニュルンベルクのマイスタージンガー (Die Meistersinger von Nürnberg)",
         "workNo": "WWV 96",
-        "publisher": "B. Schott's Söhne",
-        "plate": "27107.27500",
-        "edition": "Full Score (ca. 1903). (Prelude: 18469)",
+        "publisher": "C.F. Peters",
+        "plate": "9821",
+        "edition": "Full Score. Ed: Felix Mottl. Leipzig: C.F. Peters, n.d. [1913]. Reprinted: New York: Dover, 1976.",
         "imslp": "https://imslp.org/wiki/Die_Meistersinger_von_N%C3%BCrnberg,_WWV_96_(Wagner,_Richard)",
         "synopsis": "https://drive.google.com/file/d/1Dxxu6js8LdX9TiOdHWZtk_lE-K12LxnR/view?usp=drive_link"
     },

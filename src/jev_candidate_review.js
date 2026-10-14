@@ -91,16 +91,15 @@ function jevCandidateContext(spreadsheet, observation) {
     page.indexOf('GM') !== -1 ? 'GM' : '';
   const sheet = source && spreadsheet.getSheetByName(source);
   if (!sheet || sheet.getLastRow() < 2) return '';
-  const headers = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getValues()[0];
-  const deColumn = headers.indexOf('de') + 1;
-  if (!deColumn) return '';
-  const normalizedColumn = headers.indexOf('de_normalized') + 1;
-  const lookupColumn = normalizedColumn || deColumn;
+  const layout = namedSheetColumns_(sheet, ['de', 'de_normalized']);
+  const deColumn = layout.positions[0] + 1, normalizedColumn = layout.positions[1] + 1;
+  const lookupColumn = normalizedColumn;
   const term = normalizedColumn
     ? normalizeObservedTerm(observation[2] || observation[1])
     : String(observation[1] || '');
   const range = sheet.getRange(2, lookupColumn, sheet.getLastRow() - 1, 1);
   const match = range.createTextFinder(term).matchCase(false).findNext();
+  namedSheetAssertLayout_(sheet, layout);
   return match ? String(sheet.getRange(match.getRow(), deColumn).getValue() || '').slice(0, 500) : '';
 }
 

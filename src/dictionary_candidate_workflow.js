@@ -62,13 +62,10 @@ function dictionarySourceCorpus(spreadsheet) {
   return definitions.map(([sheetName, marker]) => {
     const sheet = spreadsheet.getSheetByName(sheetName);
     if (!sheet || sheet.getLastRow() < 2) return { marker, values: [] };
-    const headers = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getValues()[0];
-    const normalizedColumn = headers.indexOf('de_normalized') + 1;
-    const deColumn = headers.indexOf('de') + 1;
-    const column = normalizedColumn || deColumn;
-    if (!column) return { marker, values: [] };
-    const values = sheet.getRange(2, column, sheet.getLastRow() - 1, 1).getValues()
+    const layout = namedSheetColumns_(sheet, ['de', 'de_normalized']);
+    const values = sheet.getRange(2, layout.positions[1] + 1, sheet.getLastRow() - 1, 1).getValues()
       .map(row => normalizeObservedTerm(row[0])).filter(Boolean);
+    namedSheetAssertLayout_(sheet, layout);
     return { marker, values };
   });
 }
@@ -107,7 +104,7 @@ function updateNotesSourceMarkersForHeadword(spreadsheet, notesSheet, headword, 
   const current = String(rows[rowIndex][2] || '');
   const merged = mergeDictionarySourceMarkers(current, markers);
   if (merged === current) return false;
-  notesSheet.getRange(rowIndex + 2, 3).setValue(merged);
+  namedSheetCell_(notesSheet, ['de', 'ja', 'source'], rowIndex + 2, 2).setValue(merged);
   return true;
 }
 
@@ -151,7 +148,9 @@ function refreshDictionarySourceMarkersForMappings() {
     }
   });
   if (updatedRows.size) {
-    notesSheet.getRange(2, 3, sources.length, 1).setValues(sources.map(value => [value]));
+    const layout = namedSheetColumns_(notesSheet, ['source']);
+    namedSheetAssertLayout_(notesSheet, layout);
+    notesSheet.getRange(2, layout.positions[0] + 1, sources.length, 1).setValues(sources.map(value => [value]));
   }
   return { mappingsChecked: rows.length, headingsChecked: mappingHeadwords.size, mappingsWithExamples, notesUpdated: updatedRows.size };
 }
@@ -174,6 +173,7 @@ function refreshDictionarySourceMarkersForMappingsFromMenu() {
 function requireSheetWithHeaders(spreadsheet, sheetName, requiredHeaders) {
   const sheet = spreadsheet.getSheetByName(sheetName);
   if (!sheet) throw new Error('必要なタブがありません：' + sheetName);
+  if (sheetName === 'Notes') { namedSheetColumns_(sheet, requiredHeaders); return sheet; }
   const actual = sheet.getRange(1, 1, 1, requiredHeaders.length).getValues()[0];
   requiredHeaders.forEach((header, index) => {
     if (actual[index] !== header) {
@@ -282,6 +282,9 @@ function recordUnregisteredResultTermObservation(observation) {
 }
 
 function readSheetRows(sheet, width) {
+  if (typeof sheet.getName === 'function' && sheet.getName() === 'Notes') {
+    return namedSheetRead_(sheet, ['de', 'ja', 'source'].slice(0, width), 2, Math.max(0, sheet.getLastRow() - 1)).values;
+  }
   return sheet.getLastRow() >= 2
     ? sheet.getRange(2, 1, sheet.getLastRow() - 1, width).getValues()
     : [];

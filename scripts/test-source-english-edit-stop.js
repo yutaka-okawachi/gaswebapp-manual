@@ -60,6 +60,7 @@ function runEditStopTests(workflow, legacy, options = {}) {
       const ctx = {adapter, book:e.source, sheet:e.range.getSheet()};
       const calls = [];
       const sandbox = {sourceEnglishAdapter_: () => adapter, notesEnglishLock_: f => f(),
+        sourceEnglishColumns_: () => ({positions:Array.from({length:9},(_,i)=>i)}),
         sourceEnglishContext_: () => ctx, sourceEnglishControls_: () => [], sourceEnglishIndex_: () => ({}),
         sourceEnglishCapture_: (c, controls, index, row, flags) => calls.push({row, ...flags})};
       vm.createContext(sandbox); vm.runInContext(sourceEdit, sandbox);
@@ -71,7 +72,7 @@ function runEditStopTests(workflow, legacy, options = {}) {
     const e = event('Notes', 2, 2, 2);
     const calls = [];
     e.source.getSheetByName = name => { assert.equal(name, '英訳確認'); return {}; };
-    const sandbox = {englishReviewSyncSources_: (initialize, tab) => calls.push([initialize, tab])};
+    const sandbox = {namedSheetColumns_: () => ({positions:[0,1,2]}), englishReviewSyncSources_: (initialize, tab) => calls.push([initialize, tab])};
     vm.createContext(sandbox); vm.runInContext(legacyEdit, sandbox);
     assert.equal(sandbox.englishTranslationSourceEdited(e), !!options.legacyActive);
     assert.deepEqual(calls, options.legacyActive ? [[false, 'Notes']] : []);
@@ -84,6 +85,7 @@ function runEditStopTests(workflow, legacy, options = {}) {
       const expected = {written:2, held:0, pending:0};
       const sandbox = {SpreadsheetApp:{getActiveSpreadsheet: () => book}, notesEnglishLock_: f => f(),
         sourceEnglishAdapter_: () => ({width:15}), sourceEnglishContext_: () => ctx,
+        sourceEnglishColumns_: () => ({positions:Array.from({length:15},(_,i)=>i)}),
         PropertiesService:{getScriptProperties: () => ({getProperty: () => 'mock-key'})}, NOTES_ENGLISH_API_KEY:'mock-key-property',
         notesEnglishApiConfig_: () => ({tested:true, testedKeyHash:'mock-hash'}), notesEnglishHash_: () => 'mock-hash',
         sourceEnglishControls_: () => [], sourceEnglishIndex_: () => ({}),

@@ -2,7 +2,7 @@
 // Synthetic values only. Real Sheets and paid endpoints are never contacted.
 const assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path'),vm=require('node:vm'),crypto=require('node:crypto');
 const read=n=>fs.readFileSync(path.join(__dirname,'../src/'+n+'.js'),'utf8');
-const workflow=read('source_english_workflow'),api=read('source_english_api');
+const workflow=read('sheet_column_layout')+'\n'+read('source_english_workflow'),api=read('source_english_api');
 const {extract}=require('./test-source-english-edit-stop');
 const hash=v=>crypto.createHash('sha256').update(typeof v==='string'?v:JSON.stringify(v)).digest('hex');
 const clone=v=>JSON.parse(JSON.stringify(v));
@@ -50,10 +50,11 @@ function harness(options={}){
   const propApi={getProperty:k=>props.get(k)||null,setProperty:(k,v)=>props.set(k,v),deleteProperty:k=>props.delete(k)};
   const ledger={getLastRow:()=>lines.length+2,getMaxRows:()=>1000,getRange:(r,c,n,w)=>({kind:'ledger',row:r,col:c,width:w,
     getDisplayValues:()=>Array.from({length:n},(_,i)=>[lines[r-3+i]||'']),getFormulas:()=>Array.from({length:n},()=>[''])})};
-  const sheet={getName:()=>tab,getSheetId:()=>7,getLastRow:()=>row,getMaxColumns:()=>15,
+  const sourceHeaders=['Oper','Aufzug','Szene','page','whom','de','de_normalized','ja','whom_en','現在の日本語（修正案）','修正点','改訂英訳候補','イタリア語の比較','根拠・未解決点','準備状態'];
+  const sheet={getName:()=>tab,getSheetId:()=>7,getLastRow:()=>row,getMaxColumns:()=>15,getLastColumn:()=>15,
     getRange:(r,c,n,w)=>({kind:'sheet',row:r,col:c,width:w,
-      getDisplayValues:()=>{if(options.readbackFailure&&iWritten)throw new Error('readback failed');return [values.slice(c-1,c-1+w)];},
-      getNotes:()=>[notes.slice(c-1,c-1+w)],getFormulas:()=>[formulas.slice(c-1,c-1+w)]})};
+      getDisplayValues:()=>{if(options.readbackFailure&&iWritten)throw new Error('readback failed');return [(r===1?sourceHeaders:values).slice(c-1,c-1+w)];},
+      getNotes:()=>[(r===1?Array(15).fill(''):notes).slice(c-1,c-1+w)],getFormulas:()=>[(r===1?Array(15).fill(''):formulas).slice(c-1,c-1+w)]})};
   const reference={getLastRow:()=>table.length+3,getMaxColumns:()=>12,getRange:()=>({getDisplayValues:()=>clone(table),getFormulas:()=>clone(tableFormulas)})};
   const selection={getSheet:()=>sheet,getRow:()=>row,getLastRow:()=>row};
   const book={getId:()=> 'test-book',getActiveRange:()=>selection,toast:()=>{},getSheetByName:name=>{
@@ -101,8 +102,8 @@ for(const tab of ['RW','RS']){
   test(tab+' manual menu updates only L,I,N; keeps mixed-tab ledger',()=>{const h=harness({tab});const r=h.run();assert.equal(r.written,1);assert.equal(r.held,0);assert.equal(h.values[8],'Messenger');assert.equal(h.values[11],'quietly');assert.deepEqual(h.writes,[12,9,14]);assert.match(h.values[13],/^existing evidence\n\n/);assert.equal(h.control().whomStatus,'UPDATED');assert.equal(h.counts().fetches,1);h.assertOther();});
   for(const col of [0,4,5,7,8,9,10,11,13,14])test(tab+' response-time edit at column '+(col+1)+' discards result',()=>{const h=harness({tab,duringResponseEdit:col});const r=h.run();assert.equal(r.written,0);assert.equal(r.held,1);assert.deepEqual(h.writes,[]);assert.equal(h.counts().fetches,1);h.assertOther();});
 }
-for(const opt of [{httpFailure:true},{empty:true},{inputLimit:true}])test('body failure retains both I and L '+JSON.stringify(opt),()=>{const h=harness(opt);h.run();assert.equal(h.values[8],'old target');assert.equal(h.values[11],'old body');assert.equal(h.control().status,'HOLD');assert.equal(h.control().whomStatus,'HELD');assert.match(h.values[13],/指示対象I/);assert.ok(!h.writes.includes(9));assert.ok(!h.writes.includes(12));});
-for(const opt of [{hold:true},{whom:'未登録役'},{missingTable:true},{tableFailure:true}])test('unresolved target saves body but holds I '+JSON.stringify(opt),()=>{const h=harness(opt),r=h.run();assert.equal(r.written,1);assert.equal(r.held,1);assert.equal(r.whomHeld,1);assert.equal(h.values[8],'old target');assert.equal(h.values[11],'quietly');assert.equal(h.control().whomStatus,'HELD');assert.match(h.control().reviewReason,/指示対象I/);});
+for(const opt of [{httpFailure:true},{empty:true},{inputLimit:true}])test('body failure retains both I and L '+JSON.stringify(opt),()=>{const h=harness(opt);h.run();assert.equal(h.values[8],'old target');assert.equal(h.values[11],'old body');assert.equal(h.control().status,'HOLD');assert.equal(h.control().whomStatus,'HELD');assert.match(h.values[13],/指示対象英訳/);assert.ok(!h.writes.includes(9));assert.ok(!h.writes.includes(12));});
+for(const opt of [{hold:true},{whom:'未登録役'},{missingTable:true},{tableFailure:true}])test('unresolved target saves body but holds I '+JSON.stringify(opt),()=>{const h=harness(opt),r=h.run();assert.equal(r.written,1);assert.equal(r.held,1);assert.equal(r.whomHeld,1);assert.equal(h.values[8],'old target');assert.equal(h.values[11],'quietly');assert.equal(h.control().whomStatus,'HELD');assert.match(h.control().reviewReason,/指示対象英訳/);});
 test('untranslated European name remains nonempty and visibly unconfirmed',()=>{const h=harness({whom:'Arindal'});h.run();assert.equal(h.values[8],'Arindal');assert.equal(h.control().reason,'UPDATED_REVIEW_REQUIRED');assert.match(h.values[13],/確定ではありません/);});
 for(const opt of [{referenceChange:true},{approvalChange:true}])test('changed reference preserves I '+JSON.stringify(opt),()=>{const h=harness(opt);h.run();assert.equal(h.values[8],'old target');assert.equal(h.control().whomStatus,'HELD');assert.match(h.values[13],/対応表が変わった/);});
 test('body-write failure leaves I unchanged and save unresolved',()=>{const h=harness({bodyWriteFailure:true});assert.throws(()=>h.run());assert.equal(h.values[8],'old target');assert.equal(h.values[11],'old body');assert.equal(h.control().status,'WRITING');assert.ok(h.props.get('flight'));});
@@ -110,7 +111,7 @@ test('I-write failure retains saved body and unresolved flight; no resend',()=>{
 test('I readback failure stays unresolved with no automatic retry',()=>{const h=harness({readbackFailure:true});assert.throws(()=>h.run());assert.equal(h.control().status,'WRITING');assert.ok(h.props.get('flight'));assert.equal(h.counts().fetches,1);});
 test('unmatched I readback is reported as unknown, not held unchanged',()=>{const h=harness({ignoreIWrite:true}),r=h.run();assert.equal(h.control().status,'HOLD');assert.equal(h.control().whomStatus,'PENDING');assert.equal(r.whomUnconfirmed,1);assert.equal(r.whomHeld,0);});
 test('log failure with held target preserves WRITING across another click',()=>{const h=harness({hold:true,logWriteFailure:true});assert.throws(()=>h.run());h.run();assert.equal(h.control().status,'WRITING');assert.equal(h.control().whomStatus,'HELD');assert.equal(h.counts().fetches,1);});
-test('partial save status identifies L/I even when the input hash changed',()=>{const h=harness({whomWriteFailure:true});assert.throws(()=>h.run());const d=h.sandbox.sourceEnglishStatusDetail_(h.control(),{inputChanged:true,inFlight:true});assert.match(d.reason,/本文L・指示対象Iの保存完了は未確認/);assert.match(d.nextAction,/本文L・指示対象I・根拠N/);});
+test('partial save status identifies L/I even when the input hash changed',()=>{const h=harness({whomWriteFailure:true});assert.throws(()=>h.run());const d=h.sandbox.sourceEnglishStatusDetail_(h.control(),{inputChanged:true,inFlight:true});assert.match(d.reason,/本文英訳・指示対象英訳の保存完了は未確認/);assert.match(d.nextAction,/本文英訳・指示対象英訳・根拠欄/);});
 test('E edit after body save prevents I overwrite',()=>{const h=harness({afterBodyEdit:4});const r=h.run();assert.equal(r.written,0);assert.equal(h.control().status,'HOLD');assert.equal(h.values[8],'old target');assert.equal(h.values[4],'concurrent edit');});
 test('I edit after body save retains the user value',()=>{const h=harness({afterBodyEdit:8});h.run();assert.equal(h.values[8],'concurrent edit');assert.ok(!h.writes.includes(9));assert.equal(h.control().status,'HOLD');});
 test('concurrent N-only edit survives I update and is reported',()=>{const h=harness({afterBodyEdit:13});h.run();assert.equal(h.values[13],'concurrent edit');assert.equal(h.values[8],'Messenger');assert.equal(h.control().reason,'UPDATED_LOG_UNSAVED');assert.deepEqual(h.writes,[12,9]);});
@@ -124,5 +125,5 @@ test('invalid whom state is rejected by shared ledger validator',()=>{const h=ha
 test('RW/RS/GM editing remains inert without reading the table',()=>{for(const tab of ['RW','RS','GM']){const c=vm.createContext({NOTES_ENGLISH_META:'meta'});vm.runInContext(workflow,c);assert.equal(c.sourceEnglishEdited_({range:{getSheet:()=>({getName:()=>tab})},source:{}}),false);}});
 test('Notes and GM do not touch the whom table',()=>{for(const tab of ['Notes','GM'])assert.equal(resolver.sourceEnglishWhomPlan_({adapter:{name:tab}},{}),null);});
 test('I formulas prevent sending and are never overwritten',()=>{const h=harness();h.formulas[8]='=test';h.run();assert.equal(h.counts().fetches,0);assert.deepEqual(h.writes,[]);});
-test('input-limit and missing table reasons are visible without adoption',()=>{const h=harness({missingTable:true});h.run();const c=h.control();assert.equal(c.reviewed,false);const detail=h.sandbox.sourceEnglishStatusDetail_(c,{now:1800000010000,inputChanged:false,keyPresent:true});assert.match(detail.reason,/指示対象I/);assert.match(detail.nextAction,/本文L/);});
+test('input-limit and missing table reasons are visible without adoption',()=>{const h=harness({missingTable:true});h.run();const c=h.control();assert.equal(c.reviewed,false);const detail=h.sandbox.sourceEnglishStatusDetail_(c,{now:1800000010000,inputChanged:false,keyPresent:true});assert.match(detail.reason,/指示対象英訳/);assert.match(detail.nextAction,/本文英訳/);});
 console.log(JSON.stringify({passed,tests:names,networkCalls:0,productionWrites:0},null,2));

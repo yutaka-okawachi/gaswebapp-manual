@@ -104,7 +104,7 @@ function* englishDraftBindSteps_(ctx,key,deadline,batch){
   function source(){
     budget();const data=englishDraftFrameRead_(batch,'notes',function(){
       const count=notes.getLastRow();if(count<2||count>30000)throw new Error('原文の件数が範囲外です。');
-      const r=notes.getRange(1,1,count,3),values=r.getValues(),memo=r.getNotes(),formulas=r.getFormulas(),bySource=Object.create(null);
+      const read=namedSheetRead_(notes,['de','ja','source'],1,count,'raw'),values=read.values,memo=read.notes,formulas=read.formulas,bySource=Object.create(null);
       if(JSON.stringify(values[0])!==JSON.stringify(['de','ja','source'])||values.some(function(row){return row.some(function(x){return typeof x!=='string';});})||formulas.some(function(row){return row.some(Boolean);}))throw new Error('原文の列・型・数式を確認してください。');
       values.forEach(function(row,i){if(i){const fingerprint=JSON.stringify({row:row,notes:memo[i]});(bySource[fingerprint]||(bySource[fingerprint]=[])).push(i+1);}});
       return {bySource:bySource,digest:englishReviewDigest_({values:values,notes:memo})};
@@ -138,8 +138,8 @@ function* englishDraftBindSteps_(ctx,key,deadline,batch){
     // Do not leave other staged candidates at INTENT before their own tag attempt.
     yield* checkSource();persist();
     if(tags()||registryRows().length)throw new Error('結合開始後に識別情報が変わりました。');candidate();
-    const liveSource=notes.getRange(plan.binding.plannedRow,1,1,3);
-    if(JSON.stringify({row:liveSource.getValues()[0],notes:liveSource.getNotes()[0]})!==JSON.stringify({row:plan.row,notes:plan.notes})||liveSource.getFormulas()[0].some(Boolean))throw new Error('metadata作成直前に原文・補足が変わりました。');
+    const liveSource=namedSheetRead_(notes,['de','ja','source'],plan.binding.plannedRow,1,'raw');
+    if(JSON.stringify({row:liveSource.values[0],notes:liveSource.notes[0]})!==JSON.stringify({row:plan.row,notes:plan.notes})||liveSource.formulas[0].some(Boolean))throw new Error('metadata作成直前に原文・補足が変わりました。');
     englishDraftMeasured_('saveFlush',function(){notes.getRange(plan.binding.plannedRow+':'+plan.binding.plannedRow).addDeveloperMetadata(ENGLISH_REVIEW_METADATA_KEY,id,SpreadsheetApp.DeveloperMetadataVisibility.DOCUMENT);});
     tag=tags();if(!tag)throw new Error('metadata作成の読戻しができません。');receipt.metadataId=tag.getId();receipt.stage='TAGGED';persist();
   }else if(receipt.stage==='INTENT')throw new Error('前回のmetadata作成結果が未確定です。再作成せず要確認。');

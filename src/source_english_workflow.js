@@ -1,7 +1,6 @@
 /** Direct sheet editing. Only control metadata and a bounded current review reason persist; no previous English history. */
 const SOURCE_ENGLISH_MODE='direct-english-v2';
-// Future adapters must define their own columns and retain each existing row as the translation unit.
-// GM/RW/RS are deliberately absent: no guessed columns, merged German terms or new source columns.
+// Indices describe canonical meanings, not physical sheet columns. Named layouts retain existing row hashes.
 const SOURCE_ENGLISH_ADAPTERS={
   Notes:{name:'Notes',width:9,de:0,ja:1,source:2,draft:3,changes:4,english:5,italian:6,evidence:7,status:8,metadata:NOTES_ENGLISH_META},
   GM:{name:'GM',width:10,de:0,ja:2,source:3,draft:4,changes:5,english:6,italian:7,evidence:8,status:9,metadata:'GM_ENGLISH_ROW_V1'},
@@ -14,21 +13,21 @@ function sourceEnglishWhomPlan_(ctx,snapshot){
   if(!['RW','RS'].includes(ctx.adapter.name))return null;
   try{
     const sheet=ctx.book.getSheetByName('指示対象英訳確認');
-    if(!sheet)return {status:'HOLD',value:'',reason:'指示対象英訳確認タブが見つからないためIは保持しました。',referenceHash:'missing',reviewRequired:true};
+    if(!sheet)return {status:'HOLD',value:'',reason:'指示対象英訳確認タブが見つからないため指示対象英訳は保持しました。',referenceHash:'missing',reviewRequired:true};
     const last=sheet.getLastRow();
-    if(last<4||last>5004||sheet.getMaxColumns()<10)return {status:'HOLD',value:'',reason:'指示対象の対応表の範囲を確認できないためIは保持しました。',referenceHash:'invalid-range',reviewRequired:true};
+    if(last<4||last>5004||sheet.getMaxColumns()<10)return {status:'HOLD',value:'',reason:'指示対象の対応表の範囲を確認できないため指示対象英訳は保持しました。',referenceHash:'invalid-range',reviewRequired:true};
     const range=sheet.getRange(4,1,last-3,10);
     return sourceEnglishWhomResolve_(ctx.adapter.name,snapshot.values[0],snapshot.values[4],range.getDisplayValues(),range.getFormulas());
-  }catch(_){return {status:'HOLD',value:'',reason:'指示対象の対応表を読み取れないためIは保持しました。',referenceHash:'unavailable',reviewRequired:true};}
+  }catch(_){return {status:'HOLD',value:'',reason:'指示対象の対応表を読み取れないため指示対象英訳は保持しました。',referenceHash:'unavailable',reviewRequired:true};}
 }
 function sourceEnglishWhomResolve_(tab,work,whom,rows,formulas){
   const referenceHash=notesEnglishHash_([rows,formulas]);
-  function held(reason){return {status:'HOLD',value:'',reason:reason+' Iは保持しました。',referenceHash:referenceHash,reviewRequired:true};}
+  function held(reason){return {status:'HOLD',value:'',reason:reason+' 指示対象英訳は保持しました。',referenceHash:referenceHash,reviewRequired:true};}
   const headers=['区分','作品','指示対象（原語）','ユーザー選択案','ユーザー判断','第1案（推奨）','第2案','第3案','推奨理由・判断が難しい点','自由修正（英訳）'];
   if(!Array.isArray(rows)||!Array.isArray(formulas)||rows.length!==formulas.length||!rows.length||
     rows.some(function(r,i){return !Array.isArray(r)||r.length!==10||!Array.isArray(formulas[i])||formulas[i].length!==10||r.concat(formulas[i]).some(function(v){return typeof v!=='string'||v.length>45000;});})||
     headers.some(function(h,i){return rows[0][i]!==h||formulas[0][i];}))return held('指示対象の対応表の見出し・形式を確認してください。');
-  if(typeof whom!=='string'||!whom.trim())return held('Eの指示対象が空です。');
+  if(typeof whom!=='string'||!whom.trim())return held('whomの指示対象が空です。');
   const workCode=String(work).trim(),source=whom.trim(),matches=Object.create(null);
   for(let i=1;i<rows.length;i++){
     const r=rows[i],code=/\[([^\[\]\r\n]+)\]\s*$/.exec(r[1]);
@@ -68,7 +67,7 @@ function sourceEnglishWhomResolve_(tab,work,whom,rows,formulas){
   if(error)return held(error);
   if(!value||value.length>45000)return held('指示対象英訳の長さを確認してください。');
   return {status:'READY',value:value,referenceHash:referenceHash,reviewRequired:kept>0,
-    reason:kept?'承認対応のない欧文表記は原表記のまま保持します（英訳の確定ではありません）。':'同作品・同原語の承認済み選択をIへ反映します。'};
+    reason:kept?'承認対応のない欧文表記は原表記のまま保持します（英訳の確定ではありません）。':'同作品・同原語の承認済み選択を指示対象英訳へ反映します。'};
 }
 function sourceEnglishDirect_(){const c=notesEnglishConfig_();return !!(c&&c.mode===SOURCE_ENGLISH_MODE);}
 function sourceEnglishContext_(targetName){
@@ -81,11 +80,11 @@ function sourceEnglishContext_(targetName){
   return ctx;
 }
 function sourceEnglishSnapshot_(ctx,row){
-  const a=ctx.adapter,r=ctx.sheet.getRange(row,1,1,a.width),v=r.getDisplayValues()[0],n=r.getNotes()[0],f=r.getFormulas()[0];
+  const a=ctx.adapter,read=namedSheetRead_(ctx.sheet,sourceSheetNames_(ctx.sheet,a.width),row,1,true),v=read.values[0],n=read.notes[0],f=read.formulas[0];
   if(v.concat(n,f).some(function(x){return typeof x!=='string'||x.length>45000;}))throw new Error('入力が上限を超えています。切り詰めません。');
   function hash(indices){return notesEnglishHash_(indices.map(function(i){return [v[i],n[i],f[i]];}));}
   const status=v[a.status]||(a.name!=='Notes'?'確認待ち':''),draft=v[a.draft].trim()||(a.name!=='Notes'?v[a.ja].trim():'');
-  return {values:v,notes:n,formulas:f,inputHash:notesEnglishHash_([v,n,f]),jaHash:hash([a.draft]),fHash:hash([a.english]),sourceHash:hash([a.de,a.ja,a.source]),
+  return {values:v,notes:n,formulas:f,layout:read.layout,inputHash:notesEnglishHash_([v,n,f]),jaHash:hash([a.draft]),fHash:hash([a.english]),sourceHash:hash([a.de,a.ja,a.source]),
     eligible:['確認待ち','承認','保留'].includes(status)&&!!v[a.de].trim()&&!!draft&&!f.some(Boolean),
     manualEligible:['確認待ち','承認','保留'].includes(status)&&!!v[a.de].trim()&&!!draft&&!f.some(Boolean)};
 }
@@ -162,6 +161,7 @@ function sourceEnglishCapture_(ctx,controls,index,row,options){
 }
 function prepareSourceEnglishWorkflow(){
   const result=notesEnglishLock_(function(){const book=notesEnglishBook_(),sheet=book.getSheetByName('Notes');if(!sheet||sheet.getMaxColumns()<9)throw new Error('Notesの作業列を確認してください。');
+    namedSheetColumns_(sheet,sourceSheetNames_(sheet,9));
     let config=notesEnglishConfig_();if(!config){
       if(book.getSheetByName(NOTES_ENGLISH_LEDGER))throw new Error('内部タブだけが存在します。設定との対応を点検してください。');
       const old=book.getSheetByName('日英修正案');if(old&&old.getMaxColumns()>=30&&old.getLastRow()>4&&old.getRange(5,28,old.getLastRow()-4,1).getDisplayValues().some(function(r){return /^(受付|処理中)/.test(r[0]);}))throw new Error('旧再英訳の処理中受付を先に整理してください。');
@@ -186,9 +186,10 @@ function sourceEnglishEdited_(e){
   const sheetName=range.getSheet().getName();
   if(['RW','RS','GM'].includes(sheetName))return false;
   const adapter=sourceEnglishAdapter_(sheetName);
-  if(!adapter||range.getLastRow()<2||range.getColumn()>adapter.width)return true;
+  if(!adapter||range.getLastRow()<2)return true;
   try{notesEnglishLock_(function(){const ctx=sourceEnglishContext_(sheetName);if(e.source.getId()!==ctx.book.getId()||range.getSheet().getSheetId()!==ctx.sheet.getSheetId())return;
-    const a=ctx.adapter,first=range.getColumn()-1,last=range.getLastColumn()-1,intersects=function(c){return c>=first&&c<=last;},draftEdit=intersects(a.draft),cancel=!draftEdit||intersects(a.english)||[a.de,a.ja,a.source,a.status].some(intersects);
+    const a=ctx.adapter,columns=sourceEnglishColumns_(ctx).positions,first=range.getColumn()-1,last=range.getLastColumn()-1,intersects=function(c){return columns[c]>=first&&columns[c]<=last;},draftEdit=intersects(a.draft),cancel=!draftEdit||intersects(a.english)||[a.de,a.ja,a.source,a.status].some(intersects);
+    if(!columns.some(function(c){return c>=first&&c<=last;}))return;
     const controls=sourceEnglishControls_(ctx),index=sourceEnglishIndex_(ctx),start=Date.now();let processed=0;
     for(let row=Math.max(2,range.getRow());row<=Math.min(ctx.sheet.getLastRow(),range.getLastRow());row++){
       if(processed>=20||Date.now()-start>7000)break;sourceEnglishCapture_(ctx,controls,index,row,{draftEdit:draftEdit,cancel:cancel,explicit:false});processed++;
@@ -212,7 +213,7 @@ function regenerateSourceEnglishSelection(){
     if(!adapter)throw new Error('Notes、GM、RW、RSの対象1〜20行を選択してください。');
     targetTab=sheetName;const ctx=sourceEnglishContext_(sheetName);
     if(range.getSheet().getSheetId()!==ctx.sheet.getSheetId())throw new Error(sheetName+'の対象1〜20行を選択してください。');
-    if(ctx.sheet.getMaxColumns()<adapter.width)throw new Error(sheetName+'の列数が不足しています（'+adapter.width+'列以上必要です）。');
+    sourceEnglishColumns_(ctx);
     const first=Math.max(2,range.getRow()),last=Math.min(ctx.sheet.getLastRow(),range.getLastRow()),count=last-first+1;if(count<1||count>20)throw new Error('見出しを除き、'+sheetName+'の対象1〜20行を選択してください。');
     const key=PropertiesService.getScriptProperties().getProperty(NOTES_ENGLISH_API_KEY),api=notesEnglishApiConfig_();if(!key)throw new Error('APIキーを先に設定してください。');if((!api.tested||api.testedKeyHash!==notesEnglishHash_(key))&&count!==1)throw new Error('初回はテストする1行だけを選択してください。');
     const controls=sourceEnglishControls_(ctx),index=sourceEnglishIndex_(ctx),ids=[];
@@ -230,11 +231,11 @@ function sourceEnglishProcessMessage_(result){
     TIME_LIMIT:'今回の処理時間上限です。残りの行を選んで再生成してください。',
     COALESCING:'編集確定の待ち時間内です。少し待って対象行を再生成してください。'};
   let message='英訳再生成：保存 '+result.written+'件／要確認 '+result.held+'件／待ち '+result.pending+'件。'+(reasons[result.pendingReason]||'');
-  if(result.held)message+=' 要確認には、入力変更による応答破棄や受付記録の欠落も含みます。対象行の状態と'+(result.whomHeld!==undefined?'本文L・指示対象I・根拠N':'F・H')+'を確認してください。';
+  if(result.held)message+=' 要確認には、入力変更による応答破棄や受付記録の欠落も含みます。対象行の状態と'+(result.whomHeld!==undefined?'本文英訳・指示対象英訳・根拠欄':'英訳候補・根拠欄')+'を確認してください。';
   if(result.pending)message+=' 自動再試行予定はありません。';
   if(result.waitRecordSaved===false&&result.pending)message+=' 待ち理由の保存を確認できません。状態メニューで再確認してください。';
-  if(result.whomHeld)message+=' 指示対象Iは '+result.whomHeld+'件を保持しました。本文L・指示対象I・根拠Nを確認してください。';
-  if(result.whomUnconfirmed)message+=' 指示対象Iは '+result.whomUnconfirmed+'件の保存完了が未確認です。再送せず本文L・指示対象I・根拠Nを確認してください。';
+  if(result.whomHeld)message+=' 指示対象英訳は '+result.whomHeld+'件を保持しました。本文英訳・指示対象英訳・根拠欄を確認してください。';
+  if(result.whomUnconfirmed)message+=' 指示対象英訳は '+result.whomUnconfirmed+'件の保存完了が未確認です。再送せず本文英訳・指示対象英訳・根拠欄を確認してください。';
   return message;
 }
 function enableSourceEnglishAutomatic(){SpreadsheetApp.getActiveSpreadsheet().toast('英訳は手動再生成のみです。対象行を選び「選択行の英訳を再生成」を実行してください。','英訳',12);return {enabled:false,stoppedReason:'MANUAL_ONLY'};}
@@ -293,7 +294,10 @@ function showSourceEnglishStatus(){
         '\n次の操作：'+detail.nextAction;
       if(c&&['BATCH_LIMIT','TIME_LIMIT'].includes(c.waitCode))s.message+='\n前回理由の記録：'+sourceEnglishStatusTime_(c.waitObservedAt,timezone);
       if(c){s.selectedReviewReason=sourceEnglishReviewMessage_(ctx,c,row);if(s.selectedReviewReason)s.message+='\n注意：'+s.selectedReviewReason;}
-      s.message+='\n処理ログ全文：同じ行の'+(String.fromCharCode(65+ctx.adapter.evidence))+'列';
+      s.selectedColumns={english:namedSheetColumnLabel_(snapshot.layout.positions[ctx.adapter.english]),evidence:namedSheetColumnLabel_(snapshot.layout.positions[ctx.adapter.evidence])};
+      if(['RW','RS'].includes(ctx.adapter.name))s.selectedColumns.whomEnglish=namedSheetColumnLabel_(snapshot.layout.positions[8]);
+      s.message+='\n現在の保存先：英訳候補 '+s.selectedColumns.english+'列'+(s.selectedColumns.whomEnglish?'／指示対象英訳 '+s.selectedColumns.whomEnglish+'列':'')+'／根拠 '+s.selectedColumns.evidence+'列';
+      s.message+='\n処理ログ全文：同じ行の'+namedSheetColumnLabel_(snapshot.layout.positions[ctx.adapter.evidence])+'列（根拠・未解決点）';
     }
   }
   s.displayed=false;try{ctx.book.toast(s.message,'英訳の状態（手動）',60);s.displayed=true;}catch(_){}
@@ -306,8 +310,8 @@ function showSourceEnglishStatus(){
 
 
 function sourceEnglishRangeHash_(ctx,from,to){
-  const r=ctx.sheet.getRange(from,1,to-from+1,ctx.adapter.width),source=ctx.sheet.getRange(2,1,ctx.sheet.getLastRow()-1,3),index=sourceEnglishIndex_(ctx);
-  return notesEnglishHash_([r.getDisplayValues(),r.getNotes(),r.getFormulas(),source.getDisplayValues(),Object.keys(index.byId).sort().map(function(id){return [id,index.byId[id]];})]);
+  const names=sourceSheetNames_(ctx.sheet,ctx.adapter.width),r=namedSheetRead_(ctx.sheet,names,from,to-from+1,true),source=namedSheetRead_(ctx.sheet,names.slice(0,3),2,ctx.sheet.getLastRow()-1,true),index=sourceEnglishIndex_(ctx);
+  return notesEnglishHash_([r.values,r.notes,r.formulas,source.values,Object.keys(index.byId).sort().map(function(id){return [id,index.byId[id]];})]);
 }
 
 // Keep only the current needs_review explanation; never persist the response or F history.
@@ -344,26 +348,26 @@ function sourceEnglishStatusDetail_(c,facts){
     MONTHLY_LIMIT:'月の費用または回数上限に達しました。',INPUT_LIMIT:'送信文字量の上限に達しました。',
     WRITE_CONFLICT:'保存時に同時編集を検出しました。',ROW_ID_MISSING:'対象行の識別を確認できません。',
     USER_HOLD:'行は保留です。',INPUT_CHANGED:'受付後に入力内容が変わりました。',USER_EDIT:'編集により受付が停止しました。',
-    MEANING_REVIEW_REQUIRED:'旧処理の意味確認待ちです。Fは未保存です。',
-    UPDATED_UNREVIEWED:'F保存済みです。採否は未確認です。',UPDATED_REVIEW_REQUIRED:'F保存済みです。意味や引用の注意があります。',
-    UPDATED_LOG_UNSAVED:'F保存済みですが、同時編集または容量上限によりHログを保存できませんでした。'};
+    MEANING_REVIEW_REQUIRED:'旧処理の意味確認待ちです。英訳候補は未保存です。',
+    UPDATED_UNREVIEWED:'英訳候補保存済みです。採否は未確認です。',UPDATED_REVIEW_REQUIRED:'英訳候補保存済みです。意味や引用の注意があります。',
+    UPDATED_LOG_UNSAVED:'英訳候補保存済みですが、同時編集または容量上限により根拠欄のログを保存できませんでした。'};
   if(c.status==='RESERVED'||c.status==='WRITING'){
     detail.phase=c.status==='RESERVED'?'送信予約あり・応答未確認':'応答確認済み・保存完了未確認';
     detail.reason=c.status==='RESERVED'?'送信予約の記録があります。実際のAPI開始・実行中・終了は確認できません。':'保存開始の記録があります。現在も保存中か、途中で停止したかは確認できません。';
-    detail.nextAction='再送せず、GASの実行履歴と同じ行のF・Hを確認してください。';
+    detail.nextAction='再送せず、GASの実行履歴と同じ行の英訳候補・根拠欄を確認してください。';
   }else if(facts.inputChanged){
     detail.phase='入力変更あり';
     detail.reason='現在の内容と受付記録が一致しません。以前の結果や注意は現在の内容に適用できません。';
     detail.nextAction='現在の内容を確認し、対象行を選んで再生成してください。';
     if(facts.inFlight){
       detail.reason+=' 送信／結果未確定の記録もあります。現在の実行状況は不明です。';
-      detail.nextAction='再送せず、GASの実行履歴と関係する行のF・Hを確認してください。送信中記録は自動解除しません。';
+      detail.nextAction='再送せず、GASの実行履歴と関係する行の英訳候補・根拠欄を確認してください。送信中記録は自動解除しません。';
     }
   }else if(c.status==='REQUEST'){
     detail.phase='受付済み・送信開始未確認';
     if(facts.inFlight){
       detail.reason=facts.flightMatched?'別の送信中または結果未確定の記録があり、新しい送信を止めています。':'対応する処理を確認できない送信中記録があり、新しい送信を止めています。実行中かは不明です。';
-      detail.nextAction='再送せず、GASの実行履歴と前回のF・Hを確認してください。送信中記録は自動解除しません。';
+      detail.nextAction='再送せず、GASの実行履歴と前回の英訳候補・根拠欄を確認してください。送信中記録は自動解除しません。';
     }else if(!facts.keyPresent){
       detail.phase='停止・設定不足';detail.reason='APIキーが未設定のため送信できません。';
       detail.nextAction='APIキー設定を確認後、対象行を選んで再生成してください。';
@@ -376,18 +380,18 @@ function sourceEnglishStatusDetail_(c,facts){
     }
   }else if(c.status==='WRITTEN'){
     detail.phase='保存済み・本人確認待ち';detail.reason=reasons[c.reason]||'保存済みです。採否は未確認です。';
-    detail.nextAction='同じ行のFとHを確認し、内容と採否を本人が判断してください。';
+    detail.nextAction='同じ行の英訳候補と根拠欄を確認し、内容と採否を本人が判断してください。';
   }else if(c.status==='HOLD'){
     detail.phase='停止・要確認';detail.reason=reasons[c.reason]||'停止理由を確認できません。';
-    detail.nextAction='同じ行のHと必要に応じて実行履歴を確認し、原因を解消してから手動再生成してください。';
+    detail.nextAction='同じ行の根拠欄と必要に応じて実行履歴を確認し、原因を解消してから手動再生成してください。';
   }else{
     detail.phase='再生成未依頼';detail.reason=reasons[c.reason]||'明示的な再生成依頼はありません。';
   }
   if(facts.inputChanged&&['RESERVED','WRITING'].includes(c.status))detail.reason+=' 現在の入力も受付時から変わっています。';
   if(c.whomStatus){
-    if(c.status==='WRITING')detail.reason+=' 本文L・指示対象Iの保存完了は未確認です。';
-    else if(!facts.inputChanged)detail.reason+=' 指示対象I：'+(c.whomStatus==='PENDING'?'更新完了は未確認です。':c.whomStatus==='UPDATED'?'保存済みです。':'保持しました。')+c.whomReason;
-    detail.nextAction+=' 本文L・指示対象I・根拠Nを確認してください。';
+    if(c.status==='WRITING')detail.reason+=' 本文英訳・指示対象英訳の保存完了は未確認です。';
+    else if(!facts.inputChanged)detail.reason+=' 指示対象英訳：'+(c.whomStatus==='PENDING'?'更新完了は未確認です。':c.whomStatus==='UPDATED'?'保存済みです。':'保持しました。')+c.whomReason;
+    detail.nextAction+=' 本文英訳・指示対象英訳・根拠欄を確認してください。';
   }
   return detail;
 }

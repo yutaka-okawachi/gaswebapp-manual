@@ -141,10 +141,13 @@ function englishTranslationSourceEdited(e) {
   if (!range) return false;
   const tab = range.getSheet().getName();
   if (['RW','RS','GM'].includes(tab)) return false;
-  const columns = tab === 'Notes' ? [1,2,3] : tab === 'GM' ? [1,3,4] : tab === 'RW' || tab === 'RS' ? [1,2,3,4,5,6,8,9,10,11,12,14] : [];
-  if (!columns.some(function (c) { return c >= range.getColumn() && c <= range.getLastColumn(); }) || range.getLastRow() < 2) return false;
-  if (!e.source.getSheetByName('英訳確認')) return true;
-  try { englishReviewSyncSources_(false, tab); }
+  if (tab !== 'Notes' || range.getLastRow() < 2) return false;
+  try {
+    const columns = namedSheetColumns_(range.getSheet(), ['de', 'ja', 'source']).positions.map(function(c){return c+1;});
+    if (!columns.some(function (c) { return c >= range.getColumn() && c <= range.getLastColumn(); })) return false;
+    if (!e.source.getSheetByName('英訳確認')) return true;
+    englishReviewSyncSources_(false, tab);
+  }
   catch (_) { e.source.toast('英訳確認の自動更新を完了できませんでした。確認画面で最新の内容を読み直してください。', '英訳作業', 8); }
   return true;
 }

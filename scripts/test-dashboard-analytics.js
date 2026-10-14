@@ -387,10 +387,13 @@ const context = {
         getSheetByName(name) {
           assert.strictEqual(name, 'Notes');
           return {
+            getName() { return 'Notes'; },
+            getLastColumn() { return 2; },
             getLastRow() {
               return 3;
             },
             getRange(row, column, rowCount, columnCount) {
+              if (row === 1) return { getDisplayValues: () => [['de', 'ja']], getFormulas: () => [['', '']] };
               assert.deepStrictEqual([row, column, rowCount, columnCount], [2, 1, 2, 2]);
               return {
                 getValues() {
@@ -578,7 +581,7 @@ const context = {
 };
 
 vm.createContext(context);
-vm.runInContext(fs.readFileSync(sourcePath, 'utf8'), context, {
+vm.runInContext(fs.readFileSync(path.join(repositoryRoot, 'src/sheet_column_layout.js'), 'utf8') + '\n' + fs.readFileSync(sourcePath, 'utf8'), context, {
   filename: sourcePath
 });
 

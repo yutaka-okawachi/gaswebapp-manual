@@ -54,24 +54,19 @@ function englishReviewSources_(workbook, tabs, selectedRows) {
     const sheet = workbook.getSheetByName(tab);
     if (!sheet) throw new Error('元タブが見つかりません。');
     const width = tab === 'Notes' ? 3 : tab === 'GM' ? 4 : 14;
-    const expected = tab === 'Notes' ? ['de', 'ja', 'source'] : tab === 'GM'
-      ? ['de', 'de_normalized', 'ja', 'data']
-      : ['Oper', 'Aufzug', 'Szene', 'page', 'whom', 'de', 'de_normalized', 'ja'];
-    const header = sheet.getRange(1, 1, 1, width).getDisplayValues()[0];
-    if (expected.some(function (v, i) { return v !== header[i]; })) {
-      throw new Error('元タブの列構成が変更されています。書込みを停止しました。');
-    }
+    const names = sourceSheetNames_(sheet, width);
+    namedSheetColumns_(sheet, names);
     const index = Object.create(null); index.byRow = Object.create(null);
     const count = sheet.getLastRow() - 1;
     if (count > 30000) throw new Error('元タブの件数が上限を超えています。');
     const rowNumbers = selectedRows ? Array.from(new Set(selectedRows[tab] || [])).filter(function(n){return n>=2&&n<=count+1;}).sort(function(a,b){return a-b;}) : [];
     const groups=[];rowNumbers.forEach(function(n){const last=groups[groups.length-1];if(last&&last.first+last.count===n)last.count++;else groups.push({first:n,count:1});});
     const ranges = selectedRows ? groups.map(function (part) {
-      return { range: sheet.getRange(part.first, 1, part.count, width), first: part.first };
-    }) : count > 0 ? [{ range: sheet.getRange(2, 1, count, width), first: 2 }] : [];
+      return { first: part.first, count: part.count };
+    }) : count > 0 ? [{ first: 2, count: count }] : [];
     ranges.forEach(function (part) {
-    const notes = part.range.getNotes ? part.range.getNotes() : [];
-    part.range.getDisplayValues().forEach(function (row, i) {
+    const read = namedSheetRead_(sheet, names, part.first, part.count, true), notes = read.notes;
+    read.values.forEach(function (row, i) {
       const de = row[tab === 'Notes' || tab === 'GM' ? 0 : 5];
       if (!de) return;
       const key = englishReviewSourceKey_(tab, row, false);

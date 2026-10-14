@@ -17,8 +17,11 @@ class Sheet {
   getName() { return this.name; }
   getSheetId() { return this.id; }
   getLastRow() { return this.rows.length; }
+  getLastColumn() { return Math.max(...this.rows.map(row => row.length)); }
   getRange(row, col, height, width) {
     return {
+      getDisplayValues: () => this.rows.slice(row - 1, row - 1 + height).map(item => item.slice(col - 1, col - 1 + width).map(String)),
+      getFormulas: () => Array.from({length: height}, () => Array(width).fill('')),
       getValues: () => this.rows.slice(row - 1, row - 1 + height)
         .map(item => item.slice(col - 1, col - 1 + width)),
       setValues: values => {
@@ -66,7 +69,7 @@ const context = {
   }) }
 };
 vm.createContext(context);
-vm.runInContext(read('src/dictionary_candidate_workflow.js'), context);
+vm.runInContext(read('src/sheet_column_layout.js') + '\n' + read('src/dictionary_candidate_workflow.js'), context);
 vm.runInContext(read('src/morphology_survey_review.js'), context);
 vm.runInContext('dictionarySourceMarkers = () => ["[RS: Oper]"];' +
   'updateNotesSourceMarkersForHeadword = () => { sourceUpdates++; };', context);

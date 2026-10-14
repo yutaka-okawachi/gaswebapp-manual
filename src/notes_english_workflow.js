@@ -50,9 +50,9 @@ function notesEnglishMetadataRowRange_(sheet,row){
   return range;
 }
 function notesEnglishSnapshot_(sheet,row){
-  const range=sheet.getRange(row,1,1,9),v=range.getDisplayValues()[0],n=range.getNotes()[0],f=range.getFormulas()[0];
+  const read=namedSheetRead_(sheet,sourceSheetNames_(sheet,9),row,1,true),v=read.values[0],n=read.notes[0],f=read.formulas[0];
   if(v.concat(n,f).some(function(x){return typeof x!=='string'||x.length>45000;}))throw new Error('Notesのセルを安全に固定できません。');
-  return {values:v,notes:n,formulas:f,digest:notesEnglishHash_([v,n,f]),source:notesEnglishHash_([v.slice(0,3),n.slice(0,3),f.slice(0,3)])};
+  return {values:v,notes:n,formulas:f,layout:read.layout,digest:notesEnglishHash_([v,n,f]),source:notesEnglishHash_([v.slice(0,3),n.slice(0,3),f.slice(0,3)])};
 }
 function notesEnglishIndex_(ctx){
   const byId=Object.create(null),byRow=Object.create(null);
@@ -100,7 +100,8 @@ function notesEnglishRequestable_(snapshot){return ['確認待ち','承認'].inc
 function prepareNotesEnglishWorkflow(){
   if(typeof sourceEnglishDirect_==='function'&&sourceEnglishDirect_())throw new Error('直接英訳へ切替済みです。旧初期化は使用できません。');
   const outcome=notesEnglishLock_(function(){
-    const book=notesEnglishBook_(),sheet=book.getSheetByName('Notes');if(!sheet||sheet.getMaxColumns()<9)throw new Error('Notes A:Iを先に準備してください。');
+    const book=notesEnglishBook_(),sheet=book.getSheetByName('Notes');if(!sheet||sheet.getMaxColumns()<9)throw new Error('Notesの作業見出しを先に準備してください。');
+    namedSheetColumns_(sheet,sourceSheetNames_(sheet,9));
     let config=notesEnglishConfig_();
     if(!config){
       // Migration-only dependency: refuse cutover while the old writer has acknowledged work.
@@ -113,7 +114,7 @@ function prepareNotesEnglishWorkflow(){
       PropertiesService.getScriptProperties().setProperty(NOTES_ENGLISH_PROPERTY,JSON.stringify(config));
     }
     const ctx=notesEnglishContext_(),index=notesEnglishIndex_(ctx),records=notesEnglishRecords_(ctx),started=Date.now();let added=0,remaining=0;
-    const drafts=sheet.getLastRow()>1?sheet.getRange(2,4,sheet.getLastRow()-1,1).getDisplayValues():[];
+    const drafts=namedSheetRead_(sheet,['現在の日本語（修正案）'],2,Math.max(0,sheet.getLastRow()-1),true).values;
     for(let row=2;row<=sheet.getLastRow();row++){
       if(!drafts[row-2][0].trim())continue;
       let id=index.byRow[row];if(id&&notesEnglishLatest_(records,id))continue;
@@ -151,8 +152,10 @@ function notesEnglishEdited_(e){
   const name=range.getSheet().getName();if(['日英修正案','英訳確認'].includes(name))return true;
   if(name!=='Notes')return false;
   if(typeof sourceEnglishDirect_==='function'&&sourceEnglishDirect_())return sourceEnglishEdited_(e);
-  if(range.getLastRow()<2||range.getColumn()>9)return true;
+  if(range.getLastRow()<2)return true;
   try{notesEnglishLock_(function(){const ctx=notesEnglishContext_();if(ctx.config.phase!=='ACTIVE')return;
+    const columns=namedSheetColumns_(ctx.sheet,SOURCE_SHEET_COLUMN_NAMES.Notes).positions,firstColumn=range.getColumn()-1,lastColumn=range.getLastColumn()-1;
+    if(!columns.some(function(c){return c>=firstColumn&&c<=lastColumn;}))return;
     const index=notesEnglishIndex_(ctx),records=notesEnglishRecords_(ctx),first=Math.max(2,range.getRow()),last=range.getLastRow(),started=Date.now();let processed=0;
     for(let row=first;row<=last;row++){if(processed>=20||Date.now()-started>8000)break;const id=index.byRow[row];if(id){notesEnglishObserve_(ctx,records,index,id,'EDIT');processed++;}}
   });}catch(_){try{e.source.toast('Notes英訳の受付を完了できませんでした。状態確認メニューで再照合してください。入力は保持しています。','Notes英訳',8);}catch(ignore){}}
@@ -196,7 +199,7 @@ function notesEnglishApply_(ctx,records,staged){
     throw new Error('保存直前の競合で停止しました。');
   }
   // This is a checked write, NOT a compare-and-swap. Human/API edits do not honor GAS locks.
-  notesEnglishWrite_(ctx.sheet.getRange(row,6,1,1),[staged.values[28]]);SpreadsheetApp.flush();
+  notesEnglishWrite_(namedSheetCell_(ctx.sheet,sourceSheetNames_(ctx.sheet,9),row,5),[staged.values[28]]);SpreadsheetApp.flush();
   const finalIndex=notesEnglishIndex_(ctx),finalRow=finalIndex.byId[id];if(!finalRow)throw new Error('F保存後に対象行を確認できません。自動再保存しません。');
   const after=notesEnglishSnapshot_(ctx.sheet,finalRow),expected=before.values.slice();expected[5]=staged.values[28];
   if(finalRow!==row||after.digest!==notesEnglishHash_([expected,before.notes,before.formulas])){

@@ -1712,7 +1712,7 @@ function readDashboardTranslationMap() {
     if (!spreadsheetId) return translations;
     const sheet = SpreadsheetApp.openById(spreadsheetId).getSheetByName('Notes');
     if (!sheet || sheet.getLastRow() < 2) return translations;
-    const rows = sheet.getRange(2, 1, sheet.getLastRow() - 1, 2).getValues();
+    const rows = namedSheetRead_(sheet, ['de', 'ja'], 2, sheet.getLastRow() - 1).values;
     rows.forEach(row => {
       const key = normalizeDashboardTerm(row[0]);
       const translation = sanitizeDashboardTranslation(row[1]);

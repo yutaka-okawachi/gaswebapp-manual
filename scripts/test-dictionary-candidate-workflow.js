@@ -197,7 +197,7 @@ function testJevCandidateRequest() {
       .replace(/ä/g, 'ae').replace(/ö/g, 'oe').replace(/ü/g, 'ue').replace(/ß/g, 'ss')
   };
   vm.createContext(context);
-  vm.runInContext(read('src/jev_candidate_review.js'), context, {
+  vm.runInContext(read('src/sheet_column_layout.js') + '\n' + read('src/jev_candidate_review.js'), context, {
     filename: 'src/jev_candidate_review.js'
   });
   const candidates = context.jevCandidateHeadwords([
@@ -218,11 +218,12 @@ function testJevCandidateRequest() {
   const ranges = [];
   const phrase = 'Man hört das Kriegsgewühl aus der Ferne.';
   const sourceSheet = {
+    getName: () => 'RW',
     getLastRow: () => 500,
     getLastColumn: () => 8,
     getRange(row, column, count) {
       ranges.push([row, column, count]);
-      if (row === 1) return { getValues: () => [[
+      if (row === 1) return { getFormulas: () => [Array(8).fill('')], getDisplayValues: () => [[
         'Oper', 'Aufzug', 'Szene', 'page', 'whom', 'de', 'de_normalized', 'ja'
       ]] };
       if (row === 2 && column === 7) return {

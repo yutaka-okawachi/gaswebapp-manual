@@ -87,12 +87,12 @@ function runCandidateTests(workflow,api){
    [{requestedAt:-1},{waitCode:'ARBITRARY',waitObservedAt:NOW},{waitCode:'BATCH_LIMIT'},{status:'HOLD',waitCode:'BATCH_LIMIT',waitObservedAt:NOW}].forEach(function(change){let threw=false;try{parse(Object.assign(control(),change));}catch(_){threw=true;}ok(threw,'reject malformed');});
  });
  test('status menu: read only, safe heading, explicit unknown times, no text in logs',function(){
-   let toast='',log='',propertyWrites=0;const c=control(),cs={[id]:{value:c}},snap=snapshot();snap.values[0]='sample mock-key';
+   let toast='',log='',propertyWrites=0;const c=control(),cs={[id]:{value:c}},snap=snapshot();snap.values[0]='sample mock-key';snap.layout={positions:Array.from({length:9},function(_,i){return i;})};
    const book={getId:function(){return 'book';},getActiveRange:function(){return {getSheet:function(){return {getSheetId:function(){return 7;}};},getRow:function(){return 2;}};},getSpreadsheetTimeZone:function(){return 'Asia/Tokyo';},toast:function(v){toast=v;}};
    const local={book:book,adapter:ctx.adapter,sheet:{getSheetId:function(){return 7;},getLastRow:function(){return 3;}}};
    const e=env({SpreadsheetApp:{getActiveSpreadsheet:function(){return book;}},PropertiesService:{getScriptProperties:function(){return {getProperty:function(k){return k==='SPREADSHEET_ID'?'book':k==='key'?'mock-key':null;},setProperty:function(){propertyWrites++;throw new Error('forbidden write');},deleteProperty:function(){throw new Error('forbidden delete');}};}},
     sourceEnglishContext_:function(){return local;},sourceEnglishControls_:function(){return cs;},sourceEnglishIndex_:function(){return {byId:{[id]:2},byRow:{2:id}};},sourceEnglishSnapshot_:function(){return snap;},sourceEnglishReviewMessage_:function(){return '';},
-    Utilities:{formatDate:function(){return 'test-time';}},console:{log:function(v){log=v;}}});
+    namedSheetColumnLabel_:function(p){return String.fromCharCode(65+p);},Utilities:{formatDate:function(){return 'test-time';}},console:{log:function(v){log=v;}}});
    const f=compile(['showSourceEnglishStatus','sourceEnglishStatusDetail_','sourceEnglishStatusTime_','sourceEnglishReviewText_'],e),r=f.showSourceEnglishStatus();
    ok(r.displayed&&toast.includes('Notes 2行')&&toast.includes('不明（時刻の記録なし）')&&toast.includes('自動再試行予定なし'),'display');
    ok(!toast.includes('mock-key')&&!log.includes('sample')&&!log.includes('mock-key'),'redaction');eq(propertyWrites,0,'read only');eq(c,control(),'control unchanged');
@@ -111,7 +111,7 @@ function runCandidateTests(workflow,api){
    const index={byId:{[id]:2},byRow:{2:id}};
    const lock={tryLock:function(){return !o.lockFailure;},releaseLock:function(){}};
    const e=env({notesEnglishHash_:hash,notesEnglishJson_:JSON.parse,sourceEnglishContext_:function(){return local;},sourceEnglishControls_:function(){return cs;},sourceEnglishIndex_:function(){return index;},sourceEnglishSnapshot_:function(){if(o.readbackFailure&&writeCols.includes(6))throw new Error('readback failed');return snap();},
-    sourceEnglishRequestable_:function(){return true;},sourceEnglishSave_:function(ct,controls,n){controls[id]={value:clone(n)};return n;},sourceEnglishCapture_:function(){cs[id].value.status='OBSERVE';},
+    sourceEnglishCell_:function(ct,row,col){return ct.sheet.getRange(row,col+1,1,1);},sourceEnglishRequestable_:function(){return true;},sourceEnglishSave_:function(ct,controls,n){controls[id]={value:clone(n)};return n;},sourceEnglishCapture_:function(){cs[id].value.status='OBSERVE';},
     notesEnglishApiSettle_:function(){settlements++;},sourceEnglishTested_:function(){},LockService:{getScriptLock:function(){return lock;},getDocumentLock:function(){return lock;}},
     PropertiesService:{getScriptProperties:function(){return {getProperty:function(k){return props.get(k)||null;},deleteProperty:function(k){props.delete(k);}};}},
     UrlFetchApp:{fetch:function(){fetches++;if(o.newerEdit)cs[id].value.revision++;if(o.sourceEdit)currentValues[3]='changed by user';return {getResponseCode:function(){return o.httpFailure?500:200;},getContentText:function(){return '{}';}};}},
@@ -121,7 +121,7 @@ function runCandidateTests(workflow,api){
    let result,error;try{result=compile(['sourceEnglishExecute_','sourceEnglishResultLock_','sourceEnglishState_','sourceEnglishLog_','sourceEnglishStop_','sourceEnglishReviewText_'],e).sourceEnglishExecute_(job);}catch(err){error=err.message;}
    return {result:result,error:error,c:cs[id].value,values:currentValues,fetches:fetches,settlements:settlements,writeCols:writeCols,logs:logs,flight:props.get('flight')};
  }
- test('execute: successful F/H write has receipt/reservation/response times and no adoption',function(){const t=execute();eq([t.result,t.fetches,t.settlements,t.c.status,t.c.reviewed,t.flight],['written',1,1,'WRITTEN',false,undefined],'saved');eq([t.c.requestedAt,t.c.reservedAt,t.c.responseAt],[NOW-100,NOW-10,NOW],'times');eq(t.writeCols,[6,8],'only F and H in mocked workflow');eq(t.values[3],'draft','D preserved');eq(t.values[8],'確認待ち','I preserved');});
+ test('execute: successful 英訳候補/根拠欄 write has receipt/reservation/response times and no adoption',function(){const t=execute();eq([t.result,t.fetches,t.settlements,t.c.status,t.c.reviewed,t.flight],['written',1,1,'WRITTEN',false,undefined],'saved');eq([t.c.requestedAt,t.c.reservedAt,t.c.responseAt],[NOW-100,NOW-10,NOW],'times');eq(t.writeCols,[6,8],'only F and H in mocked workflow');eq(t.values[3],'draft','D preserved');eq(t.values[8],'確認待ち','I preserved');});
  test('execute: advisory saves full English and human-review reason',function(){const t=execute({advisory:true});eq([t.result,t.c.reason,t.c.reviewReason,t.values[5]],['written','UPDATED_REVIEW_REQUIRED','confirm quotation','new English'],'advisory');});
  test('execute: new control or edited source discards stale response',function(){[{newerEdit:true},{sourceEdit:true}].forEach(function(o){const t=execute(o);eq([t.result,t.fetches,t.values[5],t.writeCols.length],['held',1,'old en',0],'preserve');});});
  test('execute: concurrent H edit retained after F save',function(){const t=execute({hEdit:true});eq([t.result,t.values[7],t.c.reason,t.writeCols],['written','concurrent user evidence','UPDATED_LOG_UNSAVED',[6]],'H retained');});

@@ -85,7 +85,7 @@ function englishMetadataCapture_(book,previous,evidence,timing,deadline) {
   const readStarted=Date.now();
   const notes=book.getSheetByName('Notes');if(!notes)throw new Error('Notesがありません。');
   const lastRow=notes.getLastRow();if(lastRow<1||lastRow>30000)throw new Error('Notesの行数が検証範囲外です。');
-  const range=notes.getRange(1,1,lastRow,3),rows=range.getValues(),cellNotes=range.getNotes(),formulas=range.getFormulas(),gridRowCount=notes.getMaxRows();
+  const read=namedSheetRead_(notes,['de','ja','source'],1,lastRow,'raw'),rows=read.values,cellNotes=read.notes,formulas=read.formulas,gridRowCount=notes.getMaxRows();
   if(rows.some(function(row){return row.length!==3||row.some(function(value){return typeof value!=='string';});})||cellNotes.some(function(row){return row.length!==3||row.some(function(value){return typeof value!=='string';});})||formulas.some(function(row){return row.some(function(value){return value!=='';});}))throw new Error('Notes A:Cに文字列以外・数式・メモの型変更があります。変換せず停止しました。');
   if(JSON.stringify(rows[0])!==JSON.stringify(['de','ja','source']))throw new Error('Notesの列構成が契約と異なります。');
   if(timing)timing.sourceReadMs=Date.now()-readStarted;

@@ -28,6 +28,7 @@ const c = vm.createContext({
   }
 });
 
+vm.runInContext(fs.readFileSync(path.join(__dirname, '../src/sheet_column_layout.js'), 'utf8'), c);
 vm.runInContext(notesWorkflowSrc, c);
 vm.runInContext(notesApiSrc, c);
 vm.runInContext(workflowSrc, c);
@@ -92,8 +93,9 @@ test('adapters: Notes, GM, RW, RS definitions and width', () => {
 // Test 2: sourceEnglishSnapshot_ fallback behavior
 test('snapshot: GM fallback when draft and status are empty', () => {
   const mockSheet = {
+    getName: () => 'GM', getLastColumn: () => 10,
     getRange: (_row, _col, _numRows, _numCols) => ({
-      getDisplayValues: () => [['allegro', 'allegro', '速く', 'data1', '', '', '', '', '', '']],
+      getDisplayValues: () => _row === 1 ? JSON.parse(vm.runInContext('JSON.stringify([SOURCE_SHEET_COLUMN_NAMES.GM])', c)) : [['allegro', 'allegro', '速く', 'data1', '', '', '', '', '', '']],
       getNotes: () => [Array(10).fill('')],
       getFormulas: () => [Array(10).fill('')]
     })
@@ -110,8 +112,9 @@ test('snapshot: RW fallback when draft and status are empty', () => {
   values[5] = 'adagio';
   values[7] = 'ゆるやかに';
   const mockSheet = {
+    getName: () => 'RW', getLastColumn: () => 15,
     getRange: (_row, _col, _numRows, _numCols) => ({
-      getDisplayValues: () => [values],
+      getDisplayValues: () => _row === 1 ? JSON.parse(vm.runInContext('JSON.stringify([SOURCE_SHEET_COLUMN_NAMES.RW])', c)) : [values],
       getNotes: () => [Array(15).fill('')],
       getFormulas: () => [Array(15).fill('')]
     })
@@ -129,8 +132,9 @@ test('snapshot: Notes requires draft (strict backward compatibility)', () => {
   values[8] = '確認待ち';
   // draft (index 3) is empty
   const mockSheet = {
+    getName: () => 'Notes', getLastColumn: () => 9,
     getRange: (_row, _col, _numRows, _numCols) => ({
-      getDisplayValues: () => [values],
+      getDisplayValues: () => _row === 1 ? JSON.parse(vm.runInContext('JSON.stringify([SOURCE_SHEET_COLUMN_NAMES.Notes])', c)) : [values],
       getNotes: () => [Array(9).fill('')],
       getFormulas: () => [Array(9).fill('')]
     })

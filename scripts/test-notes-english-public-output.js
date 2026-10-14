@@ -4,10 +4,10 @@ const root=path.resolve(__dirname,'..'),fixture=path.join(__dirname,'test-export
 const prefix=fs.readFileSync(fixture,'utf8').split('const first =')[0];
 const {sheets,context}=vm.runInNewContext(prefix+';({sheets,context});',{require:createRequire(fixture),__dirname,console});
 const cellNotes=Array.from({length:2},()=>Array(15).fill(''));
-const range=(r,c,h,w)=>({getValues:()=>Array.from({length:h},(_,i)=>Array.from({length:w},(_,j)=>sheets.Notes[r+i-1]?.[c+j-1]??'')),getNotes:()=>Array.from({length:h},(_,i)=>Array.from({length:w},(_,j)=>cellNotes[r+i-1]?.[c+j-1]??''))});
-const spreadsheet={getSheetByName:name=>sheets[name]?{getName:()=>name,getLastRow:()=>sheets[name].length,getDataRange:()=>({getValues:()=>sheets[name]}),getRange:range}:null};
+const range=(r,c,h,w)=>({getValues:()=>Array.from({length:h},(_,i)=>Array.from({length:w},(_,j)=>sheets.Notes[r+i-1]?.[c+j-1]??'')),getDisplayValues:()=>Array.from({length:h},(_,i)=>Array.from({length:w},(_,j)=>String(sheets.Notes[r+i-1]?.[c+j-1]??''))),getFormulas:()=>Array.from({length:h},()=>Array(w).fill('')),getNotes:()=>Array.from({length:h},(_,i)=>Array.from({length:w},(_,j)=>cellNotes[r+i-1]?.[c+j-1]??''))});
+const spreadsheet={getSheetByName:name=>sheets[name]?{getName:()=>name,getLastRow:()=>sheets[name].length,getLastColumn:()=>Math.max(...sheets[name].map(row=>row.length)),getDataRange:()=>({getValues:()=>sheets[name]}),getRange:range}:null};
 context.SpreadsheetApp.openById=()=>spreadsheet;context.PropertiesService={getScriptProperties:()=>({getProperty:()=> 'synthetic'})};
-vm.runInContext(fs.readFileSync(path.join(root,'src/dashboard_analytics.js'),'utf8'),context);
+vm.runInContext(fs.readFileSync(path.join(root,'src/sheet_column_layout.js'),'utf8')+'\n'+fs.readFileSync(path.join(root,'src/dashboard_analytics.js'),'utf8'),context);
 const snapshot=()=>JSON.parse(JSON.stringify(context.exportAllDataToJson({requestId:'synthetic'}))).files;
 const before=snapshot(),html=context.generateDicHtmlFromSpreadsheet(),dashboard=JSON.stringify(context.readDashboardTranslationMap());
 sheets.Notes[0].push('draft-ja','change','draft-en','italian','evidence','state');
@@ -21,6 +21,13 @@ for(const [tab,first,last] of [['GM',4,9],['RW',8,14],['RS',8,14]]){
     sheets[tab][0][col]='private_'+col;
     sheets[tab][1][col]='PRIVATE_'+tab+'_'+col;
   }
+}
+assert.deepEqual(snapshot(),before);assert.equal(context.generateDicHtmlFromSpreadsheet(),html);assert.equal(JSON.stringify(context.readDashboardTranslationMap()),dashboard);
+// Candidate-name compatibility and physical reordering must leave Japanese/public output unchanged.
+for(const [tab,col] of [['Notes',5],['GM',6],['RW',11],['RS',11]]){
+  sheets[tab][0][col]='en';
+  const width=Math.max(...sheets[tab].map(row=>row.length));
+  sheets[tab]=sheets[tab].map(row=>Array.from({length:width},(_,i)=>row[i]??'').reverse());
 }
 assert.deepEqual(snapshot(),before);assert.equal(context.generateDicHtmlFromSpreadsheet(),html);assert.equal(JSON.stringify(context.readDashboardTranslationMap()),dashboard);
 assert(!JSON.stringify(snapshot()).includes('PRIVATE_'));assert.equal(Object.keys(before).length,58);

@@ -180,16 +180,14 @@ function candidateWizardSourceExample(found) {
     page.indexOf('GM') !== -1 ? 'GM' : '';
   const sheet = source && found.spreadsheet.getSheetByName(source);
   if (!sheet || sheet.getLastRow() < 2) return { german: '', japanese: '', source: '' };
-  const headers = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getValues()[0];
-  const normalizedColumn = headers.indexOf('de_normalized') + 1;
-  const deColumn = headers.indexOf('de') + 1;
-  const jaColumn = headers.indexOf('ja') + 1;
-  const lookupColumn = normalizedColumn || deColumn;
-  if (!lookupColumn || !deColumn) return { german: '', japanese: '', source: '' };
+  const layout = namedSheetColumns_(sheet, ['de', 'de_normalized', 'ja']);
+  const deColumn = layout.positions[0] + 1, normalizedColumn = layout.positions[1] + 1, jaColumn = layout.positions[2] + 1;
+  const lookupColumn = normalizedColumn;
   const lookup = normalizedColumn ? normalizeObservedTerm(found.row[2] || found.row[1]) : String(found.row[1] || '');
   const match = sheet.getRange(2, lookupColumn, sheet.getLastRow() - 1, 1)
     .createTextFinder(lookup).matchCase(false).findNext();
   if (!match) return { german: '', japanese: '', source: '' };
+  namedSheetAssertLayout_(sheet, layout);
   return { german: String(sheet.getRange(match.getRow(), deColumn).getValue() || '').slice(0, 500),
     japanese: jaColumn ? String(sheet.getRange(match.getRow(), jaColumn).getValue() || '').slice(0, 500) : '',
     source };
@@ -527,14 +525,15 @@ function candidateWizardRegisterExperimental(id, body, source, confirmed) {
     const insertionIndex = headings.findIndex(row =>
       headword.localeCompare(String(row[0] || ''), 'de', { sensitivity: 'base' }) < 0);
     const rowNumber = insertionIndex < 0 ? notes.getLastRow() + 1 : insertionIndex + 2;
-    if (insertionIndex < 0) notes.getRange(rowNumber, 1, 1, 3).setValues([[headword, safeBody, safeSource]]);
+    namedSheetColumns_(notes, ['de', 'ja', 'source']);
+    if (insertionIndex < 0) namedSheetWriteRows_(notes, ['de', 'ja', 'source'], rowNumber, [[headword, safeBody, safeSource]]);
     else {
       notes.insertRowBefore(rowNumber);
-      notes.getRange(rowNumber, 1, 1, 3).setValues([[headword, safeBody, safeSource]]);
+      namedSheetWriteRows_(notes, ['de', 'ja', 'source'], rowNumber, [[headword, safeBody, safeSource]]);
     }
     sheet.getRange(linked.rowNumber, 11).setValue('Notes反映済み');
     sheet.getRange(linked.rowNumber, 27, 1, 2).setValues([['確認済み',
-      'ユーザーがダイアログで本文を確認．' + EXPERIMENTAL_NOTES_SHEET_NAME + '!A' + rowNumber + ':C' + rowNumber + ' に反映．']]);
+      'ユーザーがダイアログで本文を確認．' + EXPERIMENTAL_NOTES_SHEET_NAME + ' ' + rowNumber + '行の de・ja・source に反映．']]);
     return { headword, rowNumber, state: candidateWizardState(id) };
   } finally { lock.releaseLock(); }
 }

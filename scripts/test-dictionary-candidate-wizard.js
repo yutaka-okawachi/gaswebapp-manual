@@ -4,7 +4,7 @@ const path = require('path');
 const vm = require('vm');
 
 const root = path.resolve(__dirname, '..');
-const source = fs.readFileSync(path.join(root, 'src/dictionary_candidate_wizard.js'), 'utf8');
+const source = fs.readFileSync(path.join(root, 'src/sheet_column_layout.js'), 'utf8') + '\n' + fs.readFileSync(path.join(root, 'src/dictionary_candidate_wizard.js'), 'utf8');
 const html = fs.readFileSync(path.join(root, 'src/dictionary_candidate_dialog.html'), 'utf8');
 const manifest = JSON.parse(fs.readFileSync(path.join(root, 'src/appsscript.json'), 'utf8'));
 const context = { console, JEV_CANDIDATE_CATEGORIES: {
@@ -81,7 +81,8 @@ function draftHarness() {
   });
   vm.runInContext(source, h);
   const notesWrites = [];
-  const notes = { getLastRow: () => 1, getRange: () => ({ setValues: values => notesWrites.push(values) }) };
+  const notes = { getName: () => 'Notes', getLastRow: () => 1, getLastColumn: () => 3,
+    getRange: () => ({ getDisplayValues: () => [['de','ja','source']], getFormulas: () => [['','','']], setValues: values => notesWrites.push(values) }) };
   h.candidateWizardFindObservation = () => ({ row: ['', 'vorklingend', 'vorklingend'],
     spreadsheet: { getSheetByName: () => notes } });
   h.EXPERIMENTAL_NOTES_SHEET_NAME = 'Notes';
