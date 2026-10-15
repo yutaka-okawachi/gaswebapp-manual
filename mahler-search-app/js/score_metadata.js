@@ -236,8 +236,8 @@ const SCORE_METADATA = {
         "title": "エジプトのヘレナ (Die ägyptische Helena)",
         "workNo": "Op. 75 / TrV 255",
         "publisher": "Adolph Fürstner",
-        "plate": "A. 9029 F.",
-        "edition": "Full Score (1928). (Plate A. 7900 F.)",
+        "plate": "A. 7900 F.",
+        "edition": "Full Score (1928).",
         "imslp": "https://imslp.org/wiki/Die_%C3%A4gyptische_Helena,_Op.75_(Strauss,_Richard)",
         "synopsis": "https://drive.google.com/file/d/1J2eLY544NXROSwB-ZqtpVFybl9qTv0kV/view?usp=drive_link"
     },
