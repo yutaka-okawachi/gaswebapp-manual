@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "releaseId": "1ac8246b7d11ee8248d65a29d2bc57f9552fec676f97a6fc9cd8ea1d761c99d6",
+  "releaseId": "7cc89e4850bca0117f27d4e099f1e4faabed111d6ba31f1718aad561b2f2c573",
   "hashes": {
     "index.html": "6fcd6b356241b2ebc9e9ffefe75ed5d33ef2641bea8c7e3c1e3af8e39fd3724a",
     "license.html": "1265ab0bacfc4e5711771090c6b626bfcf79fe1f6760bf5d0e07e70069bd0642",
@@ -73,7 +73,7 @@
     "mahler-search-app/js/wagner_strauss.js": "460a5729c68c40caee5deacaddac1efbd7d345d117825d7bc4884c2799b0bc65",
     "mahler-search-app/mahler.html": "c10b7e75c65b80a23d48d699d56c6de06441f08865d39ed92df51342deb28257",
     "mahler-search-app/notes.html": "d1abc32720023a14bc3723068c10c00246025be58692d10381b49d669fcf41d9",
-    "mahler-search-app/other.html": "d6e2dc35c36c2117ac4ac24ed8e278efc47b17aac5ad37c3a0abfb00a4ff057c",
+    "mahler-search-app/other.html": "583f36f79a48e0eaca6c7e2408f089026bd90cde2e2062997f0b61bff927b89f",
     "mahler-search-app/richard_strauss.html": "daed2420202ca5bed5090ad6242839252b632d749e9653280a75fafa6304aff8",
     "mahler-search-app/richard_wagner.html": "9153e956657e676abda9edae18f1298017ef81ca20642c45401d5ee195d0cc8c",
     "mahler-search-app/rs_synopsis.html": "da607775d01d9a2ec14f5a6802dbaf099134b47f04634d391d6502a011ab82a0",
