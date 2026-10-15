@@ -117,6 +117,26 @@
         .score-title {
             font-weight: bold;
         }
+
+        .score-reference-guide {
+            font-size: 0.8rem;
+            line-height: 1.6;
+        }
+
+        .score-reference {
+            margin: 0.3rem 0 0.7rem;
+            color: #475569;
+            overflow-wrap: anywhere;
+        }
+
+        .score-reference a {
+            display: inline-block;
+        }
+
+        .score-source-note {
+            display: block;
+            margin-top: 0.2rem;
+        }
     </style>
 </head>
 
@@ -174,186 +194,394 @@
                 <details class="instrument-group" open>
                     <summary style="font-size: 1.1rem; font-weight: bold;">使用楽譜</summary>
                     <div style="padding: 15px 20px;">
+                        <p class="score-reference-guide">IMSLPの作品ページと参照譜へのリンクを掲載しています．参照譜は使用楽譜と同じ刷であるとは限らず，別版・別編成のものは各曲に注記しました．版名に添えた年と実際の刷年は区別し，使用刷や後年訂正の対応が未確認の場合はその旨を記しています．</p>
 
                         <div class="composer-name">Richard Wagner</div>
                         <ul class="score-list">
-                            <li><span class="score-title">Die Feen WWV 32</span>：Breitkopf & Härtel</li>
-                            <li><span class="score-title">Das Liebesverbot WWV 38</span>：Breitkopf & Härtel</li>
-                            <li><span class="score-title">Rienzi, der Letzte der Tribunen WWV 49</span>：Adolph Fürstner
-                                A. 5970 F.</li>
-                            <li><span class="score-title">Der fliegende Holländer WWV 63</span>：Adolph Fürstner A. 2760
-                                F.</li>
-                            <li><span class="score-title">Tannhäuser-Dresden WWV 70</span>：C. F. Peters 10352</li>
-                            <li><span class="score-title">Tannhäuser-Paris WWV 70</span>：C. F. Peters 10352</li>
-                            <li><span class="score-title">Lohengrin WWV 75</span>：Breitkopf & Härtel 15451</li>
-                            <li><span class="score-title">Das Rheingold WWV 86A</span>：B. Schott's Söhne 20800</li>
-                            <li><span class="score-title">Die Walküre WWV 86B</span>：C. F. Peters 10170</li>
-                            <li><span class="score-title">Siegfried WWV 86C</span>：B. Schott's Söhne 21544</li>
-                            <li><span class="score-title">Götterdämmerung WWV 86D</span>：B. Schott's Söhne 21593</li>
-                            <li><span class="score-title">Tristan und Isolde WWV 90</span>：C. F. Peters 9904</li>
-                            <li><span class="score-title">Die Meistersinger von Nürnberg WWV 96</span>：C. F. Peters 9821
+                            <li><span class="score-title">Die Feen WWV 32</span>：Breitkopf & Härtel
+                                <div class="score-reference"><a href="https://imslp.org/wiki/Die_Feen,_WWV_32_(Wagner,_Richard)" target="_blank" rel="noopener noreferrer">IMSLP作品ページ</a> · <a href="https://imslp.org/wiki/Special:ImagefromIndex/1021656" target="_blank" rel="noopener noreferrer">参照譜 #1021656</a></div>
                             </li>
-                            <li><span class="score-title">Parsifal WWV 111</span>：C. F. Peters 10261</li>
+                            <li><span class="score-title">Das Liebesverbot WWV 38</span>：Breitkopf & Härtel
+                                <div class="score-reference"><a href="https://imslp.org/wiki/Das_Liebesverbot,_WWV_38_(Wagner,_Richard)" target="_blank" rel="noopener noreferrer">IMSLP作品ページ</a> · <a href="https://imslp.org/wiki/Special:ImagefromIndex/109507" target="_blank" rel="noopener noreferrer">参照譜 #109507</a> · <a href="https://imslp.org/wiki/Special:ImagefromIndex/424050" target="_blank" rel="noopener noreferrer">参照譜 #424050</a> · <a href="https://imslp.org/wiki/Special:ImagefromIndex/111394" target="_blank" rel="noopener noreferrer">参照譜 #111394</a> · <a href="https://imslp.org/wiki/Special:ImagefromIndex/109508" target="_blank" rel="noopener noreferrer">参照譜 #109508</a></div>
+                            </li>
+                            <li><span class="score-title">Rienzi, der Letzte der Tribunen WWV 49</span>：Adolph Fürstner
+                                A. 5970 F.
+                                <div class="score-reference"><a href="https://imslp.org/wiki/Rienzi,_WWV_49_(Wagner,_Richard)" target="_blank" rel="noopener noreferrer">IMSLP作品ページ</a> · <a href="https://imslp.org/wiki/Special:ImagefromIndex/515487" target="_blank" rel="noopener noreferrer">参照譜 #515487</a></div>
+                            </li>
+                            <li><span class="score-title">Der fliegende Holländer WWV 63</span>：Adolph Fürstner A. 2760
+                                F.
+                                <div class="score-reference"><a href="https://imslp.org/wiki/Der_fliegende_Holl%C3%A4nder,_WWV_63_(Wagner,_Richard)" target="_blank" rel="noopener noreferrer">IMSLP作品ページ</a> · <a href="https://imslp.org/wiki/Special:ImagefromIndex/66164" target="_blank" rel="noopener noreferrer">参照譜 #66164</a></div>
+                            </li>
+                            <li><span class="score-title">Tannhäuser-Dresden WWV 70</span>：C. F. Peters 10352
+                                <div class="score-reference"><a href="https://imslp.org/wiki/Tannh%C3%A4user,_WWV_70_(Wagner,_Richard)" target="_blank" rel="noopener noreferrer">IMSLP作品ページ</a> · <a href="https://imslp.org/wiki/Special:ImagefromIndex/515489" target="_blank" rel="noopener noreferrer">参照譜 #515489</a></div>
+                            </li>
+                            <li><span class="score-title">Tannhäuser-Paris WWV 70</span>：C. F. Peters 10352
+                                <div class="score-reference"><a href="https://imslp.org/wiki/Tannh%C3%A4user,_WWV_70_(Wagner,_Richard)" target="_blank" rel="noopener noreferrer">IMSLP作品ページ</a> · <a href="https://imslp.org/wiki/Special:ImagefromIndex/66165" target="_blank" rel="noopener noreferrer">参照譜 #66165</a> · <a href="https://imslp.org/wiki/Special:ImagefromIndex/63659" target="_blank" rel="noopener noreferrer">参照譜 #63659</a></div>
+                            </li>
+                            <li><span class="score-title">Lohengrin WWV 75</span>：Breitkopf & Härtel 15451
+                                <div class="score-reference"><a href="https://imslp.org/wiki/Lohengrin,_WWV_75_(Wagner,_Richard)" target="_blank" rel="noopener noreferrer">IMSLP作品ページ</a> · <a href="https://imslp.org/wiki/Special:ImagefromIndex/66166" target="_blank" rel="noopener noreferrer">参照譜 #66166</a></div>
+                            </li>
+                            <li><span class="score-title">Das Rheingold WWV 86A</span>：B. Schott's Söhne 20800
+                                <div class="score-reference"><a href="https://imslp.org/wiki/Das_Rheingold,_WWV_86A_(Wagner,_Richard)" target="_blank" rel="noopener noreferrer">IMSLP作品ページ</a> · <a href="https://imslp.org/wiki/Special:ImagefromIndex/33405" target="_blank" rel="noopener noreferrer">参照譜 #33405</a></div>
+                            </li>
+                            <li><span class="score-title">Die Walküre WWV 86B</span>：C. F. Peters 10170
+                                <div class="score-reference"><a href="https://imslp.org/wiki/Die_Walk%C3%BCre,_WWV_86B_(Wagner,_Richard)" target="_blank" rel="noopener noreferrer">IMSLP作品ページ</a> · <a href="https://imslp.org/wiki/Special:ImagefromIndex/1015893" target="_blank" rel="noopener noreferrer">参照譜 #1015893</a></div>
+                            </li>
+                            <li><span class="score-title">Siegfried WWV 86C</span>：B. Schott's Söhne 21544
+                                <div class="score-reference"><a href="https://imslp.org/wiki/Siegfried,_WWV_86C_(Wagner,_Richard)" target="_blank" rel="noopener noreferrer">IMSLP作品ページ</a> · <a href="https://imslp.org/wiki/Special:ImagefromIndex/1017903" target="_blank" rel="noopener noreferrer">参照譜 #1017903</a></div>
+                            </li>
+                            <li><span class="score-title">Götterdämmerung WWV 86D</span>：B. Schott's Söhne 21593
+                                <div class="score-reference"><a href="https://imslp.org/wiki/G%C3%B6tterd%C3%A4mmerung,_WWV_86D_(Wagner,_Richard)" target="_blank" rel="noopener noreferrer">IMSLP作品ページ</a> · <a href="https://imslp.org/wiki/Special:ImagefromIndex/47958" target="_blank" rel="noopener noreferrer">参照譜 #47958</a></div>
+                            </li>
+                            <li><span class="score-title">Tristan und Isolde WWV 90</span>：C. F. Peters 9904
+                                <div class="score-reference"><a href="https://imslp.org/wiki/Tristan_und_Isolde,_WWV_90_(Wagner,_Richard)" target="_blank" rel="noopener noreferrer">IMSLP作品ページ</a> · <a href="https://imslp.org/wiki/Special:ImagefromIndex/63746" target="_blank" rel="noopener noreferrer">参照譜 #63746</a></div>
+                            </li>
+                            <li><span class="score-title">Die Meistersinger von Nürnberg WWV 96</span>：C. F. Peters 9821
+                                <div class="score-reference"><a href="https://imslp.org/wiki/Die_Meistersinger_von_N%C3%BCrnberg,_WWV_96_(Wagner,_Richard)" target="_blank" rel="noopener noreferrer">IMSLP作品ページ</a> · <a href="https://imslp.org/wiki/Special:ImagefromIndex/63565" target="_blank" rel="noopener noreferrer">参照譜 #63565</a></div>
+                            </li>
+                            <li><span class="score-title">Parsifal WWV 111</span>：C. F. Peters 10261
+                                <div class="score-reference"><a href="https://imslp.org/wiki/Parsifal,_WWV_111_(Wagner,_Richard)" target="_blank" rel="noopener noreferrer">IMSLP作品ページ</a> · <a href="https://imslp.org/wiki/Special:ImagefromIndex/515555" target="_blank" rel="noopener noreferrer">参照譜 #515555</a></div>
+                            </li>
                         </ul>
                         <div class="composer-name">Anton Bruckner</div>
                         <ul class="score-list">
 
                             <li><span class="score-title">
                                     SYMPHONY No.0 "Nullte" D minor Fassung von 1869
-                                </span>：Edition Eulenburg No.1530</li>
+                                </span>：Edition Eulenburg No.1530
+                                <div class="score-reference"><a href="https://imslp.org/wiki/Symphony_in_D_minor_%27Annullierte%27,_WAB_100_(Bruckner,_Anton)" target="_blank" rel="noopener noreferrer">IMSLP作品ページ</a> · <a href="https://imslp.org/wiki/Special:ImagefromIndex/901630" target="_blank" rel="noopener noreferrer">参照譜 #901630</a>
+                                    <span class="score-source-note">Leopold Nowak校訂，Bruckner全集第11巻（1869年稿，1968年）の参照譜．Eulenburg版の使用刷との訂正対応は未照合．</span></div>
+                            </li>
                             <li><span class="score-title">
                                     SYMPHONY No. 1 /1 C minor Fassung von 1865/66 "Linzer Fassung"
-                                </span>：Edition Eulenburg No.459</li>
+                                </span>：Edition Eulenburg No.459
+                                <div class="score-reference"><a href="https://imslp.org/wiki/Symphony_No.1_in_C_minor,_WAB_101_(Bruckner,_Anton)" target="_blank" rel="noopener noreferrer">IMSLP作品ページ</a> · <a href="https://imslp.org/wiki/Special:ImagefromIndex/562108" target="_blank" rel="noopener noreferrer">参照譜 #562108</a>
+                                    <span class="score-source-note">Leopold Nowak校訂，全集I/1（リンツ稿，1953年）の系統．参照PDFの標題紙は1955年・第2改訂版で，Eulenburg版との刷の対応は未照合．</span></div>
+                            </li>
                             <li><span class="score-title">
                                     II. SYMPHONIE C-MOLL Fassung von 1877 (L. NOWAK)
-                                </span>：音楽之友社 OGT-202</li>
+                                </span>：音楽之友社 OGT-202
+                                <div class="score-reference"><a href="https://imslp.org/wiki/Symphony_No.2_in_C_minor,_WAB_102_(Bruckner,_Anton)" target="_blank" rel="noopener noreferrer">IMSLP作品ページ</a> · <a href="https://imslp.org/wiki/Special:ImagefromIndex/566250" target="_blank" rel="noopener noreferrer">参照譜 #566250</a>
+                                    <span class="score-source-note">底本候補：Leopold Nowak校訂，Bruckner全集II/2（1877年稿，1965年）．日本版の底本表記・使用刷との直接照合は未了．William Carragan校訂2007年版とは異なる．</span></div>
+                            </li>
                             <li><span class="score-title">
                                     III. SYMPHONIE D-MOLL III. Fassung von 1889 (L. NOWAK)
-                                </span>：音楽之友社 OGT-203</li>
+                                </span>：音楽之友社 OGT-203
+                                <div class="score-reference"><a href="https://imslp.org/wiki/Symphony_No.3_in_D_minor,_WAB_103_(Bruckner,_Anton)" target="_blank" rel="noopener noreferrer">IMSLP作品ページ</a> · <a href="https://imslp.org/wiki/Special:ImagefromIndex/563116" target="_blank" rel="noopener noreferrer">参照譜 #563116</a>
+                                    <span class="score-source-note">底本：Leopold Nowak校訂，Bruckner全集III/III（1889年第3稿，1959年）．参照PDFは標題紙1959年，著作権表示1958年．日本版との刷・訂正の一致は未確認．</span></div>
+                            </li>
                             <li><span class="score-title">
                                     SYMPHONY No.4/1 Es-Dur "Romantic" Fassung von 1874
-                                </span>：Edition Eulenburg EE 6846</li>
+                                </span>：Edition Eulenburg EE 6846
+                                <div class="score-reference"><a href="https://imslp.org/wiki/Symphony_No.4_in_E-flat_major,_WAB_104_(Bruckner,_Anton)" target="_blank" rel="noopener noreferrer">IMSLP作品ページ</a> · <a href="https://imslp.org/wiki/Special:ImagefromIndex/563124" target="_blank" rel="noopener noreferrer">参照譜 #563124</a>
+                                    <span class="score-source-note">参考譜：Leopold Nowak校訂，全集IV/1（1874年第1稿，1975年）．使用譜EE 6846との直接の転載関係・後年改訂の対応は未確認．</span></div>
+                            </li>
                             <li><span class="score-title">
                                     IV. SYMPHONIE ES-DUR II. Fassung von 1878/80 (L. NOWAK)
-                                </span>：音楽之友社 OGT-204</li>
+                                </span>：音楽之友社 OGT-204
+                                <div class="score-reference"><a href="https://imslp.org/wiki/Symphony_No.4_in_E-flat_major,_WAB_104_(Bruckner,_Anton)" target="_blank" rel="noopener noreferrer">IMSLP作品ページ</a> · <a href="https://imslp.org/wiki/Special:ImagefromIndex/564304" target="_blank" rel="noopener noreferrer">参照譜 #564304</a>
+                                    <span class="score-source-note">底本：Leopold Nowak校訂，Bruckner全集IV/2（1878/80年稿，1953年）．日本版と参照PDFの使用刷，および後年改訂の対応は未確認．</span></div>
+                            </li>
                             <li><span class="score-title">
                                     V. SYMPHONIE B-DUR ORIGINALFASSUNG (L.NOWAK)
-                                </span>：音楽之友社 OGT-205</li>
+                                </span>：音楽之友社 OGT-205
+                                <div class="score-reference"><a href="https://imslp.org/wiki/Symphony_No.5_in_B-flat_major,_WAB_105_(Bruckner,_Anton)" target="_blank" rel="noopener noreferrer">IMSLP作品ページ</a> · <a href="https://imslp.org/wiki/Special:ImagefromIndex/563860" target="_blank" rel="noopener noreferrer">参照譜 #563860</a>
+                                    <span class="score-source-note">底本：Leopold Nowak校訂，Bruckner全集V（1951年）の系統．参照PDFの標題紙は1951年・第2改訂版．IMSLP登録欄の後年改訂年を，日本版の底本年とは確定できない．</span></div>
+                            </li>
                             <li><span class="score-title">
                                     VI. SYMPHONIE A-DUR ORIGINALFASSUNG (L.NOWAK)
-                                </span>：音楽之友社 OGT-206</li>
+                                </span>：音楽之友社 OGT-206
+                                <div class="score-reference"><a href="https://imslp.org/wiki/Symphony_No.6_in_A_major,_WAB_106_(Bruckner,_Anton)" target="_blank" rel="noopener noreferrer">IMSLP作品ページ</a> · <a href="https://imslp.org/wiki/Special:ImagefromIndex/563126" target="_blank" rel="noopener noreferrer">参照譜 #563126</a>
+                                    <span class="score-source-note">底本：Leopold Nowak校訂，Bruckner全集VI（1952年）．参照PDFは第2改訂版．日本版との刷・後年訂正の一致は未確認．</span></div>
+                            </li>
                             <li><span class="score-title">
                                     VII. SYMPHONIE E-DUR (L.NOWAK)
-                                </span>：音楽之友社 OGT-207</li>
+                                </span>：音楽之友社 OGT-207
+                                <div class="score-reference"><a href="https://imslp.org/wiki/Symphony_No.7_in_E_major,_WAB_107_(Bruckner,_Anton)" target="_blank" rel="noopener noreferrer">IMSLP作品ページ</a> · <a href="https://imslp.org/wiki/Special:ImagefromIndex/563127" target="_blank" rel="noopener noreferrer">参照譜 #563127</a>
+                                    <span class="score-source-note">底本：Leopold Nowak校訂，Bruckner全集VII（1954年）．参照PDFは第2改訂版．日本版との刷・後年訂正の一致は未確認．</span></div>
+                            </li>
                             <li><span class="score-title">
                                     SYMPHONY No.8/1 C minor I. Fassung von 1887
-                                </span>：Edition Eulenburg No.466</li>
+                                </span>：Edition Eulenburg No.466
+                                <div class="score-reference"><a href="https://imslp.org/wiki/Symphony_No.8_in_C_minor,_WAB_108_(Bruckner,_Anton)" target="_blank" rel="noopener noreferrer">IMSLP作品ページ</a> · <a href="https://imslp.org/wiki/Special:ImagefromIndex/562354" target="_blank" rel="noopener noreferrer">参照譜 #562354</a>
+                                    <span class="score-source-note">Leopold Nowak校訂，Bruckner全集VIII/1（1887年第1稿，1972年）の参照譜．Eulenburg版の使用刷との訂正対応は未照合．</span></div>
+                            </li>
                             <li><span class="score-title">
                                     VIII. SYMPHONIE C-MOLL II. Fassung von 1890 (L.NOWAK)
-                                </span>：音楽之友社 OGT-208</li>
+                                </span>：音楽之友社 OGT-208
+                                <div class="score-reference"><a href="https://imslp.org/wiki/Symphony_No.8_in_C_minor,_WAB_108_(Bruckner,_Anton)" target="_blank" rel="noopener noreferrer">IMSLP作品ページ</a> · <a href="https://imslp.org/wiki/Special:ImagefromIndex/563125" target="_blank" rel="noopener noreferrer">参照譜 #563125</a>
+                                    <span class="score-source-note">底本：Leopold Nowak校訂，Bruckner全集VIII/2（1890年第2稿，1955年）．参照PDFは第2改訂版．日本版との刷・後年訂正の一致は未確認．</span></div>
+                            </li>
                             <li><span class="score-title">
                                     IX. SYMPHONIE D-MOLL (L.Nowak)
-                                </span>：音楽之友社 OGT-209</li>
+                                </span>：音楽之友社 OGT-209
+                                <div class="score-reference"><a href="https://imslp.org/wiki/Symphony_No.9_in_D_minor,_WAB_109/143_(Bruckner,_Anton)" target="_blank" rel="noopener noreferrer">IMSLP作品ページ</a> · <a href="https://imslp.org/wiki/Special:ImagefromIndex/566255" target="_blank" rel="noopener noreferrer">参照譜 #566255</a>
+                                    <span class="score-source-note">底本：Leopold Nowak校訂，Bruckner全集IX（1951年）の系統．参照PDFは標題紙1951年，著作権表示1959年．Benjamin-Gunnar Cohrs校訂2000年版とは異なり，日本版との刷の一致は未確認．</span></div>
+                            </li>
                         </ul>
 
                         <div class="composer-name" id="score-mahler">Gustav Mahler</div>
                         <ul class="score-list">
-                            <li><span class="score-title">SYMPHONIE I (Revidierte Fassung)</span>：音楽之友社 OGT-1446</li>
-                            <li><span class="score-title">SYMPHONIE II (Revidierte Fassung)</span>：音楽之友社 OGT-1395</li>
-                            <li><span class="score-title">SYMPHONIE III (Revidierte Fassung)</span>：音楽之友社 OGT-1468</li>
-                            <li><span class="score-title">SYMPHONIE IV (Endgültige Fassung)</span>：音楽之友社 OGT-1214</li>
-                            <li><span class="score-title">SYMPHONIE V (Revidierte Fassung)</span>：音楽之友社 OGT-1458</li>
-                            <li><span class="score-title">SYMPHONIE VI (Revidierte Ausgabe)</span>：音楽之友社 OGT-95</li>
-                            <li><span class="score-title">SYMPHONIE VII (Revidierte Fassung)</span>：音楽之友社 OGT-1473</li>
-                            <li><span class="score-title">SYMPHONIE VIII (Revidierte Fassung)</span>：音楽之友社 OGT-1490</li>
-                            <li><span class="score-title">DAS LIED VON DER ERDE</span>：音楽之友社 OGT-1217</li>
-                            <li><span class="score-title">SYMPHONIE IX (Revidierte Fassung)</span>：音楽之友社 OGT-1472</li>
-                            <li><span class="score-title">SYMPHONY No.10 -- ADAGIO</span>：全音楽譜出版社</li>
+                            <li><span class="score-title">SYMPHONIE I (Revidierte Fassung)</span>：音楽之友社 OGT-1446
+                                <div class="score-reference"><a href="https://imslp.org/wiki/Symphony_No.1,_GMW_11_(Mahler,_Gustav)" target="_blank" rel="noopener noreferrer">IMSLP作品ページ</a> · <a href="https://imslp.org/wiki/Special:ImagefromIndex/541238" target="_blank" rel="noopener noreferrer">参照譜 #541238</a>
+                                    <span class="score-source-note">底本：Universal Editionの1967年改訂版（Erwin Ratz／Karl Heinz Füssl校訂）の系統．日本版との刷・後年訂正の一致は未確認．</span></div>
+                            </li>
+                            <li><span class="score-title">SYMPHONIE II (Revidierte Fassung)</span>：音楽之友社 OGT-1395
+                                <div class="score-reference"><a href="https://imslp.org/wiki/Symphony_No.2,_GMW_30_(Mahler,_Gustav)" target="_blank" rel="noopener noreferrer">IMSLP作品ページ</a> · <a href="https://imslp.org/wiki/Special:ImagefromIndex/211806" target="_blank" rel="noopener noreferrer">参照譜 #211806</a>
+                                    <span class="score-source-note">底本：Universal Editionの1970年改訂版（Erwin Ratz校訂）の系統．日本版との刷・後年訂正の一致は未確認．</span></div>
+                            </li>
+                            <li><span class="score-title">SYMPHONIE III (Revidierte Fassung)</span>：音楽之友社 OGT-1468
+                                <div class="score-reference"><a href="https://imslp.org/wiki/Symphony_No.3,_GMW_31_(Mahler,_Gustav)" target="_blank" rel="noopener noreferrer">IMSLP作品ページ</a> · <a href="https://imslp.org/wiki/Special:ImagefromIndex/100612" target="_blank" rel="noopener noreferrer">参照譜 #100612</a>
+                                    <span class="score-source-note">底本候補：Universal Editionの1974年改訂版（Erwin Ratz校訂）．参照PDFは標題紙を欠き，正確な刷と日本版との対応には留保がある．</span></div>
+                            </li>
+                            <li><span class="score-title">SYMPHONIE IV (Endgültige Fassung)</span>：音楽之友社 OGT-1214
+                                <div class="score-reference"><a href="https://imslp.org/wiki/Symphony_No.4,_GMW_37_(Mahler,_Gustav)" target="_blank" rel="noopener noreferrer">IMSLP作品ページ</a> · <a href="https://imslp.org/wiki/Special:ImagefromIndex/88852" target="_blank" rel="noopener noreferrer">参照譜 #88852</a>
+                                    <span class="score-source-note">底本候補：Universal Editionの1963年全集版（Erwin Ratz校訂）．参照譜は同系統で，1995年改訂版とは区別する．日本版に入る後年訂正は未確認．</span></div>
+                            </li>
+                            <li><span class="score-title">SYMPHONIE V (Revidierte Fassung)</span>：音楽之友社 OGT-1458
+                                <div class="score-reference"><a href="https://imslp.org/wiki/Symphony_No.5,_GMW_44_(Mahler,_Gustav)" target="_blank" rel="noopener noreferrer">IMSLP作品ページ</a> · <a href="https://imslp.org/wiki/Special:ImagefromIndex/1021202" target="_blank" rel="noopener noreferrer">参照譜 #1021202</a>
+                                    <span class="score-source-note">底本：Petersの1964年改訂版（Erwin Ratz校訂）の系統．参照譜はプレート3087a．日本版との刷・後年訂正の一致は未確認．</span></div>
+                            </li>
+                            <li><span class="score-title">SYMPHONIE VI (Revidierte Ausgabe)</span>：音楽之友社 OGT-95
+                                <div class="score-reference"><a href="https://imslp.org/wiki/Symphony_No.6,_GMW_46_(Mahler,_Gustav)" target="_blank" rel="noopener noreferrer">IMSLP作品ページ</a> · <a href="https://imslp.org/wiki/Special:ImagefromIndex/1021368" target="_blank" rel="noopener noreferrer">参照譜 #1021368</a>
+                                    <span class="score-source-note">底本：Kahntの1963年改訂版（Erwin Ratz校訂）の系統．参照譜は同系統で，1998年改訂・2000年刊の版とは異なる．日本版との訂正対応は未確認．</span></div>
+                            </li>
+                            <li><span class="score-title">SYMPHONIE VII (Revidierte Fassung)</span>：音楽之友社 OGT-1473
+                                <div class="score-reference"><a href="https://imslp.org/wiki/Symphony_No.7,_GMW_47_(Mahler,_Gustav)" target="_blank" rel="noopener noreferrer">IMSLP作品ページ</a> · <a href="https://imslp.org/wiki/Special:ImagefromIndex/104520" target="_blank" rel="noopener noreferrer">参照譜 #104520</a> · <a href="https://imslp.org/wiki/Special:ImagefromIndex/31849" target="_blank" rel="noopener noreferrer">参照譜 #31849</a>
+                                    <span class="score-source-note">底本候補：Bote &amp; Bockの1960年改訂版（Erwin Ratz校訂）．参照譜の著作権表示は1960年で，実際の刷年と日本版との対応は未確定．</span></div>
+                            </li>
+                            <li><span class="score-title">SYMPHONIE VIII (Revidierte Fassung)</span>：音楽之友社 OGT-1490
+                                <div class="score-reference"><a href="https://imslp.org/wiki/Symphony_No.8,_GMW_48_(Mahler,_Gustav)" target="_blank" rel="noopener noreferrer">IMSLP作品ページ</a> · <a href="https://imslp.org/wiki/Special:ImagefromIndex/537397" target="_blank" rel="noopener noreferrer">参照譜 #537397</a>
+                                    <span class="score-source-note">底本候補：Universal Editionの1977年改訂版（Erwin Ratz校訂）．参照譜は同系統で，1911年初版とは異なる．日本版との刷・訂正の対応は未確認．</span></div>
+                            </li>
+                            <li><span class="score-title">DAS LIED VON DER ERDE</span>：音楽之友社 OGT-1217
+                                <div class="score-reference"><a href="https://imslp.org/wiki/Das_Lied_von_der_Erde,_GMW_49_(Mahler,_Gustav)" target="_blank" rel="noopener noreferrer">IMSLP作品ページ</a> · <a href="https://imslp.org/wiki/Special:ImagefromIndex/112535" target="_blank" rel="noopener noreferrer">参照譜 #112535</a>
+                                    <span class="score-source-note">底本：Universal Editionの1964年全集版（Erwin Ratz校訂）の系統．参照PDFから実際の刷年は確定できず，日本版との訂正対応は未確認．</span></div>
+                            </li>
+                            <li><span class="score-title">SYMPHONIE IX (Revidierte Fassung)</span>：音楽之友社 OGT-1472
+                                <div class="score-reference"><a href="https://imslp.org/wiki/Symphony_No.9,_GMW_50_(Mahler,_Gustav)" target="_blank" rel="noopener noreferrer">IMSLP作品ページ</a> · <a href="https://imslp.org/wiki/Special:ImagefromIndex/976334" target="_blank" rel="noopener noreferrer">参照譜 #976334</a>
+                                    <span class="score-source-note">底本：Universal EditionのErwin Ratz校訂版（著作権表示1969年）の系統．参照譜はW.Ph.V.472．日本版との刷・後年訂正の対応は未確認．</span></div>
+                            </li>
+                            <li><span class="score-title">SYMPHONY No.10 -- ADAGIO</span>：全音楽譜出版社
+                                <div class="score-reference"><a href="https://imslp.org/wiki/Symphony_No.10,_GMW_F58_(Mahler,_Gustav)" target="_blank" rel="noopener noreferrer">IMSLP作品ページ</a> · <a href="https://imslp.org/wiki/Special:ImagefromIndex/981598" target="_blank" rel="noopener noreferrer">参考別版 #981598</a>
+                                    <span class="score-source-note">全音の独自作成譜．Universal Editionの1964年版（Erwin Ratz校訂）と自筆資料を参照．IMSLPのリンクは参照用のUE 13880・第2版で，全音版そのものではない．</span></div>
+                            </li>
                             <li><span class="score-title">a performing version of the draft for the TENTH
                                     SYMPHONY（Deryck Cooke）</span>：Faber Music Ltd.
+                                <div class="score-reference"><a href="https://imslp.org/wiki/Symphony_No.10,_GMW_F58_(Mahler,_Gustav)" target="_blank" rel="noopener noreferrer">IMSLP作品ページ</a>
+                                    <span class="score-source-note">作品ページには他の補筆版・自筆草稿等があるが，使用したDeryck Cooke版の総譜掲載は未確認．</span></div>
                             </li>
                             <li><span class="score-title">Das Klagende Lied Fassung 1880 in drei Sätzen</span>：Universal
-                                Edition UE 34 801</li>
+                                Edition UE 34 801
+                                <div class="score-reference"><a href="https://imslp.org/wiki/Das_Klagende_Lied,_GMW_1_(Mahler,_Gustav)" target="_blank" rel="noopener noreferrer">IMSLP作品ページ</a> · <a href="https://imslp.org/wiki/Special:ImagefromIndex/747990" target="_blank" rel="noopener noreferrer">参考別版 #747990</a>
+                                    <span class="score-source-note">参考別版：Belwin-Millsの1973年初版．使用したUE 34801との校訂・訂正の一致は未確認．</span></div>
+                            </li>
                             <li><span class="score-title">Das Klagende Lied Fassung 1899 in zwei Sätzen</span>：Universal
-                                Edition UE 34 802</li>
+                                Edition UE 34 802
+                                <div class="score-reference"><a href="https://imslp.org/wiki/Das_Klagende_Lied,_GMW_1_(Mahler,_Gustav)" target="_blank" rel="noopener noreferrer">IMSLP作品ページ</a> · <a href="https://imslp.org/wiki/Special:ImagefromIndex/112302" target="_blank" rel="noopener noreferrer">参照譜 #112302</a>
+                                    <span class="score-source-note">参照譜はRudolf Stephan校訂1978年版・UE 16814．使用したUE 34802との刷・訂正の対応は未照合．</span></div>
+                            </li>
                             <li><span class="score-title">Lieder eines fahrenden Gesellen</span>：Universal Edition UE 34
-                                810</li>
+                                810
+                                <div class="score-reference"><a href="https://imslp.org/wiki/Lieder_eines_fahrenden_Gesellen,_GMW_10_(Mahler,_Gustav)" target="_blank" rel="noopener noreferrer">IMSLP作品ページ</a> · <a href="https://imslp.org/wiki/Special:ImagefromIndex/111740" target="_blank" rel="noopener noreferrer">参照譜 #111740</a>
+                                    <span class="score-source-note">参照譜はZoltan Roman校訂1982年版・J.W.4296．使用したUE 34810との刷・訂正の対応は未照合．</span></div>
+                            </li>
                             <li><span class="score-title">Des Knaben Wunderhorn</span>：Universal Edition UE 34 131,34
-                                132</li>
-                            <li><span class="score-title">Kindertotenlieder</span>：Universal Edition UE 34 113</li>
+                                132
+                                <div class="score-reference"><a href="https://imslp.org/wiki/Des_Knaben_Wunderhorn,_GMW_21-29,_32-36,_38_(Mahler,_Gustav)" target="_blank" rel="noopener noreferrer">IMSLP作品ページ</a> · <a href="https://imslp.org/wiki/Special:ImagefromIndex/46766" target="_blank" rel="noopener noreferrer">参考別版 #46766</a>
+                                    <span class="score-source-note">参考別版：UEの1920年版の復刻．使用したUE 34131／34132との校訂・収録曲・訂正の一致は未確認．</span></div>
+                            </li>
+                            <li><span class="score-title">Kindertotenlieder</span>：Universal Edition UE 34 113
+                                <div class="score-reference"><a href="https://imslp.org/wiki/Kindertotenlieder,_GMW_45_(Mahler,_Gustav)" target="_blank" rel="noopener noreferrer">IMSLP作品ページ</a> · <a href="https://imslp.org/wiki/Special:ImagefromIndex/111743" target="_blank" rel="noopener noreferrer">参照譜 #111743</a>
+                                    <span class="score-source-note">参照譜はZoltan Roman校訂1979年版・C.F.K.9220．使用したUE 34113との刷・訂正の対応は未照合．</span></div>
+                            </li>
                             <li><span class="score-title">Lieder nach Texten von Friedrich Rückert</span>：Universal
-                                Edition UE 34 122</li>
-                            <li><span class="score-title">Symphonic Movement:Blumine</span>：Theodore Presser</li>
-                            <li><span class="score-title">Totenfeier</span>：UE 34 798</li>
+                                Edition UE 34 122
+                                <div class="score-reference"><a href="https://imslp.org/wiki/R%C3%BCckert_Lieder,_GMW_39-43_(Mahler,_Gustav)" target="_blank" rel="noopener noreferrer">IMSLP作品ページ</a> · <a href="https://imslp.org/wiki/Special:ImagefromIndex/112612" target="_blank" rel="noopener noreferrer">参照譜 #112612</a>
+                                    <span class="score-source-note">参照譜はZoltan Roman校訂1984年版・C.F.K.9256で，《Liebst du um Schönheit》を含まない．使用したUE 34122の収録範囲・刷との対応は未照合．</span></div>
+                            </li>
+                            <li><span class="score-title">Symphonic Movement:Blumine</span>：Theodore Presser
+                                <div class="score-reference"><a href="https://imslp.org/wiki/Symphony_No.1,_GMW_11_(Mahler,_Gustav)" target="_blank" rel="noopener noreferrer">IMSLP作品ページ</a> · <a href="https://imslp.org/wiki/Special:ImagefromIndex/771067" target="_blank" rel="noopener noreferrer">参考別版 #771067</a> · <a href="https://imslp.org/wiki/Special:ImagefromIndex/271026" target="_blank" rel="noopener noreferrer">参考別版 #271026</a>
+                                    <span class="score-source-note">参考別版：H. Justus Rozemondの2022年浄書，および1893年自筆資料．使用したTheodore Presser版そのものではない．</span></div>
+                            </li>
+                            <li><span class="score-title">Totenfeier</span>：UE 34 798
+                                <div class="score-reference"><a href="https://imslp.org/wiki/Symphony_No.2,_GMW_30_(Mahler,_Gustav)" target="_blank" rel="noopener noreferrer">IMSLP作品ページ</a> · <a href="https://imslp.org/wiki/Special:ImagefromIndex/866329" target="_blank" rel="noopener noreferrer">参照譜 #866329</a> · <a href="https://imslp.org/wiki/Special:ImagefromIndex/922833" target="_blank" rel="noopener noreferrer">参照譜 #922833</a>
+                                    <span class="score-source-note">参照譜はKarl Heinz Füssl校訂1988年版・UE 13827．使用したUE 34798との刷・訂正の対応は未照合．</span></div>
+                            </li>
                         </ul>
 
                         <div class="composer-name">Richard Strauss</div>
                         <ul class="score-list">
                             <li><span class="score-title">Konzert für Waldhorn und Orchester Nr.1 in Es-Dur Op.11
-                                    (1882)</span>：Universal Edition UE 34 306</li>
+                                    (1882)</span>：Universal Edition UE 34 306
+                                <div class="score-reference"><a href="https://imslp.org/wiki/Horn_Concerto_No.1,_Op.11_(Strauss,_Richard)" target="_blank" rel="noopener noreferrer">IMSLP作品ページ</a> · <a href="https://imslp.org/wiki/Special:ImagefromIndex/14830" target="_blank" rel="noopener noreferrer">参考別版 #14830</a>
+                                    <span class="score-source-note">参考別版：Aibl 2540aに由来する旧UE 1592の復刻．使用したUE 34306との校訂対応は未確認．</span></div>
+                            </li>
                             <li><span class="score-title">
                                     Konzert für Violine und Orchester d-Moll Op.8 (1882)
-                                </span>：Kalmus A2130</li>
+                                </span>：Kalmus A2130
+                                <div class="score-reference"><a href="https://imslp.org/wiki/Violin_Concerto,_Op.8_(Strauss,_Richard)" target="_blank" rel="noopener noreferrer">IMSLP作品ページ</a> · <a href="https://imslp.org/wiki/Special:ImagefromIndex/677270" target="_blank" rel="noopener noreferrer">参照譜 #677270</a></div>
+                            </li>
                             <li><span class="score-title">
                                     Burleske in d-Moll für Klavier und Orchester TrV 145 (1886)
-                                </span>：Kalmus A2126</li>
+                                </span>：Kalmus A2126
+                                <div class="score-reference"><a href="https://imslp.org/wiki/Burleske,_TrV_145_(Strauss,_Richard)" target="_blank" rel="noopener noreferrer">IMSLP作品ページ</a> · <a href="https://imslp.org/wiki/Special:ImagefromIndex/683714" target="_blank" rel="noopener noreferrer">参照譜 #683714</a></div>
+                            </li>
 
-                            <li><span class="score-title">Aus Italien, Op.16 (1886)</span>：C. F. Peters 11086</li>
+                            <li><span class="score-title">Aus Italien, Op.16 (1886)</span>：C. F. Peters 11086
+                                <div class="score-reference"><a href="https://imslp.org/wiki/Aus_Italien,_Op.16_(Strauss,_Richard)" target="_blank" rel="noopener noreferrer">IMSLP作品ページ</a> · <a href="https://imslp.org/wiki/Special:ImagefromIndex/852947" target="_blank" rel="noopener noreferrer">参照譜 #852947</a></div>
+                            </li>
 
-                            <li><span class="score-title">Don Juan Op.20 (1888)</span>：Edition Eulenburg / Zen-On</li>
-                            <li><span class="score-title">Macbeth Op.23 (1888)</span>：C.F. Peters P. 30964</li>
-                            <li><span class="score-title">Tod und Verklärung Op.24 (1889)</span>：音楽之友社 OGT-249</li>
+                            <li><span class="score-title">Don Juan Op.20 (1888)</span>：Edition Eulenburg / Zen-On
+                                <div class="score-reference"><a href="https://imslp.org/wiki/Don_Juan,_Op.20_(Strauss,_Richard)" target="_blank" rel="noopener noreferrer">IMSLP作品ページ</a> · <a href="https://imslp.org/wiki/Special:ImagefromIndex/1035516" target="_blank" rel="noopener noreferrer">参照譜 #1035516</a>
+                                    <span class="score-source-note">底本：Eulenburg No.440の系統（Norman Del Mar解説）．参照譜はE.E.3499・序文の著作権表示1974年．日本版の解説・刷・本文訂正との完全一致は未照合．</span>
+                                    <a href="https://shop.zen-on.co.jp/item/detail/894163/" target="_blank" rel="noopener noreferrer">出版社の説明</a></div>
+                            </li>
+                            <li><span class="score-title">Macbeth Op.23 (1888)</span>：C.F. Peters P. 30964
+                                <div class="score-reference"><a href="https://imslp.org/wiki/Macbeth,_Op.23_(Strauss,_Richard)" target="_blank" rel="noopener noreferrer">IMSLP作品ページ</a> · <a href="https://imslp.org/wiki/Special:ImagefromIndex/79259" target="_blank" rel="noopener noreferrer">参照譜 #79259</a></div>
+                            </li>
+                            <li><span class="score-title">Tod und Verklärung Op.24 (1889)</span>：音楽之友社 OGT-249
+                                <div class="score-reference"><a href="https://imslp.org/wiki/Tod_und_Verkl%C3%A4rung,_Op.24_(Strauss,_Richard)" target="_blank" rel="noopener noreferrer">IMSLP作品ページ</a> · <a href="https://imslp.org/wiki/Special:ImagefromIndex/18779" target="_blank" rel="noopener noreferrer">参考別版 #18779</a>
+                                    <span class="score-source-note">底本の版・刷は未特定．音楽之友社による独自の組版で，参照譜はAibl 2676に由来するDover復刻．日本版と同一の譜面としては扱わない．</span>
+                                    <a href="https://www.ongakunotomo.co.jp/catalog/detail.php?id=480249" target="_blank" rel="noopener noreferrer">出版社の説明</a></div>
+                            </li>
 
-                            <li><span class="score-title">Guntram Op.25 (1894)</span>：Adolph Fürstner A. 9027 F.</li>
+                            <li><span class="score-title">Guntram Op.25 (1894)</span>：Adolph Fürstner A. 9027 F.
+                                <div class="score-reference"><a href="https://imslp.org/wiki/Guntram,_Op.25_(Strauss,_Richard)" target="_blank" rel="noopener noreferrer">IMSLP作品ページ</a> · <a href="https://imslp.org/wiki/Special:ImagefromIndex/790346" target="_blank" rel="noopener noreferrer">参照譜 #790346</a>
+                                    <span class="score-source-note">参照譜のプレートA.9027 F.は対応するが，掲載書誌の刊年・実際の刷と1934年改訂との関係は未確認．</span></div>
+                            </li>
                             <li><span class="score-title">Till Eulenspiegels lustige Streiche Op.28 (1895)</span>：音楽之友社
-                                OGT-228</li>
-                            <li><span class="score-title">Also sprach Zarathustra Op.30 (1896)</span>：音楽之友社 OGT-231</li>
+                                OGT-228
+                                <div class="score-reference"><a href="https://imslp.org/wiki/Till_Eulenspiegels_lustige_Streiche,_Op.28_(Strauss,_Richard)" target="_blank" rel="noopener noreferrer">IMSLP作品ページ</a> · <a href="https://imslp.org/wiki/Special:ImagefromIndex/19118" target="_blank" rel="noopener noreferrer">参考別版 #19118</a>
+                                    <span class="score-source-note">底本：Peters版ポケットスコア．初版等も参照して音楽之友社が作成．参照譜はAibl由来のDover復刻で，組版・ページ割が異なる．底本の具体的な版・刷と採用訂正は未特定．</span>
+                                    <a href="https://www.ongakunotomo.co.jp/catalog/detail.php?id=480228" target="_blank" rel="noopener noreferrer">出版社の説明</a></div>
+                            </li>
+                            <li><span class="score-title">Also sprach Zarathustra Op.30 (1896)</span>：音楽之友社 OGT-231
+                                <div class="score-reference"><a href="https://imslp.org/wiki/Also_sprach_Zarathustra,_Op.30_(Strauss,_Richard)" target="_blank" rel="noopener noreferrer">IMSLP作品ページ</a> · <a href="https://imslp.org/wiki/Special:ImagefromIndex/74923" target="_blank" rel="noopener noreferrer">参考別版 #74923</a>
+                                    <span class="score-source-note">底本：Peters出版譜．指揮者用スコア等も参照して音楽之友社が作成．参照譜はAibl 2859で，底本の具体的な版・刷と採用訂正は未特定．</span>
+                                    <a href="https://www.ongakunotomo.co.jp/catalog/detail.php?id=480231" target="_blank" rel="noopener noreferrer">出版社の説明</a></div>
+                            </li>
                             <li><span class="score-title">Don Quixote Op.35 (1897)</span>：Dover Publications
-                                0-486-23754-0</li>
-                            <li><span class="score-title">Ein Heldenleben Op.40 (1898)</span>：音楽之友社 OGT-230</li>
+                                0-486-23754-0
+                                <div class="score-reference"><a href="https://imslp.org/wiki/Don_Quixote,_Op.35_(Strauss,_Richard)" target="_blank" rel="noopener noreferrer">IMSLP作品ページ</a> · <a href="https://imslp.org/wiki/Special:ImagefromIndex/18787" target="_blank" rel="noopener noreferrer">参照譜 #18787</a></div>
+                            </li>
+                            <li><span class="score-title">Ein Heldenleben Op.40 (1898)</span>：音楽之友社 OGT-230
+                                <div class="score-reference"><a href="https://imslp.org/wiki/Ein_Heldenleben,_Op.40_(Strauss,_Richard)" target="_blank" rel="noopener noreferrer">IMSLP作品ページ</a> · <a href="https://imslp.org/wiki/Special:ImagefromIndex/969486" target="_blank" rel="noopener noreferrer">参照譜 #969486</a>
+                                    <span class="score-source-note">底本：Eulenburg版．参照譜はWalter Seifert校訂のNo.498／EE 3671．日本版は独自の組版で，終結部初期稿の付録もあり，このPDFと収録内容が完全に同じではない．</span>
+                                    <a href="https://www.ongakunotomo.co.jp/catalog/detail.php?id=480230" target="_blank" rel="noopener noreferrer">出版社の説明</a></div>
+                            </li>
 
-                            <li><span class="score-title">Feuersnot Op.50 (1901)</span>：Adolph Fürstner A. 9028 F.</li>
+                            <li><span class="score-title">Feuersnot Op.50 (1901)</span>：Adolph Fürstner A. 9028 F.
+                                <div class="score-reference"><a href="https://imslp.org/wiki/Feuersnot,_Op.50_(Strauss,_Richard)" target="_blank" rel="noopener noreferrer">IMSLP作品ページ</a> · <a href="https://imslp.org/wiki/Special:ImagefromIndex/69346" target="_blank" rel="noopener noreferrer">参照譜 #69346</a></div>
+                            </li>
                             <li><span class="score-title">Symphonia domestica Op.53 (1903)</span>：Dover Publications
-                                0-486-27725-9</li>
-                            <li><span class="score-title">Salome Op.54 (1905)</span>：Adolph Fürstner A. 5500 F.</li>
+                                0-486-27725-9
+                                <div class="score-reference"><a href="https://imslp.org/wiki/Sinfonia_domestica,_Op.53_(Strauss,_Richard)" target="_blank" rel="noopener noreferrer">IMSLP作品ページ</a> · <a href="https://imslp.org/wiki/Special:ImagefromIndex/13130" target="_blank" rel="noopener noreferrer">参照譜 #13130</a></div>
+                            </li>
+                            <li><span class="score-title">Salome Op.54 (1905)</span>：Adolph Fürstner A. 5500 F.
+                                <div class="score-reference"><a href="https://imslp.org/wiki/Salome,_Op.54_(Strauss,_Richard)" target="_blank" rel="noopener noreferrer">IMSLP作品ページ</a> · <a href="https://imslp.org/wiki/Special:ImagefromIndex/672025" target="_blank" rel="noopener noreferrer">参照譜 #672025</a></div>
+                            </li>
                             <li><span class="score-title">Elektra Op.58 (1909)</span>：Adolph Fürstner A. 5650 5661 F.
+                                <div class="score-reference"><a href="https://imslp.org/wiki/Elektra,_Op.58_(Strauss,_Richard)" target="_blank" rel="noopener noreferrer">IMSLP作品ページ</a> · <a href="https://imslp.org/wiki/Special:ImagefromIndex/24779" target="_blank" rel="noopener noreferrer">参照譜 #24779</a></div>
                             </li>
                             <li><span class="score-title">Der Rosenkavalier Op.59 (1910)</span>：Adolph Fürstner A. 5900
-                                F.</li>
+                                F.
+                                <div class="score-reference"><a href="https://imslp.org/wiki/Der_Rosenkavalier,_Op.59_(Strauss,_Richard)" target="_blank" rel="noopener noreferrer">IMSLP作品ページ</a> · <a href="https://imslp.org/wiki/Special:ImagefromIndex/1020327" target="_blank" rel="noopener noreferrer">参照譜 #1020327</a></div>
+                            </li>
                             <li><span class="score-title">Ariadne auf Naxos Op.60 (1911/1912, revised 1916)</span>：Adolph Fürstner A.
-                                7450 F.</li>
+                                7450 F.
+                                <div class="score-reference"><a href="https://imslp.org/wiki/Ariadne_auf_Naxos,_Op.60_(Strauss,_Richard)" target="_blank" rel="noopener noreferrer">IMSLP作品ページ</a> · <a href="https://imslp.org/wiki/Special:ImagefromIndex/875680" target="_blank" rel="noopener noreferrer">参照譜 #875680</a></div>
+                            </li>
 
                             <li><span class="score-title">Eine Alpensinfonie Op.64 (1915)</span>：Dover Publications
-                                0-486-27725-9</li>
+                                0-486-27725-9
+                                <div class="score-reference"><a href="https://imslp.org/wiki/Eine_Alpensinfonie,_Op.64_(Strauss,_Richard)" target="_blank" rel="noopener noreferrer">IMSLP作品ページ</a> · <a href="https://imslp.org/wiki/Special:ImagefromIndex/20542" target="_blank" rel="noopener noreferrer">参照譜 #20542</a></div>
+                            </li>
                             <li><span class="score-title">Die Frau ohne Schatten Op.65 (1917)</span>：Adolph Fürstner A.
-                                7500 F.</li>
+                                7500 F.
+                                <div class="score-reference"><a href="https://imslp.org/wiki/Die_Frau_ohne_Schatten,_Op.65_(Strauss,_Richard)" target="_blank" rel="noopener noreferrer">IMSLP作品ページ</a> · <a href="https://imslp.org/wiki/Special:ImagefromIndex/1012957" target="_blank" rel="noopener noreferrer">参照譜 #1012957</a></div>
+                            </li>
 
-                            <li><span class="score-title">Intermezzo Op.72 (1923)</span>：Adolph Fürstner A. 7800 F.</li>
+                            <li><span class="score-title">Intermezzo Op.72 (1923)</span>：Adolph Fürstner A. 7800 F.
+                                <div class="score-reference"><a href="https://imslp.org/wiki/Intermezzo,_Op.72_(Strauss,_Richard)" target="_blank" rel="noopener noreferrer">IMSLP作品ページ</a> · <a href="https://imslp.org/wiki/Special:ImagefromIndex/886140" target="_blank" rel="noopener noreferrer">参照譜 #886140</a> · <a href="https://imslp.org/wiki/Special:ImagefromIndex/124008" target="_blank" rel="noopener noreferrer">参照譜 #124008</a> · <a href="https://imslp.org/wiki/Special:ImagefromIndex/1018490" target="_blank" rel="noopener noreferrer">参照譜 #1018490</a> · <a href="https://imslp.org/wiki/Special:ImagefromIndex/124009" target="_blank" rel="noopener noreferrer">参照譜 #124009</a></div>
+                            </li>
                             <li><span class="score-title">Die ägyptische Helena Op.75 (1927)</span>：Adolph Fürstner A.
-                                7900 F.</li>
+                                7900 F.
+                                <div class="score-reference"><a href="https://imslp.org/wiki/Die_%C3%A4gyptische_Helena,_Op.75_(Strauss,_Richard)" target="_blank" rel="noopener noreferrer">IMSLP作品ページ</a> · <a href="https://imslp.org/wiki/Special:ImagefromIndex/950799" target="_blank" rel="noopener noreferrer">参照譜 #950799</a></div>
+                            </li>
                             <li><span class="score-title">Arabella Op.79 (1932)</span>：Verlag Dr. Richard Strauss GmbH
-                                &amp; Co. KG A. 8250 F.; Adolph Fürstner (reprint)</li>
+                                &amp; Co. KG A. 8250 F.; Adolph Fürstner (reprint)
+                                <div class="score-reference"><a href="https://imslp.org/wiki/Arabella,_Op.79_(Strauss,_Richard)" target="_blank" rel="noopener noreferrer">IMSLP作品ページ</a> · <a href="https://imslp.org/wiki/Special:ImagefromIndex/886141" target="_blank" rel="noopener noreferrer">参照譜 #886141</a></div>
+                            </li>
                             <li><span class="score-title">Die schweigsame Frau Op.80 (1934)</span>：Verlag Dr. Richard
-                                Strauss GmbH &amp; Co. KG A. 8300 F.; Adolph Fürstner (reprint)</li>
+                                Strauss GmbH &amp; Co. KG A. 8300 F.; Adolph Fürstner (reprint)
+                                <div class="score-reference"><a href="https://imslp.org/wiki/Die_schweigsame_Frau,_Op.80_(Strauss,_Richard)" target="_blank" rel="noopener noreferrer">IMSLP作品ページ</a> · <a href="https://imslp.org/wiki/Special:ImagefromIndex/886093" target="_blank" rel="noopener noreferrer">参照譜 #886093</a></div>
+                            </li>
 
                             <li><span class="score-title">Friedenstag Op.81 (1936)</span>：Verlag Dr. Richard Strauss
-                                GmbH &amp; Co. KG A. 9032 F.</li>
+                                GmbH &amp; Co. KG A. 9032 F.
+                                <div class="score-reference"><a href="https://imslp.org/wiki/Friedenstag,_Op.81_(Strauss,_Richard)" target="_blank" rel="noopener noreferrer">IMSLP作品ページ</a> · <a href="https://imslp.org/wiki/Special:ImagefromIndex/123429" target="_blank" rel="noopener noreferrer">参照譜 #123429</a></div>
+                            </li>
                             <li><span class="score-title">Daphne Op.82 (1937)</span>：Verlag Dr. Richard Strauss GmbH
-                                &amp; Co. KG A. 8380 F.</li>
+                                &amp; Co. KG A. 8380 F.
+                                <div class="score-reference"><a href="https://imslp.org/wiki/Daphne,_Op.82_(Strauss,_Richard)" target="_blank" rel="noopener noreferrer">IMSLP作品ページ</a> · <a href="https://imslp.org/wiki/Special:ImagefromIndex/28484" target="_blank" rel="noopener noreferrer">参照譜 #28484</a></div>
+                            </li>
                             <li><span class="score-title">Die Liebe der Danae Op.83 (1940)</span>：Verlag Dr. Richard
-                                Strauss GmbH &amp; Co. KG A. 9033 F.</li>
+                                Strauss GmbH &amp; Co. KG A. 9033 F.
+                                <div class="score-reference"><a href="https://imslp.org/wiki/Die_Liebe_der_Danae,_Op.83_(Strauss,_Richard)" target="_blank" rel="noopener noreferrer">IMSLP作品ページ</a> · <a href="https://imslp.org/wiki/Special:ImagefromIndex/1013322" target="_blank" rel="noopener noreferrer">参照譜 #1013322</a>
+                                    <span class="score-source-note">掲載譜はR.St.99．使用譜に記したA.9033 F.との関係は未確認．</span></div>
+                            </li>
 
                             <li><span class="score-title">Capriccio Op.85 (1942)</span>：B. Schott's Söhne; Boosey &amp;
-                                Hawkes</li>
+                                Hawkes
+                                <div class="score-reference"><a href="https://imslp.org/wiki/Capriccio,_Op.85_(Strauss,_Richard)" target="_blank" rel="noopener noreferrer">IMSLP作品ページ</a> · <a href="https://imslp.org/wiki/Special:ImagefromIndex/24954" target="_blank" rel="noopener noreferrer">参照譜 #24954</a></div>
+                            </li>
                             <li><span class="score-title">
                                     Konzert Nr. 2 für Horn und Orchester Es-Dur, TrV 283 (1942)
-                                </span>：Hawkes &amp; Son / Boosey &amp; Hawkes B. &amp; H. 16627</li>
+                                </span>：Hawkes &amp; Son / Boosey &amp; Hawkes B. &amp; H. 16627
+                                <div class="score-reference"><a href="https://imslp.org/wiki/Horn_Concerto_No.2,_TrV_283_(Strauss,_Richard)" target="_blank" rel="noopener noreferrer">IMSLP作品ページ</a> · <a href="https://imslp.org/wiki/Special:ImagefromIndex/127748" target="_blank" rel="noopener noreferrer">参照譜 #127748</a></div>
+                            </li>
 
                             <li><span class="score-title">
                                     Sonatine Nr. 1 in F-Dur für 16 Bläser „Aus der Werkstatt eines Invaliden“, TrV 288
                                     (1943)
-                                </span>：Boosey &amp; Hawkes B. &amp; H. 19177</li>
+                                </span>：Boosey &amp; Hawkes B. &amp; H. 19177
+                                <div class="score-reference"><a href="https://imslp.org/wiki/Sonatine_No.1,_TrV_288_(Strauss,_Richard)" target="_blank" rel="noopener noreferrer">IMSLP作品ページ</a> · <a href="https://imslp.org/wiki/Special:ImagefromIndex/960953" target="_blank" rel="noopener noreferrer">参照譜 #960953</a></div>
+                            </li>
 
                             <li><span class="score-title">
                                     Sonatine Nr. 2 in Es-Dur für 16 Bläser „Fröhliche Werkstatt“, TrV 291 (1944)
-                                </span>：Hawkes &amp; Son B. &amp; H. 17902</li>
+                                </span>：Hawkes &amp; Son B. &amp; H. 17902
+                                <div class="score-reference"><a href="https://imslp.org/wiki/Sonatine_No.2,_TrV_291_(Strauss,_Richard)" target="_blank" rel="noopener noreferrer">IMSLP作品ページ</a> · <a href="https://imslp.org/wiki/Special:ImagefromIndex/960952" target="_blank" rel="noopener noreferrer">参照譜 #960952</a></div>
+                            </li>
 
                             <li><span class="score-title">
                                     Metamorphosen – Studie für 23 Solostreicher, TrV 290 (1945)
-                                </span>：音楽之友社 OGT-246</li>
+                                </span>：音楽之友社 OGT-246
+                                <div class="score-reference"><a href="https://imslp.org/wiki/Metamorphosen,_TrV_290_(Strauss,_Richard)" target="_blank" rel="noopener noreferrer">IMSLP作品ページ</a> · <a href="https://imslp.org/wiki/Special:ImagefromIndex/22734" target="_blank" rel="noopener noreferrer">参考別版 #22734</a>
+                                    <span class="score-source-note">底本の版・刷は未特定．音楽之友社による独自の組版で，参照譜はBoosey &amp; Hawkes 9118・著作権表示1946年．組版・ページ割が異なり，底本と同一の刷とは確定していない．</span>
+                                    <a href="https://www.ongakunotomo.co.jp/catalog/detail.php?id=480246" target="_blank" rel="noopener noreferrer">出版社の説明</a></div>
+                            </li>
 
                             <li><span class="score-title">
                                     Konzert für Oboe und kleines Orchester D-Dur, TrV 292 (1945)
-                                </span>：Hawkes &amp; Son / Boosey &amp; Hawkes B. &amp; H. 16388</li>
+                                </span>：Hawkes &amp; Son / Boosey &amp; Hawkes B. &amp; H. 16388
+                                <div class="score-reference"><a href="https://imslp.org/wiki/Oboe_Concerto,_TrV_292_(Strauss,_Richard)" target="_blank" rel="noopener noreferrer">IMSLP作品ページ</a> · <a href="https://imslp.org/wiki/Special:ImagefromIndex/01700" target="_blank" rel="noopener noreferrer">参照譜 #01700</a></div>
+                            </li>
 
                             <li><span class="score-title">
                                     Duett-Concertino für Klarinette und Fagott mit Streichorchester und Harfe, TrV 293
                                     (1947)
-                                </span>：Hawkes &amp; Son / Boosey &amp; Hawkes B. &amp; H. 16629</li>
+                                </span>：Hawkes &amp; Son / Boosey &amp; Hawkes B. &amp; H. 16629
+                                <div class="score-reference"><a href="https://imslp.org/wiki/Duett-Concertino,_TrV_293_(Strauss,_Richard)" target="_blank" rel="noopener noreferrer">IMSLP作品ページ</a> · <a href="https://imslp.org/wiki/Special:ImagefromIndex/22735" target="_blank" rel="noopener noreferrer">参照譜 #22735</a></div>
+                            </li>
 
                             <li><span class="score-title">
                                     Vier letzte Lieder, TrV 296 (1948)
-                                </span>：Boosey &amp; Hawkes HPS 667</li>
+                                </span>：Boosey &amp; Hawkes HPS 667
+                                <div class="score-reference"><a href="https://imslp.org/wiki/4_Letzte_Lieder,_TrV_296_(Strauss,_Richard)" target="_blank" rel="noopener noreferrer">IMSLP作品ページ</a> · <a href="https://imslp.org/wiki/Special:ImagefromIndex/615036" target="_blank" rel="noopener noreferrer">参照譜 #615036</a>
+                                    <span class="score-source-note">参照譜は4曲合冊．使用したHPS 667との再版・曲順・訂正の対応は未照合．</span></div>
+                            </li>
 
                         </ul>
 
@@ -361,64 +589,136 @@
                         <ul class="score-list">
                             <li><span class="score-title">Kammermusik No.1 for 12 solo instruments Op.24/No.1
                                     (1922)</span>：Edition Eulenburg No.1463
+                                <div class="score-reference"><a href="https://imslp.org/wiki/Kammermusik_No.1,_Op.24_No.1_(Hindemith,_Paul)" target="_blank" rel="noopener noreferrer">IMSLP作品ページ</a> · <a href="https://imslp.org/wiki/Special:ImagefromIndex/310192" target="_blank" rel="noopener noreferrer">参照譜 #310192</a>
+                                    <span class="score-source-note">参照譜は旧Schott／AMP版．使用したEulenburg版への再刊時の編集・訂正，および刷の対応は未確認．</span></div>
                             </li>
                             <li><span class="score-title">Kleine Kammermusik für fünf Bläser Op.24/No.2
-                                    (1922)</span>：Schott ED 3437</li>
+                                    (1922)</span>：Schott ED 3437
+                                <div class="score-reference"><a href="https://imslp.org/wiki/Kleine_Kammermusik,_Op.24_No.2_(Hindemith,_Paul)" target="_blank" rel="noopener noreferrer">IMSLP作品ページ</a> · <a href="https://imslp.org/wiki/Special:ImagefromIndex/309927" target="_blank" rel="noopener noreferrer">参照譜 #309927</a>
+                                    <span class="score-source-note">掲載書誌のNo.4389・プレート30928と，使用譜ED 3437との番号対応は未確認．</span></div>
+                            </li>
                             <li><span class="score-title">Kammermusik No.2 Piano Concert Op.36/No.1
-                                    (1924)</span>：Edition Eulenburg No.1464</li>
+                                    (1924)</span>：Edition Eulenburg No.1464
+                                <div class="score-reference"><a href="https://imslp.org/wiki/Kammermusik_No.2,_Op.36_No.1_(Hindemith,_Paul)" target="_blank" rel="noopener noreferrer">IMSLP作品ページ</a> · <a href="https://imslp.org/wiki/Special:ImagefromIndex/318124" target="_blank" rel="noopener noreferrer">参照譜 #318124</a>
+                                    <span class="score-source-note">参照譜は旧Schott／AMP版．使用したEulenburg版への再刊時の編集・訂正，および刷の対応は未確認．</span></div>
+                            </li>
                             <li><span class="score-title">Kammermusik No.3 for obbligato Cello and 10 Solo Instruments
                                     Op.36/No.2 (1925)</span>：Edition
-                                Eulenburg No.1465</li>
+                                Eulenburg No.1465
+                                <div class="score-reference"><a href="https://imslp.org/wiki/Kammermusik_No.3,_Op.36_No.2_(Hindemith,_Paul)" target="_blank" rel="noopener noreferrer">IMSLP作品ページ</a> · <a href="https://imslp.org/wiki/Special:ImagefromIndex/318863" target="_blank" rel="noopener noreferrer">参照譜 #318863</a>
+                                    <span class="score-source-note">参照譜は旧Schott／AMP版．使用したEulenburg版への再刊時の編集・訂正，および刷の対応は未確認．</span></div>
+                            </li>
                             <li><span class="score-title">Kammermusik No.4 Violin Concerto Op.36/No.3
-                                    (1925)</span>：Edition Eulenburg No.1466</li>
+                                    (1925)</span>：Edition Eulenburg No.1466
+                                <div class="score-reference"><a href="https://imslp.org/wiki/Kammermusik_No.4,_Op.36_No.3_(Hindemith,_Paul)" target="_blank" rel="noopener noreferrer">IMSLP作品ページ</a> · <a href="https://imslp.org/wiki/Special:ImagefromIndex/318599" target="_blank" rel="noopener noreferrer">参照譜 #318599</a>
+                                    <span class="score-source-note">参照譜は旧Schott／AMP版．使用したEulenburg版への再刊時の編集・訂正，および刷の対応は未確認．</span></div>
+                            </li>
                             <li><span class="score-title">Concerto for Orchestra Op.38 (1925)</span>：Edition Eulenburg
-                                No.8036</li>
+                                No.8036
+                                <div class="score-reference"><a href="https://imslp.org/wiki/Concerto_for_Orchestra,_Op.38_(Hindemith,_Paul)" target="_blank" rel="noopener noreferrer">IMSLP作品ページ</a> · <a href="https://imslp.org/wiki/Special:ImagefromIndex/324095" target="_blank" rel="noopener noreferrer">参照譜 #324095</a>
+                                    <span class="score-source-note">参照譜は旧Schott／AMP版．使用したEulenburg版への再刊時の編集・訂正，および刷の対応は未確認．</span></div>
+                            </li>
                             <li><span class="score-title">Kammermusik No.5 Viola Concerto Op.36/No.4
-                                    (1927)</span>：Edition Eulenburg No.1467</li>
+                                    (1927)</span>：Edition Eulenburg No.1467
+                                <div class="score-reference"><a href="https://imslp.org/wiki/Kammermusik_No.5,_Op.36_No.4_(Hindemith,_Paul)" target="_blank" rel="noopener noreferrer">IMSLP作品ページ</a> · <a href="https://imslp.org/wiki/Special:ImagefromIndex/319961" target="_blank" rel="noopener noreferrer">参照譜 #319961</a>
+                                    <span class="score-source-note">参照譜は旧Schott／AMP版．使用したEulenburg版への再刊時の編集・訂正，および刷の対応は未確認．</span></div>
+                            </li>
                             <li><span class="score-title">Kammermusik No.6 for Viola d'amore and Chamber Orchestra
                                     Op.46/No.1 (1927)</span>：Edition
-                                Eulenburg No.1468</li>
+                                Eulenburg No.1468
+                                <div class="score-reference"><a href="https://imslp.org/wiki/Kammermusik_No.6,_Op.46_No.1_(Hindemith,_Paul)" target="_blank" rel="noopener noreferrer">IMSLP作品ページ</a> · <a href="https://imslp.org/wiki/Special:ImagefromIndex/318134" target="_blank" rel="noopener noreferrer">参照譜 #318134</a>
+                                    <span class="score-source-note">参照譜は旧Schott／AMP版．使用したEulenburg版への再刊時の編集・訂正，および刷の対応は未確認．</span></div>
+                            </li>
                             <li><span class="score-title">Kammermusik No.7 for Orgue and Chamber Orchestra Op.46/No.2
                                     (1927) </span>：Edition Eulenburg
-                                No.1469</li>
-                            <li><span class="score-title">8 Stücke für Flöte allein (1927)</span>：Schott ED 4760</li>
+                                No.1469
+                                <div class="score-reference"><a href="https://imslp.org/wiki/Kammermusik_No.7,_Op.46_No.2_(Hindemith,_Paul)" target="_blank" rel="noopener noreferrer">IMSLP作品ページ</a> · <a href="https://imslp.org/wiki/Special:ImagefromIndex/318033" target="_blank" rel="noopener noreferrer">参照譜 #318033</a>
+                                    <span class="score-source-note">参照譜は旧Schott／AMP版．使用したEulenburg版への再刊時の編集・訂正，および刷の対応は未確認．</span></div>
+                            </li>
+                            <li><span class="score-title">8 Stücke für Flöte allein (1927)</span>：Schott ED 4760
+                                <div class="score-reference"><a href="https://imslp.org/wiki/8_Pieces_for_Solo_Flute_(Hindemith,_Paul)" target="_blank" rel="noopener noreferrer">IMSLP作品ページ</a> · <a href="https://imslp.org/wiki/Special:ImagefromIndex/310400" target="_blank" rel="noopener noreferrer">参照譜 #310400</a></div>
+                            </li>
                             <li><span class="score-title">Konzertmusik für Solo-Bratsche und größeres Kammerorchester
                                     Op.48 (1930)</span>：Schott ED 3150（ヴィオラとピアノの縮約譜。管弦楽総譜は ED 3491）
+                                <div class="score-reference"><a href="https://imslp.org/wiki/Konzertmusik,_Op.48_(Hindemith,_Paul)" target="_blank" rel="noopener noreferrer">IMSLP作品ページ</a> · <a href="https://imslp.org/wiki/Special:ImagefromIndex/849146" target="_blank" rel="noopener noreferrer">参照譜 #849146</a>
+                                    <span class="score-source-note">リンク先は1930年決定稿の管弦楽総譜ED 3491（プレート32589）．使用したED 3150のピアノ縮約譜とは編成が異なる．</span></div>
                             </li>
                             <li><span class="score-title">Konzertmusik für Klavier, Blechbläser, und Harfen Op.49
-                                    (1930)</span>：Schott ED 3248</li>
+                                    (1930)</span>：Schott ED 3248
+                                <div class="score-reference"><a href="https://imslp.org/wiki/Konzertmusik_f%C3%BCr_Klavier,_Blechbl%C3%A4ser_und_Harfen,_Op.49_(Hindemith,_Paul)" target="_blank" rel="noopener noreferrer">IMSLP作品ページ</a> · <a href="https://imslp.org/wiki/Special:ImagefromIndex/323292" target="_blank" rel="noopener noreferrer">参照譜 #323292</a></div>
+                            </li>
                             <li><span class="score-title">Konzertmusik für Streichorchester und Blechbläser Op.50 (1930)
                                 </span>：Edition Eulenburg
-                                No.1460</li>
+                                No.1460
+                                <div class="score-reference"><a href="https://imslp.org/wiki/Konzertmusik_f%C3%BCr_Streichorchester_und_Blechbl%C3%A4ser,_Op.50_(Hindemith,_Paul)" target="_blank" rel="noopener noreferrer">IMSLP作品ページ</a> · <a href="https://imslp.org/wiki/Special:ImagefromIndex/332833" target="_blank" rel="noopener noreferrer">参照譜 #332833</a> · <a href="https://imslp.org/wiki/Special:ImagefromIndex/332834" target="_blank" rel="noopener noreferrer">参照譜 #332834</a>
+                                    <span class="score-source-note">参照譜は旧Schott／AMP版．使用したEulenburg版への再刊時の編集・訂正，および刷の対応は未確認．</span></div>
+                            </li>
                             <li><span class="score-title">Symphonie "Mathis der Maler" (1934)</span>：Edition Eulenburg
-                                No.573</li>
+                                No.573
+                                <div class="score-reference"><a href="https://imslp.org/wiki/Mathis_der_Maler_Symphony_(Hindemith,_Paul)" target="_blank" rel="noopener noreferrer">IMSLP作品ページ</a> · <a href="https://imslp.org/wiki/Special:ImagefromIndex/907199" target="_blank" rel="noopener noreferrer">参照譜 #907199</a>
+                                    <span class="score-source-note">参照譜は旧Schott／AMP版．使用したEulenburg版への再刊時の編集・訂正，および刷の対応は未確認．</span></div>
+                            </li>
                             <li><span class="score-title">Der Schwanendreher Konzert nach alten Volksliedern für Viola
                                     und kleines Orchester
-                                    (1935)</span>：Edition Eulenburg No.1816</li>
-                            <li><span class="score-title">Trauermusik (1936)</span>：Schott ED 3514</li>
-                            <li><span class="score-title">Sonate für Flöte und Klavier (1936)</span>：Schott ED 2522</li>
-                            <li><span class="score-title">Symphonische Tänze für Orchester (1937)</span>：Schott ED 3525
+                                    (1935)</span>：Edition Eulenburg No.1816
+                                <div class="score-reference"><a href="https://imslp.org/wiki/Der_Schwanendreher_(Hindemith,_Paul)" target="_blank" rel="noopener noreferrer">IMSLP作品ページ</a> · <a href="https://imslp.org/wiki/Special:ImagefromIndex/351495" target="_blank" rel="noopener noreferrer">参照譜 #351495</a>
+                                    <span class="score-source-note">参照譜は旧Schott／AMP版．使用したEulenburg版への再刊時の編集・訂正，および刷の対応は未確認．</span></div>
                             </li>
-                            <li><span class="score-title">Nobilissima Visione – Orchestersuite (1938) </span>：Schott ED 3531</li>
+                            <li><span class="score-title">Trauermusik (1936)</span>：Schott ED 3514
+                                <div class="score-reference"><a href="https://imslp.org/wiki/Trauermusik_(Hindemith,_Paul)" target="_blank" rel="noopener noreferrer">IMSLP作品ページ</a> · <a href="https://imslp.org/wiki/Special:ImagefromIndex/311730" target="_blank" rel="noopener noreferrer">参照譜 #311730</a></div>
+                            </li>
+                            <li><span class="score-title">Sonate für Flöte und Klavier (1936)</span>：Schott ED 2522
+                                <div class="score-reference"><a href="https://imslp.org/wiki/Flute_Sonata_(Hindemith,_Paul)" target="_blank" rel="noopener noreferrer">IMSLP作品ページ</a> · <a href="https://imslp.org/wiki/Special:ImagefromIndex/310411" target="_blank" rel="noopener noreferrer">参照譜 #310411</a> · <a href="https://imslp.org/wiki/Special:ImagefromIndex/311088" target="_blank" rel="noopener noreferrer">参照譜 #311088</a></div>
+                            </li>
+                            <li><span class="score-title">Symphonische Tänze für Orchester (1937)</span>：Schott ED 3525
+                                <div class="score-reference"><a href="https://imslp.org/wiki/Symphonic_Dances_(Hindemith,_Paul)" target="_blank" rel="noopener noreferrer">IMSLP作品ページ</a> · <a href="https://imslp.org/wiki/Special:ImagefromIndex/325454" target="_blank" rel="noopener noreferrer">参照譜 #325454</a> · <a href="https://imslp.org/wiki/Special:ImagefromIndex/325455" target="_blank" rel="noopener noreferrer">参照譜 #325455</a> · <a href="https://imslp.org/wiki/Special:ImagefromIndex/325456" target="_blank" rel="noopener noreferrer">参照譜 #325456</a> · <a href="https://imslp.org/wiki/Special:ImagefromIndex/325457" target="_blank" rel="noopener noreferrer">参照譜 #325457</a></div>
+                            </li>
+                            <li><span class="score-title">Nobilissima Visione – Orchestersuite (1938) </span>：Schott ED 3531
+                                <div class="score-reference"><a href="https://imslp.org/wiki/Nobilissima_Visione,_Konzert-Suite_(Hindemith,_Paul)" target="_blank" rel="noopener noreferrer">IMSLP作品ページ</a> · <a href="https://imslp.org/wiki/Special:ImagefromIndex/325476" target="_blank" rel="noopener noreferrer">参照譜 #325476</a> · <a href="https://imslp.org/wiki/Special:ImagefromIndex/325477" target="_blank" rel="noopener noreferrer">参照譜 #325477</a> · <a href="https://imslp.org/wiki/Special:ImagefromIndex/325478" target="_blank" rel="noopener noreferrer">参照譜 #325478</a>
+                                    <span class="score-source-note">参照譜は同じ3楽章の管弦楽組曲．バレエ全曲の総譜とは区別する．</span></div>
+                            </li>
                             <li><span class="score-title">Symphonie in Es für großes Orchester (1940)</span>：Schott ED
-                                3532</li>
+                                3532
+                                <div class="score-reference"><a href="https://imslp.org/wiki/Symphony_in_E-flat_major_(Hindemith,_Paul)" target="_blank" rel="noopener noreferrer">IMSLP作品ページ</a> · <a href="https://imslp.org/wiki/Special:ImagefromIndex/319279" target="_blank" rel="noopener noreferrer">参照譜 #319279</a></div>
+                            </li>
                             <li><span class="score-title">Symphonic Metamorphosis of Themes by Carl Maria von Weber for
                                     Orchestra (1943) </span>：Edition
-                                Eulenburg No.1394</li>
-                            <li><span class="score-title">Symphonia Serena (1946)</span>：Schott ED 4422</li>
-                            <li><span class="score-title">Sinfonietta in E (1949)</span>：Schott ED 4070</li>
+                                Eulenburg No.1394
+                                <div class="score-reference"><a href="https://imslp.org/wiki/Symphonic_Metamorphosis_of_Themes_by_Carl_Maria_von_Weber_(Hindemith,_Paul)" target="_blank" rel="noopener noreferrer">IMSLP作品ページ</a> · <a href="https://imslp.org/wiki/Special:ImagefromIndex/542518" target="_blank" rel="noopener noreferrer">参照譜 #542518</a>
+                                    <span class="score-source-note">参照譜は旧Schott／AMP版．使用したEulenburg版への再刊時の編集・訂正，および刷の対応は未確認．</span></div>
+                            </li>
+                            <li><span class="score-title">Symphonia Serena (1946)</span>：Schott ED 4422
+                                <div class="score-reference"><a href="https://imslp.org/wiki/Symphonia_serena_(Hindemith,_Paul)" target="_blank" rel="noopener noreferrer">IMSLP作品ページ</a> · <a href="https://imslp.org/wiki/Special:ImagefromIndex/319453" target="_blank" rel="noopener noreferrer">参照譜 #319453</a>
+                                    <span class="score-source-note">参照譜はプレート37647・著作権表示1947年．出版社の番号はED 4422だが，IMSLP登録欄はNo.4432となっており，番号の不一致がある．</span></div>
+                            </li>
+                            <li><span class="score-title">Sinfonietta in E (1949)</span>：Schott ED 4070
+                                <div class="score-reference"><a href="https://imslp.org/wiki/Sinfonietta_in_E_major_(Hindemith,_Paul)" target="_blank" rel="noopener noreferrer">IMSLP作品ページ</a> · <a href="https://imslp.org/wiki/Special:ImagefromIndex/337935" target="_blank" rel="noopener noreferrer">参照譜 #337935</a></div>
+                            </li>
                             <li><span class="score-title">Symphonie "Die Harmonie der Welt" (1950-51)</span>：Schott ED
-                                4061</li>
+                                4061
+                                <div class="score-reference"><a href="https://imslp.org/wiki/Die_Harmonie_der_Welt_Symphony_(Hindemith,_Paul)" target="_blank" rel="noopener noreferrer">IMSLP作品ページ</a> · <a href="https://imslp.org/wiki/Special:ImagefromIndex/334625" target="_blank" rel="noopener noreferrer">参照譜 #334625</a> · <a href="https://imslp.org/wiki/Special:ImagefromIndex/334626" target="_blank" rel="noopener noreferrer">参照譜 #334626</a> · <a href="https://imslp.org/wiki/Special:ImagefromIndex/334627" target="_blank" rel="noopener noreferrer">参照譜 #334627</a></div>
+                            </li>
                             <li><span class="score-title">Symphony in B flat for Concert Band (1951)</span>：Schott SHS
-                                1009</li>
-                            <li><span class="score-title">Pittsburgh Symphony (1958) </span>：Schott ED 5011</li>
+                                1009
+                                <div class="score-reference"><a href="https://imslp.org/wiki/Symphony_in_B-flat_(Hindemith,_Paul)" target="_blank" rel="noopener noreferrer">IMSLP作品ページ</a> · <a href="https://imslp.org/wiki/Special:ImagefromIndex/319394" target="_blank" rel="noopener noreferrer">参照譜 #319394</a>
+                                    <span class="score-source-note">参照譜は旧Schott No.4063・プレート37955．使用したSHS 1009との再版・訂正の対応は未照合．</span></div>
+                            </li>
+                            <li><span class="score-title">Pittsburgh Symphony (1958) </span>：Schott ED 5011
+                                <div class="score-reference"><a href="https://imslp.org/wiki/Pittsburgh_Symphony_(Hindemith,_Paul)" target="_blank" rel="noopener noreferrer">IMSLP作品ページ</a> · <a href="https://imslp.org/wiki/Special:ImagefromIndex/310101" target="_blank" rel="noopener noreferrer">参照譜 #310101</a> · <a href="https://imslp.org/wiki/Special:ImagefromIndex/310102" target="_blank" rel="noopener noreferrer">参照譜 #310102</a> · <a href="https://imslp.org/wiki/Special:ImagefromIndex/310103" target="_blank" rel="noopener noreferrer">参照譜 #310103</a></div>
+                            </li>
                         </ul>
 
                         <div class="composer-name">Sigfrid Karg-Elert</div>
                         <ul class="score-list">
-                            <li><span class="score-title">30 Caprices for Flute Op.107</span>：Carl Fischer CU176</li>
+                            <li><span class="score-title">30 Caprices for Flute Op.107</span>：Carl Fischer CU176
+                                <div class="score-reference"><a href="https://imslp.org/wiki/30_Caprices_for_Flute_Solo,_Op.107_(Karg-Elert,_Sigfrid)" target="_blank" rel="noopener noreferrer">IMSLP作品ページ</a> · <a href="https://imslp.org/wiki/Special:ImagefromIndex/1010466" target="_blank" rel="noopener noreferrer">参考別版 #1010466</a>
+                                    <span class="score-source-note">参考別版：Steingräberの1967年版・プレート2240．使用したCarl Fischer CU176の底本・訂正・付録範囲との対応は未確認．</span></div>
+                            </li>
                             <li><span class="score-title">Sonata (Appassionata) Op.140</span>：Musikverlag Zimmermann ZM
-                                17760</li>
+                                17760
+                                <div class="score-reference"><a href="https://imslp.org/wiki/Sonata_Appassionata,_Op.140_(Karg-Elert,_Sigfrid)" target="_blank" rel="noopener noreferrer">IMSLP作品ページ</a> · <a href="https://imslp.org/wiki/Special:ImagefromIndex/48653" target="_blank" rel="noopener noreferrer">参照譜 #48653</a>
+                                    <span class="score-source-note">参照譜はZimmermannの1921年版・旧プレートZ.10764．使用したZM 17760との番号変更・再版時の訂正の対応は未照合．</span></div>
+                            </li>
                         </ul>
                     </div>
                 </details>
