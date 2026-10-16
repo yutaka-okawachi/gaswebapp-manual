@@ -199,9 +199,9 @@ const SCORE_METADATA = {
     "rosenkavalier": {
         "title": "ばらの騎士 (Der Rosenkavalier)",
         "workNo": "Op. 59 / TrV 227",
-        "publisher": "Adolph Fürstner",
-        "plate": "A. 5900 F.",
-        "edition": "Full Score.",
+        "publisher": "Adolph Fürstner (original edition)",
+        "plate": "A5900F",
+        "edition": "Used score: A5900F, full score. Copyright lines: ©1910,1911 Adolph Fürstner, Berlin; regional assignments to Fürstner Musikverlag, Mainz (1987) and Hawkes & Son (London) Ltd. (1943). Publication/printing date unverified. IMSLP #1020327 is a reference; identity of edition/printing unverified.",
         "imslp": "https://imslp.org/wiki/Der_Rosenkavalier,_Op.59_(Strauss,_Richard)",
         "synopsis": "https://drive.google.com/file/d/1Q8-kcPqVLc63rfL-orH-s4xFSr46AcO_/view?usp=drive_link"
     },
@@ -236,8 +236,8 @@ const SCORE_METADATA = {
         "title": "エジプトのヘレナ (Die ägyptische Helena)",
         "workNo": "Op. 75 / TrV 255",
         "publisher": "Adolph Fürstner",
-        "plate": "A. 7900 F.",
-        "edition": "Full Score (1928).",
+        "plate": "A9029F",
+        "edition": "Full score; ©1928 Adolph Fürstner, Berlin. Regional copyright assignments: Hawkes & Son (London) Ltd. (1943); Fürstner Musikverlag, Mainz (1987). Publication/printing date unverified. IMSLP #950799 (A7900F) is a first-edition reference, distinct from the score used.",
         "imslp": "https://imslp.org/wiki/Die_%C3%A4gyptische_Helena,_Op.75_(Strauss,_Richard)",
         "synopsis": "https://drive.google.com/file/d/1J2eLY544NXROSwB-ZqtpVFybl9qTv0kV/view?usp=drive_link"
     },
