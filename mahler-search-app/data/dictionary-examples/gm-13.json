@@ -137,7 +137,7 @@
   {"__exampleOrder":2172,"de":"spr. Bogen","de_normalized":"spr. bogen","ja":"弓を跳ねさせて（スピッカートで）","data":"M-3-2-80-va&M-3-2-83-v1&M-3-2-149-vc&M-3-2-151-v2&M-3-2-156-vc&M-3-2-192-sv,v1&M-3-3-95-v1,va,vc&M-3-3-97-v2&"},
   {"__exampleOrder":2174,"de":"spring. Bogen","de_normalized":"spring. bogen","ja":"弓を跳ねさせて（スピッカートで）","data":"M-2-3-148-v1,va,vc,kb&M-2-3-153-v2&M-2-3-246-v1&M-2-3-481-vc,kb&M-2-3-545-kb&M-2-3-553-va,vc&M-3-1-683-vc,kb&M-3-2-58-v1&M-6-1-125-kb&M-6-1-174-va&M-7-3-383-vc,kb&M-7-3-389-vc,kb&M-a-1-3-va&M-a-1-34-v1&M-a-4-88-v1,v2&M-b2-t1-4-vc,kb&"},
   {"__exampleOrder":2213,"de":"Streng im Tempo","de_normalized":"streng im tempo","ja":"厳格なテンポで","data":"M-2-5-509-all&M-4-3-259-all&M-5-1-386-all&"},
-  {"__exampleOrder":2221,"de":"Tasto Solo mit beiden Händen","de_normalized":"tasto solo mit beiden haenden","ja":"両手で和音を付け加えずに演奏する","data":"M-8-t1-127-org&"},
+  {"__exampleOrder":2221,"de":"Tasto Solo mit beiden Händen","de_normalized":"tasto solo mit beiden haenden","ja":"両手で（足鍵盤を用いずに）演奏する","data":"M-8-t1-127-org&"},
   {"__exampleOrder":2241,"de":"Ton!","de_normalized":"ton!","ja":"音を響かせて！","data":"M-4-1-38-v2,vc&M-4-3-290-v1,va&M-4-3-292-v2&M-5-5-150-v1,v2&M-6-4-587-v1,vc&"},
   {"__exampleOrder":2243,"de":"trem. auf Flag.","de_normalized":"trem. auf flag.","ja":"フラジョレットでトレモロ","data":"M-6-2-33-v1,v2&"},
   {"__exampleOrder":2256,"de":"übermüthig","de_normalized":"uebermuethig","ja":"高揚して","data":"M-3-3-414-hr,v1&M-3-3-415-v2&"},
