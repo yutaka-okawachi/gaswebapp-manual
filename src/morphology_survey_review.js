@@ -159,10 +159,6 @@ function morphologySurveyFindRow_(sheet, surveyId) {
 
 /** R列に1が入力された行を語形対応へ移す．単純トリガーと再処理メニューで共有する． */
 function onEdit(e) {
-  if (typeof notesEnglishEdited_ === 'function' && notesEnglishEdited_(e)) return;
-  if (typeof englishRetranslationEdited_ === 'function' && englishRetranslationEdited_(e)) return;
-  if (typeof englishNativeProposalEdited === 'function' && englishNativeProposalEdited(e)) return;
-  if (typeof englishTranslationSourceEdited === 'function' && englishTranslationSourceEdited(e)) return;
   const range = e && e.range;
   if (!range || range.getColumn() > 18 || range.getLastColumn() < 18) return;
   const sheet = range.getSheet();

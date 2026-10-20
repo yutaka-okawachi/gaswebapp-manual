@@ -255,7 +255,7 @@ function formatGenericResults(data) {
                 html += `<div style="margin-top: 8px;"><a href="${meta.imslp}" target="_blank" style="color: #0066cc; text-decoration: underline; font-weight: bold;">IMSLP Project Page ↗</a></div>`;
             }
             if (meta.synopsis) {
-                html += `<div style="margin-top: 8px;"><a href="${meta.synopsis}" target="_blank" style="color: #0066cc; text-decoration: underline; font-weight: bold;">あらすじ ↗</a></div>`;
+                html += `<div style="margin-top: 8px;"><a href="${meta.synopsis}" target="_blank" style="color: #0066cc; text-decoration: underline; font-weight: bold;">${window.__SITE_LANGUAGE__ === 'en' ? 'Synopsis ↗' : 'あらすじ ↗'}</a>${window.__SITE_LANGUAGE__ === 'en' ? ' <span class="japanese-only-note">Available in Japanese only.</span>' : ''}</div>`;
             }
             html += `</div>`;
         } else {
@@ -292,10 +292,10 @@ function formatGenericResults(data) {
             prevSzene = currentSzene;
         }
 
-        const pageDisplay = row.page ? `p.${row.page}` : '';
+        const pageDisplay = hasScorePage(row) ? `p.${row.page}` : '';
         const de = linkTermsInTranslation(row.de, window.appData.dic_terms_index);
         const ja = escapeHtmlWithBreaks(row.ja);
-        const whom = escapeHtml(row.whom);
+        const whom = escapeHtml(String(row.whom ?? '').trim());
 
         html += `
             <div class="result-entry">
@@ -304,7 +304,7 @@ function formatGenericResults(data) {
                     <dt class="result-de">${de}</dt>
                     <dd class="result-ja-loc">
                         <span>${ja}</span>
-                        <span>【${whom}】</span>
+                        ${whom ? `<span>【${whom}】</span>` : ''}
                     </dd>
                 </div>
             </div>

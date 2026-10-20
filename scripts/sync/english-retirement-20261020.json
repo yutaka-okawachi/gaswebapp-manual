@@ -1,0 +1,119 @@
+{
+  "schemaVersion": 1,
+  "id": "english-workflow-20261020",
+  "baselineCommit": "1ee0dbe39aa0ba5042d53a302546ad9a1b9b6bd5",
+  "baselineVersion": 1668,
+  "projectHash": "914b44775c90b69355191dea7ca7de90c94e0e45f9c6cbb031ee91e5a5fbccca",
+  "files": [
+    {
+      "name": "english_review_metadata_auto",
+      "type": "SERVER_JS",
+      "hash": "5bc3f388ea3f869f558022a6e2c5f9acaa8768ab754bcab926f01a5d768e91a2"
+    },
+    {
+      "name": "english_review_metadata_export",
+      "type": "SERVER_JS",
+      "hash": "dffaf4dbab21293f6a32b86597c23dd0cc4ad3e85c3f34b672fbd8c44915c9f3"
+    },
+    {
+      "name": "english_review_metadata_notes",
+      "type": "SERVER_JS",
+      "hash": "061b1b0033c0b72ba21107d1071d26f4be3107968f4bd81801e1b07ce2b97cfa"
+    },
+    {
+      "name": "english_review_metadata_notes_deadline",
+      "type": "SERVER_JS",
+      "hash": "e1634918b1eac9ff58e9811ec691635b09e48b627fa4479d1a78caff1e080988"
+    },
+    {
+      "name": "english_review_metadata_notes_recovery",
+      "type": "SERVER_JS",
+      "hash": "bf0210946630b90ff73a9472d38a4abbfa36afd09daa6b7705f5f8262bb01209"
+    },
+    {
+      "name": "english_review_metadata_resume",
+      "type": "SERVER_JS",
+      "hash": "8fa8b5824e943d17c907e353cdc6576a1eb33130c00775d94c86d8e0eda40dda"
+    },
+    {
+      "name": "english_translation_dialog",
+      "type": "HTML",
+      "hash": "110512119c6ad366b81fd7288f0a1a03bdbe524a0d07fe2237469697dce22e0a"
+    },
+    {
+      "name": "english_translation_review",
+      "type": "SERVER_JS",
+      "hash": "f74b95b631d96f52facaac36f20aa2c9b6711d37929f0ead58d00fb085b8ccde"
+    },
+    {
+      "name": "english_translation_sync",
+      "type": "SERVER_JS",
+      "hash": "75393cd8e8038ec3431bf470b86b5563ae3d8f2b3f8f0c10a982b5a747079fec"
+    },
+    {
+      "name": "japanese_english_draft_binding",
+      "type": "SERVER_JS",
+      "hash": "188436f73400571eb57efca294e59b98f2b99cb4c2791adead895212449ffd9f"
+    },
+    {
+      "name": "japanese_english_existing_review",
+      "type": "SERVER_JS",
+      "hash": "462de31b9e9ecdbb95dfc1bd17386338638a7ae5fade6542a9abd2cbfd9918b9"
+    },
+    {
+      "name": "japanese_english_manual_batch",
+      "type": "SERVER_JS",
+      "hash": "290d77e5cab9b715561320c7379e07d0c0d5a4ed258c118cb824c909e0ba9214"
+    },
+    {
+      "name": "japanese_english_mobile_review",
+      "type": "SERVER_JS",
+      "hash": "dc0f9b918db6629bf441acf21f3dde3e80996e3e316a2813a0606e67480d05a0"
+    },
+    {
+      "name": "japanese_english_proposals",
+      "type": "SERVER_JS",
+      "hash": "0259a343c4cc2e68a4dd6585450f845756ff568978a26fdb50f7bfcd046ed8d0"
+    },
+    {
+      "name": "japanese_english_retranslation",
+      "type": "SERVER_JS",
+      "hash": "36727681c141f1d1094b2783d4b2411968e3d31eeca4878b5c86422d55ef9d7f"
+    },
+    {
+      "name": "japanese_english_sheet_review",
+      "type": "SERVER_JS",
+      "hash": "8a06d9e85edd266c18c5b96788c4d2464740d7aaaac1815064949756ea3c5b71"
+    },
+    {
+      "name": "legacy_english_binding_cleanup",
+      "type": "SERVER_JS",
+      "hash": "545911a8ca41bc699bba989b0f0003168b02799625b1a7b53ecf93ea8b718997"
+    },
+    {
+      "name": "notes_english_api",
+      "type": "SERVER_JS",
+      "hash": "615c19eef19cc1c1db8f3b2002c5355839d13e3afaecd69b4adaf197136817a9"
+    },
+    {
+      "name": "notes_english_dialog",
+      "type": "HTML",
+      "hash": "bec22d90a21730ee6700698e41763fbc172537d7563de9f2cf570f4a56c30345"
+    },
+    {
+      "name": "notes_english_workflow",
+      "type": "SERVER_JS",
+      "hash": "bf1121c6efffde5a8dfe40f97ed04bb63ceffd2a8d90875961ae5ea561678574"
+    },
+    {
+      "name": "source_english_api",
+      "type": "SERVER_JS",
+      "hash": "daeeaa48b238b47945fb00e95785117f83da34214835a830686c64612b78401a"
+    },
+    {
+      "name": "source_english_workflow",
+      "type": "SERVER_JS",
+      "hash": "9b9a9bc0343982aa80cb7bb32743fabb8e6d5786719356f5cde0a2e13a3ce17e"
+    }
+  ]
+}

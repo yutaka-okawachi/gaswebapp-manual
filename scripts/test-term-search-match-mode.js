@@ -30,6 +30,8 @@ vm.createContext(serverContext);
 vm.runInContext([
   extractFunction(serverSource, 'normalizeString'),
   extractFunction(serverSource, 'isTermWordCharacter'),
+  extractFunction(serverSource, 'normalizeTermSearchText'),
+  extractFunction(serverSource, 'termSearchTextVariants'),
   extractFunction(serverSource, 'matchesTermQuery')
 ].join('\n'), serverContext);
 
@@ -66,6 +68,8 @@ vm.createContext(publicAppContext);
 vm.runInContext([
   extractFunction(publicAppSource, 'normalizeString'),
   extractFunction(publicAppSource, 'isTermWordCharacter'),
+  extractFunction(publicAppSource, 'normalizeTermSearchText'),
+  extractFunction(publicAppSource, 'termSearchTextVariants'),
   extractFunction(publicAppSource, 'matchesTermQuery')
 ].join('\n'), publicAppContext);
 

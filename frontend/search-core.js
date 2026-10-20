@@ -1,5 +1,10 @@
 // Shared by the public browser bundle and its local tests. Edit this file only.
 
+// A real zero is a page value; null, missing, empty and whitespace-only cells are not.
+function hasScorePage(row) {
+  return row.page !== null && row.page !== undefined && String(row.page).trim() !== '';
+}
+
 function normalizeString(str) {
   if (typeof str !== 'string') return '';
   return str
@@ -15,21 +20,37 @@ function isTermWordCharacter(character) {
   return typeof character === 'string' && character !== '' && /[\p{L}\p{N}]/u.test(character);
 }
 
+// Search-only forms: canonical de/de_normalized and dictionary IDs remain untouched.
+// Text inputs remove CR/LF on assignment. Keep both whitespace and legacy joined forms
+// so an older datalist value still matches the original multiline source.
+function normalizeTermSearchText(value) {
+  return normalizeString(String(value ?? '')).replace(/\s+/gu, ' ').trim();
+}
+function termSearchTextVariants(value) {
+  const original = normalizeString(String(value ?? ''));
+  const spaced = normalizeTermSearchText(original);
+  const joined = normalizeTermSearchText(original.replace(/[ \t]*[\r\n\u2028\u2029]+[ \t]*/g, ''));
+  return spaced === joined ? [spaced] : [spaced, joined];
+}
 function matchesTermQuery(value, query, matchMode) {
-  const normalizedValue = normalizeString(String(value || ''));
-  const normalizedQuery = normalizeString(String(query || ''));
-  if (!normalizedQuery) return false;
-  if (matchMode !== 'exact') return normalizedValue.includes(normalizedQuery);
-
-  let searchFrom = 0;
-  while (searchFrom <= normalizedValue.length - normalizedQuery.length) {
-    const matchIndex = normalizedValue.indexOf(normalizedQuery, searchFrom);
-    if (matchIndex === -1) return false;
-    const before = matchIndex > 0 ? normalizedValue.charAt(matchIndex - 1) : '';
-    const afterIndex = matchIndex + normalizedQuery.length;
-    const after = afterIndex < normalizedValue.length ? normalizedValue.charAt(afterIndex) : '';
-    if (!isTermWordCharacter(before) && !isTermWordCharacter(after)) return true;
-    searchFrom = matchIndex + 1;
+  for (const normalizedValue of termSearchTextVariants(value)) {
+    for (const normalizedQuery of termSearchTextVariants(query)) {
+      if (!normalizedQuery) continue;
+      if (matchMode !== 'exact') {
+        if (normalizedValue.includes(normalizedQuery)) return true;
+        continue;
+      }
+      let searchFrom = 0;
+      while (searchFrom <= normalizedValue.length - normalizedQuery.length) {
+        const matchIndex = normalizedValue.indexOf(normalizedQuery, searchFrom);
+        if (matchIndex === -1) break;
+        const before = matchIndex > 0 ? normalizedValue.charAt(matchIndex - 1) : '';
+        const afterIndex = matchIndex + normalizedQuery.length;
+        const after = afterIndex < normalizedValue.length ? normalizedValue.charAt(afterIndex) : '';
+        if (!isTermWordCharacter(before) && !isTermWordCharacter(after)) return true;
+        searchFrom = matchIndex + 1;
+      }
+    }
   }
   return false;
 }
@@ -89,7 +110,7 @@ function isDictionaryExampleSearch(query) {
   const notice = document.getElementById('dictionaryExampleAliasNotice');
   return params.get('source') === 'dictionary_example' &&
     Boolean(notice && !notice.hidden) &&
-    normalizeString(String(query || '')) === normalizeString(String(params.get('q') || ''));
+    normalizeTermSearchText(query) === normalizeTermSearchText(params.get('q'));
 }
 
 function buildTermResolutionNotice(query, termsIndex, resultCount, isDictionaryExample = false) {
@@ -100,7 +121,11 @@ function buildTermResolutionNotice(query, termsIndex, resultCount, isDictionaryE
   const escapedCanonical = escapeTermResolutionHtml(resolution.canonical);
   if (resolution.category === 'TYPO') {
     if (Number(resultCount) !== 0) return '';
-    return `<p class="term-resolution-notice term-resolution-suggestion">もしかして：<a href="?q=${encodeURIComponent(resolution.canonical)}">${escapedCanonical}</a></p>`;
+    return `<p class="term-resolution-notice term-resolution-suggestion">${typeof window !== 'undefined' && window.__SITE_LANGUAGE__ === 'en' ? 'Did you mean: ' : 'もしかして：'}<a href="?q=${encodeURIComponent(resolution.canonical)}">${escapedCanonical}</a></p>`;
+  }
+  if (typeof window !== 'undefined' && window.__SITE_LANGUAGE__ === 'en') {
+    const relation = resolution.category === 'INFLECTION' ? 'an inflected form' : resolution.category === 'ORTHOGRAPHIC_VARIANT' ? 'an alternative spelling' : 'a related form';
+    return `<p class="term-resolution-notice">“${escapedQuery}” is ${relation} of “${escapedCanonical}”. Examples are matched against the headword and its registered forms and alternative spellings.</p>`;
   }
   const relation = resolution.category === 'INFLECTION'
     ? '語形'
@@ -160,6 +185,12 @@ function buildDictionaryExampleAliasNotice(query, termsIndex) {
       : '関連語形・別綴り';
   // 呼び出し側は textContent に設定するため、ここではHTMLエスケープしない。
   const forms = variants.map(item => `「${String(item.form || '')}」`).join('，');
+  if (typeof window !== 'undefined' && window.__SITE_LANGUAGE__ === 'en') {
+    const singular = variants.length === 1;
+    const relationEnglish = categories.size === 1 && categories.has('INFLECTION') ? (singular ? 'an inflected form' : 'inflected forms') : categories.size === 1 && categories.has('ORTHOGRAPHIC_VARIANT') ? (singular ? 'an alternative spelling' : 'alternative spellings') : (singular ? 'a related form or alternative spelling' : 'related forms or alternative spellings');
+    const formsEnglish = variants.map(item => '“' + String(item.form || '') + '”').join(', ');
+    return `${formsEnglish} ${variants.length === 1 ? 'is' : 'are'} also included in this search as ${relationEnglish} registered under the headword “${canonical}”.`;
+  }
   return `${forms}も，見出し「${canonical}」に登録された${relation}として検索対象としている．`;
 }
 
@@ -192,6 +223,7 @@ function matchesAnyTermQuery(value, queries, matchMode) {
 }
 
 if (typeof window !== 'undefined') {
+  window.normalizeTermSearchText = normalizeTermSearchText;
   window.getDictionaryTermResolution = getDictionaryTermResolution;
   window.buildTermResolutionNotice = buildTermResolutionNotice;
   window.buildDictionaryExampleAliasNotice = buildDictionaryExampleAliasNotice;

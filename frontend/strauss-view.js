@@ -205,7 +205,7 @@ function searchRichardStraussByScene() {
         const isAll = selectedScenes.includes('all');
         const filteredData = data.filter(row => {
             if (normalizeString(row.Oper) !== normalizeString(operaValue)) return false;
-            if (row.page === undefined || row.page === null || row.page === '') return false;
+            if (!hasScorePage(row)) return false;
             if (isAll) return true;
 
             // Construct scene key from row data
@@ -250,7 +250,7 @@ function searchRichardStraussByPage() {
 
         const filteredData = data.filter(row => {
             if (normalizeString(row.Oper) !== normalizeString(operaValue)) return false;
-            if (row.page === undefined || row.page === null || row.page === '') return false;
+            if (!hasScorePage(row)) return false;
             // row.page might be number or string
             return pages.has(Number(row.page));
         });

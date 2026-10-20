@@ -71,7 +71,7 @@
     <link rel="apple-touch-icon" href="https://yutaka-okawachi.github.io/gaswebapp-manual/apple-touch-icon.png">
     <link rel="preload" href="css/common.css?v=c86bc2885119" as="style">
     <link rel="stylesheet" href="css/common.css?v=c86bc2885119">
-    <script src="js/app.js?v=040ac2ad1c0e"></script>
+    <script src="js/app.js?v=f8af988856aa"></script>
 
     <script>
         /*******************************************************************
@@ -119,7 +119,7 @@
             const rawQuery = new URLSearchParams(window.location.search).get('q');
             let usedDictionaryExampleData = false;
             if (rawQuery) {
-                inputField.value = typeof normalizeString === 'function' ? normalizeString(rawQuery) : rawQuery;
+                inputField.value = typeof normalizeTermSearchText === 'function' ? normalizeTermSearchText(rawQuery) : rawQuery;
                 resultsDiv.innerHTML = '<p class="loading">検索データを読み込んでいます・・・</p>';
             }
             // 入力フィールドに文字を入力するたびにイベント発火
@@ -423,6 +423,6 @@
     </div>
         </div>
     </div>
-</body>
+<!-- site-legal:start --><footer class="site-legal-footer" aria-label="サイト情報"><a href="../privacy.html">プライバシーポリシー</a><span class="site-legal-footer__separator" aria-hidden="true"> ｜ </span><a href="../license.html">ライセンス・利用条件</a><span class="site-legal-footer__copyright">© 2014–2026 Yutaka Okawachi</span></footer><!-- site-legal:end --></body>
 
 </html>

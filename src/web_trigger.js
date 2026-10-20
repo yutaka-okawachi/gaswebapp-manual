@@ -260,7 +260,7 @@ function handleRequest(params) {
     let result;
     if (action === "exportSnapshot") {
       if (!/^[a-f0-9-]{36}$/.test(String(params.requestId || ''))) throw new Error('Invalid requestId');
-      result = Object.assign({ status: 'success' }, exportAllDataToJson({ requestId: params.requestId }));
+      result = Object.assign({ status: 'success' }, exportAllDataToJson({ requestId: params.requestId, includeEnglish: params.includeEnglish === true }));
     } else if (action === 'syncInfo') {
       result = { status: 'success', schemaVersion: 1, sourceHash: SYNC_SOURCE_HASH };
     } else if (action === 'exportDic' || action === 'exportAllDataToJson') {

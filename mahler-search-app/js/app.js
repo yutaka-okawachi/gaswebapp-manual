@@ -3,6 +3,11 @@
 // ---- frontend/search-core.js ----
 // Shared by the public browser bundle and its local tests. Edit this file only.
 
+// A real zero is a page value; null, missing, empty and whitespace-only cells are not.
+function hasScorePage(row) {
+  return row.page !== null && row.page !== undefined && String(row.page).trim() !== '';
+}
+
 function normalizeString(str) {
   if (typeof str !== 'string') return '';
   return str
@@ -18,21 +23,37 @@ function isTermWordCharacter(character) {
   return typeof character === 'string' && character !== '' && /[\p{L}\p{N}]/u.test(character);
 }
 
+// Search-only forms: canonical de/de_normalized and dictionary IDs remain untouched.
+// Text inputs remove CR/LF on assignment. Keep both whitespace and legacy joined forms
+// so an older datalist value still matches the original multiline source.
+function normalizeTermSearchText(value) {
+  return normalizeString(String(value ?? '')).replace(/\s+/gu, ' ').trim();
+}
+function termSearchTextVariants(value) {
+  const original = normalizeString(String(value ?? ''));
+  const spaced = normalizeTermSearchText(original);
+  const joined = normalizeTermSearchText(original.replace(/[ \t]*[\r\n\u2028\u2029]+[ \t]*/g, ''));
+  return spaced === joined ? [spaced] : [spaced, joined];
+}
 function matchesTermQuery(value, query, matchMode) {
-  const normalizedValue = normalizeString(String(value || ''));
-  const normalizedQuery = normalizeString(String(query || ''));
-  if (!normalizedQuery) return false;
-  if (matchMode !== 'exact') return normalizedValue.includes(normalizedQuery);
-
-  let searchFrom = 0;
-  while (searchFrom <= normalizedValue.length - normalizedQuery.length) {
-    const matchIndex = normalizedValue.indexOf(normalizedQuery, searchFrom);
-    if (matchIndex === -1) return false;
-    const before = matchIndex > 0 ? normalizedValue.charAt(matchIndex - 1) : '';
-    const afterIndex = matchIndex + normalizedQuery.length;
-    const after = afterIndex < normalizedValue.length ? normalizedValue.charAt(afterIndex) : '';
-    if (!isTermWordCharacter(before) && !isTermWordCharacter(after)) return true;
-    searchFrom = matchIndex + 1;
+  for (const normalizedValue of termSearchTextVariants(value)) {
+    for (const normalizedQuery of termSearchTextVariants(query)) {
+      if (!normalizedQuery) continue;
+      if (matchMode !== 'exact') {
+        if (normalizedValue.includes(normalizedQuery)) return true;
+        continue;
+      }
+      let searchFrom = 0;
+      while (searchFrom <= normalizedValue.length - normalizedQuery.length) {
+        const matchIndex = normalizedValue.indexOf(normalizedQuery, searchFrom);
+        if (matchIndex === -1) break;
+        const before = matchIndex > 0 ? normalizedValue.charAt(matchIndex - 1) : '';
+        const afterIndex = matchIndex + normalizedQuery.length;
+        const after = afterIndex < normalizedValue.length ? normalizedValue.charAt(afterIndex) : '';
+        if (!isTermWordCharacter(before) && !isTermWordCharacter(after)) return true;
+        searchFrom = matchIndex + 1;
+      }
+    }
   }
   return false;
 }
@@ -92,7 +113,7 @@ function isDictionaryExampleSearch(query) {
   const notice = document.getElementById('dictionaryExampleAliasNotice');
   return params.get('source') === 'dictionary_example' &&
     Boolean(notice && !notice.hidden) &&
-    normalizeString(String(query || '')) === normalizeString(String(params.get('q') || ''));
+    normalizeTermSearchText(query) === normalizeTermSearchText(params.get('q'));
 }
 
 function buildTermResolutionNotice(query, termsIndex, resultCount, isDictionaryExample = false) {
@@ -103,7 +124,11 @@ function buildTermResolutionNotice(query, termsIndex, resultCount, isDictionaryE
   const escapedCanonical = escapeTermResolutionHtml(resolution.canonical);
   if (resolution.category === 'TYPO') {
     if (Number(resultCount) !== 0) return '';
-    return `<p class="term-resolution-notice term-resolution-suggestion">もしかして：<a href="?q=${encodeURIComponent(resolution.canonical)}">${escapedCanonical}</a></p>`;
+    return `<p class="term-resolution-notice term-resolution-suggestion">${typeof window !== 'undefined' && window.__SITE_LANGUAGE__ === 'en' ? 'Did you mean: ' : 'もしかして：'}<a href="?q=${encodeURIComponent(resolution.canonical)}">${escapedCanonical}</a></p>`;
+  }
+  if (typeof window !== 'undefined' && window.__SITE_LANGUAGE__ === 'en') {
+    const relation = resolution.category === 'INFLECTION' ? 'an inflected form' : resolution.category === 'ORTHOGRAPHIC_VARIANT' ? 'an alternative spelling' : 'a related form';
+    return `<p class="term-resolution-notice">“${escapedQuery}” is ${relation} of “${escapedCanonical}”. Examples are matched against the headword and its registered forms and alternative spellings.</p>`;
   }
   const relation = resolution.category === 'INFLECTION'
     ? '語形'
@@ -163,6 +188,12 @@ function buildDictionaryExampleAliasNotice(query, termsIndex) {
       : '関連語形・別綴り';
   // 呼び出し側は textContent に設定するため、ここではHTMLエスケープしない。
   const forms = variants.map(item => `「${String(item.form || '')}」`).join('，');
+  if (typeof window !== 'undefined' && window.__SITE_LANGUAGE__ === 'en') {
+    const singular = variants.length === 1;
+    const relationEnglish = categories.size === 1 && categories.has('INFLECTION') ? (singular ? 'an inflected form' : 'inflected forms') : categories.size === 1 && categories.has('ORTHOGRAPHIC_VARIANT') ? (singular ? 'an alternative spelling' : 'alternative spellings') : (singular ? 'a related form or alternative spelling' : 'related forms or alternative spellings');
+    const formsEnglish = variants.map(item => '“' + String(item.form || '') + '”').join(', ');
+    return `${formsEnglish} ${variants.length === 1 ? 'is' : 'are'} also included in this search as ${relationEnglish} registered under the headword “${canonical}”.`;
+  }
   return `${forms}も，見出し「${canonical}」に登録された${relation}として検索対象としている．`;
 }
 
@@ -195,6 +226,7 @@ function matchesAnyTermQuery(value, queries, matchMode) {
 }
 
 if (typeof window !== 'undefined') {
+  window.normalizeTermSearchText = normalizeTermSearchText;
   window.getDictionaryTermResolution = getDictionaryTermResolution;
   window.buildTermResolutionNotice = buildTermResolutionNotice;
   window.buildDictionaryExampleAliasNotice = buildDictionaryExampleAliasNotice;
@@ -958,7 +990,7 @@ function searchRichardStraussByScene() {
         const isAll = selectedScenes.includes('all');
         const filteredData = data.filter(row => {
             if (normalizeString(row.Oper) !== normalizeString(operaValue)) return false;
-            if (row.page === undefined || row.page === null || row.page === '') return false;
+            if (!hasScorePage(row)) return false;
             if (isAll) return true;
 
             // Construct scene key from row data
@@ -1003,7 +1035,7 @@ function searchRichardStraussByPage() {
 
         const filteredData = data.filter(row => {
             if (normalizeString(row.Oper) !== normalizeString(operaValue)) return false;
-            if (row.page === undefined || row.page === null || row.page === '') return false;
+            if (!hasScorePage(row)) return false;
             // row.page might be number or string
             return pages.has(Number(row.page));
         });
@@ -1274,7 +1306,7 @@ function formatGenericResults(data) {
                 html += `<div style="margin-top: 8px;"><a href="${meta.imslp}" target="_blank" style="color: #0066cc; text-decoration: underline; font-weight: bold;">IMSLP Project Page ↗</a></div>`;
             }
             if (meta.synopsis) {
-                html += `<div style="margin-top: 8px;"><a href="${meta.synopsis}" target="_blank" style="color: #0066cc; text-decoration: underline; font-weight: bold;">あらすじ ↗</a></div>`;
+                html += `<div style="margin-top: 8px;"><a href="${meta.synopsis}" target="_blank" style="color: #0066cc; text-decoration: underline; font-weight: bold;">${window.__SITE_LANGUAGE__ === 'en' ? 'Synopsis ↗' : 'あらすじ ↗'}</a>${window.__SITE_LANGUAGE__ === 'en' ? ' <span class="japanese-only-note">Available in Japanese only.</span>' : ''}</div>`;
             }
             html += `</div>`;
         } else {
@@ -1311,10 +1343,10 @@ function formatGenericResults(data) {
             prevSzene = currentSzene;
         }
 
-        const pageDisplay = row.page ? `p.${row.page}` : '';
+        const pageDisplay = hasScorePage(row) ? `p.${row.page}` : '';
         const de = linkTermsInTranslation(row.de, window.appData.dic_terms_index);
         const ja = escapeHtmlWithBreaks(row.ja);
-        const whom = escapeHtml(row.whom);
+        const whom = escapeHtml(String(row.whom ?? '').trim());
 
         html += `
             <div class="result-entry">
@@ -1323,7 +1355,7 @@ function formatGenericResults(data) {
                     <dt class="result-de">${de}</dt>
                     <dd class="result-ja-loc">
                         <span>${ja}</span>
-                        <span>【${whom}】</span>
+                        ${whom ? `<span>【${whom}】</span>` : ''}
                     </dd>
                 </div>
             </div>
@@ -1544,7 +1576,7 @@ function searchRichardWagnerByScene() {
         const isAll = selectedScenes.includes('all');
         const filteredData = data.filter(row => {
             if (normalizeString(row.Oper) !== normalizeString(operaValue)) return false;
-            if (row.page === undefined || row.page === null || row.page === '') return false;
+            if (!hasScorePage(row)) return false;
             if (isAll) return true;
 
             // Construct scene key from row data
@@ -1591,7 +1623,7 @@ function searchRichardWagnerByPage() {
 
         const filteredData = data.filter(row => {
             if (normalizeString(row.Oper) !== normalizeString(operaValue)) return false;
-            if (row.page === undefined || row.page === null || row.page === '') return false;
+            if (!hasScorePage(row)) return false;
             return pages.has(Number(row.page));
         });
 
@@ -2072,7 +2104,7 @@ window.getMahlerTermsListLocal = function () {
     }
     const mapped = data.map(row => ({
         original: row.de || row[0],
-        normalized: row.de_normalized || row[1]
+        normalized: normalizeTermSearchText(row.de_normalized || row[1] || row.de || row[0])
     })).filter(item => item.original);
     console.log('Mapped terms:', mapped.length);
     return mapped;
@@ -2171,8 +2203,7 @@ function searchGenericTermsLocal(query, dataKey, type, resultMeta, matchMode) {
     const filteredData = data.filter(row => {
         const de = row.de || '';
         const deNormalized = row.de_normalized || normalizeString(de);
-        const pageExists = row.page !== null && row.page !== undefined && String(row.page).trim() !== '';
-        return matchesAnyTermQuery(deNormalized, searchQueries, matchMode) && pageExists;
+        return matchesAnyTermQuery(deNormalized, searchQueries, matchMode) && hasScorePage(row);
     });
 
     if (filteredData.length === 0) {
@@ -2236,15 +2267,15 @@ function searchGenericTermsLocal(query, dataKey, type, resultMeta, matchMode) {
             const ja = escapeHtmlWithBreaks(String(row.ja || ''));
             html += `<dd class="result-c">${ja}</dd>`;
             
-            const whom = escapeHtml(String(row.whom || ''));
+            const whom = escapeHtml(String(row.whom ?? '').trim());
             const operKey = normalizeString(String(row.Oper || ''));
-            const aufzug = (row.aufzug || '0').toString().trim().toLowerCase();
-            const szene = (row.szene || '0').toString().trim().toLowerCase();
-            const page = escapeHtml(String(row.page || ''));
+            const aufzug = String(row.Aufzug ?? row.aufzug ?? '').trim().toLowerCase();
+            const szene = String(row.Szene ?? row.szene ?? '').trim().toLowerCase();
+            const page = escapeHtml(String(row.page ?? ''));
             const operaDisplayName = operaDisplayNames[operKey] || escapeHtml(String(row.Oper || ''));
             
             // Scene Name Logic
-            let sceneName = row['場面タイトル'] || `場面(${aufzug}-${szene})`;
+            let sceneName = row['場面タイトル'] || (aufzug || szene ? `場面(${aufzug}-${szene})` : '');
 
             const pageDisplay = page ? `p.${page}` : '';
             let locationText = `${operaDisplayName} ${sceneName} ${pageDisplay}`.trim();
@@ -2252,7 +2283,7 @@ function searchGenericTermsLocal(query, dataKey, type, resultMeta, matchMode) {
                 locationText += `：${whom}`;
             }
 
-            html += `<dd class="result-loc">【${locationText}】</dd>`;
+            html += `<dd class="result-loc">${whom ? `【${locationText}】` : locationText}</dd>`;
         });
         
         // 各見出し語の件数を表示
@@ -2271,8 +2302,8 @@ window.getGenericTermsListLocal = function(dataKey) {
     // Extract unique 'de' terms
     const terms = data
         // ページ番号（D列）が空欄のものを予測変換候補から除外
-        .filter(row => row.page !== null && row.page !== undefined && String(row.page).trim() !== '')
-        .map(row => ({ original: row.de, normalized: row.de_normalized || normalizeString(row.de) }))
+        .filter(hasScorePage)
+        .map(row => ({ original: row.de, normalized: normalizeTermSearchText(row.de_normalized || row.de) }))
         .filter(item => item.original && item.normalized);
 
     const uniqueTermsMap = new Map();

@@ -335,7 +335,7 @@ function searchByScene() {
                 const isAll = selectedScenes.includes('all');
                 const filteredData = data.filter(row => {
                     if (normalizeString(row.Oper) !== normalizeString(operaValue)) return false;
-                    if (row.page === undefined || row.page === null || row.page === '') return false;
+                    if (!hasScorePage(row)) return false;
                     if (isAll) return true;
 
                     const aufzug = (row.Aufzug !== undefined && row.Aufzug !== null) ? row.Aufzug : '';
@@ -459,7 +459,7 @@ function searchByPage() {
 
                 const filteredData = data.filter(row => {
                     if (normalizeString(row.Oper) !== normalizeString(operaValue)) return false;
-                    if (row.page === undefined || row.page === null || row.page === '') return false;
+                    if (!hasScorePage(row)) return false;
                     return pages.has(Number(row.page));
                 });
 
@@ -646,7 +646,7 @@ function searchByWhom() {
                 const operMatch = normalizeString(row.Oper) === normalizeString(operaValue) ||
                                   (row.Oper && row.Oper.trim().toLowerCase() === operaValue.trim().toLowerCase());
                 if (!operMatch) return false;
-                if (row.page === undefined || row.page === null || row.page === '') return false;
+                if (!hasScorePage(row)) return false;
                 
                 const rowWhom = row.whom || row.Whom || '';
                 if (!rowWhom) return false;

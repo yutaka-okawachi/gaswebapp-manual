@@ -6,6 +6,7 @@ const repository = require('./git');
 const gas = require('./gas');
 const editorHead = require('./gas-head');
 const artifacts = require('./artifacts');
+const bilingual = require('./bilingual');
 const publication = require('./publish');
 const logger = require('./logger');
 const { build } = require('../build-site');
@@ -49,9 +50,12 @@ function lock() {
     return () => fs.unlinkSync(file);
 }
 
-async function verify(state, settings, credential, slug, save) {
+async function verify(state, settings, credential, slug, save, gateTicket) {
+    bilingual.assertPolicyUnchanged(gateTicket);
+    bilingual.assertPublicTree();
     const receipt = state.pending;
     if (!receipt || !receipt.commit) throw new Error('再開可能な公開記録がありません。通常の sync-data を実行してください。');
+    bilingual.assertReleaseManifest(receipt.manifest);
     if (git('rev-parse', 'HEAD') !== receipt.commit) throw new Error('未完了の公開後に HEAD が変更されています。先に元の公開コミットの確認が必要です。');
 
     // Verify/resume must not bypass the editor-only change check before a push.
@@ -83,6 +87,8 @@ async function verify(state, settings, credential, slug, save) {
 
 async function main(args = process.argv.slice(2)) {
     const opt = options(args);
+    const gateTicket = bilingual.publicationTicket();
+    bilingual.assertPublicTree();
     const release = lock();
     try {
         const stateFile = path.join(directory, 'state.json');
@@ -101,7 +107,7 @@ async function main(args = process.argv.slice(2)) {
         }
         if (opt.mode === 'Verify' || (opt.mode !== 'Check' && state.pending && state.pending.commit)) {
             logger.info('未完了の公開記録が見つかりました。確認工程を再開します。');
-            return await verify(state, gas.configuration(), publication.token(), repository.repoSlug(), save);
+            return await verify(state, gas.configuration(), publication.token(), repository.repoSlug(), save, gateTicket);
         }
 
         if (fs.existsSync(path.join(root, '.env'))) {
@@ -137,6 +143,7 @@ async function main(args = process.argv.slice(2)) {
 
         logger.info(`同期モード: ${opt.mode} (GAS更新: ${selected.deploy ? '要' : '不要'}, データ取得: ${selected.data ? '要' : '不要'})`);
 
+        bilingual.assertPolicyUnchanged(gateTicket);
         // Save a source checkpoint before mutating the live GAS deployment.
         if (repository.changed().length) {
             repository.commitChanges(opt.message);
@@ -163,11 +170,16 @@ async function main(args = process.argv.slice(2)) {
             const requestId = crypto.randomUUID();
             const snapshot = await gas.exportSnapshotForSource(settings, requestId, gas.fingerprint());
             logger.success('スナップショットを受信しました。データ整合性を検証中…');
-            const values = artifacts.validateSnapshot(snapshot, requestId, artifacts.previousData(), opt.allowRemoval);
+            const prepared = bilingual.prepare(snapshot, requestId, artifacts.previousData(), opt.allowRemoval);
+            const values = prepared.japanese;
+            bilingual.assertPolicyUnchanged(gateTicket);
+            const publicValues = bilingual.englishEnabled() ? { ...values, ...prepared.english } : values;
             logger.sub(`検証合格: 全 ${Object.keys(values).length} ファイル (辞書・実例48分割シャード整合)`);
-            state.ownedData = Object.fromEntries(Object.entries(values).map(([file, value]) =>
+            state.ownedData = Object.fromEntries(Object.entries(publicValues).map(([file, value]) =>
                 [file, sha256(normalizeText(typeof artifacts.formatJson === 'function' ? artifacts.formatJson(file, value) : (typeof value === 'string' ? value : JSON.stringify(value))))]));
             save();
+            const englishStage = bilingual.stage(prepared);
+            logger.sub('英語成果物を同一取得から生成: ' + (englishStage.publishedEnglish ? '承認済み公開対象' : '非公開ステージのみ'));
             artifacts.installSnapshot(values);
             // GAS returns a cache-neutral dictionary. Apply current public asset hashes locally
             // so browser-only changes never require a GAS deployment.
@@ -175,6 +187,7 @@ async function main(args = process.argv.slice(2)) {
             logger.success('ローカルデータファイルを最新スナップショットで更新しました。');
         } else {
             logger.info('データ更新はスキップされました。');
+            if (!selected.documentsOnly) bilingual.refreshStage();
         }
 
         const allChanged = [...new Set([...files, ...repository.changed()])];
@@ -187,6 +200,7 @@ async function main(args = process.argv.slice(2)) {
             ? `同期: ${opt.message} (データおよびサイト成果物の検証・反映)`
             : '同期: データおよびサイト成果物の検証・反映';
         await editorHead.preflight(settings);
+        bilingual.assertPolicyUnchanged(gateTicket);
         repository.commitChanges(artifactCommitMsg);
         logger.success(`成果物をコミットしました: "${artifactCommitMsg}"`);
 
@@ -194,7 +208,7 @@ async function main(args = process.argv.slice(2)) {
         if (repository.checkRemote() !== remote) throw new Error('同期中にリモートが変更されました。公開を停止しました。');
         state.pending = { commit: git('rev-parse', 'HEAD'), baseUrl, manifest, documentsOnly: selected.documentsOnly };
         save();
-        await verify(state, settings, credential, slug, save);
+        await verify(state, settings, credential, slug, save, gateTicket);
     } finally { release(); }
 }
 

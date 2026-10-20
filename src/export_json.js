@@ -15,6 +15,27 @@ const EXPORT_SHEET_HEADERS = Object.freeze({
 });
 const EXPORT_POSITIONAL_SHEETS = Object.freeze({ '略記一覧': 3 });
 
+
+// Optional authenticated bilingual envelope; it never changes the Japanese public file schema.
+const ENGLISH_EXPORT_HEADERS = Object.freeze({
+ GM: ['de','de_normalized','ja','en','data'],
+ RW: ['Oper','Aufzug','Szene','page','whom','whom_en','de','de_normalized','ja','en'],
+ RS: ['Oper','Aufzug','Szene','page','whom','whom_en','de','de_normalized','ja','en'],
+ Notes: ['de','ja','en','source']
+});
+function buildEnglishExportSource_(tables, options) {
+ const tabs = {};
+ Object.keys(ENGLISH_EXPORT_HEADERS).forEach(name => {
+  const table = tables[name], names = ENGLISH_EXPORT_HEADERS[name];
+  tabs[name] = table.values.slice(1).map((values,index) => {
+   const row = {__row:index+2};
+   names.forEach(key => row[key] = values[table.englishColumns[key]] === undefined ? '' : values[table.englishColumns[key]]);
+   return row;
+  }).filter(row => name === 'GM' ? row.de || row.data : name === 'Notes' || EXPORT_SHEET_HEADERS[name].some(key => row[key] !== ''));
+ });
+ return {schema:1,requestId:String(options.requestId || ''),sourceHash:typeof SYNC_SOURCE_HASH === 'string' ? SYNC_SOURCE_HASH : '',readAt:new Date().toISOString(),tabs:tabs,termMappings:pickExportRows_(tables['語形対応']).filter(row => String(row[0] || '').trim() && String(row[1] || '').trim())};
+}
+
 function exportAllDataToJson(options) {
     const settings = options || {};
     const lock = LockService.getScriptLock();
@@ -46,7 +67,7 @@ function buildExportSnapshot_(exportOptions) {
     
     const ss = SpreadsheetApp.openById(SPREADSHEET_ID);
     // 各タブは1回だけ読み、見出し名から列位置を解決した結果を以降の処理で共有する
-    const tables = validateExportSheets_(ss);
+    const tables = validateExportSheets_(ss, exportOptions.includeEnglish === true);
 
     // 0. Score Info (楽譜情報) - Load first for Publisher info
     const scoreMap = {}; // Map for Publisher info (Opera -> Publisher)
@@ -123,7 +144,7 @@ function buildExportSnapshot_(exportOptions) {
         rows.forEach(item => {
             const operKey = String((item['Oper'] || item['oper'] || '')).toLowerCase().trim();
             const whomField = String(item['whom'] || item['Whom'] || '').trim();
-            const pageField = String(item['page'] || item['Page'] || '').trim(); // D列に対応
+            const pageField = String(item['page'] ?? item['Page'] ?? '').trim(); // D列に対応
 
             // Operが空、またはWhomが空、またはPageが空の場合はスキップ
             // 空文字列 ("") も確実に弾くように .trim() と併用
@@ -220,12 +241,14 @@ function buildExportSnapshot_(exportOptions) {
     };
     Object.assign(files, dictionaryExampleData.files);
 
-    return {
+    const snapshot = {
         schemaVersion: 1,
         requestId: String(exportOptions.requestId || ''),
         sourceHash: typeof SYNC_SOURCE_HASH === 'string' ? SYNC_SOURCE_HASH : '',
         files: files
     };
+    if (exportOptions.includeEnglish === true) snapshot.englishSource = buildEnglishExportSource_(tables, exportOptions);
+    return snapshot;
 }
 
 /**
@@ -233,7 +256,7 @@ function buildExportSnapshot_(exportOptions) {
  * 必須見出しの欠落・重複があれば、公開データを作る前に停止する。
  * @return {Object<string, {values: Array[], header: string[], columns: Object<string, number>}>}
  */
-function validateExportSheets_(ss) {
+function validateExportSheets_(ss, includeEnglish) {
     const tables = {};
     const names = Object.keys(EXPORT_SHEET_HEADERS).concat(Object.keys(EXPORT_POSITIONAL_SHEETS));
     names.forEach(name => {
@@ -248,6 +271,7 @@ function validateExportSheets_(ss) {
         }
         const header = values[0].map(normalizeExportHeader_);
         tables[name] = { values: values, header: header, columns: resolveExportColumns_(name, header, EXPORT_SHEET_HEADERS[name]) };
+        if (includeEnglish && ENGLISH_EXPORT_HEADERS[name]) tables[name].englishColumns = resolveExportColumns_(name, header, ENGLISH_EXPORT_HEADERS[name]);
     });
     return tables;
 }

@@ -6,8 +6,8 @@ const exact = new Set(['.claspignore', '.gitignore', '_config.yml', '01_START_SU
     'google34b939d4db375916.html', 'index.html', 'LICENSE', 'license.html', 'privacy.html',
     'ogp.png', 'README.md', 'robots.txt', 'sitemap.xml', 'sync-data.ps1']);
 const prefixes = ['.agent/workflows/', '.github/workflows/', 'mahler-search-app/', 'manuals/', 'scripts/', 'src/', 'frontend/'];
-function isAllowed(file) { return exact.has(file) || prefixes.some(prefix => file.startsWith(prefix)); }
-function isData(file) { return file === 'mahler-search-app/dic.html' || file.startsWith('mahler-search-app/data/'); }
+function isAllowed(file) { return exact.has(file) || prefixes.some(prefix => file.startsWith(prefix)) || (file.startsWith('en/') && require('./bilingual').englishEnabled()); }
+function isData(file) { return file.startsWith('en/') || file === 'mahler-search-app/dic.html' || file.startsWith('mahler-search-app/data/'); }
 function parseStatus(text) {
     const records = text.split('\0');
     const files = [];
@@ -21,6 +21,7 @@ function parseStatus(text) {
 }
 function changed() { return parseStatus(run('git', ['status', '--porcelain=v1', '-z', '--untracked-files=all'])); }
 function preflight(ownedData = {}) {
+    require('./bilingual').assertPublicTree();
     if (git('branch', '--show-current') !== 'main') throw new Error('main ブランチで実行してください。自動マージ・退避は行いません。');
     for (const name of ['MERGE_HEAD', 'rebase-merge', 'rebase-apply', 'CHERRY_PICK_HEAD']) {
         if (fs.existsSync(path.resolve(root, git('rev-parse', '--git-path', name)))) throw new Error(`Git の未完了操作があります: ${name}`);

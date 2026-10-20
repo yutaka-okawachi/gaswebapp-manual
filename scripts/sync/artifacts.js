@@ -6,7 +6,8 @@ const jsonNames = ['mahler', 'richard_strauss', 'richard_wagner', 'rs_scenes', '
     'dic_notes', 'abbr_list', 'dic_terms_index', 'whom_list'];
 const expectedPaths = [base + 'dic.html', ...jsonNames.map(n => `${base}data/${n}.json`),
     ...['gm', 'rw', 'rs'].flatMap(c => Array.from({ length: 16 }, (_, n) => `${base}data/dictionary-examples/${c}-${String(n).padStart(2, '0')}.json`))];
-function validateSnapshot(snapshot, requestId, previous = {}, allowRemoval = false) {
+function validateSnapshot(snapshot, requestId, previous = {}, allowRemoval = false, language = 'ja') {
+    if (!['ja','en'].includes(language)) throw new Error('公開データの言語が不正です。');
     if (snapshot.schemaVersion !== 1 || snapshot.requestId !== requestId || !snapshot.files) throw new Error('生成結果の実行ID・形式が不一致です。');
     const files = snapshot.files;
     if (JSON.stringify(Object.keys(files).sort()) !== JSON.stringify([...expectedPaths].sort())) throw new Error('生成ファイルの不足・想定外のパスがあります。');
@@ -21,6 +22,9 @@ function validateSnapshot(snapshot, requestId, previous = {}, allowRemoval = fal
         if (/\/(mahler|richard_wagner|richard_strauss)\.json$/.test(file)) {
             const keys = file.endsWith('/mahler.json') ? ['de', 'ja', 'data'] : ['Oper', 'de', 'ja', 'page'];
             if (value.some(row => !row || keys.some(key => !Object.hasOwn(row, key)))) throw new Error(`検索データの必須列が不足: ${file}`);
+            const permitted = file.endsWith('/mahler.json') ? ['de','de_normalized','ja','data'] : ['Oper','Aufzug','Szene','page','whom','de','de_normalized','ja','楽譜情報','場面タイトル'];
+            if (language === 'en') permitted.push('en','whom_en');
+            if (value.some(row => Object.keys(row).some(key => !permitted.includes(key)))) throw new Error('公開検索データに許可外の列があります: ' + file);
         }
     }
     // Validate shard contents against the full data and preserve source row ordering.
@@ -87,6 +91,8 @@ function updateSitemap(changed, today = new Date().toLocaleDateString('en-CA', {
     writeIfChanged(file, next);
 }
 function publicFiles() {
+    const bilingual = require('./bilingual');
+    bilingual.assertPublicTree();
     const files = ['index.html', 'license.html', 'privacy.html', 'sitemap.xml', 'robots.txt'];
     function walk(dir) {
         for (const entry of fs.readdirSync(path.join(root, dir), { withFileTypes: true })) {
@@ -96,6 +102,7 @@ function publicFiles() {
         }
     }
     walk('mahler-search-app');
+    if (bilingual.englishEnabled() && fs.existsSync(path.join(root, 'en'))) walk('en');
     return files.sort();
 }
 function releaseManifest() {
@@ -103,7 +110,8 @@ function releaseManifest() {
     for (const file of publicFiles()) hashes[file] = sha256(normalizeText(fs.readFileSync(path.join(root, file), 'utf8')));
     const releaseId = sha256(JSON.stringify(hashes));
     const manifest = { schemaVersion: 1, releaseId, hashes };
+    require('./bilingual').assertReleaseManifest(manifest);
     writeIfChanged(base + 'release.json', formatJson(base + 'release.json', manifest));
     return manifest;
 }
-module.exports = { expectedPaths, validateSnapshot, previousData, installSnapshot, updateSitemap, releaseManifest, formatJson };
+module.exports = { expectedPaths, validateSnapshot, previousData, installSnapshot, updateSitemap, releaseManifest, formatJson, publicFiles };

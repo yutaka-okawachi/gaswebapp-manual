@@ -229,7 +229,7 @@ window.getMahlerTermsListLocal = function () {
     }
     const mapped = data.map(row => ({
         original: row.de || row[0],
-        normalized: row.de_normalized || row[1]
+        normalized: normalizeTermSearchText(row.de_normalized || row[1] || row.de || row[0])
     })).filter(item => item.original);
     console.log('Mapped terms:', mapped.length);
     return mapped;
@@ -328,8 +328,7 @@ function searchGenericTermsLocal(query, dataKey, type, resultMeta, matchMode) {
     const filteredData = data.filter(row => {
         const de = row.de || '';
         const deNormalized = row.de_normalized || normalizeString(de);
-        const pageExists = row.page !== null && row.page !== undefined && String(row.page).trim() !== '';
-        return matchesAnyTermQuery(deNormalized, searchQueries, matchMode) && pageExists;
+        return matchesAnyTermQuery(deNormalized, searchQueries, matchMode) && hasScorePage(row);
     });
 
     if (filteredData.length === 0) {
@@ -393,15 +392,15 @@ function searchGenericTermsLocal(query, dataKey, type, resultMeta, matchMode) {
             const ja = escapeHtmlWithBreaks(String(row.ja || ''));
             html += `<dd class="result-c">${ja}</dd>`;
             
-            const whom = escapeHtml(String(row.whom || ''));
+            const whom = escapeHtml(String(row.whom ?? '').trim());
             const operKey = normalizeString(String(row.Oper || ''));
-            const aufzug = (row.aufzug || '0').toString().trim().toLowerCase();
-            const szene = (row.szene || '0').toString().trim().toLowerCase();
-            const page = escapeHtml(String(row.page || ''));
+            const aufzug = String(row.Aufzug ?? row.aufzug ?? '').trim().toLowerCase();
+            const szene = String(row.Szene ?? row.szene ?? '').trim().toLowerCase();
+            const page = escapeHtml(String(row.page ?? ''));
             const operaDisplayName = operaDisplayNames[operKey] || escapeHtml(String(row.Oper || ''));
             
             // Scene Name Logic
-            let sceneName = row['場面タイトル'] || `場面(${aufzug}-${szene})`;
+            let sceneName = row['場面タイトル'] || (aufzug || szene ? `場面(${aufzug}-${szene})` : '');
 
             const pageDisplay = page ? `p.${page}` : '';
             let locationText = `${operaDisplayName} ${sceneName} ${pageDisplay}`.trim();
@@ -409,7 +408,7 @@ function searchGenericTermsLocal(query, dataKey, type, resultMeta, matchMode) {
                 locationText += `：${whom}`;
             }
 
-            html += `<dd class="result-loc">【${locationText}】</dd>`;
+            html += `<dd class="result-loc">${whom ? `【${locationText}】` : locationText}</dd>`;
         });
         
         // 各見出し語の件数を表示
@@ -428,8 +427,8 @@ window.getGenericTermsListLocal = function(dataKey) {
     // Extract unique 'de' terms
     const terms = data
         // ページ番号（D列）が空欄のものを予測変換候補から除外
-        .filter(row => row.page !== null && row.page !== undefined && String(row.page).trim() !== '')
-        .map(row => ({ original: row.de, normalized: row.de_normalized || normalizeString(row.de) }))
+        .filter(hasScorePage)
+        .map(row => ({ original: row.de, normalized: normalizeTermSearchText(row.de_normalized || row.de) }))
         .filter(item => item.original && item.normalized);
 
     const uniqueTermsMap = new Map();

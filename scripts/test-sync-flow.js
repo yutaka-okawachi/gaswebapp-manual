@@ -6,7 +6,7 @@ const vm = require('vm');
 const core = require('./sync/core');
 const source = fs.readFileSync(path.join(__dirname, 'sync/main.js'), 'utf8');
 
-async function scenario({ failCheck = false, failSnapshot = false, failPublish = false, failHeadAt = 0, sourceChanges = false, mode = 'Auto', blockResume = false, currentGas = false } = {}) {
+async function scenario({ failCheck = false, failSnapshot = false, failPublish = false, failHeadAt = 0, sourceChanges = false, mode = 'Auto', blockResume = false, currentGas = false, blockEnglishResume = false, failGateAt = 0 } = {}) {
     const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'gmt-sync-test-'));
     const events = [];
     let head = 'source-head';
@@ -14,6 +14,7 @@ async function scenario({ failCheck = false, failSnapshot = false, failPublish =
     let publishFailure = failPublish;
     let headChecks = 0;
     let resumeBlocked = false;
+    let gateChecks = 0;
     const fakeRequire = name => {
         const stubs = {
             './core': { ...core, root: directory, run: () => '', git: (...args) => args[0] === 'rev-parse' ? head : '' },
@@ -45,8 +46,14 @@ async function scenario({ failCheck = false, failSnapshot = false, failPublish =
                 previousData: () => ({}),
                 validateSnapshot: () => { events.push('validate'); if (failSnapshot) throw new Error('bad snapshot'); return {}; },
                 installSnapshot: () => { events.push('install'); },
-                updateSitemap: () => {}, releaseManifest: () => ({ releaseId: 'release', hashes: {} }),
+                updateSitemap: () => {}, releaseManifest: () => ({ releaseId: 'release', hashes: { 'index.html': 'a'.repeat(64) } }),
                 formatJson: (file, value) => typeof value === 'string' ? value : JSON.stringify(value)
+            },
+            './bilingual': {
+                publicationTicket: () => ({}), assertPolicyUnchanged: () => { gateChecks++; if (gateChecks === failGateAt) throw new Error('gate changed'); }, assertPublicTree: () => {}, assertReleaseManifest: manifest => { events.push('gate-manifest-check'); require('./sync/bilingual').assertReleaseManifest(manifest); }, englishEnabled: () => false,
+                prepare: (snapshot, requestId, previous, allow) => { events.push('english-build'); return { japanese: stubs['./artifacts'].validateSnapshot(snapshot, requestId, previous, allow), english: {} }; },
+                stage: () => { events.push('english-stage'); return { publishedEnglish: false }; },
+                refreshStage: () => { events.push('english-refresh'); }
             },
             './publish': {
                 token: () => 'secret', preflight: async () => 'https://example.test/',
@@ -70,6 +77,10 @@ async function scenario({ failCheck = false, failSnapshot = false, failPublish =
             assert.ok(!failed, failure && failure.stack);
             assert.ok(events.includes('tests'));
             for (const stage of ['head-check', 'commit', 'deploy', 'snapshot', 'push']) assert.ok(!events.includes(stage), stage);
+        } else if (failGateAt) {
+            assert.ok(failed); assert.ok(!events.includes('push'));
+            if (failGateAt === 1) assert.ok(!events.includes('commit') && !events.includes('deploy'));
+            if (failGateAt === 2) assert.ok(!events.includes('english-stage') && !events.includes('install'));
         } else if (failHeadAt) {
             assert.ok(failed);
             assert.ok(!events.includes('push'));
@@ -87,18 +98,22 @@ async function scenario({ failCheck = false, failSnapshot = false, failPublish =
             resumeBlocked = blockResume;
             // After checkpoint commits the working tree is clean on resume.
             changes = [];
-            if (blockResume) await assert.rejects(() => main(['--mode', 'Verify']), /editor-only/);
+            if (blockEnglishResume) {
+                const file=path.join(directory,'.sync-state/state.json'), receipt=core.readJson(file);receipt.pending.manifest.hashes['en/index.html']='a'.repeat(64);core.atomicJson(file,receipt);
+                await assert.rejects(() => main(['--mode','Verify']), /英語公開ゲート/);
+            } else if (blockResume) await assert.rejects(() => main(['--mode', 'Verify']), /editor-only/);
             else await main([]);
             const resume = events.slice(before);
-            assert.ok(resume.includes('head-check'));
-            if (blockResume) assert.ok(!resume.includes('push') && !resume.includes('verify'));
+            if (!blockEnglishResume) assert.ok(resume.includes('head-check'));
+            if (blockResume || blockEnglishResume) assert.ok(!resume.includes('push') && !resume.includes('verify'));
             else assert.ok(resume.includes('verify'));
             for (const stage of ['deploy', 'snapshot', 'install', 'commit']) assert.ok(!resume.includes(stage), stage);
         } else {
             assert.ok(!failed, failure && failure.stack);
             assert.ok(events.indexOf('tests') < events.indexOf('deploy'));
             assert.ok(events.indexOf('head-check') < events.indexOf('commit'));
-            assert.ok(events.indexOf('validate') < events.indexOf('install'));
+            assert.ok(events.indexOf('validate') < events.indexOf('english-stage'));
+            assert.ok(events.indexOf('english-stage') < events.indexOf('install'));
             assert.ok(events.indexOf('install') < events.indexOf('commit'));
             assert.ok(events.indexOf('commit') < events.indexOf('push'));
             assert.ok(events.indexOf('push') < events.indexOf('verify'));
@@ -123,5 +138,7 @@ async function scenario({ failCheck = false, failSnapshot = false, failPublish =
     await scenario({ failHeadAt: 3 });
     await scenario({ failPublish: true, blockResume: true });
     await scenario({ mode: 'Check' });
+    await scenario({ failPublish: true, blockEnglishResume: true });
+    for (const failGateAt of [1,2,3,4]) await scenario({ failGateAt });
     console.log('sync workflow ordering and failure recovery tests: OK');
 })().catch(error => { console.error(error); process.exitCode = 1; });

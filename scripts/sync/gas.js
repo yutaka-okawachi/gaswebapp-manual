@@ -38,7 +38,7 @@ async function exportSnapshot(settings, requestId) {
     let error;
     for (const ms of [0, 3000, 10000]) {
         await delay(ms);
-        try { return await call(settings, 'exportSnapshot', { requestId }); }
+        try { return await call(settings, 'exportSnapshot', { requestId, includeEnglish: true }); }
         catch (e) { error = e; if (/validation|必須|列|空|欠落/i.test(e.message)) throw e; }
     }
     throw error;

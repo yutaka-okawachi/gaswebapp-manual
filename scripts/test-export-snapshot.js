@@ -70,6 +70,25 @@ restore();
 sheets['RS幕構成'] = sheets['RS幕構成'].map((row, i) => [...row, i === 0 ? '作品名' : 'dup']);
 assert.throws(() => context.exportAllDataToJson({}), /列名が重複しています: RS幕構成:作品名/);
 restore();
+// Japanese promotion is independent of approval labels. Old Japanese and English remain private.
+for (const mode of ['held', 'empty']) {
+    restore();
+    for (const tab of ['GM', 'RW', 'RS', 'Notes']) {
+        const data = sheets[tab], jaIndex = data[0].indexOf('ja');
+        data[0][jaIndex] = 'ja_old';
+        data[0].push('ja', 'en', 'whom_en', '準備状態');
+        data[1][jaIndex] = 'PRIVATE_OLD_JAPANESE';
+        data[1].push(mode === 'empty' ? '' : '昇格した日本語', 'PRIVATE_ENGLISH', 'PRIVATE_TARGET_ENGLISH', '保留');
+    }
+    const promoted = context.exportAllDataToJson({ requestId: 'fixture' });
+    for (const [tab, file] of [['GM', 'mahler'], ['RW', 'richard_wagner'], ['RS', 'richard_strauss'], ['Notes', 'dic_notes']]) {
+        const row = promoted.files['mahler-search-app/data/' + file + '.json'][0];
+        assert.strictEqual(tab === 'Notes' ? row[1] : row.ja, mode === 'empty' ? '' : '昇格した日本語');
+    }
+    assert.ok(!JSON.stringify(promoted.files).includes('PRIVATE_'));
+}
+restore();
+
 released = 0;
 
 delete sheets.RW;
