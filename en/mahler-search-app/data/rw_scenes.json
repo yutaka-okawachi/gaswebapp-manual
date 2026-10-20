@@ -1,0 +1,891 @@
+[
+  {
+    "Oper": "feen",
+    "Aufzug": 1,
+    "Szene": "",
+    "日本語": "Act 1",
+    "作品名": "Die Feen, WWV 32 (1833-34)"
+  },
+  {
+    "Oper": "feen",
+    "Aufzug": 2,
+    "Szene": "",
+    "日本語": "Act 2",
+    "作品名": "Die Feen, WWV 32 (1833-34)"
+  },
+  {
+    "Oper": "feen",
+    "Aufzug": 3,
+    "Szene": "",
+    "日本語": "Act 3",
+    "作品名": "Die Feen, WWV 32 (1833-34)"
+  },
+  {
+    "Oper": "liebes",
+    "Aufzug": 1,
+    "Szene": "",
+    "日本語": "Act 1",
+    "作品名": "Das Liebesverbot, WWV 38 (1834)"
+  },
+  {
+    "Oper": "liebes",
+    "Aufzug": 2,
+    "Szene": "",
+    "日本語": "Act 2",
+    "作品名": "Das Liebesverbot, WWV 38 (1834)"
+  },
+  {
+    "Oper": "rienzi",
+    "Aufzug": 1,
+    "Szene": "",
+    "日本語": "Act 1",
+    "作品名": "Rienzi, WWV 49 (1840)"
+  },
+  {
+    "Oper": "rienzi",
+    "Aufzug": 2,
+    "Szene": "",
+    "日本語": "Act 2",
+    "作品名": "Rienzi, WWV 49 (1840)"
+  },
+  {
+    "Oper": "rienzi",
+    "Aufzug": 3,
+    "Szene": "",
+    "日本語": "Act 3",
+    "作品名": "Rienzi, WWV 49 (1840)"
+  },
+  {
+    "Oper": "rienzi",
+    "Aufzug": 4,
+    "Szene": "",
+    "日本語": "Act 4",
+    "作品名": "Rienzi, WWV 49 (1840)"
+  },
+  {
+    "Oper": "rienzi",
+    "Aufzug": 5,
+    "Szene": "",
+    "日本語": "Act 5",
+    "作品名": "Rienzi, WWV 49 (1840)"
+  },
+  {
+    "Oper": "holländer",
+    "Aufzug": 1,
+    "Szene": "",
+    "日本語": "Act 1",
+    "作品名": "Der fliegende Holländer, WWV 63 (1840-41)"
+  },
+  {
+    "Oper": "holländer",
+    "Aufzug": 2,
+    "Szene": "",
+    "日本語": "Act 2",
+    "作品名": "Der fliegende Holländer, WWV 63 (1840-41)"
+  },
+  {
+    "Oper": "holländer",
+    "Aufzug": 3,
+    "Szene": "",
+    "日本語": "Act 3",
+    "作品名": "Der fliegende Holländer, WWV 63 (1840-41)"
+  },
+  {
+    "Oper": "holländer",
+    "Aufzug": "Anhang",
+    "Szene": "",
+    "日本語": "Act Anhang",
+    "作品名": "Der fliegende Holländer, WWV 63 (1840-41)"
+  },
+  {
+    "Oper": "tann_dresden",
+    "Aufzug": 1,
+    "Szene": "vorspiel",
+    "日本語": "Act 1, Scene vorspiel",
+    "作品名": "Tannhäuser, WWV 70 (1845, revised 1860 Dresden)"
+  },
+  {
+    "Oper": "tann_dresden",
+    "Aufzug": 1,
+    "Szene": 1,
+    "日本語": "Act 1, Scene 1",
+    "作品名": "Tannhäuser, WWV 70 (1845, revised 1860 Dresden)"
+  },
+  {
+    "Oper": "tann_dresden",
+    "Aufzug": 1,
+    "Szene": 2,
+    "日本語": "Act 1, Scene 2",
+    "作品名": "Tannhäuser, WWV 70 (1845, revised 1860 Dresden)"
+  },
+  {
+    "Oper": "tann_dresden",
+    "Aufzug": 1,
+    "Szene": 3,
+    "日本語": "Act 1, Scene 3",
+    "作品名": "Tannhäuser, WWV 70 (1845, revised 1860 Dresden)"
+  },
+  {
+    "Oper": "tann_dresden",
+    "Aufzug": 1,
+    "Szene": 4,
+    "日本語": "Act 1, Scene 4",
+    "作品名": "Tannhäuser, WWV 70 (1845, revised 1860 Dresden)"
+  },
+  {
+    "Oper": "tann_dresden",
+    "Aufzug": 2,
+    "Szene": 1,
+    "日本語": "Act 2, Scene 1",
+    "作品名": "Tannhäuser, WWV 70 (1845, revised 1860 Dresden)"
+  },
+  {
+    "Oper": "tann_dresden",
+    "Aufzug": 2,
+    "Szene": 2,
+    "日本語": "Act 2, Scene 2",
+    "作品名": "Tannhäuser, WWV 70 (1845, revised 1860 Dresden)"
+  },
+  {
+    "Oper": "tann_dresden",
+    "Aufzug": 2,
+    "Szene": 3,
+    "日本語": "Act 2, Scene 3",
+    "作品名": "Tannhäuser, WWV 70 (1845, revised 1860 Dresden)"
+  },
+  {
+    "Oper": "tann_dresden",
+    "Aufzug": 2,
+    "Szene": 4,
+    "日本語": "Act 2, Scene 4",
+    "作品名": "Tannhäuser, WWV 70 (1845, revised 1860 Dresden)"
+  },
+  {
+    "Oper": "tann_dresden",
+    "Aufzug": 3,
+    "Szene": "einleitung",
+    "日本語": "Act 3, Scene einleitung",
+    "作品名": "Tannhäuser, WWV 70 (1845, revised 1860 Dresden)"
+  },
+  {
+    "Oper": "tann_dresden",
+    "Aufzug": 3,
+    "Szene": 1,
+    "日本語": "Act 3, Scene 1",
+    "作品名": "Tannhäuser, WWV 70 (1845, revised 1860 Dresden)"
+  },
+  {
+    "Oper": "tann_dresden",
+    "Aufzug": 3,
+    "Szene": 2,
+    "日本語": "Act 3, Scene 2",
+    "作品名": "Tannhäuser, WWV 70 (1845, revised 1860 Dresden)"
+  },
+  {
+    "Oper": "tann_dresden",
+    "Aufzug": 3,
+    "Szene": 3,
+    "日本語": "Act 3, Scene 3",
+    "作品名": "Tannhäuser, WWV 70 (1845, revised 1860 Dresden)"
+  },
+  {
+    "Oper": "tann_dresden",
+    "Aufzug": "I zu Seite 28",
+    "Szene": "",
+    "日本語": "Act I zu Seite 28",
+    "作品名": "Tannhäuser, WWV 70 (1845, revised 1860 Dresden)"
+  },
+  {
+    "Oper": "tann_dresden",
+    "Aufzug": "II zu Seite 133",
+    "Szene": "",
+    "日本語": "Act II zu Seite 133",
+    "作品名": "Tannhäuser, WWV 70 (1845, revised 1860 Dresden)"
+  },
+  {
+    "Oper": "tann_dresden",
+    "Aufzug": "III zu Seite 233",
+    "Szene": "",
+    "日本語": "Act III zu Seite 233",
+    "作品名": "Tannhäuser, WWV 70 (1845, revised 1860 Dresden)"
+  },
+  {
+    "Oper": "tann_dresden",
+    "Aufzug": "IV zu Seite 333",
+    "Szene": "",
+    "日本語": "Act IV zu Seite 333",
+    "作品名": "Tannhäuser, WWV 70 (1845, revised 1860 Dresden)"
+  },
+  {
+    "Oper": "tann_dresden",
+    "Aufzug": "V zu Seite 413",
+    "Szene": "",
+    "日本語": "Act V zu Seite 413",
+    "作品名": "Tannhäuser, WWV 70 (1845, revised 1860 Dresden)"
+  },
+  {
+    "Oper": "tann_paris",
+    "Aufzug": "",
+    "Szene": "vorspiel",
+    "日本語": "Scene vorspiel",
+    "作品名": "Tannhäuser, WWV 70 (1860-61, revised 1875 Paris)"
+  },
+  {
+    "Oper": "tann_paris",
+    "Aufzug": 1,
+    "Szene": 1,
+    "日本語": "Act 1, Scene 1",
+    "作品名": "Tannhäuser, WWV 70 (1860-61, revised 1875 Paris)"
+  },
+  {
+    "Oper": "tann_paris",
+    "Aufzug": 1,
+    "Szene": 2,
+    "日本語": "Act 1, Scene 2",
+    "作品名": "Tannhäuser, WWV 70 (1860-61, revised 1875 Paris)"
+  },
+  {
+    "Oper": "tann_paris",
+    "Aufzug": 1,
+    "Szene": 3,
+    "日本語": "Act 1, Scene 3",
+    "作品名": "Tannhäuser, WWV 70 (1860-61, revised 1875 Paris)"
+  },
+  {
+    "Oper": "tann_paris",
+    "Aufzug": 1,
+    "Szene": 4,
+    "日本語": "Act 1, Scene 4",
+    "作品名": "Tannhäuser, WWV 70 (1860-61, revised 1875 Paris)"
+  },
+  {
+    "Oper": "tann_paris",
+    "Aufzug": 2,
+    "Szene": 1,
+    "日本語": "Act 2, Scene 1",
+    "作品名": "Tannhäuser, WWV 70 (1860-61, revised 1875 Paris)"
+  },
+  {
+    "Oper": "tann_paris",
+    "Aufzug": 2,
+    "Szene": 2,
+    "日本語": "Act 2, Scene 2",
+    "作品名": "Tannhäuser, WWV 70 (1860-61, revised 1875 Paris)"
+  },
+  {
+    "Oper": "tann_paris",
+    "Aufzug": 2,
+    "Szene": 3,
+    "日本語": "Act 2, Scene 3",
+    "作品名": "Tannhäuser, WWV 70 (1860-61, revised 1875 Paris)"
+  },
+  {
+    "Oper": "tann_paris",
+    "Aufzug": 2,
+    "Szene": 4,
+    "日本語": "Act 2, Scene 4",
+    "作品名": "Tannhäuser, WWV 70 (1860-61, revised 1875 Paris)"
+  },
+  {
+    "Oper": "tann_paris",
+    "Aufzug": 3,
+    "Szene": "einleitung",
+    "日本語": "Act 3, Scene einleitung",
+    "作品名": "Tannhäuser, WWV 70 (1860-61, revised 1875 Paris)"
+  },
+  {
+    "Oper": "tann_paris",
+    "Aufzug": 3,
+    "Szene": 1,
+    "日本語": "Act 3, Scene 1",
+    "作品名": "Tannhäuser, WWV 70 (1860-61, revised 1875 Paris)"
+  },
+  {
+    "Oper": "tann_paris",
+    "Aufzug": 3,
+    "Szene": 2,
+    "日本語": "Act 3, Scene 2",
+    "作品名": "Tannhäuser, WWV 70 (1860-61, revised 1875 Paris)"
+  },
+  {
+    "Oper": "tann_paris",
+    "Aufzug": 3,
+    "Szene": 3,
+    "日本語": "Act 3, Scene 3",
+    "作品名": "Tannhäuser, WWV 70 (1860-61, revised 1875 Paris)"
+  },
+  {
+    "Oper": "lohengrin",
+    "Aufzug": 1,
+    "Szene": "vorspiel",
+    "日本語": "Act 1, Scene vorspiel",
+    "作品名": "Lohengrin, WWV 75 (1846-48)"
+  },
+  {
+    "Oper": "lohengrin",
+    "Aufzug": 1,
+    "Szene": 1,
+    "日本語": "Act 1, Scene 1",
+    "作品名": "Lohengrin, WWV 75 (1846-48)"
+  },
+  {
+    "Oper": "lohengrin",
+    "Aufzug": 1,
+    "Szene": 2,
+    "日本語": "Act 1, Scene 2",
+    "作品名": "Lohengrin, WWV 75 (1846-48)"
+  },
+  {
+    "Oper": "lohengrin",
+    "Aufzug": 1,
+    "Szene": 3,
+    "日本語": "Act 1, Scene 3",
+    "作品名": "Lohengrin, WWV 75 (1846-48)"
+  },
+  {
+    "Oper": "lohengrin",
+    "Aufzug": 2,
+    "Szene": 1,
+    "日本語": "Act 2, Scene 1",
+    "作品名": "Lohengrin, WWV 75 (1846-48)"
+  },
+  {
+    "Oper": "lohengrin",
+    "Aufzug": 2,
+    "Szene": 2,
+    "日本語": "Act 2, Scene 2",
+    "作品名": "Lohengrin, WWV 75 (1846-48)"
+  },
+  {
+    "Oper": "lohengrin",
+    "Aufzug": 2,
+    "Szene": 3,
+    "日本語": "Act 2, Scene 3",
+    "作品名": "Lohengrin, WWV 75 (1846-48)"
+  },
+  {
+    "Oper": "lohengrin",
+    "Aufzug": 2,
+    "Szene": 4,
+    "日本語": "Act 2, Scene 4",
+    "作品名": "Lohengrin, WWV 75 (1846-48)"
+  },
+  {
+    "Oper": "lohengrin",
+    "Aufzug": 2,
+    "Szene": 5,
+    "日本語": "Act 2, Scene 5",
+    "作品名": "Lohengrin, WWV 75 (1846-48)"
+  },
+  {
+    "Oper": "lohengrin",
+    "Aufzug": 3,
+    "Szene": "vorspiel",
+    "日本語": "Act 3, Scene vorspiel",
+    "作品名": "Lohengrin, WWV 75 (1846-48)"
+  },
+  {
+    "Oper": "lohengrin",
+    "Aufzug": 3,
+    "Szene": 1,
+    "日本語": "Act 3, Scene 1",
+    "作品名": "Lohengrin, WWV 75 (1846-48)"
+  },
+  {
+    "Oper": "lohengrin",
+    "Aufzug": 3,
+    "Szene": 2,
+    "日本語": "Act 3, Scene 2",
+    "作品名": "Lohengrin, WWV 75 (1846-48)"
+  },
+  {
+    "Oper": "lohengrin",
+    "Aufzug": 3,
+    "Szene": 3,
+    "日本語": "Act 3, Scene 3",
+    "作品名": "Lohengrin, WWV 75 (1846-48)"
+  },
+  {
+    "Oper": "rheingold",
+    "Aufzug": "",
+    "Szene": 1,
+    "日本語": "Scene 1",
+    "作品名": "Das Rheingold, WWV 86A (1854)"
+  },
+  {
+    "Oper": "rheingold",
+    "Aufzug": "",
+    "Szene": 2,
+    "日本語": "Scene 2",
+    "作品名": "Das Rheingold, WWV 86A (1854)"
+  },
+  {
+    "Oper": "rheingold",
+    "Aufzug": "",
+    "Szene": 3,
+    "日本語": "Scene 3",
+    "作品名": "Das Rheingold, WWV 86A (1854)"
+  },
+  {
+    "Oper": "rheingold",
+    "Aufzug": "",
+    "Szene": 4,
+    "日本語": "Scene 4",
+    "作品名": "Das Rheingold, WWV 86A (1854)"
+  },
+  {
+    "Oper": "walküre",
+    "Aufzug": 1,
+    "Szene": 1,
+    "日本語": "Act 1, Scene 1",
+    "作品名": "Die Walküre, WWV 86B (1856-70)"
+  },
+  {
+    "Oper": "walküre",
+    "Aufzug": 1,
+    "Szene": 2,
+    "日本語": "Act 1, Scene 2",
+    "作品名": "Die Walküre, WWV 86B (1856-70)"
+  },
+  {
+    "Oper": "walküre",
+    "Aufzug": 1,
+    "Szene": 3,
+    "日本語": "Act 1, Scene 3",
+    "作品名": "Die Walküre, WWV 86B (1856-70)"
+  },
+  {
+    "Oper": "walküre",
+    "Aufzug": 2,
+    "Szene": 1,
+    "日本語": "Act 2, Scene 1",
+    "作品名": "Die Walküre, WWV 86B (1856-70)"
+  },
+  {
+    "Oper": "walküre",
+    "Aufzug": 2,
+    "Szene": 2,
+    "日本語": "Act 2, Scene 2",
+    "作品名": "Die Walküre, WWV 86B (1856-70)"
+  },
+  {
+    "Oper": "walküre",
+    "Aufzug": 2,
+    "Szene": 3,
+    "日本語": "Act 2, Scene 3",
+    "作品名": "Die Walküre, WWV 86B (1856-70)"
+  },
+  {
+    "Oper": "walküre",
+    "Aufzug": 2,
+    "Szene": 4,
+    "日本語": "Act 2, Scene 4",
+    "作品名": "Die Walküre, WWV 86B (1856-70)"
+  },
+  {
+    "Oper": "walküre",
+    "Aufzug": 2,
+    "Szene": 5,
+    "日本語": "Act 2, Scene 5",
+    "作品名": "Die Walküre, WWV 86B (1856-70)"
+  },
+  {
+    "Oper": "walküre",
+    "Aufzug": 3,
+    "Szene": 1,
+    "日本語": "Act 3, Scene 1",
+    "作品名": "Die Walküre, WWV 86B (1856-70)"
+  },
+  {
+    "Oper": "walküre",
+    "Aufzug": 3,
+    "Szene": 2,
+    "日本語": "Act 3, Scene 2",
+    "作品名": "Die Walküre, WWV 86B (1856-70)"
+  },
+  {
+    "Oper": "walküre",
+    "Aufzug": 3,
+    "Szene": 3,
+    "日本語": "Act 3, Scene 3",
+    "作品名": "Die Walküre, WWV 86B (1856-70)"
+  },
+  {
+    "Oper": "siegfried",
+    "Aufzug": 1,
+    "Szene": 1,
+    "日本語": "Act 1, Scene 1",
+    "作品名": "Siegfried, WWV 86C (1871)"
+  },
+  {
+    "Oper": "siegfried",
+    "Aufzug": 1,
+    "Szene": 2,
+    "日本語": "Act 1, Scene 2",
+    "作品名": "Siegfried, WWV 86C (1871)"
+  },
+  {
+    "Oper": "siegfried",
+    "Aufzug": 1,
+    "Szene": 3,
+    "日本語": "Act 1, Scene 3",
+    "作品名": "Siegfried, WWV 86C (1871)"
+  },
+  {
+    "Oper": "siegfried",
+    "Aufzug": 2,
+    "Szene": 1,
+    "日本語": "Act 2, Scene 1",
+    "作品名": "Siegfried, WWV 86C (1871)"
+  },
+  {
+    "Oper": "siegfried",
+    "Aufzug": 2,
+    "Szene": 2,
+    "日本語": "Act 2, Scene 2",
+    "作品名": "Siegfried, WWV 86C (1871)"
+  },
+  {
+    "Oper": "siegfried",
+    "Aufzug": 2,
+    "Szene": 3,
+    "日本語": "Act 2, Scene 3",
+    "作品名": "Siegfried, WWV 86C (1871)"
+  },
+  {
+    "Oper": "siegfried",
+    "Aufzug": 3,
+    "Szene": "vorspiel",
+    "日本語": "Act 3, Scene vorspiel",
+    "作品名": "Siegfried, WWV 86C (1871)"
+  },
+  {
+    "Oper": "siegfried",
+    "Aufzug": 3,
+    "Szene": 1,
+    "日本語": "Act 3, Scene 1",
+    "作品名": "Siegfried, WWV 86C (1871)"
+  },
+  {
+    "Oper": "siegfried",
+    "Aufzug": 3,
+    "Szene": 2,
+    "日本語": "Act 3, Scene 2",
+    "作品名": "Siegfried, WWV 86C (1871)"
+  },
+  {
+    "Oper": "siegfried",
+    "Aufzug": 3,
+    "Szene": 3,
+    "日本語": "Act 3, Scene 3",
+    "作品名": "Siegfried, WWV 86C (1871)"
+  },
+  {
+    "Oper": "götter",
+    "Aufzug": "",
+    "Szene": "vorspiel",
+    "日本語": "Scene vorspiel",
+    "作品名": "Götterdämmerung, WWV 86D (1848-74)"
+  },
+  {
+    "Oper": "götter",
+    "Aufzug": 1,
+    "Szene": 1,
+    "日本語": "Act 1, Scene 1",
+    "作品名": "Götterdämmerung, WWV 86D (1848-74)"
+  },
+  {
+    "Oper": "götter",
+    "Aufzug": 1,
+    "Szene": 2,
+    "日本語": "Act 1, Scene 2",
+    "作品名": "Götterdämmerung, WWV 86D (1848-74)"
+  },
+  {
+    "Oper": "götter",
+    "Aufzug": 1,
+    "Szene": 3,
+    "日本語": "Act 1, Scene 3",
+    "作品名": "Götterdämmerung, WWV 86D (1848-74)"
+  },
+  {
+    "Oper": "götter",
+    "Aufzug": 2,
+    "Szene": 1,
+    "日本語": "Act 2, Scene 1",
+    "作品名": "Götterdämmerung, WWV 86D (1848-74)"
+  },
+  {
+    "Oper": "götter",
+    "Aufzug": 2,
+    "Szene": 2,
+    "日本語": "Act 2, Scene 2",
+    "作品名": "Götterdämmerung, WWV 86D (1848-74)"
+  },
+  {
+    "Oper": "götter",
+    "Aufzug": 2,
+    "Szene": 3,
+    "日本語": "Act 2, Scene 3",
+    "作品名": "Götterdämmerung, WWV 86D (1848-74)"
+  },
+  {
+    "Oper": "götter",
+    "Aufzug": 2,
+    "Szene": 4,
+    "日本語": "Act 2, Scene 4",
+    "作品名": "Götterdämmerung, WWV 86D (1848-74)"
+  },
+  {
+    "Oper": "götter",
+    "Aufzug": 2,
+    "Szene": 5,
+    "日本語": "Act 2, Scene 5",
+    "作品名": "Götterdämmerung, WWV 86D (1848-74)"
+  },
+  {
+    "Oper": "götter",
+    "Aufzug": 3,
+    "Szene": 1,
+    "日本語": "Act 3, Scene 1",
+    "作品名": "Götterdämmerung, WWV 86D (1848-74)"
+  },
+  {
+    "Oper": "götter",
+    "Aufzug": 3,
+    "Szene": 2,
+    "日本語": "Act 3, Scene 2",
+    "作品名": "Götterdämmerung, WWV 86D (1848-74)"
+  },
+  {
+    "Oper": "götter",
+    "Aufzug": 3,
+    "Szene": 3,
+    "日本語": "Act 3, Scene 3",
+    "作品名": "Götterdämmerung, WWV 86D (1848-74)"
+  },
+  {
+    "Oper": "tristan",
+    "Aufzug": "",
+    "Szene": "vorspiel",
+    "日本語": "Scene vorspiel",
+    "作品名": "Tristan und Isolde, WWV 90 (1857-59)"
+  },
+  {
+    "Oper": "tristan",
+    "Aufzug": 1,
+    "Szene": 1,
+    "日本語": "Act 1, Scene 1",
+    "作品名": "Tristan und Isolde, WWV 90 (1857-59)"
+  },
+  {
+    "Oper": "tristan",
+    "Aufzug": 1,
+    "Szene": 2,
+    "日本語": "Act 1, Scene 2",
+    "作品名": "Tristan und Isolde, WWV 90 (1857-59)"
+  },
+  {
+    "Oper": "tristan",
+    "Aufzug": 1,
+    "Szene": 3,
+    "日本語": "Act 1, Scene 3",
+    "作品名": "Tristan und Isolde, WWV 90 (1857-59)"
+  },
+  {
+    "Oper": "tristan",
+    "Aufzug": 1,
+    "Szene": 4,
+    "日本語": "Act 1, Scene 4",
+    "作品名": "Tristan und Isolde, WWV 90 (1857-59)"
+  },
+  {
+    "Oper": "tristan",
+    "Aufzug": 1,
+    "Szene": 5,
+    "日本語": "Act 1, Scene 5",
+    "作品名": "Tristan und Isolde, WWV 90 (1857-59)"
+  },
+  {
+    "Oper": "tristan",
+    "Aufzug": 2,
+    "Szene": 1,
+    "日本語": "Act 2, Scene 1",
+    "作品名": "Tristan und Isolde, WWV 90 (1857-59)"
+  },
+  {
+    "Oper": "tristan",
+    "Aufzug": 2,
+    "Szene": 2,
+    "日本語": "Act 2, Scene 2",
+    "作品名": "Tristan und Isolde, WWV 90 (1857-59)"
+  },
+  {
+    "Oper": "tristan",
+    "Aufzug": 2,
+    "Szene": 3,
+    "日本語": "Act 2, Scene 3",
+    "作品名": "Tristan und Isolde, WWV 90 (1857-59)"
+  },
+  {
+    "Oper": "tristan",
+    "Aufzug": 3,
+    "Szene": 1,
+    "日本語": "Act 3, Scene 1",
+    "作品名": "Tristan und Isolde, WWV 90 (1857-59)"
+  },
+  {
+    "Oper": "tristan",
+    "Aufzug": 3,
+    "Szene": 2,
+    "日本語": "Act 3, Scene 2",
+    "作品名": "Tristan und Isolde, WWV 90 (1857-59)"
+  },
+  {
+    "Oper": "tristan",
+    "Aufzug": 3,
+    "Szene": 3,
+    "日本語": "Act 3, Scene 3",
+    "作品名": "Tristan und Isolde, WWV 90 (1857-59)"
+  },
+  {
+    "Oper": "meister",
+    "Aufzug": 1,
+    "Szene": 1,
+    "日本語": "Act 1, Scene 1",
+    "作品名": "Die Meistersinger von Nürnberg, WWV 96 (1862-67)"
+  },
+  {
+    "Oper": "meister",
+    "Aufzug": 1,
+    "Szene": 2,
+    "日本語": "Act 1, Scene 2",
+    "作品名": "Die Meistersinger von Nürnberg, WWV 96 (1862-67)"
+  },
+  {
+    "Oper": "meister",
+    "Aufzug": 1,
+    "Szene": 3,
+    "日本語": "Act 1, Scene 3",
+    "作品名": "Die Meistersinger von Nürnberg, WWV 96 (1862-67)"
+  },
+  {
+    "Oper": "meister",
+    "Aufzug": 2,
+    "Szene": 1,
+    "日本語": "Act 2, Scene 1",
+    "作品名": "Die Meistersinger von Nürnberg, WWV 96 (1862-67)"
+  },
+  {
+    "Oper": "meister",
+    "Aufzug": 2,
+    "Szene": 2,
+    "日本語": "Act 2, Scene 2",
+    "作品名": "Die Meistersinger von Nürnberg, WWV 96 (1862-67)"
+  },
+  {
+    "Oper": "meister",
+    "Aufzug": 2,
+    "Szene": 3,
+    "日本語": "Act 2, Scene 3",
+    "作品名": "Die Meistersinger von Nürnberg, WWV 96 (1862-67)"
+  },
+  {
+    "Oper": "meister",
+    "Aufzug": 2,
+    "Szene": 4,
+    "日本語": "Act 2, Scene 4",
+    "作品名": "Die Meistersinger von Nürnberg, WWV 96 (1862-67)"
+  },
+  {
+    "Oper": "meister",
+    "Aufzug": 2,
+    "Szene": 5,
+    "日本語": "Act 2, Scene 5",
+    "作品名": "Die Meistersinger von Nürnberg, WWV 96 (1862-67)"
+  },
+  {
+    "Oper": "meister",
+    "Aufzug": 2,
+    "Szene": 6,
+    "日本語": "Act 2, Scene 6",
+    "作品名": "Die Meistersinger von Nürnberg, WWV 96 (1862-67)"
+  },
+  {
+    "Oper": "meister",
+    "Aufzug": 2,
+    "Szene": 7,
+    "日本語": "Act 2, Scene 7",
+    "作品名": "Die Meistersinger von Nürnberg, WWV 96 (1862-67)"
+  },
+  {
+    "Oper": "meister",
+    "Aufzug": 3,
+    "Szene": "vorspiel",
+    "日本語": "Act 3, Scene vorspiel",
+    "作品名": "Die Meistersinger von Nürnberg, WWV 96 (1862-67)"
+  },
+  {
+    "Oper": "meister",
+    "Aufzug": 3,
+    "Szene": 1,
+    "日本語": "Act 3, Scene 1",
+    "作品名": "Die Meistersinger von Nürnberg, WWV 96 (1862-67)"
+  },
+  {
+    "Oper": "meister",
+    "Aufzug": 3,
+    "Szene": 2,
+    "日本語": "Act 3, Scene 2",
+    "作品名": "Die Meistersinger von Nürnberg, WWV 96 (1862-67)"
+  },
+  {
+    "Oper": "meister",
+    "Aufzug": 3,
+    "Szene": 3,
+    "日本語": "Act 3, Scene 3",
+    "作品名": "Die Meistersinger von Nürnberg, WWV 96 (1862-67)"
+  },
+  {
+    "Oper": "meister",
+    "Aufzug": 3,
+    "Szene": 4,
+    "日本語": "Act 3, Scene 4",
+    "作品名": "Die Meistersinger von Nürnberg, WWV 96 (1862-67)"
+  },
+  {
+    "Oper": "meister",
+    "Aufzug": 3,
+    "Szene": 5,
+    "日本語": "Act 3, Scene 5",
+    "作品名": "Die Meistersinger von Nürnberg, WWV 96 (1862-67)"
+  },
+  {
+    "Oper": "parsifal",
+    "Aufzug": "vorspiel",
+    "Szene": "",
+    "日本語": "Act vorspiel",
+    "作品名": "Parsifal, WWV 111 (1857-82)"
+  },
+  {
+    "Oper": "parsifal",
+    "Aufzug": 1,
+    "Szene": "",
+    "日本語": "Act 1",
+    "作品名": "Parsifal, WWV 111 (1857-82)"
+  },
+  {
+    "Oper": "parsifal",
+    "Aufzug": 2,
+    "Szene": "",
+    "日本語": "Act 2",
+    "作品名": "Parsifal, WWV 111 (1857-82)"
+  },
+  {
+    "Oper": "parsifal",
+    "Aufzug": 3,
+    "Szene": "",
+    "日本語": "Act 3",
+    "作品名": "Parsifal, WWV 111 (1857-82)"
+  }
+]
