@@ -187,7 +187,19 @@ async function main(args = process.argv.slice(2)) {
             logger.success('ローカルデータファイルを最新スナップショットで更新しました。');
         } else {
             logger.info('データ更新はスキップされました。');
-            if (!selected.documentsOnly) bilingual.refreshStage();
+            if (!selected.documentsOnly) {
+                // Dictionary navigation is generated too, including browser-only releases.
+                build({ includeDictionary: true });
+                const staged = bilingual.refreshStage();
+                const generated = [...artifacts.expectedPaths];
+                if (staged && staged.publishedEnglish) {
+                    const report = readJson(path.join(staged.directory, 'manifest.json'));
+                    generated.push(...Object.keys(report.hashes));
+                }
+                state.ownedData = Object.fromEntries(generated.map(file =>
+                    [file, sha256(normalizeText(fs.readFileSync(path.join(root, file), 'utf8')))]));
+                save();
+            }
         }
 
         const allChanged = [...new Set([...files, ...repository.changed()])];

@@ -313,5 +313,9 @@
   "📁 すべて閉じる": "📁 Collapse all",
   "検索データを読み込んでいます・・・": "Loading search data…",
   "あらすじ": "Synopsis",
-  "サイト情報": "Site information"
+  "サイト情報": "Site information",
+  "管理者モード：解析・検索記録 OFF": "Admin mode: analytics and search logging OFF",
+  "管理者モード：解析・通知・検索履歴 OFF\n未登録語候補のみ ON": "Admin mode: analytics, notifications and search history OFF\nUnregistered-term candidates only ON",
+  "選択した作品：": "Selected works:",
+  "選択した楽器：": "Selected instruments:"
 }

@@ -45,7 +45,7 @@ async function scenario({ failCheck = false, failSnapshot = false, failPublish =
                 }
             },
             './artifacts': {
-                previousData: () => ({}),
+                expectedPaths: [], previousData: () => ({}),
                 validateSnapshot: () => { events.push('validate'); if (failSnapshot) throw new Error('bad snapshot'); return {}; },
                 installSnapshot: () => { events.push('install'); },
                 updateSitemap: () => {}, releaseManifest: () => ({ releaseId: 'release', hashes: { 'index.html': 'a'.repeat(64) } }),
@@ -112,11 +112,17 @@ async function scenario({ failCheck = false, failSnapshot = false, failPublish =
             for (const stage of ['deploy', 'snapshot', 'install', 'commit']) assert.ok(!resume.includes(stage), stage);
         } else {
             assert.ok(!failed, failure && failure.stack);
-            assert.ok(events.indexOf('tests') < events.indexOf('deploy'));
+            if (currentGas && mode === 'Site') {
+                assert.ok(!events.includes('deploy') && !events.includes('snapshot'));
+                assert.ok(events.includes('english-refresh'));
+                assert.equal(events.filter(event => event === 'build').length, 2, 'Site release regenerates Japanese dictionary navigation');
+            } else assert.ok(events.indexOf('tests') < events.indexOf('deploy'));
             assert.ok(events.indexOf('head-check') < events.indexOf('commit'));
-            assert.ok(events.indexOf('validate') < events.indexOf('english-stage'));
-            assert.ok(events.indexOf('english-stage') < events.indexOf('install'));
-            assert.ok(events.indexOf('install') < events.indexOf('commit'));
+            if (!(currentGas && mode === 'Site')) {
+                assert.ok(events.indexOf('validate') < events.indexOf('english-stage'));
+                assert.ok(events.indexOf('english-stage') < events.indexOf('install'));
+                assert.ok(events.indexOf('install') < events.indexOf('commit'));
+            }
             assert.ok(events.indexOf('commit') < events.indexOf('push'));
             assert.ok(events.indexOf('push') < events.indexOf('verify'));
         }
@@ -140,6 +146,7 @@ async function scenario({ failCheck = false, failSnapshot = false, failPublish =
     await scenario({ failHeadAt: 3 });
     await scenario({ failPublish: true, blockResume: true });
     await scenario({ mode: 'Check' });
+    await scenario({ currentGas: true, sourceChanges: true, mode: 'Site' });
     await scenario({ failPublish: true, blockEnglishResume: true });
     for (const failGateAt of [1,2,3,4]) await scenario({ failGateAt });
     console.log('sync workflow ordering and failure recovery tests: OK');
