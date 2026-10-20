@@ -1240,6 +1240,10 @@ function evaluateWorkSelectionTracking(source) {
     }
   };
   vm.createContext(trackingContext);
+  const guardStart = source.indexOf('function getSiteLanguage');
+  const guardEnd = source.indexOf('function normalizeDictionaryExampleTimingTerm', guardStart);
+  assert.ok(guardStart >= 0 && guardEnd > guardStart);
+  vm.runInContext(source.slice(guardStart, guardEnd), trackingContext);
   vm.runInContext(source.slice(helperStart, helperEnd), trackingContext);
   trackingContext.trackSearchResults({
     searchTerm: 'works:test',
@@ -1284,6 +1288,10 @@ function evaluateZeroResultWorkSelectionTracking(source) {
     }
   };
   vm.createContext(trackingContext);
+  const guardStart = source.indexOf('function getSiteLanguage');
+  const guardEnd = source.indexOf('function normalizeDictionaryExampleTimingTerm', guardStart);
+  assert.ok(guardStart >= 0 && guardEnd > guardStart);
+  vm.runInContext(source.slice(guardStart, guardEnd), trackingContext);
   vm.runInContext(source.slice(helperStart, helperEnd), trackingContext);
   trackingContext.trackSearchResults({
     searchTerm: 'works:ALL',

@@ -279,17 +279,48 @@ function handleRequest(params) {
 /**
  * 検索通知ハンドラー（フロントエンドからのPOST）
  */
+function normalizeSearchNotificationData_(input) {
+  if (!input || typeof input !== 'object' || Array.isArray(input)) throw new Error('Invalid notification');
+  const data = {};
+  for (const item of [['work', 200], ['page', 240], ['term', 4000], ['scope', 4000], ['userAgent', 1024]]) {
+    const value = input[item[0]] == null ? '' : input[item[0]];
+    if (typeof value !== 'string' || value.length > item[1]) throw new Error('Invalid notification field: ' + item[0]);
+    data[item[0]] = value;
+  }
+  const pathLanguage = /(?:^|\/)en(?:\/|$)/.test(data.page) ? 'en' : null;
+  data.language = input.language == null ? (pathLanguage || 'ja') : input.language;
+  if (data.language !== 'ja' && data.language !== 'en') throw new Error('Invalid notification language');
+  if (pathLanguage && data.language !== pathLanguage) throw new Error('Notification language mismatch');
+  data.page = data.page.split(/[?#]/, 1)[0].split('/').pop();
+  if (!Object.prototype.hasOwnProperty.call(pageNameMap, data.page)) throw new Error('Invalid notification page');
+  if (!data.work.trim()) throw new Error('Missing notification work');
+  if (input.includeGlobal != null && typeof input.includeGlobal !== 'boolean') throw new Error('Invalid global flag');
+  data.includeGlobal = input.includeGlobal === true;
+  return data;
+}
+
+function searchNotificationCacheKey_(data) {
+  const payload = JSON.stringify([data.language, data.page, data.work, data.scope, data.term, data.includeGlobal, data.userAgent]);
+  const bytes = Utilities.computeDigest(Utilities.DigestAlgorithm.SHA_256, payload, Utilities.Charset.UTF_8);
+  return 'search_notification_v2_' + bytes.map(b => ('0' + ((b + 256) % 256).toString(16)).slice(-2)).join('');
+}
+
 function handleSearchNotification(data) {
+  let notificationLock = null;
+  let lockAcquired = false;
+  let notificationCache = null;
+  let notificationKey = '';
+  let historyWritten = false;
   try {
-    // --- レート制限チェック（同一 UserAgent から30秒以内の重複送信を抑制） ---
-    // 注意: トークン検証は廃止済み（公開リポジトリのJSに埋め込めないため）
-    // 代わりにスプレッドシートベースのレート制限を主防御とする
-    const userAgentForCheck = String(data.userAgent || '');
-    if (isRateLimited(userAgentForCheck)) {
-      Logger.log('handleSearchNotification: レート制限により通知をスキップ。');
-      return createJsonResponse({ status: 'success' });
-    }
-    // --- ここまでレート制限 ---
+    data = normalizeSearchNotificationData_(data);
+    notificationLock = LockService.getScriptLock();
+    lockAcquired = notificationLock.tryLock(5000);
+    if (!lockAcquired) throw new Error('Notification busy');
+    notificationCache = CacheService.getScriptCache();
+    notificationKey = searchNotificationCacheKey_(data);
+    if (isRateLimited(data, notificationKey)) return createJsonResponse({ status: 'success' });
+    notificationCache.put(notificationKey, 'reserved', 5);
+
 
     const pageRaw = getValue(data.page);
     const pageTitle = pageNameMap[pageRaw] || pageRaw;
@@ -312,7 +343,7 @@ function handleSearchNotification(data) {
     }
 
     const formattedDate = Utilities.formatDate(new Date(), "Asia/Tokyo", "yyyy/MM/dd HH:mm:ss");
-    const subject = "【検索通知】: "+ workFull;
+    const subject = "【検索通知】: "+ workFull + " [" + data.language.toUpperCase() + "]";
 
     // 表示用ラベルとコンテンツの決定
     let searchTypeDisplay = "曲名・楽器検索";
@@ -345,6 +376,7 @@ function handleSearchNotification(data) {
 
     // メール本文
     let body = "■ 検索内容\n" +
+               "【表示言語】 " + (data.language === "en" ? "English (en)" : "Japanese (ja)") + "\n" +
                "【作品】 " + workFull + "\n" +
                "【タイプ】 " + searchTypeDisplay + "\n" +
                "【" + detailLabel + "】 " + detailContent + "\n";
@@ -359,25 +391,31 @@ function handleSearchNotification(data) {
             "■ ユーザー環境\n" +
             getValue(data.userAgent);
                 
+    logToSpreadsheet(data, body);
+    historyWritten = true;
     const recipient = PropertiesService.getScriptProperties().getProperty('NOTIFY_EMAIL');
     if (recipient) {
       try {
         MailApp.sendEmail(recipient, subject, body);
       } catch (e) {
-        Logger.log("Email sending failed: " + e.toString());
+        Logger.log("Email sending failed; search history is retained.");
       }
     } else {
       Logger.log("NOTIFY_EMAIL is not set in Script Properties. Skipping email notification.");
     }
     
     // Log to Spreadsheet
-    logToSpreadsheet(data, body);
+    notificationCache.put(notificationKey, 'complete', 5);
+
     
     return createJsonResponse({status: "success"});
       
   } catch (error) {
-    Logger.log("Error in handleSearchNotification: " + error.toString());
-    return createJsonResponse({status: "error", error: error.toString()}, 500);
+    if (notificationCache && notificationKey && !historyWritten) { try { notificationCache.remove(notificationKey); } catch (_) {} }
+    Logger.log('Search notification failed before completion.');
+    return createJsonResponse({status: 'error', error: 'Search notification failed'}, 500);
+  } finally {
+    if (notificationLock && lockAcquired) notificationLock.releaseLock();
   }
 }
 
@@ -387,39 +425,8 @@ function handleSearchNotification(data) {
 /**
  * Log search history to Spreadsheet
  */
-function logToSpreadsheet(data, detail) {
-  try {
-    const ss = SpreadsheetApp.getActiveSpreadsheet();
-    const sheetName = '検索履歴';
-    let sheet = ss.getSheetByName(sheetName);
-    
-    // Standard headers definition
-    const standardHeaders = ['日時', 'Work', 'Page', 'Term', 'Instruments', 'Global', 'Szene', 'Whom', 'Page_Num', 'UserAgent', '詳細'];
+function buildSearchHistoryDataMap_(data, detail, timestamp) {
 
-    // Create sheet if it doesn't exist
-    if (!sheet) {
-      sheet = ss.insertSheet(sheetName);
-      sheet.appendRow(standardHeaders);
-    }
-    
-    // Read existing headers
-    // If sheet is empty (no last row), set standard headers
-    if (sheet.getLastRow() === 0) {
-      sheet.appendRow(standardHeaders);
-    }
-
-    // Get actual headers from the first row
-    const lastCol = sheet.getLastColumn();
-    let existingHeaders = [];
-    if (lastCol > 0) {
-      existingHeaders = sheet.getRange(1, 1, 1, lastCol).getValues()[0];
-    } else {
-      // Should not happen if we just appended, but safe fallback
-      existingHeaders = standardHeaders;
-    }
-    
-    // Prepare data
-    const timestamp = new Date();
     const safeStr = (val) => (val && val !== 'N/A') ? String(val) : '';
     
     const pageRaw = safeStr(data.page);
@@ -466,59 +473,38 @@ function logToSpreadsheet(data, detail) {
         }
     }
 
-    // Construct the row array based on the ORDER of existingHeaders
-    const row = existingHeaders.map(header => {
-        // Match header name to dataMap key (exact match expected)
-        // If header is unknown, leave blank/undefined (GAS handles undefined as empty cell usually, or use '')
-        return dataMap[header] || '';
-    });
-    
-    // Append row
-    sheet.appendRow(row);
-    
-  } catch (e) {
-    Logger.log("Failed to log to spreadsheet: " + e.toString());
-  }
+    dataMap.Language = data.language || 'ja';
+    return dataMap;
 }
 
-/**
- * レート制限チェック
- * 検索履歴シートを参照し、同一 UserAgent から RATE_LIMIT_SECONDS 秒以内に
- * 送信が記録されていれば true を返す。エラー時は安全側に倒して false を返す。
- */
-function isRateLimited(userAgent) {
-  const RATE_LIMIT_SECONDS = 5;
-  try {
-    if (!userAgent) return false;
-    const ss = SpreadsheetApp.getActiveSpreadsheet();
-    const sheet = ss.getSheetByName('検索履歴');
-    if (!sheet || sheet.getLastRow() < 2) return false;
+function logToSpreadsheet(data, detail) {
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  const standardHeaders = ['日時', 'Work', 'Page', 'Term', 'Instruments', 'Global', 'Szene', 'Whom', 'Page_Num', 'UserAgent', '詳細', 'Language'];
+  let sheet = ss.getSheetByName('検索履歴');
+  if (!sheet) sheet = ss.insertSheet('検索履歴');
+  if (sheet.getLastRow() === 0) sheet.appendRow(standardHeaders);
+  const lastCol = sheet.getLastColumn();
+  const headers = sheet.getRange(1, 1, 1, lastCol).getValues()[0].map(value => String(value).trim());
+  if (headers.filter(value => value === 'Language').length > 1) throw new Error('Duplicate Language header');
+  if (headers.indexOf('Language') < 0) { sheet.getRange(1, lastCol + 1).setValue('Language'); headers.push('Language'); }
+  const values = buildSearchHistoryDataMap_(data, detail, new Date());
+  sheet.appendRow(headers.map(header => Object.prototype.hasOwnProperty.call(values, header) ? values[header] : ''));
+}
 
-    // ヘッダーから 日時・UserAgent 列のインデックスを取得
-    const lastCol = sheet.getLastColumn();
-    const headers = sheet.getRange(1, 1, 1, lastCol).getValues()[0];
-    const dateIdx = headers.indexOf('日時');
-    const uaIdx   = headers.indexOf('UserAgent');
-    if (dateIdx === -1 || uaIdx === -1) return false;
-
-    // 最新 30 行を確認（十分な範囲）
-    const lastRow   = sheet.getLastRow();
-    const checkRows = Math.min(30, lastRow - 1);
-    const values    = sheet.getRange(lastRow - checkRows + 1, 1, checkRows, lastCol).getValues();
-
-    const cutoff = new Date(new Date().getTime() - RATE_LIMIT_SECONDS * 1000);
-    for (const row of values) {
-      const rowDate = row[dateIdx];
-      const rowUA   = row[uaIdx];
-      if (rowDate instanceof Date && rowDate >= cutoff && rowUA === userAgent) {
-        return true; // 重複検出
-      }
-    }
-    return false;
-  } catch (e) {
-    Logger.log('isRateLimited error: ' + e.toString());
-    return false; // エラー時は通過させる（安全側）
-  }
+function isRateLimited(data, cacheKey) {
+  if (CacheService.getScriptCache().get(cacheKey)) return true;
+  const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('検索履歴');
+  if (!sheet || sheet.getLastRow() < 2) return false;
+  const lastCol = sheet.getLastColumn(), headers = sheet.getRange(1, 1, 1, lastCol).getValues()[0].map(value => String(value).trim());
+  const dateIndex = headers.indexOf('日時');
+  const fields = ['Work', 'Page', 'Term', 'Instruments', 'Global', 'Szene', 'Whom', 'Page_Num', 'UserAgent'];
+  if (dateIndex < 0 || fields.some(key => headers.indexOf(key) < 0)) return false;
+  const wanted = buildSearchHistoryDataMap_(data, '', new Date()), count = Math.min(30, sheet.getLastRow() - 1);
+  const rows = sheet.getRange(sheet.getLastRow() - count + 1, 1, count, lastCol).getValues();
+  const cutoff = Date.now() - 5000, languageIndex = headers.indexOf('Language');
+  return rows.some(row => row[dateIndex] instanceof Date && row[dateIndex].getTime() >= cutoff &&
+    String(languageIndex < 0 ? 'ja' : row[languageIndex] || 'ja') === data.language &&
+    fields.every(key => String(row[headers.indexOf(key)] == null ? '' : row[headers.indexOf(key)]) === String(wanted[key])));
 }
 
 /**

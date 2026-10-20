@@ -194,6 +194,20 @@ foreach ($period in @(7, 30, 90, 180)) {
 
     $result = Test-DashboardApiPayload -Payload $payload -ExpectedPeriod $period
     Assert-True -Condition $result.Success -Message "valid $period-day payload: $($result.Message)"
+    $withLanguages = $payload | ConvertFrom-Json
+    $languageSummary = @{ basis = "site-page-path"; rows = @("ja", "en", "unknown" | ForEach-Object {
+        @{language = $_; label = $_; views = 0; searches = 3; withResults = 2; noResults = 1; exampleClicks = 0}
+    }) }
+    $withLanguages | Add-Member -NotePropertyName languageSummary -NotePropertyValue $languageSummary
+    $languageResult = Test-DashboardApiPayload -Payload ($withLanguages | ConvertTo-Json -Depth 12) -ExpectedPeriod $period
+    Assert-True -Condition $languageResult.Success -Message "valid optional language summary: $($languageResult.Message)"
+    $languageSummary.rows[1].language = "ja"
+    $duplicateResult = Test-DashboardApiPayload -Payload ($withLanguages | ConvertTo-Json -Depth 12) -ExpectedPeriod $period
+    Assert-True -Condition (-not $duplicateResult.Success) -Message "duplicate language must fail"
+    $languageSummary.rows[1].language = "en"
+    $languageSummary.rows[1].searches = 9
+    $inconsistentResult = Test-DashboardApiPayload -Payload ($withLanguages | ConvertTo-Json -Depth 12) -ExpectedPeriod $period
+    Assert-True -Condition (-not $inconsistentResult.Success) -Message "inconsistent language count must fail"
 }
 
 $htmlResult = Test-DashboardApiPayload -Payload "<html>login</html>" -ExpectedPeriod 7

@@ -1,5 +1,5 @@
 {
   "schemaVersion": 1,
-  "publishEnglish": false,
-  "englishReleaseApproved": false
+  "publishEnglish": true,
+  "englishReleaseApproved": true
 }

@@ -158,7 +158,7 @@ function getDashboardAnalytics(period) {
   }
 
   const cache = CacheService.getScriptCache();
-  const cacheKey = 'admin_dashboard_analytics_v21_' + propertyId + '_' + period;
+  const cacheKey = 'admin_dashboard_analytics_v22_' + propertyId + '_' + period;
   const cachedResult = readDashboardCachedResult(cache, cacheKey);
   if (cachedResult) return cachedResult;
 
@@ -296,7 +296,7 @@ function runDashboardPageViewsReport(propertyName, range) {
     metrics: [{ name: 'eventCount' }],
     dimensionFilter: dashboardAndFilter([
       dashboardExactFilter('eventName', 'page_view'),
-      dashboardInListFilter('pagePath', DASHBOARD_PAGES.map(item => item.path))
+      dashboardInListFilter('pagePath', dashboardTrackedPagePaths_())
     ]),
     limit: '100000'
   }, propertyName);
@@ -312,7 +312,7 @@ function runDashboardPageEngagementReport(propertyName, range) {
     ],
     dimensionFilter: dashboardInListFilter(
       'pagePath',
-      DASHBOARD_PAGES.map(item => item.path)
+      dashboardTrackedPagePaths_()
     ),
     limit: '100000'
   }, propertyName);
@@ -717,7 +717,7 @@ function runDashboardMonthlyPageViewsReport(propertyName, range) {
     metrics: [{ name: 'eventCount' }],
     dimensionFilter: dashboardAndFilter([
       dashboardExactFilter('eventName', 'page_view'),
-      dashboardInListFilter('pagePath', DASHBOARD_PAGES.map(item => item.path))
+      dashboardInListFilter('pagePath', dashboardTrackedPagePaths_())
     ]),
     limit: '100000'
   }, propertyName);
@@ -736,7 +736,7 @@ function runDashboardMonthlyPageEngagementReport(propertyName, range) {
     ],
     dimensionFilter: dashboardInListFilter(
       'pagePath',
-      DASHBOARD_PAGES.map(item => item.path)
+      dashboardTrackedPagePaths_()
     ),
     limit: '100000'
   }, propertyName);
@@ -1290,6 +1290,7 @@ function buildDashboardAnalyticsResponse(period, range, reports) {
       searchSummary: previousSearchSummary
     },
     searchSummary: searchSummary,
+    languageSummary: buildDashboardLanguageSummary_(reports.pageViews, reports.activity),
     searchMethods: searchMethods,
     retention: reports.retention || buildDashboardRetentionResponse(
       range.endDate,
@@ -1640,6 +1641,50 @@ function dashboardDisplayDate(isoDate) {
   return Number(parts[1]) + '/' + Number(parts[2]);
 }
 
+function dashboardTrackedPagePaths_() {
+  const paths = DASHBOARD_PAGES.map(item => item.path);
+  paths.push('/gaswebapp-manual/index.html');
+  return paths.concat(paths.map(value => value.replace('/gaswebapp-manual/', '/gaswebapp-manual/en/')));
+}
+
+function dashboardSiteLanguage_(sourcePage, pagePath) {
+  for (const candidate of [pagePath, sourcePage]) {
+    const canonical = normalizeDashboardPagePath(candidate);
+    if (!DASHBOARD_PAGES.some(item => item.path === canonical)) continue;
+    let raw = String(candidate || '').trim();
+    try { if (/^https?:\/\//i.test(raw)) raw = new URL(raw).pathname; } catch (_) { continue; }
+    return /^\/gaswebapp-manual\/en(?:\/|$)/.test(raw) ? 'en' : 'ja';
+  }
+  return 'unknown';
+}
+
+function buildDashboardLanguageSummary_(pageViewsReport, activityReport) {
+  const rows = ['ja', 'en', 'unknown'].map(language => ({
+    language: language,
+    label: language === 'ja' ? 'Japanese' : language === 'en' ? 'English' : '言語情報なし（過去データ等）',
+    views: 0, searches: 0, withResults: 0, noResults: 0, exampleClicks: 0
+  }));
+  const byLanguage = {};
+  rows.forEach(row => { byLanguage[row.language] = row; });
+  dashboardReportRows(pageViewsReport, 2).forEach(row => {
+    if (!DASHBOARD_PAGES.some(item => item.path === normalizeDashboardPagePath(row.dimensions[1]))) return;
+    byLanguage[dashboardSiteLanguage_('', row.dimensions[1])].views += dashboardCount(row.metrics[0]);
+  });
+  dashboardReportRows(activityReport, 6).forEach(row => {
+    const eventName = row.dimensions[1];
+    const bucket = byLanguage[dashboardSiteLanguage_(row.dimensions[2], row.dimensions[3])];
+    const count = dashboardCount(row.metrics[0]);
+    if (DASHBOARD_SEARCH_EVENTS.indexOf(eventName) >= 0) {
+      if (!chooseDashboardSearchSourcePath(row.dimensions[2], row.dimensions[3], row.dimensions[4])) return;
+      bucket.searches += count;
+      bucket[eventName === 'view_search_results' ? 'withResults' : 'noResults'] += count;
+    } else if (eventName === 'view_example_search_results') {
+      bucket.exampleClicks += count;
+    }
+  });
+  return { basis: 'site-page-path', rows: rows };
+}
+
 function normalizeDashboardPagePath(value) {
   let path = String(value || '').trim();
   if (!path || path === '(not set)') return '';
@@ -1649,6 +1694,8 @@ function normalizeDashboardPagePath(value) {
     return '';
   }
   path = path.split(/[?#]/, 1)[0] || '/';
+  path = path.replace(/^\/gaswebapp-manual\/en(?=\/|$)/, '/gaswebapp-manual');
+  if (path === '/gaswebapp-manual/index.html') path = '/gaswebapp-manual/';
   if (path === '/gaswebapp-manual' || path === '/gaswebapp-manual/') {
     return '/gaswebapp-manual/';
   }

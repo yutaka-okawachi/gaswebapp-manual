@@ -24,5 +24,5 @@ for(const language of ['ja','en']){
  assert(result.includes('hreflang="ja"'));
 }
 new vm.Script(languages.runtimeSource());
-assert(!fs.readFileSync(path.join(root,'index.html'),'utf8').includes('data-language-switch'),'Closed-gate public Japanese HTML has no unpublished English link');
+assert.equal(fs.readFileSync(path.join(root,'index.html'),'utf8').includes('data-language-switch'),require('./sync/bilingual').englishEnabled(),'Public Japanese navigation follows the explicit release policy');
 console.log('Language UI: local/public counterpart paths, query/hash retention, closed public gate, English-language switch labels, Japanese-only resource links and conservative target mapping passed.');

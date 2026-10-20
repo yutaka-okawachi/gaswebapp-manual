@@ -211,7 +211,9 @@
                 filename = gasPage.endsWith('.html') ? gasPage : `${gasPage}.html`;
             }
         }
-        return SEARCH_PAGE_PATHS[filename] || '';
+        const destination = SEARCH_PAGE_PATHS[filename] || '';
+        return destination && /\/en\//.test(url.pathname)
+            ? destination.replace('/gaswebapp-manual/', '/gaswebapp-manual/en/') : destination;
     }
 
     function installSearchPageMoveTracking() {

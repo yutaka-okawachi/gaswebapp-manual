@@ -227,6 +227,29 @@ function Test-DashboardApiPayload {
         }
     }
 
+    if (Test-DashboardHasProperty -Object $data -Name "languageSummary") {
+        $languageSummary = $data.languageSummary
+        $languageRows = @($languageSummary.rows)
+        if ($languageSummary.basis -ne "site-page-path" -or $languageRows.Count -ne 3) {
+            return New-DashboardApiCheckResult -Success $false -Period $ExpectedPeriod -Message "Invalid language summary"
+        }
+        $seenLanguages = @{}
+        foreach ($row in $languageRows) {
+            if ($row.language -notin @("ja", "en", "unknown") -or $seenLanguages.ContainsKey([string]$row.language) -or [string]::IsNullOrWhiteSpace($row.label)) {
+                return New-DashboardApiCheckResult -Success $false -Period $ExpectedPeriod -Message "Invalid language row"
+            }
+            $seenLanguages[$row.language] = $true
+            foreach ($key in @("views", "searches", "withResults", "noResults", "exampleClicks")) {
+                if (-not (Test-DashboardNonNegativeInteger -Value $row.$key)) {
+                    return New-DashboardApiCheckResult -Success $false -Period $ExpectedPeriod -Message "Invalid language count"
+                }
+            }
+            if ($row.searches -ne ($row.withResults + $row.noResults)) {
+                return New-DashboardApiCheckResult -Success $false -Period $ExpectedPeriod -Message "Inconsistent language searches"
+            }
+        }
+    }
+
     foreach ($method in $searchMethods) {
         foreach ($key in @("key", "label", "count")) {
             if (-not (Test-DashboardHasProperty -Object $method -Name $key)) {

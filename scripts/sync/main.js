@@ -183,7 +183,7 @@ async function main(args = process.argv.slice(2)) {
             artifacts.installSnapshot(values);
             // GAS returns a cache-neutral dictionary. Apply current public asset hashes locally
             // so browser-only changes never require a GAS deployment.
-            build({ includeDictionary: true });
+            build({ includeDictionary: true, bilingualSource: snapshot.englishSource });
             logger.success('ローカルデータファイルを最新スナップショットで更新しました。');
         } else {
             logger.info('データ更新はスキップされました。');

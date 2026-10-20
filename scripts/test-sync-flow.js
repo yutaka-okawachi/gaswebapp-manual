@@ -8,6 +8,8 @@ const source = fs.readFileSync(path.join(__dirname, 'sync/main.js'), 'utf8');
 
 async function scenario({ failCheck = false, failSnapshot = false, failPublish = false, failHeadAt = 0, sourceChanges = false, mode = 'Auto', blockResume = false, currentGas = false, blockEnglishResume = false, failGateAt = 0 } = {}) {
     const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'gmt-sync-test-'));
+    fs.mkdirSync(path.join(directory, 'scripts'));
+    fs.writeFileSync(path.join(directory, 'scripts/english-publication.json'), JSON.stringify({schemaVersion:1,publishEnglish:false,englishReleaseApproved:false}));
     const events = [];
     let head = 'source-head';
     let changes = sourceChanges ? ['src/synthetic.js'] : [];
@@ -50,7 +52,7 @@ async function scenario({ failCheck = false, failSnapshot = false, failPublish =
                 formatJson: (file, value) => typeof value === 'string' ? value : JSON.stringify(value)
             },
             './bilingual': {
-                publicationTicket: () => ({}), assertPolicyUnchanged: () => { gateChecks++; if (gateChecks === failGateAt) throw new Error('gate changed'); }, assertPublicTree: () => {}, assertReleaseManifest: manifest => { events.push('gate-manifest-check'); require('./sync/bilingual').assertReleaseManifest(manifest); }, englishEnabled: () => false,
+                publicationTicket: () => ({}), assertPolicyUnchanged: () => { gateChecks++; if (gateChecks === failGateAt) throw new Error('gate changed'); }, assertPublicTree: () => {}, assertReleaseManifest: manifest => { events.push('gate-manifest-check'); require('./sync/bilingual').assertReleaseManifest(manifest, directory); }, englishEnabled: () => false,
                 prepare: (snapshot, requestId, previous, allow) => { events.push('english-build'); return { japanese: stubs['./artifacts'].validateSnapshot(snapshot, requestId, previous, allow), english: {} }; },
                 stage: () => { events.push('english-stage'); return { publishedEnglish: false }; },
                 refreshStage: () => { events.push('english-refresh'); }

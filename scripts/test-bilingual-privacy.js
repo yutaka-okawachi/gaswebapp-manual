@@ -18,12 +18,19 @@ const english=post({token:secret,action:'exportSnapshot',requestId,includeEnglis
 for(const includeEnglish of ['true',1,false])noLeak(post({token:secret,action:'exportSnapshot',requestId,includeEnglish}));
 noLeak(c.doGet({parameter:{token:secret,action:'exportSnapshot',requestId,includeEnglish:'true'}}));
 assert(!logs.join('\n').includes(secret)&&!logs.join('\n').includes(marker));
-assert.equal(bilingual.englishEnabled(),false);bilingual.assertPublicTree();
-for(const file of ['en/index.html','.sync-state/english/snapshot.json','mahler-search-app/data/english-source.json','scripts/english-source.json'])assert.throws(()=>bilingual.assertReleaseManifest({hashes:{[file]:'a'.repeat(64)}}));
+const enabled=bilingual.englishEnabled();bilingual.assertPublicTree();
+const os=require('os'),closed=fs.mkdtempSync(path.join(os.tmpdir(),'gmt-closed-policy-'));
+fs.mkdirSync(path.join(closed,'scripts'));fs.writeFileSync(path.join(closed,'scripts/english-publication.json'),JSON.stringify({schemaVersion:1,publishEnglish:false,englishReleaseApproved:false}));
+try { assert.equal(bilingual.englishEnabled(closed),false);
+assert.throws(()=>bilingual.assertReleaseManifest({hashes:{'en/index.html':'a'.repeat(64)}},closed));
+fs.mkdirSync(path.join(closed,'en'));fs.writeFileSync(path.join(closed,'en/index.html'),'blocked');assert.throws(()=>bilingual.assertPublicTree(closed));
+}finally{assert(path.resolve(closed).startsWith(path.resolve(os.tmpdir())+path.sep));fs.rmSync(closed,{recursive:true,force:true});}
+for(const file of [...(!enabled?['en/index.html']:[]),'.sync-state/english/snapshot.json','mahler-search-app/data/english-source.json','scripts/english-source.json'])assert.throws(()=>bilingual.assertReleaseManifest({hashes:{[file]:'a'.repeat(64)}}));
 assert.doesNotThrow(()=>bilingual.assertReleaseManifest({hashes:{'index.html':'a'.repeat(64)}}));
-for(const file of ['.sync-state/english/snapshot.json','.sync-state/english/current.json','en/index.html','en/mahler-search-app/data/mahler.json'])assert.equal(git.isAllowed(file),false,file);
+for(const file of ['.sync-state/english/snapshot.json','.sync-state/english/current.json'])assert.equal(git.isAllowed(file),false,file);
+for(const file of ['en/index.html','en/mahler-search-app/data/mahler.json'])assert.equal(git.isAllowed(file),enabled,file);
 assert(git.isData('mahler-search-app/data/english-source.json'),'An accidental raw source under data is treated as generated and rejected without an ownership record');
-assert(artifacts.publicFiles().every(file=>!file.startsWith('en/')&&!file.startsWith('.sync-state/')));
+assert(artifacts.publicFiles().every(file=>(enabled||!file.startsWith('en/'))&&!file.startsWith('.sync-state/')));
 for(const url of ['/.sync-state/english/snapshot.json','/scripts/english-publication.json','/en/mahler-search-app/data/mahler.json'])assert.equal(publicPath(url),null);
 const files=artifacts.previousData();files['mahler-search-app/dic.html']=fs.readFileSync(path.join(root,'mahler-search-app/dic.html'),'utf8');
 for(const field of ['en','whom_en','ja_old','準備状態']){const snapshot={schemaVersion:1,requestId,files:JSON.parse(JSON.stringify(files))};snapshot.files['mahler-search-app/data/mahler.json'][0][field]=marker;assert.throws(()=>artifacts.validateSnapshot(snapshot,requestId),/許可外/);}

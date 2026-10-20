@@ -18,6 +18,18 @@ const GAS_NOTIFICATION_URL = 'https://script.google.com/macros/s/AKfycbzFD2EDHfE
 const DICTIONARY_EXAMPLE_TIMING_KEY = 'gmt_dictionary_example_timing';
 const DICTIONARY_EXAMPLE_TIMING_MAX_AGE_MS = 5 * 60 * 1000;
 
+function getSiteLanguage() {
+    if (window.__SITE_LANGUAGE__ === 'en' || /^(?:\/gaswebapp-manual)?\/en(?:\/|$)/.test(window.location.pathname)) return 'en';
+    return typeof document !== 'undefined' && document.documentElement && document.documentElement.lang === 'en' ? 'en' : 'ja';
+}
+window.getSiteLanguage = getSiteLanguage;
+
+function isSiteTelemetrySuppressed() {
+    if (window.__LOCAL_PREVIEW__ || window.__gaAdminOptOut === true) return true;
+    if (typeof window.isAdminDeviceOptOut === 'function' && window.isAdminDeviceOptOut()) return true;
+    try { return window.localStorage.getItem('gmt_admin_device_optout') === '1'; } catch (_) { return false; }
+}
+
 function normalizeDictionaryExampleTimingTerm(term) {
     const value = String(term || '').normalize('NFKC').trim().toLowerCase();
     if (typeof normalizeString === 'function') return normalizeString(value);
@@ -83,7 +95,7 @@ function getSearchResultCount(options) {
     if (!root || typeof root.querySelectorAll !== 'function') return null;
 
     const text = (root.textContent || '').replace(/\s+/g, ' ').trim();
-    const countMatch = text.match(/(\d[\d,]*)\s*件\s*(?:見つかりました|ありました|該当しました)/);
+    const countMatch = text.match(/(\d[\d,]*)\s*件\s*(?:見つかりました|ありました|該当しました)/) || text.match(/(\d[\d,]*)\s+entr(?:y|ies)\b/i);
     if (countMatch) return Number(countMatch[1].replace(/,/g, ''));
 
     const entryCount = Math.max(
@@ -92,7 +104,7 @@ function getSearchResultCount(options) {
     );
     if (entryCount > 0) return entryCount;
 
-    if (/(?:該当する[^。]*?(?:見つかりません|ありません)|検索結果[^。]*?(?:見つかりません|ありません)|0\s*件)/.test(text)) {
+    if (/(?:該当する[^。]*?(?:見つかりません|ありません)|検索結果[^。]*?(?:見つかりません|ありません)|0\s*件|No matching entries found|No results found)/i.test(text)) {
         return 0;
     }
     return null;
@@ -100,7 +112,7 @@ function getSearchResultCount(options) {
 window.getSearchResultCount = getSearchResultCount;
 
 function trackSearchResults(options) {
-    if (typeof window.gtag !== 'function' || !options) return false;
+    if (isSiteTelemetrySuppressed() || typeof window.gtag !== 'function' || !options) return false;
 
     const searchTerm = String(options.searchTerm || '').trim();
     const searchType = String(options.searchType || '').trim();
@@ -148,7 +160,7 @@ function trackSearchResults(options) {
             : window.location.pathname;
         const examplePayload = Object.assign({}, payload, {
             term: searchTerm,
-            source_page: '/gaswebapp-manual/mahler-search-app/dic.html',
+            source_page: '/gaswebapp-manual/' + (getSiteLanguage() === 'en' ? 'en/' : '') + 'mahler-search-app/dic.html',
             destination_page: destinationPage
         });
         window.gtag('event', 'view_example_search_results', examplePayload);
@@ -255,7 +267,7 @@ window.matchesTermQuery = matchesTermQuery;
  * @param {string} pageName - The name of the page where the search was performed.
  */
 async function sendSearchNotification(details, pageName) {
-    if (window.__LOCAL_PREVIEW__) return;
+    if (isSiteTelemetrySuppressed()) return;
     if (GAS_NOTIFICATION_URL === 'YOUR_GAS_WEB_APP_URL_HERE' || !GAS_NOTIFICATION_URL) {
         console.warn('GAS_NOTIFICATION_URL is not set. Notification skipped.');
         return;
@@ -269,6 +281,7 @@ async function sendSearchNotification(details, pageName) {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
+                language: getSiteLanguage(),
                 work: details.work,
                 scope: details.scope,
                 term: details.term,
