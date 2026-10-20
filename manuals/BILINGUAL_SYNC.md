@@ -42,3 +42,9 @@
 ## ダッシュボードの言語区分
 
 API schemaVersion 8を維持し、任意のlanguageSummaryを追加します。basisはsite-page-path、rowsはja/en/unknownの3区分でviews/searches/withResults/noResults/exampleClicksを返します。ブラウザ言語を表示言語として使いません。英語ページを既存の11論理ページへ畳み込んだ総計も維持します。APIの言語別情報がない旧応答では画面に未対応を明示し、0と捏造しません。実通知・人工検索履歴での本番試験は行いません。
+
+## 公開URLと言語情報（2026-10-20）
+
+既存のルート sitemap.xml を維持し、通常sync-dataで日本語14URLと英語14URLを管理します。転送専用のhome.htmlとindex.html別名は掲載しません。日英の正規ページは各言語の自己canonicalと、head内の相互hreflang（ja/en、自己参照を含む）を共通生成処理で付けます。英語公開ゲートが閉じている場合は、英語sitemap項目と相互リンクを生成しません。英語データだけの更新は対応する英語ページのlastmodを更新し、日本語の更新日を動かしません。
+
+Googleの多言語ページ案内: https://developers.google.com/search/docs/specialty/international/localized-versions 。GSC登録・取得成功・インデックス採用はファイル公開とは別に確認します。

@@ -66,28 +66,9 @@ function installSnapshot(files) {
         formatJson(file, value))).map(([file]) => file);
 }
 function updateSitemap(changed, today = new Date().toLocaleDateString('en-CA', { timeZone: 'Asia/Tokyo' })) {
-    const mapping = {
-        'mahler.json': ['mahler.html', 'terms_search.html'],
-        'richard_wagner.json': ['richard_wagner.html', 'rw_terms_search.html'],
-        'richard_strauss.json': ['richard_strauss.html', 'rs_terms_search.html'],
-        'rw_scenes.json': ['richard_wagner.html', 'rw_synopsis.html'],
-        'rs_scenes.json': ['richard_strauss.html', 'rs_synopsis.html'],
-        'dic_notes.json': ['dic.html'], 'abbr_list.json': ['dic.html'], 'dic_terms_index.json': ['dic.html']
-    };
-    const targets = new Set();
-    for (const file of changed) {
-        if (file === 'index.html') targets.add('');
-        else if (file.endsWith('.html') && !file.startsWith('src/')) targets.add(file);
-        else if (file.startsWith(base + 'data/')) for (const page of mapping[path.basename(file)] || []) targets.add(base + page);
-    }
     const file = 'sitemap.xml';
     const xml = fs.readFileSync(path.join(root, file), 'utf8');
-    const next = xml.replace(/<url>[\s\S]*?<\/url>/g, block => {
-        const loc = block.match(/<loc>([^<]+)<\/loc>/);
-        if (!loc) return block;
-        const sitePath = new URL(loc[1]).pathname.replace(/^\/gaswebapp-manual\//, '');
-        return targets.has(sitePath) ? block.replace(/<lastmod>[^<]*<\/lastmod>/, `<lastmod>${today}</lastmod>`) : block;
-    });
+    const next = require('../site-seo').updateSitemap(xml, changed, today, require('./bilingual').englishEnabled());
     writeIfChanged(file, next);
 }
 function publicFiles() {
