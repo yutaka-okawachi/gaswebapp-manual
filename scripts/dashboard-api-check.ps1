@@ -28,6 +28,7 @@ function Test-DashboardHasProperty {
 function Test-DashboardNonNegativeInteger {
     param($Value)
 
+    if ($null -eq $Value) { return $false }
     try {
         $number = [double]$Value
     } catch {
@@ -45,6 +46,7 @@ function Test-DashboardNonNegativeInteger {
 function Test-DashboardNonNegativeNumber {
     param($Value)
 
+    if ($null -eq $Value) { return $false }
     try {
         $number = [double]$Value
     } catch {
@@ -61,6 +63,7 @@ function Test-DashboardNonNegativeNumber {
 function Test-DashboardRate {
     param($Value)
 
+    if ($null -eq $Value) { return $false }
     try {
         $number = [double]$Value
     } catch {
@@ -78,7 +81,8 @@ function Test-DashboardRate {
 function Test-DashboardApiPayload {
     param(
         [string]$Payload,
-        [int]$ExpectedPeriod
+        [int]$ExpectedPeriod,
+        [ValidateSet("all", "ja", "en")][string]$ExpectedLanguage = "all"
     )
 
     if (-not $Payload -or $Payload.TrimStart().StartsWith("<")) {
@@ -122,7 +126,10 @@ function Test-DashboardApiPayload {
         }
     }
 
-    if ([int]$data.schemaVersion -ne 8) {
+    if ($data.selectedLanguage -ne $ExpectedLanguage) {
+        return New-DashboardApiCheckResult -Success $false -Period $ExpectedPeriod -Message "Unexpected selected language"
+    }
+    if ([int]$data.schemaVersion -ne 9) {
         return New-DashboardApiCheckResult -Success $false -Period $ExpectedPeriod -Message "Unexpected schemaVersion"
     }
     if ([int]$data.period -ne $ExpectedPeriod) {
@@ -155,7 +162,7 @@ function Test-DashboardApiPayload {
     if ($daily.Count -ne $expectedDailyCount) {
         return New-DashboardApiCheckResult -Success $false -Period $ExpectedPeriod -Message "daily length mismatch"
     }
-    if ($pages.Count -ne 11) {
+    if ($pages.Count -ne 14) {
         return New-DashboardApiCheckResult -Success $false -Period $ExpectedPeriod -Message "pages length mismatch"
     }
     if ($previousDaily.Count -ne $expectedDailyCount) {
@@ -283,7 +290,7 @@ function Test-DashboardApiPayload {
             return New-DashboardApiCheckResult -Success $false -Period $ExpectedPeriod -Message "Invalid retention summary"
         }
     }
-    if (-not (Test-DashboardNonNegativeInteger -Value $retention.summary.latestFirstVisitUsers)) {
+    if ($null -ne $retention.summary.latestFirstVisitUsers -and -not (Test-DashboardNonNegativeInteger -Value $retention.summary.latestFirstVisitUsers)) {
         return New-DashboardApiCheckResult -Success $false -Period $ExpectedPeriod -Message "Invalid latest retention count"
     }
     foreach ($retentionRow in @($retention.rows)) {
@@ -291,7 +298,7 @@ function Test-DashboardApiPayload {
             -not (Test-DashboardHasProperty -Object $retentionRow -Name "month") -or
             -not (Test-DashboardHasProperty -Object $retentionRow -Name "firstVisitUsers") -or
             -not (Test-DashboardHasProperty -Object $retentionRow -Name "periods") -or
-            -not (Test-DashboardNonNegativeInteger -Value $retentionRow.firstVisitUsers) -or
+            ($null -ne $retentionRow.firstVisitUsers -and -not (Test-DashboardNonNegativeInteger -Value $retentionRow.firstVisitUsers)) -or
             @($retentionRow.periods).Count -ne 4
         ) {
             return New-DashboardApiCheckResult -Success $false -Period $ExpectedPeriod -Message "Invalid retention row"
@@ -305,7 +312,7 @@ function Test-DashboardApiPayload {
                 -not (Test-DashboardNonNegativeInteger -Value $retentionPeriod.offset) -or
                 ($null -ne $retentionPeriod.returningUsers -and -not (Test-DashboardNonNegativeInteger -Value $retentionPeriod.returningUsers)) -or
                 ($null -ne $retentionPeriod.rate -and -not (Test-DashboardRate -Value $retentionPeriod.rate)) -or
-                $retentionPeriod.status -notin @("complete", "collecting")
+                $retentionPeriod.status -notin @("complete", "collecting", "unmeasured")
             ) {
                 return New-DashboardApiCheckResult -Success $false -Period $ExpectedPeriod -Message "Invalid retention period"
             }
@@ -318,7 +325,7 @@ function Test-DashboardApiPayload {
             return New-DashboardApiCheckResult -Success $false -Period $ExpectedPeriod -Message "Invalid page trends"
         }
     }
-    if ($pageTrends.granularity -ne "month" -or @($pageTrends.pages).Count -ne 11) {
+    if ($pageTrends.granularity -ne "month" -or @($pageTrends.pages).Count -ne 14) {
         return New-DashboardApiCheckResult -Success $false -Period $ExpectedPeriod -Message "Invalid page trend range"
     }
     foreach ($trendPage in @($pageTrends.pages)) {
@@ -337,10 +344,11 @@ function Test-DashboardApiPayload {
                 -not (Test-DashboardHasProperty -Object $trendMonth -Name "averageEngagementSeconds") -or
                 -not (Test-DashboardHasProperty -Object $trendMonth -Name "searches") -or
                 -not (Test-DashboardHasProperty -Object $trendMonth -Name "status") -or
-                -not (Test-DashboardNonNegativeInteger -Value $trendMonth.views) -or
+                ($null -ne $trendMonth.views -and -not (Test-DashboardNonNegativeInteger -Value $trendMonth.views)) -or
+                ($null -eq $trendMonth.views -and $trendMonth.status -ne "before_launch") -or
                 ($null -ne $trendMonth.averageEngagementSeconds -and -not (Test-DashboardNonNegativeNumber -Value $trendMonth.averageEngagementSeconds)) -or
                 ($null -ne $trendMonth.searches -and -not (Test-DashboardNonNegativeInteger -Value $trendMonth.searches)) -or
-                $trendMonth.status -notin @("complete", "collecting")
+                $trendMonth.status -notin @("complete", "collecting", "before_launch")
             ) {
                 return New-DashboardApiCheckResult -Success $false -Period $ExpectedPeriod -Message "Invalid page trend month"
             }
@@ -380,7 +388,7 @@ function Test-DashboardApiPayload {
             -not (Test-DashboardHasProperty -Object $month -Name "status") -or
             -not (Test-DashboardHasProperty -Object $month -Name "channels") -or
             -not (Test-DashboardNonNegativeInteger -Value $month.totalSessions) -or
-            $month.status -notin @("complete", "collecting") -or
+            $month.status -notin @("complete", "collecting", "before_launch") -or
             @($month.channels).Count -ne 4
         ) {
             return New-DashboardApiCheckResult -Success $false -Period $ExpectedPeriod -Message "Invalid acquisition month"
@@ -493,7 +501,8 @@ function Test-DashboardApiPayload {
 function Invoke-DashboardApiCheck {
     param(
         [string]$BaseUrl,
-        [int]$Period
+        [int]$Period,
+        [ValidateSet("all", "ja", "en")][string]$Language = "all"
     )
 
     if (-not $BaseUrl) {
@@ -501,7 +510,7 @@ function Invoke-DashboardApiCheck {
     }
 
     $separator = if ($BaseUrl.Contains("?")) { "&" } else { "?" }
-    $url = "$($BaseUrl.Trim())${separator}api=dashboard&period=$Period"
+    $url = "$($BaseUrl.Trim())${separator}api=dashboard&period=$Period&language=$Language"
     $tempRoot = [System.IO.Path]::GetTempPath()
     $requestId = [guid]::NewGuid().ToString("N")
     $bodyPath = Join-Path $tempRoot "dashboard-api-$requestId.json"
@@ -556,7 +565,7 @@ function Invoke-DashboardApiCheck {
             return New-DashboardApiCheckResult -Success $false -Period $Period -Message "Invalid UTF-8 response"
         }
 
-        $result = Test-DashboardApiPayload -Payload $payload -ExpectedPeriod $Period
+        $result = Test-DashboardApiPayload -Payload $payload -ExpectedPeriod $Period -ExpectedLanguage $Language
         if (-not $result.Success -and $result.Message -in @("Invalid JSON", "HTML or empty response")) {
             $typeLabel = if ($contentType) { $contentType } else { "unknown content type" }
             $result.Message = "$($result.Message) (HTTP $httpStatus, $typeLabel)"

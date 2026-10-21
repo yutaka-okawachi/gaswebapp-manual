@@ -6,7 +6,9 @@
  * read or returned here.
  */
 
-const DASHBOARD_SCHEMA_VERSION = 8;
+const DASHBOARD_SCHEMA_VERSION = 9;
+const DASHBOARD_ENGLISH_LAUNCH_DATE = '2026-10-20';
+const DASHBOARD_FIRST_LANGUAGE_COHORT_START = '2026-11-01';
 const DASHBOARD_TIME_ZONE = 'Asia/Tokyo';
 const DASHBOARD_ALLOWED_PERIODS = Object.freeze([7, 30, 90, 180]);
 const DASHBOARD_CACHE_SECONDS = 900;
@@ -89,7 +91,10 @@ const DASHBOARD_PAGES = Object.freeze([
   { page: '曲名から検索 (RW)', path: '/gaswebapp-manual/mahler-search-app/richard_wagner.html' },
   { page: 'あらすじ集 (RS)', path: '/gaswebapp-manual/mahler-search-app/rs_synopsis.html' },
   { page: 'あらすじ集 (RW)', path: '/gaswebapp-manual/mahler-search-app/rw_synopsis.html' },
-  { page: 'その他', path: '/gaswebapp-manual/mahler-search-app/other.html' }
+  { page: 'その他', path: '/gaswebapp-manual/mahler-search-app/other.html' },
+  { page: '用語についての注記', path: '/gaswebapp-manual/mahler-search-app/notes.html' },
+  { page: 'プライバシーポリシー', path: '/gaswebapp-manual/privacy.html', group: 'auxiliary' },
+  { page: 'ライセンス', path: '/gaswebapp-manual/license.html', group: 'auxiliary' }
 ]);
 
 const DASHBOARD_DICTIONARY_PATH = '/gaswebapp-manual/mahler-search-app/dic.html';
@@ -130,8 +135,10 @@ function handleDashboardAnalyticsRequest(params) {
     });
   }
 
+  const language = parseDashboardLanguage(params && params.language);
+  if (!language) return createJsonResponse({ error: { code: 'INVALID_LANGUAGE', message: 'language must be all, ja, or en' } });
   try {
-    return createJsonResponse(getDashboardAnalytics(period));
+    return createJsonResponse(getDashboardAnalytics(period, language));
   } catch (error) {
     Logger.log('Dashboard analytics error: ' + String(error && error.stack ? error.stack : error));
     const code = error && error.dashboardCode ? error.dashboardCode : 'GA4_API_ERROR';
@@ -147,7 +154,9 @@ function handleDashboardAnalyticsRequest(params) {
  * @param {number} period
  * @returns {Object}
  */
-function getDashboardAnalytics(period) {
+function getDashboardAnalytics(period, language) {
+  language = language || 'all';
+  if (!parseDashboardLanguage(language)) throw new Error('Invalid dashboard language');
   const propertyId = String(
     PropertiesService.getScriptProperties().getProperty('GA4_PROPERTY_ID') || ''
   ).trim();
@@ -158,7 +167,7 @@ function getDashboardAnalytics(period) {
   }
 
   const cache = CacheService.getScriptCache();
-  const cacheKey = 'admin_dashboard_analytics_v22_' + propertyId + '_' + period;
+  const cacheKey = 'admin_dashboard_analytics_v23_' + propertyId + '_' + period + '_' + language;
   const cachedResult = readDashboardCachedResult(cache, cacheKey);
   if (cachedResult) return cachedResult;
 
@@ -179,38 +188,45 @@ function getDashboardAnalytics(period) {
     const previousRange = createDashboardPreviousDateRange(range, period);
     const propertyName = 'properties/' + propertyId;
     const reports = {
-      pageViews: runDashboardPageViewsReport(propertyName, range),
-      pageEngagement: runDashboardPageEngagementReport(propertyName, range),
-      activity: runDashboardActivityReport(propertyName, range),
-      exampleTimings: runDashboardExampleTimingReport(propertyName, range),
-      searchMoves: runDashboardSearchMovesReport(propertyName, range),
-      terms: runDashboardTermsReport(propertyName, range),
-      works: runDashboardWorksReport(propertyName, range),
-      cities: runDashboardCitiesReport(propertyName, range),
+      pageViews: runDashboardPageViewsReport(propertyName, range, language),
+      pageEngagement: runDashboardPageEngagementReport(propertyName, range, language),
+      activity: runDashboardActivityReport(propertyName, range, language),
+      exampleTimings: runDashboardExampleTimingReport(propertyName, range, language),
+      searchMoves: runDashboardSearchMovesReport(propertyName, range, language),
+      terms: runDashboardTermsReport(propertyName, range, language),
+      works: runDashboardWorksReport(propertyName, range, language),
+      cities: runDashboardCitiesReport(propertyName, range, language),
       previousRange: previousRange,
-      previousPageViews: runDashboardPageViewsReport(propertyName, previousRange),
+      previousPageViews: runDashboardPageViewsReport(propertyName, previousRange, language),
       previousPageEngagement: runDashboardPageEngagementReport(
         propertyName,
-        previousRange
+        previousRange,
+        language
       ),
-      previousActivity: runDashboardActivityReport(propertyName, previousRange)
+      previousActivity: runDashboardActivityReport(propertyName, previousRange, language)
     };
     reports.retention = getDashboardRetentionAnalytics(
       propertyName,
       cache,
-      range.endDate
+      range.endDate,
+      language
     );
     reports.pageTrends = getDashboardPageTrendAnalytics(
       propertyName,
       cache,
-      range.endDate
+      range.endDate,
+      language
     );
     reports.acquisition = getDashboardAcquisitionAnalytics(
       propertyName,
       cache,
-      range.endDate
+      range.endDate,
+      language
     );
+    reports.pageEngagement = deduplicateDashboardEngagement_(propertyName, range, reports.pageEngagement, false, language);
+    reports.previousPageEngagement = deduplicateDashboardEngagement_(propertyName, previousRange, reports.previousPageEngagement, false, language);
     const result = buildDashboardAnalyticsResponse(period, range, reports);
+    applyDashboardLanguageMetadata_(result, language);
 
     try {
       cache.put(cacheKey, JSON.stringify(result), DASHBOARD_CACHE_SECONDS);
@@ -286,8 +302,8 @@ function shiftDashboardIsoDate(isoDate, dayOffset) {
   ].join('-');
 }
 
-function runDashboardPageViewsReport(propertyName, range) {
-  return AnalyticsData.Properties.runReport({
+function runDashboardPageViewsReport(propertyName, range, language) {
+  return runDashboardLanguageReport_({
     dateRanges: [range],
     dimensions: [
       { name: 'date' },
@@ -299,11 +315,11 @@ function runDashboardPageViewsReport(propertyName, range) {
       dashboardInListFilter('pagePath', dashboardTrackedPagePaths_())
     ]),
     limit: '100000'
-  }, propertyName);
+  }, propertyName, language, 'pagePath');
 }
 
-function runDashboardPageEngagementReport(propertyName, range) {
-  return AnalyticsData.Properties.runReport({
+function runDashboardPageEngagementReport(propertyName, range, language) {
+  return runDashboardLanguageReport_({
     dateRanges: [range],
     dimensions: [{ name: 'pagePath' }],
     metrics: [
@@ -315,11 +331,11 @@ function runDashboardPageEngagementReport(propertyName, range) {
       dashboardTrackedPagePaths_()
     ),
     limit: '100000'
-  }, propertyName);
+  }, propertyName, language, 'pagePath');
 }
 
-function runDashboardActivityReport(propertyName, range) {
-  return AnalyticsData.Properties.runReport({
+function runDashboardActivityReport(propertyName, range, language) {
+  return runDashboardLanguageReport_({
     dateRanges: [range],
     dimensions: [
       { name: 'date' },
@@ -336,7 +352,7 @@ function runDashboardActivityReport(propertyName, range) {
       'view_example_search_results'
     ]),
     limit: '100000'
-  }, propertyName);
+  }, propertyName, language, 'pagePath');
 }
 
 function createDashboardPreviousDateRange(range, period) {
@@ -347,8 +363,8 @@ function createDashboardPreviousDateRange(range, period) {
   };
 }
 
-function runDashboardSearchMovesReport(propertyName, range) {
-  return AnalyticsData.Properties.runReport({
+function runDashboardSearchMovesReport(propertyName, range, language) {
+  return runDashboardLanguageReport_({
     dateRanges: [range],
     dimensions: [
       { name: 'customEvent:source_page' },
@@ -359,11 +375,11 @@ function runDashboardSearchMovesReport(propertyName, range) {
     metrics: [{ name: 'eventCount' }],
     dimensionFilter: dashboardExactFilter('eventName', 'search_page_move'),
     limit: '100000'
-  }, propertyName);
+  }, propertyName, language, 'pagePath');
 }
 
-function runDashboardTermsReport(propertyName, range) {
-  return AnalyticsData.Properties.runReport({
+function runDashboardTermsReport(propertyName, range, language) {
+  return runDashboardLanguageReport_({
     dateRanges: [range],
     dimensions: [
       { name: 'searchTerm' },
@@ -377,26 +393,27 @@ function runDashboardTermsReport(propertyName, range) {
       dashboardInListFilter('customEvent:search_type', DASHBOARD_TERM_SEARCH_TYPES)
     ]),
     limit: '100000'
-  }, propertyName);
+  }, propertyName, language, 'pagePath');
 }
 
-function runDashboardWorksReport(propertyName, range) {
-  return AnalyticsData.Properties.runReport({
+function runDashboardWorksReport(propertyName, range, language) {
+  return runDashboardLanguageReport_({
     dateRanges: [range],
     dimensions: [
       { name: 'customEvent:work_id' },
       { name: 'customEvent:work_title' },
       { name: 'customEvent:composer' },
-      { name: 'customEvent:search_type' }
+      { name: 'customEvent:search_type' },
+      { name: 'pagePath' }
     ],
     metrics: [{ name: 'eventCount' }],
     dimensionFilter: dashboardExactFilter('eventName', 'work_search_selection'),
     limit: '100000'
-  }, propertyName);
+  }, propertyName, language, 'pagePath');
 }
 
-function runDashboardCitiesReport(propertyName, range) {
-  return AnalyticsData.Properties.runReport({
+function runDashboardCitiesReport(propertyName, range, language) {
+  return runDashboardLanguageReport_({
     dateRanges: [range],
     dimensions: [
       { name: 'city' },
@@ -408,17 +425,32 @@ function runDashboardCitiesReport(propertyName, range) {
     ],
     dimensionFilter: dashboardHostFilter(),
     limit: '100000'
-  }, propertyName);
+  }, propertyName, language, 'pagePath');
 }
 
-function getDashboardRetentionAnalytics(propertyName, cache, asOfDate) {
-  const cacheKey = 'admin_dashboard_retention_v2_' + propertyName.replace('/', '_');
+function getDashboardRetentionAnalytics(propertyName, cache, asOfDate, language) {
+  const cacheKey = 'admin_dashboard_retention_v3_' + propertyName.replace('/', '_') + '_' + (language || 'all');
   const cachedResult = readDashboardCachedResult(cache, cacheKey);
   if (cachedResult) return cachedResult;
 
   const cohorts = createDashboardMonthlyCohorts(asOfDate);
-  const report = runDashboardRetentionReport(propertyName, cohorts);
+  const selected = language && language !== 'all';
+  let configured = !selected;
+  if (selected) {
+    try { const metadata = AnalyticsData.Properties.getMetadata(propertyName + '/metadata'); configured = (metadata.dimensions || []).some(item => item.apiName === 'customUser:gmt_initial_language'); } catch (_) { configured = false; }
+  }
+  const measuredCohorts = selected ? cohorts.filter(item => item.startDate >= DASHBOARD_FIRST_LANGUAGE_COHORT_START) : cohorts;
+  const report = configured && measuredCohorts.length ? runDashboardRetentionReport(propertyName, measuredCohorts, language) : {};
   const result = buildDashboardRetentionResponse(asOfDate, cohorts, report);
+  result.basis = selected ? 'first-visit-language' : 'all-users';
+  result.measurementStart = selected ? DASHBOARD_FIRST_LANGUAGE_COHORT_START : null;
+  result.availability = !configured ? 'not_configured' : selected && !measuredCohorts.length ? 'collecting' : 'available';
+  if (selected) {
+    result.rows.forEach(row => {
+      if (!configured || row.month < DASHBOARD_FIRST_LANGUAGE_COHORT_START.slice(0, 7)) { row.firstVisitUsers = null; row.periods.forEach(period => { period.returningUsers = null; period.rate = null; period.status = 'unmeasured'; }); }
+    });
+    result.summary = { nextMonth: summarizeDashboardRetention(result.rows, 1), thirdMonth: summarizeDashboardRetention(result.rows, 3), latestFirstVisitUsers: result.rows.length ? result.rows[result.rows.length - 1].firstVisitUsers : null };
+  }
   try {
     cache.put(cacheKey, JSON.stringify(result), DASHBOARD_CACHE_SECONDS);
   } catch (error) {
@@ -427,17 +459,18 @@ function getDashboardRetentionAnalytics(propertyName, cache, asOfDate) {
   return result;
 }
 
-function getDashboardPageTrendAnalytics(propertyName, cache, asOfDate) {
-  const cacheKey = 'admin_dashboard_page_trends_v1_' + propertyName.replace('/', '_');
+function getDashboardPageTrendAnalytics(propertyName, cache, asOfDate, language) {
+  const cacheKey = 'admin_dashboard_page_trends_v2_' + propertyName.replace('/', '_') + '_' + (language || 'all');
   const cachedResult = readDashboardCachedResult(cache, cacheKey);
   if (cachedResult) return cachedResult;
 
   const range = createDashboardPageTrendRange(asOfDate);
   const reports = {
-    pageViews: runDashboardMonthlyPageViewsReport(propertyName, range),
-    pageEngagement: runDashboardMonthlyPageEngagementReport(propertyName, range),
-    activity: runDashboardMonthlyActivityReport(propertyName, range)
+    pageViews: runDashboardMonthlyPageViewsReport(propertyName, range, language),
+    pageEngagement: runDashboardMonthlyPageEngagementReport(propertyName, range, language),
+    activity: runDashboardMonthlyActivityReport(propertyName, range, language)
   };
+  reports.pageEngagement = deduplicateDashboardEngagement_(propertyName, range, reports.pageEngagement, true, language);
   const result = buildDashboardPageTrendResponse(asOfDate, range, reports);
   try {
     cache.put(cacheKey, JSON.stringify(result), DASHBOARD_CACHE_SECONDS);
@@ -454,8 +487,8 @@ function createDashboardPageTrendRange(asOfDate) {
   };
 }
 
-function runDashboardExampleTimingReport(propertyName, range) {
-  return AnalyticsData.Properties.runReport({
+function runDashboardExampleTimingReport(propertyName, range, language) {
+  return runDashboardLanguageReport_({
     dateRanges: [range],
     dimensions: [{ name: 'customEvent:destination_page' }],
     metrics: [
@@ -467,20 +500,20 @@ function runDashboardExampleTimingReport(propertyName, range) {
       'dictionary_example_timing'
     ),
     limit: '100000'
-  }, propertyName);
+  }, propertyName, language, 'pagePath');
 }
 
-function getDashboardAcquisitionAnalytics(propertyName, cache, asOfDate) {
-  const cacheKey = 'admin_dashboard_acquisition_v1_' + propertyName.replace('/', '_');
+function getDashboardAcquisitionAnalytics(propertyName, cache, asOfDate, language) {
+  const cacheKey = 'admin_dashboard_acquisition_v2_' + propertyName.replace('/', '_') + '_' + (language || 'all');
   const cachedResult = readDashboardCachedResult(cache, cacheKey);
   if (cachedResult) return cachedResult;
 
   const range = createDashboardAcquisitionRange(asOfDate);
   const reports = {
-    monthly: runDashboardMonthlyAcquisitionReport(propertyName, range),
-    sources: runDashboardAcquisitionSourcesReport(propertyName, range),
-    landingPages: runDashboardAcquisitionLandingPagesReport(propertyName, range),
-    searches: runDashboardAcquisitionSearchesReport(propertyName, range)
+    monthly: runDashboardMonthlyAcquisitionReport(propertyName, range, language),
+    sources: runDashboardAcquisitionSourcesReport(propertyName, range, language),
+    landingPages: runDashboardAcquisitionLandingPagesReport(propertyName, range, language),
+    searches: runDashboardAcquisitionSearchesReport(propertyName, range, language)
   };
   const result = buildDashboardAcquisitionResponse(asOfDate, range, reports);
   try {
@@ -505,8 +538,8 @@ function dashboardHostFilter() {
   return dashboardExactFilter('hostName', DASHBOARD_HOST_NAME);
 }
 
-function runDashboardMonthlyAcquisitionReport(propertyName, range) {
-  return AnalyticsData.Properties.runReport({
+function runDashboardMonthlyAcquisitionReport(propertyName, range, language) {
+  return runDashboardLanguageReport_({
     dateRanges: [range],
     dimensions: [
       { name: 'yearMonth' },
@@ -516,11 +549,11 @@ function runDashboardMonthlyAcquisitionReport(propertyName, range) {
     metrics: [{ name: 'sessions' }],
     dimensionFilter: dashboardHostFilter(),
     limit: '100000'
-  }, propertyName);
+  }, propertyName, language, 'landingPage');
 }
 
-function runDashboardAcquisitionSourcesReport(propertyName, range) {
-  return AnalyticsData.Properties.runReport({
+function runDashboardAcquisitionSourcesReport(propertyName, range, language) {
+  return runDashboardLanguageReport_({
     dateRanges: [range],
     dimensions: [
       { name: 'sessionSourceMedium' },
@@ -534,11 +567,11 @@ function runDashboardAcquisitionSourcesReport(propertyName, range) {
     ],
     dimensionFilter: dashboardHostFilter(),
     limit: '100000'
-  }, propertyName);
+  }, propertyName, language, 'landingPage');
 }
 
-function runDashboardAcquisitionLandingPagesReport(propertyName, range) {
-  return AnalyticsData.Properties.runReport({
+function runDashboardAcquisitionLandingPagesReport(propertyName, range, language) {
+  return runDashboardLanguageReport_({
     dateRanges: [range],
     dimensions: [
       { name: 'sessionSourceMedium' },
@@ -547,11 +580,11 @@ function runDashboardAcquisitionLandingPagesReport(propertyName, range) {
     metrics: [{ name: 'sessions' }],
     dimensionFilter: dashboardHostFilter(),
     limit: '100000'
-  }, propertyName);
+  }, propertyName, language, 'landingPage');
 }
 
-function runDashboardAcquisitionSearchesReport(propertyName, range) {
-  return AnalyticsData.Properties.runReport({
+function runDashboardAcquisitionSearchesReport(propertyName, range, language) {
+  return runDashboardLanguageReport_({
     dateRanges: [range],
     dimensions: [{ name: 'sessionSourceMedium' }],
     metrics: [{ name: 'eventCount' }],
@@ -560,7 +593,7 @@ function runDashboardAcquisitionSearchesReport(propertyName, range) {
       dashboardInListFilter('eventName', DASHBOARD_SEARCH_EVENTS)
     ]),
     limit: '100000'
-  }, propertyName);
+  }, propertyName, language, 'landingPage');
 }
 
 function dashboardAcquisitionChannel(channel, medium) {
@@ -707,8 +740,8 @@ function buildDashboardAcquisitionResponse(asOfDate, range, reports) {
   };
 }
 
-function runDashboardMonthlyPageViewsReport(propertyName, range) {
-  return AnalyticsData.Properties.runReport({
+function runDashboardMonthlyPageViewsReport(propertyName, range, language) {
+  return runDashboardLanguageReport_({
     dateRanges: [range],
     dimensions: [
       { name: 'yearMonth' },
@@ -720,11 +753,11 @@ function runDashboardMonthlyPageViewsReport(propertyName, range) {
       dashboardInListFilter('pagePath', dashboardTrackedPagePaths_())
     ]),
     limit: '100000'
-  }, propertyName);
+  }, propertyName, language, 'pagePath');
 }
 
-function runDashboardMonthlyPageEngagementReport(propertyName, range) {
-  return AnalyticsData.Properties.runReport({
+function runDashboardMonthlyPageEngagementReport(propertyName, range, language) {
+  return runDashboardLanguageReport_({
     dateRanges: [range],
     dimensions: [
       { name: 'yearMonth' },
@@ -739,11 +772,11 @@ function runDashboardMonthlyPageEngagementReport(propertyName, range) {
       dashboardTrackedPagePaths_()
     ),
     limit: '100000'
-  }, propertyName);
+  }, propertyName, language, 'pagePath');
 }
 
-function runDashboardMonthlyActivityReport(propertyName, range) {
-  return AnalyticsData.Properties.runReport({
+function runDashboardMonthlyActivityReport(propertyName, range, language) {
+  return runDashboardLanguageReport_({
     dateRanges: [range],
     dimensions: [
       { name: 'yearMonth' },
@@ -755,7 +788,7 @@ function runDashboardMonthlyActivityReport(propertyName, range) {
     metrics: [{ name: 'eventCount' }],
     dimensionFilter: dashboardInListFilter('eventName', DASHBOARD_SEARCH_EVENTS),
     limit: '100000'
-  }, propertyName);
+  }, propertyName, language, 'pagePath');
 }
 
 function buildDashboardPageTrendResponse(asOfDate, range, reports) {
@@ -838,8 +871,8 @@ function createDashboardMonthlyCohorts(asOfDate) {
   return cohorts;
 }
 
-function runDashboardRetentionReport(propertyName, cohorts) {
-  return AnalyticsData.Properties.runReport({
+function runDashboardRetentionReport(propertyName, cohorts, language) {
+  return runDashboardLanguageReport_({
     dimensions: [
       { name: 'cohort' },
       { name: 'cohortNthMonth' }
@@ -866,7 +899,7 @@ function runDashboardRetentionReport(propertyName, cohorts) {
     dimensionFilter: dashboardExactFilter('hostName', DASHBOARD_HOST_NAME),
     keepEmptyRows: true,
     limit: '100000'
-  }, propertyName);
+  }, propertyName, language, 'customUser:gmt_initial_language');
 }
 
 function buildDashboardRetentionResponse(asOfDate, cohorts, report) {
@@ -1183,6 +1216,7 @@ function buildDashboardAnalyticsResponse(period, range, reports) {
   });
 
   const translationMap = readDashboardTranslationMap();
+  const englishTranslationMap = readDashboardTranslationMap('en');
   const allTermEntries = Object.keys(termAggregates).map(key => {
     const aggregate = termAggregates[key];
     return {
@@ -1210,6 +1244,7 @@ function buildDashboardAnalyticsResponse(period, range, reports) {
   const terms = allTermEntries.slice(0, DASHBOARD_TERM_LIMIT).map(item => ({
     term: item.term,
     translation: translationMap[item.key] || '',
+    translationEn: englishTranslationMap[item.key] || '',
     searches: item.searches,
     pages: Object.keys(item.pages)
       .map(path => ({
@@ -1222,7 +1257,7 @@ function buildDashboardAnalyticsResponse(period, range, reports) {
   }));
 
   const workAggregates = {};
-  dashboardReportRows(reports.works, 4).forEach(row => {
+  dashboardReportRows(reports.works, 5).forEach(row => {
     const workId = String(row.dimensions[0] || '').trim();
     const workTitle = String(row.dimensions[1] || '').trim().replace(/\s+/g, ' ');
     const composerCode = String(row.dimensions[2] || '').trim().toUpperCase();
@@ -1245,11 +1280,13 @@ function buildDashboardAnalyticsResponse(period, range, reports) {
         workId: workId,
         composer: composer,
         searches: 0,
-        titles: {}
+        titles: {},
+        languageCounts: { ja: 0, en: 0, unknown: 0 }
       };
     }
     const aggregate = workAggregates[key];
     aggregate.searches += count;
+    aggregate.languageCounts[dashboardSiteLanguage_('', row.dimensions[4])] += count;
     aggregate.titles[workTitle] = (aggregate.titles[workTitle] || 0) + count;
   });
 
@@ -1260,7 +1297,8 @@ function buildDashboardAnalyticsResponse(period, range, reports) {
         workId: aggregate.workId,
         workTitle: chooseDashboardTermVariant(aggregate.titles),
         composer: aggregate.composer,
-        searches: aggregate.searches
+        searches: aggregate.searches,
+        languageCounts: aggregate.languageCounts
       };
     })
     .sort((a, b) =>
@@ -1750,7 +1788,8 @@ function dashboardPageOrder(path) {
   return index < 0 ? DASHBOARD_PAGES.length : index;
 }
 
-function readDashboardTranslationMap() {
+function readDashboardTranslationMap(column) {
+  column = column || 'ja';
   const translations = {};
   try {
     const spreadsheetId = String(
@@ -1759,7 +1798,7 @@ function readDashboardTranslationMap() {
     if (!spreadsheetId) return translations;
     const sheet = SpreadsheetApp.openById(spreadsheetId).getSheetByName('Notes');
     if (!sheet || sheet.getLastRow() < 2) return translations;
-    const rows = namedSheetRead_(sheet, ['de', 'ja'], 2, sheet.getLastRow() - 1).values;
+    const rows = namedSheetRead_(sheet, ['de', column], 2, sheet.getLastRow() - 1).values;
     rows.forEach(row => {
       const key = normalizeDashboardTerm(row[0]);
       const translation = sanitizeDashboardTranslation(row[1]);
@@ -1778,4 +1817,110 @@ function sanitizeDashboardTranslation(value) {
     .find(Boolean) || '';
   if (firstLine.length <= 80) return firstLine;
   return firstLine.slice(0, 79) + '…';
+}
+
+
+function parseDashboardLanguage(value) {
+  if (value != null && typeof value !== 'string') return null;
+  const language = value == null || value === '' ? 'all' : String(value);
+  return ['all', 'ja', 'en'].indexOf(language) >= 0 ? language : null;
+}
+
+function dashboardLanguageRequest_(request, language, basis) {
+  const filters = [dashboardHostFilter()];
+  if (request.dimensionFilter) filters.push(request.dimensionFilter);
+  if (language && language !== 'all') {
+    if (basis === 'customUser:gmt_initial_language') {
+      filters.push(dashboardExactFilter(basis, language));
+    } else {
+      filters.push(dashboardInListFilter(
+        basis || 'pagePath',
+        dashboardTrackedPagePaths_().filter(path => dashboardSiteLanguage_('', path) === language)
+      ));
+    }
+  }
+  request.dimensionFilter = dashboardAndFilter(filters);
+  return request;
+}
+
+function runDashboardLanguageReport_(request, propertyName, language, basis) {
+  return AnalyticsData.Properties.runReport(
+    dashboardLanguageRequest_(request, language, basis), propertyName
+  );
+}
+
+/** Re-query logical pages with aliases in GA, so active users are deduplicated.
+ * Summing per-language activeUsers would count bilingual users twice. */
+function deduplicateDashboardEngagement_(propertyName, range, report, monthly, language) {
+  const pathIndex = monthly ? 1 : 0;
+  const groups = {};
+  (report.rows || []).forEach(row => {
+    const raw = row.dimensionValues[pathIndex].value;
+    const key = normalizeDashboardPagePath(raw);
+    if (!groups[key]) groups[key] = new Set();
+    groups[key].add(raw);
+  });
+  const duplicates = Object.keys(groups).filter(key => groups[key].size > 1 && DASHBOARD_PAGES.some(item => item.path === key));
+  if (!duplicates.length) return report;
+  const rows = (report.rows || []).filter(row => duplicates.indexOf(normalizeDashboardPagePath(row.dimensionValues[pathIndex].value)) < 0);
+  const requests = duplicates.map(path => dashboardLanguageRequest_({
+    dateRanges: [range],
+    dimensions: monthly ? [{ name: 'yearMonth' }] : [],
+    metrics: [{ name: 'userEngagementDuration' }, { name: 'activeUsers' }],
+    dimensionFilter: dashboardInListFilter('pagePath', Array.from(groups[path])),
+    limit: '100000'
+  }, language, 'pagePath'));
+  // Five is the GA4 batch API limit; batching avoids a request round trip per page.
+  for (let offset = 0; offset < requests.length; offset += 5) {
+    const batch = requests.slice(offset, offset + 5);
+    const reports = typeof AnalyticsData.Properties.batchRunReports === 'function'
+      ? AnalyticsData.Properties.batchRunReports({ requests: batch }, propertyName).reports
+      : batch.map(request => AnalyticsData.Properties.runReport(request, propertyName));
+    if (!reports || reports.length !== batch.length) throw new Error('Incomplete engagement batch response');
+    reports.forEach((aggregate, index) => {
+      const path = duplicates[offset + index];
+      (aggregate.rows || []).forEach(row => rows.push({
+        dimensionValues: monthly ? [row.dimensionValues[0], { value: path }] : [{ value: path }],
+        metricValues: row.metricValues
+      }));
+    });
+  }
+  return { rows: rows };
+}
+
+function applyDashboardLanguageMetadata_(result, language) {
+  result.selectedLanguage = language;
+  result.measurement = {
+    englishLaunchDate: DASHBOARD_ENGLISH_LAUNCH_DATE,
+    recentDataStatus: 'collecting',
+    comparisonIncludesBeforeLaunch: language === 'en' && result.previous.range.startDate < DASHBOARD_ENGLISH_LAUNCH_DATE
+  };
+  result.pages.forEach(page => {
+    page.group = DASHBOARD_PAGES.find(item => item.path === page.path).group || 'main';
+  });
+  if (language !== 'en') return result;
+  result.pageTrends.pages.forEach(page => page.months.forEach(month => {
+    if (month.month < DASHBOARD_ENGLISH_LAUNCH_DATE.slice(0, 7)) {
+      month.status = 'before_launch';
+      month.views = null;
+      month.searches = null;
+      month.averageEngagementSeconds = null;
+    } else if (month.month === DASHBOARD_ENGLISH_LAUNCH_DATE.slice(0, 7)) {
+      month.partial = true;
+    }
+  }));
+  result.acquisition.months.forEach(month => {
+    if (month.month < DASHBOARD_ENGLISH_LAUNCH_DATE.slice(0, 7)) month.status = 'before_launch';
+  });
+  [
+    { rows: result.daily, range: result.range },
+    { rows: result.previous.daily, range: result.previous.range }
+  ].forEach(series => series.rows.forEach((day, index) => {
+    const start = shiftDashboardIsoDate(series.range.startDate, index * (result.period === 180 ? 7 : 1));
+    const bucketEnd = shiftDashboardIsoDate(start, result.period === 180 ? 6 : 0);
+    const end = bucketEnd > series.range.endDate ? series.range.endDate : bucketEnd;
+    day.status = end < DASHBOARD_ENGLISH_LAUNCH_DATE ? 'before_launch'
+      : start < DASHBOARD_ENGLISH_LAUNCH_DATE ? 'partial' : 'measured';
+  }));
+  return result;
 }

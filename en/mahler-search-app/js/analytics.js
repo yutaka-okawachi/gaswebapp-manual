@@ -166,6 +166,30 @@
     applyAdminDeviceUrlCommand();
     disableGoogleAnalyticsForAdminDevice();
 
+    // Stable, non-identifying classification; never overwrite on language change.
+    // The GA4 firstSessionDate cohort excludes earlier visitors retrospectively.
+    function installInitialLanguageProperty() {
+        if (isAdminDeviceOptOut() || !canUseStorage) return;
+        if (window.location.hostname !== 'yutaka-okawachi.github.io' ||
+            !/^\/gaswebapp-manual\//.test(window.location.pathname)) return;
+        try {
+            const key = 'gmt_initial_language';
+            let language = window.localStorage.getItem(key);
+            if (language !== 'ja' && language !== 'en') {
+                language = /^\/gaswebapp-manual\/en(?:\/|$)/.test(window.location.pathname) ? 'en' : 'ja';
+                window.localStorage.setItem(key, language);
+            }
+            window.dataLayer = window.dataLayer || [];
+            function queue() { window.dataLayer.push(arguments); }
+            (typeof window.gtag === 'function' ? window.gtag : queue)('set', 'user_properties', {
+                gmt_initial_language: language
+            });
+        } catch (_) {
+            // Missing storage must not create an unstable first-language label.
+        }
+    }
+    installInitialLanguageProperty();
+
     window.isAdminDeviceOptOut = isAdminDeviceOptOut;
     window.isAdminCandidateObservationEnabled = isAdminCandidateObservationEnabled;
     window.setAdminDeviceOptOut = function (enabled) {

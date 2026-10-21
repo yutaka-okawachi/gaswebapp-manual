@@ -26,7 +26,7 @@ foreach ($period in @(7, 30, 90, 180)) {
     }
 
     $pages = @()
-    for ($i = 0; $i -lt 11; $i++) {
+    for ($i = 0; $i -lt 14; $i++) {
         $pages += @{
             page = "Page $i"
             path = "/page-$i"
@@ -45,7 +45,8 @@ foreach ($period in @(7, 30, 90, 180)) {
     }
 
     $payload = @{
-        schemaVersion = 8
+        schemaVersion = 9
+        selectedLanguage = "all"
         period = $period
         granularity = if ($period -eq 180) { "week" } else { "day" }
         updatedAt = "2026年7月26日 14:05"
@@ -105,7 +106,7 @@ foreach ($period in @(7, 30, 90, 180)) {
                 startMonth = "2025-08"
                 endMonth = "2026-07"
             }
-            pages = @(0..10 | ForEach-Object {
+            pages = @(0..13 | ForEach-Object {
                 @{
                     page = "Page $_"
                     path = "/page-$_"

@@ -445,11 +445,11 @@ const context = {
             { granularity: 'MONTHLY', startOffset: 0, endOffset: 3 }
           );
           assert.strictEqual(
-            request.dimensionFilter.filter.fieldName,
+            dashboardTestFilters(request.dimensionFilter)[0].fieldName,
             'hostName'
           );
           assert.strictEqual(
-            request.dimensionFilter.filter.stringFilter.value,
+            dashboardTestFilters(request.dimensionFilter).find(item => item.stringFilter && item.fieldName !== 'hostName')?.stringFilter.value || dashboardTestFilters(request.dimensionFilter)[0].stringFilter.value,
             'yutaka-okawachi.github.io'
           );
           return retentionReport;
@@ -527,7 +527,7 @@ const context = {
           'customEvent:source_page,customEvent:destination_page,customEvent:link_type,pagePath'
         ) {
           assert.strictEqual(
-            request.dimensionFilter.filter.stringFilter.value,
+            dashboardTestFilters(request.dimensionFilter).find(item => item.stringFilter && item.fieldName !== 'hostName')?.stringFilter.value || dashboardTestFilters(request.dimensionFilter)[0].stringFilter.value,
             'search_page_move'
           );
           return searchMovesReport;
@@ -538,7 +538,7 @@ const context = {
             [{ name: 'eventCount' }, { name: 'eventValue' }]
           );
           assert.strictEqual(
-            request.dimensionFilter.filter.stringFilter.value,
+            dashboardTestFilters(request.dimensionFilter).find(item => item.stringFilter && item.fieldName !== 'hostName')?.stringFilter.value || dashboardTestFilters(request.dimensionFilter)[0].stringFilter.value,
             'dictionary_example_timing'
           );
           return exampleTimingReport;
@@ -547,7 +547,7 @@ const context = {
           dimensionNames ===
           'searchTerm,customEvent:source_page,pagePath,customEvent:search_type'
         ) {
-          const eventFilter = request.dimensionFilter.andGroup.expressions[0];
+          const eventFilter = { filter: dashboardTestFilters(request.dimensionFilter).find(item => item.fieldName === 'eventName') };
           assert.strictEqual(
             eventFilter.filter.stringFilter.value,
             'view_search_results'
@@ -556,17 +556,17 @@ const context = {
         }
         if (
           dimensionNames ===
-          'customEvent:work_id,customEvent:work_title,customEvent:composer,customEvent:search_type'
+          'customEvent:work_id,customEvent:work_title,customEvent:composer,customEvent:search_type,pagePath'
         ) {
           assert.strictEqual(
-            request.dimensionFilter.filter.stringFilter.value,
+            dashboardTestFilters(request.dimensionFilter).find(item => item.stringFilter && item.fieldName !== 'hostName')?.stringFilter.value || dashboardTestFilters(request.dimensionFilter)[0].stringFilter.value,
             'work_search_selection'
           );
           return worksReport;
         }
         if (dimensionNames === 'city,country') {
           assert.strictEqual(
-            request.dimensionFilter.filter.stringFilter.value,
+            dashboardTestFilters(request.dimensionFilter).find(item => item.stringFilter && item.fieldName !== 'hostName')?.stringFilter.value || dashboardTestFilters(request.dimensionFilter)[0].stringFilter.value,
             'yutaka-okawachi.github.io'
           );
           return citiesReport;
@@ -613,7 +613,7 @@ const result = context.getDashboardAnalytics(7);
 assert.strictEqual(analyticsCallCount, 20);
 assert.strictEqual(lockAcquireCount, 1);
 assert.strictEqual(lockReleaseCount, 1);
-assert.strictEqual(result.schemaVersion, 8);
+assert.strictEqual(result.schemaVersion, 9);
 assert.strictEqual(result.granularity, 'day');
 assert.strictEqual(result.period, 7);
 assert.deepStrictEqual(
@@ -684,7 +684,7 @@ assert.deepStrictEqual(
   JSON.parse(JSON.stringify(result.pageTrends.range)),
   { startMonth: '2025-08', endMonth: '2026-07' }
 );
-assert.strictEqual(result.pageTrends.pages.length, 11);
+assert.strictEqual(result.pageTrends.pages.length, 14);
 const homeTrend = result.pageTrends.pages.find(page => page.page === 'HOME');
 const gmTermsTrend = result.pageTrends.pages.find(
   page => page.page === '用語から検索 (GM)'
@@ -771,13 +771,13 @@ assert.strictEqual(
 const home = result.pages.find(page => page.page === 'HOME');
 const dictionary = result.pages.find(page => page.page === 'ドイツ語の音楽用語集');
 const gmTerms = result.pages.find(page => page.page === '用語から検索 (GM)');
-assert.strictEqual(result.pages.length, 11);
+assert.strictEqual(result.pages.length, 14);
 assert.strictEqual(result.pages[0].page, 'HOME');
 assert.strictEqual(result.pages[1].page, 'ドイツ語の音楽用語集');
-assert.strictEqual(result.pages[result.pages.length - 1].page, 'その他');
+assert.strictEqual(result.pages[10].page, 'その他');
 assert.strictEqual(
   result.pages.some(page => page.path.endsWith('/notes.html')),
-  false
+  true
 );
 assert.strictEqual(home.views, 5);
 assert.strictEqual(home.averageEngagementSeconds, 22.5);
@@ -863,25 +863,29 @@ assert.deepStrictEqual(
       workId: 'gm_all',
       workTitle: 'マーラーの全ての楽曲',
       composer: 'Mahler',
-      searches: 3
+      searches: 3,
+      languageCounts: { ja: 0, en: 0, unknown: 3 }
     },
     {
       workId: 'gm_1',
       workTitle: '交響曲第1番ニ長調（1884-88）',
       composer: 'Mahler',
-      searches: 2
+      searches: 2,
+      languageCounts: { ja: 0, en: 0, unknown: 2 }
     },
     {
       workId: 'rw_tristan',
       workTitle: 'Tristan und Isolde, WWV 90 (1857-59)',
       composer: 'Wagner',
-      searches: 2
+      searches: 2,
+      languageCounts: { ja: 0, en: 0, unknown: 2 }
     },
     {
       workId: 'rs_salome',
       workTitle: 'Salome, Op.54 (1903-05)',
       composer: 'R. Strauss',
-      searches: 1
+      searches: 1,
+      languageCounts: { ja: 0, en: 0, unknown: 1 }
     }
   ]
 );
@@ -1109,7 +1113,7 @@ assert.deepStrictEqual(
   assert.strictEqual(emptyResponse.previous.daily[0].searches, 0);
   assert.strictEqual(emptyResponse.previous.daily[0].views, 0);
   assert.strictEqual(emptyResponse.previous.daily[0].exampleClicks, 0);
-  assert.strictEqual(emptyResponse.pages.length, 11);
+  assert.strictEqual(emptyResponse.pages.length, 14);
   assert.deepStrictEqual(
     JSON.parse(JSON.stringify(emptyResponse.dictionaryExamplePerformance)),
     {
@@ -1375,3 +1379,5 @@ assert.strictEqual(
 );
 
 console.log('dashboard analytics tests: OK');
+
+function dashboardTestFilters(expression) { if (expression.filter) return [expression.filter]; return (expression.andGroup?.expressions || []).flatMap(dashboardTestFilters); }

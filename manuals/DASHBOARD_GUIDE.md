@@ -110,7 +110,21 @@ GAS APIの更新とSitesの公開は別作業です。どちらか一方の成�
 
 ## 4. 計測とAPIの保守資料
 
-ローカル実装では `schemaVersion` は **8** です。本番が同じ版かどうかは公開後のAPI検査で確認します。古いschemaVersion 1のJSON例は使用しません。
+ローカル実装では `schemaVersion` は **9** です。本番が同じ版かどうかは公開後のAPI検査で確認します。古いschemaVersion 1のJSON例は使用しません。
+
+### 日本語版・英語版の切替（schemaVersion 9）
+
+- APIの `language=all|ja|en` で表示対象を指定します。省略時は `all`、未知の値や文字列以外は `INVALID_LANGUAGE` です。例：固定WebアプリURLの末尾に `?api=dashboard&period=30&language=en` を付けます。
+- 閲覧、用語、作品、検索方法、実例表示、表示時間、都市は実際に利用したページの言語で分類します。端末やブラウザの言語、アクセス元の国から推定しません。言語情報のない過去イベントは全体集計に残し、日英どちらかへ推定配分しません。
+- 訪問経路（02）は、そのセッションの `landingPage` を基準に分類します。継続利用（08）はユーザープロパティ `gmt_initial_language` を基準に分類し、別言語での再訪も含みます。
+- `mahler-search-app/js/analytics.js` が、計測を許可された公開サイトで最初に開いた言語を端末に保存し、GA4の同名プロパティへ送信します。管理者端末、ローカルプレビュー、ストレージを利用できない端末では新しい分類を送りません。個人識別子や検索語を追加しません。
+- GA4の管理 → カスタム定義で、名前「初回訪問言語」、範囲「ユーザー」、ユーザープロパティ `gmt_initial_language` を登録します。対象プロパティで2026年10月21日に登録・一覧読戻しを確認済みです。既存の登録は重複作成しません。
+- 過去の初回言語は復元できません。初回日が2026年11月1日以降のコホートから言語別の継続利用を計測します。それより前は `unmeasured`（未計測）、対象月が終わっていなければ `collecting`（集計中）です。カスタム定義がAPIにまだ現れない場合は `availability: not_configured` と表示し、ゼロ人と扱いません。全体の継続利用は従来の履歴を維持します。
+- 対象は14種類の日英ページです。`notes.html` を主要ページに含め、`privacy.html`・`license.html` は `group: auxiliary` として画面のチェック欄で追加表示します。
+- 月別推移（03）は切替と日英比較表に対応します。英語版の2026年10月20日公開より前の月は `before_launch`（公開前）、閲覧数・検索数・平均時間は `null` です。公開月には部分月の注記を付け、直近の未確定値には集計中と表示します。日別・週別推移も公開前を描画せず、公開前を含む前期間比には注意書きを付けます。
+- 用語（04）はNotesの `ja` と `en` を併記します。作品（05）は作曲家と作品IDで統合し、`languageCounts` の日英・言語不明の内訳を表示します。
+- 平均エンゲージメント時間は、日英ページやHOMEの別名URLが重なる場合、GA4に論理ページ単位で再問い合わせし、重複を除いた `activeUsers` を分母にします。日英の平均や人数を単純合算しません。都市の全体ユーザー数も日英の人数の和とは限りません。
+- キャッシュは期間と言語ごとに分離します。新画面はschema 5〜8の全体表示も受け付けますが、言語別の要求に旧APIの全体応答が返った場合はエラーにします。公開順序は「新画面（旧API互換）」→「GAS・計測コード」の順にそろえ、両方の公開後に日英切替を確認します。
 
 必須キーは `schemaVersion`、`period`、`updatedAt`、`range`、`granularity`、`daily`、`previous`、`searchSummary`、`searchMethods`、`retention`、`pageTrends`、`acquisition`、`pages`、`dictionaryExampleMoves`、`dictionaryExamplePerformance`、`terms`、`works`、`cities` です。型・値の制約は `scripts/dashboard-api-check.ps1`、計算方法は `src/dashboard_analytics.js` とそのテストを正本とします。
 
@@ -128,7 +142,7 @@ GAS APIの更新とSitesの公開は別作業です。どちらか一方の成�
 - 終了日はGA4プロパティのタイムゾーンにおける当日とする。
 - 開始日は当日を含めて `period` 日前ではなく、`period - 1` 日前とする。
 - `daily` は期間内の推移を古い順に返す。7日・30日・90日は日別推移（`granularity: 'day'`）、180日は週別推移（約26週、`granularity: 'week'`）として集約して返す。
-- データがない日も省略せず、各値を `0` として返す。
+- データがない日も省略せず、各値を `0` として返す。ただし英語版の公開前は `status: before_launch` を付け、画面でゼロ件と表示しない。
 - 日付境界はGA4プロパティとGASの双方を日本時間にそろえる。
 - 集計結果は期間ごとに15分間キャッシュする。
 - 同じ期間のキャッシュが同時に失効した場合は処理を直列化し、待機後に
@@ -157,11 +171,9 @@ GAS APIの更新とSitesの公開は別作業です。どちらか一方の成�
 - 国名を併記した `displayName`（例: `Tokyo (Japan)`）を提供する。
 - 地域判定が特定できないアクセス（GA4の `(not set)`）は、都市・国の判定状況に応じて `特定不能/その他 (Japan)` や `特定不能/その他` として集約する。
 
-### 用語集の閲覧数
+### 閲覧数
 
-- `daily[].views` はサイト全体ではなく、用語集
-  `/gaswebapp-manual/mahler-search-app/dic.html`
-  の `page_view` 数とする。
+- `daily[].views` は、対象の14種類のページの `page_view` 合計とする。用語集の閲覧数は `pages` の `/gaswebapp-manual/mahler-search-app/dic.html` から取得する。
 - ページ別の `pages[].views` は、それぞれのページの `page_view` 数とする。
 
 ### 「実例を見る」から検索結果が表示された回数
