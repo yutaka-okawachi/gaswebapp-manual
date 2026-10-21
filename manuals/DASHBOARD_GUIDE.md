@@ -120,7 +120,7 @@ GAS APIの更新とSitesの公開は別作業です。どちらか一方の成�
 - `mahler-search-app/js/analytics.js` が、計測を許可された公開サイトで最初に開いた言語を端末に保存し、GA4の同名プロパティへ送信します。管理者端末、ローカルプレビュー、ストレージを利用できない端末では新しい分類を送りません。個人識別子や検索語を追加しません。
 - GA4の管理 → カスタム定義で、名前「初回訪問言語」、範囲「ユーザー」、ユーザープロパティ `gmt_initial_language` を登録します。対象プロパティで2026年10月21日に登録・一覧読戻しを確認済みです。既存の登録は重複作成しません。
 - 過去の初回言語は復元できません。初回日が2026年11月1日以降のコホートから言語別の継続利用を計測します。それより前は `unmeasured`（未計測）、対象月が終わっていなければ `collecting`（集計中）です。カスタム定義がAPIにまだ現れない場合は `availability: not_configured` と表示し、ゼロ人と扱いません。全体の継続利用は従来の履歴を維持します。
-- 対象は14種類の日英ページです。`notes.html` を主要ページに含め、`privacy.html`・`license.html` は `group: auxiliary` として画面のチェック欄で追加表示します。
+- 対象は主要11種類と補助2種類の計13種類の日英ページです。運用していない「訳出についての覚書」（`notes.html`）は集計・表示対象から除き、`privacy.html`・`license.html` は `group: auxiliary` として画面のチェック欄で追加表示します。
 - 月別推移（03）は切替と日英比較表に対応します。英語版の2026年10月20日公開より前の月は `before_launch`（公開前）、閲覧数・検索数・平均時間は `null` です。公開月には部分月の注記を付け、直近の未確定値には集計中と表示します。日別・週別推移も公開前を描画せず、公開前を含む前期間比には注意書きを付けます。
 - 用語（04）はNotesの `ja` と `en` を併記します。作品（05）は作曲家と作品IDで統合し、`languageCounts` の日英・言語不明の内訳を表示します。
 - 平均エンゲージメント時間は、日英ページやHOMEの別名URLが重なる場合、GA4に論理ページ単位で再問い合わせし、重複を除いた `activeUsers` を分母にします。日英の平均や人数を単純合算しません。都市の全体ユーザー数も日英の人数の和とは限りません。
@@ -173,7 +173,7 @@ GAS APIの更新とSitesの公開は別作業です。どちらか一方の成�
 
 ### 閲覧数
 
-- `daily[].views` は、対象の14種類のページの `page_view` 合計とする。用語集の閲覧数は `pages` の `/gaswebapp-manual/mahler-search-app/dic.html` から取得する。
+- `daily[].views` は、対象の13種類のページの `page_view` 合計とする。用語集の閲覧数は `pages` の `/gaswebapp-manual/mahler-search-app/dic.html` から取得する。
 - ページ別の `pages[].views` は、それぞれのページの `page_view` 数とする。
 
 ### 「実例を見る」から検索結果が表示された回数
@@ -259,13 +259,13 @@ schemaVersion 5・6を受け取ったSitesは、作品ランキングを空欄�
 
 ### ページ名と実在パス
 
-`pages` は次の12ページを常にこの順で返す。対象期間の値がすべて0でも省略しない。
+`pages` は次の13ページを常にこの順で返す。対象期間の値がすべて0でも省略しない。
 
 | `page` | `path` |
 |---|---|
 | HOME | `/gaswebapp-manual/` |
-| 曲名と楽器等から検索 (GM) | `/gaswebapp-manual/mahler-search-app/mahler.html` |
 | ドイツ語の音楽用語集 | `/gaswebapp-manual/mahler-search-app/dic.html` |
+| 曲名と楽器等から検索 (GM) | `/gaswebapp-manual/mahler-search-app/mahler.html` |
 | 用語から検索 (GM) | `/gaswebapp-manual/mahler-search-app/terms_search.html` |
 | 用語から検索 (RS) | `/gaswebapp-manual/mahler-search-app/rs_terms_search.html` |
 | 用語から検索 (RW) | `/gaswebapp-manual/mahler-search-app/rw_terms_search.html` |
@@ -273,8 +273,9 @@ schemaVersion 5・6を受け取ったSitesは、作品ランキングを空欄�
 | 曲名から検索 (RW) | `/gaswebapp-manual/mahler-search-app/richard_wagner.html` |
 | あらすじ集 (RS) | `/gaswebapp-manual/mahler-search-app/rs_synopsis.html` |
 | あらすじ集 (RW) | `/gaswebapp-manual/mahler-search-app/rw_synopsis.html` |
-| 訳出についての覚書 | `/gaswebapp-manual/mahler-search-app/notes.html` |
 | その他 | `/gaswebapp-manual/mahler-search-app/other.html` |
+| プライバシーポリシー（補助） | `/gaswebapp-manual/privacy.html` |
+| ライセンス（補助） | `/gaswebapp-manual/license.html` |
 
 ページ別の帰属規則は次のとおりとする。
 

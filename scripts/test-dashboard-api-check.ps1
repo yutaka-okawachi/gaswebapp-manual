@@ -26,7 +26,7 @@ foreach ($period in @(7, 30, 90, 180)) {
     }
 
     $pages = @()
-    for ($i = 0; $i -lt 14; $i++) {
+    for ($i = 0; $i -lt 13; $i++) {
         $pages += @{
             page = "Page $i"
             path = "/page-$i"
@@ -106,7 +106,7 @@ foreach ($period in @(7, 30, 90, 180)) {
                 startMonth = "2025-08"
                 endMonth = "2026-07"
             }
-            pages = @(0..13 | ForEach-Object {
+            pages = @(0..12 | ForEach-Object {
                 @{
                     page = "Page $_"
                     path = "/page-$_"

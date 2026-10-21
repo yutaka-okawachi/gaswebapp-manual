@@ -50,7 +50,9 @@ const cohortRequest = requests.at(-1);
 assert(cohortRequest.cohortSpec.cohorts.every(cohort => cohort.dateRange.startDate >= '2026-11-01'));
 assert(filters(cohortRequest.dimensionFilter).some(item => item.fieldName === 'customUser:gmt_initial_language' && item.stringFilter.value === 'ja'));
 assert(!filters(cohortRequest.dimensionFilter).some(item => item.fieldName === 'pagePath'), 'revisits in either language remain in the first-language cohort');
-assert(c.dashboardTrackedPagePaths_().includes('/gaswebapp-manual/en/mahler-search-app/notes.html'));
+assert(!c.dashboardTrackedPagePaths_().includes('/gaswebapp-manual/en/mahler-search-app/notes.html'));
+assert(!c.dashboardTrackedPagePaths_().includes('/gaswebapp-manual/mahler-search-app/notes.html'));
+assert.equal(c.dashboardSiteLanguage_('', '/gaswebapp-manual/en/mahler-search-app/notes.html'), 'unknown');
 assert(c.dashboardTrackedPagePaths_().includes('/gaswebapp-manual/privacy.html'));
 c.Utilities = { formatDate: () => '2026-10-21' };
 const works = { rows: [

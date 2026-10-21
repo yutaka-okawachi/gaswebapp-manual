@@ -92,7 +92,6 @@ const DASHBOARD_PAGES = Object.freeze([
   { page: 'あらすじ集 (RS)', path: '/gaswebapp-manual/mahler-search-app/rs_synopsis.html' },
   { page: 'あらすじ集 (RW)', path: '/gaswebapp-manual/mahler-search-app/rw_synopsis.html' },
   { page: 'その他', path: '/gaswebapp-manual/mahler-search-app/other.html' },
-  { page: '用語についての注記', path: '/gaswebapp-manual/mahler-search-app/notes.html' },
   { page: 'プライバシーポリシー', path: '/gaswebapp-manual/privacy.html', group: 'auxiliary' },
   { page: 'ライセンス', path: '/gaswebapp-manual/license.html', group: 'auxiliary' }
 ]);
@@ -167,7 +166,7 @@ function getDashboardAnalytics(period, language) {
   }
 
   const cache = CacheService.getScriptCache();
-  const cacheKey = 'admin_dashboard_analytics_v23_' + propertyId + '_' + period + '_' + language;
+  const cacheKey = 'admin_dashboard_analytics_v24_' + propertyId + '_' + period + '_' + language;
   const cachedResult = readDashboardCachedResult(cache, cacheKey);
   if (cachedResult) return cachedResult;
 
@@ -460,7 +459,7 @@ function getDashboardRetentionAnalytics(propertyName, cache, asOfDate, language)
 }
 
 function getDashboardPageTrendAnalytics(propertyName, cache, asOfDate, language) {
-  const cacheKey = 'admin_dashboard_page_trends_v2_' + propertyName.replace('/', '_') + '_' + (language || 'all');
+  const cacheKey = 'admin_dashboard_page_trends_v3_' + propertyName.replace('/', '_') + '_' + (language || 'all');
   const cachedResult = readDashboardCachedResult(cache, cacheKey);
   if (cachedResult) return cachedResult;
 
@@ -504,7 +503,7 @@ function runDashboardExampleTimingReport(propertyName, range, language) {
 }
 
 function getDashboardAcquisitionAnalytics(propertyName, cache, asOfDate, language) {
-  const cacheKey = 'admin_dashboard_acquisition_v2_' + propertyName.replace('/', '_') + '_' + (language || 'all');
+  const cacheKey = 'admin_dashboard_acquisition_v3_' + propertyName.replace('/', '_') + '_' + (language || 'all');
   const cachedResult = readDashboardCachedResult(cache, cacheKey);
   if (cachedResult) return cachedResult;
 

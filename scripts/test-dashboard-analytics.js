@@ -684,7 +684,7 @@ assert.deepStrictEqual(
   JSON.parse(JSON.stringify(result.pageTrends.range)),
   { startMonth: '2025-08', endMonth: '2026-07' }
 );
-assert.strictEqual(result.pageTrends.pages.length, 14);
+assert.strictEqual(result.pageTrends.pages.length, 13);
 const homeTrend = result.pageTrends.pages.find(page => page.page === 'HOME');
 const gmTermsTrend = result.pageTrends.pages.find(
   page => page.page === '用語から検索 (GM)'
@@ -771,13 +771,13 @@ assert.strictEqual(
 const home = result.pages.find(page => page.page === 'HOME');
 const dictionary = result.pages.find(page => page.page === 'ドイツ語の音楽用語集');
 const gmTerms = result.pages.find(page => page.page === '用語から検索 (GM)');
-assert.strictEqual(result.pages.length, 14);
+assert.strictEqual(result.pages.length, 13);
 assert.strictEqual(result.pages[0].page, 'HOME');
 assert.strictEqual(result.pages[1].page, 'ドイツ語の音楽用語集');
 assert.strictEqual(result.pages[10].page, 'その他');
 assert.strictEqual(
   result.pages.some(page => page.path.endsWith('/notes.html')),
-  true
+  false
 );
 assert.strictEqual(home.views, 5);
 assert.strictEqual(home.averageEngagementSeconds, 22.5);
@@ -1113,7 +1113,7 @@ assert.deepStrictEqual(
   assert.strictEqual(emptyResponse.previous.daily[0].searches, 0);
   assert.strictEqual(emptyResponse.previous.daily[0].views, 0);
   assert.strictEqual(emptyResponse.previous.daily[0].exampleClicks, 0);
-  assert.strictEqual(emptyResponse.pages.length, 14);
+  assert.strictEqual(emptyResponse.pages.length, 13);
   assert.deepStrictEqual(
     JSON.parse(JSON.stringify(emptyResponse.dictionaryExamplePerformance)),
     {

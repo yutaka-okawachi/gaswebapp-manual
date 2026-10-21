@@ -162,7 +162,7 @@ function Test-DashboardApiPayload {
     if ($daily.Count -ne $expectedDailyCount) {
         return New-DashboardApiCheckResult -Success $false -Period $ExpectedPeriod -Message "daily length mismatch"
     }
-    if ($pages.Count -ne 14) {
+    if ($pages.Count -ne 13) {
         return New-DashboardApiCheckResult -Success $false -Period $ExpectedPeriod -Message "pages length mismatch"
     }
     if ($previousDaily.Count -ne $expectedDailyCount) {
@@ -325,7 +325,7 @@ function Test-DashboardApiPayload {
             return New-DashboardApiCheckResult -Success $false -Period $ExpectedPeriod -Message "Invalid page trends"
         }
     }
-    if ($pageTrends.granularity -ne "month" -or @($pageTrends.pages).Count -ne 14) {
+    if ($pageTrends.granularity -ne "month" -or @($pageTrends.pages).Count -ne 13) {
         return New-DashboardApiCheckResult -Success $false -Period $ExpectedPeriod -Message "Invalid page trend range"
     }
     foreach ($trendPage in @($pageTrends.pages)) {
