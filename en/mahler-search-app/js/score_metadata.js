@@ -1,10 +1,5 @@
-/**
- * Public-site score metadata.
- * 作品ごとの詳細な楽譜情報（出版社、プレート番号、版情報、IMSLPリンク）を定義します。
- */
-
+// Generated from frontend/score-metadata.js and the same synopsis snapshot.
 const SCORE_METADATA = {
-    // --- Richard Wagner ---
     "feen": {
         "title": "妖精 (Die Feen)",
         "workNo": "WWV 32",
@@ -12,7 +7,7 @@ const SCORE_METADATA = {
         "plate": "N/A",
         "edition": "Band 13 of the old complete works.",
         "imslp": "https://imslp.org/wiki/Die_Feen,_WWV_32_(Wagner,_Richard)",
-        "synopsis": "https://drive.google.com/file/d/1S6eM9_i_Eu1lAVfODo4QeVUzelbOc4Wf/view?usp=drive_link"
+        "synopsis": "https://drive.google.com/file/d/1A3RmHqQc9H6h0lnwqKBiMhl5Dl9scmVE/view?usp=drivesdk"
     },
     "liebes": {
         "title": "恋愛禁制 (Das Liebesverbot)",
@@ -21,7 +16,7 @@ const SCORE_METADATA = {
         "plate": "N/A",
         "edition": "Full Score. (Vocal Score: Plate 26945)",
         "imslp": "https://imslp.org/wiki/Das_Liebesverbot,_WWV_38_(Wagner,_Richard)",
-        "synopsis": "https://drive.google.com/file/d/1mOkxloYAwWW4DKuF14HROq65PTpIMyYG/view?usp=drive_link"
+        "synopsis": "https://drive.google.com/file/d/1Nu-Ql1ePQXegy1ZcexfM_vuzA54hX4fq/view?usp=drivesdk"
     },
     "rienzi": {
         "title": "リエンツィ、最後の護民官 (Rienzi, der Letzte der Tribunen)",
@@ -30,7 +25,7 @@ const SCORE_METADATA = {
         "plate": "A. 5970 F.",
         "edition": "Full Score. (Overture reprint: A. 2863 F.)",
         "imslp": "https://imslp.org/wiki/Rienzi,_WWV_49_(Wagner,_Richard)",
-        "synopsis": "https://drive.google.com/file/d/16I-bikJn0ciy8R1JPIJ_lHjgH44iLoy9/view?usp=drive_link"
+        "synopsis": "https://drive.google.com/file/d/1bjZIu-34ktlLv8QDVJT0E3n-DWj9BGGB/view?usp=drivesdk"
     },
     "holländer": {
         "title": "さまよえるオランダ人 (Der fliegende Holländer)",
@@ -39,16 +34,16 @@ const SCORE_METADATA = {
         "plate": "A. 2760 F.",
         "edition": "Full Score. Ed: Weingartner. (Plate 9810 is Peters VS)",
         "imslp": "https://imslp.org/wiki/Der_fliegende_Holl%C3%A4nder,_WWV_63_(Wagner,_Richard)",
-        "synopsis": "https://drive.google.com/file/d/1YGul1KGVdc0UcAe3-cx_2XOAPvdSbFJh/view?usp=sharing"
+        "synopsis": "https://drive.google.com/file/d/1GI5Dh1jFTdwx7EBukqgOyHax1H4jP1jK/view?usp=drivesdk"
     },
-    "hollaender": { // Normalization fallback
+    "hollaender": {
         "title": "さまよえるオランダ人 (Der fliegende Holländer)",
         "workNo": "WWV 63",
         "publisher": "Adolph Fürstner",
         "plate": "A. 2760 F.",
         "edition": "Full Score. Ed: Weingartner. (Plate 9810 is Peters VS)",
         "imslp": "https://imslp.org/wiki/Der_fliegende_Holl%C3%A4nder,_WWV_63_(Wagner,_Richard)",
-        "synopsis": "https://drive.google.com/file/d/1YGul1KGVdc0UcAe3-cx_2XOAPvdSbFJh/view?usp=sharing"
+        "synopsis": "https://drive.google.com/file/d/1GI5Dh1jFTdwx7EBukqgOyHax1H4jP1jK/view?usp=drivesdk"
     },
     "tann_dresden": {
         "title": "タンホイザー (Tannhäuser-Dresden)",
@@ -57,7 +52,7 @@ const SCORE_METADATA = {
         "plate": "10352",
         "edition": "Full Score. Ed: Felix Mottl.",
         "imslp": "https://imslp.org/wiki/Tannh%C3%A4user,_WWV_70_(Wagner,_Richard)",
-        "synopsis": "https://drive.google.com/file/d/1ghyR1l9WTfUQdknC4Np36CM6A-bVxfkP/view?usp=drive_link"
+        "synopsis": "https://drive.google.com/file/d/1IFKk46IMsoy2WtYKwXSiYOh0zyYFd0P3/view?usp=drivesdk"
     },
     "tann_paris": {
         "title": "タンホイザー (Tannhäuser-Paris)",
@@ -66,7 +61,7 @@ const SCORE_METADATA = {
         "plate": "10352",
         "edition": "Full Score. Ed: Felix Mottl.",
         "imslp": "https://imslp.org/wiki/Tannh%C3%A4user,_WWV_70_(Wagner,_Richard)",
-        "synopsis": "https://drive.google.com/file/d/1ghyR1l9WTfUQdknC4Np36CM6A-bVxfkP/view?usp=drive_link"
+        "synopsis": "https://drive.google.com/file/d/1IFKk46IMsoy2WtYKwXSiYOh0zyYFd0P3/view?usp=drivesdk"
     },
     "lohengrin": {
         "title": "ローエングリン (Lohengrin)",
@@ -75,7 +70,7 @@ const SCORE_METADATA = {
         "plate": "15451",
         "edition": "Full Score (ca. 1881).",
         "imslp": "https://imslp.org/wiki/Lohengrin,_WWV_75_(Wagner,_Richard)",
-        "synopsis": "https://drive.google.com/file/d/1PW47yOi-kDxXjlSignXg28Ezo0D9BxFI/view?usp=drive_link"
+        "synopsis": "https://drive.google.com/file/d/1tn595Bsm0RaOYY1lKeYk4Sogaj9IlkdQ/view?usp=drivesdk"
     },
     "rheingold": {
         "title": "ラインの黄金 (Das Rheingold)",
@@ -84,7 +79,7 @@ const SCORE_METADATA = {
         "plate": "20800",
         "edition": "Full Score (1873).",
         "imslp": "https://imslp.org/wiki/Das_Rheingold,_WWV_86A_(Wagner,_Richard)",
-        "synopsis": "https://drive.google.com/file/d/1yJHFWm5F4yKXxhJjhCDst20Y5x5GOVuF/view?usp=drive_link"
+        "synopsis": "https://drive.google.com/file/d/12prs70FjwoPizkUSlUofoGk8RVyYAJuE/view?usp=drivesdk"
     },
     "walküre": {
         "title": "ワルキューレ (Die Walküre)",
@@ -93,16 +88,16 @@ const SCORE_METADATA = {
         "plate": "10170",
         "edition": "Ed: Felix Mottl. (Schott Plate: 27001a/b)",
         "imslp": "https://imslp.org/wiki/Die_Walk%C3%BCre,_WWV_86B_(Wagner,_Richard)",
-        "synopsis": "https://drive.google.com/file/d/1vOyWpzLg_kdYaRT6_IeDsk23jJ1Ehz6h/view?usp=drive_link"
+        "synopsis": "https://drive.google.com/file/d/19ximQPWVi1lGPoZfbdsZ8m3TCqPp9aR4/view?usp=drivesdk"
     },
-    "walkuere": { // Normalization fallback
+    "walkuere": {
         "title": "ワルキューレ (Die Walküre)",
         "workNo": "WWV 86B",
         "publisher": "C.F. Peters",
         "plate": "10170",
         "edition": "Ed: Felix Mottl. (Schott Plate: 27001a/b)",
         "imslp": "https://imslp.org/wiki/Die_Walk%C3%BCre,_WWV_86B_(Wagner,_Richard)",
-        "synopsis": "https://drive.google.com/file/d/1vOyWpzLg_kdYaRT6_IeDsk23jJ1Ehz6h/view?usp=drive_link"
+        "synopsis": "https://drive.google.com/file/d/19ximQPWVi1lGPoZfbdsZ8m3TCqPp9aR4/view?usp=drivesdk"
     },
     "siegfried": {
         "title": "ジークフリート (Siegfried)",
@@ -111,7 +106,7 @@ const SCORE_METADATA = {
         "plate": "21544",
         "edition": "Full Score (1876).",
         "imslp": "https://imslp.org/wiki/Siegfried,_WWV_86C_(Wagner,_Richard)",
-        "synopsis": "https://drive.google.com/file/d/1Yj4mlnkx5M-AhGw7Vbl_BXaWHke8NFcD/view?usp=drive_link"
+        "synopsis": "https://drive.google.com/file/d/1VNAgxcFOnwjX6lD3qtGXvE2mM2bhZ_6o/view?usp=drivesdk"
     },
     "götter": {
         "title": "神々の黄昏 (Götterdämmerung)",
@@ -120,16 +115,16 @@ const SCORE_METADATA = {
         "plate": "21593",
         "edition": "Full Score (1876).",
         "imslp": "https://imslp.org/wiki/G%C3%B6tterd%C3%A4mmerung,_WWV_86D_(Wagner,_Richard)",
-        "synopsis": "https://drive.google.com/file/d/1T26qiCNB5LgUv_VAM6I3i8IJnVGX_3dO/view?usp=drive_link"
+        "synopsis": "https://drive.google.com/file/d/1GxN-ACT8W7yJEwvXLqbn0KKTn4tqF7od/view?usp=drivesdk"
     },
-    "goetter": { // Normalization fallback
+    "goetter": {
         "title": "神々の黄昏 (Götterdämmerung)",
         "workNo": "WWV 86D",
         "publisher": "B. Schott's Söhne",
         "plate": "21593",
         "edition": "Full Score (1876).",
         "imslp": "https://imslp.org/wiki/G%C3%B6tterd%C3%A4mmerung,_WWV_86D_(Wagner,_Richard)",
-        "synopsis": "https://drive.google.com/file/d/1T26qiCNB5LgUv_VAM6I3i8IJnVGX_3dO/view?usp=drive_link"
+        "synopsis": "https://drive.google.com/file/d/1GxN-ACT8W7yJEwvXLqbn0KKTn4tqF7od/view?usp=drivesdk"
     },
     "tristan": {
         "title": "トリスタンとイゾルデ (Tristan und Isolde)",
@@ -138,7 +133,7 @@ const SCORE_METADATA = {
         "plate": "9904",
         "edition": "Historical editions on IMSLP.",
         "imslp": "https://imslp.org/wiki/Tristan_und_Isolde,_WWV_90_(Wagner,_Richard)",
-        "synopsis": "https://drive.google.com/file/d/1B3-7eFKCbzwsGqLYEm8UyCfV1UGh0alD/view?usp=drive_link"
+        "synopsis": "https://drive.google.com/file/d/17IC9poHKBzpd45TH5dwcZ526kgipRypa/view?usp=drivesdk"
     },
     "meister": {
         "title": "ニュルンベルクのマイスタージンガー (Die Meistersinger von Nürnberg)",
@@ -147,7 +142,7 @@ const SCORE_METADATA = {
         "plate": "9821",
         "edition": "Full Score. Ed: Felix Mottl. Leipzig: C.F. Peters, n.d. [1913]. Reprinted: New York: Dover, 1976.",
         "imslp": "https://imslp.org/wiki/Die_Meistersinger_von_N%C3%BCrnberg,_WWV_96_(Wagner,_Richard)",
-        "synopsis": "https://drive.google.com/file/d/1Dxxu6js8LdX9TiOdHWZtk_lE-K12LxnR/view?usp=drive_link"
+        "synopsis": "https://drive.google.com/file/d/1HNCx4KZ3JxEfp8xV7YA7AwLslLQ1W_cm/view?usp=drivesdk"
     },
     "parsifal": {
         "title": "パルジファル (Parsifal)",
@@ -156,10 +151,8 @@ const SCORE_METADATA = {
         "plate": "10261",
         "edition": "Ed: Felix Mottl (ca. 1920). (Schott: 23571 / 27200)",
         "imslp": "https://imslp.org/wiki/Parsifal,_WWV_111_(Wagner,_Richard)",
-        "synopsis": "https://drive.google.com/file/d/1wVaDRlIQe4KOeZH8qL2ZchflM_8bk_QW/view?usp=drive_link"
+        "synopsis": "https://drive.google.com/file/d/1Pu1IfCJfiHGg4kFwRhyr2yuXDB98oJze/view?usp=drivesdk"
     },
-
-    // --- Richard Strauss ---
     "guntram": {
         "title": "グントラム (Guntram)",
         "workNo": "Op. 25 / TrV 160",
@@ -167,7 +160,7 @@ const SCORE_METADATA = {
         "plate": "A. 9027 F.",
         "edition": "Full Score.",
         "imslp": "https://imslp.org/wiki/Guntram,_Op.25_(Strauss,_Richard)",
-        "synopsis": "https://drive.google.com/file/d/1Mb7TPMcxkW7GcnoK9uTqNcdgG4ybYabe/view?usp=drive_link"
+        "synopsis": "https://drive.google.com/file/d/1IIXa5IjQZYJ2Zpbqj8tLW2hlO8sbmSNe/view?usp=drivesdk"
     },
     "feuersnot": {
         "title": "火の危機 (Feuersnot)",
@@ -176,7 +169,7 @@ const SCORE_METADATA = {
         "plate": "A. 9028 F.",
         "edition": "Full Score. (Love Scene: A. 5208 F.)",
         "imslp": "https://imslp.org/wiki/Feuersnot,_Op.50_(Strauss,_Richard)",
-        "synopsis": "https://drive.google.com/file/d/1RaTY3N2b55NexzkpImPJKQbW3z0QvLnh/view?usp=drive_link"
+        "synopsis": "https://drive.google.com/file/d/1xqDrjZGfN956QhXJ6e9mE6XJTT1VjuVD/view?usp=drivesdk"
     },
     "salome": {
         "title": "サロメ (Salome)",
@@ -185,7 +178,7 @@ const SCORE_METADATA = {
         "plate": "A. 5500 F.",
         "edition": "Original and reduced orchestration available.",
         "imslp": "https://imslp.org/wiki/Salome,_Op.54_(Strauss,_Richard)",
-        "synopsis": "https://drive.google.com/file/d/1i6W4M5nkfKhtyd5UjPZTqnnCKfRL2UsQ/view?usp=drive_link"
+        "synopsis": "https://drive.google.com/file/d/1uePHHP4VpfJWnXxrxVVJxN616IN9GnX0/view?usp=drivesdk"
     },
     "elektra": {
         "title": "エレクトラ (Elektra)",
@@ -194,7 +187,7 @@ const SCORE_METADATA = {
         "plate": "A. 5650 5661 F.",
         "edition": "Full Score published in 1916.",
         "imslp": "https://imslp.org/wiki/Elektra,_Op.58_(Strauss,_Richard)",
-        "synopsis": "https://drive.google.com/file/d/1UUJKyDdaQKyjeUNGF4Le6wHl5_GOS8ac/view?usp=drive_link"
+        "synopsis": "https://drive.google.com/file/d/1tPJh0BrLILIuQdpWvVVPjsy2ZX7ILX6x/view?usp=drivesdk"
     },
     "rosenkavalier": {
         "title": "ばらの騎士 (Der Rosenkavalier)",
@@ -203,7 +196,7 @@ const SCORE_METADATA = {
         "plate": "A5900F",
         "edition": "Used score: A5900F, full score. Copyright lines: ©1910,1911 Adolph Fürstner, Berlin; regional assignments to Fürstner Musikverlag, Mainz (1987) and Hawkes & Son (London) Ltd. (1943). Publication/printing date unverified. IMSLP #1020327 is a reference; identity of edition/printing unverified.",
         "imslp": "https://imslp.org/wiki/Der_Rosenkavalier,_Op.59_(Strauss,_Richard)",
-        "synopsis": "https://drive.google.com/file/d/1Q8-kcPqVLc63rfL-orH-s4xFSr46AcO_/view?usp=drive_link"
+        "synopsis": "https://drive.google.com/file/d/1labFVNrroDKkSb6zEHaRCwvX3dXqxJcj/view?usp=drivesdk"
     },
     "ariadne": {
         "title": "ナクソス島のアリアドネ (Ariadne auf Naxos)",
@@ -212,7 +205,7 @@ const SCORE_METADATA = {
         "plate": "A. 7450 F.",
         "edition": "1916 version. (1912 version: Plate A. 6300 F.)",
         "imslp": "https://imslp.org/wiki/Ariadne_auf_Naxos,_Op.60_(Strauss,_Richard)",
-        "synopsis": "https://drive.google.com/file/d/1C5kOM9GhPblHv8c0b8Q-k1DvMigkA15Z/view?usp=drive_link"
+        "synopsis": "https://drive.google.com/file/d/1Cf0aRn1NUkulOA-PX2yowHxxRIvw-dsW/view?usp=drivesdk"
     },
     "schatten": {
         "title": "影のない女 (Die Frau ohne Schatten)",
@@ -221,7 +214,7 @@ const SCORE_METADATA = {
         "plate": "A. 7500 F.",
         "edition": "Full Score.",
         "imslp": "https://imslp.org/wiki/Die_Frau_ohne_Schatten,_Op.65_(Strauss,_Richard)",
-        "synopsis": "https://drive.google.com/file/d/1VgM32B4Dr5I9UlQu17vzG--B2VbMZl5z/view?usp=drive_link"
+        "synopsis": "https://drive.google.com/file/d/1o_iG3u_9d1V3wsuEpfMvBr5L1oRnNlPW/view?usp=drivesdk"
     },
     "intermezzo": {
         "title": "インターメッツォ (Intermezzo)",
@@ -230,7 +223,7 @@ const SCORE_METADATA = {
         "plate": "A. 7800 F.",
         "edition": "Full Score (1924).",
         "imslp": "https://imslp.org/wiki/Intermezzo,_Op.72_(Strauss,_Richard)",
-        "synopsis": "https://drive.google.com/file/d/1pxOyOn2e12O4eibzdIeCP5QpyqEBaNXs/view?usp=drive_link"
+        "synopsis": "https://drive.google.com/file/d/1taZCzRhWiCZpPRF8fsfLwqrUHZdWq71-/view?usp=drivesdk"
     },
     "helena": {
         "title": "エジプトのヘレナ (Die ägyptische Helena)",
@@ -239,7 +232,7 @@ const SCORE_METADATA = {
         "plate": "A9029F",
         "edition": "Full score; ©1928 Adolph Fürstner, Berlin. Regional copyright assignments: Hawkes & Son (London) Ltd. (1943); Fürstner Musikverlag, Mainz (1987). Publication/printing date unverified. IMSLP #950799 (A7900F) is a first-edition reference, distinct from the score used.",
         "imslp": "https://imslp.org/wiki/Die_%C3%A4gyptische_Helena,_Op.75_(Strauss,_Richard)",
-        "synopsis": "https://drive.google.com/file/d/1J2eLY544NXROSwB-ZqtpVFybl9qTv0kV/view?usp=drive_link"
+        "synopsis": "https://drive.google.com/file/d/1c42cYQk15FYzecOPQ8x2tQPA0B-HUq_p/view?usp=drivesdk"
     },
     "arabella": {
         "title": "アラベラ (Arabella)",
@@ -248,7 +241,7 @@ const SCORE_METADATA = {
         "plate": "A. 8250 F.",
         "edition": "Reissue: Adolph Fürstner.",
         "imslp": "https://imslp.org/wiki/Arabella,_Op.79_(Strauss,_Richard)",
-        "synopsis": "https://drive.google.com/file/d/169dQoZxqOptJrdlTN7kw_ikJMQcUx74P/view?usp=drive_link"
+        "synopsis": "https://drive.google.com/file/d/1R4NXq1FYNROL9413c2uA_YhMBO16V3AD/view?usp=drivesdk"
     },
     "schweigsame": {
         "title": "無口な女 (Die schweigsame Frau)",
@@ -257,7 +250,7 @@ const SCORE_METADATA = {
         "plate": "A. 8300 F.",
         "edition": "Reissue: Adolphe Fürstner (1935).",
         "imslp": "https://imslp.org/wiki/Die_schweigsame_Frau,_Op.80_(Strauss,_Richard)",
-        "synopsis": "https://drive.google.com/file/d/1r6790SGrE_zwaaS55WbZuvm22y5NmC8A/view?usp=drive_link"
+        "synopsis": "https://drive.google.com/file/d/1YYiV4k10f7YRFuOLY4xDRMEVATrdCC08/view?usp=drivesdk"
     },
     "tag": {
         "title": "平和の日 (Friedenstag)",
@@ -266,7 +259,7 @@ const SCORE_METADATA = {
         "plate": "A. 9032 F.",
         "edition": "Full Score (1938).",
         "imslp": "https://imslp.org/wiki/Friedenstag,_Op.81_(Strauss,_Richard)",
-        "synopsis": "https://drive.google.com/file/d/18T6kMSsJZBGY6X_YSSx_TDAYhfZfLB-A/view?usp=drive_link"
+        "synopsis": "https://drive.google.com/file/d/1KurEGM2ju0ggbtOLCprm4UmPLptmIrlx/view?usp=drivesdk"
     },
     "daphne": {
         "title": "ダフネ (Daphne)",
@@ -275,7 +268,7 @@ const SCORE_METADATA = {
         "plate": "N/A",
         "edition": "Reprinted by Schott (1998). (VS: 8383)",
         "imslp": "https://imslp.org/wiki/Daphne,_Op.82_(Strauss,_Richard)",
-        "synopsis": "https://drive.google.com/file/d/1L2v7WvY8iLa9y4qTUXWPT3sEeU74vxIf/view?usp=drive_link"
+        "synopsis": "https://drive.google.com/file/d/1XzUA3rbam3qoPE4Dj-d-YJs_fPFIi616/view?usp=drivesdk"
     },
     "danae": {
         "title": "ダナエの愛 (Die Liebe der Danae)",
@@ -284,7 +277,7 @@ const SCORE_METADATA = {
         "plate": "R. St. 99",
         "edition": "Full Score (1944). Plate A. 9033 F is likely VS info.",
         "imslp": "https://imslp.org/wiki/Die_Liebe_der_Danae,_Op.83_(Strauss,_Richard)",
-        "synopsis": "https://drive.google.com/file/d/11CCDJSOvt3uTeklfNQ0ybRhDWkpGWmdC/view?usp=drive_link"
+        "synopsis": "https://drive.google.com/file/d/1wygC1GIHw3s8M2jeV4xGRb_JZypmobH0/view?usp=drivesdk"
     },
     "cap": {
         "title": "カプリッチョ (Capriccio)",
@@ -293,11 +286,6 @@ const SCORE_METADATA = {
         "plate": "N/A",
         "edition": "Identified as IMSLP file #24954.",
         "imslp": "https://imslp.org/wiki/Capriccio,_Op.85_(Strauss,_Richard)",
-        "synopsis": "https://drive.google.com/file/d/1eZBswrQvVtc84zFhs29zO-saPKDrvKD8/view?usp=drive_link"
+        "synopsis": "https://drive.google.com/file/d/18luJ8NO3kR-Qfz0M1i3qjeAtIcSpKJpi/view?usp=drivesdk"
     }
 };
-
-// Global for GAS and Client-side
-if (typeof module !== 'undefined' && module.exports) {
-    module.exports = SCORE_METADATA;
-}

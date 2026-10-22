@@ -1,10 +1,5 @@
-/**
- * Public-site score metadata.
- * 作品ごとの詳細な楽譜情報（出版社、プレート番号、版情報、IMSLPリンク）を定義します。
- */
-
+// Generated from frontend/score-metadata.js and the same synopsis snapshot.
 const SCORE_METADATA = {
-    // --- Richard Wagner ---
     "feen": {
         "title": "妖精 (Die Feen)",
         "workNo": "WWV 32",
@@ -41,7 +36,7 @@ const SCORE_METADATA = {
         "imslp": "https://imslp.org/wiki/Der_fliegende_Holl%C3%A4nder,_WWV_63_(Wagner,_Richard)",
         "synopsis": "https://drive.google.com/file/d/1YGul1KGVdc0UcAe3-cx_2XOAPvdSbFJh/view?usp=sharing"
     },
-    "hollaender": { // Normalization fallback
+    "hollaender": {
         "title": "さまよえるオランダ人 (Der fliegende Holländer)",
         "workNo": "WWV 63",
         "publisher": "Adolph Fürstner",
@@ -95,7 +90,7 @@ const SCORE_METADATA = {
         "imslp": "https://imslp.org/wiki/Die_Walk%C3%BCre,_WWV_86B_(Wagner,_Richard)",
         "synopsis": "https://drive.google.com/file/d/1vOyWpzLg_kdYaRT6_IeDsk23jJ1Ehz6h/view?usp=drive_link"
     },
-    "walkuere": { // Normalization fallback
+    "walkuere": {
         "title": "ワルキューレ (Die Walküre)",
         "workNo": "WWV 86B",
         "publisher": "C.F. Peters",
@@ -122,7 +117,7 @@ const SCORE_METADATA = {
         "imslp": "https://imslp.org/wiki/G%C3%B6tterd%C3%A4mmerung,_WWV_86D_(Wagner,_Richard)",
         "synopsis": "https://drive.google.com/file/d/1T26qiCNB5LgUv_VAM6I3i8IJnVGX_3dO/view?usp=drive_link"
     },
-    "goetter": { // Normalization fallback
+    "goetter": {
         "title": "神々の黄昏 (Götterdämmerung)",
         "workNo": "WWV 86D",
         "publisher": "B. Schott's Söhne",
@@ -158,8 +153,6 @@ const SCORE_METADATA = {
         "imslp": "https://imslp.org/wiki/Parsifal,_WWV_111_(Wagner,_Richard)",
         "synopsis": "https://drive.google.com/file/d/1wVaDRlIQe4KOeZH8qL2ZchflM_8bk_QW/view?usp=drive_link"
     },
-
-    // --- Richard Strauss ---
     "guntram": {
         "title": "グントラム (Guntram)",
         "workNo": "Op. 25 / TrV 160",
@@ -296,8 +289,3 @@ const SCORE_METADATA = {
         "synopsis": "https://drive.google.com/file/d/1eZBswrQvVtc84zFhs29zO-saPKDrvKD8/view?usp=drive_link"
     }
 };
-
-// Global for GAS and Client-side
-if (typeof module !== 'undefined' && module.exports) {
-    module.exports = SCORE_METADATA;
-}
