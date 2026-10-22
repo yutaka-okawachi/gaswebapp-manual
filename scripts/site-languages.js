@@ -25,7 +25,7 @@ function decorateHtml(html,options={}){
  html=legal.decorateHtml(stripLanguageUi(html),options);
  html=require('./site-seo').decorateHtml(html,options);
  if(language==='en'){
-  if(/\/(?:rw|rs)_synopsis\.html$/.test('/'+options.file)&&!html.includes('data-japanese-only="synopsis"'))html=html.replace(/<\/h1>/i,'</h1><p class="japanese-only-note" role="note" data-japanese-only="synopsis">Available in Japanese only.</p>');
+  if(/\/(?:rw|rs)_synopsis\.html$/.test('/'+options.file))html=html.replace(/<p\b[^>]*data-japanese-only="synopsis"[^>]*>[^]*?<\/p>/gi,'');
   if(options.file==='mahler-search-app/other.html')html=html.replace(/<a\b[^>]*class=["'][^"']*\barticle-link\b[^"']*["'][^>]*>[^]*?<\/a>/gi,link=>/Shostakovich[^]*passacaglia|ショスタコーヴィチ[^]*パッサカリア/i.test(link)?link+' <span class="japanese-only-note" data-japanese-only="essay">Available in Japanese only.</span>':link);
  }
  if(!enabled)return html;

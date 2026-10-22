@@ -45,6 +45,7 @@ function validateEnglishSource(snapshot){
   }else for(let i=0;i<rows.length;i++)for(const key of fields.filter(k=>!['en','whom_en'].includes(k)))if(JSON.stringify(rows[i][key])!==JSON.stringify(japanese[i][key]))throw Error('日英の元行が一致しません: '+tab+':'+(i+2)+':'+key);
  }
  if(source.termMappings.some(row=>!Array.isArray(row)||row.length!==6))throw Error('同一取得の語形対応が不正です。');
+ require('../synopsis-links').validateSource(source.synopsis);
  return source;
 }
 function publicTemplatePaths(directory){
@@ -57,7 +58,9 @@ function publicTemplatePaths(directory){
 }
 function prepare(snapshot,requestId,previous={},allowRemoval=false,options={}){
  const directory=options.root||core.root;
+ const synopsis=require('../synopsis-links'),baseMetadata=synopsis.readBaseMetadata(core.root);
  const japanese=artifacts.validateSnapshot(snapshot,requestId,previous,allowRemoval),source=validateEnglishSource(snapshot);
+ const projectedMetadata=synopsis.projectMetadata(baseMetadata,source.synopsis,'en');
  const site=buildEnglishSite(directory,source,{baseFiles:japanese}),english={};
  const values={...site.files,'mahler-search-app/data/abbr_list.json':japanese['mahler-search-app/data/abbr_list.json']};
  for(const file of new Set([...publicTemplatePaths(directory),...Object.keys(values)])){
@@ -65,11 +68,15 @@ function prepare(snapshot,requestId,previous={},allowRemoval=false,options={}){
   if(file.endsWith('.html')){
    // The mirror retains the shared body/CSS/operations. Relative links resolve within en/.
    const script=file.includes('/')?'js/english-locale.js':'mahler-search-app/js/english-locale.js';
-   const html=site.localizeHtml(String(value)).replace(/<head([^>]*)>/i,'<head$1><script>window.__SITE_LANGUAGE__="en";</script><script src="'+script+'"></script>')
+   const template=/(?:rw|rs)_synopsis\.html$/.test(file)?synopsis.rewriteList(String(value),baseMetadata,projectedMetadata,'en'):String(value);
+   const html=site.localizeHtml(template).replace(/<head([^>]*)>/i,'<head$1><script>window.__SITE_LANGUAGE__="en";</script><script src="'+script+'"></script>')
     .replaceAll('https://yutaka-okawachi.github.io/gaswebapp-manual/','https://yutaka-okawachi.github.io/gaswebapp-manual/en/');
    english['en/'+file]=languages.decorateHtml(html.replace(/\/en\/(favicon\.png|apple-touch-icon\.png|ogp\.png)/g,'/$1'),{language:'en',englishEnabled:true,file,targetAliases:languages.buildTargetAliases(source)});
   }else english['en/'+file]=Buffer.isBuffer(value)?value.toString('utf8'):value;
  }
+ english['en/mahler-search-app/js/score_metadata.js']=synopsis.metadataScript(projectedMetadata);
+ const synopsisVersion=core.sha256(core.normalizeText(english['en/mahler-search-app/js/score_metadata.js'])).slice(0,12);
+ for(const file of Object.keys(english))if(file.endsWith('.html'))english[file]=english[file].replace(/(score_metadata\.js)(?:\?v=[^"']*)?(?=["'])/g,'$1?v='+synopsisVersion);
  english['en/mahler-search-app/js/english-locale.js']=locale.browserSource();
  english['en/mahler-search-app/js/site-language-switch.js']=languages.runtimeSource();
  artifacts.validateSnapshot({schemaVersion:1,requestId,files:values},requestId,{},false,'en');

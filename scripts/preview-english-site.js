@@ -3,11 +3,13 @@ const fs=require('fs'),path=require('path'),http=require('http');
 const {root}=require('./sync/core'),{publicPath}=require('./preview-site'),{buildEnglishSite}=require('./english-site'),{buildJapanesePreview}=require('./japanese-preview'),locale=require('./english-locale'),languages=require('./site-languages');
 function startEnglishPreview({source,port=4178,runtimeDirectory=null}={}){
  if(!Number.isSafeInteger(port)||port<1024||port>65535)throw Error('Invalid preview port');
+ const synopsis=require('./synopsis-links'),baseMetadata=synopsis.readBaseMetadata(root),metadata={ja:synopsis.projectMetadata(baseMetadata,source.synopsis,'ja'),en:synopsis.projectMetadata(baseMetadata,source.synopsis,'en')};
  const site=buildEnglishSite(root,source),japanese=buildJapanesePreview(root,source,site),aliases=languages.buildTargetAliases(source),htmlCache=new Map(),origin='http://127.0.0.1:'+port;
  const types={'.html':'text/html','.js':'application/javascript','.css':'text/css','.json':'application/json','.svg':'image/svg+xml','.png':'image/png','.ico':'image/x-icon'};
  function transform(html,key,language){
   const cacheKey=language+':'+key;if(htmlCache.has(cacheKey))return htmlCache.get(cacheKey);
   let clean=html.replace(/<script\b[^>]*src=["'][^"']*(?:googletagmanager|google-analytics)[^"']*["'][^>]*>[^]*?<\/script>/gi,'');
+  if(/(?:rw|rs)_synopsis\.html$/.test(key))clean=synopsis.rewriteList(clean,baseMetadata,metadata[language],language);
   if(language==='en')clean=site.localizeHtml(clean);
   const optout='<script>window.__LOCAL_PREVIEW__=true;window.__SITE_LANGUAGE__="'+language+'";try{localStorage.setItem("gmt_admin_device_optout","1")}catch(e){}</script>'+(language==='en'?'<script src="'+(key.includes('/')?'js/english-preview.js':'mahler-search-app/js/english-preview.js')+'"></script>':'')+'<meta name="robots" content="noindex,nofollow">';
   clean=clean.replace(/<head([^>]*)>/i,'<head$1>'+optout);
@@ -25,6 +27,7 @@ function startEnglishPreview({source,port=4178,runtimeDirectory=null}={}){
   const language=route.startsWith('/ja/')?'ja':'en',logical=route.replace(/^\/(?:ja|en)(?=\/|$)/,'')||'/';
   if(logical==='/mahler-search-app/js/site-language-switch.js'){res.setHeader('Content-Type','application/javascript; charset=utf-8');return res.end(languages.runtimeSource());}
   if(logical==='/mahler-search-app/js/english-preview.js'){res.setHeader('Content-Type','application/javascript; charset=utf-8');return res.end(locale.browserSource());}
+  if(logical==='/mahler-search-app/js/score_metadata.js'){res.setHeader('Content-Type','application/javascript; charset=utf-8');return res.end(synopsis.metadataScript(metadata[language]));}
   if(logical==='/mahler-search-app/js/analytics.js'){res.setHeader('Content-Type','application/javascript');return res.end('/* Analytics disabled in local preview. */');}
   let file;try{file=publicPath(logical+url.search);}catch{}if(!file){res.writeHead(404);return res.end('Not found');}
   const relative=path.relative(root,file).replaceAll('\\','/'),localized=language==='ja'?japanese:site,overridden=Object.prototype.hasOwnProperty.call(localized.files,relative);

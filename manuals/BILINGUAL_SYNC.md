@@ -8,6 +8,14 @@
 
 `scripts/sync/bilingual.js` はrequestId/sourceHash、行数、元のドイツ語・日本語・位置情報、語形対応を検証し、応答内の補助データだけで日英の検索JSON・辞書・実例を生成します。英語本文はen、対象はwhom_enで、日本語fallbackは使いません。元のde/de_normalizedの改行・句読点・IDは保存し、検索時だけ空白を正規化します。
 
+## Synopsis PDFリンク（2026-10-22）
+
+認証付き日英snapshotは、存在する場合に `synopsis` タブを追加で一回読み取ります。契約は A=作品略称、B=日本語PDF、C=英語PDF、データ行2～29（RS15・RW13、overview除外）です。これは既存の主要タブの見出し名解決とは別の、明示されたA:C位置契約です。B/CはGoogle DriveのPDF閲覧URLを使います。リンクの公開権限・ダウンロード等制限はDrive側で別途確認します。
+
+一覧は日英で同じ作品順・配置・別タブ導線を使い、日本語はB、英語はCへリンクします。検索結果のSynopsisも同じ作品対応を使います。同じ日本語PDFを共有するウムラウト表記やTannhäuserの版違いも同一の対応へ結びます。C空欄時は日本語PDFへfallbackせず、英語一覧は準備中、英語検索結果はSynopsisリンクなしとします。synopsis向けJapanese only注記は除き、未翻訳のショスタコーヴィチ・エッセイ等の注記は維持します。
+
+生成元は `scripts/synopsis-links.js`、`scripts/build-site.js`、`scripts/sync/bilingual.js` です。C列は日本語公開JSONへ入れず、認証snapshotと英語生成物でのみ使用します。通常sync-dataは新しい取得から、サイトのみの再生成は同一取得キャッシュからリンクを再生成します。古いsnapshotにはCがないため、英語リンクは生成しません。新しいGAS exporterの反映とC列の完成後にデータを再取得する必要があります。
+
 ## 非公開の境界
 
 `scripts/english-publication.json` のpublishEnglishとenglishReleaseApprovedは英語公開時にともにtrueへ変更します。両方trueの場合だけ英語を公開対象にできます。一方だけtrue、不明なキー、同期途中の設定変更は停止します。.sync-stateキャッシュは常にGit対象外です。ゲート閉鎖中の英語出力先はGit対象外の `.sync-state/english/<buildHash>/` であり、公開enディレクトリは作りません。

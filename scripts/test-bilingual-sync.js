@@ -14,7 +14,7 @@ const tables={
  '楽譜情報':[['Oper','Publisher'],['work','音楽之友社']]
 };
 let reads={},lockReleased=0;
-const c=vm.createContext({Logger:{log(){}},SPREADSHEET_ID:'synthetic',CacheService:{getScriptCache:()=>({remove(){}})},LockService:{getScriptLock:()=>({tryLock:()=>true,releaseLock:()=>lockReleased++})},SpreadsheetApp:{openById:()=>({getSheetByName:name=>({getDataRange:()=>({getValues:()=>{reads[name]=(reads[name]||0)+1;return tables[name];}})})})}});
+const c=vm.createContext({Logger:{log(){}},SPREADSHEET_ID:'synthetic',CacheService:{getScriptCache:()=>({remove(){}})},LockService:{getScriptLock:()=>({tryLock:()=>true,releaseLock:()=>lockReleased++})},SpreadsheetApp:{openById:()=>({getSheetByName:name=>!tables[name]?null:({getDataRange:()=>({getValues:()=>{reads[name]=(reads[name]||0)+1;return tables[name];}})})})}});
 for(const f of ['sync_build','dictionary_example_shards','generate_dic_html','export_json'])vm.runInContext(fs.readFileSync(path.join(root,'src',f+'.js'),'utf8'),c);
 const exportSnapshot=english=>JSON.parse(JSON.stringify(c.exportAllDataToJson({requestId:'bilingual-fixture',includeEnglish:english})));
 const legacy=exportSnapshot(false);reads={};const snapshot=exportSnapshot(true);
