@@ -17,6 +17,8 @@ function configuration() {
     }
     if (!/^https:\/\/script\.google\.com\/macros\/s\/[A-Za-z0-9_-]+\/exec$/.test(settings.GAS_DEPLOY_URL || '')) throw new Error('固定 GAS_DEPLOY_URL が必要です。');
     if (!settings.GAS_SECRET_TOKEN) throw new Error('GAS_SECRET_TOKEN が必要です。');
+    if (typeof settings.DASHBOARD_API_TOKEN !== 'string' || settings.DASHBOARD_API_TOKEN.length < 32) throw new Error('認証移行の準備が必要です。DASHBOARD_GUIDE.md に従い Sites を先に更新し、専用の DASHBOARD_API_TOKEN を .env と GAS に設定してください。');
+    if (settings.DASHBOARD_API_TOKEN === settings.GAS_SECRET_TOKEN) throw new Error('DASHBOARD_API_TOKEN は管理用トークンと別の値にしてください。');
     return settings;
 }
 function fingerprint() {

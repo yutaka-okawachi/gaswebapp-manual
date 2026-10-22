@@ -215,9 +215,15 @@ const translateScope = (scope, work, type) => {
 function doPost(e) {
   Logger.log("doPost triggered");
   try {
+    if (!e || !e.postData || typeof e.postData.contents !== 'string' || e.postData.contents.length > 24000) {
+      return createJsonResponse({ status: 'error', error: 'Invalid request payload' }, 400);
+    }
     const data = JSON.parse(e.postData.contents);
+    if (!data || typeof data !== 'object' || Array.isArray(data)) {
+      return createJsonResponse({ status: 'error', error: 'Invalid request payload' }, 400);
+    }
 
-    // Public aggregate dashboard API (POST variant).
+    // Dashboard credentials are accepted only in the POST body.
     if (data.api === 'dashboard') {
         return handleDashboardAnalyticsRequest(data);
     }
@@ -237,10 +243,10 @@ function doPost(e) {
     return handleRequest(data);
     
   } catch (error) {
-    Logger.log("Error in doPost: " + error.toString());
+    Logger.log('Invalid POST request.');
     return createJsonResponse({
       status: "error",
-      error: "Invalid request payload: " + error.toString()
+      error: 'Invalid request payload'
     }, 400);
   }
 }
@@ -299,10 +305,31 @@ function normalizeSearchNotificationData_(input) {
   return data;
 }
 
+// Call only while holding the script lock. Properties survive CacheService eviction.
+// Budgets are global, never keyed by a caller-controlled User-Agent or event ID.
+function consumePublicRequestBudget_(kind) {
+  const limits = { notification: [30, 3000], observation: [30, 3000], mail: [10, 80] };
+  if (!Object.prototype.hasOwnProperty.call(limits, kind)) throw new Error('Invalid public request budget');
+  const props = PropertiesService.getScriptProperties();
+  const key = 'public_request_budget_v1_' + kind;
+  const raw = props.getProperty(key);
+  const saved = raw ? JSON.parse(raw) : {};
+  const now = Date.now(), minute = Math.floor(now / 60000), day = Math.floor((now + 9 * 3600000) / 86400000);
+  if (raw && (!Number.isSafeInteger(saved.minute) || !Number.isSafeInteger(saved.day) ||
+      !Number.isSafeInteger(saved.minuteCount) || saved.minuteCount < 0 ||
+      !Number.isSafeInteger(saved.dayCount) || saved.dayCount < 0)) throw new Error('Invalid public request budget state');
+  const minuteCount = saved.minute === minute ? saved.minuteCount : 0;
+  const dayCount = saved.day === day ? saved.dayCount : 0;
+  if (minuteCount >= limits[kind][0] || dayCount >= limits[kind][1]) return false;
+  // Reserve before Sheets/Mail side effects; failed attempts also consume the budget.
+  props.setProperty(key, JSON.stringify({ minute, day, minuteCount: minuteCount + 1, dayCount: dayCount + 1 }));
+  return true;
+}
+
 function searchNotificationCacheKey_(data) {
-  const payload = JSON.stringify([data.language, data.page, data.work, data.scope, data.term, data.includeGlobal, data.userAgent]);
+  const payload = JSON.stringify([data.language, data.page, data.work, data.scope, data.term, data.includeGlobal]);
   const bytes = Utilities.computeDigest(Utilities.DigestAlgorithm.SHA_256, payload, Utilities.Charset.UTF_8);
-  return 'search_notification_v2_' + bytes.map(b => ('0' + ((b + 256) % 256).toString(16)).slice(-2)).join('');
+  return 'search_notification_v3_' + bytes.map(b => ('0' + ((b + 256) % 256).toString(16)).slice(-2)).join('');
 }
 
 function handleSearchNotification(data) {
@@ -319,6 +346,7 @@ function handleSearchNotification(data) {
     notificationCache = CacheService.getScriptCache();
     notificationKey = searchNotificationCacheKey_(data);
     if (isRateLimited(data, notificationKey)) return createJsonResponse({ status: 'success' });
+    if (!consumePublicRequestBudget_('notification')) return createJsonResponse({ status: 'success', recorded: false, limited: true });
     notificationCache.put(notificationKey, 'reserved', 5);
 
 
@@ -396,7 +424,9 @@ function handleSearchNotification(data) {
     const recipient = PropertiesService.getScriptProperties().getProperty('NOTIFY_EMAIL');
     if (recipient) {
       try {
-        MailApp.sendEmail(recipient, subject, body);
+        if (MailApp.getRemainingDailyQuota() > 10 && consumePublicRequestBudget_('mail')) {
+          MailApp.sendEmail(recipient, subject, body);
+        }
       } catch (e) {
         Logger.log("Email sending failed; search history is retained.");
       }
@@ -488,7 +518,7 @@ function logToSpreadsheet(data, detail) {
   if (headers.filter(value => value === 'Language').length > 1) throw new Error('Duplicate Language header');
   if (headers.indexOf('Language') < 0) { sheet.getRange(1, lastCol + 1).setValue('Language'); headers.push('Language'); }
   const values = buildSearchHistoryDataMap_(data, detail, new Date());
-  sheet.appendRow(headers.map(header => Object.prototype.hasOwnProperty.call(values, header) ? values[header] : ''));
+  sheet.appendRow(headers.map(header => sheetLiteralValue_(Object.prototype.hasOwnProperty.call(values, header) ? values[header] : '')));
 }
 
 function isRateLimited(data, cacheKey) {
@@ -497,7 +527,7 @@ function isRateLimited(data, cacheKey) {
   if (!sheet || sheet.getLastRow() < 2) return false;
   const lastCol = sheet.getLastColumn(), headers = sheet.getRange(1, 1, 1, lastCol).getValues()[0].map(value => String(value).trim());
   const dateIndex = headers.indexOf('日時');
-  const fields = ['Work', 'Page', 'Term', 'Instruments', 'Global', 'Szene', 'Whom', 'Page_Num', 'UserAgent'];
+  const fields = ['Work', 'Page', 'Term', 'Instruments', 'Global', 'Szene', 'Whom', 'Page_Num'];
   if (dateIndex < 0 || fields.some(key => headers.indexOf(key) < 0)) return false;
   const wanted = buildSearchHistoryDataMap_(data, '', new Date()), count = Math.min(30, sheet.getLastRow() - 1);
   const rows = sheet.getRange(sheet.getLastRow() - count + 1, 1, count, lastCol).getValues();
@@ -524,8 +554,8 @@ function localNormalize(str) {
  * JSON Helper
  */
 function createJsonResponse(data, statusCode) {
+  if (statusCode) data.httpStatus = statusCode;
   const output = ContentService.createTextOutput(JSON.stringify(data, null, 2))
     .setMimeType(ContentService.MimeType.JSON);
-  if (statusCode) data.httpStatus = statusCode;
   return output;
 }

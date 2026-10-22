@@ -502,15 +502,22 @@ function Invoke-DashboardApiCheck {
     param(
         [string]$BaseUrl,
         [int]$Period,
-        [ValidateSet("all", "ja", "en")][string]$Language = "all"
+        [ValidateSet("all", "ja", "en")][string]$Language = "all",
+        [string]$DashboardToken = $env:DASHBOARD_API_TOKEN
     )
 
     if (-not $BaseUrl) {
         return New-DashboardApiCheckResult -Success $false -Period $Period -Message "GAS_DEPLOY_URL is missing"
     }
 
-    $separator = if ($BaseUrl.Contains("?")) { "&" } else { "?" }
-    $url = "$($BaseUrl.Trim())${separator}api=dashboard&period=$Period&language=$Language"
+    if (-not $DashboardToken -or $DashboardToken.Length -lt 32) {
+        return New-DashboardApiCheckResult -Success $false -Period $Period -Message "DASHBOARD_API_TOKEN is missing or too short"
+    }
+    $url = $BaseUrl.Trim()
+    if ($url -notmatch '^https://script\.google\.com/macros/s/[A-Za-z0-9_-]+/exec$') {
+        return New-DashboardApiCheckResult -Success $false -Period $Period -Message "Invalid fixed GAS URL"
+    }
+    $requestBody = @{ api = 'dashboard'; period = $Period; language = $Language; dashboardToken = $DashboardToken } | ConvertTo-Json -Compress
     $tempRoot = [System.IO.Path]::GetTempPath()
     $requestId = [guid]::NewGuid().ToString("N")
     $bodyPath = Join-Path $tempRoot "dashboard-api-$requestId.json"
@@ -520,10 +527,13 @@ function Invoke-DashboardApiCheck {
         # Keep the response body out of PowerShell's native-process text
         # pipeline. Windows PowerShell may decode UTF-8 JSON using the active
         # console code page, which can turn a valid response into invalid JSON.
-        $metadataLines = & curl.exe `
+        # Credentials go through stdin, never command-line arguments or URLs.
+        $metadataLines = $requestBody | & curl.exe `
             -sS `
             -L `
             --max-time 90 `
+            -H "Content-Type: application/json" `
+            --data-binary "@-" `
             -o "$bodyPath" `
             -w "%{http_code}|%{content_type}" `
             "$url" 2> "$errorPath"

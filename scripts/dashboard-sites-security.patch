@@ -1,0 +1,245 @@
+diff --git a/.gitignore b/.gitignore
+index 116e8e4..9681be0 100644
+--- a/.gitignore
++++ b/.gitignore
+@@ -30,6 +30,8 @@ yarn-error.log*
+ 
+ # env files (can opt-in for committing if needed)
+ .env*
++!.env.example
++.dev.vars*
+ 
+ # vercel
+ .vercel
+diff --git a/README.md b/README.md
+index 4b30cd0..70ccdf7 100644
+--- a/README.md
++++ b/README.md
+@@ -2,6 +2,29 @@
+ 
+ [vinext](https://github.com/cloudflare/vinext) 上で動作するクリーンなフルスタック スターターキットです。オプションで Cloudflare D1 および Drizzle のサポートが含まれています。
+ 
++## 集計APIの認証移行
++
++ブラウザは同一オリジンの `/api/dashboard?period=30&language=all` を呼びます。
++`worker/index.ts` がこの経路を処理し、所有者限定のSitesアクセス制限と
++Dispatchの認証済み訪問者ヘッダーを前提にGASへPOSTします。
++`app/dashboard-proxy.ts` はサーバー専用です。GASのURLや秘密値をブラウザへ渡しません。
++
++32文字以上の専用ランダム値 `DASHBOARD_API_TOKEN` をSitesの非公開ランタイム設定、
++GASの同名スクリプトプロパティ、PCの非公開 `.env` に同じ値で設定してください。
++管理用 `GAS_SECRET_TOKEN` は流用しません。ローカルWorkerではGit対象外の `.dev.vars` を使います。
++秘密値をソースや `.openai/hosting.json` に記載しないでください。
++
++初回公開時は、秘密設定 → Sitesプロキシの先行公開 → GASの通常同期、の順に進めます。
++GASの応答schemaVersionは9のままです。期間・日英切替・既存の集計表示を維持します。
++GASの認証なしGET/POSTは `UNAUTHORIZED` になります。プロキシの未認証はHTTP 401、
++GASの認証・形式・通信エラーは詳細を含めないHTTP 502です。
++
++検証は `npm test` と `npx tsc --noEmit` です。通常の画面テストに加え、匿名拒否、
++POST本文だけでのトークン送信、キャッシュ禁止、エラー非漏えい、ビルド済みWorkerの
++実際のルーティング、ブラウザ成果物に秘密設定が含まれないことを検証します。
++
++公開時は既存の所有者限定設定を維持し、Sitesの先行公開後にGASを更新します。
++
+ ## 前提条件
+ 
+ - Node.js `>=22.13.0`
+diff --git a/app/page.tsx b/app/page.tsx
+index 6b75866..9a20fd0 100644
+--- a/app/page.tsx
++++ b/app/page.tsx
+@@ -2,7 +2,7 @@
+ 
+ import { useEffect, useState } from "react";
+ import LanguageSummaryPanel from "./language-summary";
+-import { GAS_API_URL, PUBLIC_SITE_URL } from "./config";
++import { PUBLIC_SITE_URL } from "./config";
+ import {
+   parseDashboardData,
+   type DashboardData,
+@@ -189,11 +189,7 @@ async function fetchDashboardData(
+   signal: AbortSignal,
+   language: SiteLanguage = "all",
+ ): Promise<DashboardData> {
+-  if (!GAS_API_URL) {
+-    throw new Error("GAS API URLが設定されていません");
+-  }
+-  const url = new URL(GAS_API_URL);
+-  url.searchParams.set("api", "dashboard");
++  const url = new URL("/api/dashboard", window.location.origin);
+   url.searchParams.set("period", String(period));
+   url.searchParams.set("language", language);
+   try {
+diff --git a/package.json b/package.json
+index 147a4af..c6f3327 100644
+--- a/package.json
++++ b/package.json
+@@ -9,7 +9,7 @@
+     "dev": "vite",
+     "build": "vinext build",
+     "start": "vinext start",
+-    "test": "npm run build && node --test tests/rendered-html.test.mjs tests/language-summary.test.mjs tests/dashboard-language.test.mjs",
++    "test": "npm run build && node --test tests/rendered-html.test.mjs tests/language-summary.test.mjs tests/dashboard-language.test.mjs tests/dashboard-proxy.test.mjs",
+     "lint": "eslint . --ignore-pattern dist --ignore-pattern .next",
+     "db:generate": "drizzle-kit generate"
+   },
+diff --git a/tests/rendered-html.test.mjs b/tests/rendered-html.test.mjs
+index cffeef6..6e43ed3 100644
+--- a/tests/rendered-html.test.mjs
++++ b/tests/rendered-html.test.mjs
+@@ -50,7 +50,8 @@ test("uses the fixed aggregate API with runtime validation", async () => {
+ 
+   assert.match(config, /https:\/\/script\.google\.com\/macros\/s\/[^"]+\/exec/);
+   assert.doesNotMatch(config, /token|secret/i);
+-  assert.match(page, /url\.searchParams\.set\("api", "dashboard"\)/);
++  assert.match(page, /new URL\("\/api\/dashboard", window\.location\.origin\)/);
++  assert.doesNotMatch(page, /GAS_API_URL|dashboardToken|DASHBOARD_API_TOKEN/);
+   assert.match(page, /url\.searchParams\.set\("period", String\(period\)\)/);
+   assert.match(page, /parseDashboardData\(await response\.json\(\), period\)/);
+   assert.match(page, /cache: "no-store"/);
+diff --git a/worker/index.ts b/worker/index.ts
+index b3cd137..5d1d335 100644
+--- a/worker/index.ts
++++ b/worker/index.ts
+@@ -1,8 +1,10 @@
+ /** Cloudflare Worker entry point for the vinext-starter template. */
+ import { handleImageOptimization, DEFAULT_DEVICE_SIZES, DEFAULT_IMAGE_SIZES } from "vinext/server/image-optimization";
+ import handler from "vinext/server/app-router-entry";
++import { dashboardProxy } from "../app/dashboard-proxy";
+ 
+ interface Env {
++  DASHBOARD_API_TOKEN?: string;
+   ASSETS: Fetcher;
+   DB: D1Database;
+   IMAGES: {
+@@ -29,6 +31,8 @@ const worker = {
+   async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
+     const url = new URL(request.url);
+ 
++    if (url.pathname === "/api/dashboard") return dashboardProxy(request, env);
++
+     if (url.pathname === "/_vinext/image") {
+       const allowedWidths = [...DEFAULT_DEVICE_SIZES, ...DEFAULT_IMAGE_SIZES];
+       return handleImageOptimization(request, {
+diff --git a/.env.example b/.env.example
+new file mode 100644
+--- /dev/null
++++ b/.env.example
+@@ -0,0 +1,4 @@
++# Ignored .dev.vars for local Worker testing / Sites runtime secret in production.
++# Same dedicated read-only value as GAS Script Property DASHBOARD_API_TOKEN.
++# At least 32 random characters. Never use GAS_SECRET_TOKEN here.
++DASHBOARD_API_TOKEN=
+diff --git a/app/dashboard-proxy.ts b/app/dashboard-proxy.ts
+new file mode 100644
+--- /dev/null
++++ b/app/dashboard-proxy.ts
+@@ -0,0 +1,37 @@
++// Server-only: imported by the Worker, never by a client component.
++import { GAS_API_URL } from "./config";
++import { parseDashboardData, type Period } from "./dashboard-data";
++
++type ProxyEnv = { DASHBOARD_API_TOKEN?: string };
++const responseHeaders = { "Cache-Control": "no-store, private", "Content-Type": "application/json; charset=utf-8", "X-Content-Type-Options": "nosniff" };
++
++export async function dashboardProxy(request: Request, env: ProxyEnv, upstream: typeof fetch = fetch): Promise<Response> {
++  const reply = (status: number, code: string) => new Response(JSON.stringify({ error: { code } }), { status, headers: responseHeaders });
++  // Dispatch enforces the existing owner-only Site policy on every path, including
++  // this endpoint. Require its authenticated visitor identity as defense in depth.
++  if (!request.headers.get("oai-authenticated-user-email")) return reply(401, "UNAUTHORIZED");
++  if (request.method !== "GET") return reply(405, "METHOD_NOT_ALLOWED");
++  const url = new URL(request.url);
++  const period = url.searchParams.get("period"), language = url.searchParams.get("language") || "all";
++  if (!["7", "30", "90", "180"].includes(period || "") || !["all", "ja", "en"].includes(language) ||
++      [...url.searchParams.keys()].some(key => !["period", "language"].includes(key)) ||
++      url.searchParams.getAll("period").length !== 1 || url.searchParams.getAll("language").length > 1) return reply(400, "INVALID_SELECTION");
++  if (typeof env.DASHBOARD_API_TOKEN !== "string" || env.DASHBOARD_API_TOKEN.length < 32) return reply(503, "CONFIGURATION_ERROR");
++  try {
++    const result = await upstream(GAS_API_URL, {
++      method: "POST",
++      headers: { "Content-Type": "application/json" },
++      body: JSON.stringify({ api: "dashboard", period, language, dashboardToken: env.DASHBOARD_API_TOKEN }),
++      cache: "no-store",
++      signal: AbortSignal.timeout(55000),
++    });
++    if (!result.ok) return reply(502, "UPSTREAM_ERROR");
++    // GAS ContentService returns HTTP 200 even for an authentication error.
++    const data = parseDashboardData(await result.json(), Number(period) as Period);
++    if ((data.selectedLanguage ?? "all") !== language || (language !== "all" && data.schemaVersion !== 9)) return reply(502, "UPSTREAM_ERROR");
++    return new Response(JSON.stringify(data), { status: 200, headers: responseHeaders });
++  } catch {
++    // Do not forward upstream bodies, tokens, request URLs or exception details.
++    return reply(502, "UPSTREAM_ERROR");
++  }
++}
+diff --git a/tests/dashboard-proxy.test.mjs b/tests/dashboard-proxy.test.mjs
+new file mode 100644
+--- /dev/null
++++ b/tests/dashboard-proxy.test.mjs
+@@ -0,0 +1,65 @@
++import assert from "node:assert/strict";
++import fs from "node:fs";
++import vm from "node:vm";
++import { createRequire } from "node:module";
++import test from "node:test";
++const require = createRequire(import.meta.url), ts = require("typescript");
++const secret = "synthetic-read-only-dashboard-token";
++const fixture = JSON.parse(fs.readFileSync(new URL("fixtures/schema9.json", import.meta.url), "utf8"));
++function load(relative) {
++  const file = new URL(relative, import.meta.url);
++  const code = ts.transpileModule(fs.readFileSync(file, "utf8"), { compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.CommonJS } }).outputText;
++  const module = { exports: {} };
++  vm.runInNewContext(code, { module, exports: module.exports, URL, Request, Response, AbortSignal, fetch,
++    require: name => name === "./config" ? { GAS_API_URL: "https://example.invalid/fixed-gas" } : name === "./dashboard-data" ? load("../app/dashboard-data.ts") : require(name) });
++  return module.exports;
++}
++const { dashboardProxy } = load("../app/dashboard-proxy.ts");
++const request = (query = "period=7&language=en", authenticated = true, method = "GET") => new Request("https://dashboard.example/api/dashboard?" + query, { method, headers: authenticated ? { "oai-authenticated-user-email": "owner@example.invalid" } : {} });
++
++test("anonymous, invalid selections and missing secrets never contact GAS", async () => {
++  let calls = 0;
++  const upstream = async () => { calls++; throw Error("Must not run"); };
++  assert.equal((await dashboardProxy(request(undefined, false), { DASHBOARD_API_TOKEN: secret }, upstream)).status, 401);
++  assert.equal((await dashboardProxy(request(undefined, true, "POST"), { DASHBOARD_API_TOKEN: secret }, upstream)).status, 405);
++  for (const query of ["period=1", "period=7&language=fr", "period=7&period=30", "period=7&dashboardToken=caller", "period=7&url=https://example.invalid"]) {
++    assert.equal((await dashboardProxy(request(query), { DASHBOARD_API_TOKEN: secret }, upstream)).status, 400);
++  }
++  assert.equal((await dashboardProxy(request(), {}, upstream)).status, 503);
++  assert.equal(calls, 0);
++});
++test("authenticated proxy preserves validated data and sends the read-only secret only in the POST body", async () => {
++  for (const language of ["all", "ja", "en"]) {
++    const expected = structuredClone(fixture); expected.selectedLanguage = language;
++    const response = await dashboardProxy(request("period=7&language=" + language), { DASHBOARD_API_TOKEN: secret }, async (url, init) => {
++      assert.equal(url, "https://example.invalid/fixed-gas"); assert.equal(init.method, "POST");
++      assert.deepEqual(JSON.parse(init.body), { api: "dashboard", period: "7", language, dashboardToken: secret });
++      assert.equal(init.cache, "no-store"); return Response.json(expected);
++    });
++    assert.equal(response.status, 200); assert.equal(response.headers.get("cache-control"), "no-store, private");
++    const body = await response.text(); assert(!body.includes(secret)); assert.deepEqual(JSON.parse(body), expected);
++  }
++});
++test("GAS error bodies, mismatched language and exceptions never leak upstream details or credentials", async () => {
++  for (const upstream of [
++    async () => Response.json({ error: { code: "UNAUTHORIZED", message: secret } }),
++    async () => Response.json({ ...fixture, selectedLanguage: "ja" }),
++    async () => Response.json(fixture, { status: 503 }),
++    async () => { throw Error(secret); },
++  ]) {
++    const response = await dashboardProxy(request(), { DASHBOARD_API_TOKEN: secret }, upstream);
++    assert.equal(response.status, 502); assert.deepEqual(await response.json(), { error: { code: "UPSTREAM_ERROR" } });
++  }
++});
++test("built Worker protects the actual /api/dashboard route before the page router", async () => {
++  const { default: worker } = await import("../dist/server/index.js");
++  const response = await worker.fetch(request(undefined, false), { ASSETS: { fetch: async () => new Response("Not found", { status: 404 }) } }, { waitUntil() {}, passThroughOnException() {} });
++  assert.equal(response.status, 401); assert.equal((await response.json()).error.code, "UNAUTHORIZED");
++});
++test("browser bundle contains neither dashboard secret bindings nor direct GAS fetch configuration", () => {
++  for (const name of fs.readdirSync(new URL("../dist/client/assets", import.meta.url)).filter(name => name.endsWith(".js"))) {
++    const source = fs.readFileSync(new URL("../dist/client/assets/" + name, import.meta.url), "utf8");
++    assert(!source.includes("DASHBOARD_API_TOKEN"), name); assert(!source.includes("dashboardToken"), name);
++    assert(!source.includes("script.google.com/macros/s/"), name);
++  }
++});

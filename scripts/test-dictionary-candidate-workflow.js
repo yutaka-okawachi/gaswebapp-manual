@@ -155,7 +155,7 @@ function testRelatedFormPromotionHelper() {
     }
   };
   vm.createContext(context);
-  vm.runInContext(read('src/dictionary_candidate_workflow.js'), context, {
+  vm.runInContext(read('src/sheet_column_layout.js') + '\n' + read('src/dictionary_candidate_workflow.js'), context, {
     filename: 'src/dictionary_candidate_workflow.js'
   });
   const mappingSheet = { appendRow: row => appended.push(row) };

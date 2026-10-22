@@ -24,6 +24,7 @@ let lockAcquireCount = 0;
 let lockReleaseCount = 0;
 const cacheValues = new Map();
 const scriptProperties = {
+  DASHBOARD_API_TOKEN: 'synthetic-read-only-dashboard-token',
   GA4_PROPERTY_ID: '471296729',
   SPREADSHEET_ID: 'spreadsheet-test-id'
 };
@@ -597,7 +598,7 @@ assert.strictEqual(
 );
 assert.strictEqual(analyticsCallCount, 1);
 
-const invalid = context.handleDashboardAnalyticsRequest({ period: '14' });
+const invalid = context.handleDashboardAnalyticsRequest({ period: '14', dashboardToken: scriptProperties.DASHBOARD_API_TOKEN });
 assert.deepStrictEqual(
   JSON.parse(JSON.stringify(invalid)),
   {
@@ -1172,7 +1173,7 @@ assertFiniteNonNegativeCounts(result);
 
 cacheValues.clear();
 scriptProperties.GA4_PROPERTY_ID = '';
-const missingConfiguration = context.handleDashboardAnalyticsRequest({ period: '7' });
+const missingConfiguration = context.handleDashboardAnalyticsRequest({ period: '7', dashboardToken: scriptProperties.DASHBOARD_API_TOKEN });
 assert.deepStrictEqual(
   JSON.parse(JSON.stringify(missingConfiguration)),
   {

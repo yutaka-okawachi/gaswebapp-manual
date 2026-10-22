@@ -4,12 +4,24 @@
 
 ## 1. 通常確認と更新・公開
 
-管理者ダッシュボードは、Sitesへ保存された画面から固定GAS APIを直接読み込みます。保守対象は次の2つのリポジトリに分かれています。
+管理者ダッシュボードは、ブラウザから同じSites内の `/api/dashboard` を読み込み、所有者限定のSitesサーバーが固定GAS APIへ認証付きPOSTを送ります。専用トークンはサーバーだけで使用し、ブラウザやURLに渡しません。保守対象は次の2つのリポジトリに分かれています。
 
 | 対象 | リポジトリ | 主な正本 |
 |---|---|---|
 | 集計・JSON API | `gaswebapp-manual`（本リポジトリ） | `src/dashboard_analytics.js` |
 | 表示・入力検証・Sites公開 | `sites-plugin-sites-openai-bundled` | `app/dashboard-data.ts`、`app/page.tsx`、`app/globals.css` |
+
+#### 認証方式の初回移行（公開前に必要）
+
+GAS、Sites、秘密設定の本番反映は以下の順序で行います。画面からGASへ直接GETする旧版を残したままGASだけを先に更新すると、ダッシュボードの新規取得が失敗します。検索ページの検索処理は影響を受けません。
+
+1. 管理用 `GAS_SECRET_TOKEN` と異なる、暗号学的にランダムな32文字以上の値を専用の `DASHBOARD_API_TOKEN` として用意します。同じ値をGASのスクリプトプロパティ、Sitesの非公開ランタイム設定、PCのGit対象外 `.env` に設定します。値をソース、`.openai/hosting.json`、公開マニュアル、チャット、URLへ記載しません。未設定・短すぎる値・管理用トークンの流用は拒否されます。
+2. Sites側は `worker/index.ts` の `/api/dashboard`、サーバー専用 `app/dashboard-proxy.ts`、`app/page.tsx` の同一オリジン取得をまとめて更新します。今回の対応差分は [dashboard-sites-security.patch](../scripts/dashboard-sites-security.patch) です。適用元はSitesソース `53b50f142d2841bc1a261dc7e008b6d593d0ace3` です。別の版に適用するときは `git apply --check` と内容確認を先に行い、最新変更を上書きしません。
+3. Sites側で `npm test` と `npx tsc --noEmit` を通します。既存の所有者限定アクセスを維持したまま、**Sitesを先に公開**します。新しいプロキシは旧GASにもPOSTできるため、GASを切り替えるまでの表示を維持できます。ただし旧GASの認証なしAPIは、この段階では閉じていません。
+4. その後、通常の `sync-data` でGAS・公開サイトを更新します。7・30・90・180日、全体・日本語・英語の取得、所有者の表示、Sitesへの匿名アクセス拒否、GASへのトークンなしGET/POSTの `UNAUTHORIZED` を確認します。
+5. `DASHBOARD_API_TOKEN` 未設定では通常同期は公開前に停止します。`-Mode Check` は秘密設定や本番接続を必要とせず、ローカルの組み立て・テストだけを行います。Check成功は認証移行の本番完了を意味しません。
+
+GASの `ContentService` はエラーでもHTTP 200を返すため、HTTPコードだけで認証成功を判定しません。GASの拒否応答は `error.code=UNAUTHORIZED`、`httpStatus=401` です。Sitesプロキシは未認証をHTTP 401、GAS取得・検証失敗をHTTP 502に変換し、上流の本文や例外情報を公開しません。GETのURLへトークンを書いてもGASは認証しません。
 
 API契約の現在値は、`src/dashboard_analytics.js` の `DASHBOARD_SCHEMA_VERSION` と `scripts/dashboard-api-check.ps1` を基準にしてください。両リポジトリの `schemaVersion` は必ず一致させます。
 
@@ -36,7 +48,7 @@ API契約の現在値は、`src/dashboard_analytics.js` の `DASHBOARD_SCHEMA_VE
 2. 本リポジトリの `scripts/dashboard-api-check.ps1`
 3. Sitesリポジトリの `app/dashboard-data.ts`（型・入力検証）
 4. Sitesリポジトリの `app/page.tsx`、必要に応じて `app/globals.css`
-5. Sitesリポジトリの `tests/rendered-html.test.mjs`
+5. Sitesリポジトリの `worker/index.ts`、`app/dashboard-proxy.ts`、`tests/dashboard-proxy.test.mjs`、`tests/rendered-html.test.mjs`
 
 必須キーの追加など、旧画面が新しい応答を安全に読めない変更では `schemaVersion` を上げます。GASだけを先に公開すると現行画面がエラーになる場合があるため、公開順序と互換性を事前に確認してください。
 
@@ -114,7 +126,7 @@ GAS APIの更新とSitesの公開は別作業です。どちらか一方の成�
 
 ### 日本語版・英語版の切替（schemaVersion 9）
 
-- APIの `language=all|ja|en` で表示対象を指定します。省略時は `all`、未知の値や文字列以外は `INVALID_LANGUAGE` です。例：固定WebアプリURLの末尾に `?api=dashboard&period=30&language=en` を付けます。
+- APIの `language=all|ja|en` で表示対象を指定します。省略時は `all`、未知の値や文字列以外は `INVALID_LANGUAGE` です。Sites側の例は `/api/dashboard?period=30&language=en` です。GASには `api`、`period`、`language`、`dashboardToken` をJSON本文でPOSTします。認証確認を入力期間・言語の検証やキャッシュ参照より先に行います。応答schemaVersionは9のままで、集計項目は変更しません。
 - 閲覧、用語、作品、検索方法、実例表示、表示時間、都市は実際に利用したページの言語で分類します。端末やブラウザの言語、アクセス元の国から推定しません。言語情報のない過去イベントは全体集計に残し、日英どちらかへ推定配分しません。
 - 訪問経路（02）は、そのセッションの `landingPage` を基準に分類します。継続利用（08）はユーザープロパティ `gmt_initial_language` を基準に分類し、別言語での再訪も含みます。
 - `mahler-search-app/js/analytics.js` が、計測を許可された公開サイトで最初に開いた言語を端末に保存し、GA4の同名プロパティへ送信します。管理者端末、ローカルプレビュー、ストレージを利用できない端末では新しい分類を送りません。個人識別子や検索語を追加しません。

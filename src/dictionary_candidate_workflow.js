@@ -200,6 +200,9 @@ function mergeObservationPages(currentValue, newValue) {
 }
 
 function sanitizeUnregisteredResultTermObservation(data) {
+  if (!data || typeof data !== 'object' || Array.isArray(data) ||
+      typeof data.term !== 'string' || typeof data.page !== 'string' || typeof data.eventId !== 'string' ||
+      typeof data.resultCount !== 'number') throw new Error('観測データの型が不正です．');
   const term = String(data && data.term || '').normalize('NFC').replace(/\s+/g, ' ').trim();
   const page = String(data && data.page || '').trim();
   const eventId = String(data && data.eventId || '').trim();
@@ -238,6 +241,7 @@ function recordUnregisteredResultTermObservation(observation) {
 
   try {
     if (cache.get(cacheKey)) return { recorded: false, duplicate: true };
+    if (!consumePublicRequestBudget_('observation')) return { recorded: false, limited: true };
     const sheet = requireSheetWithHeaders(
       SpreadsheetApp.getActiveSpreadsheet(),
       UNREGISTERED_RESULT_TERM_SHEET_NAME,
@@ -258,7 +262,7 @@ function recordUnregisteredResultTermObservation(observation) {
       row[5] = Math.max(0, Number(row[5]) || 0) + 1;
       row[6] = mergeObservationPages(row[6], pageTitle);
       row[7] = Math.max(0, Number(row[7]) || 0, observation.resultCount);
-      sheet.getRange(targetRow, 1, 1, row.length).setValues([row]);
+      sheet.getRange(targetRow, 1, 1, row.length).setValues([row.map(sheetLiteralValue_)]);
     } else {
       sheet.appendRow([
         dictionaryCandidateRecordId('observation', observation.normalized),
@@ -272,7 +276,7 @@ function recordUnregisteredResultTermObservation(observation) {
         '未判定',
         '',
         ''
-      ]);
+      ].map(sheetLiteralValue_));
     }
     cache.put(cacheKey, '1', 5);
     return { recorded: true, duplicate: false };
@@ -315,7 +319,7 @@ function appendApprovedRelatedForm(review, mappingSheet, notesHeadwords, existin
     termSearch,
     '対象',
     noteParts.join(' ')
-  ]);
+  ].map(sheetLiteralValue_));
   if (typeof mappingSheet.getParent === 'function') {
     const spreadsheet = mappingSheet.getParent();
     const notesSheet = spreadsheet.getSheetByName(EXPERIMENTAL_NOTES_SHEET_NAME);
@@ -351,7 +355,7 @@ function appendApprovedNewTermCandidate(review, observationByNormalized, candida
     row[9] = review[11];
     row[14] = review[0];
     row[15] = now;
-    candidateSheet.getRange(existing.sheetRow, 1, 1, row.length).setValues([row]);
+    candidateSheet.getRange(existing.sheetRow, 1, 1, row.length).setValues([row.map(sheetLiteralValue_)]);
   } else {
     const row = [
       dictionaryCandidateRecordId('candidate', normalized), observed.row[1], normalized,
@@ -359,12 +363,12 @@ function appendApprovedNewTermCandidate(review, observationByNormalized, candida
       'NEW_TERM_CANDIDATE', review[9], review[11], '候補', '', '未作成', '',
       review[0], now, '', '', '', '', '', '', '', '', '', '', '未確認', ''
     ];
-    candidateSheet.appendRow(row);
+    candidateSheet.appendRow(row.map(sheetLiteralValue_));
     candidateByNormalized.set(normalized, { row, sheetRow: candidateSheet.getLastRow() });
   }
   observed.row[8] = '候補移送済み';
   observed.row[9] = review[0];
-  observed.sheet.getRange(observed.sheetRow, 1, 1, observed.row.length).setValues([observed.row]);
+  observed.sheet.getRange(observed.sheetRow, 1, 1, observed.row.length).setValues([observed.row.map(sheetLiteralValue_)]);
   return existing ? 'updated' : 'inserted';
 }
 

@@ -206,7 +206,7 @@ function createJevReviewForObservation(rowNumber, expectedObservationId, confirm
         answer.category.confidence, answer.target.confidence,
         candidates.map(item => item.option + ': ' + item.headword + '（距離 ' + item.distance + '）').join(' / '),
         '未確認', '', new Date()
-      ]);
+      ].map(sheetLiteralValue_));
       observations.getRange(rowNumber, 9, 1, 3).setValues([['Jev判定済み', reviewId, '']]);
     } finally { lock.releaseLock(); }
     return { reviewId, term };

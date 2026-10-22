@@ -38,7 +38,7 @@ GitHub認証は新PCのGit Credential Managerなどで行います。公開リ�
 ## 3. GAS接続の復元
 
 1. `01_START_SUCCESSOR_SETUP.bat` を実行します。Node.js・Git・claspの確認、`.env` 作成、Googleログインを対話式で行います。ツール導入後は画面を開き直して再実行する場合があります。
-2. GAS Web App URLには既存の固定URLを入力します。`GAS_SECRET_TOKEN` はGAS側スクリプトプロパティと同じ値を使います。
+2. GAS Web App URLには既存の固定URLを入力します。`GAS_SECRET_TOKEN` はGAS側スクリプトプロパティと同じ値を使います。別の読取り専用 `DASHBOARD_API_TOKEN` も安全に引き継ぎ、GAS・Sitesと同じ値を `.env` に設定します。初回の認証移行がまだなら[ダッシュボードマニュアル](DASHBOARD_GUIDE.md)の順序に従い、Sitesを先に更新します。
 3. GASを管理するGoogleアカウントでログインします。必要なら次を個別に実行します。
 
 ```powershell

@@ -134,7 +134,7 @@ function candidateWizardSaveReview(id, decision, category, headword, memo) {
     if (original !== category) row[9] = '';
     if (originalHeadword !== safeHeadword) row[10] = '';
     row[13] = (original !== category ? '人が分類を変更（Jev：' + original + '）．' : '') + safeMemo;
-    sheet.getRange(linked.rowNumber, 1, 1, JEV_REVIEW_HEADERS.length).setValues([row]);
+    sheet.getRange(linked.rowNumber, 1, 1, JEV_REVIEW_HEADERS.length).setValues([row.map(sheetLiteralValue_)]);
   } finally { lock.releaseLock(); }
   return candidateWizardState(id);
 }

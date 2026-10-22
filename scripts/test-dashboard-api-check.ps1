@@ -239,4 +239,30 @@ Assert-True `
     -Condition ($syncSource -match '\$pending = @\(7, 30, 90, 180\)') `
     -Message "all periods must share one retry schedule"
 
+# Exercise the transport with synthetic data; never contact the live deployment.
+$script:dashboardCurlCalls = 0
+$script:dashboardSentBody = $null
+$script:dashboardSentArgs = $null
+function curl.exe {
+    $script:dashboardCurlCalls++
+    $script:dashboardSentArgs = @($args)
+    $script:dashboardSentBody = ($input | Out-String) | ConvertFrom-Json
+    $outputIndex = [array]::IndexOf($args, '-o')
+    [System.IO.File]::WriteAllText($args[$outputIndex + 1], $payload, (New-Object System.Text.UTF8Encoding($false)))
+    $global:LASTEXITCODE = 0
+    '200|application/json'
+}
+try {
+    $testToken = 'synthetic-read-only-dashboard-token'
+    $transport = Invoke-DashboardApiCheck -BaseUrl 'https://script.google.com/macros/s/synthetic/exec' -Period 180 -DashboardToken $testToken
+    Assert-True -Condition $transport.Success -Message "authenticated POST transport: $($transport.Message)"
+    Assert-True -Condition ($script:dashboardSentBody.dashboardToken -eq $testToken) -Message 'secret is supplied in stdin JSON'
+    Assert-True -Condition ($script:dashboardSentBody.api -eq 'dashboard' -and $script:dashboardSentBody.period -eq 180) -Message 'period contract preserved'
+    Assert-True -Condition (-not (($script:dashboardSentArgs -join ' ') -match [regex]::Escape($testToken))) -Message 'secret absent from process arguments'
+    Assert-True -Condition ($script:dashboardSentArgs -contains '@-') -Message 'curl reads request body from stdin'
+    $missing = Invoke-DashboardApiCheck -BaseUrl 'https://script.google.com/macros/s/synthetic/exec' -Period 7 -DashboardToken ''
+    $wrongHost = Invoke-DashboardApiCheck -BaseUrl 'https://example.invalid/exec' -Period 7 -DashboardToken $testToken
+    Assert-True -Condition (-not $missing.Success -and -not $wrongHost.Success -and $script:dashboardCurlCalls -eq 1) -Message 'missing credentials or wrong host never send a request'
+} finally { Remove-Item Function:curl.exe }
+
 Write-Output "sync dashboard API checks: OK"

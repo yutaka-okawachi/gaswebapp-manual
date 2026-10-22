@@ -124,6 +124,14 @@ const DASHBOARD_SEARCH_ENABLED_PATHS = Object.freeze([
  * @returns {TextOutput}
  */
 function handleDashboardAnalyticsRequest(params) {
+  // A separate read-only secret is kept on the Sites server and in Script Properties.
+  // Never accept query-string credentials or fall back to the administrative token.
+  const expected = PropertiesService.getScriptProperties().getProperty('DASHBOARD_API_TOKEN');
+  if (typeof expected !== 'string' || expected.length < 32 ||
+      expected === PropertiesService.getScriptProperties().getProperty('GAS_SECRET_TOKEN') || !params ||
+      typeof params.dashboardToken !== 'string' || params.dashboardToken !== expected) {
+    return createJsonResponse({ error: { code: 'UNAUTHORIZED', message: 'Dashboard authentication required' } }, 401);
+  }
   const period = parseDashboardPeriod(params && params.period);
   if (!period) {
     return createJsonResponse({

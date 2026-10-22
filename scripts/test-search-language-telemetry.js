@@ -1,16 +1,16 @@
 'use strict';
 const fs=require('fs'),path=require('path'),vm=require('vm'),assert=require('assert/strict'),crypto=require('crypto');
 const root=path.resolve(__dirname,'..');
-const server=fs.readFileSync(path.join(root,'src/web_trigger.js'),'utf8');
+const server=fs.readFileSync(path.join(root,'src/sheet_column_layout.js'),'utf8')+'\n'+fs.readFileSync(path.join(root,'src/web_trigger.js'),'utf8');
 let cases=0;
 function test(name,fn){fn();cases++;}
 const oldHeaders=['日時','Work','Page','Term','Instruments','Global','Szene','Whom','Page_Num','UserAgent','詳細'];
 function sandbox(headers=oldHeaders,options={}){
- const rows=headers?[headers.slice()]:[],mails=[],cache=new Map(),writes={rows:0,headers:0,tabs:0},locks={acquire:0,release:0};
+ const rows=headers?[headers.slice()]:[],mails=[],cache=new Map(),budgets=new Map(),writes={rows:0,headers:0,tabs:0},locks={acquire:0,release:0};
  const sheet={getLastRow:()=>rows.length,getLastColumn:()=>Math.max(0,...rows.map(r=>r.length)),getRange:(row,col,n=1,m=1)=>({getValues:()=>Array.from({length:n},(_,i)=>Array.from({length:m},(_,j)=>rows[row-1+i]?.[col-1+j]??'')),setValue:value=>{if(!rows[row-1])rows[row-1]=[];rows[row-1][col-1]=value;writes.headers++;}}),appendRow:row=>{if(options.failHistory){options.failHistory=false;throw Error('mock history failure');}rows.push(Array.from(row));writes.rows++;}};
  let exists=!!headers;
  const ss={getSheetByName:()=>exists?sheet:null,insertSheet:()=>{exists=true;writes.tabs++;return sheet;}};
- const c=vm.createContext({Date,URL,JSON,Logger:{log:()=>{}},PropertiesService:{getScriptProperties:()=>({getProperty:key=>key==='NOTIFY_EMAIL'?'owner@example.invalid':'mock-secret'})},SpreadsheetApp:{getActiveSpreadsheet:()=>ss},MailApp:{sendEmail:(...args)=>{mails.push(args);if(options.failMail)throw Error('mock mail failure');}},Utilities:{DigestAlgorithm:{SHA_256:'sha256'},Charset:{UTF_8:'utf8'},computeDigest:(_,value)=>[...crypto.createHash('sha256').update(value).digest()],formatDate:()=> '2026/10/20 12:00:00'},CacheService:{getScriptCache:()=>({get:key=>cache.get(key)||null,put:(key,value)=>{if(options.failCache)throw Error('mock cache failure');cache.set(key,value);},remove:key=>cache.delete(key)})},LockService:{getScriptLock:()=>({tryLock:()=>{locks.acquire++;return !options.busy;},releaseLock:()=>{locks.release++;}})},ContentService:{MimeType:{JSON:'json'},createTextOutput:text=>({text,setMimeType(){return this;}})}});
+ const c=vm.createContext({Date,URL,JSON,Logger:{log:()=>{}},PropertiesService:{getScriptProperties:()=>({getProperty:key=>key==='NOTIFY_EMAIL'?'owner@example.invalid':key==='GAS_SECRET_TOKEN'?'mock-secret':budgets.get(key)||null,setProperty:(key,value)=>budgets.set(key,value)})},SpreadsheetApp:{getActiveSpreadsheet:()=>ss},MailApp:{getRemainingDailyQuota:()=>100,sendEmail:(...args)=>{mails.push(args);if(options.failMail)throw Error('mock mail failure');}},Utilities:{DigestAlgorithm:{SHA_256:'sha256'},Charset:{UTF_8:'utf8'},computeDigest:(_,value)=>[...crypto.createHash('sha256').update(value).digest()],formatDate:()=> '2026/10/20 12:00:00'},CacheService:{getScriptCache:()=>({get:key=>cache.get(key)||null,put:(key,value)=>{if(options.failCache)throw Error('mock cache failure');cache.set(key,value);},remove:key=>cache.delete(key)})},LockService:{getScriptLock:()=>({tryLock:()=>{locks.acquire++;return !options.busy;},releaseLock:()=>{locks.release++;}})},ContentService:{MimeType:{JSON:'json'},createTextOutput:text=>({text,setMimeType(){return this;}})}});
  vm.runInContext(server,c);
  const send=data=>JSON.parse(c.handleSearchNotification(Object.assign({work:'All (GM)',page:'terms_search.html',term:'langsam',scope:'Term',userAgent:'MockAgent',includeGlobal:false},data)).text);
  return {c,rows,mails,cache,writes,locks,send};

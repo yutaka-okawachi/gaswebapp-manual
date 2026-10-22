@@ -74,7 +74,8 @@ async function verify(state, settings, credential, slug, save, gateTicket) {
     if (!receipt.documentsOnly) {
         logger.info('管理者ダッシュボード API の応答を検査中…');
         process.stdout.write(run(process.platform === 'win32' ? 'powershell.exe' : 'pwsh',
-            ['-NoProfile', '-ExecutionPolicy', 'Bypass', '-File', 'scripts/verify-dashboard.ps1', '-BaseUrl', settings.GAS_DEPLOY_URL]));
+            ['-NoProfile', '-ExecutionPolicy', 'Bypass', '-File', 'scripts/verify-dashboard.ps1', '-BaseUrl', settings.GAS_DEPLOY_URL],
+            { env: { ...process.env, DASHBOARD_API_TOKEN: settings.DASHBOARD_API_TOKEN }, redactError: true }));
         logger.success('ダッシュボード API 正常性確認 (7/30/90/180日)');
     }
 

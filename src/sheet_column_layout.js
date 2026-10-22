@@ -1,5 +1,9 @@
 /** Resolve shared sheet columns by header name; never guess a physical column. */
 function namedSheetHeader_(value) { return String(value == null ? '' : value).normalize('NFC').trim(); }
+// Escape only at the Sheets write boundary; reads retain the original literal text.
+function sheetLiteralValue_(value) {
+  return typeof value === 'string' && /^[\s\u0000-\u001f]*[=+@-]/.test(value) ? "'" + value : value;
+}
 function namedSheetColumns_(sheet, names) {
   const width = sheet.getLastColumn();
   if (!Number.isSafeInteger(width) || width < 1 || width > 1000) throw new Error('列の範囲を確認できません。読み書きを停止しました。');

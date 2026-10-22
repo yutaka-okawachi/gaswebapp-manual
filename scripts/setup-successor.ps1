@@ -105,7 +105,8 @@ function Write-EnvFile {
     param(
         [string]$Path,
         [string]$GasDeployUrl,
-        [string]$GasSecretToken
+        [string]$GasSecretToken,
+        [string]$DashboardToken
     )
 
     $content = @"
@@ -114,6 +115,9 @@ GAS_DEPLOY_URL=$GasDeployUrl
 
 # Same value as GAS script property GAS_SECRET_TOKEN
 GAS_SECRET_TOKEN=$GasSecretToken
+
+# Dedicated read-only token: same value in GAS and Sites runtime secrets
+DASHBOARD_API_TOKEN=$DashboardToken
 "@
 
     Set-Content -Encoding UTF8 -Path $Path -Value $content
@@ -176,7 +180,8 @@ if (Test-Path $envPath) {
     if (Ask-YesNo ".env を作り直しますか？" $false) {
         $gasDeployUrl = Read-GasWebAppUrl
         $gasSecretToken = Read-GasSecretToken
-        Write-EnvFile -Path $envPath -GasDeployUrl $gasDeployUrl -GasSecretToken $gasSecretToken
+        $dashboardToken = Read-RequiredValue "引き継いだ DASHBOARD_API_TOKEN を入力してください" -Secret $true
+        Write-EnvFile -Path $envPath -GasDeployUrl $gasDeployUrl -GasSecretToken $gasSecretToken -DashboardToken $dashboardToken
         Write-Host ".env を更新しました。" -ForegroundColor Green
     }
 } else {
@@ -184,7 +189,8 @@ if (Test-Path $envPath) {
     Write-Host "前任者から受け取った GAS Web App URL と GAS_SECRET_TOKEN を入力します。" -ForegroundColor Yellow
     $gasDeployUrl = Read-GasWebAppUrl
     $gasSecretToken = Read-GasSecretToken
-    Write-EnvFile -Path $envPath -GasDeployUrl $gasDeployUrl -GasSecretToken $gasSecretToken
+    $dashboardToken = Read-RequiredValue "引き継いだ DASHBOARD_API_TOKEN を入力してください" -Secret $true
+    Write-EnvFile -Path $envPath -GasDeployUrl $gasDeployUrl -GasSecretToken $gasSecretToken -DashboardToken $dashboardToken
     Write-Host ".env を作成しました。" -ForegroundColor Green
 }
 

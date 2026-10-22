@@ -2,6 +2,7 @@ const assert = require('assert');
 const fs = require('fs');
 const path = require('path');
 const vm = require('vm');
+const { extractFunction } = require('./test-utils/extract-function');
 
 const root = path.resolve(__dirname, '..');
 
@@ -9,20 +10,6 @@ function read(relativePath) {
   return fs.readFileSync(path.join(root, relativePath), 'utf8');
 }
 
-function extractFunction(source, name) {
-  const start = source.indexOf(`function ${name}(`);
-  assert.notStrictEqual(start, -1, `${name} should exist`);
-  const openBrace = source.indexOf('{', start);
-  let depth = 0;
-  for (let index = openBrace; index < source.length; index += 1) {
-    if (source[index] === '{') depth += 1;
-    if (source[index] === '}') {
-      depth -= 1;
-      if (depth === 0) return source.slice(start, index + 1);
-    }
-  }
-  throw new Error(`${name} closing brace was not found`);
-}
 
 const wagnerStraussSource = read('mahler-search-app/js/wagner_strauss.js');
 const context = {};

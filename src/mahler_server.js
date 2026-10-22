@@ -11,7 +11,8 @@ function doGet(e) {
 
   // 所有者用ダッシュボードが読む公開集計API。
   if (parameters.api === 'dashboard') {
-    return handleDashboardAnalyticsRequest(parameters);
+    // GET must remain unauthorized even if a token was placed in a URL.
+    return handleDashboardAnalyticsRequest({ period: parameters.period, language: parameters.language });
   }
 
   // sync-data が使用する認証済み管理API。
