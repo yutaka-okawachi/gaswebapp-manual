@@ -16,6 +16,8 @@
 
 生成元は `scripts/synopsis-links.js`、`scripts/build-site.js`、`scripts/sync/bilingual.js` です。C列は日本語公開JSONへ入れず、認証snapshotと英語生成物でのみ使用します。通常sync-dataは新しい取得から、サイトのみの再生成は同一取得キャッシュからリンクを再生成します。古いsnapshotにはCがないため、英語リンクは生成しません。新しいGAS exporterの反映とC列の完成後にデータを再取得する必要があります。
 
+キャッシュのないCIでは、コミット済みの日本語 `score_metadata.js` からB列リンクだけを承継し、それ以外の楽譜情報は現在の `frontend/score-metadata.js` を使います。キャッシュの有無にかかわらず同じ形式で生成し、B列が将来更新された場合もCIで旧リンクに戻しません。認証付きsnapshotがある通常同期では、その取得時のB列を優先します。英語C列をこの日本語投影へ含めません。
+
 ## 非公開の境界
 
 `scripts/english-publication.json` のpublishEnglishとenglishReleaseApprovedは英語公開時にともにtrueへ変更します。両方trueの場合だけ英語を公開対象にできます。一方だけtrue、不明なキー、同期途中の設定変更は停止します。.sync-stateキャッシュは常にGit対象外です。ゲート閉鎖中の英語出力先はGit対象外の `.sync-state/english/<buildHash>/` であり、公開enディレクトリは作りません。

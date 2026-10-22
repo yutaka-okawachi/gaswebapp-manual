@@ -51,6 +51,23 @@ function projectMetadata(base, source, language) {
     }
     return result;
 }
+function japaneseBuildMetadata(root, base, source) {
+    if (source !== undefined && source !== null) return projectMetadata(base, source, 'ja');
+    // The committed Japanese projection is public B-column data. Preserve it on
+    // a clean CI checkout without the private authenticated bilingual snapshot.
+    // All non-link score fields still come from the current frontend source.
+    const result = projectMetadata(base, undefined, 'ja');
+    const file = path.join(root, 'mahler-search-app/js/score_metadata.js');
+    if (!fs.existsSync(file)) return result;
+    const context = vm.createContext({});
+    vm.runInContext(fs.readFileSync(file, 'utf8'), context);
+    const published = JSON.parse(vm.runInContext('JSON.stringify(SCORE_METADATA)', context));
+    for (const [key, meta] of Object.entries(result)) if (meta.synopsis && published[key]?.synopsis) {
+        pdfId(published[key].synopsis);
+        meta.synopsis = published[key].synopsis;
+    }
+    return result;
+}
 function metadataScript(metadata) {
     return '// Generated from frontend/score-metadata.js and the same synopsis snapshot.\nconst SCORE_METADATA = ' + JSON.stringify(metadata, null, 4).replaceAll('<', '\\u003c') + ';\n';
 }
@@ -78,4 +95,4 @@ function sourceFromCache(root) {
     if (!fs.existsSync(file)) return undefined;
     return JSON.parse(fs.readFileSync(file, 'utf8')).englishSource?.synopsis;
 }
-module.exports = { pdfId, validateSource, readBaseMetadata, projectMetadata, metadataScript, rewriteList, sourceFromCache };
+module.exports = { pdfId, validateSource, readBaseMetadata, projectMetadata, japaneseBuildMetadata, metadataScript, rewriteList, sourceFromCache };
