@@ -377,11 +377,12 @@ function searchGenericTermsLocal(query, dataKey, type, resultMeta, matchMode) {
     sortedDeKeys.forEach(de => {
         const itemsForThisDe = groupedByDe[de];
         // Generate Link first
-        let resultDe = linkTermsInTranslation(de, window.appData.dic_terms_index);
+        const notationRow = typeof window.hasMusicNotationForRow === 'function' ? itemsForThisDe.find(row => window.hasMusicNotationForRow(row)) || itemsForThisDe[0] : itemsForThisDe[0];
+        let resultDe = linkTermsInTranslation(de, window.appData.dic_terms_index, notationRow);
         
         // Apply Highlight
         if (searchQueries.some(searchQuery => normalizeString(searchQuery).length >= 2)) {
-             resultDe = resultDe.replace(highlightRegex, '<span style="color: red;">$1</span>');
+             resultDe = typeof window.highlightMusicNotationResult === 'function' ? window.highlightMusicNotationResult(resultDe,highlightRegex) : resultDe.replace(highlightRegex, '<span style="color: red;">$1</span>');
         }
 
         html += `<div class="search-result-item">`;
@@ -389,7 +390,7 @@ function searchGenericTermsLocal(query, dataKey, type, resultMeta, matchMode) {
         
         itemsForThisDe.forEach(row => {
             // 各用例ごとに日本語訳を表示（訳語の揺れがわかるように）
-            const ja = escapeHtmlWithBreaks(String(row.ja || ''));
+            const ja = typeof window.formatNotationTranslation === 'function' ? window.formatNotationTranslation(String(row.ja || ''),row) : escapeHtmlWithBreaks(String(row.ja || ''));
             html += `<dd class="result-c">${ja}</dd>`;
             
             const whom = escapeHtml(String(row.whom ?? '').trim());

@@ -1,6 +1,6 @@
 'use strict';
 const assert=require('assert/strict'),{plan}=require('./sync/main');
-for(const file of ['scripts/english-site.js','scripts/gm-original-validation.js']){
+for(const file of ['scripts/english-site.js','scripts/gm-original-validation.js','frontend/notation-contexts.js']){
  assert.equal(plan('Auto',[file],false).data,true,'English data generator changes require a fresh authenticated snapshot');
  assert.equal(plan('Auto',[file],false).deploy,false,'No unnecessary GAS deployment');
 }

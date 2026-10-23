@@ -12,7 +12,41 @@
         'M-d-d01-16-all&M-d-d01-92-all&': [...variants('𝅘𝅥𝅘𝅥𝅘𝅥', 'quarters'), ['[Vierteltriole]', 'quarter-triplet']],
         'M-3-2-50-all&': [...variants('𝅘𝅥𝅮𝅘𝅥𝅮𝅘𝅥𝅮', 'eighths'), ['[Achteltriole]', 'eighth-triplet']]
     };
+    function notationContextKey(row) {
+        if (!row || typeof row !== 'object') return '';
+        const de = String(row.de ?? row[0] ?? '').normalize('NFC');
+        const data = row.data ?? row[3];
+        return data ? JSON.stringify(['GM',String(data),de]) :
+            row.Oper !== undefined ? JSON.stringify(['opera',String(row.Oper),String(row.Aufzug ?? ''),String(row.Szene ?? ''),String(row.page ?? ''),de]) : '';
+    }
+    const contexts = new Map((window.MUSIC_NOTATION_CONTEXTS || []).map(context => {
+        const tokens = context.tokens.flatMap(([token,kind,boundary]) => variants(token,kind).map(([value]) => [value,kind,boundary]));
+        tokens.sort((a,b) => b[0].length-a[0].length);
+        return [notationContextKey(context),tokens];
+    }));
+    function rulesFor(row) {
+        const key = notationContextKey(row), data = String(row?.data || row?.[3] || '');
+        return contexts.get(key) || (Object.hasOwn(rules,data) ? rules[data] : undefined);
+    }
     const labels = {
+        half: ['二分音符', 'Half note'],
+        whole: ['全音符', 'Whole note'],
+        eighth: ['八分音符', 'Eighth note'],
+        'dotted-quarter': ['付点四分音符', 'Dotted quarter note'],
+        fermata: ['フェルマータ記号', 'Fermata sign'],
+        'stopped-plus': ['ゲシュトップを示すプラス記号', 'Plus sign for a stopped note'],
+        'trill-tr': ['トリルを示すtr記号', 'Trill sign tr'],
+        'rhythmic-alignment': ['リズム一致位置を示す縦線', 'Rhythmic alignment line'],
+        'caret-accent': ['山形アクセント記号', 'Caret-shaped accent'],
+        'accent-right': ['アクセント記号', 'Accent sign'],
+        'glissando-up': ['グリッサンドを示す斜線', 'Diagonal glissando line'],
+        'portamento-up': ['ポルタメントを示す右上がりの斜線', 'Rising portamento line'],
+        'portamento-down': ['ポルタメントを示す右下がりの斜線', 'Falling portamento line'],
+        'down-arrow': ['打点の位置を示す下向き矢印', 'Downward beat-cue arrow'],
+        'tempo-star': ['テンポ変化の参照位置を示す星形記号', 'Star-shaped tempo reference marker'],
+        'tempo-theta': ['テンポ変化の参照位置を示す横線入り丸形記号', 'Circle with horizontal bar, a tempo reference marker'],
+        'circle-cross-marker': ['接続・カット位置を示す円十字形記号', 'Circle-and-cross connection or cut marker'],
+        'time-signature-c': ['拍子記号C', 'Time signature C'],
         roof: ['山形アクセントとその下の横線', 'Roof-shaped accent with a horizontal line underneath'],
         'fermata-v': ['フェルマータとV記号の並置', 'Fermata followed by a V-shaped sign'],
         quarter: ['四分音符', 'Quarter note'],
@@ -70,10 +104,50 @@
         } else if (kind === 'fermata-v') {
             width = 70;
             body = '<path d="M5 28 C8 7 31 7 34 28 M45 11 L54 31 L64 11" fill="none" stroke="black" stroke-width="2.3"/><circle cx="19.5" cy="27" r="2.5"/>';
-        } else if (kind === 'quarter' || kind === 'dotted-half') {
-            const dotted = kind === 'dotted-half';
+        } else if (kind === 'fermata') {
+            width = 39;
+            body = '<path d="M5 28 C8 7 31 7 34 28" fill="none" stroke="black" stroke-width="2.3"/><circle cx="19.5" cy="27" r="2.5"/>';
+        } else if (kind === 'whole') {
+            width = 33;
+            body = '<ellipse data-note="whole" cx="16" cy="31" rx="9" ry="5" fill="white" stroke="black" stroke-width="2"/>';
+        } else if (kind === 'stopped-plus') {
+            width = 30;
+            body = '<path d="M15 13 V35 M4 24 H26" fill="none" stroke="black" stroke-width="2"/>';
+        } else if (kind === 'rhythmic-alignment') {
+            width = 17;
+            body = '<path d="M8 7 V41" fill="none" stroke="black" stroke-width="1.8"/>';
+        } else if (kind === 'caret-accent') {
+            width = 31;
+            body = '<path d="M5 32 L15 12 L26 32" fill="none" stroke="black" stroke-width="2.3"/>';
+        } else if (kind === 'accent-right') {
+            width = 33;
+            body = '<path d="M5 14 L28 24 L5 34" fill="none" stroke="black" stroke-width="2.1"/>';
+        } else if (['glissando-up','portamento-up','portamento-down'].includes(kind)) {
+            width = 34;
+            body = '<path d="'+(kind === 'portamento-down' ? 'M5 9 L29 39' : 'M5 39 L29 9')+'" fill="none" stroke="black" stroke-width="1.7"/>';
+        } else if (kind === 'down-arrow') {
+            width = 34;
+            body = '<path d="M17 7 V39 M6 28 L17 39 L28 28" fill="none" stroke="black" stroke-width="1.9"/>';
+        } else if (kind === 'tempo-star') {
+            width = 35;
+            body = '<path d="M17.5 9 V39 M5 16 L30 32 M5 32 L30 16" fill="none" stroke="black" stroke-width="2"/>';
+        } else if (kind === 'tempo-theta') {
+            width = 35;
+            body = '<ellipse cx="17.5" cy="24" rx="11" ry="15" fill="none" stroke="black" stroke-width="2"/><path d="M7 24 H28" stroke="black" stroke-width="2"/>';
+        } else if (kind === 'circle-cross-marker') {
+            width = 42;
+            body = '<circle cx="21" cy="24" r="11" fill="none" stroke="black" stroke-width="1.8"/><path d="M21 5 V43 M2 24 H40" stroke="black" stroke-width="1.8"/>';
+        } else if (kind === 'time-signature-c') {
+            width = 34;
+            body = '<path d="M28 13 C8 2 3 42 27 35" fill="none" stroke="black" stroke-width="4" stroke-linecap="round"/>';
+        } else if (kind === 'trill-tr') {
+            width = 43;
+            body = '<g data-trill-letters="true" transform="skewX(-11)"><path d="M16 10 L12 32 Q11 38 18 32 M8 19 H22 M25 34 L28 19 M27 24 Q33 15 38 21" fill="none" stroke="black" stroke-width="2.7" stroke-linecap="round"/></g>';
+        } else if (['quarter','dotted-half','half','dotted-quarter','eighth'].includes(kind)) {
+            const dotted = kind.startsWith('dotted-'), openHead = kind === 'half' || kind === 'dotted-half';
             width = dotted ? 38 : 28;
-            body = '<ellipse data-note="'+(dotted ? 'half' : 'quarter')+'" cx="12" cy="36" rx="6" ry="4" transform="rotate(-20 12 36)" fill="'+(dotted ? 'white' : 'black')+'" stroke="black" stroke-width="1.8"/><path d="M17 35 V9" fill="none" stroke="black" stroke-width="1.7"/>';
+            body = '<ellipse data-note="'+(openHead ? 'half' : kind === 'eighth' ? 'eighth' : 'quarter')+'" cx="12" cy="36" rx="6" ry="4" transform="rotate(-20 12 36)" fill="'+(openHead ? 'white' : 'black')+'" stroke="black" stroke-width="1.8"/><path d="M17 35 V9" fill="none" stroke="black" stroke-width="1.7"/>';
+            if (kind === 'eighth') body += '<path data-flag="eighth" d="M17 9 C18 16 29 15 26 29 C29 20 20 20 17 14 Z"/>';
             if (dotted) body += '<circle data-augmentation-dot="note" cx="29" cy="35" r="2.1"/>';
         } else {
             const triplet = kind.endsWith('triplet'), beamed = kind.startsWith('eighth');
@@ -90,21 +164,30 @@
         return '<img class="gm-music-notation'+extra+'" data-notation="'+kind+'" src="data:image/svg+xml,'+encodeURIComponent(svg)+'" width="'+width+'" height="'+height+'" alt="'+escape(label)+'" aria-label="'+escape(label)+'" title="'+escape(fallback)+'">';
     }
     function renderMusicNotationDirection(text, termsIndex, row, renderText) {
-        const entries = rules[String(row.data || row[3] || '')];
+        const entries = rulesFor(row);
         if (!entries) return renderText(text, termsIndex);
         let parts = [{text:String(text || '')}];
-        for (const [token, kind] of entries) parts = parts.flatMap(part => {
+        for (const [token, kind, boundary] of entries) parts = parts.flatMap(part => {
             if (part.html !== undefined) return [part];
-            const chunks = part.text.split(token), result = [];
-            chunks.forEach((chunk, i) => {
-                if (i) result.push({html:notationImage(kind, token)});
-                result.push({text:chunk});
-            });
+            const result = [];
+            let last = 0;
+            // Literal matching avoids regex syntax; the boundary protects 'trills', etc.
+            let index = part.text.indexOf(token);
+            while (index >= 0) {
+                const adjacent = (part.text[index-1] || '') + (part.text[index+token.length] || '');
+                if (boundary !== 'word' || !/[a-zA-Z0-9äöüßÄÖÜ]/.test(adjacent)) {
+                    result.push({text:part.text.slice(last,index)},{html:notationImage(kind,token)});
+                    last = index + token.length;
+                }
+                index = part.text.indexOf(token,index+token.length);
+            }
+            result.push({text:part.text.slice(last)});
             return result;
         });
         return parts.map(part => part.html === undefined ? renderText(part.text, termsIndex) : part.html).join('');
     }
     window.renderMusicNotationDirection = renderMusicNotationDirection;
+    window.hasMusicNotationForRow = row => !!rulesFor(row);
     window.highlightMusicNotationResult = (html, regex) => html.split(/(<[^>]*>)/g)
         .map((part, i) => i % 2 ? part : part.replace(regex, '<span style="color: red;">$1</span>')).join('');
 }());

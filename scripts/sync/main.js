@@ -30,7 +30,7 @@ function plan(mode, files, gasChanged) {
     if (mode === 'Site' && gasChanged) throw new Error('GAS に未反映の変更があります。通常の sync-data を実行してください。');
     return {
         deploy: mode !== 'Site' && gasChanged,
-        data: ['All', 'Data'].includes(mode) || (mode === 'Auto' && (gasChanged || files.length === 0 || files.some(file => file.startsWith('src/') || ['scripts/english-site.js', 'scripts/gm-original-validation.js'].includes(file)))),
+        data: ['All', 'Data'].includes(mode) || (mode === 'Auto' && (gasChanged || files.length === 0 || files.some(file => file.startsWith('src/') || ['scripts/english-site.js', 'scripts/gm-original-validation.js', 'frontend/notation-contexts.js'].includes(file)))),
         documentsOnly: documentsOnly && !gasChanged
     };
 }

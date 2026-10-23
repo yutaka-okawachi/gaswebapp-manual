@@ -206,6 +206,7 @@ function formatGmTranslation(text, row) {
         : escapeHtmlWithBreaks(text);
 }
 window.formatGmTranslation = formatGmTranslation;
+window.formatNotationTranslation = formatGmTranslation;
 
 function formatGenericResults(data) {
     if (data.length === 0) {
@@ -304,7 +305,7 @@ function formatGenericResults(data) {
 
         const pageDisplay = hasScorePage(row) ? `p.${row.page}` : '';
         const de = linkTermsInTranslation(row.de, window.appData.dic_terms_index, row);
-        const ja = escapeHtmlWithBreaks(row.ja);
+        const ja = typeof window.formatNotationTranslation === 'function' ? window.formatNotationTranslation(row.ja,row) : escapeHtmlWithBreaks(row.ja);
         const whom = escapeHtml(String(row.whom ?? '').trim());
 
         html += `
