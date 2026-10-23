@@ -1061,6 +1061,1240 @@ function searchRichardStraussByPage() {
 // --- Helper Functions ---
 
 
+// ---- frontend/notation-contexts.js ----
+// Confirmed textual notation contexts. Row numbers are provenance only; runtime uses named fields.
+window.MUSIC_NOTATION_CONTEXTS = [
+  {
+    "tab": "GM",
+    "sourceRow": 3,
+    "de": "＋ Zeichen für einzelne gestopfte Töne",
+    "tokens": [
+      [
+        "＋",
+        "stopped-plus"
+      ],
+      [
+        "+",
+        "stopped-plus"
+      ]
+    ],
+    "data": "M-4-1-113-hr&"
+  },
+  {
+    "tab": "GM",
+    "sourceRow": 37,
+    "de": "1. Spieler tr arco, 2. Spieler pizz.",
+    "tokens": [
+      [
+        "tr",
+        "trill-tr",
+        "word"
+      ]
+    ],
+    "data": "M-7-2-69-va&"
+  },
+  {
+    "tab": "GM",
+    "sourceRow": 336,
+    "de": "Anmerkung für den Dirigenten : Die 𝄐 am Taktstrich bedeuten hier eine 'Luftpause' und keinen 'Halt'.",
+    "tokens": [
+      [
+        "𝄐",
+        "fermata"
+      ]
+    ],
+    "data": "M-1-4-151-dir&"
+  },
+  {
+    "tab": "GM",
+    "sourceRow": 357,
+    "de": "Anmerkung für den Dirigenten : In den ersten Takten des Thema's sind die Bassfiguren schnell in heftigem Ansturm ungefähr 𝅘𝅥 = 144, die Pausen jedoch im Hauptzeitmass 𝅘𝅥 = 84-92 auszuführen. Der Halt im 4. Takte ist kurz - gleichsam ein Ausholen zu neuer Kraft.",
+    "tokens": [
+      [
+        "𝅘𝅥",
+        "quarter"
+      ]
+    ],
+    "data": "M-2-1-1-dir&"
+  },
+  {
+    "tab": "GM",
+    "sourceRow": 367,
+    "de": "Anmerkung : Die Striche | bedeuten die Stelle, wo die verschiedenen Instrumente im Rhythmus zusammenfallen sollen.",
+    "tokens": [
+      [
+        "|",
+        "rhythmic-alignment"
+      ]
+    ],
+    "data": "M-2-5-466-dir&"
+  },
+  {
+    "tab": "GM",
+    "sourceRow": 603,
+    "de": "Die ^ werden allmählich stärker und stärker bis zum fp",
+    "tokens": [
+      [
+        "^",
+        "caret-accent"
+      ]
+    ],
+    "data": "M-1-4-609-v1,v2&"
+  },
+  {
+    "tab": "GM",
+    "sourceRow": 613,
+    "de": "Die Bezeichnung '/' zwischen 2 Noten bedeutet : glissando",
+    "tokens": [
+      [
+        "/",
+        "glissando-up"
+      ]
+    ],
+    "data": "M-4-1-3-dir&"
+  },
+  {
+    "tab": "GM",
+    "sourceRow": 631,
+    "de": "Die mit > bezeichneten Noten sehr herausgestossen",
+    "tokens": [
+      [
+        ">",
+        "accent-right"
+      ],
+      [
+        "＞",
+        "accent-right"
+      ]
+    ],
+    "data": "M-3-5-54-alt&"
+  },
+  {
+    "tab": "GM",
+    "sourceRow": 649,
+    "de": "Die 𝅘𝅥 = ungefähr wie zuletzt die 𝅗𝅥",
+    "tokens": [
+      [
+        "𝅗𝅥",
+        "half"
+      ],
+      [
+        "𝅘𝅥",
+        "quarter"
+      ]
+    ],
+    "data": "M-3-6-92-all&"
+  },
+  {
+    "tab": "GM",
+    "sourceRow": 650,
+    "de": "Die 𝅘𝅥 = wie eben die 𝅗𝅥",
+    "tokens": [
+      [
+        "𝅗𝅥",
+        "half"
+      ],
+      [
+        "𝅘𝅥",
+        "quarter"
+      ]
+    ],
+    "data": "M-3-6-198-all&"
+  },
+  {
+    "tab": "GM",
+    "sourceRow": 651,
+    "de": "Die 𝅘𝅥 = wie früher die 𝅘𝅥.",
+    "tokens": [
+      [
+        "𝅘𝅥.",
+        "dotted-quarter"
+      ],
+      [
+        "𝅘𝅥",
+        "quarter"
+      ]
+    ],
+    "data": "M-2-5-26-all&"
+  },
+  {
+    "tab": "GM",
+    "sourceRow": 652,
+    "de": "Die 𝅘𝅥 etwas schneller wie vorher die 𝅘𝅥.",
+    "tokens": [
+      [
+        "𝅘𝅥.",
+        "dotted-quarter"
+      ],
+      [
+        "𝅘𝅥",
+        "quarter"
+      ]
+    ],
+    "data": "M-b2-t2-13-all&"
+  },
+  {
+    "tab": "GM",
+    "sourceRow": 653,
+    "de": "Die 𝅘𝅥 plötzlich etwas langsamer als vorher",
+    "tokens": [
+      [
+        "𝅘𝅥",
+        "quarter"
+      ]
+    ],
+    "data": "M-8-t2-266-all&"
+  },
+  {
+    "tab": "GM",
+    "sourceRow": 655,
+    "de": "Die 𝅗𝅥 = ungefähr wie im Anfang die 𝅘𝅥 =",
+    "tokens": [
+      [
+        "𝅗𝅥",
+        "half"
+      ],
+      [
+        "𝅘𝅥",
+        "quarter"
+      ]
+    ],
+    "data": "M-3-6-182-all&"
+  },
+  {
+    "tab": "GM",
+    "sourceRow": 656,
+    "de": "die 𝅗𝅥 = wie zuletzt die 𝅝",
+    "tokens": [
+      [
+        "𝅝",
+        "whole"
+      ],
+      [
+        "𝅗𝅥",
+        "half"
+      ]
+    ],
+    "data": "M-2-5-752-all&"
+  },
+  {
+    "tab": "GM",
+    "sourceRow": 721,
+    "de": "Einzelne gestopfte Töne mit '+' bezeichnet.",
+    "tokens": [
+      [
+        "+",
+        "stopped-plus"
+      ],
+      [
+        "＋",
+        "stopped-plus"
+      ]
+    ],
+    "data": "M-6-1-19-hr&"
+  },
+  {
+    "tab": "GM",
+    "sourceRow": 722,
+    "de": "Einzelne gestopfte Töne sind mit + bezeichnet",
+    "tokens": [
+      [
+        "+",
+        "stopped-plus"
+      ],
+      [
+        "＋",
+        "stopped-plus"
+      ]
+    ],
+    "data": "M-5-1-139-hr&"
+  },
+  {
+    "tab": "GM",
+    "sourceRow": 1032,
+    "de": "Hier haben die 𝅘𝅥 wieder eine Schnelligkeit von M. M. 104 (wie zuvor) erreicht",
+    "tokens": [
+      [
+        "𝅘𝅥",
+        "quarter"
+      ]
+    ],
+    "data": "M-b2-t2-65-all&"
+  },
+  {
+    "tab": "GM",
+    "sourceRow": 1099,
+    "de": "im Anfang 𝅘𝅥𝅮 = 138",
+    "tokens": [
+      [
+        "𝅘𝅥𝅮",
+        "eighth"
+      ]
+    ],
+    "data": "M-d-d08-1-all&"
+  },
+  {
+    "tab": "GM",
+    "sourceRow": 1135,
+    "de": "Immer dieselben 𝅘𝅥 (Allegro) Stets streng im Takt ohne Ritenuto",
+    "tokens": [
+      [
+        "𝅘𝅥",
+        "quarter"
+      ]
+    ],
+    "data": "M-8-t1-182-all&"
+  },
+  {
+    "tab": "GM",
+    "sourceRow": 1136,
+    "de": "immer dieselben 𝅗𝅥",
+    "tokens": [
+      [
+        "𝅗𝅥",
+        "half"
+      ]
+    ],
+    "data": "M-7-5-100-all&"
+  },
+  {
+    "tab": "GM",
+    "sourceRow": 1220,
+    "de": "Immer 𝅗𝅥 = 𝅗𝅥 aber immer gemessen",
+    "tokens": [
+      [
+        "𝅗𝅥",
+        "half"
+      ]
+    ],
+    "data": "M-7-5-220-all&"
+  },
+  {
+    "tab": "GM",
+    "sourceRow": 1335,
+    "de": "Langsam (𝅘𝅥 = wie früher 𝅗𝅥)",
+    "tokens": [
+      [
+        "𝅗𝅥",
+        "half"
+      ],
+      [
+        "𝅘𝅥",
+        "quarter"
+      ]
+    ],
+    "data": "M-b2-t2-199-all&"
+  },
+  {
+    "tab": "GM",
+    "sourceRow": 1551,
+    "de": "N.B. ↓ Zum Schlag ausholen!",
+    "tokens": [
+      [
+        "↓",
+        "down-arrow"
+      ]
+    ],
+    "data": "M-7-1-466-all&"
+  },
+  {
+    "tab": "GM",
+    "sourceRow": 1557,
+    "de": "N.B. Ein solcher Strich '\\' '/' zwischen 2 Noten bedeutet stets portament(gliss. )",
+    "tokens": [
+      [
+        "\\",
+        "portamento-down"
+      ],
+      [
+        "/",
+        "portamento-up"
+      ]
+    ],
+    "data": "M-6-1-127-dir&"
+  },
+  {
+    "tab": "GM",
+    "sourceRow": 1561,
+    "de": "N.B. 𝄐 bedeuten keinen Halt, sondern nur eine unbedeutende Dehnung; ebenso ist 'drängend' nur eine Direktive zur Phrasierung und sehr diskret auszuführen.",
+    "tokens": [
+      [
+        "𝄐",
+        "fermata"
+      ]
+    ],
+    "data": "M-7-1-118-v1,v2&M-7-1-119-v1,v2,va,vc&"
+  },
+  {
+    "tab": "GM",
+    "sourceRow": 1577,
+    "de": "NB. '/' bedeutet stets portamento",
+    "tokens": [
+      [
+        "/",
+        "portamento-up"
+      ]
+    ],
+    "data": "M-7-3-130-v1,v2,va&"
+  },
+  {
+    "tab": "GM",
+    "sourceRow": 1578,
+    "de": "NB. '+' = Zeichen für einzelne gestopfte Töne",
+    "tokens": [
+      [
+        "+",
+        "stopped-plus"
+      ],
+      [
+        "＋",
+        "stopped-plus"
+      ]
+    ],
+    "data": "M-a-1-39-hr&"
+  },
+  {
+    "tab": "GM",
+    "sourceRow": 1782,
+    "de": "Noch einmal so langsam (Nicht schleppend) (𝅘𝅥 = wie zuletzt die 𝅗𝅥)",
+    "tokens": [
+      [
+        "𝅗𝅥",
+        "half"
+      ],
+      [
+        "𝅘𝅥",
+        "quarter"
+      ]
+    ],
+    "data": "M-8-t1-135-all&"
+  },
+  {
+    "tab": "GM",
+    "sourceRow": 1783,
+    "de": "Noch einmal so langsam als vorher. (𝅘𝅥𝅮 = 𝅘𝅥) Nicht schleppend",
+    "tokens": [
+      [
+        "𝅘𝅥",
+        "quarter"
+      ],
+      [
+        "𝅘𝅥𝅮",
+        "eighth"
+      ]
+    ],
+    "data": "M-8-t1-217-all&"
+  },
+  {
+    "tab": "GM",
+    "sourceRow": 1920,
+    "de": "quasi tr",
+    "tokens": [
+      [
+        "tr",
+        "trill-tr",
+        "word"
+      ]
+    ],
+    "data": "M-3-3-228-va&"
+  },
+  {
+    "tab": "GM",
+    "sourceRow": 2059,
+    "de": "Sehr gehalten (Im Anfang M. M. 𝅗𝅥 = 58)",
+    "tokens": [
+      [
+        "𝅗𝅥",
+        "half"
+      ]
+    ],
+    "data": "M-b2-t1-1-all&"
+  },
+  {
+    "tab": "GM",
+    "sourceRow": 2064,
+    "de": "Sehr gemessen (𝅗𝅥 = wie früher die 𝅘𝅥)",
+    "tokens": [
+      [
+        "𝅗𝅥",
+        "half"
+      ],
+      [
+        "𝅘𝅥",
+        "quarter"
+      ]
+    ],
+    "data": "M-b2-t2-213-all&"
+  },
+  {
+    "tab": "GM",
+    "sourceRow": 2085,
+    "de": "Sehr langsam (𝅗𝅥 wie zuletzt die 𝅘𝅥)",
+    "tokens": [
+      [
+        "𝅗𝅥",
+        "half"
+      ],
+      [
+        "𝅘𝅥",
+        "quarter"
+      ]
+    ],
+    "data": "M-8-t2-1249-all&"
+  },
+  {
+    "tab": "GM",
+    "sourceRow": 2091,
+    "de": "Sehr langsam und schleppend (𝅘𝅥 noch etwas langsamer als vorhin die 𝅗𝅥)",
+    "tokens": [
+      [
+        "𝅗𝅥",
+        "half"
+      ],
+      [
+        "𝅘𝅥",
+        "quarter"
+      ]
+    ],
+    "data": "M-b2-t2-481-all&"
+  },
+  {
+    "tab": "GM",
+    "sourceRow": 2101,
+    "de": "Sehr mäßig (𝅗𝅥 wie vorher 𝅘𝅥)",
+    "tokens": [
+      [
+        "𝅗𝅥",
+        "half"
+      ],
+      [
+        "𝅘𝅥",
+        "quarter"
+      ]
+    ],
+    "data": "M-a-6-55-all&"
+  },
+  {
+    "tab": "GM",
+    "sourceRow": 2136,
+    "de": "Sehr zurückhaltend (𝅘𝅥 = wie früher die 𝅗𝅥, ungefähr M. M. 66)",
+    "tokens": [
+      [
+        "𝅗𝅥",
+        "half"
+      ],
+      [
+        "𝅘𝅥",
+        "quarter"
+      ]
+    ],
+    "data": "M-b2-t2-259-all&"
+  },
+  {
+    "tab": "GM",
+    "sourceRow": 2210,
+    "de": "stets 𝅘𝅥𝅮 = 𝅘𝅥𝅮",
+    "tokens": [
+      [
+        "𝅘𝅥𝅮",
+        "eighth"
+      ]
+    ],
+    "data": "M-6-2-277-all&"
+  },
+  {
+    "tab": "GM",
+    "sourceRow": 2231,
+    "de": "Tempo primo (𝅗𝅥 = 𝅘𝅥) etwas feierlich. Prachtvoll",
+    "tokens": [
+      [
+        "𝅗𝅥",
+        "half"
+      ],
+      [
+        "𝅘𝅥",
+        "quarter"
+      ]
+    ],
+    "data": "M-7-5-539-all&"
+  },
+  {
+    "tab": "GM",
+    "sourceRow": 2321,
+    "de": "Von hier ab bis zum Zeichen ＊ unmerklich aber stetig breiter werden",
+    "tokens": [
+      [
+        "＊",
+        "tempo-star"
+      ]
+    ],
+    "data": "M-1-1-331-all&"
+  },
+  {
+    "tab": "GM",
+    "sourceRow": 2322,
+    "de": "Von hier ab wird das Tempo bis zum Zeichen Θ in unmerklicher, aber stetiger Steigerung immer lebhafter",
+    "tokens": [
+      [
+        "Θ",
+        "tempo-theta"
+      ]
+    ],
+    "data": "M-1-1-378-all&"
+  },
+  {
+    "tab": "GM",
+    "sourceRow": 2330,
+    "de": "Von hier an in sehr allmählicher aber stetiger Tempo-Steigerung bis zum Zeichen ＊",
+    "tokens": [
+      [
+        "＊",
+        "tempo-star"
+      ]
+    ],
+    "data": "M-1-1-110-all&"
+  },
+  {
+    "tab": "GM",
+    "sourceRow": 2338,
+    "de": "Von hier an wird das Tempo bis zum Zeichen ＊ in sehr allmählicher unmerklicher Steigerung belebt",
+    "tokens": [
+      [
+        "＊",
+        "tempo-star"
+      ]
+    ],
+    "data": "M-1-1-232-all&"
+  },
+  {
+    "tab": "GM",
+    "sourceRow": 2566,
+    "de": "𝅘𝅥 = wie eben die 𝅗𝅥 =",
+    "tokens": [
+      [
+        "𝅗𝅥",
+        "half"
+      ],
+      [
+        "𝅘𝅥",
+        "quarter"
+      ]
+    ],
+    "data": "M-3-6-245-all&"
+  },
+  {
+    "tab": "GM",
+    "sourceRow": 2567,
+    "de": "𝅘𝅥 = wie früher die 𝅗𝅥",
+    "tokens": [
+      [
+        "𝅗𝅥",
+        "half"
+      ],
+      [
+        "𝅘𝅥",
+        "quarter"
+      ]
+    ],
+    "data": "M-1-1-163-all&M-2-5-712-all&"
+  },
+  {
+    "tab": "GM",
+    "sourceRow": 2568,
+    "de": "𝅘𝅥 = wie früher 𝅗𝅥",
+    "tokens": [
+      [
+        "𝅗𝅥",
+        "half"
+      ],
+      [
+        "𝅘𝅥",
+        "quarter"
+      ]
+    ],
+    "data": "M-8-t2-552-all&"
+  },
+  {
+    "tab": "GM",
+    "sourceRow": 2569,
+    "de": "𝅘𝅥 = wie früher 𝅘𝅥𝅮𝅘𝅥𝅮𝅘𝅥𝅮",
+    "tokens": [
+      [
+        "𝅘𝅥",
+        "quarter"
+      ],
+      [
+        "𝅘𝅥𝅮",
+        "eighth"
+      ]
+    ],
+    "data": "M-3-2-70-all&"
+  },
+  {
+    "tab": "GM",
+    "sourceRow": 2570,
+    "de": "𝅘𝅥 = wie zuletzt die 𝅗𝅥",
+    "tokens": [
+      [
+        "𝅗𝅥",
+        "half"
+      ],
+      [
+        "𝅘𝅥",
+        "quarter"
+      ]
+    ],
+    "data": "M-2-5-448-all&"
+  },
+  {
+    "tab": "GM",
+    "sourceRow": 2571,
+    "de": "𝅘𝅥 = wie zuletzt 𝅗𝅥",
+    "tokens": [
+      [
+        "𝅗𝅥",
+        "half"
+      ],
+      [
+        "𝅘𝅥",
+        "quarter"
+      ]
+    ],
+    "data": "M-1-4-428-all&M-2-5-602-all&"
+  },
+  {
+    "tab": "GM",
+    "sourceRow": 2572,
+    "de": "𝅘𝅥 etwas schneller als im Tempo I",
+    "tokens": [
+      [
+        "𝅘𝅥",
+        "quarter"
+      ]
+    ],
+    "data": "M-7-5-87-all&"
+  },
+  {
+    "tab": "GM",
+    "sourceRow": 2573,
+    "de": "𝅘𝅥 wie früher 𝅗𝅥",
+    "tokens": [
+      [
+        "𝅗𝅥",
+        "half"
+      ],
+      [
+        "𝅘𝅥",
+        "quarter"
+      ]
+    ],
+    "data": "M-8-t2-1449-all&"
+  },
+  {
+    "tab": "GM",
+    "sourceRow": 2574,
+    "de": "𝅘𝅥 wie früher 𝅗𝅥",
+    "tokens": [
+      [
+        "𝅗𝅥",
+        "half"
+      ],
+      [
+        "𝅘𝅥",
+        "quarter"
+      ]
+    ],
+    "data": "M-9-3-262-all&"
+  },
+  {
+    "tab": "GM",
+    "sourceRow": 2576,
+    "de": "𝅘𝅥 wie zuletzt 𝅗𝅥",
+    "tokens": [
+      [
+        "𝅗𝅥",
+        "half"
+      ],
+      [
+        "𝅘𝅥",
+        "quarter"
+      ]
+    ],
+    "data": "M-4-3-179-all&"
+  },
+  {
+    "tab": "GM",
+    "sourceRow": 2578,
+    "de": "𝅗𝅥 = etwas schneller wie zu Anfang die 𝅘𝅥 =",
+    "tokens": [
+      [
+        "𝅗𝅥",
+        "half"
+      ],
+      [
+        "𝅘𝅥",
+        "quarter"
+      ]
+    ],
+    "data": "M-3-6-234-all&"
+  },
+  {
+    "tab": "GM",
+    "sourceRow": 2579,
+    "de": "𝅗𝅥 = ungefähr wie die 𝅘𝅥 der beiden letzten Takte",
+    "tokens": [
+      [
+        "𝅗𝅥",
+        "half"
+      ],
+      [
+        "𝅘𝅥",
+        "quarter"
+      ]
+    ],
+    "data": "M-1-1-207-all&"
+  },
+  {
+    "tab": "GM",
+    "sourceRow": 2580,
+    "de": "𝅗𝅥 = wie früher die 𝅘𝅥",
+    "tokens": [
+      [
+        "𝅗𝅥",
+        "half"
+      ],
+      [
+        "𝅘𝅥",
+        "quarter"
+      ]
+    ],
+    "data": "M-b2-t2-141-all&"
+  },
+  {
+    "tab": "GM",
+    "sourceRow": 2581,
+    "de": "𝅗𝅥 = wie früher 𝅘𝅥",
+    "tokens": [
+      [
+        "𝅗𝅥",
+        "half"
+      ],
+      [
+        "𝅘𝅥",
+        "quarter"
+      ]
+    ],
+    "data": "M-1-4-458-all&M-2-5-97-all&M-b2-t1-353-all&"
+  },
+  {
+    "tab": "GM",
+    "sourceRow": 2582,
+    "de": "𝅗𝅥 = wie früher 𝅝",
+    "tokens": [
+      [
+        "𝅝",
+        "whole"
+      ],
+      [
+        "𝅗𝅥",
+        "half"
+      ]
+    ],
+    "data": "M-2-5-418-all&"
+  },
+  {
+    "tab": "GM",
+    "sourceRow": 2583,
+    "de": "𝅗𝅥 = wie zuletzt 𝅘𝅥",
+    "tokens": [
+      [
+        "𝅗𝅥",
+        "half"
+      ],
+      [
+        "𝅘𝅥",
+        "quarter"
+      ]
+    ],
+    "data": "M-2-5-640-all&"
+  },
+  {
+    "tab": "GM",
+    "sourceRow": 2584,
+    "de": "𝅗𝅥 = wie zuletzt 𝅝",
+    "tokens": [
+      [
+        "𝅝",
+        "whole"
+      ],
+      [
+        "𝅗𝅥",
+        "half"
+      ]
+    ],
+    "data": "M-f-f4-84-all&"
+  },
+  {
+    "tab": "GM",
+    "sourceRow": 2585,
+    "de": "𝅗𝅥 = wie zum Schluss die 𝅘𝅥",
+    "tokens": [
+      [
+        "𝅗𝅥",
+        "half"
+      ],
+      [
+        "𝅘𝅥",
+        "quarter"
+      ]
+    ],
+    "data": "M-1-1-59-all&"
+  },
+  {
+    "tab": "GM",
+    "sourceRow": 2586,
+    "de": "𝅗𝅥 etwas langsamer wie im letzten Takte 𝅘𝅥",
+    "tokens": [
+      [
+        "𝅗𝅥",
+        "half"
+      ],
+      [
+        "𝅘𝅥",
+        "quarter"
+      ]
+    ],
+    "data": "M-6-4-479-all&"
+  },
+  {
+    "tab": "GM",
+    "sourceRow": 2587,
+    "de": "𝅗𝅥 ungefähr wie im letzten halben Takte die 𝅘𝅥",
+    "tokens": [
+      [
+        "𝅗𝅥",
+        "half"
+      ],
+      [
+        "𝅘𝅥",
+        "quarter"
+      ]
+    ],
+    "data": "M-8-t2-580-all&"
+  },
+  {
+    "tab": "GM",
+    "sourceRow": 2588,
+    "de": "𝅗𝅥 werden 𝅘𝅥",
+    "tokens": [
+      [
+        "𝅗𝅥",
+        "half"
+      ],
+      [
+        "𝅘𝅥",
+        "quarter"
+      ]
+    ],
+    "data": "M-7-1-118-all&"
+  },
+  {
+    "tab": "GM",
+    "sourceRow": 2589,
+    "de": "𝅗𝅥 die früher die 𝅘𝅥",
+    "tokens": [
+      [
+        "𝅗𝅥",
+        "half"
+      ],
+      [
+        "𝅘𝅥",
+        "quarter"
+      ]
+    ],
+    "data": "M-b2-t2-377-all&"
+  },
+  {
+    "tab": "GM",
+    "sourceRow": 2591,
+    "de": "𝅗𝅥 wie früher 𝅘𝅥 (immer im Tempo I. )",
+    "tokens": [
+      [
+        "𝅗𝅥",
+        "half"
+      ],
+      [
+        "𝅘𝅥",
+        "quarter"
+      ]
+    ],
+    "data": "M-7-5-368-all&"
+  },
+  {
+    "tab": "GM",
+    "sourceRow": 2592,
+    "de": "𝅗𝅥 wie früher 𝅗𝅥",
+    "tokens": [
+      [
+        "𝅗𝅥",
+        "half"
+      ]
+    ],
+    "data": "M-8-t2-219-all&"
+  },
+  {
+    "tab": "GM",
+    "sourceRow": 2593,
+    "de": "𝅗𝅥 wie im letzten Takt die 𝅘𝅥",
+    "tokens": [
+      [
+        "𝅗𝅥",
+        "half"
+      ],
+      [
+        "𝅘𝅥",
+        "quarter"
+      ]
+    ],
+    "data": "M-4-3-107-all&"
+  },
+  {
+    "tab": "GM",
+    "sourceRow": 2594,
+    "de": "𝅗𝅥 wie vorher die 𝅘𝅥",
+    "tokens": [
+      [
+        "𝅗𝅥",
+        "half"
+      ],
+      [
+        "𝅘𝅥",
+        "quarter"
+      ]
+    ],
+    "data": "M-9-3-311-all&"
+  },
+  {
+    "tab": "GM",
+    "sourceRow": 2595,
+    "de": "𝅗𝅥 wie vorher 𝅘𝅥",
+    "tokens": [
+      [
+        "𝅗𝅥",
+        "half"
+      ],
+      [
+        "𝅘𝅥",
+        "quarter"
+      ]
+    ],
+    "data": "M-9-3-180-all&"
+  },
+  {
+    "tab": "GM",
+    "sourceRow": 2596,
+    "de": "𝅗𝅥 wie zuletzt 𝅝",
+    "tokens": [
+      [
+        "𝅝",
+        "whole"
+      ],
+      [
+        "𝅗𝅥",
+        "half"
+      ]
+    ],
+    "data": "M-8-t2-1404-all&"
+  },
+  {
+    "tab": "GM",
+    "sourceRow": 2597,
+    "de": "𝅘𝅥𝅮 wie im letzten Takte die 𝅘𝅥",
+    "tokens": [
+      [
+        "𝅘𝅥",
+        "quarter"
+      ],
+      [
+        "𝅘𝅥𝅮",
+        "eighth"
+      ]
+    ],
+    "data": "M-9-4-49-all&"
+  },
+  {
+    "tab": "GM",
+    "sourceRow": 2598,
+    "de": "𝅘𝅥𝅮𝅘𝅥𝅮𝅘𝅥𝅮 = wie früher 𝅘𝅥",
+    "tokens": [
+      [
+        "𝅘𝅥",
+        "quarter"
+      ],
+      [
+        "𝅘𝅥𝅮",
+        "eighth"
+      ]
+    ],
+    "data": "M-3-2-79-all&M-3-3-69-v1&"
+  },
+  {
+    "tab": "GM",
+    "sourceRow": 2600,
+    "de": "𝅘𝅥𝅮𝅘𝅥𝅮𝅘𝅥𝅮 etwas langsamer wie früher 𝅘𝅥",
+    "tokens": [
+      [
+        "𝅘𝅥",
+        "quarter"
+      ],
+      [
+        "𝅘𝅥𝅮",
+        "eighth"
+      ]
+    ],
+    "data": "M-3-3-256-all&"
+  },
+  {
+    "tab": "GM",
+    "sourceRow": 2601,
+    "de": "𝅘𝅥. = wie früher im letzten Takte die 𝅗𝅥",
+    "tokens": [
+      [
+        "𝅘𝅥.",
+        "dotted-quarter"
+      ],
+      [
+        "𝅗𝅥",
+        "half"
+      ]
+    ],
+    "data": "M-b2-t2-36-all&"
+  },
+  {
+    "tab": "RW",
+    "sourceRow": 364,
+    "de": "Von hier kann gekürzt werden bis zum Zeichen 𝄌 auf Seite 508",
+    "tokens": [
+      [
+        "𝄌",
+        "circle-cross-marker"
+      ]
+    ],
+    "Oper": "rienzi",
+    "Aufzug": 2,
+    "Szene": "",
+    "page": 487
+  },
+  {
+    "tab": "RW",
+    "sourceRow": 841,
+    "de": "𝄌 Anschlußzeichen für die im Anhang enthaltene Pariser Fassung der vorhergehenden Szene.",
+    "tokens": [
+      [
+        "𝄌",
+        "circle-cross-marker"
+      ]
+    ],
+    "Oper": "tann_dresden",
+    "Aufzug": 2,
+    "Szene": 4,
+    "page": 244
+  },
+  {
+    "tab": "RW",
+    "sourceRow": 865,
+    "de": "Von hier bis 𝄌 können die bezeichneten Gesangstimmen pausieren, so daß Tannhäuser allein singt. In der Pariser Bearbeitung sind diese Stimmen ganz fortgelassen.",
+    "tokens": [
+      [
+        "𝄌",
+        "circle-cross-marker"
+      ]
+    ],
+    "Oper": "tann_dresden",
+    "Aufzug": 2,
+    "Szene": 4,
+    "page": 287
+  },
+  {
+    "tab": "RW",
+    "sourceRow": 1025,
+    "de": "Anschluß an die Originalfassung Seite 244 bei 𝄌",
+    "tokens": [
+      [
+        "𝄌",
+        "circle-cross-marker"
+      ]
+    ],
+    "Oper": "tann_dresden",
+    "Aufzug": "III zu Seite 233",
+    "Szene": "",
+    "page": 565
+  },
+  {
+    "tab": "RW",
+    "sourceRow": 1219,
+    "de": "Von hier bis 𝄌 können die bezeichneten Gesangstimmen pausieren, so daß Tannhäuser allein singt. In der Pariser Bearbeitung sind diese Stimmen ganz fortgelassen.",
+    "tokens": [
+      [
+        "𝄌",
+        "circle-cross-marker"
+      ]
+    ],
+    "Oper": "tann_paris",
+    "Aufzug": 2,
+    "Szene": 4,
+    "page": 340
+  },
+  {
+    "tab": "RW",
+    "sourceRow": 2106,
+    "de": "Hier macht Sieglinde einige Schritte gegen Siegmund, hält aber (beim C, piano) wieder inne.",
+    "tokens": [
+      [
+        "C",
+        "time-signature-c",
+        "word"
+      ]
+    ],
+    "Oper": "walküre",
+    "Aufzug": 1,
+    "Szene": 1,
+    "page": 21
+  },
+  {
+    "tab": "RW",
+    "sourceRow": 4642,
+    "de": "Die Triller (tr) sind von den Sängern als sogenannte Bockstriller auszuführen.",
+    "tokens": [
+      [
+        "tr",
+        "trill-tr",
+        "word"
+      ]
+    ],
+    "Oper": "meister",
+    "Aufzug": 3,
+    "Szene": 5,
+    "page": 681
+  },
+  {
+    "tab": "RS",
+    "sourceRow": 726,
+    "de": "in wechselnder Taktart ♩ stets gleich ♩",
+    "tokens": [
+      [
+        "♩",
+        "quarter"
+      ]
+    ],
+    "Oper": "salome",
+    "Aufzug": "",
+    "Szene": 4,
+    "page": 154
+  }
+];
+
+
 // ---- frontend/music-notation.js ----
 // Display only: preserve the Sheet's Unicode/German source and search keys.
 (function () {
@@ -1076,7 +2310,41 @@ function searchRichardStraussByPage() {
         'M-d-d01-16-all&M-d-d01-92-all&': [...variants('𝅘𝅥𝅘𝅥𝅘𝅥', 'quarters'), ['[Vierteltriole]', 'quarter-triplet']],
         'M-3-2-50-all&': [...variants('𝅘𝅥𝅮𝅘𝅥𝅮𝅘𝅥𝅮', 'eighths'), ['[Achteltriole]', 'eighth-triplet']]
     };
+    function notationContextKey(row) {
+        if (!row || typeof row !== 'object') return '';
+        const de = String(row.de ?? row[0] ?? '').normalize('NFC');
+        const data = row.data ?? row[3];
+        return data ? JSON.stringify(['GM',String(data),de]) :
+            row.Oper !== undefined ? JSON.stringify(['opera',String(row.Oper),String(row.Aufzug ?? ''),String(row.Szene ?? ''),String(row.page ?? ''),de]) : '';
+    }
+    const contexts = new Map((window.MUSIC_NOTATION_CONTEXTS || []).map(context => {
+        const tokens = context.tokens.flatMap(([token,kind,boundary]) => variants(token,kind).map(([value]) => [value,kind,boundary]));
+        tokens.sort((a,b) => b[0].length-a[0].length);
+        return [notationContextKey(context),tokens];
+    }));
+    function rulesFor(row) {
+        const key = notationContextKey(row), data = String(row?.data || row?.[3] || '');
+        return contexts.get(key) || (Object.hasOwn(rules,data) ? rules[data] : undefined);
+    }
     const labels = {
+        half: ['二分音符', 'Half note'],
+        whole: ['全音符', 'Whole note'],
+        eighth: ['八分音符', 'Eighth note'],
+        'dotted-quarter': ['付点四分音符', 'Dotted quarter note'],
+        fermata: ['フェルマータ記号', 'Fermata sign'],
+        'stopped-plus': ['ゲシュトップを示すプラス記号', 'Plus sign for a stopped note'],
+        'trill-tr': ['トリルを示すtr記号', 'Trill sign tr'],
+        'rhythmic-alignment': ['リズム一致位置を示す縦線', 'Rhythmic alignment line'],
+        'caret-accent': ['山形アクセント記号', 'Caret-shaped accent'],
+        'accent-right': ['アクセント記号', 'Accent sign'],
+        'glissando-up': ['グリッサンドを示す斜線', 'Diagonal glissando line'],
+        'portamento-up': ['ポルタメントを示す右上がりの斜線', 'Rising portamento line'],
+        'portamento-down': ['ポルタメントを示す右下がりの斜線', 'Falling portamento line'],
+        'down-arrow': ['打点の位置を示す下向き矢印', 'Downward beat-cue arrow'],
+        'tempo-star': ['テンポ変化の参照位置を示す星形記号', 'Star-shaped tempo reference marker'],
+        'tempo-theta': ['テンポ変化の参照位置を示す横線入り丸形記号', 'Circle with horizontal bar, a tempo reference marker'],
+        'circle-cross-marker': ['接続・カット位置を示す円十字形記号', 'Circle-and-cross connection or cut marker'],
+        'time-signature-c': ['拍子記号C', 'Time signature C'],
         roof: ['山形アクセントとその下の横線', 'Roof-shaped accent with a horizontal line underneath'],
         'fermata-v': ['フェルマータとV記号の並置', 'Fermata followed by a V-shaped sign'],
         quarter: ['四分音符', 'Quarter note'],
@@ -1134,10 +2402,50 @@ function searchRichardStraussByPage() {
         } else if (kind === 'fermata-v') {
             width = 70;
             body = '<path d="M5 28 C8 7 31 7 34 28 M45 11 L54 31 L64 11" fill="none" stroke="black" stroke-width="2.3"/><circle cx="19.5" cy="27" r="2.5"/>';
-        } else if (kind === 'quarter' || kind === 'dotted-half') {
-            const dotted = kind === 'dotted-half';
+        } else if (kind === 'fermata') {
+            width = 39;
+            body = '<path d="M5 28 C8 7 31 7 34 28" fill="none" stroke="black" stroke-width="2.3"/><circle cx="19.5" cy="27" r="2.5"/>';
+        } else if (kind === 'whole') {
+            width = 33;
+            body = '<ellipse data-note="whole" cx="16" cy="31" rx="9" ry="5" fill="white" stroke="black" stroke-width="2"/>';
+        } else if (kind === 'stopped-plus') {
+            width = 30;
+            body = '<path d="M15 13 V35 M4 24 H26" fill="none" stroke="black" stroke-width="2"/>';
+        } else if (kind === 'rhythmic-alignment') {
+            width = 17;
+            body = '<path d="M8 7 V41" fill="none" stroke="black" stroke-width="1.8"/>';
+        } else if (kind === 'caret-accent') {
+            width = 31;
+            body = '<path d="M5 32 L15 12 L26 32" fill="none" stroke="black" stroke-width="2.3"/>';
+        } else if (kind === 'accent-right') {
+            width = 33;
+            body = '<path d="M5 14 L28 24 L5 34" fill="none" stroke="black" stroke-width="2.1"/>';
+        } else if (['glissando-up','portamento-up','portamento-down'].includes(kind)) {
+            width = 34;
+            body = '<path d="'+(kind === 'portamento-down' ? 'M5 9 L29 39' : 'M5 39 L29 9')+'" fill="none" stroke="black" stroke-width="1.7"/>';
+        } else if (kind === 'down-arrow') {
+            width = 34;
+            body = '<path d="M17 7 V39 M6 28 L17 39 L28 28" fill="none" stroke="black" stroke-width="1.9"/>';
+        } else if (kind === 'tempo-star') {
+            width = 35;
+            body = '<path d="M17.5 9 V39 M5 16 L30 32 M5 32 L30 16" fill="none" stroke="black" stroke-width="2"/>';
+        } else if (kind === 'tempo-theta') {
+            width = 35;
+            body = '<ellipse cx="17.5" cy="24" rx="11" ry="15" fill="none" stroke="black" stroke-width="2"/><path d="M7 24 H28" stroke="black" stroke-width="2"/>';
+        } else if (kind === 'circle-cross-marker') {
+            width = 42;
+            body = '<circle cx="21" cy="24" r="11" fill="none" stroke="black" stroke-width="1.8"/><path d="M21 5 V43 M2 24 H40" stroke="black" stroke-width="1.8"/>';
+        } else if (kind === 'time-signature-c') {
+            width = 34;
+            body = '<path d="M28 13 C8 2 3 42 27 35" fill="none" stroke="black" stroke-width="4" stroke-linecap="round"/>';
+        } else if (kind === 'trill-tr') {
+            width = 43;
+            body = '<g data-trill-letters="true" transform="skewX(-11)"><path d="M16 10 L12 32 Q11 38 18 32 M8 19 H22 M25 34 L28 19 M27 24 Q33 15 38 21" fill="none" stroke="black" stroke-width="2.7" stroke-linecap="round"/></g>';
+        } else if (['quarter','dotted-half','half','dotted-quarter','eighth'].includes(kind)) {
+            const dotted = kind.startsWith('dotted-'), openHead = kind === 'half' || kind === 'dotted-half';
             width = dotted ? 38 : 28;
-            body = '<ellipse data-note="'+(dotted ? 'half' : 'quarter')+'" cx="12" cy="36" rx="6" ry="4" transform="rotate(-20 12 36)" fill="'+(dotted ? 'white' : 'black')+'" stroke="black" stroke-width="1.8"/><path d="M17 35 V9" fill="none" stroke="black" stroke-width="1.7"/>';
+            body = '<ellipse data-note="'+(openHead ? 'half' : kind === 'eighth' ? 'eighth' : 'quarter')+'" cx="12" cy="36" rx="6" ry="4" transform="rotate(-20 12 36)" fill="'+(openHead ? 'white' : 'black')+'" stroke="black" stroke-width="1.8"/><path d="M17 35 V9" fill="none" stroke="black" stroke-width="1.7"/>';
+            if (kind === 'eighth') body += '<path data-flag="eighth" d="M17 9 C18 16 29 15 26 29 C29 20 20 20 17 14 Z"/>';
             if (dotted) body += '<circle data-augmentation-dot="note" cx="29" cy="35" r="2.1"/>';
         } else {
             const triplet = kind.endsWith('triplet'), beamed = kind.startsWith('eighth');
@@ -1154,21 +2462,30 @@ function searchRichardStraussByPage() {
         return '<img class="gm-music-notation'+extra+'" data-notation="'+kind+'" src="data:image/svg+xml,'+encodeURIComponent(svg)+'" width="'+width+'" height="'+height+'" alt="'+escape(label)+'" aria-label="'+escape(label)+'" title="'+escape(fallback)+'">';
     }
     function renderMusicNotationDirection(text, termsIndex, row, renderText) {
-        const entries = rules[String(row.data || row[3] || '')];
+        const entries = rulesFor(row);
         if (!entries) return renderText(text, termsIndex);
         let parts = [{text:String(text || '')}];
-        for (const [token, kind] of entries) parts = parts.flatMap(part => {
+        for (const [token, kind, boundary] of entries) parts = parts.flatMap(part => {
             if (part.html !== undefined) return [part];
-            const chunks = part.text.split(token), result = [];
-            chunks.forEach((chunk, i) => {
-                if (i) result.push({html:notationImage(kind, token)});
-                result.push({text:chunk});
-            });
+            const result = [];
+            let last = 0;
+            // Literal matching avoids regex syntax; the boundary protects 'trills', etc.
+            let index = part.text.indexOf(token);
+            while (index >= 0) {
+                const adjacent = (part.text[index-1] || '') + (part.text[index+token.length] || '');
+                if (boundary !== 'word' || !/[a-zA-Z0-9äöüßÄÖÜ]/.test(adjacent)) {
+                    result.push({text:part.text.slice(last,index)},{html:notationImage(kind,token)});
+                    last = index + token.length;
+                }
+                index = part.text.indexOf(token,index+token.length);
+            }
+            result.push({text:part.text.slice(last)});
             return result;
         });
         return parts.map(part => part.html === undefined ? renderText(part.text, termsIndex) : part.html).join('');
     }
     window.renderMusicNotationDirection = renderMusicNotationDirection;
+    window.hasMusicNotationForRow = row => !!rulesFor(row);
     window.highlightMusicNotationResult = (html, regex) => html.split(/(<[^>]*>)/g)
         .map((part, i) => i % 2 ? part : part.replace(regex, '<span style="color: red;">$1</span>')).join('');
 }());
@@ -1383,6 +2700,7 @@ function formatGmTranslation(text, row) {
         : escapeHtmlWithBreaks(text);
 }
 window.formatGmTranslation = formatGmTranslation;
+window.formatNotationTranslation = formatGmTranslation;
 
 function formatGenericResults(data) {
     if (data.length === 0) {
@@ -1481,7 +2799,7 @@ function formatGenericResults(data) {
 
         const pageDisplay = hasScorePage(row) ? `p.${row.page}` : '';
         const de = linkTermsInTranslation(row.de, window.appData.dic_terms_index, row);
-        const ja = escapeHtmlWithBreaks(row.ja);
+        const ja = typeof window.formatNotationTranslation === 'function' ? window.formatNotationTranslation(row.ja,row) : escapeHtmlWithBreaks(row.ja);
         const whom = escapeHtml(String(row.whom ?? '').trim());
 
         html += `
@@ -2388,11 +3706,12 @@ function searchGenericTermsLocal(query, dataKey, type, resultMeta, matchMode) {
     sortedDeKeys.forEach(de => {
         const itemsForThisDe = groupedByDe[de];
         // Generate Link first
-        let resultDe = linkTermsInTranslation(de, window.appData.dic_terms_index);
+        const notationRow = typeof window.hasMusicNotationForRow === 'function' ? itemsForThisDe.find(row => window.hasMusicNotationForRow(row)) || itemsForThisDe[0] : itemsForThisDe[0];
+        let resultDe = linkTermsInTranslation(de, window.appData.dic_terms_index, notationRow);
         
         // Apply Highlight
         if (searchQueries.some(searchQuery => normalizeString(searchQuery).length >= 2)) {
-             resultDe = resultDe.replace(highlightRegex, '<span style="color: red;">$1</span>');
+             resultDe = typeof window.highlightMusicNotationResult === 'function' ? window.highlightMusicNotationResult(resultDe,highlightRegex) : resultDe.replace(highlightRegex, '<span style="color: red;">$1</span>');
         }
 
         html += `<div class="search-result-item">`;
@@ -2400,7 +3719,7 @@ function searchGenericTermsLocal(query, dataKey, type, resultMeta, matchMode) {
         
         itemsForThisDe.forEach(row => {
             // 各用例ごとに日本語訳を表示（訳語の揺れがわかるように）
-            const ja = escapeHtmlWithBreaks(String(row.ja || ''));
+            const ja = typeof window.formatNotationTranslation === 'function' ? window.formatNotationTranslation(String(row.ja || ''),row) : escapeHtmlWithBreaks(String(row.ja || ''));
             html += `<dd class="result-c">${ja}</dd>`;
             
             const whom = escapeHtml(String(row.whom ?? '').trim());

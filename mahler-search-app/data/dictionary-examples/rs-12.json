@@ -40,7 +40,6 @@
   {"__exampleOrder":676,"Oper":"salome","Aufzug":"","Szene":1,"page":13,"whom":"Jochanaan","de":"aus der Cisterne","de_normalized":"aus der cisterne","ja":"貯水槽（井戸）の中から","楽譜情報":"Adolph Fürstner","場面タイトル":"第1場"},
   {"__exampleOrder":686,"Oper":"salome","Aufzug":"","Szene":2,"page":27,"whom":"奴隷","de":"Sklave ab","de_normalized":"sklave ab","ja":"奴隷は退場する．","楽譜情報":"Adolph Fürstner","場面タイトル":"第2場"},
   {"__exampleOrder":695,"Oper":"salome","Aufzug":"","Szene":2,"page":37,"whom":"Salome","de":"stets sehr leise","de_normalized":"stets sehr leise","ja":"常に非常に小声で","楽譜情報":"Adolph Fürstner","場面タイトル":"第2場"},
-  {"__exampleOrder":724,"Oper":"salome","Aufzug":"","Szene":4,"page":154,"whom":"Orchester","de":"in wechselnder Taktart 四分音符 stets gleich 四分音符","de_normalized":"in wechselnder taktart 四分音符 stets gleich 四分音符","ja":"拍子を変えながら，四分音符は常に（前の拍節の）四分音符と等しく．","楽譜情報":"Adolph Fürstner","場面タイトル":"第4場"},
   {"__exampleOrder":739,"Oper":"salome","Aufzug":"","Szene":4,"page":181,"whom":"Salome","de":"ruhig","de_normalized":"ruhig","ja":"静かに","楽譜情報":"Adolph Fürstner","場面タイトル":"第4場"},
   {"__exampleOrder":741,"Oper":"salome","Aufzug":"","Szene":4,"page":184,"whom":"Orchester","de":"niemals harpeggiert.","de_normalized":"niemals harpeggiert.","ja":"決してアルペジオにしない","楽譜情報":"Adolph Fürstner","場面タイトル":"第4場"},
   {"__exampleOrder":745,"Oper":"salome","Aufzug":"","Szene":4,"page":192,"whom":"Orchester","de":"mit Triangelschlägel gerieben","de_normalized":"mit triangelschlaegel gerieben","ja":"トライアングルのマレットで擦って","楽譜情報":"Adolph Fürstner","場面タイトル":"第4場"},
