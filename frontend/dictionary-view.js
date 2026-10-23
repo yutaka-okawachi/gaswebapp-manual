@@ -98,7 +98,8 @@ function compareGermanStrings(a, b) {
 }
 
 function generateAlphabetLinks() {
-    return window.customOrder.map(letter => `<a href="#letter-${letter}">${letter}</a>`).join('\n');
+    const english = /^en(?:-|$)/i.test(document.documentElement.lang || '');
+    return window.customOrder.map(letter => `<a href="#letter-${letter}">${letter === 'OTHER' && english ? 'Other' : letter}</a>`).join('\n');
 }
 
 function renderDictionaryList(data) {

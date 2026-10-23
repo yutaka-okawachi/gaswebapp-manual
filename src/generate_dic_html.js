@@ -1706,7 +1706,7 @@ ${abbrListHtml}
                 document.write(\`<a href="#letter-\${l}">\${l}</a>\`);
             });
             // 数字・記号のリンクを追加
-            document.write(\`<a href="#letter-OTHER">数字・記号</a>\`);
+            document.write(\`<a href="#letter-OTHER">${options && options.language === 'en' ? 'Other' : '数字・記号'}</a>\`);
         </script>
     </div>
 

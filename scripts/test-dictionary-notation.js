@@ -15,7 +15,7 @@ for(const language of ['ja','en']){
  assert.equal((svg.match(/data-note="quarter"/g)||[]).length,1);assert.equal((svg.match(/data-stem="single"/g)||[]).length,1);assert.equal((svg.match(/data-tremolo-stroke="true"/g)||[]).length,3);
  assert(!/<text\b|font-family|<script\b|foreignObject|data-flag|augmentation-dot/.test(svg));
  assert(svg.includes('fill="black"'));assert(svg.includes('data-stem-direction="down"')); if(language==='en')assert(!/[\p{Script=Han}\p{Script=Hiragana}\p{Script=Katakana}]/u.test(image));
- const output=c.generateDicHtml(data,[],null,[],{language});const original=old.generateDicHtml(data,[],null,[]);
+ const output=c.generateDicHtml(data,[],null,[],{language});const original=old.generateDicHtml(data,[],null,[],{language});
  assert.equal((output.match(/dictionary-music-notation/g)||[]).length,1);
  assert(output.replace(image,'トレモロ音符')===original,'Only the display placeholder changes; all 988 anchors, metadata, example links and translations remain identical');
  for(const r of data)if(r[0]!==target[0])assert.equal(c.renderDictionaryNotationText(r[0],r[0],r[2],language),c.escapeHtml(r[0]),'No unrelated dictionary notation is changed');
