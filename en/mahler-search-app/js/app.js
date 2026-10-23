@@ -1061,6 +1061,26 @@ function searchRichardStraussByPage() {
 // --- Helper Functions ---
 
 
+// ---- src/dictionary_notation.js ----
+// Display-only transcription of Don Quixote, IMSLP18787, PDF32/printed p.224.
+// One black quarter note, downward stem, three tremolo strokes; no pitch implied.
+function renderDictionaryNotationText(text, german, source, language) {
+  const escape = value => String(value ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#039;');
+  const heading = 'alle in den Bläsern als トレモロ音符 notirten Stellen sind mit Zungenschlag auszuführen.';
+  const value = String(text ?? '');
+  if (String(german ?? '').normalize('NFC').trim() !== heading || String(source ?? '').trim() !== '[RS: Qui]' || value !== String(german ?? '')) return escape(value);
+  const token = 'トレモロ音符', position = value.indexOf(token), english = language === 'en';
+  const label = english ? 'Single quarter note with a downward stem and three tremolo strokes' : '下向き符幹の四分音符1個に斜線3本のトレモロ表記';
+  const svg = '<svg xmlns="http://www.w3.org/2000/svg" width="38" height="50" viewBox="0 0 38 50">' +
+    '<ellipse data-note="quarter" cx="25" cy="10" rx="6" ry="4" transform="rotate(-20 25 10)" fill="black"/>' +
+    '<path data-stem="single" data-stem-direction="down" d="M20 11 V44" stroke="black" stroke-width="1.7"/>' +
+    [0, 6, 12].map(y => '<path data-tremolo-stroke="true" d="M8 ' + (25 + y) + ' L29 ' + (17 + y) + ' V' + (21 + y) + ' L8 ' + (29 + y) + ' Z" fill="black"/>').join('') + '</svg>';
+  const image = '<img class="gm-music-notation dictionary-music-notation" data-notation="quarter-tremolo-three" src="data:image/svg+xml,' + encodeURIComponent(svg) + '" width="38" height="50" alt="' + escape(label) + '" aria-label="' + escape(label) + '" title="' + (english ? '[tremolo notes]' : token) + '">';
+  return escape(value.slice(0, position)) + image + escape(value.slice(position + token.length));
+}
+
+
 // ---- frontend/notation-contexts.js ----
 // Confirmed textual notation contexts. Row numbers are provenance only; runtime uses named fields.
 window.MUSIC_NOTATION_CONTEXTS = [
@@ -1079,19 +1099,6 @@ window.MUSIC_NOTATION_CONTEXTS = [
       ]
     ],
     "data": "M-4-1-113-hr&"
-  },
-  {
-    "tab": "GM",
-    "sourceRow": 37,
-    "de": "1. Spieler tr arco, 2. Spieler pizz.",
-    "tokens": [
-      [
-        "tr",
-        "trill-tr",
-        "word"
-      ]
-    ],
-    "data": "M-7-2-69-va&"
   },
   {
     "tab": "GM",
@@ -1244,6 +1251,22 @@ window.MUSIC_NOTATION_CONTEXTS = [
       ]
     ],
     "data": "M-8-t2-266-all&"
+  },
+  {
+    "tab": "GM",
+    "sourceRow": 654,
+    "de": "Die 𝅘𝅥 wie früher die 𝅗𝅥",
+    "tokens": [
+      [
+        "𝅘𝅥",
+        "quarter"
+      ],
+      [
+        "𝅗𝅥",
+        "half"
+      ]
+    ],
+    "data": "M-b1-t2-302-all&"
   },
   {
     "tab": "GM",
@@ -1484,19 +1507,6 @@ window.MUSIC_NOTATION_CONTEXTS = [
       ]
     ],
     "data": "M-8-t1-217-all&"
-  },
-  {
-    "tab": "GM",
-    "sourceRow": 1920,
-    "de": "quasi tr",
-    "tokens": [
-      [
-        "tr",
-        "trill-tr",
-        "word"
-      ]
-    ],
-    "data": "M-3-3-228-va&"
   },
   {
     "tab": "GM",
@@ -2171,6 +2181,22 @@ window.MUSIC_NOTATION_CONTEXTS = [
     "data": "M-b2-t2-36-all&"
   },
   {
+    "tab": "GM",
+    "sourceRow": 2602,
+    "de": "𝅘𝅥. = wie früher 𝅘𝅥𝅮𝅘𝅥𝅮𝅘𝅥𝅮",
+    "tokens": [
+      [
+        "𝅘𝅥.",
+        "dotted-quarter"
+      ],
+      [
+        "𝅘𝅥𝅮𝅘𝅥𝅮𝅘𝅥𝅮",
+        "eighth-triplet-below"
+      ]
+    ],
+    "data": "M-3-2-144-all&"
+  },
+  {
     "tab": "RW",
     "sourceRow": 364,
     "de": "Von hier kann gekürzt werden bis zum Zeichen 𝄌 auf Seite 508",
@@ -2262,22 +2288,6 @@ window.MUSIC_NOTATION_CONTEXTS = [
     "page": 21
   },
   {
-    "tab": "RW",
-    "sourceRow": 4642,
-    "de": "Die Triller (tr) sind von den Sängern als sogenannte Bockstriller auszuführen.",
-    "tokens": [
-      [
-        "tr",
-        "trill-tr",
-        "word"
-      ]
-    ],
-    "Oper": "meister",
-    "Aufzug": 3,
-    "Szene": 5,
-    "page": 681
-  },
-  {
     "tab": "RS",
     "sourceRow": 726,
     "de": "in wechselnder Taktart ♩ stets gleich ♩",
@@ -2333,7 +2343,6 @@ window.MUSIC_NOTATION_CONTEXTS = [
         'dotted-quarter': ['付点四分音符', 'Dotted quarter note'],
         fermata: ['フェルマータ記号', 'Fermata sign'],
         'stopped-plus': ['ゲシュトップを示すプラス記号', 'Plus sign for a stopped note'],
-        'trill-tr': ['トリルを示すtr記号', 'Trill sign tr'],
         'rhythmic-alignment': ['リズム一致位置を示す縦線', 'Rhythmic alignment line'],
         'caret-accent': ['山形アクセント記号', 'Caret-shaped accent'],
         'accent-right': ['アクセント記号', 'Accent sign'],
@@ -2353,6 +2362,7 @@ window.MUSIC_NOTATION_CONTEXTS = [
         'quarter-triplet': ['四分音符3個の三連符1組', 'One triplet group of three quarter notes'],
         eighths: ['一本の連桁で結んだ通常の八分音符3個', 'Three ordinary eighth notes with one beam'],
         'eighth-triplet': ['一本の連桁で結んだ八分音符3個の三連符1組', 'One triplet group of three eighth notes with one beam'],
+        'eighth-triplet-below': ['下側の3を付した八分音符三連符1組', 'One beamed eighth-note triplet with the numeral 3 below'],
         'motif-two': ['ト音記号付き2小節。各小節は四分音符、付点八分休符、十六分音符、八分音符、八分休符。音高F4-D4-F4、G4-C4-F4。四分音符にテヌート、十六分・八分音符にスタッカート。', 'Two bars with treble clef. Each bar: quarter note, dotted eighth rest, sixteenth note, eighth note, eighth rest. Pitches F4-D4-F4, G4-C4-F4. Quarter notes have tenuto; sixteenth and eighth notes have staccato.'],
         'motif-one': ['音部記号と奏法記号なしの1小節。四分音符、付点八分休符、十六分音符、八分音符、八分休符。音高F4-D4-F4。', 'One bar without clef or articulation marks: quarter note, dotted eighth rest, sixteenth note, eighth note, eighth rest. Pitches F4-D4-F4.']
     };
@@ -2438,9 +2448,6 @@ window.MUSIC_NOTATION_CONTEXTS = [
         } else if (kind === 'time-signature-c') {
             width = 34;
             body = '<path d="M28 13 C8 2 3 42 27 35" fill="none" stroke="black" stroke-width="4" stroke-linecap="round"/>';
-        } else if (kind === 'trill-tr') {
-            width = 43;
-            body = '<g data-trill-letters="true" transform="skewX(-11)"><path d="M16 10 L12 32 Q11 38 18 32 M8 19 H22 M25 34 L28 19 M27 24 Q33 15 38 21" fill="none" stroke="black" stroke-width="2.7" stroke-linecap="round"/></g>';
         } else if (['quarter','dotted-half','half','dotted-quarter','eighth'].includes(kind)) {
             const dotted = kind.startsWith('dotted-'), openHead = kind === 'half' || kind === 'dotted-half';
             width = dotted ? 38 : 28;
@@ -2448,17 +2455,18 @@ window.MUSIC_NOTATION_CONTEXTS = [
             if (kind === 'eighth') body += '<path data-flag="eighth" d="M17 9 C18 16 29 15 26 29 C29 20 20 20 17 14 Z"/>';
             if (dotted) body += '<circle data-augmentation-dot="note" cx="29" cy="35" r="2.1"/>';
         } else {
-            const triplet = kind.endsWith('triplet'), beamed = kind.startsWith('eighth');
+            const below = kind === 'eighth-triplet-below', triplet = kind.endsWith('triplet') || below, beamed = kind.startsWith('eighth');
+            if (below) height = 60;
             for (const x of [12, 35, 58]) body += '<ellipse cx="'+x+'" cy="39" rx="6" ry="4" transform="rotate(-20 '+x+' 39)"/><path d="M'+(x+5)+' 38 V17" fill="none" stroke="black" stroke-width="1.7"/>';
             if (beamed) body += '<path d="M17 17 H63" fill="none" stroke="black" stroke-width="4"/>';
             if (triplet) {
-                body += '<path d="M33 3 C41 -1 42 7 36 7 C43 7 42 15 33 11" fill="none" stroke="black" stroke-width="1.6"/>';
+                body += '<path '+(below ? 'data-tuplet-position="below" transform="translate(8.75 45) scale(.7)" ' : '')+'d="M33 3 C41 -1 42 7 36 7 C43 7 42 15 33 11" fill="none" stroke="black" stroke-width="1.6"/>';
                 if (!beamed) body += '<path d="M9 12 V7 H28 M46 7 H68 V12" fill="none" stroke="black" stroke-width="1.2"/>';
             }
         }
         const svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 '+width+' '+height+'" width="'+width+'" height="'+height+'">'+body+'</svg>';
         const english = typeof document !== 'undefined' && /^en\b/i.test(document.documentElement.lang || '');
-        const label = labels[kind][english ? 1 : 0], extra = kind.startsWith('motif-') ? ' gm-score-example-'+(kind === 'motif-two' ? 'two' : 'one') : '';
+        const label = labels[kind][english ? 1 : 0], extra = kind.startsWith('motif-') ? ' gm-score-example-'+(kind === 'motif-two' ? 'two' : 'one') : kind === 'eighth-triplet-below' ? ' gm-triplet-below' : '';
         return '<img class="gm-music-notation'+extra+'" data-notation="'+kind+'" src="data:image/svg+xml,'+encodeURIComponent(svg)+'" width="'+width+'" height="'+height+'" alt="'+escape(label)+'" aria-label="'+escape(label)+'" title="'+escape(fallback)+'">';
     }
     function renderMusicNotationDirection(text, termsIndex, row, renderText) {
@@ -3224,7 +3232,9 @@ function renderDictionaryList(data) {
         const germanWrapper = document.createElement("div");
         const germanSpan = document.createElement("span");
         germanSpan.classList.add("german");
-        germanSpan.textContent = german;
+        germanSpan.innerHTML = typeof renderDictionaryNotationText === 'function'
+            ? renderDictionaryNotationText(german, german, source, document.documentElement.lang === 'en' ? 'en' : 'ja')
+            : escapeHtml(german);
 
         const sourceSpan = document.createElement("span");
         sourceSpan.classList.add("source");
