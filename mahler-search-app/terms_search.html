@@ -67,9 +67,9 @@
 
     <link rel="icon" href="https://yutaka-okawachi.github.io/gaswebapp-manual/favicon.png">
     <link rel="apple-touch-icon" href="https://yutaka-okawachi.github.io/gaswebapp-manual/apple-touch-icon.png">
-    <link rel="preload" href="css/common.css?v=286a9386c9e9" as="style">
-    <link rel="stylesheet" href="css/common.css?v=286a9386c9e9">
-    <script src="js/app.js?v=5d4d39d26dcb"></script>
+    <link rel="preload" href="css/common.css?v=a0acb98898f8" as="style">
+    <link rel="stylesheet" href="css/common.css?v=a0acb98898f8">
+    <script src="js/app.js?v=cde24199876e"></script>
 
     <script>
         /*******************************************************************
@@ -222,7 +222,7 @@
 
                     resultHTML += `<div class="search-result-item">`;
                     resultHTML += `<div class="result-a">${resultDe}</div>`;
-                    resultHTML += `<div class="result-c">${escapeHtmlWithBreaks(jaData)}</div>`;
+                    resultHTML += `<div class="result-c">${formatGmTranslation(jaData, row)}</div>`;
                     resultHTML += detailsHTML;
                     resultHTML += `<div class="result-loc">(${segmentCount}件)</div>`;
                     resultHTML += `</div>`;

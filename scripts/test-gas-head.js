@@ -79,7 +79,7 @@ async function main() {
         await test('manifest follows actual clasp selection', () => assert.deepEqual(guard.localSnapshot(opts).files, updated));
         await test('clasp failure is redacted and blocks', () => assert.throws(() => guard.localSnapshot({ ...opts, status: () => { throw Error('PRIVATE_TOKEN'); } }), error => !error.message.includes('PRIVATE_TOKEN') && /送信対象/.test(error.message)));
         await test('invalid clasp status blocks', () => assert.throws(() => guard.localSnapshot({ ...opts, status: () => 'not json' }), /送信対象/));
-        for (const [failure, expected] of [[Object.assign(Error('PRIVATE_TOKEN'),{code:'ETIMEDOUT'}),/60秒タイムアウト/],[Object.assign(Error('PRIVATE_TOKEN'),{code:'ENOENT'}),/見つかりません/],[Error('clasp failed (2): PRIVATE_TOKEN'),/終了コード 2/]]) {
+        for (const [failure, expected] of [[Object.assign(Error('PRIVATE_TOKEN'),{code:'ETIMEDOUT'}),/180秒タイムアウト/],[Object.assign(Error('PRIVATE_TOKEN'),{code:'ENOENT'}),/見つかりません/],[Error('clasp failed (2): PRIVATE_TOKEN'),/終了コード 2/]]) {
             await test('clasp diagnostic classifies safely: '+String(expected),()=>assert.throws(()=>guard.localSnapshot({...opts,status:()=>{throw failure;}}),error=>expected.test(error.message)&&!error.message.includes('PRIVATE_TOKEN')));
         }
         await test('invalid clasp JSON is classified without raw text',()=>assert.throws(()=>guard.localSnapshot({...opts,status:()=> 'PRIVATE_TOKEN'}),error=>/JSON解析失敗/.test(error.message)&&!error.message.includes('PRIVATE_TOKEN')));
@@ -114,6 +114,29 @@ async function main() {
         assert(fetched[2].url.endsWith('/content?versionNumber=7'));
     });
     await test('read failure hides remote response and auth detail', () => assert.rejects(() => guard.readRemote(settings, 'synthetic', { credentials, fetch: async () => { throw Error('PRIVATE_TOKEN'); } }), error => /読み取りに失敗/.test(error.message) && !error.message.includes('PRIVATE_TOKEN')));
+    await test('temporary 503 deployment read recovers without writes', async()=>{
+        let requests=0;
+        const value=await guard.readRemote(settings,'synthetic',{credentials,delay:async()=>{},fetch:async(url,init)=>{
+            if(url.includes('/deployments/')&&++requests===1)return {ok:false,status:503,json:async()=>{throw Error('PRIVATE_TOKEN');}};
+            return fetch(url,init);
+        }});
+        assert.equal(value.version,7);assert.equal(requests,2);
+    });
+    await test('persistent 503 fails after three reads without leaking body',async()=>{
+        let requests=0;
+        await assert.rejects(()=>guard.readRemote(settings,'synthetic',{credentials,delay:async()=>{},fetch:async(url,init)=>{
+            if(url.includes('/deployments/')){requests++;return {ok:false,status:503,json:async()=>{throw Error('PRIVATE_TOKEN');}};}
+            return fetch(url,init);
+        }}),error=>/固定公開版: HTTP 503/.test(error.message)&&!error.message.includes('PRIVATE_TOKEN'));
+        assert.equal(requests,3);
+    });
+    await test('authorization denial is not retried',async()=>{
+        let requests=0;
+        await assert.rejects(()=>guard.readRemote(settings,'synthetic',{credentials,delay:async()=>{},fetch:async(url,init)=>{
+            if(url.includes('/deployments/')){requests++;return {ok:false,status:403};}return fetch(url,init);
+        }}),/HTTP 403/);
+        assert.equal(requests,1);
+    });
     await test('wrong deployment/project stops', () => assert.rejects(() => guard.readRemote(settings, 'synthetic', { credentials, fetch: async () => ({ ok: true, json: async () => ({ files: [app], deploymentId: 'wrong', deploymentConfig: { scriptId: 'different', versionNumber: 1 } }) }) }), /対象・版番号/));
     await test('authorization refresh stays in memory', async () => {
         const calls = [];
@@ -129,6 +152,7 @@ async function main() {
         const events = [];
         const fakeRequire = name => {
             if (name === './core') return core;
+            if (name === './gas-response') return require('./sync/gas-response');
             if (name === '../../src/manage_deploy') return { runClasp: () => { events.push('push'); if (failure === 'push') throw Error('push failed'); }, run: () => events.push('deploy') };
             if (name === './gas-head') return {
                 preflight: async () => { events.push('preflight'); return {}; },

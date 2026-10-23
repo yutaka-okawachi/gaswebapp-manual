@@ -3,8 +3,10 @@
 const fs = require('fs');
 const os = require('os');
 const path = require('path');
-const { root, run, sha256, normalizeText, gasSourceFingerprint } = require('./core');
+const { root, run, sha256, normalizeText, gasSourceFingerprint, delay } = require('./core');
 const retirementPolicy = require('./retirement-policy');
+// Windows CLI startup/file discovery can exceed a minute under load. Still fail closed.
+const CLASP_STATUS_TIMEOUT_MS = 180000;
 
 function manifest(files) {
     if (!Array.isArray(files) || !files.length) throw new Error('GAS ファイル一覧を確認できません。');
@@ -68,14 +70,14 @@ function localSnapshot(options = {}) {
     let status;
     try {
         const output = (options.status || (() => run('clasp', ['status', '--json'], {
-            cwd: directory, shell: process.platform === 'win32', timeout: 60000,
+            cwd: directory, shell: process.platform === 'win32', timeout: CLASP_STATUS_TIMEOUT_MS,
             env: { ...process.env, CI: 'true', NO_UPDATE_NOTIFIER: '1' }, redactError: true
         })))();
         status = JSON.parse(output);
     } catch (error) {
         // Preserve the fail-closed guard without exposing clasp output or credentials.
         const statusCode = /^clasp failed \((-?\d+)\):/.exec(String(error.message || ''));
-        const reason = error.code === 'ETIMEDOUT' ? 'コマンドの60秒タイムアウト' :
+        const reason = error.code === 'ETIMEDOUT' ? 'コマンドの'+(CLASP_STATUS_TIMEOUT_MS / 1000)+'秒タイムアウト' :
             error.code === 'ENOENT' ? 'claspコマンドが見つかりません' :
             error instanceof SyntaxError ? 'clasp応答のJSON解析失敗' :
             statusCode ? 'clasp終了コード '+statusCode[1] : 'claspコマンド実行失敗';
@@ -115,11 +117,32 @@ async function readRemote(settings, scriptId, options = {}) {
     catch (_) { throw new Error('既存の clasp 認証を読み取れません。'); }
     if (!credentials) throw new Error('既存の clasp 認証がありません。');
     async function json(url, init) {
-        try {
-            const response = await fetchFn(url, { ...init, redirect: 'error', signal: AbortSignal.timeout(25000) });
-            if (!response.ok) throw new Error();
-            return await response.json();
-        } catch (_) { throw new Error('GAS 編集版の読み取りに失敗しました。認証・接続を確認してください。更新は行いません。'); }
+        const stage = url.includes('oauth2.googleapis.com') ? '既存OAuth更新' : url.includes('/deployments/') ? '固定公開版' : url.includes('?versionNumber=') ? '公開版内容' : '編集版内容';
+        const waits = init.method === 'GET' ? [0, 1000, 3000] : [0];
+        const sleep = options.delay || delay;
+        const failure = reason => new Error('GAS 編集版の読み取りに失敗しました。('+stage+': '+reason+') 更新は行いません。');
+        for (let attempt = 0; attempt < waits.length; attempt++) {
+            await sleep(waits[attempt]);
+            let response;
+            try {
+                response = await fetchFn(url, { ...init, redirect: 'error', signal: AbortSignal.timeout(25000) });
+            } catch (error) {
+                const code = ['ENOTFOUND','ETIMEDOUT','ECONNRESET','ECONNREFUSED','UND_ERR_CONNECT_TIMEOUT'].includes(error.cause?.code) ? error.cause.code : '';
+                const timeout = error.name === 'TimeoutError' || error.name === 'AbortError';
+                if ((code || timeout) && attempt + 1 < waits.length) continue;
+                throw failure(timeout ? '接続タイムアウト' : code ? '接続 '+code : '接続または応答エラー');
+            }
+            if (!response.ok) {
+                const status = Number(response.status || 0);
+                if ([500,502,503,504].includes(status) && attempt + 1 < waits.length) {
+                    if (!options.fetch) console.warn('GAS '+stage+'の読み取り HTTP '+status+'。一時エラーのため再確認します。');
+                    continue;
+                }
+                throw failure('HTTP '+status);
+            }
+            try { return await response.json(); }
+            catch (_) { throw failure('JSON解析失敗'); }
+        }
     }
     let token = credentials.access_token;
     if (!token || Number(credentials.expiry_date) <= Date.now() + 120000 || !Number.isFinite(Number(credentials.expiry_date))) {

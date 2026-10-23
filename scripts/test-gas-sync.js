@@ -2,6 +2,10 @@ const assert = require('assert');
 const { inspect, exportSnapshotForSource, waitForSourceHash, DEPLOYMENT_VERIFY_DELAYS_MS, INSPECTION_RETRY_DELAYS_MS, SNAPSHOT_SOURCE_RETRY_DELAYS_MS } = require('./sync/gas');
 
 async function main() {
+    let deniedCalls = 0;
+    const denied = Object.assign(new Error('classified authentication failure'), {retryable:false});
+    await assert.rejects(()=>inspect({}, {delays:[0,1],delay:async()=>{},call:async()=>{deniedCalls++;throw denied;}}),error=>error===denied);
+    assert.strictEqual(deniedCalls,1,'Classified authorization/limit failures do not trigger repeated reads');
     let inspectionCalls = 0;
     const inspectionWaits = [];
     const inspected = await inspect({}, {

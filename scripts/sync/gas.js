@@ -3,6 +3,7 @@ const path = require('path');
 const { root, gasSourceFingerprint, request, delay, writeIfChanged } = require('./core');
 const { runClasp, run: deploy } = require('../../src/manage_deploy');
 const editorHead = require('./gas-head');
+const { parseGasResponse } = require('./gas-response');
 const DEPLOYMENT_VERIFY_DELAYS_MS = [0, 2000, 5000, 10000, 20000];
 const INSPECTION_RETRY_DELAYS_MS = [0, 2000, 5000, 10000];
 const SNAPSHOT_SOURCE_RETRY_DELAYS_MS = [0, 5000, 15000, 30000];
@@ -32,7 +33,7 @@ async function call(settings, action, extra = {}) {
         method: 'POST', headers: { 'Content-Type': 'application/json' }, timeout: 360000,
         body: JSON.stringify({ action, token: settings.GAS_SECRET_TOKEN, ...extra })
     });
-    const result = await response.json();
+    const result = await parseGasResponse(response, action);
     if (result.status !== 'success') throw new Error(`GAS ${action}: ${result.error || result.message || result.status}`);
     return result;
 }
@@ -41,7 +42,7 @@ async function exportSnapshot(settings, requestId) {
     for (const ms of [0, 3000, 10000]) {
         await delay(ms);
         try { return await call(settings, 'exportSnapshot', { requestId, includeEnglish: true }); }
-        catch (e) { error = e; if (/validation|必須|列|空|欠落/i.test(e.message)) throw e; }
+        catch (e) { error = e; if (e.retryable === false || /validation|必須|列|空|欠落/i.test(e.message)) throw e; }
     }
     throw error;
 }
@@ -75,7 +76,7 @@ async function inspect(settings, options = {}) {
     for (const waitMs of delays) {
         await wait(waitMs);
         try { return await callFn(settings); }
-        catch (error) { lastError = error; }
+        catch (error) { if (error.retryable === false) throw error; lastError = error; }
     }
     throw lastError;
 }
@@ -92,6 +93,7 @@ async function waitForSourceHash(settings, expectedHash, options = {}) {
             lastError = null;
             if (observed && observed.sourceHash === expectedHash) return observed;
         } catch (error) {
+            if (error.retryable === false) throw error;
             lastError = error;
         }
     }

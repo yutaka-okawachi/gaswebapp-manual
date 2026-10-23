@@ -9,15 +9,16 @@ const fixtures=[
  {__row:589,de:'Der Sinn dieser Bezeichnung 𝄐 V ist, den Eintritt ...',data:'M-7-5-196-all&'},
  {__row:2577,de:'𝅘𝅥𝅘𝅥𝅘𝅥 wie früher [Vierteltriole]',data:'M-d-d01-16-all&M-d-d01-92-all&'},
  {__row:2599,de:'𝅘𝅥𝅮𝅘𝅥𝅮𝅘𝅥𝅮 = wie früher [Achteltriole]',data:'M-3-2-50-all&'},
- {__row:2575,de:'𝅘𝅥 wie vorher 付点𝅗𝅥',data:'M-4-3-283-all&'}
+ {__row:2575,de:'𝅘𝅥 wie vorher 𝅗𝅥𝅭',data:'M-4-3-283-all&'}
 ];
 const normalize=s=>s.toLowerCase().replaceAll('ä','ae').replaceAll('ö','oe').replaceAll('ü','ue').replaceAll('ß','ss');
 fixtures.forEach(row=>Object.assign(row,{de_normalized:normalize(row.de),en:'Public English.',ja:'日本語訳',準備状態:'保留'}));
+fixtures[0].ja='ここは［譜例］'; fixtures[0].en='Here: [musical example]'; fixtures[1].ja='ここでも［譜例］'; fixtures[1].en='Here too: [musical example]';
 const before=JSON.stringify(fixtures);
-assert.equal(validateGmOriginals(fixtures).length,1);
+assert.equal(validateGmOriginals(fixtures).length,0);
 assert.equal(validateGmOriginals(fixtures.slice(0,6)).length,0);
-assert.throws(()=>validateGmOriginals([...fixtures,{...fixtures[6]}]),/Japanese text/,'Duplicate exception is rejected');
-for(const changed of [{de:'new 日本語'},{de_normalized:'new 日本語'},{data:'M-4-3-284-all&'},{de:'𝅘𝅥 wie vorher 付点𝅗𝅥 changed'}])assert.throws(()=>validateGmOriginals([{...fixtures[6],...changed}]),/Japanese text/);
+assert.throws(()=>validateGmOriginals([{...fixtures[6],de:'𝅘𝅥 wie vorher 付点𝅗𝅥',de_normalized:'𝅘𝅥 wie vorher 付点𝅗𝅥'}]),/Japanese text/,'The former Japanese exception is no longer allowed');
+for(const changed of [{de:'new 日本語'},{de_normalized:'new 日本語'},{de:'𝅘𝅥 wie vorher 付点𝅗𝅥 changed'}])assert.throws(()=>validateGmOriginals([{...fixtures[6],...changed}]),/Japanese text/);
 const svgImages=html=>[...html.matchAll(/<img\b[^>]*src="data:image\/svg\+xml,([^"]*)"[^>]*>/g)].map(match=>decodeURIComponent(match[1]));
 let checks=0;
 (async()=>{
@@ -26,7 +27,7 @@ for(const language of ['ja','en']){
  const c=vm.createContext({window,document:{documentElement:{lang:language}},console,URLSearchParams,setTimeout,clearTimeout,navigator:{userAgent:'test'}});
  vm.runInContext(read('mahler-search-app/js/app.js'),c);
  for(const [i,row]of fixtures.entries()){
-  const html=window.linkTermsInTranslation(row.de,{},row),svgs=svgImages(html),expected=[0,0,1,1,2,2,0][i];
+  const html=window.linkTermsInTranslation(row.de,{},row),svgs=svgImages(html),expected=[1,1,1,1,2,2,2][i];
   assert.equal(svgs.length,expected,'Exact approved symbol count row '+row.__row);
   if(!expected)assert.equal(html,row.de,'Placeholders and GM2575 stay visible verbatim');
   for(const svg of svgs){assert(!/<text\b|<script\b|foreignObject|font-family|𝅘𝅥|𝅘𝅥𝅮|𝄐/.test(svg));assert(svg.includes('viewBox='));}
@@ -34,6 +35,18 @@ for(const language of ['ja','en']){
   assert.equal(c.matchesTermQuery(row.de_normalized,normalize(row.de),'partial'),true);
   checks++;
  }
+ for(const form of ['NFC','NFD']){
+  const normalized=fixtures[6].de.normalize(form),html=window.linkTermsInTranslation(normalized,{},fixtures[6]),notes=svgImages(html);
+  assert.equal(notes.length,2,'Composed and decomposed music symbols');assert(notes[1].includes('data-augmentation-dot="note"'));assert(notes[1].includes('fill="white"'));
+  assert.equal(c.matchesTermQuery(c.normalizeString(normalized),normalized,'partial'),true);checks++;
+ }
+ const motifTwo=svgImages(window.linkTermsInTranslation(fixtures[0].de,{},fixtures[0]))[0],motifOne=svgImages(window.linkTermsInTranslation(fixtures[1].de,{},fixtures[1]))[0];
+ assert.equal((motifTwo.match(/data-measure=/g)||[]).length,2);assert.equal((motifOne.match(/data-measure=/g)||[]).length,1);
+ assert(motifTwo.includes('data-clef="treble"'));assert(!motifOne.includes('data-clef='));
+ assert.deepEqual([...motifTwo.matchAll(/data-pitch="([^"]*)"/g)].map(m=>m[1]),['F4','D4','F4','G4','C4','F4']);
+ assert.equal((motifTwo.match(/data-articulation="tenuto"/g)||[]).length,2);assert.equal((motifTwo.match(/data-articulation="staccato"/g)||[]).length,4);assert(!motifOne.includes('data-articulation'));
+ for(const [motif,bars]of [[motifTwo,2],[motifOne,1]]){assert.equal((motif.match(/data-rest="dotted-eighth"/g)||[]).length,bars);assert.equal((motif.match(/data-rest="eighth"/g)||[]).length,bars);assert.equal((motif.match(/data-augmentation-dot="rest"/g)||[]).length,bars);assert(!motif.includes('data-augmentation-dot="note"'));}
+ for(const row of fixtures.slice(0,2))for(const text of [row.ja,row.en])assert.equal(svgImages(window.formatGmTranslation(text,row)).length,1,'Japanese and English translation placeholders');
  const quarter=svgImages(window.linkTermsInTranslation(fixtures[4].de,{},fixtures[4]));
  const eighth=svgImages(window.linkTermsInTranslation(fixtures[5].de,{},fixtures[5]));
  for(const svg of quarter.concat(eighth))assert.equal((svg.match(/<ellipse/g)||[]).length,3,'Exactly three note heads per group');
@@ -44,7 +57,7 @@ for(const language of ['ja','en']){
  for(const row of fixtures){
   window.appData.mahler=[row];
   const direct=window.searchMahlerTermsLocal(row.de,{},'partial');
-  assert.equal(svgImages(direct).length,[0,0,1,1,2,2,0][fixtures.indexOf(row)],'Shared GM term renderer');
+  assert.equal(svgImages(direct).length,[2,2,1,1,2,2,2][fixtures.indexOf(row)],'Shared GM term renderer');
  }
  // Actual page overrides are also used by dictionary example links.
  for(const file of ['mahler-search-app/terms_search.html','mahler-search-app/mahler.html']){
@@ -52,7 +65,7 @@ for(const language of ['ja','en']){
   if(file.includes('terms_search')){
    const inline=[...page.matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/gi)].map(x=>x[1]).find(x=>x.includes('Override/Define searchMahlerTermsLocal'));
    vm.runInContext(inline,c);
-   for(const row of fixtures){window.appData.mahler=[row];const html=window.searchMahlerTermsLocal(row.de,{},'partial');assert.equal(svgImages(html).length,[0,0,1,1,2,2,0][fixtures.indexOf(row)]);checks++;}
+   for(const row of fixtures){window.appData.mahler=[row];const html=window.searchMahlerTermsLocal(row.de,{},'partial');assert.equal(svgImages(html).length,[2,2,1,1,2,2,2][fixtures.indexOf(row)]);checks++;}
    window.appData.mahler=[fixtures[5]];
    for(const query of ['achtel','3','frueher']){const html=window.searchMahlerTermsLocal(query,{},'partial');for(const svg of svgImages(html))assert(!svg.includes('<span'),'Highlight cannot alter SVG URL');assert(!/<img[^>]*<span/.test(html),'Highlight cannot alter image attributes');checks++;}
   }else {
@@ -71,7 +84,7 @@ for(const language of ['ja','en']){
    c.matched=matched;
    vm.runInContext('let currentSearchResults=matched,currentSearchIndex=0;const SEARCH_BATCH_SIZE=50;let searchObserver=null;'+extractFunction(page,'loadMoreSearchResults')+';loadMoreSearchResults();',c);
    assert.equal(nodes.length,7);
-   nodes.forEach((node,i)=>assert.equal(svgImages(node.innerHTML).length,[0,0,1,1,2,2,0][i],'Actual lazy-loaded work/instrument DOM'));
+   nodes.forEach((node,i)=>assert.equal(svgImages(node.innerHTML).length,[2,2,1,1,2,2,2][i],'Actual lazy-loaded work/instrument DOM'));
    checks+=7;
   }
  }
@@ -79,5 +92,5 @@ for(const language of ['ja','en']){
  assert(!window.linkTermsInTranslation(payload,{},fixtures[4]).includes('<script>'),'Source text remains escaped');
 }
 assert.equal(JSON.stringify(fixtures),before,'Canonical source/search/translation/status fields never mutate');
-console.log('GM notation: '+checks+' language/search cases; confirmed vector shapes, safe highlighting, exact deferred-source guard, and unchanged canonical fields passed.');
+console.log('GM notation: '+checks+' language/search cases; confirmed vector shapes, safe highlighting, strict original-source guard, and unchanged canonical fields passed.');
 })().catch(error=>{console.error(error);process.exitCode=1;});

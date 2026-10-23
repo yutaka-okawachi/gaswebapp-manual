@@ -200,6 +200,13 @@ function linkTermsInTranslation(text, termsIndex, notationRow) {
 // Expose for use in other scripts (e.g., index.html)
 window.linkTermsInTranslation = linkTermsInTranslation;
 
+function formatGmTranslation(text, row) {
+    return typeof window.renderMusicNotationDirection === 'function'
+        ? window.renderMusicNotationDirection(text, {}, row, part => escapeHtmlWithBreaks(part))
+        : escapeHtmlWithBreaks(text);
+}
+window.formatGmTranslation = formatGmTranslation;
+
 function formatGenericResults(data) {
     if (data.length === 0) {
         return '<div class="result-message">該当するデータが見つかりませんでした。</div>';
