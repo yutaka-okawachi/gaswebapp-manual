@@ -478,6 +478,32 @@
 
 
 
+        /* Keep the English dictionary action below its heading on narrow screens. */
+        @media (max-width: 600px) {
+            html[lang="en"] .dic-section .dictionary-card-header {
+                flex-direction: column;
+                align-items: flex-start !important;
+                gap: 10px;
+            }
+            html[lang="en"] .dictionary-card-header .action {
+                min-width: 0;
+                max-width: 100%;
+            }
+            html[lang="en"] .dictionary-card-header .btn-primary {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                box-sizing: border-box;
+                max-width: 100%;
+                min-height: 44px;
+                padding: 9px 12px;
+                font-size: .9rem;
+                line-height: 1.4;
+                white-space: normal;
+                text-align: center;
+            }
+        }
+
         /* Footer */
         footer {
             text-align: center;
@@ -864,7 +890,7 @@
         <!-- Dictionary Section -->
         <div class="home-card dic-section" data-initial="D" style="margin-bottom: 20px;">
             <div class="content" style="width: 100%;">
-                <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+                <div class="dictionary-card-header" style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
                     <div>
                         <h2 style="margin: 0;">Dictionary</h2>
                     </div>
