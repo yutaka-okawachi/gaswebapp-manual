@@ -5814,12 +5814,17 @@
   "schalltrichter": {
     "id": "term-schalltrichter",
     "exampleVariants": [
-      "Schalltricht"
+      "Schalltricht",
+      "Schalltr."
     ],
     "exampleVariantDetails": [
       {
         "form": "Schalltricht",
         "type": "名詞の格・数"
+      },
+      {
+        "form": "Schalltr.",
+        "type": "省略形"
       }
     ]
   },
@@ -13048,5 +13053,11 @@
     "original": "wegzulassen",
     "canonical": "weglassen",
     "type": "該当なし"
+  },
+  "schalltr": {
+    "id": "term-schalltrichter",
+    "original": "Schalltr.",
+    "canonical": "Schalltrichter",
+    "type": "省略形"
   }
 }
