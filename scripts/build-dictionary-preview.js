@@ -59,6 +59,7 @@ function readAbbreviationData(html) {
 
 const generatorSource = fs.readFileSync(generatorPath, 'utf8');
 const context = vm.createContext({ console });
+vm.runInContext(fs.readFileSync(path.join(repositoryRoot, 'src/dictionary_notation.js'), 'utf8'), context);
 vm.runInContext(generatorSource, context, { filename: generatorPath });
 
 const dictionaryData = JSON.parse(fs.readFileSync(dictionaryDataPath, 'utf8'));

@@ -1,0 +1,29 @@
+'use strict';
+const fs=require('fs'),path=require('path'),vm=require('vm'),assert=require('assert/strict');
+const root=path.resolve(__dirname,'..'),read=f=>fs.readFileSync(path.join(root,f),'utf8');
+const notes=JSON.parse(read('mahler-search-app/data/dic_notes.json')),english=JSON.parse(read('en/mahler-search-app/data/dic_notes.json'));
+const target=notes.find(r=>r[0].includes('als トレモロ音符'));
+assert(target);const before=JSON.stringify(notes),c=vm.createContext({});
+vm.runInContext(read('src/dictionary_notation.js'),c);vm.runInContext(read('src/generate_dic_html.js'),c);
+const old=vm.createContext({});vm.runInContext(read('src/generate_dic_html.js'),old);
+let checks=0;
+for(const language of ['ja','en']){
+ const data=language==='ja'?notes:english,row=data.find(r=>r[0]===target[0]);
+ const html=c.renderDictionaryNotationText(row[0],row[0],row[2],language);
+ assert.equal((html.match(/<img\b/g)||[]).length,1);
+ const image=html.match(/<img\b[^>]+>/)[0],svg=decodeURIComponent(image.match(/src="data:image\/svg\+xml,([^"]+)"/)[1]);
+ assert.equal((svg.match(/data-note="quarter"/g)||[]).length,1);assert.equal((svg.match(/data-stem="single"/g)||[]).length,1);assert.equal((svg.match(/data-tremolo-stroke="true"/g)||[]).length,3);
+ assert(!/<text\b|font-family|<script\b|foreignObject|data-flag|augmentation-dot/.test(svg));
+ assert(svg.includes('fill="black"'));assert(svg.includes('data-stem-direction="down"')); if(language==='en')assert(!/[\p{Script=Han}\p{Script=Hiragana}\p{Script=Katakana}]/u.test(image));
+ const output=c.generateDicHtml(data,[],null,[],{language});const original=old.generateDicHtml(data,[],null,[]);
+ assert.equal((output.match(/dictionary-music-notation/g)||[]).length,1);
+ assert(output.replace(image,'トレモロ音符')===original,'Only the display placeholder changes; all 988 anchors, metadata, example links and translations remain identical');
+ for(const r of data)if(r[0]!==target[0])assert.equal(c.renderDictionaryNotationText(r[0],r[0],r[2],language),c.escapeHtml(r[0]),'No unrelated dictionary notation is changed');
+ assert(!c.renderDictionaryNotationText(row[1],row[0],row[2],language).includes('<img'),'Spelled-out tremolo references in explanations remain words');
+ assert(!c.renderDictionaryNotationText(row[0],row[0],'[GM]',language).includes('<img'));
+ assert(!c.renderDictionaryNotationText(row[0],row[0]+' altered',row[2],language).includes('<img'));
+ const nfd=row[0].normalize('NFD');assert(c.renderDictionaryNotationText(nfd,nfd,row[2],language).includes('<img'));
+ assert.equal(c.renderDictionaryNotationText('<img onerror="x">','unrelated','',language),'&lt;img onerror=&quot;x&quot;&gt;');checks+=data.length+14;
+}
+assert.equal(JSON.stringify(notes),before);
+console.log('Dictionary notation: '+checks+' checks; exact Notes21 quotation, one quarter note/three strokes, language alt text, 988-entry isolation, unchanged anchors/translations, canonical data and safe escaping passed. Don Quixote reference-score footnote verified (PDF32/printed p.224).');

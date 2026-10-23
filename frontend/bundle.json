@@ -4,6 +4,7 @@
   "frontend/data-loader.js",
   "frontend/suggestions.js",
   "frontend/strauss-view.js",
+  "src/dictionary_notation.js",
   "frontend/notation-contexts.js",
   "frontend/music-notation.js",
   "frontend/result-format.js",

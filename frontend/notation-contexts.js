@@ -18,19 +18,6 @@ window.MUSIC_NOTATION_CONTEXTS = [
   },
   {
     "tab": "GM",
-    "sourceRow": 37,
-    "de": "1. Spieler tr arco, 2. Spieler pizz.",
-    "tokens": [
-      [
-        "tr",
-        "trill-tr",
-        "word"
-      ]
-    ],
-    "data": "M-7-2-69-va&"
-  },
-  {
-    "tab": "GM",
     "sourceRow": 336,
     "de": "Anmerkung für den Dirigenten : Die 𝄐 am Taktstrich bedeuten hier eine 'Luftpause' und keinen 'Halt'.",
     "tokens": [
@@ -180,6 +167,22 @@ window.MUSIC_NOTATION_CONTEXTS = [
       ]
     ],
     "data": "M-8-t2-266-all&"
+  },
+  {
+    "tab": "GM",
+    "sourceRow": 654,
+    "de": "Die 𝅘𝅥 wie früher die 𝅗𝅥",
+    "tokens": [
+      [
+        "𝅘𝅥",
+        "quarter"
+      ],
+      [
+        "𝅗𝅥",
+        "half"
+      ]
+    ],
+    "data": "M-b1-t2-302-all&"
   },
   {
     "tab": "GM",
@@ -420,19 +423,6 @@ window.MUSIC_NOTATION_CONTEXTS = [
       ]
     ],
     "data": "M-8-t1-217-all&"
-  },
-  {
-    "tab": "GM",
-    "sourceRow": 1920,
-    "de": "quasi tr",
-    "tokens": [
-      [
-        "tr",
-        "trill-tr",
-        "word"
-      ]
-    ],
-    "data": "M-3-3-228-va&"
   },
   {
     "tab": "GM",
@@ -1107,6 +1097,22 @@ window.MUSIC_NOTATION_CONTEXTS = [
     "data": "M-b2-t2-36-all&"
   },
   {
+    "tab": "GM",
+    "sourceRow": 2602,
+    "de": "𝅘𝅥. = wie früher 𝅘𝅥𝅮𝅘𝅥𝅮𝅘𝅥𝅮",
+    "tokens": [
+      [
+        "𝅘𝅥.",
+        "dotted-quarter"
+      ],
+      [
+        "𝅘𝅥𝅮𝅘𝅥𝅮𝅘𝅥𝅮",
+        "eighth-triplet-below"
+      ]
+    ],
+    "data": "M-3-2-144-all&"
+  },
+  {
     "tab": "RW",
     "sourceRow": 364,
     "de": "Von hier kann gekürzt werden bis zum Zeichen 𝄌 auf Seite 508",
@@ -1196,22 +1202,6 @@ window.MUSIC_NOTATION_CONTEXTS = [
     "Aufzug": 1,
     "Szene": 1,
     "page": 21
-  },
-  {
-    "tab": "RW",
-    "sourceRow": 4642,
-    "de": "Die Triller (tr) sind von den Sängern als sogenannte Bockstriller auszuführen.",
-    "tokens": [
-      [
-        "tr",
-        "trill-tr",
-        "word"
-      ]
-    ],
-    "Oper": "meister",
-    "Aufzug": 3,
-    "Szene": 5,
-    "page": 681
   },
   {
     "tab": "RS",

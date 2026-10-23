@@ -35,7 +35,6 @@
         'dotted-quarter': ['付点四分音符', 'Dotted quarter note'],
         fermata: ['フェルマータ記号', 'Fermata sign'],
         'stopped-plus': ['ゲシュトップを示すプラス記号', 'Plus sign for a stopped note'],
-        'trill-tr': ['トリルを示すtr記号', 'Trill sign tr'],
         'rhythmic-alignment': ['リズム一致位置を示す縦線', 'Rhythmic alignment line'],
         'caret-accent': ['山形アクセント記号', 'Caret-shaped accent'],
         'accent-right': ['アクセント記号', 'Accent sign'],
@@ -55,6 +54,7 @@
         'quarter-triplet': ['四分音符3個の三連符1組', 'One triplet group of three quarter notes'],
         eighths: ['一本の連桁で結んだ通常の八分音符3個', 'Three ordinary eighth notes with one beam'],
         'eighth-triplet': ['一本の連桁で結んだ八分音符3個の三連符1組', 'One triplet group of three eighth notes with one beam'],
+        'eighth-triplet-below': ['下側の3を付した八分音符三連符1組', 'One beamed eighth-note triplet with the numeral 3 below'],
         'motif-two': ['ト音記号付き2小節。各小節は四分音符、付点八分休符、十六分音符、八分音符、八分休符。音高F4-D4-F4、G4-C4-F4。四分音符にテヌート、十六分・八分音符にスタッカート。', 'Two bars with treble clef. Each bar: quarter note, dotted eighth rest, sixteenth note, eighth note, eighth rest. Pitches F4-D4-F4, G4-C4-F4. Quarter notes have tenuto; sixteenth and eighth notes have staccato.'],
         'motif-one': ['音部記号と奏法記号なしの1小節。四分音符、付点八分休符、十六分音符、八分音符、八分休符。音高F4-D4-F4。', 'One bar without clef or articulation marks: quarter note, dotted eighth rest, sixteenth note, eighth note, eighth rest. Pitches F4-D4-F4.']
     };
@@ -140,9 +140,6 @@
         } else if (kind === 'time-signature-c') {
             width = 34;
             body = '<path d="M28 13 C8 2 3 42 27 35" fill="none" stroke="black" stroke-width="4" stroke-linecap="round"/>';
-        } else if (kind === 'trill-tr') {
-            width = 43;
-            body = '<g data-trill-letters="true" transform="skewX(-11)"><path d="M16 10 L12 32 Q11 38 18 32 M8 19 H22 M25 34 L28 19 M27 24 Q33 15 38 21" fill="none" stroke="black" stroke-width="2.7" stroke-linecap="round"/></g>';
         } else if (['quarter','dotted-half','half','dotted-quarter','eighth'].includes(kind)) {
             const dotted = kind.startsWith('dotted-'), openHead = kind === 'half' || kind === 'dotted-half';
             width = dotted ? 38 : 28;
@@ -150,17 +147,18 @@
             if (kind === 'eighth') body += '<path data-flag="eighth" d="M17 9 C18 16 29 15 26 29 C29 20 20 20 17 14 Z"/>';
             if (dotted) body += '<circle data-augmentation-dot="note" cx="29" cy="35" r="2.1"/>';
         } else {
-            const triplet = kind.endsWith('triplet'), beamed = kind.startsWith('eighth');
+            const below = kind === 'eighth-triplet-below', triplet = kind.endsWith('triplet') || below, beamed = kind.startsWith('eighth');
+            if (below) height = 60;
             for (const x of [12, 35, 58]) body += '<ellipse cx="'+x+'" cy="39" rx="6" ry="4" transform="rotate(-20 '+x+' 39)"/><path d="M'+(x+5)+' 38 V17" fill="none" stroke="black" stroke-width="1.7"/>';
             if (beamed) body += '<path d="M17 17 H63" fill="none" stroke="black" stroke-width="4"/>';
             if (triplet) {
-                body += '<path d="M33 3 C41 -1 42 7 36 7 C43 7 42 15 33 11" fill="none" stroke="black" stroke-width="1.6"/>';
+                body += '<path '+(below ? 'data-tuplet-position="below" transform="translate(8.75 45) scale(.7)" ' : '')+'d="M33 3 C41 -1 42 7 36 7 C43 7 42 15 33 11" fill="none" stroke="black" stroke-width="1.6"/>';
                 if (!beamed) body += '<path d="M9 12 V7 H28 M46 7 H68 V12" fill="none" stroke="black" stroke-width="1.2"/>';
             }
         }
         const svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 '+width+' '+height+'" width="'+width+'" height="'+height+'">'+body+'</svg>';
         const english = typeof document !== 'undefined' && /^en\b/i.test(document.documentElement.lang || '');
-        const label = labels[kind][english ? 1 : 0], extra = kind.startsWith('motif-') ? ' gm-score-example-'+(kind === 'motif-two' ? 'two' : 'one') : '';
+        const label = labels[kind][english ? 1 : 0], extra = kind.startsWith('motif-') ? ' gm-score-example-'+(kind === 'motif-two' ? 'two' : 'one') : kind === 'eighth-triplet-below' ? ' gm-triplet-below' : '';
         return '<img class="gm-music-notation'+extra+'" data-notation="'+kind+'" src="data:image/svg+xml,'+encodeURIComponent(svg)+'" width="'+width+'" height="'+height+'" alt="'+escape(label)+'" aria-label="'+escape(label)+'" title="'+escape(fallback)+'">';
     }
     function renderMusicNotationDirection(text, termsIndex, row, renderText) {

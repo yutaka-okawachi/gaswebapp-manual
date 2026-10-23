@@ -134,7 +134,9 @@ function renderDictionaryList(data) {
         const germanWrapper = document.createElement("div");
         const germanSpan = document.createElement("span");
         germanSpan.classList.add("german");
-        germanSpan.textContent = german;
+        germanSpan.innerHTML = typeof renderDictionaryNotationText === 'function'
+            ? renderDictionaryNotationText(german, german, source, document.documentElement.lang === 'en' ? 'en' : 'ja')
+            : escapeHtml(german);
 
         const sourceSpan = document.createElement("span");
         sourceSpan.classList.add("source");

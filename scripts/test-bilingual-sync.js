@@ -15,7 +15,7 @@ const tables={
 };
 let reads={},lockReleased=0;
 const c=vm.createContext({Logger:{log(){}},SPREADSHEET_ID:'synthetic',CacheService:{getScriptCache:()=>({remove(){}})},LockService:{getScriptLock:()=>({tryLock:()=>true,releaseLock:()=>lockReleased++})},SpreadsheetApp:{openById:()=>({getSheetByName:name=>!tables[name]?null:({getDataRange:()=>({getValues:()=>{reads[name]=(reads[name]||0)+1;return tables[name];}})})})}});
-for(const f of ['sync_build','dictionary_example_shards','generate_dic_html','export_json'])vm.runInContext(fs.readFileSync(path.join(root,'src',f+'.js'),'utf8'),c);
+for(const f of ['sync_build','dictionary_notation','dictionary_example_shards','generate_dic_html','export_json'])vm.runInContext(fs.readFileSync(path.join(root,'src',f+'.js'),'utf8'),c);
 const exportSnapshot=english=>JSON.parse(JSON.stringify(c.exportAllDataToJson({requestId:'bilingual-fixture',includeEnglish:english})));
 const legacy=exportSnapshot(false);reads={};const snapshot=exportSnapshot(true);
 assert.deepEqual(snapshot.files,legacy.files,'Japanese output remains byte-equivalent with the optional English envelope');
@@ -48,7 +48,7 @@ try{
  setPolicy(false,false);assert.equal(bilingual.refreshStage({root:directory}),null);const closedTicket=bilingual.publicationTicket(directory);
  const result=bilingual.stage(prepared,{root:directory});assert.equal(result.publishedEnglish,false);assert(!fs.existsSync(path.join(directory,'en')));assert(fs.existsSync(path.join(directory,'.sync-state/english/current.json')));assert(!fs.existsSync(path.join(directory,'mahler-search-app')));
  // Rebuild browser templates from the same private capture without another Sheet read.
- fs.mkdirSync(path.join(directory,'src'));for(const name of ['dictionary_example_shards','generate_dic_html'])fs.copyFileSync(path.join(root,'src',name+'.js'),path.join(directory,'src',name+'.js'));
+ fs.mkdirSync(path.join(directory,'src'));for(const name of ['dictionary_notation','dictionary_example_shards','generate_dic_html'])fs.copyFileSync(path.join(root,'src',name+'.js'),path.join(directory,'src',name+'.js'));
  fs.writeFileSync(path.join(directory,'index.html'),'<html lang="ja"><head></head><body>HOME</body></html>');
  for(const [name,value]of Object.entries(prepared.japanese)){const target=path.join(directory,name);fs.mkdirSync(path.dirname(target),{recursive:true});fs.writeFileSync(target,require('./sync/artifacts').formatJson(name,value));}
  assert(bilingual.refreshStage({root:directory}));assert(!fs.existsSync(path.join(directory,'en')));

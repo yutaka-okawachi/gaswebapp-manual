@@ -23,7 +23,7 @@ const context = vm.createContext({
     LockService: { getScriptLock: () => ({ tryLock: () => true, releaseLock: () => released++ }) },
     SpreadsheetApp: { openById: () => ({ getSheetByName: name => sheets[name] ? { getDataRange: () => ({ getValues: () => sheets[name] }) } : null }) }
 });
-for (const file of ['sync_build', 'dictionary_example_shards', 'generate_dic_html', 'export_json']) {
+for (const file of ['sync_build', 'dictionary_notation', 'dictionary_example_shards', 'generate_dic_html', 'export_json']) {
     vm.runInContext(fs.readFileSync(path.join(root, `src/${file}.js`), 'utf8'), context);
 }
 const first = JSON.parse(JSON.stringify(context.exportAllDataToJson({ requestId: 'fixture' })));

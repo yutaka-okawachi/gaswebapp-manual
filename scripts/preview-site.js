@@ -31,7 +31,7 @@ async function startPreview({ approval = false, open = false, phase = 'publish',
     const previewFiles = {};
     if (!approval || phase === 'prepare') {
         const context = vm.createContext({ console });
-        for (const file of ['src/dictionary_example_shards.js', 'src/generate_dic_html.js']) {
+        for (const file of ['src/dictionary_notation.js', 'src/dictionary_example_shards.js', 'src/generate_dic_html.js']) {
             vm.runInContext(fs.readFileSync(path.join(root, file), 'utf8'), context);
         }
         const data = name => JSON.parse(fs.readFileSync(path.join(root, 'mahler-search-app/data', name + '.json'), 'utf8'));

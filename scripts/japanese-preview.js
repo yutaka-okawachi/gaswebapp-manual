@@ -4,7 +4,7 @@
 const fs=require('fs'),path=require('path'),vm=require('vm');
 function buildJapanesePreview(root,source,english){
  const data=name=>JSON.parse(fs.readFileSync(path.join(root,'mahler-search-app/data',name+'.json'),'utf8'));
- const c=vm.createContext({});vm.runInContext(fs.readFileSync(path.join(root,'src/generate_dic_html.js'),'utf8'),c);
+ const c=vm.createContext({});for(const file of ['dictionary_notation','generate_dic_html'])vm.runInContext(fs.readFileSync(path.join(root,'src',file+'.js'),'utf8'),c);
  const files={},rowsByComposer={};
  for(const [tab,name,code]of [['GM','mahler','gm'],['RW','richard_wagner','rw'],['RS','richard_strauss','rs']]){
   const inputs=source.tabs[tab].filter(row=>tab==='GM'||row.page!=null&&String(row.page).trim()!=='');

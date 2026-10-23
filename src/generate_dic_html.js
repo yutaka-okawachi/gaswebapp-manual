@@ -416,7 +416,7 @@ function sortDicData(data) {
  * @param {Object} termsIndex - 用語インデックス（正規化キー → ID）
  * @return {string} 生成されたHTML
  */
-function generateDicListHtml(dicData, termsIndex, abbreviationIndex, dictionaryExampleIndex) {
+function generateDicListHtml(dicData, termsIndex, abbreviationIndex, dictionaryExampleIndex, language) {
   if (!dicData || dicData.length === 0) {
     return '<div class="result-message">データが存在しません。</div>';
   }
@@ -502,7 +502,7 @@ function generateDicListHtml(dicData, termsIndex, abbreviationIndex, dictionaryE
     html += `<div class="row"${termIdAttr}>
   <dt${letterAnchorAttr}>
     <div class="dt-main">
-      <dfn class="german">${escapeHtml(german)}</dfn>
+      <dfn class="german">${typeof renderDictionaryNotationText === 'function' ? renderDictionaryNotationText(german, german, source, language) : escapeHtml(german)}</dfn>
     </div>
     <div class="dt-details">
       ${toggleArea}
@@ -569,12 +569,12 @@ function generateAbbrListHtml(abbrData) {
  * @param {Array} mappingData - 検索対応データ
  * @return {string} 完全なHTMLファイルの内容
  */
-function generateDicHtml(dicData, abbrData, dictionaryExampleIndex, mappingData) {
+function generateDicHtml(dicData, abbrData, dictionaryExampleIndex, mappingData, options) {
   // 用語インデックスを生成
   const termsIndex = generateDicTermsIndex(dicData, mappingData);
   const abbreviationIndex = generateAbbreviationIndex(abbrData);
   
-  const dicListHtml = generateDicListHtml(dicData, termsIndex, abbreviationIndex, dictionaryExampleIndex);
+  const dicListHtml = generateDicListHtml(dicData, termsIndex, abbreviationIndex, dictionaryExampleIndex, options && options.language === 'en' ? 'en' : 'ja');
   const abbrListHtml = generateAbbrListHtml(abbrData);
 
   // 構造化データの生成 (SEO対策)
