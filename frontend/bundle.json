@@ -4,6 +4,7 @@
   "frontend/data-loader.js",
   "frontend/suggestions.js",
   "frontend/strauss-view.js",
+  "frontend/music-notation.js",
   "frontend/result-format.js",
   "frontend/wagner-view.js",
   "frontend/dictionary-view.js",

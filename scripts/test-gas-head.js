@@ -79,6 +79,10 @@ async function main() {
         await test('manifest follows actual clasp selection', () => assert.deepEqual(guard.localSnapshot(opts).files, updated));
         await test('clasp failure is redacted and blocks', () => assert.throws(() => guard.localSnapshot({ ...opts, status: () => { throw Error('PRIVATE_TOKEN'); } }), error => !error.message.includes('PRIVATE_TOKEN') && /送信対象/.test(error.message)));
         await test('invalid clasp status blocks', () => assert.throws(() => guard.localSnapshot({ ...opts, status: () => 'not json' }), /送信対象/));
+        for (const [failure, expected] of [[Object.assign(Error('PRIVATE_TOKEN'),{code:'ETIMEDOUT'}),/60秒タイムアウト/],[Object.assign(Error('PRIVATE_TOKEN'),{code:'ENOENT'}),/見つかりません/],[Error('clasp failed (2): PRIVATE_TOKEN'),/終了コード 2/]]) {
+            await test('clasp diagnostic classifies safely: '+String(expected),()=>assert.throws(()=>guard.localSnapshot({...opts,status:()=>{throw failure;}}),error=>expected.test(error.message)&&!error.message.includes('PRIVATE_TOKEN')));
+        }
+        await test('invalid clasp JSON is classified without raw text',()=>assert.throws(()=>guard.localSnapshot({...opts,status:()=> 'PRIVATE_TOKEN'}),error=>/JSON解析失敗/.test(error.message)&&!error.message.includes('PRIVATE_TOKEN')));
         await test('duplicate remote filename blocks', () => assert.throws(() => guard.localSnapshot({ ...opts, status: status(['src/appsscript.json', 'src/main.js', 'src/main.gs']) }), /重複/));
         fs.writeFileSync(path.join(directory, 'outside.js'), 'outside');
         await test('outside root file rejected', () => assert.throws(() => guard.localSnapshot({ ...opts, status: status(['src/appsscript.json', 'outside.js']) }), /同期元の外/));

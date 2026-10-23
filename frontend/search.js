@@ -196,7 +196,7 @@ window.searchMahlerDataLocal = function (choice1Arr, choice2Arr, includeOrchestr
             });
 
             if (matchedLocList.length > 0) {
-                resultHTML += `<div class="result-a">${linkTermsInTranslation(deData, window.appData.dic_terms_index)}</div>`;
+                resultHTML += `<div class="result-a">${linkTermsInTranslation(deData, window.appData.dic_terms_index, row)}</div>`;
                 resultHTML += `<div class="result-c">${escapeHtmlWithBreaks(jaData)}</div>`;
                 matchedLocList.forEach(loc => {
                     resultHTML += `<div class="result-loc">${escapeHtml(loc)}</div>`;
@@ -284,7 +284,7 @@ window.searchMahlerTermsLocal = function (query, resultMeta, matchMode) {
             if (matchedLocList.length > 0) {
                 totalMatches++;
                 resultHTML += `<div class="search-result-item">`;
-                resultHTML += `<div class="result-a">${linkTermsInTranslation(deData, window.appData.dic_terms_index)}</div>`;
+                resultHTML += `<div class="result-a">${linkTermsInTranslation(deData, window.appData.dic_terms_index, row)}</div>`;
                 resultHTML += `<div class="result-c">${escapeHtmlWithBreaks(jaData)}</div>`;
                 matchedLocList.forEach(loc => {
                     resultHTML += `<div class="result-loc">${escapeHtml(loc)}</div>`;

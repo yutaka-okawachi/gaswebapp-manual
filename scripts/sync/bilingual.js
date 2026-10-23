@@ -83,7 +83,7 @@ function prepare(snapshot,requestId,previous={},allowRemoval=false,options={}){
  const sortedIndex=value=>JSON.stringify(Object.entries(value).sort(([a],[b])=>a.localeCompare(b)));
  if(sortedIndex(values['mahler-search-app/data/dic_terms_index.json'])!==sortedIndex(japanese['mahler-search-app/data/dic_terms_index.json']))throw Error('日英の辞書ID・語形対応が一致しません。');
  const hashes=Object.fromEntries(Object.entries(english).sort(([a],[b])=>a.localeCompare(b)).map(([file,value])=>[file,core.sha256(serialize(file,value))]));
- const report={schemaVersion:1,requestId,sourceHash:snapshot.sourceHash,inputHash:core.sha256(JSON.stringify(source)),buildHash:core.sha256(JSON.stringify(hashes)),hashes,stats:site.stats,untranslated:[...site.missing]};
+ const report={schemaVersion:1,requestId,sourceHash:snapshot.sourceHash,inputHash:core.sha256(JSON.stringify(source)),buildHash:core.sha256(JSON.stringify(hashes)),hashes,stats:site.stats,warnings:site.warnings,untranslated:[...site.missing]};
  return {japanese,english,report,snapshot};
 }
 function serialize(file,value){return Buffer.isBuffer(value)?value:artifacts.formatJson(file,value);}
@@ -94,6 +94,7 @@ function stage(prepared,options={}){
  if(!/^[a-f0-9]{64}$/.test(prepared.report.buildHash))throw Error('英語ビルドIDが不正です。');
  const actualHashes=Object.fromEntries(Object.entries(prepared.english).sort(([a],[b])=>a.localeCompare(b)).map(([file,value])=>[file,core.sha256(serialize(file,value))]));
  if(JSON.stringify(actualHashes)!==JSON.stringify(prepared.report.hashes)||core.sha256(JSON.stringify(actualHashes))!==prepared.report.buildHash)throw Error('英語成果物が検証後に変更されています。');
+ for(const warning of prepared.report.warnings||[])console.warn('WARNING: '+warning);
  const staging=path.join(directory,'.sync-state','english',prepared.report.buildHash);
  for(const file of Object.keys(prepared.english))safeTarget(staging,file);
  for(let item=staging;item!==path.dirname(item);item=path.dirname(item))if(fs.existsSync(item)&&fs.lstatSync(item).isSymbolicLink())throw Error('非公開ステージの保存先にリンクがあります。');fs.mkdirSync(staging,{recursive:true});

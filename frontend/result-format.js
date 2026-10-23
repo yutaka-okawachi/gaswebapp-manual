@@ -153,7 +153,10 @@ function generateTermPattern(normalizedTerm, originalTerm) {
  * @param {Object} termsIndex - 用語インデックス（正規化キー → ID）
  * @return {string} リンク付きHTML
  */
-function linkTermsInTranslation(text, termsIndex) {
+function linkTermsInTranslation(text, termsIndex, notationRow) {
+    if (notationRow && typeof window.renderMusicNotationDirection === 'function') {
+        return window.renderMusicNotationDirection(text, termsIndex, notationRow, (part, index) => linkTermsInTranslation(part, index));
+    }
     if (!text || !termsIndex || Object.keys(termsIndex).length === 0) {
         return escapeHtmlWithBreaks(text);
     }
@@ -293,7 +296,7 @@ function formatGenericResults(data) {
         }
 
         const pageDisplay = hasScorePage(row) ? `p.${row.page}` : '';
-        const de = linkTermsInTranslation(row.de, window.appData.dic_terms_index);
+        const de = linkTermsInTranslation(row.de, window.appData.dic_terms_index, row);
         const ja = escapeHtmlWithBreaks(row.ja);
         const whom = escapeHtml(String(row.whom ?? '').trim());
 

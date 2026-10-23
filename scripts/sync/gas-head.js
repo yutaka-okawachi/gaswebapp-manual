@@ -72,7 +72,15 @@ function localSnapshot(options = {}) {
             env: { ...process.env, CI: 'true', NO_UPDATE_NOTIFIER: '1' }, redactError: true
         })))();
         status = JSON.parse(output);
-    } catch (_) { throw new Error('clasp の送信対象を確認できません。更新せず停止しました。'); }
+    } catch (error) {
+        // Preserve the fail-closed guard without exposing clasp output or credentials.
+        const statusCode = /^clasp failed \((-?\d+)\):/.exec(String(error.message || ''));
+        const reason = error.code === 'ETIMEDOUT' ? 'コマンドの60秒タイムアウト' :
+            error.code === 'ENOENT' ? 'claspコマンドが見つかりません' :
+            error instanceof SyntaxError ? 'clasp応答のJSON解析失敗' :
+            statusCode ? 'clasp終了コード '+statusCode[1] : 'claspコマンド実行失敗';
+        throw new Error('clasp の送信対象を確認できません。更新せず停止しました。('+reason+')');
+    }
     if (!Array.isArray(status.filesToPush)) throw new Error('clasp の送信対象一覧が不正です。');
     const files = status.filesToPush.map(file => {
         if (typeof file !== 'string') throw new Error('clasp の送信パスが不正です。');
