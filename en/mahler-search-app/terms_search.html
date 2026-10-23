@@ -36,9 +36,9 @@
 
     <link rel="icon" href="https://yutaka-okawachi.github.io/gaswebapp-manual/favicon.png">
     <link rel="apple-touch-icon" href="https://yutaka-okawachi.github.io/gaswebapp-manual/apple-touch-icon.png">
-    <link rel="preload" href="css/common.css?v=c86bc2885119" as="style">
-    <link rel="stylesheet" href="css/common.css?v=c86bc2885119">
-    <script src="js/app.js?v=498b3e50eccd"></script>
+    <link rel="preload" href="css/common.css?v=a0acb98898f8" as="style">
+    <link rel="stylesheet" href="css/common.css?v=a0acb98898f8">
+    <script src="js/app.js?v=cde24199876e"></script>
 
     <script>
         /*******************************************************************
@@ -182,16 +182,16 @@
 
                     // Generate HTML with .search-result-item wrapper
                     // 1. Generate Link first
-                    let resultDe = window.linkTermsInTranslation ? window.linkTermsInTranslation(deData, window.appData.dic_terms_index) : escapeHtmlWithBreaks(deData);
+                    let resultDe = window.linkTermsInTranslation ? window.linkTermsInTranslation(deData, window.appData.dic_terms_index, row) : escapeHtmlWithBreaks(deData);
                     
                     // 2. Apply Highlight
                     if (searchQueries.some(searchQuery => normalizeString(searchQuery).length >= 2)) {
-                         resultDe = resultDe.replace(highlightRegex, '<span style="color: red;">$1</span>');
+                         resultDe = window.highlightMusicNotationResult ? window.highlightMusicNotationResult(resultDe, highlightRegex) : resultDe.replace(highlightRegex, '<span style="color: red;">$1</span>');
                     }
 
                     resultHTML += `<div class="search-result-item">`;
                     resultHTML += `<div class="result-a">${resultDe}</div>`;
-                    resultHTML += `<div class="result-c">${escapeHtmlWithBreaks(jaData)}</div>`;
+                    resultHTML += `<div class="result-c">${formatGmTranslation(jaData, row)}</div>`;
                     resultHTML += detailsHTML;
                     resultHTML += `<div class="result-loc">(${segmentCount}件)</div>`;
                     resultHTML += `</div>`;

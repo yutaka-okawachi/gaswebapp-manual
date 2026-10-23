@@ -1237,3 +1237,16 @@ input#termInput,
 .term-suggestion-item {
     font-family: var(--font-serif);
 }
+
+/* Confirmed GM notation: vector shapes; canonical German stays in source/tooltip. */
+.gm-music-notation {
+    display: inline-block;
+    height: 2.4em;
+    width: auto;
+    max-width: 100%;
+    vertical-align: middle;
+    margin: 0 .12em;
+}
+
+.gm-music-notation.gm-score-example-two { width: 18em; height: auto; max-width: 100%; }
+.gm-music-notation.gm-score-example-one { width: 8.7em; height: auto; max-width: 100%; }

@@ -140,6 +140,5 @@
   {"__exampleOrder":2503,"de":"womöglich verdoppelt","de_normalized":"womoeglich verdoppelt","ja":"With doubled trumpet forces, if possible.","en":"With doubled trumpet forces, if possible.","data":"M-3-1-845-tr&"},
   {"__exampleOrder":2510,"de":"zart aber ausdrucksvoll","de_normalized":"zart aber ausdrucksvoll","ja":"Delicately but expressively.","en":"Delicately but expressively.","data":"M-7-1-92-v1,vc&"},
   {"__exampleOrder":2515,"de":"zart gesungen","de_normalized":"zart gesungen","ja":"Delicately, in a singing tone.","en":"Delicately, in a singing tone.","data":"M-1-3-95-ob&M-5-2-267-v1,v2&M-d-d09-3-v1&"},
-  {"__exampleOrder":2530,"de":"ziehen","de_normalized":"ziehen","ja":"Portamento.","en":"Portamento.","data":"M-d-d14-25-sti&M-d-d14-51-sti&"},
-  {"__exampleOrder":2597,"de":"𝅘𝅥𝅮𝅘𝅥𝅮𝅘𝅥𝅮 = wie früher 𝅘𝅥𝅮の3連符","de_normalized":"𝅘𝅥𝅮𝅘𝅥𝅮𝅘𝅥𝅮 = wie frueher 𝅘𝅥𝅮の3連符","ja":"Three eighth notes take the same time as the earlier group of three triplet eighth notes.","en":"Three eighth notes take the same time as the earlier group of three triplet eighth notes.","data":"M-3-2-50-all&"}
+  {"__exampleOrder":2530,"de":"ziehen","de_normalized":"ziehen","ja":"Portamento.","en":"Portamento.","data":"M-d-d14-25-sti&M-d-d14-51-sti&"}
 ]

@@ -140,6 +140,5 @@
   {"__exampleOrder":2503,"de":"womöglich verdoppelt","de_normalized":"womoeglich verdoppelt","ja":"できれば倍管で","data":"M-3-1-845-tr&"},
   {"__exampleOrder":2510,"de":"zart aber ausdrucksvoll","de_normalized":"zart aber ausdrucksvoll","ja":"繊細に，しかし表情豊かに","data":"M-7-1-92-v1,vc&"},
   {"__exampleOrder":2515,"de":"zart gesungen","de_normalized":"zart gesungen","ja":"繊細に歌って","data":"M-1-3-95-ob&M-5-2-267-v1,v2&M-d-d09-3-v1&"},
-  {"__exampleOrder":2530,"de":"ziehen","de_normalized":"ziehen","ja":"ポルタメント","data":"M-d-d14-25-sti&M-d-d14-51-sti&"},
-  {"__exampleOrder":2597,"de":"𝅘𝅥𝅮𝅘𝅥𝅮𝅘𝅥𝅮 = wie früher 𝅘𝅥𝅮の3連符","de_normalized":"𝅘𝅥𝅮𝅘𝅥𝅮𝅘𝅥𝅮 = wie frueher 𝅘𝅥𝅮の3連符","ja":"八分音符3つは前の八分音符の3連符の長さで ","data":"M-3-2-50-all&"}
+  {"__exampleOrder":2530,"de":"ziehen","de_normalized":"ziehen","ja":"ポルタメント","data":"M-d-d14-25-sti&M-d-d14-51-sti&"}
 ]

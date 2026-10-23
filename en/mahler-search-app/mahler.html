@@ -39,9 +39,9 @@
   <link rel="icon" href="https://yutaka-okawachi.github.io/gaswebapp-manual/favicon.png">
   <link rel="apple-touch-icon" href="https://yutaka-okawachi.github.io/gaswebapp-manual/apple-touch-icon.png">
 
-  <link rel="preload" href="css/common.css?v=c86bc2885119" as="style">
-  <link rel="stylesheet" href="css/common.css?v=c86bc2885119">
-  <script src="js/app.js?v=498b3e50eccd"></script>
+  <link rel="preload" href="css/common.css?v=a0acb98898f8" as="style">
+  <link rel="stylesheet" href="css/common.css?v=a0acb98898f8">
+  <script src="js/app.js?v=cde24199876e"></script>
   <style>
     /* index.html固有のスタイル */
     
@@ -792,6 +792,7 @@
         if (matchedLocList.length > 0) {
           results.push({
               de: deData,
+              data: dataCol,
               ja: jaData,
               locs: matchedLocList,
               count: segmentCount
@@ -936,8 +937,8 @@
             const entryDiv = document.createElement('div');
             entryDiv.classList.add('result-entry');
 
-            let html = `<div class="result-a">${window.linkTermsInTranslation ? window.linkTermsInTranslation(item.de, window.appData.dic_terms_index) : escapeHtmlWithBreaks(item.de)}</div>`;
-            html += `<div class="result-c">${escapeHtmlWithBreaks(item.ja)}</div>`;
+            let html = `<div class="result-a">${window.linkTermsInTranslation ? window.linkTermsInTranslation(item.de, window.appData.dic_terms_index, item) : escapeHtmlWithBreaks(item.de)}</div>`;
+            html += `<div class="result-c">${formatGmTranslation(item.ja, item)}</div>`;
             item.locs.forEach(loc => {
                 html += `<div class="result-loc">${escapeHtml(loc)}</div>`;
             });
