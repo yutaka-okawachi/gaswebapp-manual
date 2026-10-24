@@ -42,7 +42,7 @@ for(const language of ['ja','en']){
  }
  const motifTwo=svgImages(window.linkTermsInTranslation(fixtures[0].de,{},fixtures[0]))[0],motifOne=svgImages(window.linkTermsInTranslation(fixtures[1].de,{},fixtures[1]))[0];
  assert.equal((motifTwo.match(/data-measure=/g)||[]).length,2);assert.equal((motifOne.match(/data-measure=/g)||[]).length,1);
- assert(motifTwo.includes('data-clef="treble"'));assert(!motifOne.includes('data-clef='));
+ assert(motifTwo.includes('data-clef="treble"'));assert(motifTwo.includes('data-glyph="gClef"'));assert(motifTwo.includes('data-source="Bravura-1.482"'));assert(motifTwo.includes('<metadata>Copyright'));assert(motifTwo.includes('SIL OPEN FONT LICENSE Version 1.1'));assert(!motifOne.includes('Bravura')); assert(!motifOne.includes('data-clef='));
  assert.deepEqual([...motifTwo.matchAll(/data-pitch="([^"]*)"/g)].map(m=>m[1]),['G4','D4','F4','G4','C4','F4']);
  assert.equal((motifTwo.match(/data-articulation="tenuto"/g)||[]).length,2);assert.equal((motifTwo.match(/data-articulation="staccato"/g)||[]).length,3);assert(!motifOne.includes('data-articulation'));
  for(const [motif,bars]of [[motifTwo,2],[motifOne,1]]){assert.equal((motif.match(/data-rest="dotted-eighth"/g)||[]).length,bars);assert.equal((motif.match(/data-rest="eighth"/g)||[]).length,1);assert.equal((motif.match(/data-augmentation-dot="rest"/g)||[]).length,bars);assert(!motif.includes('data-augmentation-dot="note"'));}
