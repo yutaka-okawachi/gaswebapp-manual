@@ -55,15 +55,16 @@
         eighths: ['一本の連桁で結んだ通常の八分音符3個', 'Three ordinary eighth notes with one beam'],
         'eighth-triplet': ['一本の連桁で結んだ八分音符3個の三連符1組', 'One triplet group of three eighth notes with one beam'],
         'eighth-triplet-below': ['下側の3を付した八分音符三連符1組', 'One beamed eighth-note triplet with the numeral 3 below'],
-        'motif-two': ['ト音記号付き2小節。各小節は四分音符、付点八分休符、十六分音符、八分音符、八分休符。音高F4-D4-F4、G4-C4-F4。四分音符にテヌート、十六分・八分音符にスタッカート。', 'Two bars with treble clef. Each bar: quarter note, dotted eighth rest, sixteenth note, eighth note, eighth rest. Pitches F4-D4-F4, G4-C4-F4. Quarter notes have tenuto; sixteenth and eighth notes have staccato.'],
+        'motif-two': ['ト音記号付き2小節。第1小節はG4四分音符、付点八分休符、D4十六分音符、F4八分音符、八分休符。第2小節はG4四分音符、付点八分休符、C4十六分音符、F4四分音符と右へ続くタイ。各小節の最初にテヌート、十六分音符と第1小節の八分音符にスタッカート。', 'Two bars with treble clef. First bar: G4 quarter, dotted eighth rest, D4 sixteenth, F4 eighth, eighth rest. Second bar: G4 quarter, dotted eighth rest, C4 sixteenth, F4 quarter tied onward to the right. The first note in each bar has tenuto; the sixteenths and the first-bar eighth have staccato.'],
         'motif-one': ['音部記号と奏法記号なしの1小節。四分音符、付点八分休符、十六分音符、八分音符、八分休符。音高F4-D4-F4。', 'One bar without clef or articulation marks: quarter note, dotted eighth rest, sixteenth note, eighth note, eighth rest. Pitches F4-D4-F4.']
     };
     const escape = value => String(value).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-    // Peters 8951, Symphony 5, printed/PDF pp.128 and 137; visually checked.
+    // GM358: user-provided footnote photograph (2026-10-24), edition unspecified.
+    // GM387: Peters 8951, Symphony 5, printed/PDF p.137; unchanged.
     function motifSvg(two) {
-        const width = two ? 280 : 134;
+        const width = two ? 292 : 134;
         let body = '<g fill="black" stroke="black" stroke-width="1">';
-        for (const y of [38, 44, 50, 56, 62]) body += '<path d="M4 '+y+' H'+width+'" fill="none" stroke-width=".7"/>';
+        for (const y of [38, 44, 50, 56, 62]) body += '<path d="M4 '+y+' H'+(two ? 280 : width)+'" fill="none" stroke-width=".7"/>';
         if (two) body += '<path data-clef="treble" d="M18 62 C7 61 6 49 15 45 C23 40 30 48 25 55 C21 61 12 56 14 50 C16 44 25 40 26 31 C28 22 26 15 23 15 C16 19 17 29 19 40 L26 73 C28 83 17 87 13 79 C10 73 16 69 19 73 C21 76 17 79 15 77" fill="none" stroke-width="2.2" stroke-linecap="round"/>';
         function note(x, y, duration, pitch, articulation) {
             body += '<g data-note="'+duration+'" data-pitch="'+pitch+'"><ellipse cx="'+x+'" cy="'+y+'" rx="4.6" ry="3.1" transform="rotate(-20 '+x+' '+y+')"/><path d="M'+(x+4)+' '+y+' V'+(y-31)+'" fill="none" stroke-width="1.25"/>';
@@ -85,11 +86,13 @@
         for (let bar = 0; bar < (two ? 2 : 1); bar++) {
             const start = two ? 40 + bar * 123 : 20;
             body += '<g data-measure="'+(bar+1)+'">';
-            note(start, bar ? 56 : 59, 'quarter', bar ? 'G4' : 'F4', two ? 'tenuto' : '');
+            note(start, two ? 56 : 59, 'quarter', two ? 'G4' : 'F4', two ? 'tenuto' : '');
             rest(start + 28, true);
             note(start + 51, bar ? 68 : 65, 'sixteenth', bar ? 'C4' : 'D4', two ? 'staccato' : '');
-            note(start + 71, 59, 'eighth', 'F4', two ? 'staccato' : '');
-            rest(start + 94, false);
+            const tiedFinal = two && bar === 1;
+            note(start + 71, 59, tiedFinal ? 'quarter' : 'eighth', 'F4', two && !tiedFinal ? 'staccato' : '');
+            if (tiedFinal) body += '<path data-tie="continuing" d="M239 65 C252 78 275 78 286 65 C273 75 252 75 239 65 Z" stroke="none"/>';
+            else rest(start + 94, false);
             body += '<path data-barline="true" d="M'+(two ? (bar ? 280 : 144) : 134)+' 38 V62" fill="none" stroke-width="1"/></g>';
         }
         return {width, height:96, body:body+'</g>'};

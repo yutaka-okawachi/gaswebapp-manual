@@ -43,9 +43,11 @@ for(const language of ['ja','en']){
  const motifTwo=svgImages(window.linkTermsInTranslation(fixtures[0].de,{},fixtures[0]))[0],motifOne=svgImages(window.linkTermsInTranslation(fixtures[1].de,{},fixtures[1]))[0];
  assert.equal((motifTwo.match(/data-measure=/g)||[]).length,2);assert.equal((motifOne.match(/data-measure=/g)||[]).length,1);
  assert(motifTwo.includes('data-clef="treble"'));assert(!motifOne.includes('data-clef='));
- assert.deepEqual([...motifTwo.matchAll(/data-pitch="([^"]*)"/g)].map(m=>m[1]),['F4','D4','F4','G4','C4','F4']);
- assert.equal((motifTwo.match(/data-articulation="tenuto"/g)||[]).length,2);assert.equal((motifTwo.match(/data-articulation="staccato"/g)||[]).length,4);assert(!motifOne.includes('data-articulation'));
- for(const [motif,bars]of [[motifTwo,2],[motifOne,1]]){assert.equal((motif.match(/data-rest="dotted-eighth"/g)||[]).length,bars);assert.equal((motif.match(/data-rest="eighth"/g)||[]).length,bars);assert.equal((motif.match(/data-augmentation-dot="rest"/g)||[]).length,bars);assert(!motif.includes('data-augmentation-dot="note"'));}
+ assert.deepEqual([...motifTwo.matchAll(/data-pitch="([^"]*)"/g)].map(m=>m[1]),['G4','D4','F4','G4','C4','F4']);
+ assert.equal((motifTwo.match(/data-articulation="tenuto"/g)||[]).length,2);assert.equal((motifTwo.match(/data-articulation="staccato"/g)||[]).length,3);assert(!motifOne.includes('data-articulation'));
+ for(const [motif,bars]of [[motifTwo,2],[motifOne,1]]){assert.equal((motif.match(/data-rest="dotted-eighth"/g)||[]).length,bars);assert.equal((motif.match(/data-rest="eighth"/g)||[]).length,1);assert.equal((motif.match(/data-augmentation-dot="rest"/g)||[]).length,bars);assert(!motif.includes('data-augmentation-dot="note"'));}
+ assert.deepEqual([...motifTwo.matchAll(/data-note="([^"]*)"/g)].map(m=>m[1]),['quarter','sixteenth','eighth','quarter','sixteenth','quarter']);
+ assert.equal((motifTwo.match(/data-tie="continuing"/g)||[]).length,1);assert(!motifOne.includes('data-tie='));
  for(const row of fixtures.slice(0,2))for(const text of [row.ja,row.en])assert.equal(svgImages(window.formatGmTranslation(text,row)).length,1,'Japanese and English translation placeholders');
  const quarter=svgImages(window.linkTermsInTranslation(fixtures[4].de,{},fixtures[4]));
  const eighth=svgImages(window.linkTermsInTranslation(fixtures[5].de,{},fixtures[5]));
