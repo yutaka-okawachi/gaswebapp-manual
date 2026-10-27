@@ -10,7 +10,7 @@ assert.deepEqual(descriptors.find(r=>r.tab==='GM'&&r.sourceRow===2601).tokens.ma
 const identity=(a,b)=>a.data!==undefined?a.data===b.data&&a.de.normalize('NFC')===b.de.normalize('NFC'):['Oper','Aufzug','Szene','page'].every(k=>String(a[k]??'')===String(b[k]??''));
 const svgImages=html=>[...html.matchAll(/src="data:image\/svg\+xml,([^"]*)"/g)].map(m=>decodeURIComponent(m[1]));
 const kinds=html=>[...html.matchAll(/data-notation="([^"]+)"/g)].map(m=>m[1]);
-const excluded={GM:[37,1920,338,570,930,965,1354,2084,2590,325,582,1550],RW:[4642,349,410,742,832,2704,3128,3908,5428],RS:[651,727,782,5052]};
+const excluded={GM:[37,1920,338,570,930,965,1354,2084,2590,325,582],RW:[4642,349,410,742,832,2704,3128,3908,5428],RS:[651,727,782,5052]};
 let checks=0;
 for(const language of ['ja','en']){
  const window={addEventListener(){},appData:{dic_terms_index:{}},location:{pathname:'/mahler-search-app/terms_search.html',search:''},aReverseMap:{},aMapping:{},dReverseMap:{},dMapping:{}};

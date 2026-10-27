@@ -200,10 +200,44 @@ function linkTermsInTranslation(text, termsIndex, notationRow) {
 // Expose for use in other scripts (e.g., index.html)
 window.linkTermsInTranslation = linkTermsInTranslation;
 
+// Link only plain-text web URLs; all source HTML remains escaped.
+function formatSourceTextWithLinks(text) {
+    if (!text) return '';
+    const source = String(text);
+    const tokens = /<a\b[^>]*>[\s\S]*?<\/a\s*>|<[^>]*>|https?:\/\/[^\s<>"'\x00-\x1f\x7f「」『』【】（）]+/gi;
+    let html = '', last = 0, match;
+    while ((match = tokens.exec(source))) {
+        html += escapeHtmlWithBreaks(source.slice(last, match.index));
+        const token = match[0];
+        let url = token;
+        // Sentence punctuation and unmatched closing brackets belong to the prose.
+        while (url) {
+            if (/[.,;:!?。、，．！？]$/.test(url)) { url = url.slice(0, -1); continue; }
+            const close = url.slice(-1), open = { ')': '(', ']': '[', '}': '{' }[close];
+            if (open && url.split(close).length > url.split(open).length) { url = url.slice(0, -1); continue; }
+            break;
+        }
+        let valid = false;
+        if (/^https?:\/\//i.test(url) && !/[\w/:]/.test(source[match.index - 1] || ' ') &&
+            !/[\\\x00-\x20\x7f]/.test(url) && !/%(?![0-9a-f]{2})/i.test(url)) {
+            try {
+                const parsed = new URL(url);
+                valid = ['http:', 'https:'].includes(parsed.protocol) && Boolean(parsed.hostname) &&
+                    !parsed.username && !parsed.password;
+            } catch (_) { /* Invalid URLs stay visible as escaped text. */ }
+        }
+        html += valid
+            ? `<a href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(url)}</a>${escapeHtmlWithBreaks(token.slice(url.length))}`
+            : escapeHtmlWithBreaks(token);
+        last = tokens.lastIndex;
+    }
+    return html + escapeHtmlWithBreaks(source.slice(last));
+}
+
 function formatGmTranslation(text, row) {
     return typeof window.renderMusicNotationDirection === 'function'
-        ? window.renderMusicNotationDirection(text, {}, row, part => escapeHtmlWithBreaks(part))
-        : escapeHtmlWithBreaks(text);
+        ? window.renderMusicNotationDirection(text, {}, row, formatSourceTextWithLinks)
+        : formatSourceTextWithLinks(text);
 }
 window.formatGmTranslation = formatGmTranslation;
 window.formatNotationTranslation = formatGmTranslation;

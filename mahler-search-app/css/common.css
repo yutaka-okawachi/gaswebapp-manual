@@ -984,6 +984,8 @@ h3 {
 }
 
 .result-c {
+    min-width: 0;
+    overflow-wrap: anywhere;
     margin-left: 15px;
     color: #333;
     font-size: 0.85rem;
@@ -1250,6 +1252,7 @@ input#termInput,
 
 .gm-music-notation.gm-score-example-two { width: 18em; height: auto; max-width: 100%; }
 .gm-music-notation.gm-score-example-one { width: 8.7em; height: auto; max-width: 100%; }
+.gm-music-notation.gm-score-example-gm1550 { width: 13.6em; height: auto; max-width: 100%; }
 
 /* Keep the noteheads at the standard scale/baseline while accommodating a lower 3. */
 .gm-music-notation.gm-triplet-below { height: 3em; vertical-align: calc(-1.65em + .5ex); }

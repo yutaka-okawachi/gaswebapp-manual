@@ -125,3 +125,11 @@ GM2602（第3交響曲第II楽章144小節、M-3-2-144-all&）は、https://imsl
 GM358だけのト音記号をSteinberg Bravura 1.482のgClef（U+E050）から抽出した塗りつぶしSVGパスへ変更します。公式固定版 https://github.com/steinbergmedia/bravura/tree/37b194378b710cc40e406ab6c4b07608bb9548ae 、OTF SHA-256 `cdf0f893ee1fdb64b7f6713d71ee0dcfc349c0ac01429a8e451b01a9e79f5f3b`。FontTools 4.67.0 SVGPathPenで輪郭を取得し、1五線間隔6pxに対して1フォント単位0.024px、G4線をy=56、左端x=10として座標変換。輪郭範囲はx=10〜26.104、y=29.648〜71.792です。フォントファイルの実行時読み込み・端末フォント・SVG textは使用しません。
 
 著作権表示とSIL OFL 1.1全文は `manuals/licenses/Bravura-OFL.md` に保存し、GM358のSVG metadataにも同じ全文を含めます。字形の出典名としてBravuraを記録し、新たな派生フォント名には使用しません。音符・音高・音価・休符・奏法記号・タイ・五線と配置間隔は変更せず、GM387を含む他譜例も変更しません。
+
+### GM1550 の譜例（2026-10-27）
+
+ユーザーが採用した訂正版に従い、音高はF2ではなくG2の二分音符とします。ヘ音記号、フラット3個、二分休符、Und、複縦線、縦線なしのCを透過SVGで表示します。`M-b1-t1-380-chor&` と原文 `Müßte so sein (Herausgebervorschlag)` の両方が一致する場合だけ、訳文の後に1回追加します。行番号だけで照合せず、原文・訳文・検索キー・辞書本文は変更しません。日英で同じSVGを共用し、幅13.6em・高さauto・max-width:100%と既存譜例の余白を使います。以前のGM1550表示除外は、この承認済みの文脈だけ解除します。
+
+`node scripts/test-gm1550-example.js` でG2・透過・文脈隔離・日英の検索表示と、既存GM358/387との共存を検証します。
+
+字形はGM358と同じBravura 1.482のU+E062/U+E260/U+E08Aを使用し、既存OFLをSVG metadataへ同梱します。Undは公式URW Base35のNimbusRoman-Regular（Git blob `4588affb13eb72259ab3878a642ed04b3140aa48`、OTF SHA-256 `fd41669443616a7ae890c42e53a58f47fa24a940fd1e367acaff665cf5b6e9d8`）を11pxで輪郭化し、中央x136・baseline80に配置します。出典と利用条件は `manuals/licenses/NimbusRoman-LICENSE.md` に保存します。実行時のフォント取得はありません。

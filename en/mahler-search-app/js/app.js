@@ -2332,11 +2332,18 @@ window.MUSIC_NOTATION_CONTEXTS = [
         tokens.sort((a,b) => b[0].length-a[0].length);
         return [notationContextKey(context),tokens];
     }));
+    // GM1550: user-approved G2 correction (2026-10-27), not F2.
+    function isGm1550(row) {
+        return String(row?.data ?? row?.[3] ?? '') === 'M-b1-t1-380-chor&' &&
+            String(row?.de ?? row?.[0] ?? '').normalize('NFC') === 'Müßte so sein (Herausgebervorschlag)';
+    }
     function rulesFor(row) {
+        if (isGm1550(row)) return [];
         const key = notationContextKey(row), data = String(row?.data || row?.[3] || '');
         return contexts.get(key) || (Object.hasOwn(rules,data) ? rules[data] : undefined);
     }
     const labels = {
+        'gm1550-example': ['編集者提案の譜例：ヘ音記号、フラット3個、G2二分音符、Und、二分休符、複縦線、縦線なしのC。', 'Editorial example: bass clef, three flats, G2 half note, Und, half rest, double barline, and common-time C without a vertical stroke.'],
         half: ['二分音符', 'Half note'],
         whole: ['全音符', 'Whole note'],
         eighth: ['八分音符', 'Eighth note'],
@@ -2409,9 +2416,32 @@ window.MUSIC_NOTATION_CONTEXTS = [
         }
         return {width, height:96, body:body+'</g>'};
     }
+    // Bravura 1.482 E062/E260/E08A; same pinned source and OFL as GM358.
+    // NimbusRoman-Regular Und outline: manuals/licenses/NimbusRoman-LICENSE.md.
+    const gm1550BassPath = "M252 262C78 262 0 135 0 39C0 -41 42 -110 123 -110C186 -110 229 -66 229 -4C229 60 182 100 133 100C106 100 96 93 83 93C70 93 67 101 67 111C67 151 127 224 229 224C335 224 381 120 381 -37C381 -140 359 -260 297 -356C237 -449 134 -534 10 -605C1 -610 -5 -615 -5 -623C-5 -629 -1 -635 8 -635C13 -635 19 -633 25 -630C158 -565 286 -489 392 -375C479 -281 531 -159 531 -28C531 146 425 262 252 262ZM629 180C598 180 574 156 574 125C574 94 598 70 629 70C660 70 684 94 684 125C684 156 660 180 629 180ZM630 -71C599 -71 576 -94 576 -125C576 -156 599 -179 630 -179C661 -179 684 -156 684 -125C684 -94 661 -71 630 -71Z";
+    const gm1550FlatPath = "M12 -170C15 -174 18 -175 21 -175C24 -175 27 -173 27 -173C57 -156 81 -129 106 -112C195 -50 226 11 226 57C226 114 182 150 136 153C129 153 122 152 115 150C104 147 92 143 81 136C75 131 64 122 59 122C57 122 56 122 54 123C47 126 43 133 43 140C44 162 50 402 50 422C50 433 41 439 31 439C17 439 1 429 0 411C0 411 4 -160 12 -170ZM47 -81C47 -81 44 -21 44 19C44 35 45 47 46 51C50 63 76 85 90 93C99 98 108 100 116 100C126 100 135 96 141 89C151 78 157 61 157 42C157 24 152 3 140 -18C127 -42 98 -74 68 -93C64 -95 61 -96 58 -96C49 -96 47 -86 47 -81Z";
+    const gm1550CommonPath = "M233 251C203 251 168 243 141 231C52 192 5 85 5 -10C5 -19 5 -28 6 -37C11 -91 37 -142 70 -182C108 -228 163 -249 223 -249C398 -249 424 -90 424 -61C424 -39 413 -39 409 -39C401 -39 394 -40 394 -57C394 -186 284 -216 252 -216C171 -216 128 -137 128 28C128 193 204 227 258 227C310 227 331 203 331 193C331 184 328 171 313 171C273 171 250 128 250 97C250 40 299 22 327 22C327 22 403 25 403 108C403 239 252 251 233 251Z";
+    const gm1550UndPath = "M705 662H473V643C550 638 565 618 567 515V245C567 177 561 139 544 109C517 61 453 30 378 30C307 30 258 54 231 101C213 133 206 170 206 233V553C207 626 217 636 297 643V662H14V643C93 637 103 627 104 553V241C104 68 185 -14 355 -14C464 -14 539 21 578 89C602 131 611 177 611 254V515C613 620 624 634 705 643ZM740 0H952V15C902 18 886 31 886 67V348C934 393 956 405 989 405C1038 405 1062 374 1062 308V99C1060 34 1048 18 999 15V0H1207V15C1158 20 1147 32 1146 81V310C1146 404 1102 460 1028 460C982 460 951 443 883 379V458L876 460C824 441 790 430 738 415V398C745 401 754 402 765 402C793 402 802 387 802 338V90C801 31 790 18 740 15ZM1713 58C1700 57 1694 57 1690 57C1655 57 1646 68 1646 114V681L1641 683C1594 667 1560 656 1494 639V623C1502 624 1507 624 1516 624C1553 624 1562 614 1562 573V417C1524 449 1497 460 1457 460C1342 460 1249 347 1249 205C1249 77 1323 -10 1434 -10C1490 -10 1528 10 1562 57V-7L1566 -10L1713 42ZM1562 102C1562 95 1555 83 1545 72C1528 52 1502 42 1473 42C1389 42 1335 122 1335 246C1335 358 1384 432 1460 432C1514 432 1562 385 1562 332Z";
+    const gm1550UnderlayLicense = "(URW)++,Copyright 2014 by (URW)++ Design & Development\nThe font and related files in this directory are distributed under the\nGNU AFFERO GENERAL PUBLIC LICENSE Version 3 (see the file COPYING), with\nthe following exemption:\n\nAs a special exception, permission is granted to include these font\nprograms in a Postscript or PDF file that consists of a document that\ncontains text to be displayed or printed using this font, regardless\nof the conditions or license applying to the document itself.\n\n";
+    function gm1550Svg() {
+        const width = 220, height = 96;
+        let body = '<metadata>'+escape(gm358ClefLicense)+'\n'+escape(gm1550UnderlayLicense)+'</metadata><g fill="black" stroke="black">';
+        for (const y of [38, 44, 50, 56]) body += '<path d="M8 '+y+' H212" fill="none" stroke-width=".7"/>';
+        body += '<path d="M8 62 H131.6 M140.4 62 H212" fill="none" stroke-width=".7"/>';
+        body += '<path data-clef="bass" data-glyph="fClef" d="'+gm1550BassPath+'" transform="translate(12 44) scale(.024 -.024)" stroke="none"/>';
+        for (const [x,y] of [[37,56],[45,47],[53,59]]) body += '<path data-accidental="flat" d="'+gm1550FlatPath+'" transform="translate('+x+' '+y+') scale(.024 -.024)" stroke="none"/>';
+        body += '<rect data-rest="half" x="84" y="46.6" width="9" height="3.4" stroke="none"/>';
+        body += '<g data-note="half" data-pitch="G2"><ellipse cx="136" cy="62" rx="4.6" ry="3.1" transform="rotate(-20 136 62)" fill="none" stroke-width="1.2"/><path d="M140 61 V40" fill="none" stroke-width="1.25"/></g>';
+        body += '<path data-underlay="Und" d="'+gm1550UndPath+'" transform="translate(126.529 80) scale(0.011 -0.011)" stroke="none"/>';
+        body += '<path data-barline="double" d="M181 38 V62 M185 38 V62" fill="none" stroke-width="1"/>';
+        body += '<path data-time-signature="common" data-glyph="timeSigCommon" d="'+gm1550CommonPath+'" transform="translate(195 50) scale(.024 -.024)" stroke="none"/>';
+        return {width, height, body:body+'</g>'};
+    }
     function notationImage(kind, fallback) {
         let width = 76, height = 48, body = '';
-        if (kind.startsWith('motif-')) {
+        if (kind === 'gm1550-example') {
+            ({width, height, body} = gm1550Svg());
+        } else if (kind.startsWith('motif-')) {
             ({width, height, body} = motifSvg(kind === 'motif-two'));
         } else if (kind === 'roof') {
             width = 37;
@@ -2473,7 +2503,7 @@ window.MUSIC_NOTATION_CONTEXTS = [
         }
         const svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 '+width+' '+height+'" width="'+width+'" height="'+height+'">'+body+'</svg>';
         const english = typeof document !== 'undefined' && /^en\b/i.test(document.documentElement.lang || '');
-        const label = labels[kind][english ? 1 : 0], extra = kind.startsWith('motif-') ? ' gm-score-example-'+(kind === 'motif-two' ? 'two' : 'one') : kind === 'eighth-triplet-below' ? ' gm-triplet-below' : '';
+        const label = labels[kind][english ? 1 : 0], extra = kind === 'gm1550-example' ? ' gm-score-example-gm1550' : kind.startsWith('motif-') ? ' gm-score-example-'+(kind === 'motif-two' ? 'two' : 'one') : kind === 'eighth-triplet-below' ? ' gm-triplet-below' : '';
         return '<img class="gm-music-notation'+extra+'" data-notation="'+kind+'" src="data:image/svg+xml,'+encodeURIComponent(svg)+'" width="'+width+'" height="'+height+'" alt="'+escape(label)+'" aria-label="'+escape(label)+'" title="'+escape(fallback)+'">';
     }
     function renderMusicNotationDirection(text, termsIndex, row, renderText) {
@@ -2497,7 +2527,9 @@ window.MUSIC_NOTATION_CONTEXTS = [
             result.push({text:part.text.slice(last)});
             return result;
         });
-        return parts.map(part => part.html === undefined ? renderText(part.text, termsIndex) : part.html).join('');
+        const rendered = parts.map(part => part.html === undefined ? renderText(part.text, termsIndex) : part.html).join('');
+        return isGm1550(row) && [row.ja, row.en, row[2]].some(value => value !== undefined && String(text) === String(value))
+            ? rendered + ' ' + notationImage('gm1550-example', String(text)) : rendered;
     }
     window.renderMusicNotationDirection = renderMusicNotationDirection;
     window.hasMusicNotationForRow = row => !!rulesFor(row);
@@ -2709,10 +2741,44 @@ function linkTermsInTranslation(text, termsIndex, notationRow) {
 // Expose for use in other scripts (e.g., index.html)
 window.linkTermsInTranslation = linkTermsInTranslation;
 
+// Link only plain-text web URLs; all source HTML remains escaped.
+function formatSourceTextWithLinks(text) {
+    if (!text) return '';
+    const source = String(text);
+    const tokens = /<a\b[^>]*>[\s\S]*?<\/a\s*>|<[^>]*>|https?:\/\/[^\s<>"'\x00-\x1f\x7f「」『』【】（）]+/gi;
+    let html = '', last = 0, match;
+    while ((match = tokens.exec(source))) {
+        html += escapeHtmlWithBreaks(source.slice(last, match.index));
+        const token = match[0];
+        let url = token;
+        // Sentence punctuation and unmatched closing brackets belong to the prose.
+        while (url) {
+            if (/[.,;:!?。、，．！？]$/.test(url)) { url = url.slice(0, -1); continue; }
+            const close = url.slice(-1), open = { ')': '(', ']': '[', '}': '{' }[close];
+            if (open && url.split(close).length > url.split(open).length) { url = url.slice(0, -1); continue; }
+            break;
+        }
+        let valid = false;
+        if (/^https?:\/\//i.test(url) && !/[\w/:]/.test(source[match.index - 1] || ' ') &&
+            !/[\\\x00-\x20\x7f]/.test(url) && !/%(?![0-9a-f]{2})/i.test(url)) {
+            try {
+                const parsed = new URL(url);
+                valid = ['http:', 'https:'].includes(parsed.protocol) && Boolean(parsed.hostname) &&
+                    !parsed.username && !parsed.password;
+            } catch (_) { /* Invalid URLs stay visible as escaped text. */ }
+        }
+        html += valid
+            ? `<a href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(url)}</a>${escapeHtmlWithBreaks(token.slice(url.length))}`
+            : escapeHtmlWithBreaks(token);
+        last = tokens.lastIndex;
+    }
+    return html + escapeHtmlWithBreaks(source.slice(last));
+}
+
 function formatGmTranslation(text, row) {
     return typeof window.renderMusicNotationDirection === 'function'
-        ? window.renderMusicNotationDirection(text, {}, row, part => escapeHtmlWithBreaks(part))
-        : escapeHtmlWithBreaks(text);
+        ? window.renderMusicNotationDirection(text, {}, row, formatSourceTextWithLinks)
+        : formatSourceTextWithLinks(text);
 }
 window.formatGmTranslation = formatGmTranslation;
 window.formatNotationTranslation = formatGmTranslation;
