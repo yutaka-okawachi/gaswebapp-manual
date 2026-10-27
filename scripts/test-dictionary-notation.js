@@ -6,6 +6,30 @@ const target=notes.find(r=>r[0].includes('als トレモロ音符'));
 assert(target);const before=JSON.stringify(notes),c=vm.createContext({});
 vm.runInContext(read('src/dictionary_notation.js'),c);vm.runInContext(read('src/generate_dic_html.js'),c);
 const old=vm.createContext({});vm.runInContext(read('src/generate_dic_html.js'),old);
+const scoreToken='[[score:hindemith-glockenspiel-fsharp5]]';
+// Reverse only the approved display substitutions, back to each fixture's exact source.
+// Keep the whole-document equality: anchors, metadata, links and all other text stay strict.
+function restoreApprovedNotation(output,data){
+ const note=data.find(r=>r[0].startsWith('Ein Stab aus einem Glockenspiel')&&r[2]==='[H: KM1-1]');assert(note);
+ const glockImage=/<img\b[^>]*data-notation="glockenspiel-fsharp5"[^>]*>/g;
+ let restored=output.replace(/<dfn class="german">([\s\S]*?)<\/dfn>/g,(_,body)=>'<dfn class="german">'+body.replace(glockImage,note[0].includes(scoreToken)?scoreToken:'(の譜例)')+'</dfn>');
+ if(note[1].includes(scoreToken))restored=restored.replace(glockImage,scoreToken);
+ else restored=restored.replace(/ <img\b[^>]*data-notation="glockenspiel-fsharp5"[^>]*>/g,'');
+ return restored.replace(/<img\b[^>]*data-notation="quarter-tremolo-three"[^>]*>/,'トレモロ音符').replace(/<img\b[^>]*data-notation="short-pause"[^>]*>/,'𝄐');
+}
+function assertExactDocument(output,original,data){
+ assert.equal(restoreApprovedNotation(output,data),original,'Only approved display substitutions change; all anchors, metadata, example links and source/translated text remain identical');
+}
+function assertTamperingRejected(output,original,data){
+ const changes=[
+  ['anchor',html=>html.replace('id="term-','id="tampered-term-')],
+  ['metadata',html=>html.replace(/("@type":\s*)"DefinedTermSet"/,'$1"TamperedTermSet"')],
+  ['example link',html=>html.replace(/href="((?:rw_|rs_)?terms_search\.html[^\"]*)"/,'href="$1&tampered=1"')],
+  ['source text',html=>html.replace('<dfn class="german">','<dfn class="german">tampered ')],
+  ['translation',html=>html.replace('<dd class="translation">','<dd class="translation">tampered ')]
+ ];
+ for(const [name,change]of changes){const changed=change(output);assert.notEqual(changed,output,'Mutation reaches '+name);assert.throws(()=>assertExactDocument(changed,original,data),assert.AssertionError,'Reject unintended '+name+' changes');}
+}
 let checks=0;
 for(const language of ['ja','en']){
  const data=language==='ja'?notes:english,row=data.find(r=>r[0]===target[0]);
@@ -18,9 +42,8 @@ for(const language of ['ja','en']){
  const output=c.generateDicHtml(data,[],null,[],{language});const original=old.generateDicHtml(data,[],null,[],{language});
  assert.equal((output.match(/dictionary-music-notation/g)||[]).length,4);
  const pause=output.match(/<img\b[^>]*data-notation="short-pause"[^>]*>/)[0];
- const glockImage=/<img\b[^>]*data-notation="glockenspiel-fsharp5"[^>]*>/g;
- const restored=output.replace(/<dfn class="german">([\s\S]*?)<\/dfn>/g,(_,body)=>'<dfn class="german">'+body.replace(glockImage,'(の譜例)')+'</dfn>').replace(/ <img\b[^>]*data-notation="glockenspiel-fsharp5"[^>]*>/g,'');
- assert(restored.replace(image,'トレモロ音符').replace(pause,'𝄐')===original,'Only the approved display signs change; all 988 anchors, metadata, example links and source text remain identical');
+ assertExactDocument(output,original,data);
+ assertTamperingRejected(output,original,data);
  for(const r of data)if(r[0]!==target[0]&&!r[0].startsWith('Ein Stab aus einem Glockenspiel'))assert.equal(c.renderDictionaryNotationText(r[0],r[0],r[2],language),c.escapeHtml(r[0]),'No unrelated dictionary notation is changed');
  assert(!c.renderDictionaryNotationText(row[1],row[0],row[2],language).includes('<img'),'Spelled-out tremolo references in explanations remain words');
  assert(!c.renderDictionaryNotationText(row[0],row[0],'[GM]',language).includes('<img'));
@@ -28,5 +51,19 @@ for(const language of ['ja','en']){
  const nfd=row[0].normalize('NFD');assert(c.renderDictionaryNotationText(nfd,nfd,row[2],language).includes('<img'));
  assert.equal(c.renderDictionaryNotationText('<img onerror="x">','unrelated','',language),'&lt;img onerror=&quot;x&quot;&gt;');checks+=data.length+14;
 }
+// Explicit compact fixtures avoid relying on whichever migration state the live Sheet has.
+for(const language of ['ja','en'])for(const scenario of ['legacy','token','partial-source','partial-translation']){
+ const live=language==='ja'?notes:english;
+ const glock=JSON.parse(JSON.stringify(live.find(r=>r[0].startsWith('Ein Stab aus einem Glockenspiel')&&r[2]==='[H: KM1-1]')));
+ glock[0]='Ein Stab aus einem Glockenspiel (Klang Fis(の譜例) , ebenso notiert) ';
+ glock[1]=language==='ja'?'実音はFis、記譜も同じ高さ。':'Sounding F-sharp, and notated at the same pitch.';
+ if(scenario==='token'||scenario==='partial-source')glock[0]=glock[0].replace('(の譜例)',' '+scoreToken);
+ if(scenario==='token'||scenario==='partial-translation')glock[1]+=' '+scoreToken;
+ const data=[live.find(r=>r[0]===target[0]),live.find(r=>r[0]==='anhalten'),glock,['fixture unchanged','Unchanged translation','[GM]']];assert(data.every(Boolean));
+ const fixtureBefore=JSON.stringify(data),output=c.generateDicHtml(data,[],null,[],{language}),original=old.generateDicHtml(data,[],null,[],{language});
+ assert.equal((output.match(/data-notation="glockenspiel-fsharp5"/g)||[]).length,2,language+' '+scenario+' has one source and one translation image');
+ assertExactDocument(output,original,data);assertTamperingRejected(output,original,data);
+ assert.equal(JSON.stringify(data),fixtureBefore,'Fixture remains canonical: '+language+' '+scenario);checks+=9;
+}
 assert.equal(JSON.stringify(notes),before);
-console.log('Dictionary notation: '+checks+' checks; exact Notes21 quotation, one quarter note/three strokes, language alt text, 988-entry isolation, unchanged anchors/translations, canonical data and safe escaping passed. Don Quixote reference-score footnote verified (PDF32/printed p.224).');
+console.log('Dictionary notation: '+checks+' checks; exact Notes21 quotation, one quarter note/three strokes, language alt text, 988-entry isolation, exact full-document legacy/token/partial fixtures in both languages, 50 anchor/metadata/example-link/source/translation tamper rejections, canonical data and safe escaping passed. Don Quixote reference-score footnote verified (PDF32/printed p.224).');

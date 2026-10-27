@@ -1,4 +1,5 @@
 'use strict';
+const {legacyDirectionRows,legacyNotesRows}=require('./test-utils/score-example-fixtures');
 const fs=require('fs'),path=require('path'),vm=require('vm'),assert=require('assert/strict');
 const root=path.resolve(__dirname,'..'),read=f=>fs.readFileSync(path.join(root,f),'utf8');
 const specs=[['mahler','M-2-5-55-dir&','mahler-trill-chain','gm325-example'],['mahler','M-b1-t1-380-chor&','mahler-editorial-g2','gm1550-example'],['richard_strauss','feuersnot','feuersnot-desk-division','rs651-example'],['richard_strauss','salome','salome-timpani-layout','rs782-example']];
@@ -9,7 +10,13 @@ for(const language of ['ja','en']){
  const prefix=language==='en'?'en/':'',window={addEventListener(){},appData:{dic_terms_index:{}},location:{pathname:'/'+prefix+'mahler-search-app/terms_search.html',search:''}};
  const c=vm.createContext({window,document:{documentElement:{lang:language},getElementById:()=>null},URL,URLSearchParams,console,setTimeout,clearTimeout,navigator:{userAgent:'test'}});vm.runInContext(read(prefix+'mahler-search-app/js/app.js'),c);
  for(const [file,location,id,kind]of specs){
-  const rows=JSON.parse(read(prefix+'mahler-search-app/data/'+file+'.json')),row=rows.find(r=>file==='mahler'?r.data===location:r.Oper===location&&r.de.startsWith(location==='feuersnot'?'vielleicht pultweise':'Aufstellung der 4 Pauken'));assert(row);
+  const currentRows=JSON.parse(read(prefix+'mahler-search-app/data/'+file+'.json')),canonicalBefore=JSON.stringify(currentRows);
+  const matches=r=>file==='mahler'?r.data===location:r.Oper===location&&r.de.startsWith(location==='feuersnot'?'vielleicht pultweise':'Aufstellung der 4 Pauken');
+  const current=currentRows.find(matches),rows=legacyDirectionRows(currentRows),row=rows.find(matches);assert(current&&row);
+  assert(!row.de.includes('[[score:')&&!row.ja.includes('[[score:'),'Legacy coverage uses genuine token-free clones');
+  assert.equal(count(window.linkTermsInTranslation(current.de,{},current),kind),1,'Current canonical source still renders once');
+  assert.equal(count(window.formatNotationTranslation(current.ja,current),kind),1,'Current canonical translation still renders once');
+  assert.equal(JSON.stringify(currentRows),canonicalBefore,'Legacy fixtures never mutate canonical input');
   const token='[[score:'+id+']]',modern={...row,de:id==='feuersnot-desk-division'?row.de.replace('～ etc.',token):row.de+' '+token,ja:row.ja+' '+token,en:(row.en||row.ja)+' '+token};
   assert.equal(count(window.linkTermsInTranslation(modern.de,{},modern),kind),1);assert.equal(count(window.formatNotationTranslation(modern.ja,modern),kind),1);
   assert(!window.linkTermsInTranslation(modern.de,{},modern).includes('[[score:'),'Known IDs do not leak through image tooltips');
@@ -25,7 +32,10 @@ for(const language of ['ja','en']){
   for(const mixed of [token+' <img src=x onerror=alert(1)>',token+' [[score:unknown-artwork]]']){const html=window.formatNotationTranslation(mixed,modern);assert.equal(count(html,kind),1);assert(!html.includes('<img src=x'));assert(!html.includes('onerror=alert(1)>'));if(mixed.includes('unknown-artwork')){assert(html.includes('unknown-artwork'));assert(html.includes('role="note"'));assert(html.includes(language==='en'?'Score example unavailable:':'譜例を表示できません:'));}}
   assert(!kinds(window.formatNotationTranslation('[[score:unknown-artwork]]',row)).length,'Unknown token suppresses implicit duplicate fallback and stays visible');cases+=13;
  }
- const notes=JSON.parse(read(prefix+'mahler-search-app/data/dic_notes.json')),note=notes.find(r=>r[0].startsWith('Ein Stab aus einem Glockenspiel')&&r[2]==='[H: KM1-1]'),id='hindemith-glockenspiel-fsharp5',token='[[score:'+id+']]',modern=[note[0].replace('(の譜例)',token),note[1]+' '+token,note[2]];
+ const currentNotes=JSON.parse(read(prefix+'mahler-search-app/data/dic_notes.json')),currentNote=currentNotes.find(r=>r[0].startsWith('Ein Stab aus einem Glockenspiel')&&r[2]==='[H: KM1-1]'),notesBefore=JSON.stringify(currentNotes);
+ assert.equal(count(c.renderDictionaryNotationText(currentNote[0],currentNote[0],currentNote[2],language),'glockenspiel-fsharp5'),1);
+ assert.equal(count(c.renderDictionaryNotationText(currentNote[1],currentNote[0],currentNote[2],language),'glockenspiel-fsharp5'),1);
+ const notes=legacyNotesRows(currentNotes);assert.equal(JSON.stringify(currentNotes),notesBefore);const note=notes.find(r=>r[0].startsWith('Ein Stab aus einem Glockenspiel')&&r[2]==='[H: KM1-1]'),id='hindemith-glockenspiel-fsharp5',token='[[score:'+id+']]',modern=[note[0].replace('(の譜例)',token),note[1]+' '+token,note[2]];
  assert.equal(count(c.renderDictionaryNotationText(modern[0],modern[0],modern[2],language),'glockenspiel-fsharp5'),1);assert.equal(count(c.renderDictionaryNotationText(modern[1],modern[0],modern[2],language),'glockenspiel-fsharp5'),1);
  assert.equal(count(c.renderDictionaryNotationText(note[1],modern[0],modern[2],language),'glockenspiel-fsharp5'),1,'Notes partial migration fallback');
  assert.equal(count(c.renderDictionaryNotationText(token+' '+token,modern[0],modern[2],language),'glockenspiel-fsharp5'),1);

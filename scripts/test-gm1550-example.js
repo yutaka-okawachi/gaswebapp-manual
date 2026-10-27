@@ -1,4 +1,5 @@
 'use strict';
+const {legacyDirectionRows}=require('./test-utils/score-example-fixtures');
 const fs=require('fs'),path=require('path'),vm=require('vm'),assert=require('assert/strict');
 const {extractFunction}=require('./test-utils/extract-function');
 const root=path.resolve(__dirname,'..'),read=f=>fs.readFileSync(path.join(root,f),'utf8');
@@ -6,7 +7,7 @@ const images=html=>[...html.matchAll(/<img\b[^>]*data-notation="gm1550-example"[
 let checks=0;
 for(const language of ['ja','en']){
  const prefix=language==='en'?'en/':'';
- const rows=JSON.parse(read(prefix+'mahler-search-app/data/mahler.json'));
+ const rows=legacyDirectionRows(JSON.parse(read(prefix+'mahler-search-app/data/mahler.json')));
  const row=rows.find(r=>r.data==='M-b1-t1-380-chor&');
  assert.equal(row.de,'Müßte so sein (Herausgebervorschlag)');
  const before=JSON.stringify(row),nodes=[];

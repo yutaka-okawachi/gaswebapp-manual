@@ -1,4 +1,5 @@
 'use strict';
+const {legacyDirectionRows}=require('./test-utils/score-example-fixtures');
 const fs=require('fs'),path=require('path'),vm=require('vm'),assert=require('assert/strict');
 const root=path.resolve(__dirname,'..'),read=f=>fs.readFileSync(path.join(root,f),'utf8');
 const specs=[
@@ -18,7 +19,7 @@ let audited=0,paths=0;
 for(const language of ['ja','en']){
  const prefix=language==='en'?'en/':'',window={addEventListener(){},appData:{dic_terms_index:{}},location:{pathname:'/'+prefix+'mahler-search-app/terms_search.html',search:''}};
  const c=vm.createContext({window,document:{documentElement:{lang:language},getElementById:id=>id==='dictionaryExampleAliasNotice'?{hidden:false}:null},URL,URLSearchParams,console,setTimeout,clearTimeout,navigator:{userAgent:'test'}});vm.runInContext(read(prefix+'mahler-search-app/js/app.js'),c);
- const all=Object.fromEntries(['mahler','richard_wagner','richard_strauss'].map(file=>[file,JSON.parse(read(prefix+'mahler-search-app/data/'+file+'.json'))]));
+ const all=Object.fromEntries(['mahler','richard_wagner','richard_strauss'].map(file=>[file,legacyDirectionRows(JSON.parse(read(prefix+'mahler-search-app/data/'+file+'.json')))]));
  for(const [file,rows]of Object.entries(all))for(const row of rows)if(music.test(row.de)){
   const html=window.linkTermsInTranslation(row.de,{},row);assert(!music.test(visible(html)),language+'/'+file+' leaves a raw music symbol in German: '+row.de);audited++;
  }

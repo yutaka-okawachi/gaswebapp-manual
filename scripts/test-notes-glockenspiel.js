@@ -1,4 +1,5 @@
 'use strict';
+const {legacyNotesRows}=require('./test-utils/score-example-fixtures');
 const fs=require('fs'),path=require('path'),vm=require('vm'),assert=require('assert/strict');
 const root=path.resolve(__dirname,'..'),read=f=>fs.readFileSync(path.join(root,f),'utf8');
 const heading='Ein Stab aus einem Glockenspiel (Klang Fis(の譜例) , ebenso notiert)',source='[H: KM1-1]';
@@ -6,7 +7,7 @@ const identity=row=>String(row[0]??'').normalize('NFC').trim()===heading&&String
 const imgs=html=>[...html.matchAll(/<img\b[^>]*data-notation="glockenspiel-fsharp5"[^>]*src="data:image\/svg\+xml,([^"]*)"[^>]*>/g)];
 let checks=0;
 for(const language of ['ja','en']){
- const prefix=language==='en'?'en/':'',notes=JSON.parse(read(prefix+'mahler-search-app/data/dic_notes.json')),before=JSON.stringify(notes),row=notes.find(identity);assert(row,'The source is a Notes heading, never a GM item');
+ const prefix=language==='en'?'en/':'',notes=legacyNotesRows(JSON.parse(read(prefix+'mahler-search-app/data/dic_notes.json'))),before=JSON.stringify(notes),row=notes.find(identity);assert(row,'The source is a Notes heading, never a GM item');
  const nodes=[],container={innerHTML:'',appendChild(n){nodes.push(n);}};
  const document={documentElement:{lang:language},getElementById:id=>id==='listContainer'?container:null,createElement:()=>({innerHTML:'',style:{},classList:{add(){}},children:[],appendChild(n){this.children.push(n);}})};
  const window={addEventListener(){},appData:{dic_notes:notes,dic_terms_index:{}},location:{pathname:'/'+prefix+'mahler-search-app/other.html',search:''}};

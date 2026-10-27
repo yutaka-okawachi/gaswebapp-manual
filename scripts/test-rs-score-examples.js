@@ -1,4 +1,5 @@
 'use strict';
+const {legacyDirectionRows}=require('./test-utils/score-example-fixtures');
 const fs=require('fs'),path=require('path'),vm=require('vm'),assert=require('assert/strict');
 const root=path.resolve(__dirname,'..'),read=f=>fs.readFileSync(path.join(root,f),'utf8');
 const specs=[
@@ -15,7 +16,7 @@ for(const language of ['ja','en']){
  const window={addEventListener(){},appData:{dic_terms_index:JSON.parse(read(prefix+'mahler-search-app/data/dic_terms_index.json'))},location:{pathname:'/'+prefix+'mahler-search-app/rs_terms_search.html',search:''}};
  const document={documentElement:{lang:language},getElementById:id=>id==='dictionaryExampleAliasNotice'?notice:null};
  const c=vm.createContext({window,document,URL,URLSearchParams,console,setTimeout,clearTimeout,navigator:{userAgent:'test'}});vm.runInContext(read(prefix+'mahler-search-app/js/app.js'),c);
- const all=Object.fromEntries(['mahler','richard_strauss'].map(f=>[f,JSON.parse(read(prefix+'mahler-search-app/data/'+f+'.json'))]));
+ const all=Object.fromEntries(['mahler','richard_strauss'].map(f=>[f,legacyDirectionRows(JSON.parse(read(prefix+'mahler-search-app/data/'+f+'.json')))]));
  for(const spec of specs){
   window.appData.dic_terms_index=JSON.parse(read(prefix+'mahler-search-app/data/dic_terms_index.json'));
   const pool=all[spec.file],row=pool.find(r=>equalContext(r,spec));assert(row);const original=JSON.stringify(pool),html=window.formatNotationTranslation(row.ja,row),found=images(html,spec.kind);assert.equal(found.length,1,'Exactly one diagram after JA/EN translation');
@@ -52,7 +53,7 @@ for(const language of ['ja','en']){
   else for(const works of [['ALL'],[Object.keys(window.aMapping).find(k=>window.aMapping[k]==='2')]])assert.equal(images(window.searchMahlerDataLocal(works,['ALL_GLOBAL'],true),spec.kind).length,2);
   assert.equal(JSON.stringify(pool),original,'Canonical data unchanged');
   const shardDirectory=prefix+'mahler-search-app/data/dictionary-examples',shardPrefix=spec.file==='mahler'?'gm-':'rs-';
-  const shardRows=fs.readdirSync(path.join(root,shardDirectory)).filter(f=>f.startsWith(shardPrefix)).flatMap(f=>JSON.parse(read(shardDirectory+'/'+f))).filter(r=>equalContext(r,spec));
+  const shardRows=fs.readdirSync(path.join(root,shardDirectory)).filter(f=>f.startsWith(shardPrefix)).flatMap(f=>legacyDirectionRows(JSON.parse(read(shardDirectory+'/'+f)))).filter(r=>equalContext(r,spec));
   assert(shardRows.length>0,'Target is present in actual dictionary-example shard data');
   for(const shardRow of shardRows)assert.equal(images(window.formatNotationTranslation(shardRow.ja,shardRow),spec.kind).length,1,'Actual shard row retains complete stable context');
   const unsafe={...row,ja:'<script>alert(1)</script> & '+row.ja};const safe=window.formatNotationTranslation(unsafe.ja,unsafe);assert(!safe.includes('<script>'));assert(safe.includes('&lt;script&gt;'));
