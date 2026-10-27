@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "releaseId": "bf894bdf5b4c6e29824498eab5fc0f0b0b54226acd4870cb6db2f07bd59ffa9f",
+  "releaseId": "3d92818472db92817f9376d2a1c471089e1c03725b347422d6206eff67690fc7",
   "hashes": {
     "en/index.html": "7413b543e578bb5f43e559f40bf63c843d99b3412fb6a5d62f8fc3cfacd44c25",
     "en/license.html": "ba1aeb6c8fdc29cfd280ebad3f21ce6e4a016303c177f768e44ea20b388ababe",
@@ -69,7 +69,7 @@
     "en/mahler-search-app/index.html": "8f1dce8523aca03b724c7886e31be082213eebf1a5bf5b9fd209f1a86d07bdb6",
     "en/mahler-search-app/js/analytics.js": "171fa81f3f55957572ccd511f6fe804e68ec7cea16c307f4370d2195de52ba8c",
     "en/mahler-search-app/js/app.js": "6aff6f9188aa5a04695162e8ab53659f48e60d5f068d370444691fd2b30017fd",
-    "en/mahler-search-app/js/english-locale.js": "86eb0690be24f54721ab9ad9d51cc1fb83de7a9188321e0d2f8b76459401e090",
+    "en/mahler-search-app/js/english-locale.js": "9b76ae381ea8caa3fd6829aa027eeda1dced2faef86a5a3277b4c82d24520543",
     "en/mahler-search-app/js/score_metadata.js": "48edbc08c426895fdc9095bf38339f030a35aecfcfe90fbbd2d48f3f71160b05",
     "en/mahler-search-app/js/site-language-switch.js": "bccf4f9280f737fb164e2088ce395051e1fba54f5371a5abb2e779e30cf90038",
     "en/mahler-search-app/js/wagner_strauss.js": "9c5b3866195ab9c76d7c02a61aa922d06f0b6449d9cfa26cfc548287f37e43bc",
