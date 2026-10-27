@@ -19,7 +19,7 @@ for(const language of ['ja','en']){
  for(const spec of specs){
   window.appData.dic_terms_index=JSON.parse(read(prefix+'mahler-search-app/data/dic_terms_index.json'));
   const pool=all[spec.file],row=pool.find(r=>equalContext(r,spec));assert(row);const original=JSON.stringify(pool),html=window.formatNotationTranslation(row.ja,row),found=images(html,spec.kind);assert.equal(found.length,1,'Exactly one diagram after JA/EN translation');
-  assert(html.startsWith(c.escapeHtmlWithBreaks(row.ja)),'Preserve complete translation');assert.equal(images(window.linkTermsInTranslation(row.de,{},row),spec.kind).length,0,'German source remains literal; no double diagram');
+  assert(html.startsWith(c.escapeHtmlWithBreaks(row.ja)),'Preserve complete translation');assert.equal(images(window.linkTermsInTranslation(row.de,{},row),spec.kind).length,1,'Exactly one diagram in German source too');
   const svg=found[0];assert(svg.includes('SIL OPEN FONT LICENSE'));assert(!/<text\b|font-family|fill="white"|<script\b|foreignObject/.test(svg));
   if(spec.kind==='gm325-example'){
    assert(svg.includes('viewBox="0 0 300 100"'));assert.equal(count(svg,/data-duration="quarter"/g),4);assert.equal(count(svg,/data-ornament="trill"/g),4);assert.equal(count(svg,/data-after-notes="thirty-second-pair"/g),4);assert.equal(count(svg,/data-grace="thirty-second"/g),8);assert.equal(count(svg,/data-beam="thirty-second"/g),12);assert.equal(count(svg,/data-accidental="natural"/g),2);assert.equal(count(svg,/data-clef=/g),0);assert.equal(count(svg,/data-slur=/g),0);
@@ -43,13 +43,13 @@ for(const language of ['ja','en']){
   for(const source of ['', '?source=dictionary_example&q='+encodeURIComponent(spec.query)]){
    window.location.search=source;
    for(let repeat=0;repeat<3;repeat++){
-    const terms=spec.file==='mahler'?window.searchMahlerTermsLocal(spec.query,{},'partial'):window.searchRSTermsLocal(spec.query,{},'partial');assert.equal(images(terms,spec.kind).length,1,'Actual bundle terms and dictionary-example route');scenarios++;
+    const terms=spec.file==='mahler'?window.searchMahlerTermsLocal(spec.query,{},'partial'):window.searchRSTermsLocal(spec.query,{},'partial');assert.equal(images(terms,spec.kind).length,2,'One diagram per field in actual bundle terms and dictionary-example route');scenarios++;
    }
   }
   window.location.search='';
   window.appData.dic_terms_index={}; // Isolate work rendering from unrelated dictionary-link expansion across every row.
-  if(spec.file==='richard_strauss')for(const rows of [pool,pool.filter(r=>r.Oper===row.Oper),[row]])assert.equal(images(c.formatGenericResults([...rows]),spec.kind).length,1,'All works, selected work and page filtering use same renderer');
-  else for(const works of [['ALL'],[Object.keys(window.aMapping).find(k=>window.aMapping[k]==='2')]])assert.equal(images(window.searchMahlerDataLocal(works,['ALL_GLOBAL'],true),spec.kind).length,1);
+  if(spec.file==='richard_strauss')for(const rows of [pool,pool.filter(r=>r.Oper===row.Oper),[row]])assert.equal(images(c.formatGenericResults([...rows]),spec.kind).length,2,'All works, selected work and page filtering use same renderer');
+  else for(const works of [['ALL'],[Object.keys(window.aMapping).find(k=>window.aMapping[k]==='2')]])assert.equal(images(window.searchMahlerDataLocal(works,['ALL_GLOBAL'],true),spec.kind).length,2);
   assert.equal(JSON.stringify(pool),original,'Canonical data unchanged');
   const shardDirectory=prefix+'mahler-search-app/data/dictionary-examples',shardPrefix=spec.file==='mahler'?'gm-':'rs-';
   const shardRows=fs.readdirSync(path.join(root,shardDirectory)).filter(f=>f.startsWith(shardPrefix)).flatMap(f=>JSON.parse(read(shardDirectory+'/'+f))).filter(r=>equalContext(r,spec));

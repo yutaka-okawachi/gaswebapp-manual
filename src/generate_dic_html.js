@@ -14,7 +14,7 @@
  */
 function normalizeForId(term) {
   if (!term) return '';
-  let id = term.toLowerCase().trim();
+  let id = term.replace(/\[\[score:[a-z][a-z0-9-]{0,95}\]\]/gi, '').toLowerCase().trim();
   // ウムラウトの変換
   id = id.replace(/ä/g, 'ae').replace(/ö/g, 'oe').replace(/ü/g, 'ue').replace(/ß/g, 'ss');
   // 非英数字をハイフンに置換
@@ -467,7 +467,7 @@ function generateDicListHtml(dicData, termsIndex, abbreviationIndex, dictionaryE
     let toggleArea = '';
 
     if (hasExample) {
-      const queryParam = encodeURIComponent(german);
+      const queryParam = encodeURIComponent(String(german).replace(/\[\[score:[a-z][a-z0-9-]{0,95}\]\]/gi,'').trim());
       const links = [];
       const createExampleHref = (pageName, composer) => {
         const hasExampleIndex = dictionaryExampleIndex &&
@@ -584,11 +584,11 @@ function generateDicHtml(dicData, abbrData, dictionaryExampleIndex, mappingData,
     .filter(row => row[0]) // 有効な行のみ
     .map(row => {
       // 翻訳文からHTMLタグを除去してプレーンテキストにする
-      const plainTranslation = String(row[1] || '').replace(/<[^>]*>?/gm, '').trim();
+      const plainTranslation = String(row[1] || '').replace(/\[\[score:[a-z][a-z0-9-]{0,95}\]\]/gi,'').replace(/<[^>]*>?/gm, '').trim();
       return {
         "@type": "DefinedTerm",
         "termCode": normalizeForId(row[0]),
-        "name": String(row[0]).trim(),
+        "name": String(row[0]).replace(/\[\[score:[a-z][a-z0-9-]{0,95}\]\]/gi,'').trim(),
         "description": plainTranslation || "ドイツ語の音楽用語"
       };
     });

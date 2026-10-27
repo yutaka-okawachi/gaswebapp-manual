@@ -75,7 +75,7 @@ function escapeHtmlWithBreaks(str) {
  */
 function normalizeForId(term) {
     if (!term) return '';
-    let id = term.toLowerCase().trim();
+    let id = term.replace(/\[\[score:[a-z][a-z0-9-]{0,95}\]\]/gi, '').toLowerCase().trim();
     // ウムラウトの変換
     id = id.replace(/ä/g, 'ae').replace(/ö/g, 'oe').replace(/ü/g, 'ue').replace(/ß/g, 'ss');
     // 非英数字をハイフンに置換

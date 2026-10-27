@@ -3,6 +3,7 @@ window.searchTermsLocal = function (query, sourceFilter) {
     if (!data) return '<div class="result-message">データが読み込まれていません。</div>';
 
     const normalizedQuery = normalizeString(query);
+    if(!normalizedQuery && String(query??'').trim())return '<div class="result-message">'+(/^en\b/i.test(document.documentElement.lang||'')?'Enter a valid search term.':'有効な検索語を入力してください。')+'</div>';
     const results = [];
 
     data.forEach(row => {
@@ -35,7 +36,7 @@ window.searchTermsLocal = function (query, sourceFilter) {
     results.forEach(row => {
         const [german, translation, source] = row;
         html += `<div class="row">
-            <dt><dfn class="german">${escapeHtml(german)}</dfn><span class="source">${escapeHtml(source)}</span></dt>
+            <dt><dfn class="german">${renderDictionaryNotationText(german, german, source, typeof document !== 'undefined' && /^en\b/i.test(document.documentElement?.lang || '') ? 'en' : 'ja')}</dfn><span class="source">${escapeHtml(source)}</span></dt>
             <dd class="translation">${renderDictionaryNotationText(translation, german, source, typeof document !== 'undefined' && /^en\b/i.test(document.documentElement?.lang || '') ? 'en' : 'ja', escapeHtmlWithBreaks)}</dd>
         </div>`;
     });

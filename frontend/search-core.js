@@ -7,7 +7,8 @@ function hasScorePage(row) {
 
 function normalizeString(str) {
   if (typeof str !== 'string') return '';
-  return str
+  return (typeof scoreExampleSearchText==='function'?scoreExampleSearchText(str):str)
+    .replace(/\[\[score:[a-z][a-z0-9-]{0,95}\]\]/gi, '')
     .toLowerCase()
     .replace(/ä/g, 'ae')
     .replace(/ö/g, 'oe')

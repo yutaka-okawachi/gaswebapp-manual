@@ -2,7 +2,8 @@
 const fs=require('fs'),path=require('path'),vm=require('vm');
 const locale=require('./english-locale');
 const {validateGmOriginals}=require('./gm-original-validation');
-const normalize=s=>String(s||'').toLowerCase().replaceAll('ä','ae').replaceAll('ö','oe').replaceAll('ü','ue').replaceAll('ß','ss').trim();
+const {scoreExampleSearchText}=require('../src/dictionary_notation');
+const normalize=s=>scoreExampleSearchText(s||'').toLowerCase().replaceAll('ä','ae').replaceAll('ö','oe').replaceAll('ü','ue').replaceAll('ß','ss').trim();
 function englishValue(value,missing){return String(value||'').trim()?locale.localizeHtml(String(value),missing):'English translation is not yet available.';}
 function buildEnglishSite(root,source,options={}){
  if(source.schema!==1||!source.tabs)throw Error('Invalid English source snapshot');

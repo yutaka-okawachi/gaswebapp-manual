@@ -18,7 +18,7 @@ for(const language of ['ja','en']){
  const result=window.formatGmTranslation(row.ja,row),svgs=images(result);
  assert.equal(svgs.length,1,'One approved example after translation');
  assert(result.startsWith(c.escapeHtmlWithBreaks(row.ja)+' '),'Preserve full translated text');
- assert.equal(images(window.linkTermsInTranslation(row.de,{},row)).length,0,'No duplicate in German line');
+ assert.equal(images(window.linkTermsInTranslation(row.de,{},row)).length,1,'Exactly one example in German source too');
  const svg=svgs[0];
  assert(svg.includes('viewBox="0 0 220 96"'));
  assert(svg.includes('data-pitch="G2"')&&!svg.includes('data-pitch="F2"'));
@@ -39,13 +39,13 @@ for(const language of ['ja','en']){
  for(const changed of [{data:'M-b1-t1-381-chor&'},{de:row.de+' changed'},{__row:1550,data:'different'}])assert.equal(images(window.formatGmTranslation(row.ja,{...row,...changed})).length,0);
  assert.equal(images(window.formatGmTranslation(row.ja,{...row,de:row.de.normalize('NFD')})).length,1);
  assert.equal(images(window.formatNotationTranslation(row.ja,row)).length,1,'Dictionary example/shared translation route');
- for(let repeat=0;repeat<3;repeat++)assert.equal(images(window.searchMahlerTermsLocal('muesste',{},'partial')).length,1,'Bundle search');
+ for(let repeat=0;repeat<3;repeat++)assert.equal(images(window.searchMahlerTermsLocal('muesste',{},'partial')).length,2,'Bundle search');
  const inline=[...read(prefix+'mahler-search-app/terms_search.html').matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/gi)].map(m=>m[1]).find(s=>s.includes('Override/Define searchMahlerTermsLocal'));
  vm.runInContext(inline,c);
- for(let repeat=0;repeat<3;repeat++)assert.equal(images(window.searchMahlerTermsLocal('muesste',{},'partial')).length,1,'Actual page search');
+ for(let repeat=0;repeat<3;repeat++)assert.equal(images(window.searchMahlerTermsLocal('muesste',{},'partial')).length,2,'Actual page search');
  c.results=[{...row,locs:['380'],count:1}];
  vm.runInContext('let currentSearchResults=results,currentSearchIndex=0;const SEARCH_BATCH_SIZE=50;let searchObserver=null;'+extractFunction(read(prefix+'mahler-search-app/mahler.html'),'loadMoreSearchResults')+';loadMoreSearchResults();',c);
- assert.equal(nodes.length,1);assert.equal(images(nodes[0].innerHTML).length,1,'Work/instrument result');
+ assert.equal(nodes.length,1);assert.equal(images(nodes[0].innerHTML).length,2,'Work/instrument result');
  for(const [data,kind]of [['M-5-3-136-dir&','two'],['M-5-3-283-all&','one']]){
   const existing=rows.find(r=>r.data===data),html=window.formatGmTranslation(existing.ja,existing);
   assert(html.includes('gm-score-example-'+kind));assert.equal(images(html).length,0,'GM358/387 untouched');

@@ -7,7 +7,8 @@ const DICTIONARY_EXAMPLE_SHARD_COUNT = 16;
 
 function normalizeDictionaryExampleTerm(value) {
   if (!value) return '';
-  return String(value)
+  return (typeof scoreExampleSearchText==='function'?scoreExampleSearchText(value):String(value))
+    .replace(/\[\[score:[a-z][a-z0-9-]{0,95}\]\]/gi, '')
     .toLowerCase()
     .replace(/ä/g, 'ae')
     .replace(/ö/g, 'oe')

@@ -10,7 +10,8 @@ function hasScorePage(row) {
 
 function normalizeString(str) {
   if (typeof str !== 'string') return '';
-  return str
+  return (typeof scoreExampleSearchText==='function'?scoreExampleSearchText(str):str)
+    .replace(/\[\[score:[a-z][a-z0-9-]{0,95}\]\]/gi, '')
     .toLowerCase()
     .replace(/ä/g, 'ae')
     .replace(/ö/g, 'oe')
@@ -730,8 +731,8 @@ window.renderTermSuggestions = function(inputId, datalistId, suggestions) {
     datalist.innerHTML = '';
     (suggestions || []).forEach(entry => {
         const option = document.createElement('option');
-        option.value = entry.normalized;
-        option.textContent = entry.original || entry.normalized;
+        option.value = entry.normalized.replace(/\[\[score:[a-z][a-z0-9-]{0,95}\]\]/gi,'').trim();
+        option.textContent = String(entry.original || entry.normalized).replace(/\[\[score:[a-z][a-z0-9-]{0,95}\]\]/gi,'').trim();
         datalist.appendChild(option);
     });
 
@@ -770,7 +771,7 @@ window.renderTermSuggestions = function(inputId, datalistId, suggestions) {
         const item = document.createElement('button');
         item.type = 'button';
         item.className = 'term-suggestion-item';
-        item.textContent = entry.original || entry.normalized;
+        item.textContent = String(entry.original || entry.normalized).replace(/\[\[score:[a-z][a-z0-9-]{0,95}\]\]/gi,'').trim();
         item.addEventListener('mousedown', event => event.preventDefault());
         item.addEventListener('click', () => {
             input.value = entry.normalized;
@@ -1062,6 +1063,57 @@ function searchRichardStraussByPage() {
 
 
 // ---- src/dictionary_notation.js ----
+// Add new approved artwork here, with semantic IDs and stable source context.
+const SCORE_EXAMPLE_REGISTRY = Object.freeze({
+  'mahler-trill-chain': {renderer:'direction',kind:'gm325-example',data:'M-2-5-55-dir&'},
+  'mahler-editorial-g2': {renderer:'direction',kind:'gm1550-example',data:'M-b1-t1-380-chor&'},
+  'feuersnot-desk-division': {renderer:'direction',kind:'rs651-example',searchText:'～ etc.',Oper:'feuersnot',Aufzug:'',Szene:'',page:320},
+  'salome-timpani-layout': {renderer:'direction',kind:'rs782-example',Oper:'salome',Aufzug:'',Szene:4,page:287},
+  'hindemith-glockenspiel-fsharp5': {renderer:'dictionary',kind:'glockenspiel-fsharp5',sourceTab:'Notes',source:'[H: KM1-1]',headingPrefix:'Ein Stab aus einem Glockenspiel'}
+});
+function scoreExampleRegistryEntry(row,id) {
+  if(!Object.prototype.hasOwnProperty.call(SCORE_EXAMPLE_REGISTRY,id))return null;
+  const entry=SCORE_EXAMPLE_REGISTRY[id];
+  if(entry.renderer==='dictionary')return String(row?.source??row?.[2]??'').trim()===entry.source && stripScoreExampleTokens(row?.de??row?.[0]??'').normalize('NFC').trim().startsWith(entry.headingPrefix) ? entry : null;
+  if(entry.data)return String(row?.data??row?.[3]??'')===entry.data ? entry : null;
+  return ['Oper','Aufzug','Szene','page'].every(key=>String(row?.[key]??'')===String(entry[key]??'')) ? entry : null;
+}
+// Plain-text score tokens are data, never HTML. IDs describe artwork, not Sheet rows.
+function stripScoreExampleTokens(value) {
+  return String(value ?? '').replace(/\[\[score:[a-z][a-z0-9-]{0,95}\]\]/gi, '');
+}
+function scoreExampleSearchText(value) {
+  const text=String(value??'');
+  if(!/\[\[score:[a-z][a-z0-9-]{0,95}\]\]/i.test(text))return text;
+  return text.replace(/\[\[score:([a-z][a-z0-9-]{0,95})\]\]/gi,(_,id)=>Object.prototype.hasOwnProperty.call(SCORE_EXAMPLE_REGISTRY,id.toLowerCase()) ? SCORE_EXAMPLE_REGISTRY[id.toLowerCase()].searchText||'' : '').trim();
+}
+function renderScoreExampleTokens(value, resolve, renderText, language='ja') {
+  const text=String(value ?? ''),regex=/\[\[score:([a-z][a-z0-9-]{0,95})\]\]/gi,seen=new Set();
+  let last=0,html='',found=false,match;
+  while((match=regex.exec(text))){
+    found=true;html+=renderText(text.slice(last,match.index));
+    const id=match[1].toLowerCase(),image=resolve(id);
+    html+=image ? (seen.has(id)?'':image) : '<span class="score-example-unavailable" role="note">'+renderText((language==='en'?'[Score example unavailable: ':'[譜例を表示できません: ')+id+']')+'</span>';
+    if(image)seen.add(id);last=match.index+match[0].length;
+  }
+  return {found,html:found ? html+renderText(text.slice(last)) : ''};
+}
+function notesGlockenspielImage(language) {
+    const escape=value=>String(value??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;');
+    const english = language === 'en';
+    const label = english ? 'Glockenspiel example: treble clef, F-sharp5 quarter note on the top staff line, downward stem, and end barline' : 'グロッケンシュピールの譜例：ト音記号、最上線のF♯5四分音符、下向き符幹、末線';
+    let body='<metadata>'+escape(NOTES_GLOCKENSPIEL_ASSET.license)+'</metadata><g fill="black" stroke="black">';
+    for (const y of [38,44,50,56,62]) body+='<path d="M8 '+y+' H97" fill="none" stroke-width=".7"/>';
+    body+='<path data-clef="treble" d="'+NOTES_GLOCKENSPIEL_ASSET.gClef+'" transform="translate(12 56) scale(.024 -.024)" stroke="none"/>';
+    body+='<path data-accidental="sharp" d="'+NOTES_GLOCKENSPIEL_ASSET.sharp+'" transform="translate(40 38) scale(.024 -.024)" stroke="none"/>';
+    body+='<ellipse data-pitch="F-sharp5" data-duration="quarter" cx="55" cy="38" rx="4.6" ry="3.1" transform="rotate(-20 55 38)" stroke="none"/>';
+    body+='<path data-stem="down" d="M51 38 V63" fill="none" stroke-width="1.25"/><path data-barline="end" d="M97 38 V62" fill="none" stroke-width="1"/></g>';
+    const svg='<svg xmlns="http://www.w3.org/2000/svg" width="105" height="96" viewBox="0 0 105 96">'+body+'</svg>';
+    return '<img class="gm-music-notation dictionary-music-notation dictionary-glockenspiel-example" data-notation="glockenspiel-fsharp5" src="data:image/svg+xml,'+encodeURIComponent(svg)+'" width="105" height="96" alt="'+escape(label)+'" aria-label="'+escape(label)+'" title="'+escape(label)+'">';
+}
+// Notes235 (formerly 236): approved Hindemith Glockenspiel score, display only.
+// Stable identity is the complete Notes heading + [H: KM1-1], never a GM key or row number.
+const NOTES_GLOCKENSPIEL_ASSET = {"gClef": "M376 415C374 427 376 428 382 434C398 449 419 470 438 491C522 583 572 702 572 815C572 902 548 988 507 1048C492 1070 466 1098 455 1098C441 1098 410 1072 390 1050C316 968 292 843 292 739C292 681 299 616 306 575C308 563 309 561 297 551C233 498 164 437 112 373C43 287 0 194 0 87C0 -87 119 -252 364 -252C387 -252 413 -250 433 -246C444 -244 446 -243 448 -255C460 -322 475 -409 475 -456C475 -604 375 -622 316 -622C262 -622 236 -606 236 -593C236 -586 245 -583 268 -576C299 -567 335 -540 335 -482C335 -427 300 -380 239 -380C172 -380 132 -433 132 -495C132 -560 171 -658 322 -658C389 -658 519 -628 519 -458C519 -401 501 -306 490 -244C488 -232 489 -233 503 -227C604 -187 671 -102 671 11C671 139 577 252 430 252C404 252 404 252 401 270ZM470 943C503 943 530 916 530 861C530 792 497 728 419 650C403 634 379 611 356 591C349 585 345 586 343 599C339 625 337 659 337 691C337 847 409 943 470 943ZM361 262C364 243 364 244 346 238C258 208 201 129 201 44C201 -46 248 -110 316 -133C324 -136 336 -139 343 -139C351 -139 355 -134 355 -128C355 -121 347 -118 340 -115C298 -97 268 -54 268 -8C268 49 307 92 368 109C384 113 386 112 388 101L438 -197C440 -208 439 -208 424 -211C408 -214 388 -216 368 -216C193 -216 80 -119 80 20C80 79 90 158 173 252C233 319 279 356 326 394C336 402 338 401 340 390ZM430 103C428 115 429 118 441 117C522 110 589 42 589 -46C589 -109 551 -160 495 -188C483 -194 481 -194 479 -182Z", "sharp": "M237 118C244 121 249 129 249 135V206C249 211 246 214 242 214C240 214 239 214 237 213C237 213 217 205 212 204C205 204 198 209 198 217V339C198 345 192 350 184 350C174 350 168 345 168 339V209C167 199 164 186 155 180C143 173 109 159 92 155C83 155 80 167 80 175V295C80 301 73 306 66 306C56 306 50 301 50 295V160C50 146 44 136 38 133C32 130 12 122 12 122C5 120 0 112 0 106V35C0 29 3 26 8 26C9 26 11 27 12 27C12 27 27 33 34 37C35 37 36 38 37 38C44 38 50 28 50 20V-79C50 -90 45 -99 39 -102C33 -104 12 -113 12 -113C5 -115 0 -123 0 -129V-200C0 -206 3 -209 8 -209C9 -209 11 -208 12 -208C12 -208 26 -202 35 -199C36 -198 37 -198 38 -198C45 -198 50 -209 50 -214V-337C50 -343 56 -348 63 -348C73 -348 80 -343 80 -337V-198C80 -185 85 -178 90 -176L151 -151C152 -151 154 -150 155 -150C163 -150 168 -162 168 -168V-293C168 -299 174 -304 181 -304C192 -304 198 -299 198 -293V-151C198 -143 202 -131 209 -128C216 -125 237 -117 237 -117C244 -114 249 -106 249 -100V-29C249 -24 246 -21 242 -21C240 -21 239 -21 237 -22L211 -32C205 -32 198 -26 198 -14V79C198 86 203 105 211 108ZM168 -45C162 -65 115 -85 92 -85C86 -85 81 -83 80 -80C78 -76 77 -54 77 -30C77 1 78 36 80 44C82 61 128 82 153 82C160 82 166 80 168 76C170 71 172 46 172 19C172 -8 170 -36 168 -45Z", "license": "Copyright © 2026, Steinberg Media Technologies GmbH (http://www.steinberg.net/),\nwith Reserved Font Name \"Bravura\".\n\nThis Font Software is licensed under the SIL Open Font License, Version 1.1.\nThis license is copied below, and is also available with a FAQ at:\nhttp://scripts.sil.org/OFL\n\n-----------------------------------------------------------\nSIL OPEN FONT LICENSE Version 1.1 - 26 February 2007\n-----------------------------------------------------------\n\nPREAMBLE\nThe goals of the Open Font License (OFL) are to stimulate worldwide\ndevelopment of collaborative font projects, to support the font creation\nefforts of academic and linguistic communities, and to provide a free and\nopen framework in which fonts may be shared and improved in partnership\nwith others.\n\nThe OFL allows the licensed fonts to be used, studied, modified and\nredistributed freely as long as they are not sold by themselves. The\nfonts, including any derivative works, can be bundled, embedded,\nredistributed and/or sold with any software provided that any reserved\nnames are not used by derivative works. The fonts and derivatives,\nhowever, cannot be released under any other type of license. The\nrequirement for fonts to remain under this license does not apply\nto any document created using the fonts or their derivatives.\n\nDEFINITIONS\n\"Font Software\" refers to the set of files released by the Copyright\nHolder(s) under this license and clearly marked as such. This may\ninclude source files, build scripts and documentation.\n\n\"Reserved Font Name\" refers to any names specified as such after the\ncopyright statement(s).\n\n\"Original Version\" refers to the collection of Font Software components as\ndistributed by the Copyright Holder(s).\n\n\"Modified Version\" refers to any derivative made by adding to, deleting,\nor substituting -- in part or in whole -- any of the components of the\nOriginal Version, by changing formats or by porting the Font Software to a\nnew environment.\n\n\"Author\" refers to any designer, engineer, programmer, technical\nwriter or other person who contributed to the Font Software.\n\nPERMISSION AND CONDITIONS\nPermission is hereby granted, free of charge, to any person obtaining\na copy of the Font Software, to use, study, copy, merge, embed, modify,\nredistribute, and sell modified and unmodified copies of the Font\nSoftware, subject to the following conditions:\n\n1) Neither the Font Software nor any of its individual components,\nin Original or Modified Versions, may be sold by itself.\n\n2) Original or Modified Versions of the Font Software may be bundled,\nredistributed and/or sold with any software, provided that each copy\ncontains the above copyright notice and this license. These can be\nincluded either as stand-alone text files, human-readable headers or\nin the appropriate machine-readable metadata fields within text or\nbinary files as long as those fields can be easily viewed by the user.\n\n3) No Modified Version of the Font Software may use the Reserved Font\nName(s) unless explicit written permission is granted by the corresponding\nCopyright Holder. This restriction only applies to the primary font name as\npresented to the users.\n\n4) The name(s) of the Copyright Holder(s) or the Author(s) of the Font\nSoftware shall not be used to promote, endorse or advertise any\nModified Version, except to acknowledge the contribution(s) of the\nCopyright Holder(s) and the Author(s) or with their explicit written\npermission.\n\n5) The Font Software, modified or unmodified, in part or in whole,\nmust be distributed entirely under this license, and must not be\ndistributed under any other license. The requirement for fonts to\nremain under this license does not apply to any document created\nusing the Font Software.\n\nTERMINATION\nThis license becomes null and void if any of the above conditions are\nnot met.\n\nDISCLAIMER\nTHE FONT SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND,\nEXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO ANY WARRANTIES OF\nMERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT\nOF COPYRIGHT, PATENT, TRADEMARK, OR OTHER RIGHT. IN NO EVENT SHALL THE\nCOPYRIGHT HOLDER BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,\nINCLUDING ANY GENERAL, SPECIAL, INDIRECT, INCIDENTAL, OR CONSEQUENTIAL\nDAMAGES, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING\nFROM, OUT OF THE USE OR INABILITY TO USE THE FONT SOFTWARE OR FROM\nOTHER DEALINGS IN THE FONT SOFTWARE.\n"};
 // Display-only transcription of Don Quixote, IMSLP18787, PDF32/printed p.224.
 // One black quarter note, downward stem, three tremolo strokes; no pitch implied.
 function renderDictionaryNotationText(text, german, source, language, renderText) {
@@ -1070,6 +1122,20 @@ function renderDictionaryNotationText(text, german, source, language, renderText
   const heading = 'alle in den Bläsern als トレモロ音符 notirten Stellen sind mit Zungenschlag auszuführen.';
   const value = String(text ?? '');
   const render = typeof renderText === 'function' ? renderText : escape;
+  const glockenspielHeading = 'Ein Stab aus einem Glockenspiel (Klang Fis(の譜例) , ebenso notiert)';
+  const hasGlockenspielToken=!!scoreExampleRegistryEntry({de:german,source},'hindemith-glockenspiel-fsharp5') && /\[\[score:hindemith-glockenspiel-fsharp5\]\]/i.test(String(german??''));
+  const notesContext=String(source??'').trim()==='[H: KM1-1]' && (String(german??'').normalize('NFC').trim()===glockenspielHeading || (hasGlockenspielToken && stripScoreExampleTokens(german).normalize('NFC').trim().startsWith('Ein Stab aus einem Glockenspiel')));
+  const tokenized=renderScoreExampleTokens(value,id=>notesContext && id==='hindemith-glockenspiel-fsharp5' ? notesGlockenspielImage(language) : '',render,language);
+  if(tokenized.found)return tokenized.html;
+  if (notesContext && value) {
+    const image=notesGlockenspielImage(language);
+    if (value.normalize('NFC').trim() === glockenspielHeading) {
+      const token='(の譜例)',position=value.indexOf(token);
+      return render(value.slice(0,position))+image+render(value.slice(position+token.length));
+    }
+    // Translation remains verbatim; one complete approved example follows it.
+    return render(value)+' '+image;
+  }
   // Preserve the quotation and its explicit short-pause meaning; only draw its sign.
   const quote = '𝄐 bedeutet hier nur ein kurzes Anhalten auf dem Taktstrich und nicht etwa eine Fermate.';
   if (String(german ?? '').normalize('NFC').trim() === 'anhalten' && String(source ?? '').includes('[GM]') && value.includes(quote)) {
@@ -1089,6 +1155,8 @@ function renderDictionaryNotationText(text, german, source, language, renderText
   const image = '<img class="gm-music-notation dictionary-music-notation" data-notation="quarter-tremolo-three" src="data:image/svg+xml,' + encodeURIComponent(svg) + '" width="38" height="50" alt="' + escape(label) + '" aria-label="' + escape(label) + '" title="' + (english ? '[tremolo notes]' : token) + '">';
   return render(value.slice(0, position)) + image + render(value.slice(position + token.length));
 }
+
+if(typeof module!=='undefined' && module.exports)module.exports={stripScoreExampleTokens,scoreExampleSearchText,SCORE_EXAMPLE_REGISTRY};
 
 
 // ---- frontend/notation-contexts.js ----
@@ -2571,7 +2639,15 @@ window.MUSIC_NOTATION_CONTEXTS = [
         [notationContextKey({Oper:'salome',Aufzug:'',Szene:4,page:287,de:'Aufstellung der 4 Pauken: linke H. rechte Hand'}), 'rs782-example']
     ]);
     const gm325Key = notationContextKey({data:'M-2-5-55-dir&',de:"Anmerk. f. d. Dirigenten : hier, wie bei der folgende gleichartigen Stelle ist darauf zu achten, dass sich die Triller der 1. u. 2. Geigen dicht an einander schliessen, und keine Pause dazwischen entsteht (eine 'Trillerkette') also so:"});
-    const scoreExampleKind = row => isGm1550(row) ? 'gm1550-example' : notationContextKey(row) === gm325Key ? 'gm325-example' : rsExampleKinds.get(notationContextKey(row));
+    function tokenKindForRow(row,id) {
+        const entry=typeof scoreExampleRegistryEntry==='function' ? scoreExampleRegistryEntry(row,id) : null;
+        return entry?.renderer==='direction' ? entry.kind : '';
+    }
+    const scoreExampleKind = row => {
+        const source=String(row?.de??row?.[0]??''),tokens=[...source.matchAll(/\[\[score:([a-z][a-z0-9-]{0,95})\]\]/gi)];
+        if(tokens.length)return tokens.map(token=>tokenKindForRow(row,token[1].toLowerCase())).find(Boolean);
+        return isGm1550(row) ? 'gm1550-example' : notationContextKey(row) === gm325Key ? 'gm325-example' : rsExampleKinds.get(notationContextKey(row));
+    };
     function rulesFor(row) {
         if (scoreExampleKind(row)) return [];
         return contexts.get(notationContextKey(row));
@@ -2579,7 +2655,7 @@ window.MUSIC_NOTATION_CONTEXTS = [
     const labels = {
         'gm325-example': ['トリルの連鎖：主四分音符C6・A5・F5・D5、各トリル後に小32分音符2個を三重連桁で示す4組、ナチュラル2個。音部記号なし。', 'Chain of trills: main quarter notes C6, A5, F5, D5; four pairs of small thirty-second after-notes with triple beams; two naturals; no clef.'],
         'rs651-example': ['プルト単位の分割譜例：ヘ音記号、上下声部それぞれ4組の二重連桁音符、変化記号、休符、スラー、etc.。', 'Division by desk: bass clef, four pairs of double-beamed notes in each voice, accidentals, rests, slurs, and etc.'],
-        'rs782-example': ['4台のティンパニの配置譜例：ヘ音記号、4個の四分音符、フラット2個、左手と右手の原譜ラベル。', 'Arrangement of four timpani: bass clef, four quarter notes, two flats, and the original left- and right-hand labels.'],
+        'rs782-example': ['4台のティンパニの配置譜例：ヘ音記号、4個の四分音符、フラット2個、原譜ラベルlinke H. / l. H. / rechte H. / rechte Hand。', 'Arrangement of four timpani: bass clef, four quarter notes, two flats, and the original labels linke H. / l. H. / rechte H. / rechte Hand.'],
         'gm1550-example': ['編集者提案の譜例：ヘ音記号、フラット3個、G2二分音符、Und、二分休符、複縦線、縦線なしのC。', 'Editorial example: bass clef, three flats, G2 half note, Und, half rest, double barline, and common-time C without a vertical stroke.'],
         half: ['二分音符', 'Half note'],
         whole: ['全音符', 'Whole note'],
@@ -2802,11 +2878,17 @@ window.MUSIC_NOTATION_CONTEXTS = [
             }
         }
         const svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 '+width+' '+height+'" width="'+width+'" height="'+height+'">'+body+'</svg>';
-        const english = typeof document !== 'undefined' && /^en\b/i.test(document.documentElement.lang || '');
+        const english = typeof document !== 'undefined' && /^en\b/i.test(document.documentElement?.lang || '');
         const label = labels[kind][english ? 1 : 0], extra = kind === 'gm325-example' ? ' gm-score-example-gm325' : kind === 'rs651-example' || kind === 'rs782-example' ? ' rs-score-example-'+kind.slice(0,5) : kind === 'gm1550-example' ? ' gm-score-example-gm1550' : kind.startsWith('motif-') ? ' gm-score-example-'+(kind === 'motif-two' ? 'two' : 'one') : kind === 'eighth-triplet-below' ? ' gm-triplet-below' : '';
         return '<img class="gm-music-notation'+extra+'" data-notation="'+kind+'" src="data:image/svg+xml,'+encodeURIComponent(svg)+'" width="'+width+'" height="'+height+'" alt="'+escape(label)+'" aria-label="'+escape(label)+'" title="'+escape(fallback)+'">';
     }
+    function scoreExampleHtml(kind,text) {
+        const image=notationImage(kind,typeof stripScoreExampleTokens==='function'?stripScoreExampleTokens(text).trim():String(text));
+        return kind==='rs651-example'||kind==='gm325-example' ? '<span class="rs-score-example-scroll" tabindex="0" role="region" aria-label="'+escape(labels[kind][/^en\b/i.test(document.documentElement?.lang||'')?1:0])+'">'+image+'</span>' : image;
+    }
     function renderMusicNotationDirection(text, termsIndex, row, renderText) {
+        const tokenized=typeof renderScoreExampleTokens==='function' ? renderScoreExampleTokens(text,id=>{const kind=tokenKindForRow(row,id);return kind?scoreExampleHtml(kind,text):'';},part=>renderText(part,termsIndex),/^en\b/i.test(document.documentElement?.lang||'')?'en':'ja') : {found:false};
+        if(tokenized.found)return tokenized.html;
         const entries = rulesFor(row);
         if (!entries) return renderText(text, termsIndex);
         let parts = [{text:String(text || '')}];
@@ -2829,9 +2911,14 @@ window.MUSIC_NOTATION_CONTEXTS = [
         });
         const rendered = parts.map(part => part.html === undefined ? renderText(part.text, termsIndex) : part.html).join('');
         const example = scoreExampleKind(row);
-        if (!example || ![row.ja, row.en, row[2]].some(value => value !== undefined && String(text) === String(value))) return rendered;
-        const image = notationImage(example, String(text));
-        return rendered + (example === 'rs651-example' || example === 'gm325-example' ? '<span class="rs-score-example-scroll" tabindex="0" role="region" aria-label="'+escape(labels[example][/^en\b/i.test(document.documentElement.lang || '') ? 1 : 0])+'">'+image+'</span>' : ' '+image);
+        // A score belongs in both the complete German source and its translation.
+        // Keep all canonical text/search keys intact; never append to a partial text fragment.
+        const source = row.de ?? row[0];
+        const comparable=value=>(typeof stripScoreExampleTokens==='function'?stripScoreExampleTokens(value):String(value)).normalize('NFC').trim();
+        const isSource = source !== undefined && comparable(text) === comparable(source);
+        const isTranslation = [row.ja, row.en, row[2]].some(value => value !== undefined && comparable(text) === comparable(value));
+        if (!example || !(isSource || isTranslation)) return rendered;
+        return rendered+' '+scoreExampleHtml(example,text);
     }
     window.renderMusicNotationDirection = renderMusicNotationDirection;
     window.hasMusicNotationForRow = row => !!rulesFor(row);
@@ -2918,7 +3005,7 @@ function escapeHtmlWithBreaks(str) {
  */
 function normalizeForId(term) {
     if (!term) return '';
-    let id = term.toLowerCase().trim();
+    let id = term.replace(/\[\[score:[a-z][a-z0-9-]{0,95}\]\]/gi, '').toLowerCase().trim();
     // ウムラウトの変換
     id = id.replace(/ä/g, 'ae').replace(/ö/g, 'oe').replace(/ü/g, 'ue').replace(/ß/g, 'ss');
     // 非英数字をハイフンに置換
@@ -3720,6 +3807,7 @@ window.searchTermsLocal = function (query, sourceFilter) {
     if (!data) return '<div class="result-message">データが読み込まれていません。</div>';
 
     const normalizedQuery = normalizeString(query);
+    if(!normalizedQuery && String(query??'').trim())return '<div class="result-message">'+(/^en\b/i.test(document.documentElement.lang||'')?'Enter a valid search term.':'有効な検索語を入力してください。')+'</div>';
     const results = [];
 
     data.forEach(row => {
@@ -3752,7 +3840,7 @@ window.searchTermsLocal = function (query, sourceFilter) {
     results.forEach(row => {
         const [german, translation, source] = row;
         html += `<div class="row">
-            <dt><dfn class="german">${escapeHtml(german)}</dfn><span class="source">${escapeHtml(source)}</span></dt>
+            <dt><dfn class="german">${renderDictionaryNotationText(german, german, source, typeof document !== 'undefined' && /^en\b/i.test(document.documentElement?.lang || '') ? 'en' : 'ja')}</dfn><span class="source">${escapeHtml(source)}</span></dt>
             <dd class="translation">${renderDictionaryNotationText(translation, german, source, typeof document !== 'undefined' && /^en\b/i.test(document.documentElement?.lang || '') ? 'en' : 'ja', escapeHtmlWithBreaks)}</dd>
         </div>`;
     });

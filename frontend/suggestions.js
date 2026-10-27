@@ -7,8 +7,8 @@ window.renderTermSuggestions = function(inputId, datalistId, suggestions) {
     datalist.innerHTML = '';
     (suggestions || []).forEach(entry => {
         const option = document.createElement('option');
-        option.value = entry.normalized;
-        option.textContent = entry.original || entry.normalized;
+        option.value = entry.normalized.replace(/\[\[score:[a-z][a-z0-9-]{0,95}\]\]/gi,'').trim();
+        option.textContent = String(entry.original || entry.normalized).replace(/\[\[score:[a-z][a-z0-9-]{0,95}\]\]/gi,'').trim();
         datalist.appendChild(option);
     });
 
@@ -47,7 +47,7 @@ window.renderTermSuggestions = function(inputId, datalistId, suggestions) {
         const item = document.createElement('button');
         item.type = 'button';
         item.className = 'term-suggestion-item';
-        item.textContent = entry.original || entry.normalized;
+        item.textContent = String(entry.original || entry.normalized).replace(/\[\[score:[a-z][a-z0-9-]{0,95}\]\]/gi,'').trim();
         item.addEventListener('mousedown', event => event.preventDefault());
         item.addEventListener('click', () => {
             input.value = entry.normalized;

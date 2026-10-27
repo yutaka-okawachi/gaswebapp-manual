@@ -108,7 +108,7 @@ function buildExportSnapshot_(exportOptions) {
     // Convert to object array for better readability/safety
     const mahlerJson = pickExportRows_(tables.GM).map(row => ({
         de: row[0],
-        de_normalized: row[1],
+        de_normalized: scoreExampleSearchText(row[1]??''),
         ja: row[2],
         data: row[3]
     })).filter(item => item.de || item.data); // Filter out empty rows
@@ -122,6 +122,8 @@ function buildExportSnapshot_(exportOptions) {
             names.forEach((h, i) => {
                 obj[h] = values[i];
             });
+
+            if(obj.de_normalized!==undefined)obj.de_normalized=scoreExampleSearchText(obj.de_normalized);
 
             const operKey = String(obj['Oper'] || '').toLowerCase().trim();
 

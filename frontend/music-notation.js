@@ -25,7 +25,15 @@
         [notationContextKey({Oper:'salome',Aufzug:'',Szene:4,page:287,de:'Aufstellung der 4 Pauken: linke H. rechte Hand'}), 'rs782-example']
     ]);
     const gm325Key = notationContextKey({data:'M-2-5-55-dir&',de:"Anmerk. f. d. Dirigenten : hier, wie bei der folgende gleichartigen Stelle ist darauf zu achten, dass sich die Triller der 1. u. 2. Geigen dicht an einander schliessen, und keine Pause dazwischen entsteht (eine 'Trillerkette') also so:"});
-    const scoreExampleKind = row => isGm1550(row) ? 'gm1550-example' : notationContextKey(row) === gm325Key ? 'gm325-example' : rsExampleKinds.get(notationContextKey(row));
+    function tokenKindForRow(row,id) {
+        const entry=typeof scoreExampleRegistryEntry==='function' ? scoreExampleRegistryEntry(row,id) : null;
+        return entry?.renderer==='direction' ? entry.kind : '';
+    }
+    const scoreExampleKind = row => {
+        const source=String(row?.de??row?.[0]??''),tokens=[...source.matchAll(/\[\[score:([a-z][a-z0-9-]{0,95})\]\]/gi)];
+        if(tokens.length)return tokens.map(token=>tokenKindForRow(row,token[1].toLowerCase())).find(Boolean);
+        return isGm1550(row) ? 'gm1550-example' : notationContextKey(row) === gm325Key ? 'gm325-example' : rsExampleKinds.get(notationContextKey(row));
+    };
     function rulesFor(row) {
         if (scoreExampleKind(row)) return [];
         return contexts.get(notationContextKey(row));
@@ -33,7 +41,7 @@
     const labels = {
         'gm325-example': ['トリルの連鎖：主四分音符C6・A5・F5・D5、各トリル後に小32分音符2個を三重連桁で示す4組、ナチュラル2個。音部記号なし。', 'Chain of trills: main quarter notes C6, A5, F5, D5; four pairs of small thirty-second after-notes with triple beams; two naturals; no clef.'],
         'rs651-example': ['プルト単位の分割譜例：ヘ音記号、上下声部それぞれ4組の二重連桁音符、変化記号、休符、スラー、etc.。', 'Division by desk: bass clef, four pairs of double-beamed notes in each voice, accidentals, rests, slurs, and etc.'],
-        'rs782-example': ['4台のティンパニの配置譜例：ヘ音記号、4個の四分音符、フラット2個、左手と右手の原譜ラベル。', 'Arrangement of four timpani: bass clef, four quarter notes, two flats, and the original left- and right-hand labels.'],
+        'rs782-example': ['4台のティンパニの配置譜例：ヘ音記号、4個の四分音符、フラット2個、原譜ラベルlinke H. / l. H. / rechte H. / rechte Hand。', 'Arrangement of four timpani: bass clef, four quarter notes, two flats, and the original labels linke H. / l. H. / rechte H. / rechte Hand.'],
         'gm1550-example': ['編集者提案の譜例：ヘ音記号、フラット3個、G2二分音符、Und、二分休符、複縦線、縦線なしのC。', 'Editorial example: bass clef, three flats, G2 half note, Und, half rest, double barline, and common-time C without a vertical stroke.'],
         half: ['二分音符', 'Half note'],
         whole: ['全音符', 'Whole note'],
@@ -256,11 +264,17 @@
             }
         }
         const svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 '+width+' '+height+'" width="'+width+'" height="'+height+'">'+body+'</svg>';
-        const english = typeof document !== 'undefined' && /^en\b/i.test(document.documentElement.lang || '');
+        const english = typeof document !== 'undefined' && /^en\b/i.test(document.documentElement?.lang || '');
         const label = labels[kind][english ? 1 : 0], extra = kind === 'gm325-example' ? ' gm-score-example-gm325' : kind === 'rs651-example' || kind === 'rs782-example' ? ' rs-score-example-'+kind.slice(0,5) : kind === 'gm1550-example' ? ' gm-score-example-gm1550' : kind.startsWith('motif-') ? ' gm-score-example-'+(kind === 'motif-two' ? 'two' : 'one') : kind === 'eighth-triplet-below' ? ' gm-triplet-below' : '';
         return '<img class="gm-music-notation'+extra+'" data-notation="'+kind+'" src="data:image/svg+xml,'+encodeURIComponent(svg)+'" width="'+width+'" height="'+height+'" alt="'+escape(label)+'" aria-label="'+escape(label)+'" title="'+escape(fallback)+'">';
     }
+    function scoreExampleHtml(kind,text) {
+        const image=notationImage(kind,typeof stripScoreExampleTokens==='function'?stripScoreExampleTokens(text).trim():String(text));
+        return kind==='rs651-example'||kind==='gm325-example' ? '<span class="rs-score-example-scroll" tabindex="0" role="region" aria-label="'+escape(labels[kind][/^en\b/i.test(document.documentElement?.lang||'')?1:0])+'">'+image+'</span>' : image;
+    }
     function renderMusicNotationDirection(text, termsIndex, row, renderText) {
+        const tokenized=typeof renderScoreExampleTokens==='function' ? renderScoreExampleTokens(text,id=>{const kind=tokenKindForRow(row,id);return kind?scoreExampleHtml(kind,text):'';},part=>renderText(part,termsIndex),/^en\b/i.test(document.documentElement?.lang||'')?'en':'ja') : {found:false};
+        if(tokenized.found)return tokenized.html;
         const entries = rulesFor(row);
         if (!entries) return renderText(text, termsIndex);
         let parts = [{text:String(text || '')}];
@@ -283,9 +297,14 @@
         });
         const rendered = parts.map(part => part.html === undefined ? renderText(part.text, termsIndex) : part.html).join('');
         const example = scoreExampleKind(row);
-        if (!example || ![row.ja, row.en, row[2]].some(value => value !== undefined && String(text) === String(value))) return rendered;
-        const image = notationImage(example, String(text));
-        return rendered + (example === 'rs651-example' || example === 'gm325-example' ? '<span class="rs-score-example-scroll" tabindex="0" role="region" aria-label="'+escape(labels[example][/^en\b/i.test(document.documentElement.lang || '') ? 1 : 0])+'">'+image+'</span>' : ' '+image);
+        // A score belongs in both the complete German source and its translation.
+        // Keep all canonical text/search keys intact; never append to a partial text fragment.
+        const source = row.de ?? row[0];
+        const comparable=value=>(typeof stripScoreExampleTokens==='function'?stripScoreExampleTokens(value):String(value)).normalize('NFC').trim();
+        const isSource = source !== undefined && comparable(text) === comparable(source);
+        const isTranslation = [row.ja, row.en, row[2]].some(value => value !== undefined && comparable(text) === comparable(value));
+        if (!example || !(isSource || isTranslation)) return rendered;
+        return rendered+' '+scoreExampleHtml(example,text);
     }
     window.renderMusicNotationDirection = renderMusicNotationDirection;
     window.hasMusicNotationForRow = row => !!rulesFor(row);
