@@ -13,4 +13,31 @@ for(const text of ['管理者モード：解析・検索記録 OFF','管理者�
 }
 assert.equal(locale.localizeText('選択した作品：'),'Selected works:');assert.equal(locale.localizeText('選択した楽器：'),'Selected instruments:');
 context.window.__SITE_LANGUAGE__='ja';assert(locale.JAPANESE.test(context.buildDictionaryExampleAliasNotice('abnehmen',index)),'Japanese explanation preserved');
-console.log('Dynamic English UI: real abnehmen alias, relation categories, loading text and singular/plural counts passed. Browser mode DOM coverage is recorded separately.');
+// Exercise the actual dynamic Japanese navigation label, before browser localization.
+const {extractFunction}=require('./test-utils/extract-function');
+const panel={hidden:true,attributes:{},setAttribute(name,value){this.attributes[name]=value;}},label={textContent:''};
+let inserted=null;
+const targetElement={parentNode:{insertBefore(element,target){inserted={element,target};}}};
+const navigation=vm.createContext({document:{getElementById:id=>({abbrReturnPanel:panel,abbrReturnLabel:label})[id]},hideAbbreviationReturnPanel(){throw Error('Unexpected invalid navigation context');}});
+vm.runInContext(extractFunction(fs.readFileSync(root+'/src/generate_dic_html.js','utf8'),'showAbbreviationReturnPanel'),navigation);
+const browser=vm.createContext({window:{alert(){}},document:{documentElement:{},addEventListener(){}},MutationObserver:class{observe(){}},queueMicrotask(){},NodeFilter:{SHOW_TEXT:4}});
+vm.runInContext(locale.browserSource(),browser);
+const headwords=['Ein Stab aus einem Glockenspiel (Klang Fis , ebenso notiert)','mäßig','m.d.','alle als トレモロ音符 notirten Stellen','A &amp; B &lt;C&gt;','„leise“','first line\nsecond line'];
+for(const headword of headwords){
+ const termId='term-original-headword',missing=new Set(),expected='Return to “'+headword+'”';
+ assert.equal(navigation.showAbbreviationReturnPanel(targetElement,{termId,termLabel:headword}),panel);
+ const japanese='「'+headword+'」に戻る';assert.equal(label.textContent,japanese,'Japanese label remains unchanged');
+ assert.equal(panel.attributes['data-return-target'],termId);assert.equal(panel.hidden,false);assert.equal(inserted.element,panel);assert.equal(inserted.target,targetElement);
+ assert.equal(locale.localizeText(label.textContent,missing),expected);assert.equal(missing.size,0,'Navigation must not create a missing Notes entry');
+ assert.equal(browser.localizeText(label.textContent,browser.window.__ENGLISH_PREVIEW_MISSING__),expected);
+ assert.equal(browser.window.__ENGLISH_PREVIEW_MISSING__.size,0);assert.equal(label.textContent,japanese,'Localization does not mutate the Japanese source label');
+ for(const whitespace of [[' ','\t'],['\n  ',' \n']]){
+  const input=whitespace[0]+japanese+whitespace[1],translated=whitespace[0]+expected+whitespace[1];assert.equal(locale.localizeText(input,missing),translated);assert.equal(browser.localizeText(input),translated);
+ }
+}
+navigation.showAbbreviationReturnPanel(targetElement,{termId:'term-original-headword',termLabel:''});
+assert.equal(label.textContent,'元の見出し語に戻る');assert.equal(locale.localizeText(label.textContent),'Return to the original headword');assert.equal(browser.localizeText(label.textContent),'Return to the original headword');assert.equal(panel.attributes['data-return-target'],'term-original-headword');
+for(const source of ['未翻訳の本文がここにあります。','「見出し」に戻るではない本文']){
+ const missing=new Set();assert.equal(locale.localizeText(source,missing),'English text is not yet available for this note.');assert(missing.has(source));assert.equal(browser.localizeText(source),'English text is not yet available for this note.');
+}
+console.log('Dynamic English UI: alias/categories/loading/counts and real abbreviation-return navigation; Node/browser localization, exact headwords/entities/quotes/newlines/whitespace, stable target ID, unchanged Japanese, empty-headword label and true missing-body fallback passed.');

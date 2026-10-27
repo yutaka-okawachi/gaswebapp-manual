@@ -17,6 +17,9 @@ Object.assign(phrases,require('./english-phrases.json'));
 const keys=Object.keys(phrases).sort((a,b)=>b.length-a.length);
 function localizeText(value,missing){
  const original=String(value??'');if(!JAPANESE.test(original))return original;let text=original;
+ // This is navigation UI, not a Notes body. Preserve the source headword verbatim.
+ const returnLabel=original.match(/^(\s*)「([^]+)」に戻る(\s*)$/);
+ if(returnLabel)return returnLabel[1]+'Return to “'+returnLabel[2]+'”'+returnLabel[3];
  const flat=text.trim().replace(/\s+/g,' ');if(phrases[flat])return text.replace(text.trim(),phrases[flat]);
  text=text.replace(/交響曲第(\d+)番([^（]+)（([^）]+)）/g,(_,n,key,year)=>'Symphony No. '+n+' ('+year+')');
  text=text.replace(/第([0-9IVX]+)幕/g,'Act $1').replace(/第([0-9IVX]+)楽章/g,'Movement $1').replace(/第([0-9]+)小節/g,'bar $1').replace(/(\d+)件(?:見つかりました|ありました|あります)?[。．]?/g,(_,n)=>n+(Number(n)===1?' entry':' entries'));
