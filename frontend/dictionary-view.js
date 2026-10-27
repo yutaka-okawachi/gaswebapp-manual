@@ -150,7 +150,9 @@ function renderDictionaryList(data) {
         // Translation
         const translationDiv = document.createElement("div");
         translationDiv.classList.add("translation");
-        translationDiv.textContent = translation;
+        translationDiv.innerHTML = typeof renderDictionaryNotationText === 'function'
+            ? renderDictionaryNotationText(translation, german, source, document.documentElement.lang === 'en' ? 'en' : 'ja', escapeHtml)
+            : escapeHtml(translation);
 
         rowDiv.appendChild(translationDiv);
         container.appendChild(rowDiv);

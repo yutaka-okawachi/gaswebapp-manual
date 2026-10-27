@@ -454,7 +454,9 @@ function generateDicListHtml(dicData, termsIndex, abbreviationIndex, dictionaryE
     const termIdAttr = termId ? ` id="${termId}"` : '';
     
     // translationにリンクを適用
-    const linkedTranslation = termsIndex ? linkTermsInTranslation(translation, termsIndex) : escapeHtmlWithBreaks(translation);
+    const renderTranslation = part => termsIndex ? linkTermsInTranslation(part, termsIndex) : escapeHtmlWithBreaks(part);
+    const linkedTranslation = typeof renderDictionaryNotationText === 'function'
+      ? renderDictionaryNotationText(translation, german, source, language, renderTranslation) : renderTranslation(translation);
     
     // 略記から対象作曲家を判定し、実例リンクを生成
     const hasGM = source && source.includes('[GM]');

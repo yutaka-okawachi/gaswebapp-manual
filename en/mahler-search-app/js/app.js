@@ -1064,12 +1064,22 @@ function searchRichardStraussByPage() {
 // ---- src/dictionary_notation.js ----
 // Display-only transcription of Don Quixote, IMSLP18787, PDF32/printed p.224.
 // One black quarter note, downward stem, three tremolo strokes; no pitch implied.
-function renderDictionaryNotationText(text, german, source, language) {
+function renderDictionaryNotationText(text, german, source, language, renderText) {
   const escape = value => String(value ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;')
     .replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#039;');
   const heading = 'alle in den Bläsern als トレモロ音符 notirten Stellen sind mit Zungenschlag auszuführen.';
   const value = String(text ?? '');
-  if (String(german ?? '').normalize('NFC').trim() !== heading || String(source ?? '').trim() !== '[RS: Qui]' || value !== String(german ?? '')) return escape(value);
+  const render = typeof renderText === 'function' ? renderText : escape;
+  // Preserve the quotation and its explicit short-pause meaning; only draw its sign.
+  const quote = '𝄐 bedeutet hier nur ein kurzes Anhalten auf dem Taktstrich und nicht etwa eine Fermate.';
+  if (String(german ?? '').normalize('NFC').trim() === 'anhalten' && String(source ?? '').includes('[GM]') && value.includes(quote)) {
+    const position = value.indexOf(quote), token = '𝄐';
+    const label = language === 'en' ? 'Sign for a brief pause at the barline, without a sustained hold' : '小節線上の短い休止を示す記号（長く保持しない）';
+    const svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 39 48" width="39" height="48"><path d="M5 28 C8 7 31 7 34 28" fill="none" stroke="black" stroke-width="2.3"/><circle cx="19.5" cy="27" r="2.5"/></svg>';
+    const image = '<img class="gm-music-notation dictionary-music-notation" data-notation="short-pause" src="data:image/svg+xml,' + encodeURIComponent(svg) + '" width="39" height="48" alt="' + escape(label) + '" aria-label="' + escape(label) + '" title="' + token + '">';
+    return render(value.slice(0, position)) + image + render(value.slice(position + token.length));
+  }
+  if (String(german ?? '').normalize('NFC').trim() !== heading || String(source ?? '').trim() !== '[RS: Qui]' || value !== String(german ?? '')) return render(value);
   const token = 'トレモロ音符', position = value.indexOf(token), english = language === 'en';
   const label = english ? 'Single quarter note with a downward stem and three tremolo strokes' : '下向き符幹の四分音符1個に斜線3本のトレモロ表記';
   const svg = '<svg xmlns="http://www.w3.org/2000/svg" width="38" height="50" viewBox="0 0 38 50">' +
@@ -1077,7 +1087,7 @@ function renderDictionaryNotationText(text, german, source, language) {
     '<path data-stem="single" data-stem-direction="down" d="M20 11 V44" stroke="black" stroke-width="1.7"/>' +
     [0, 6, 12].map(y => '<path data-tremolo-stroke="true" d="M8 ' + (25 + y) + ' L29 ' + (17 + y) + ' V' + (21 + y) + ' L8 ' + (29 + y) + ' Z" fill="black"/>').join('') + '</svg>';
   const image = '<img class="gm-music-notation dictionary-music-notation" data-notation="quarter-tremolo-three" src="data:image/svg+xml,' + encodeURIComponent(svg) + '" width="38" height="50" alt="' + escape(label) + '" aria-label="' + escape(label) + '" title="' + (english ? '[tremolo notes]' : token) + '">';
-  return escape(value.slice(0, position)) + image + escape(value.slice(position + token.length));
+  return render(value.slice(0, position)) + image + render(value.slice(position + token.length));
 }
 
 
@@ -2197,6 +2207,234 @@ window.MUSIC_NOTATION_CONTEXTS = [
     "data": "M-3-2-144-all&"
   },
   {
+    "tab": "GM",
+    "sourceRow": 338,
+    "de": "Anmerkung für den Dirigenten und Sänger : 𝄐 bedeutet hier nur ein kurzes Anhalten auf dem Taktstrich und nicht etwa eine Fermate. [Anmerkung Mahlers]",
+    "tokens": [
+      [
+        "𝄐",
+        "short-pause"
+      ]
+    ],
+    "data": "M-d-d04-151-sti,dir&"
+  },
+  {
+    "tab": "GM",
+    "sourceRow": 358,
+    "de": "Anmerkung für den Dirigenten : In diesem Motiv ist das Achtel stets etwas flüchtig = nachlässig auszuführen, in welches Instrument es auch gelegt ist; also ungefähr so : [Notenbeispiel]",
+    "tokens": [
+      [
+        "[Notenbeispiel]",
+        "motif-two"
+      ],
+      [
+        "［譜例］",
+        "motif-two"
+      ],
+      [
+        "[譜例]",
+        "motif-two"
+      ],
+      [
+        "[musical example]",
+        "motif-two"
+      ]
+    ],
+    "data": "M-5-3-136-dir&"
+  },
+  {
+    "tab": "GM",
+    "sourceRow": 387,
+    "de": "Auch hier die Achtel flüchtig, ungefähr : [Notenbeispiel]",
+    "tokens": [
+      [
+        "[Notenbeispiel]",
+        "motif-one"
+      ],
+      [
+        "［譜例］",
+        "motif-one"
+      ],
+      [
+        "[譜例]",
+        "motif-one"
+      ],
+      [
+        "[musical example]",
+        "motif-one"
+      ]
+    ],
+    "data": "M-5-3-283-all&"
+  },
+  {
+    "tab": "GM",
+    "sourceRow": 570,
+    "de": "Dasselbe Tempo (𝅗𝅥 wie früher 𝅘𝅥.)",
+    "tokens": [
+      [
+        "𝅗𝅥",
+        "half"
+      ],
+      [
+        "𝅘𝅥.",
+        "dotted-quarter"
+      ]
+    ],
+    "data": "M-b1-t3-13-all&"
+  },
+  {
+    "tab": "GM",
+    "sourceRow": 586,
+    "de": "Die mit [dachförmigem Akzentzeichen mit Querstrich darunter] bezeichneten Noten länger gehalten.",
+    "tokens": [
+      [
+        "[dachförmigem Akzentzeichen mit Querstrich darunter]",
+        "roof"
+      ]
+    ],
+    "data": "M-2-5-78-hr&M-2-5-79-ob,cl&"
+  },
+  {
+    "tab": "GM",
+    "sourceRow": 589,
+    "de": "Der Sinn dieser Bezeichnung 𝄐 V ist, den Eintritt der Violinen, Violen und Celli erst nach den letzten Viertel zu vollziehen, um ihn deutlich zu machen_ also zwischen den letzten Takt des Tempo I und den Eintritt der Streichinstrumente eine unbedeutende 'Luftpause' zu legen (ungefähr in der Dauer eines Achtel) eben nur so lang als zur rhythmischen Gestaltung nötig.",
+    "tokens": [
+      [
+        "𝄐 V",
+        "fermata-v"
+      ]
+    ],
+    "data": "M-7-5-196-all&"
+  },
+  {
+    "tab": "GM",
+    "sourceRow": 930,
+    "de": "Gemessen (𝅘𝅥 wie früher 𝅗𝅥)",
+    "tokens": [
+      [
+        "𝅘𝅥",
+        "quarter"
+      ],
+      [
+        "𝅗𝅥",
+        "half"
+      ]
+    ],
+    "data": "M-b1-t3-33-all&"
+  },
+  {
+    "tab": "GM",
+    "sourceRow": 965,
+    "de": "Gleiches Zeitmaß (𝅗𝅥 wie früher 𝅘𝅥)",
+    "tokens": [
+      [
+        "𝅗𝅥",
+        "half"
+      ],
+      [
+        "𝅘𝅥",
+        "quarter"
+      ]
+    ],
+    "data": "M-b1-t3-149-all&"
+  },
+  {
+    "tab": "GM",
+    "sourceRow": 1354,
+    "de": "Langsamer (die 𝅘𝅥 etwas langsamer als früher die 𝅗𝅥)",
+    "tokens": [
+      [
+        "𝅘𝅥",
+        "quarter"
+      ],
+      [
+        "𝅗𝅥",
+        "half"
+      ]
+    ],
+    "data": "M-b1-t3-204-all&"
+  },
+  {
+    "tab": "GM",
+    "sourceRow": 2084,
+    "de": "Sehr langsam (𝅘𝅥 wie früher 𝅗𝅥)",
+    "tokens": [
+      [
+        "𝅘𝅥",
+        "quarter"
+      ],
+      [
+        "𝅗𝅥",
+        "half"
+      ]
+    ],
+    "data": "M-b1-t3-506-all&"
+  },
+  {
+    "tab": "GM",
+    "sourceRow": 2575,
+    "de": "𝅘𝅥 wie vorher 𝅗𝅥𝅭",
+    "tokens": [
+      [
+        "𝅘𝅥",
+        "quarter"
+      ],
+      [
+        "𝅗𝅥𝅭",
+        "dotted-half"
+      ]
+    ],
+    "data": "M-4-3-283-all&"
+  },
+  {
+    "tab": "GM",
+    "sourceRow": 2577,
+    "de": "𝅘𝅥𝅘𝅥𝅘𝅥 wie früher [Vierteltriole]",
+    "tokens": [
+      [
+        "𝅘𝅥𝅘𝅥𝅘𝅥",
+        "quarters"
+      ],
+      [
+        "[Vierteltriole]",
+        "quarter-triplet"
+      ]
+    ],
+    "data": "M-d-d01-16-all&M-d-d01-92-all&"
+  },
+  {
+    "tab": "GM",
+    "sourceRow": 2590,
+    "de": "𝅗𝅥 wie früher die 𝅘𝅥",
+    "tokens": [
+      [
+        "𝅗𝅥",
+        "half"
+      ],
+      [
+        "𝅘𝅥",
+        "quarter"
+      ]
+    ],
+    "data": "M-b1-t3-218-all&M-b1-t3-379-all&"
+  },
+  {
+    "tab": "GM",
+    "sourceRow": 2599,
+    "de": "𝅘𝅥𝅮𝅘𝅥𝅮𝅘𝅥𝅮 = wie früher [Achteltriole]",
+    "tokens": [
+      [
+        "𝅘𝅥𝅮𝅘𝅥𝅮𝅘𝅥𝅮",
+        "eighths"
+      ],
+      [
+        "[Achteltriole]",
+        "eighth-triplet"
+      ]
+    ],
+    "data": "M-3-2-50-all&"
+  },
+  {
     "tab": "RW",
     "sourceRow": 364,
     "de": "Von hier kann gekürzt werden bis zum Zeichen 𝄌 auf Seite 508",
@@ -2309,17 +2547,7 @@ window.MUSIC_NOTATION_CONTEXTS = [
 // Display only: preserve the Sheet's Unicode/German source and search keys.
 (function () {
     'use strict';
-    const examples = kind => ['[Notenbeispiel]', '［譜例］', '[譜例]', '[musical example]'].map(text => [text, kind]);
     const variants = (text, kind) => [...new Set([text, text.normalize('NFC'), text.normalize('NFD')])].map(value => [value, kind]);
-    const rules = {
-        'M-5-3-136-dir&': examples('motif-two'),
-        'M-5-3-283-all&': examples('motif-one'),
-        'M-2-5-78-hr&M-2-5-79-ob,cl&': [['[dachförmigem Akzentzeichen mit Querstrich darunter]', 'roof']],
-        'M-7-5-196-all&': [['𝄐 V', 'fermata-v']],
-        'M-4-3-283-all&': [...variants('𝅘𝅥', 'quarter'), ...variants('𝅗𝅥𝅭', 'dotted-half')],
-        'M-d-d01-16-all&M-d-d01-92-all&': [...variants('𝅘𝅥𝅘𝅥𝅘𝅥', 'quarters'), ['[Vierteltriole]', 'quarter-triplet']],
-        'M-3-2-50-all&': [...variants('𝅘𝅥𝅮𝅘𝅥𝅮𝅘𝅥𝅮', 'eighths'), ['[Achteltriole]', 'eighth-triplet']]
-    };
     function notationContextKey(row) {
         if (!row || typeof row !== 'object') return '';
         const de = String(row.de ?? row[0] ?? '').normalize('NFC');
@@ -2339,8 +2567,7 @@ window.MUSIC_NOTATION_CONTEXTS = [
     }
     function rulesFor(row) {
         if (isGm1550(row)) return [];
-        const key = notationContextKey(row), data = String(row?.data || row?.[3] || '');
-        return contexts.get(key) || (Object.hasOwn(rules,data) ? rules[data] : undefined);
+        return contexts.get(notationContextKey(row));
     }
     const labels = {
         'gm1550-example': ['編集者提案の譜例：ヘ音記号、フラット3個、G2二分音符、Und、二分休符、複縦線、縦線なしのC。', 'Editorial example: bass clef, three flats, G2 half note, Und, half rest, double barline, and common-time C without a vertical stroke.'],
@@ -2349,6 +2576,7 @@ window.MUSIC_NOTATION_CONTEXTS = [
         eighth: ['八分音符', 'Eighth note'],
         'dotted-quarter': ['付点四分音符', 'Dotted quarter note'],
         fermata: ['フェルマータ記号', 'Fermata sign'],
+        'short-pause': ['小節線上の短い休止を示す記号（長く保持しない）', 'Sign for a brief pause at the barline, without a sustained hold'],
         'stopped-plus': ['ゲシュトップを示すプラス記号', 'Plus sign for a stopped note'],
         'rhythmic-alignment': ['リズム一致位置を示す縦線', 'Rhythmic alignment line'],
         'caret-accent': ['山形アクセント記号', 'Caret-shaped accent'],
@@ -2426,8 +2654,7 @@ window.MUSIC_NOTATION_CONTEXTS = [
     function gm1550Svg() {
         const width = 220, height = 96;
         let body = '<metadata>'+escape(gm358ClefLicense)+'\n'+escape(gm1550UnderlayLicense)+'</metadata><g fill="black" stroke="black">';
-        for (const y of [38, 44, 50, 56]) body += '<path d="M8 '+y+' H212" fill="none" stroke-width=".7"/>';
-        body += '<path d="M8 62 H131.6 M140.4 62 H212" fill="none" stroke-width=".7"/>';
+        for (const y of [38, 44, 50, 56, 62]) body += '<path d="M8 '+y+' H212" fill="none" stroke-width=".7"/>';
         body += '<path data-clef="bass" data-glyph="fClef" d="'+gm1550BassPath+'" transform="translate(12 44) scale(.024 -.024)" stroke="none"/>';
         for (const [x,y] of [[37,56],[45,47],[53,59]]) body += '<path data-accidental="flat" d="'+gm1550FlatPath+'" transform="translate('+x+' '+y+') scale(.024 -.024)" stroke="none"/>';
         body += '<rect data-rest="half" x="84" y="46.6" width="9" height="3.4" stroke="none"/>';
@@ -2449,12 +2676,12 @@ window.MUSIC_NOTATION_CONTEXTS = [
         } else if (kind === 'fermata-v') {
             width = 70;
             body = '<path d="M5 28 C8 7 31 7 34 28 M45 11 L54 31 L64 11" fill="none" stroke="black" stroke-width="2.3"/><circle cx="19.5" cy="27" r="2.5"/>';
-        } else if (kind === 'fermata') {
+        } else if (kind === 'fermata' || kind === 'short-pause') {
             width = 39;
             body = '<path d="M5 28 C8 7 31 7 34 28" fill="none" stroke="black" stroke-width="2.3"/><circle cx="19.5" cy="27" r="2.5"/>';
         } else if (kind === 'whole') {
             width = 33;
-            body = '<ellipse data-note="whole" cx="16" cy="31" rx="9" ry="5" fill="white" stroke="black" stroke-width="2"/>';
+            body = '<ellipse data-note="whole" cx="16" cy="31" rx="9" ry="5" fill="none" stroke="black" stroke-width="2"/>';
         } else if (kind === 'stopped-plus') {
             width = 30;
             body = '<path d="M15 13 V35 M4 24 H26" fill="none" stroke="black" stroke-width="2"/>';
@@ -2488,7 +2715,7 @@ window.MUSIC_NOTATION_CONTEXTS = [
         } else if (['quarter','dotted-half','half','dotted-quarter','eighth'].includes(kind)) {
             const dotted = kind.startsWith('dotted-'), openHead = kind === 'half' || kind === 'dotted-half';
             width = dotted ? 38 : 28;
-            body = '<ellipse data-note="'+(openHead ? 'half' : kind === 'eighth' ? 'eighth' : 'quarter')+'" cx="12" cy="36" rx="6" ry="4" transform="rotate(-20 12 36)" fill="'+(openHead ? 'white' : 'black')+'" stroke="black" stroke-width="1.8"/><path d="M17 35 V9" fill="none" stroke="black" stroke-width="1.7"/>';
+            body = '<ellipse data-note="'+(openHead ? 'half' : kind === 'eighth' ? 'eighth' : 'quarter')+'" cx="12" cy="36" rx="6" ry="4" transform="rotate(-20 12 36)" fill="'+(openHead ? 'none' : 'black')+'" stroke="black" stroke-width="1.8"/><path d="M17 35 V9" fill="none" stroke="black" stroke-width="1.7"/>';
             if (kind === 'eighth') body += '<path data-flag="eighth" d="M17 9 C18 16 29 15 26 29 C29 20 20 20 17 14 Z"/>';
             if (dotted) body += '<circle data-augmentation-dot="note" cx="29" cy="35" r="2.1"/>';
         } else {
@@ -3321,7 +3548,9 @@ function renderDictionaryList(data) {
         // Translation
         const translationDiv = document.createElement("div");
         translationDiv.classList.add("translation");
-        translationDiv.textContent = translation;
+        translationDiv.innerHTML = typeof renderDictionaryNotationText === 'function'
+            ? renderDictionaryNotationText(translation, german, source, document.documentElement.lang === 'en' ? 'en' : 'ja', escapeHtml)
+            : escapeHtml(translation);
 
         rowDiv.appendChild(translationDiv);
         container.appendChild(rowDiv);
@@ -3449,7 +3678,7 @@ window.searchTermsLocal = function (query, sourceFilter) {
         const [german, translation, source] = row;
         html += `<div class="row">
             <dt><dfn class="german">${escapeHtml(german)}</dfn><span class="source">${escapeHtml(source)}</span></dt>
-            <dd class="translation">${escapeHtmlWithBreaks(translation)}</dd>
+            <dd class="translation">${renderDictionaryNotationText(translation, german, source, typeof document !== 'undefined' && /^en\b/i.test(document.documentElement?.lang || '') ? 'en' : 'ja', escapeHtmlWithBreaks)}</dd>
         </div>`;
     });
 

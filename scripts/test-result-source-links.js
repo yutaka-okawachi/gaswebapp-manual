@@ -50,7 +50,7 @@ for (const language of ['ja', 'en']) {
   delete window.renderMusicNotationDirection;
   assert.deepEqual(hrefs(format(text)),[pdf,library],'Fallback also links safely');
   window.renderMusicNotationDirection = renderer;
-  const musicRow = {de:'ungefähr so : [Notenbeispiel]',data:'M-5-3-136-dir&'};
+  const musicRow = JSON.parse(read(prefix+'mahler-search-app/data/mahler.json')).find(row=>row.data==='M-5-3-136-dir&');
   const music = window.formatGmTranslation('[musical example] ［譜例］ '+pdf,musicRow);
   assert(music.includes('data:image/svg+xml,'),'Notation remains rendered');
   assert.deepEqual(hrefs(music),[pdf]);

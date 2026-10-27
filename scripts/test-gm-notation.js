@@ -3,10 +3,10 @@ const fs=require('fs'),path=require('path'),vm=require('vm'),assert=require('ass
 const {validateGmOriginals}=require('./gm-original-validation');
 const root=path.resolve(__dirname,'..'),read=f=>fs.readFileSync(path.join(root,f),'utf8');
 const fixtures=[
- {__row:358,de:'ungefähr so : [Notenbeispiel]',data:'M-5-3-136-dir&'},
+ {__row:358,de:"Anmerkung für den Dirigenten : In diesem Motiv ist das Achtel stets etwas flüchtig = nachlässig auszuführen, in welches Instrument es auch gelegt ist; also ungefähr so : [Notenbeispiel]",data:'M-5-3-136-dir&'},
  {__row:387,de:'Auch hier die Achtel flüchtig, ungefähr : [Notenbeispiel]',data:'M-5-3-283-all&'},
  {__row:586,de:'Die mit [dachförmigem Akzentzeichen mit Querstrich darunter] bezeichneten Noten länger gehalten.',data:'M-2-5-78-hr&M-2-5-79-ob,cl&'},
- {__row:589,de:'Der Sinn dieser Bezeichnung 𝄐 V ist, den Eintritt ...',data:'M-7-5-196-all&'},
+ {__row:589,de:"Der Sinn dieser Bezeichnung 𝄐 V ist, den Eintritt der Violinen, Violen und Celli erst nach den letzten Viertel zu vollziehen, um ihn deutlich zu machen_ also zwischen den letzten Takt des Tempo I und den Eintritt der Streichinstrumente eine unbedeutende 'Luftpause' zu legen (ungefähr in der Dauer eines Achtel) eben nur so lang als zur rhythmischen Gestaltung nötig.",data:'M-7-5-196-all&'},
  {__row:2577,de:'𝅘𝅥𝅘𝅥𝅘𝅥 wie früher [Vierteltriole]',data:'M-d-d01-16-all&M-d-d01-92-all&'},
  {__row:2599,de:'𝅘𝅥𝅮𝅘𝅥𝅮𝅘𝅥𝅮 = wie früher [Achteltriole]',data:'M-3-2-50-all&'},
  {__row:2575,de:'𝅘𝅥 wie vorher 𝅗𝅥𝅭',data:'M-4-3-283-all&'}
@@ -37,7 +37,7 @@ for(const language of ['ja','en']){
  }
  for(const form of ['NFC','NFD']){
   const normalized=fixtures[6].de.normalize(form),html=window.linkTermsInTranslation(normalized,{},fixtures[6]),notes=svgImages(html);
-  assert.equal(notes.length,2,'Composed and decomposed music symbols');assert(notes[1].includes('data-augmentation-dot="note"'));assert(notes[1].includes('fill="white"'));
+  assert.equal(notes.length,2,'Composed and decomposed music symbols');assert(notes[1].includes('data-augmentation-dot="note"'));assert(notes[1].includes('fill="none"')&&!notes[1].includes('fill="white"'));
   assert.equal(c.matchesTermQuery(c.normalizeString(normalized),normalized,'partial'),true);checks++;
  }
  const motifTwo=svgImages(window.linkTermsInTranslation(fixtures[0].de,{},fixtures[0]))[0],motifOne=svgImages(window.linkTermsInTranslation(fixtures[1].de,{},fixtures[1]))[0];

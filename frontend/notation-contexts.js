@@ -1113,6 +1113,234 @@ window.MUSIC_NOTATION_CONTEXTS = [
     "data": "M-3-2-144-all&"
   },
   {
+    "tab": "GM",
+    "sourceRow": 338,
+    "de": "Anmerkung für den Dirigenten und Sänger : 𝄐 bedeutet hier nur ein kurzes Anhalten auf dem Taktstrich und nicht etwa eine Fermate. [Anmerkung Mahlers]",
+    "tokens": [
+      [
+        "𝄐",
+        "short-pause"
+      ]
+    ],
+    "data": "M-d-d04-151-sti,dir&"
+  },
+  {
+    "tab": "GM",
+    "sourceRow": 358,
+    "de": "Anmerkung für den Dirigenten : In diesem Motiv ist das Achtel stets etwas flüchtig = nachlässig auszuführen, in welches Instrument es auch gelegt ist; also ungefähr so : [Notenbeispiel]",
+    "tokens": [
+      [
+        "[Notenbeispiel]",
+        "motif-two"
+      ],
+      [
+        "［譜例］",
+        "motif-two"
+      ],
+      [
+        "[譜例]",
+        "motif-two"
+      ],
+      [
+        "[musical example]",
+        "motif-two"
+      ]
+    ],
+    "data": "M-5-3-136-dir&"
+  },
+  {
+    "tab": "GM",
+    "sourceRow": 387,
+    "de": "Auch hier die Achtel flüchtig, ungefähr : [Notenbeispiel]",
+    "tokens": [
+      [
+        "[Notenbeispiel]",
+        "motif-one"
+      ],
+      [
+        "［譜例］",
+        "motif-one"
+      ],
+      [
+        "[譜例]",
+        "motif-one"
+      ],
+      [
+        "[musical example]",
+        "motif-one"
+      ]
+    ],
+    "data": "M-5-3-283-all&"
+  },
+  {
+    "tab": "GM",
+    "sourceRow": 570,
+    "de": "Dasselbe Tempo (𝅗𝅥 wie früher 𝅘𝅥.)",
+    "tokens": [
+      [
+        "𝅗𝅥",
+        "half"
+      ],
+      [
+        "𝅘𝅥.",
+        "dotted-quarter"
+      ]
+    ],
+    "data": "M-b1-t3-13-all&"
+  },
+  {
+    "tab": "GM",
+    "sourceRow": 586,
+    "de": "Die mit [dachförmigem Akzentzeichen mit Querstrich darunter] bezeichneten Noten länger gehalten.",
+    "tokens": [
+      [
+        "[dachförmigem Akzentzeichen mit Querstrich darunter]",
+        "roof"
+      ]
+    ],
+    "data": "M-2-5-78-hr&M-2-5-79-ob,cl&"
+  },
+  {
+    "tab": "GM",
+    "sourceRow": 589,
+    "de": "Der Sinn dieser Bezeichnung 𝄐 V ist, den Eintritt der Violinen, Violen und Celli erst nach den letzten Viertel zu vollziehen, um ihn deutlich zu machen_ also zwischen den letzten Takt des Tempo I und den Eintritt der Streichinstrumente eine unbedeutende 'Luftpause' zu legen (ungefähr in der Dauer eines Achtel) eben nur so lang als zur rhythmischen Gestaltung nötig.",
+    "tokens": [
+      [
+        "𝄐 V",
+        "fermata-v"
+      ]
+    ],
+    "data": "M-7-5-196-all&"
+  },
+  {
+    "tab": "GM",
+    "sourceRow": 930,
+    "de": "Gemessen (𝅘𝅥 wie früher 𝅗𝅥)",
+    "tokens": [
+      [
+        "𝅘𝅥",
+        "quarter"
+      ],
+      [
+        "𝅗𝅥",
+        "half"
+      ]
+    ],
+    "data": "M-b1-t3-33-all&"
+  },
+  {
+    "tab": "GM",
+    "sourceRow": 965,
+    "de": "Gleiches Zeitmaß (𝅗𝅥 wie früher 𝅘𝅥)",
+    "tokens": [
+      [
+        "𝅗𝅥",
+        "half"
+      ],
+      [
+        "𝅘𝅥",
+        "quarter"
+      ]
+    ],
+    "data": "M-b1-t3-149-all&"
+  },
+  {
+    "tab": "GM",
+    "sourceRow": 1354,
+    "de": "Langsamer (die 𝅘𝅥 etwas langsamer als früher die 𝅗𝅥)",
+    "tokens": [
+      [
+        "𝅘𝅥",
+        "quarter"
+      ],
+      [
+        "𝅗𝅥",
+        "half"
+      ]
+    ],
+    "data": "M-b1-t3-204-all&"
+  },
+  {
+    "tab": "GM",
+    "sourceRow": 2084,
+    "de": "Sehr langsam (𝅘𝅥 wie früher 𝅗𝅥)",
+    "tokens": [
+      [
+        "𝅘𝅥",
+        "quarter"
+      ],
+      [
+        "𝅗𝅥",
+        "half"
+      ]
+    ],
+    "data": "M-b1-t3-506-all&"
+  },
+  {
+    "tab": "GM",
+    "sourceRow": 2575,
+    "de": "𝅘𝅥 wie vorher 𝅗𝅥𝅭",
+    "tokens": [
+      [
+        "𝅘𝅥",
+        "quarter"
+      ],
+      [
+        "𝅗𝅥𝅭",
+        "dotted-half"
+      ]
+    ],
+    "data": "M-4-3-283-all&"
+  },
+  {
+    "tab": "GM",
+    "sourceRow": 2577,
+    "de": "𝅘𝅥𝅘𝅥𝅘𝅥 wie früher [Vierteltriole]",
+    "tokens": [
+      [
+        "𝅘𝅥𝅘𝅥𝅘𝅥",
+        "quarters"
+      ],
+      [
+        "[Vierteltriole]",
+        "quarter-triplet"
+      ]
+    ],
+    "data": "M-d-d01-16-all&M-d-d01-92-all&"
+  },
+  {
+    "tab": "GM",
+    "sourceRow": 2590,
+    "de": "𝅗𝅥 wie früher die 𝅘𝅥",
+    "tokens": [
+      [
+        "𝅗𝅥",
+        "half"
+      ],
+      [
+        "𝅘𝅥",
+        "quarter"
+      ]
+    ],
+    "data": "M-b1-t3-218-all&M-b1-t3-379-all&"
+  },
+  {
+    "tab": "GM",
+    "sourceRow": 2599,
+    "de": "𝅘𝅥𝅮𝅘𝅥𝅮𝅘𝅥𝅮 = wie früher [Achteltriole]",
+    "tokens": [
+      [
+        "𝅘𝅥𝅮𝅘𝅥𝅮𝅘𝅥𝅮",
+        "eighths"
+      ],
+      [
+        "[Achteltriole]",
+        "eighth-triplet"
+      ]
+    ],
+    "data": "M-3-2-50-all&"
+  },
+  {
     "tab": "RW",
     "sourceRow": 364,
     "de": "Von hier kann gekürzt werden bis zum Zeichen 𝄌 auf Seite 508",

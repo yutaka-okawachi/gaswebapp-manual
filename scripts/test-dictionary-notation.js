@@ -16,8 +16,9 @@ for(const language of ['ja','en']){
  assert(!/<text\b|font-family|<script\b|foreignObject|data-flag|augmentation-dot/.test(svg));
  assert(svg.includes('fill="black"'));assert(svg.includes('data-stem-direction="down"')); if(language==='en')assert(!/[\p{Script=Han}\p{Script=Hiragana}\p{Script=Katakana}]/u.test(image));
  const output=c.generateDicHtml(data,[],null,[],{language});const original=old.generateDicHtml(data,[],null,[],{language});
- assert.equal((output.match(/dictionary-music-notation/g)||[]).length,1);
- assert(output.replace(image,'トレモロ音符')===original,'Only the display placeholder changes; all 988 anchors, metadata, example links and translations remain identical');
+ assert.equal((output.match(/dictionary-music-notation/g)||[]).length,2);
+ const pause=output.match(/<img\b[^>]*data-notation="short-pause"[^>]*>/)[0];
+ assert(output.replace(image,'トレモロ音符').replace(pause,'𝄐')===original,'Only the two confirmed display signs change; all 988 anchors, metadata, example links and source text remain identical');
  for(const r of data)if(r[0]!==target[0])assert.equal(c.renderDictionaryNotationText(r[0],r[0],r[2],language),c.escapeHtml(r[0]),'No unrelated dictionary notation is changed');
  assert(!c.renderDictionaryNotationText(row[1],row[0],row[2],language).includes('<img'),'Spelled-out tremolo references in explanations remain words');
  assert(!c.renderDictionaryNotationText(row[0],row[0],'[GM]',language).includes('<img'));

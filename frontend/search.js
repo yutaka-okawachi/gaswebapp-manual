@@ -36,7 +36,7 @@ window.searchTermsLocal = function (query, sourceFilter) {
         const [german, translation, source] = row;
         html += `<div class="row">
             <dt><dfn class="german">${escapeHtml(german)}</dfn><span class="source">${escapeHtml(source)}</span></dt>
-            <dd class="translation">${escapeHtmlWithBreaks(translation)}</dd>
+            <dd class="translation">${renderDictionaryNotationText(translation, german, source, typeof document !== 'undefined' && /^en\b/i.test(document.documentElement?.lang || '') ? 'en' : 'ja', escapeHtmlWithBreaks)}</dd>
         </div>`;
     });
 

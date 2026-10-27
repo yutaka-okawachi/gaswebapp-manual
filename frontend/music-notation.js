@@ -1,17 +1,7 @@
 // Display only: preserve the Sheet's Unicode/German source and search keys.
 (function () {
     'use strict';
-    const examples = kind => ['[Notenbeispiel]', '［譜例］', '[譜例]', '[musical example]'].map(text => [text, kind]);
     const variants = (text, kind) => [...new Set([text, text.normalize('NFC'), text.normalize('NFD')])].map(value => [value, kind]);
-    const rules = {
-        'M-5-3-136-dir&': examples('motif-two'),
-        'M-5-3-283-all&': examples('motif-one'),
-        'M-2-5-78-hr&M-2-5-79-ob,cl&': [['[dachförmigem Akzentzeichen mit Querstrich darunter]', 'roof']],
-        'M-7-5-196-all&': [['𝄐 V', 'fermata-v']],
-        'M-4-3-283-all&': [...variants('𝅘𝅥', 'quarter'), ...variants('𝅗𝅥𝅭', 'dotted-half')],
-        'M-d-d01-16-all&M-d-d01-92-all&': [...variants('𝅘𝅥𝅘𝅥𝅘𝅥', 'quarters'), ['[Vierteltriole]', 'quarter-triplet']],
-        'M-3-2-50-all&': [...variants('𝅘𝅥𝅮𝅘𝅥𝅮𝅘𝅥𝅮', 'eighths'), ['[Achteltriole]', 'eighth-triplet']]
-    };
     function notationContextKey(row) {
         if (!row || typeof row !== 'object') return '';
         const de = String(row.de ?? row[0] ?? '').normalize('NFC');
@@ -31,8 +21,7 @@
     }
     function rulesFor(row) {
         if (isGm1550(row)) return [];
-        const key = notationContextKey(row), data = String(row?.data || row?.[3] || '');
-        return contexts.get(key) || (Object.hasOwn(rules,data) ? rules[data] : undefined);
+        return contexts.get(notationContextKey(row));
     }
     const labels = {
         'gm1550-example': ['編集者提案の譜例：ヘ音記号、フラット3個、G2二分音符、Und、二分休符、複縦線、縦線なしのC。', 'Editorial example: bass clef, three flats, G2 half note, Und, half rest, double barline, and common-time C without a vertical stroke.'],
@@ -41,6 +30,7 @@
         eighth: ['八分音符', 'Eighth note'],
         'dotted-quarter': ['付点四分音符', 'Dotted quarter note'],
         fermata: ['フェルマータ記号', 'Fermata sign'],
+        'short-pause': ['小節線上の短い休止を示す記号（長く保持しない）', 'Sign for a brief pause at the barline, without a sustained hold'],
         'stopped-plus': ['ゲシュトップを示すプラス記号', 'Plus sign for a stopped note'],
         'rhythmic-alignment': ['リズム一致位置を示す縦線', 'Rhythmic alignment line'],
         'caret-accent': ['山形アクセント記号', 'Caret-shaped accent'],
@@ -118,8 +108,7 @@
     function gm1550Svg() {
         const width = 220, height = 96;
         let body = '<metadata>'+escape(gm358ClefLicense)+'\n'+escape(gm1550UnderlayLicense)+'</metadata><g fill="black" stroke="black">';
-        for (const y of [38, 44, 50, 56]) body += '<path d="M8 '+y+' H212" fill="none" stroke-width=".7"/>';
-        body += '<path d="M8 62 H131.6 M140.4 62 H212" fill="none" stroke-width=".7"/>';
+        for (const y of [38, 44, 50, 56, 62]) body += '<path d="M8 '+y+' H212" fill="none" stroke-width=".7"/>';
         body += '<path data-clef="bass" data-glyph="fClef" d="'+gm1550BassPath+'" transform="translate(12 44) scale(.024 -.024)" stroke="none"/>';
         for (const [x,y] of [[37,56],[45,47],[53,59]]) body += '<path data-accidental="flat" d="'+gm1550FlatPath+'" transform="translate('+x+' '+y+') scale(.024 -.024)" stroke="none"/>';
         body += '<rect data-rest="half" x="84" y="46.6" width="9" height="3.4" stroke="none"/>';
@@ -141,12 +130,12 @@
         } else if (kind === 'fermata-v') {
             width = 70;
             body = '<path d="M5 28 C8 7 31 7 34 28 M45 11 L54 31 L64 11" fill="none" stroke="black" stroke-width="2.3"/><circle cx="19.5" cy="27" r="2.5"/>';
-        } else if (kind === 'fermata') {
+        } else if (kind === 'fermata' || kind === 'short-pause') {
             width = 39;
             body = '<path d="M5 28 C8 7 31 7 34 28" fill="none" stroke="black" stroke-width="2.3"/><circle cx="19.5" cy="27" r="2.5"/>';
         } else if (kind === 'whole') {
             width = 33;
-            body = '<ellipse data-note="whole" cx="16" cy="31" rx="9" ry="5" fill="white" stroke="black" stroke-width="2"/>';
+            body = '<ellipse data-note="whole" cx="16" cy="31" rx="9" ry="5" fill="none" stroke="black" stroke-width="2"/>';
         } else if (kind === 'stopped-plus') {
             width = 30;
             body = '<path d="M15 13 V35 M4 24 H26" fill="none" stroke="black" stroke-width="2"/>';
@@ -180,7 +169,7 @@
         } else if (['quarter','dotted-half','half','dotted-quarter','eighth'].includes(kind)) {
             const dotted = kind.startsWith('dotted-'), openHead = kind === 'half' || kind === 'dotted-half';
             width = dotted ? 38 : 28;
-            body = '<ellipse data-note="'+(openHead ? 'half' : kind === 'eighth' ? 'eighth' : 'quarter')+'" cx="12" cy="36" rx="6" ry="4" transform="rotate(-20 12 36)" fill="'+(openHead ? 'white' : 'black')+'" stroke="black" stroke-width="1.8"/><path d="M17 35 V9" fill="none" stroke="black" stroke-width="1.7"/>';
+            body = '<ellipse data-note="'+(openHead ? 'half' : kind === 'eighth' ? 'eighth' : 'quarter')+'" cx="12" cy="36" rx="6" ry="4" transform="rotate(-20 12 36)" fill="'+(openHead ? 'none' : 'black')+'" stroke="black" stroke-width="1.8"/><path d="M17 35 V9" fill="none" stroke="black" stroke-width="1.7"/>';
             if (kind === 'eighth') body += '<path data-flag="eighth" d="M17 9 C18 16 29 15 26 29 C29 20 20 20 17 14 Z"/>';
             if (dotted) body += '<circle data-augmentation-dot="note" cx="29" cy="35" r="2.1"/>';
         } else {

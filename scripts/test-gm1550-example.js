@@ -24,7 +24,7 @@ for(const language of ['ja','en']){
  assert(svg.includes('data-pitch="G2"')&&!svg.includes('data-pitch="F2"'));
  assert(svg.includes('cx="136" cy="62" rx="4.6" ry="3.1"'));
  assert(svg.includes('M140 61 V40'));
- assert(svg.includes('M8 62 H131.6 M140.4 62 H212'),'Staff avoids transparent notehead');
+ assert(svg.includes('M8 62 H212')&&!svg.includes('H131.6'),'Continuous staff remains visible through transparent G2 head');
  assert(svg.includes('data-clef="bass"')&&svg.includes('translate(12 44) scale(.024 -.024)'));
  assert.equal((svg.match(/data-accidental="flat"/g)||[]).length,3);
  for(const pos of ['37 56','45 47','53 59'])assert(svg.includes('translate('+pos+') scale(.024 -.024)'));
