@@ -99,13 +99,15 @@ Richard Wagner（リヒャルト・ワーグナー）、Gustav Mahler（グス�
 
 ### 運用・保守を行う方へ
 
-- [日常保守マニュアル](./manuals/DEVELOPER_GUIDE.md): データ更新、同期、障害対応、管理者モード
-- [PC移行マニュアル](./manuals/PC_MIGRATION_GUIDE.md): 新しいPCの準備、設定復元、初回確認
-- [継承者マニュアル](./manuals/SUCCESSOR_GUIDE.md): 資産・権限・アカウントの引き継ぎ
-- [ダッシュボードマニュアル](./manuals/DASHBOARD_GUIDE.md): 利用状況確認、画面・API保守、公開、新PC作業
-- [更新履歴](./CHANGELOG.md): サイトとリポジトリの主な変更
+**[運用マニュアルの入口：最初から順番に進める](./manuals/README.md)**
 
-`manuals`配下のMarkdownファイルはGitHub上で閲覧できる前提です。トークン、パスワード、実際の秘密情報は書き込まないでください。
+- 後継者として新しく担当する方：[継承者マニュアル](./manuals/SUCCESSOR_GUIDE.md)から権限・資産を確認します。
+- 本人が新しいPCへ移る方：[PC移行マニュアル](./manuals/PC_MIGRATION_GUIDE.md)から設定・再認証・初回確認を進めます。
+- 設定済みPCで更新する方：[日常保守マニュアル](./manuals/DEVELOPER_GUIDE.md)へ。シート変更の反映は`-Mode Data`を使います。
+
+入口から「概要・構成 → 権限・新PC設定 → シート編集と検証 → 同期と公開確認 → 譜例追加 → 障害復旧」を辿れます。[ダッシュボード](./manuals/DASHBOARD_GUIDE.md)・日英同期・譜例・履歴資料の位置づけも入口にまとめています。[更新履歴](./CHANGELOG.md)は従来どおりです。
+
+`manuals`配下のMarkdownファイルはGitHub上で閲覧できます。トークン、パスワード、実際の秘密値は書き込まないでください。
 
 ## ライセンス・利用許諾
 

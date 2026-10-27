@@ -1,5 +1,7 @@
 # ダッシュボードマニュアル
 
+> この文書はダッシュボードの専門資料です。サイト全体の導入順は[マニュアル入口](README.md)、Windows共通設定は[PC移行](PC_MIGRATION_GUIDE.md)に集約しています。画面・入力検証・Sites公開は別repo、本repoは固定GAS APIとその契約・検証が担当です。
+
 利用状況の確認、APIと画面の保守、Sites公開、新PCへの移行をまとめています。サイトの日常更新は[日常保守マニュアル](DEVELOPER_GUIDE.md)、共通環境の復元は[PC移行マニュアル](PC_MIGRATION_GUIDE.md)を参照してください。
 
 ## 1. 通常確認と更新・公開
