@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "releaseId": "e1e4dcbdbec114a7d7dab65515a70d9758db132377b9a1200d4f825103a4ef91",
+  "releaseId": "d56a331251e8fd7bead3b4da790f4e50cc37e2108caa6ced49f527a0827fc01c",
   "hashes": {
-    "en/index.html": "84d42e9a8cbaba683828a005ba5a91b6e724e10920c88671022b016fb16a5a70",
+    "en/index.html": "3e6f13d457e5d8b6f59cf157f8f7e37164a0d906f36eb83b5330f53e86c8786b",
     "en/license.html": "73dacc65cfdf258c22c4329d053b70e76e55a1e9c7ca387efa927db4bf35604e",
     "en/mahler-search-app/css/common.css": "8905a698372a280c036d35b09a54e735c564a3f943e8a09522c001d318ca122a",
     "en/mahler-search-app/css/common_terms.css": "30f34aafa29c8c7f63e805717d26e03e438c61e9d71598094ec6032ad0eee666",
@@ -84,7 +84,7 @@
     "en/mahler-search-app/rw_terms_search.html": "2d49a379a0400b416500ceb407231bbcbe783c7c04fc194622823798eeaf60a9",
     "en/mahler-search-app/terms_search.html": "42fbac96bfd28a0ee19ef82469bc06eee0afb9f8c4fa19fc4d7a56bc780dd26b",
     "en/privacy.html": "14f3f87a4a7fca764197285fdb70978f2b402063b7bf4a68b10b0eb36a3fea2d",
-    "index.html": "1d600513bd683f4e03516982728a44b66e14721cc9b48c64b2324847d99a2a58",
+    "index.html": "8643632e3be3f88e0ecaba6fa37431ef173eaf6ec557c7a4739d9b6155424bed",
     "license.html": "f10280599c5e76a5097297c8d5f010949487286db6e522928559c1794fd1c115",
     "mahler-search-app/css/common.css": "8905a698372a280c036d35b09a54e735c564a3f943e8a09522c001d318ca122a",
     "mahler-search-app/css/common_terms.css": "30f34aafa29c8c7f63e805717d26e03e438c61e9d71598094ec6032ad0eee666",
@@ -166,6 +166,6 @@
     "mahler-search-app/terms_search.html": "ffa57cc4fd7bcb8c00f7fc4470deb888905326ba5b5d798d6f702ca13f1f0fb7",
     "privacy.html": "b7fe3c5c1ee9adb55be89b4a43a1b7d86ba4491cb874d1ee61c43274799948ae",
     "robots.txt": "f8e564433b1070c88c346790607f4e5be1e23bb9e605359e0347f3c87855183f",
-    "sitemap.xml": "f8f097ca02485defb51e209e2f307bb7c9fd76e096c702935ef6fca5dbdbf7bf"
+    "sitemap.xml": "c9e2e84e1e55469f329ee7c9f8f9239898bfae6faa98e7e44e10d87f4855d3c8"
   }
 }
