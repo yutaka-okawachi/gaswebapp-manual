@@ -837,6 +837,8 @@ button.clear-input-btn:hover {
 
 .result-content {
     flex: 1;
+    min-width: 0;
+    overflow-wrap: anywhere;
 }
 
 .result-de {
@@ -1256,3 +1258,10 @@ input#termInput,
 
 /* Keep the noteheads at the standard scale/baseline while accommodating a lower 3. */
 .gm-music-notation.gm-triplet-below { height: 3em; vertical-align: calc(-1.65em + .5ex); }
+
+/* Approved RS score examples: keep the long division legible within a scrollable region. */
+.rs-score-example-scroll { display: block; max-width: 100%; overflow-x: auto; margin: .35em 0; }
+.gm-music-notation.rs-score-example-rs651 { width: 29.6em; height: auto; max-width: none; }
+.gm-music-notation.rs-score-example-rs782 { width: 19.1em; height: auto; max-width: 100%; margin-left: 0; margin-right: 0; }
+
+.gm-music-notation.gm-score-example-gm325 { width: 18.5em; height: auto; max-width: none; }

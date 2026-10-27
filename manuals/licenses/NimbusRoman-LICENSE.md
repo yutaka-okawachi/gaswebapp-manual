@@ -6,6 +6,8 @@ Font: NimbusRoman-Regular.otf, Git blob 4588affb13eb72259ab3878a642ed04b3140aa48
 
 Only the outline of the text Und at 11px is rendered as document artwork. No font binary is distributed. FontTools 4.67.0 SVGPathPen; advance-width centering at x136, baseline80.
 
+Additional approved score labels: NimbusRoman-Italic.otf, Git blob a0ffd96879acd0d75a89503dd86c2661a3cf6ba6; SHA-256 b7c424e6cb79baddfcdcd9a9d87f9fc4fdd06f0e5160066e2b2e47bcd647c7b9. Outlines only: etc. at 12px, and linke H. / l. H. / rechte H. / rechte Hand at 11px. The same official URW copyright and license below apply. No runtime font fetch or font binary distribution.
+
 (URW)++,Copyright 2014 by (URW)++ Design & Development
 
 Official LICENSE:
