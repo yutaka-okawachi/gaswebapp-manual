@@ -26,7 +26,7 @@
   {"__exampleOrder":501,"de":"C nach Des","de_normalized":"c nach des","ja":"C を Des に","data":"M-2-5-399-pau&"},
   {"__exampleOrder":507,"de":"G-S.","de_normalized":"g-s.","ja":"G線で","data":"M-9-1-52-v1&"},
   {"__exampleOrder":513,"de":"Chor der Büßerinnen (20 ausgewählte Stimmen des II Chores in der ersten Reihe postiert)","de_normalized":"chor der buesserinnen (20 ausgewaehlte stimmen des ii chores in der ersten reihe postiert)","ja":"贖罪の女たちの合唱（第2合唱団から選ばれた20人の声楽家を，最前列に配置する）","data":"M-8-t2-843-chor2&"},
-  {"__exampleOrder":525,"de":"col legno gestrichen","de_normalized":"col legno gestrichen","ja":"弓の木の部分で弾く","data":"M-3-3-575-va,vc&"},
+  {"__exampleOrder":525,"de":"col legno gestrichen","de_normalized":"col legno gestrichen","ja":"弓の木の部分で弦を擦って弾く","data":"M-3-3-575-va,vc&"},
   {"__exampleOrder":533,"de":"D nach C, A nach G","de_normalized":"d nach c, a nach g","ja":"D を C に，A を G に","data":"M-2-3-434-pau&"},
   {"__exampleOrder":540,"de":"D nach Ges hoch","de_normalized":"d nach ges hoch","ja":"D を上の Ges に","data":"M-3-1-864-pau&"},
   {"__exampleOrder":550,"de":"Dämpfer allmählich ab","de_normalized":"daempfer allmaehlich ab","ja":"徐々にミュートをはずす","data":"M-8-t2-1465-va,vc,kb&"},

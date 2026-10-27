@@ -26,7 +26,7 @@
   {"__exampleOrder":501,"de":"C nach Des","de_normalized":"c nach des","ja":"C to D-flat.","en":"C to D-flat.","data":"M-2-5-399-pau&"},
   {"__exampleOrder":507,"de":"G-S.","de_normalized":"g-s.","ja":"On the G string.","en":"On the G string.","data":"M-9-1-52-v1&"},
   {"__exampleOrder":513,"de":"Chor der Büßerinnen (20 ausgewählte Stimmen des II Chores in der ersten Reihe postiert)","de_normalized":"chor der buesserinnen (20 ausgewaehlte stimmen des ii chores in der ersten reihe postiert)","ja":"Chorus of penitent women (20 selected singers from Chorus II, positioned in the front row)","en":"Chorus of penitent women (20 selected singers from Chorus II, positioned in the front row)","data":"M-8-t2-843-chor2&"},
-  {"__exampleOrder":525,"de":"col legno gestrichen","de_normalized":"col legno gestrichen","ja":"Play by drawing the wood of the bow across the strings.","en":"Play by drawing the wood of the bow across the strings.","data":"M-3-3-575-va,vc&"},
+  {"__exampleOrder":525,"de":"col legno gestrichen","de_normalized":"col legno gestrichen","ja":"Bow the strings with the wooden part of the bow.","en":"Bow the strings with the wooden part of the bow.","data":"M-3-3-575-va,vc&"},
   {"__exampleOrder":533,"de":"D nach C, A nach G","de_normalized":"d nach c, a nach g","ja":"D to C, A to G.","en":"D to C, A to G.","data":"M-2-3-434-pau&"},
   {"__exampleOrder":540,"de":"D nach Ges hoch","de_normalized":"d nach ges hoch","ja":"D to high G-flat.","en":"D to high G-flat.","data":"M-3-1-864-pau&"},
   {"__exampleOrder":550,"de":"Dämpfer allmählich ab","de_normalized":"daempfer allmaehlich ab","ja":"Gradually remove the mutes.","en":"Gradually remove the mutes.","data":"M-8-t2-1465-va,vc,kb&"},
