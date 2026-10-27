@@ -46,3 +46,11 @@ RS651のdeは `vielleicht pultweise derart zu teilen [[score:feuersnot-desk-divi
 RS782のjaは `4つのティンパニの配置： [[score:salome-timpani-layout]]`、enは `Arrangement of the four timpani: [[score:salome-timpani-layout]]` とする案をfixtureで確認しました。deは左右手の実テキストを維持するのでその語での検索を保持します。代替説明にも `linke H. / l. H. / rechte H. / rechte Hand` を明記します。左右を示す2つの（譜例）を残して画像を二重に追加することはしません。シートの文面変更はwriterがコード公開後に担当します。
 
 `node scripts/test-score-token-sync.js` は合成シートだけで一回読取のGAS出力と英語生成を実行し、生トークンの保持、IDを除いた検索値、etc.検索互換、辞書アンカーと構造化テキストを確認します。元データにトークンがない場合の正規化値・空白は変更しません。
+
+## 日英envelopeの正規化修復（2026-10-27）
+
+token移行後のData同期で `日英の元行が一致しません: GM:325:de_normalized` が発生した原因は、日本語JSONだけで検索用トークン除外を行い、同一取得の英語入力envelopeにシートの計算結果をそのまま格納していたことでした。`buildEnglishExportSource_` もGM/RW/RSのde_normalizedだけに同じ `scoreExampleSearchText()` を適用します。シート式・de/ja/en・用例等を変更せず、`validateEnglishSource` の厳密な文字・行数比較を維持します。
+
+回帰は描画・英語生成関数の直接呼出しだけでなく、合成シート一回読取→GAS export→実際のvalidateEnglishSource→bilingual.prepare全体を、旧データ・新トークン・部分移行で通します。envelopeのde/ja/data/page/de_normalizedやNotes出典の改変、行削除は引き続き拒否します。
+
+修正はGASのexportコードなので、ローカル修正だけで再取得しても直りません。標準DataモードはSite以外のモードと同様、GASソース差分があれば先にGASを更新し、ソースハッシュを検証してから新snapshotを取得します。準備完了後に利用者が修正版checkoutで `./sync-data.ps1 -Mode Data` を実行すればよく、別の先行モードや手動deployは不要です。認証・GAS編集差分等で停止した場合は表示理由を確認し、繰返し実行しません。こちらではsync-data（Check含む）・commit・push・deployを実行しません。

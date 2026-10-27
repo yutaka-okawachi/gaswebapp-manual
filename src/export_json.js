@@ -30,6 +30,8 @@ function buildEnglishExportSource_(tables, options) {
   tabs[name] = table.values.slice(1).map((values,index) => {
    const row = {__row:index+2};
    names.forEach(key => row[key] = values[table.englishColumns[key]] === undefined ? '' : values[table.englishColumns[key]]);
+   // Match the Japanese export's derived search field; raw de/ja/en and context stay verbatim.
+   if (Object.prototype.hasOwnProperty.call(row, 'de_normalized')) row.de_normalized = scoreExampleSearchText(row.de_normalized);
    return row;
   }).filter(row => name === 'GM' ? row.de || row.data : name === 'Notes' || EXPORT_SHEET_HEADERS[name].some(key => row[key] !== ''));
  });
