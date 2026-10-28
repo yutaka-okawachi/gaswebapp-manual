@@ -454,7 +454,8 @@ function generateDicListHtml(dicData, termsIndex, abbreviationIndex, dictionaryE
     const termIdAttr = termId ? ` id="${termId}"` : '';
     
     // translationにリンクを適用
-    const renderTranslation = part => termsIndex ? linkTermsInTranslation(part, termsIndex) : escapeHtmlWithBreaks(part);
+    const renderPlainTranslation = part => termsIndex ? linkTermsInTranslation(part, termsIndex) : escapeHtmlWithBreaks(part);
+    const renderTranslation = part => typeof renderDictionaryReferenceText === 'function' ? renderDictionaryReferenceText(part, renderPlainTranslation) : renderPlainTranslation(part);
     const linkedTranslation = typeof renderDictionaryNotationText === 'function'
       ? renderDictionaryNotationText(translation, german, source, language, renderTranslation) : renderTranslation(translation);
     

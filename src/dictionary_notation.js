@@ -1,3 +1,62 @@
+// Portable validation: Apps Script does not provide the browser URL constructor.
+function isSafeDictionaryReferenceUrl(value) {
+  const url=String(value??'');
+  if(url.length>8192 || /[\x00-\x20\x7f-\x9f\\<>"`\u200b-\u200f\u202a-\u202e\u2060-\u206f\ufeff]/.test(url) || /%(?![0-9a-f]{2})|%(?:0[0-9a-f]|1[0-9a-f]|7f)/i.test(url))return false;
+  const parsed=/^https?:\/\/([^/?#]+)(?:[/?#][\s\S]*)?$/i.exec(url);
+  if(!parsed || parsed[1].includes('@'))return false;
+  const authority=/^(\[[0-9a-f:]+\]|[^:]+)(?::([0-9]+))?$/i.exec(parsed[1]);
+  if(!authority || (authority[2]!==undefined && Number(authority[2])>65535))return false;
+  const host=authority[1];
+  if(host.startsWith('[')){
+    const address=host.slice(1,-1),parts=address.split('::');
+    if(parts.length>2 || address.includes(':::') || (address.startsWith(':')&&!address.startsWith('::')) || (address.endsWith(':')&&!address.endsWith('::')))return false;
+    const groups=address.split(':').filter(Boolean);
+    return groups.every(group=>/^[0-9a-f]{1,4}$/i.test(group)) && (parts.length===2?groups.length<8:groups.length===8);
+  }
+  if(/^[0-9.]+$/.test(host)){const parts=host.split('.');return parts.length===4 && parts.every(part=>/^\d{1,3}$/.test(part)&&Number(part)<=255);}
+  return host.length<=253 && host.replace(/\.$/,'').split('.').every(part=>/^[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?$/i.test(part));
+}
+
+// Only [plain label](http(s) URL) and plain web URLs are interpreted. Protected
+// spans never reach the internal-term linker; all source HTML stays literal.
+function renderDictionaryReferenceText(value,renderPlain) {
+  const text=String(value??''),escape=part=>String(part).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;');
+  const literal=part=>escape(part).replace(/\r?\n/g,'<br>');
+  const plain=typeof renderPlain==='function'?renderPlain:literal;
+  const starts=/<a\b[^>]*>[\s\S]*?<\/a\s*>|<[^>]*>|\[[^\]\r\n]*\]\(|https?:\/\//gi;
+  let html='',last=0,match;
+  while((match=starts.exec(text))){
+    html+=plain(text.slice(last,match.index));
+    const start=match.index;
+    let end=starts.lastIndex,url='',label='',valid=false;
+    if(match[0][0]==='['){
+      label=match[0].slice(1,-2);
+      let depth=1,index=end;
+      for(;index<text.length&&!/[\r\n]/.test(text[index]);index++){
+        if(text[index]==='(')depth++;
+        else if(text[index]===')'&&--depth===0)break;
+      }
+      if(depth===0){url=text.slice(end,index);end=index+1;valid=!!label.trim()&&!/[\x00-\x1f\x7f]/.test(label)&&text[start-1]!=='!';}
+      else end=index;
+    }else if(/^https?:/i.test(match[0])){
+      end=start+(text.slice(start).match(/^[^\s<>"`「」『』【】（）]+/)||[''])[0].length;
+      url=text.slice(start,end);
+      while(url){
+        if(/[.,;:!?。、，．！？]$/.test(url)){url=url.slice(0,-1);continue;}
+        const close=url.slice(-1),open={')':'(',']':'[','}':'{'}[close];
+        if(open&&url.split(close).length>url.split(open).length){url=url.slice(0,-1);continue;}
+        break;
+      }
+      label=url;end=start+url.length;
+      valid=!/[\w/:]/.test(text[start-1]||' ');
+    }
+    valid=valid&&isSafeDictionaryReferenceUrl(url);
+    html+=valid?'<a class="dictionary-reference-link" style="overflow-wrap:anywhere" href="'+escape(url)+'" target="_blank" rel="noopener noreferrer">'+escape(label)+'</a>':literal(text.slice(start,end));
+    last=end;starts.lastIndex=end;
+  }
+  return html+plain(text.slice(last));
+}
+
 // Add new approved artwork here, with semantic IDs and stable source context.
 const SCORE_EXAMPLE_REGISTRY = Object.freeze({
   'mahler-trill-chain': {renderer:'direction',kind:'gm325-example',data:'M-2-5-55-dir&'},
