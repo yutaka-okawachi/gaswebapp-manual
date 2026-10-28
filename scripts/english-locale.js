@@ -15,11 +15,21 @@ const phrases={
 };
 Object.assign(phrases,require('./english-phrases.json'));
 const keys=Object.keys(phrases).sort((a,b)=>b.length-a.length);
-function localizeText(value,missing){
+// Reviewed bilingual quotations in the approved Notes English text. New quotations
+// require an exact registry entry; arbitrary Japanese prose is never inferred as English.
+const approvedCitations=require('./english-approved-citations.json');
+function isEnglishWithJapaneseCitations(value) {
+ const text=String(value??'');let rest=text;
+ for(const citation of approvedCitations)rest=rest.split(citation).join(' ');
+ return rest!==text&&!JAPANESE.test(rest);
+}
+
+function localizeText(value,missing,allowCitations=false){
  const original=String(value??'');if(!JAPANESE.test(original))return original;let text=original;
  // This is navigation UI, not a Notes body. Preserve the source headword verbatim.
  const returnLabel=original.match(/^(\s*)「([^]+)」に戻る(\s*)$/);
  if(returnLabel)return returnLabel[1]+'Return to “'+returnLabel[2]+'”'+returnLabel[3];
+ if(allowCitations&&isEnglishWithJapaneseCitations(original))return original;
  const flat=text.trim().replace(/\s+/g,' ');if(phrases[flat])return text.replace(text.trim(),phrases[flat]);
  text=text.replace(/交響曲第(\d+)番([^（]+)（([^）]+)）/g,(_,n,key,year)=>'Symphony No. '+n+' ('+year+')');
  text=text.replace(/第([0-9IVX]+)幕/g,'Act $1').replace(/第([0-9IVX]+)楽章/g,'Movement $1').replace(/第([0-9]+)小節/g,'bar $1').replace(/(\d+)件(?:見つかりました|ありました|あります)?[。．]?/g,(_,n)=>n+(Number(n)===1?' entry':' entries'));
@@ -33,12 +43,12 @@ function localizeHtml(html,missing){
   if(/^<!--|^<style/i.test(token))return token;
   if(/^<script/i.test(token)){
    if(!/application\/ld\+json/i.test(token))return token;
-   return token.replace(/>([^]*)<\/script>/i,(_,body)=>{try{const data=JSON.parse(body);function walk(v,key){if(Array.isArray(v))return v.map(x=>walk(x,key));if(v&&typeof v==='object')return Object.fromEntries(Object.entries(v).map(([k,x])=>[k,walk(x,k)]));if(typeof v==='string'&&['name','description','headline','alternateName'].includes(key))return localizeText(v,missing);if(key==='inLanguage')return v==='ja'?'en':v;return v;}return '>'+JSON.stringify(walk(data))+'</script>';}catch{return '>'+body+'</script>';}});
+   return token.replace(/>([^]*)<\/script>/i,(_,body)=>{try{const data=JSON.parse(body);function walk(v,key){if(Array.isArray(v))return v.map(x=>walk(x,key));if(v&&typeof v==='object')return Object.fromEntries(Object.entries(v).map(([k,x])=>[k,walk(x,k)]));if(typeof v==='string'&&['name','description','headline','alternateName'].includes(key))return localizeText(v,missing,key==='description');if(key==='inLanguage')return v==='ja'?'en':v;return v;}return '>'+JSON.stringify(walk(data))+'</script>';}catch{return '>'+body+'</script>';}});
   }
   if(token.startsWith('<'))return token.replace(/\blang=(['"])ja\1/gi,'lang="en"').replace(/\b(title|alt|placeholder|aria-label|content)=(['"])([^]*?)\2/gi,(_,name,q,value)=>name+'='+q+localizeText(value,missing).replaceAll(q,q==='"'?'&quot;':'&#39;')+q);
-  return localizeText(token,missing);
+  return localizeText(token,missing,true);
  });
 }
-function browserSource(){return "'use strict';\nconst JAPANESE="+JAPANESE.toString()+",phrases="+JSON.stringify(phrases)+",keys="+JSON.stringify(keys)+";\n"+localizeText.toString()+"\n"+`(()=>{const missing=new Set();window.__ENGLISH_PREVIEW_MISSING__=missing;const translate=(v)=>localizeText(v,missing);function scan(root){if(!root)return;const walker=document.createTreeWalker(root,NodeFilter.SHOW_TEXT);const nodes=[];while(walker.nextNode()){const node=walker.currentNode;if(!['SCRIPT','STYLE','TEXTAREA'].includes(node.parentElement?.tagName)&&!node.parentElement?.closest('[data-language-switch]')&&JAPANESE.test(node.nodeValue))nodes.push(node);}for(const node of nodes)node.nodeValue=translate(node.nodeValue);for(const element of root.querySelectorAll?.('[title],[alt],[placeholder],[aria-label]')||[])for(const attr of ['title','alt','placeholder','aria-label'])if(element.hasAttribute(attr)&&JAPANESE.test(element.getAttribute(attr)))element.setAttribute(attr,translate(element.getAttribute(attr)));}const alertOriginal=window.alert;window.alert=(message)=>alertOriginal.call(window,translate(message));let scheduled=false;new MutationObserver(()=>{if(scheduled)return;scheduled=true;queueMicrotask(()=>{scheduled=false;scan(document.documentElement);});}).observe(document.documentElement,{subtree:true,childList:true,characterData:true});document.addEventListener('DOMContentLoaded',()=>scan(document.documentElement));})();`;
+function browserSource(){return "'use strict';\nconst JAPANESE="+JAPANESE.toString()+",phrases="+JSON.stringify(phrases)+",keys="+JSON.stringify(keys)+",approvedCitations="+JSON.stringify(approvedCitations)+";\n"+isEnglishWithJapaneseCitations.toString()+"\n"+localizeText.toString()+"\n"+`(()=>{const missing=new Set();window.__ENGLISH_PREVIEW_MISSING__=missing;const translate=(v,allowCitations=false)=>localizeText(v,missing,allowCitations);function scan(root){if(!root)return;const walker=document.createTreeWalker(root,NodeFilter.SHOW_TEXT);const nodes=[];while(walker.nextNode()){const node=walker.currentNode;if(!['SCRIPT','STYLE','TEXTAREA'].includes(node.parentElement?.tagName)&&!node.parentElement?.closest('[data-language-switch]')&&JAPANESE.test(node.nodeValue))nodes.push(node);}for(const node of nodes){if(node.parentElement?.closest('#abbrReturnLabel')&&/^\s*Return to “[^]+”\s*$/.test(node.nodeValue))continue;const translated=translate(node.nodeValue,!!node.parentElement?.closest('.translation'));if(translated!==node.nodeValue)node.nodeValue=translated;}for(const element of root.querySelectorAll?.('[title],[alt],[placeholder],[aria-label]')||[])for(const attr of ['title','alt','placeholder','aria-label'])if(element.hasAttribute(attr)&&JAPANESE.test(element.getAttribute(attr)))element.setAttribute(attr,translate(element.getAttribute(attr)));}const alertOriginal=window.alert;window.alert=(message)=>alertOriginal.call(window,translate(message));let scheduled=false;new MutationObserver(()=>{if(scheduled)return;scheduled=true;queueMicrotask(()=>{scheduled=false;scan(document.documentElement);});}).observe(document.documentElement,{subtree:true,childList:true,characterData:true});document.addEventListener('DOMContentLoaded',()=>scan(document.documentElement));})();`;
 }
 module.exports={JAPANESE,phrases,localizeText,localizeHtml,browserSource};

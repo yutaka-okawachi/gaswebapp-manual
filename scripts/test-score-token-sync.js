@@ -52,6 +52,18 @@ for(const scenario of ['legacy','partial']){
  for(const [tab,file]of [['GM','mahler'],['RW','richard_wagner'],['RS','richard_strauss']])assert.equal(batch.englishSource.tabs[tab][0].de_normalized,batch.files['mahler-search-app/data/'+file+'.json'][0].de_normalized,scenario+' aligns '+tab);
 }
 Object.assign(tables,initial);
+// Real one-read export -> full bilingual prepare -> publication gate. No production writes.
+for(const [body,expected]of [['The Japanese translation is “静かに” (“quietly”).',0],['「これは翻訳されていない日本語本文です。」 (a)',1],['English explanation with 未翻訳の本文。',1]]){
+ tables.Notes[1][2]=body;
+ const batch=JSON.parse(JSON.stringify(c.exportAllDataToJson({requestId:'citation-gate-fixture',includeEnglish:true})));
+ const unchanged=JSON.stringify(batch),built=bilingual.prepare(batch,batch.requestId);
+ assert.equal(JSON.stringify(batch),unchanged,'Citation handling never rewrites source values');
+ assert.equal(built.report.untranslated.length,expected);
+ if(expected)assert.throws(()=>bilingual.stage(built),/未翻訳表示/,'Real publication gate must reject untranslated text before any staging writes');
+ else assert.equal(built.english['en/mahler-search-app/data/dic_notes.json'][0][1],body,'Approved bilingual quotation survives the full export and build');
+}
+Object.assign(tables,JSON.parse(before));
+
 const plan=require('./sync/main').plan('Data',['src/export_json.js'],true);assert.equal(plan.deploy,true,'Data mode updates changed GAS source before fresh export');assert.equal(plan.data,true);
 
 console.log('Score-token sync: real bilingual gate/full prepare, 20 tamper/row-count rejections, legacy/token/partial one-read Notes/GM/RW/RS export, preserved raw tokens, Japanese/English search normalization and etc. compatibility, stable anchors and token-free structured data passed; no network or Sheet writes.');
