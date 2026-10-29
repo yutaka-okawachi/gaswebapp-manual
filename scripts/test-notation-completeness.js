@@ -48,13 +48,24 @@ let symbolRows=0,paths=0;
  c.matched=matched;vm.runInContext('let currentSearchResults=matched,currentSearchIndex=0;const SEARCH_BATCH_SIZE=50;let searchObserver=null;'+extractFunction(workPage,'loadMoreSearchResults')+';loadMoreSearchResults();',c);
  assert.equal(nodes.length,targets.length);for(const node of nodes){assert(!music.test(visible(node.innerHTML)));assert(kinds(node.innerHTML).length);paths++;}
  const notes=JSON.parse(read(prefix+'mahler-search-app/data/dic_notes.json')),note=notes.find(r=>r[0]==='anhalten'),before=JSON.stringify(notes);
- const html=c.renderDictionaryNotationText(note[1],note[0],note[2],language,c.escapeHtmlWithBreaks);assert.deepEqual(kinds(html),['short-pause']);assert.equal(restore(html),note[1]);
+ const expectedPauses=language==='en'?['short-pause','short-pause']:['short-pause'];
+ const html=c.renderDictionaryNotationText(note[1],note[0],note[2],language,c.escapeHtmlWithBreaks);assert.deepEqual(kinds(html),expectedPauses);assert.equal(restore(html),note[1]);
  for(const [heading,source,body]of [['other',note[2],note[1]],['anhalten','[RW: Oper]',note[1]],['anhalten',note[2],note[1].replace('nicht etwa eine Fermate','eine lange Fermate')]])assert.equal(kinds(c.renderDictionaryNotationText(body,heading,source,language)).length,0,'Strict dictionary quotation context');
- const unsafe='<script>alert(1)</script>\n'+note[1];assert(!c.renderDictionaryNotationText(unsafe,note[0],note[2],language).includes('<script>'));
+ const unsafe='<script>alert(1)</script>\n'+note[1]+'\n<img onerror="x"> & 𝄐';
+ const safe=c.renderDictionaryNotationText(unsafe,note[0],note[2],language,c.escapeHtmlWithBreaks);assert(!/<script>|<img onerror/.test(safe));assert.deepEqual(kinds(safe),expectedPauses);assert.equal(restore(safe),unsafe,'Escape both sides of the signs, preserve line breaks, and leave unrelated music symbols literal');
+ if(language==='en'){
+  const translation='Here the symbol 𝄐 indicates only a brief pause at the barline, not a fermata';assert(note[1].includes(translation));
+  for(const body of [note[1].replace(translation,translation.replace('brief','long')),translation,note[1].replace('nicht etwa eine Fermate','eine lange Fermate')]){
+   const rendered=c.renderDictionaryNotationText(body,note[0],note[2],language,c.escapeHtmlWithBreaks);assert.equal(kinds(rendered).length,body.includes('nicht etwa eine Fermate')?1:0,'Changed translation or missing approved quotation never authorises a second sign');assert.equal(restore(rendered),body);
+  }
+  assert.equal(kinds(c.renderDictionaryNotationText(note[1],note[0],note[2],'ja')).length,1,'The English bridge is language-specific');
+  const quote='𝄐 bedeutet hier nur ein kurzes Anhalten auf dem Taktstrich und nicht etwa eine Fermate.';
+  const reversed=translation+'\n'+quote;const rendered=c.renderDictionaryNotationText(reversed,note[0],note[2],language,c.escapeHtmlWithBreaks);assert.deepEqual(kinds(rendered),['short-pause'],'Only a following translation is approved');assert.equal(restore(rendered),reversed);
+ }
  window.appData.dic_notes=notes;assert(!music.test(visible(window.searchTermsLocal('anhalten'))));assert.equal(JSON.stringify(notes),before);
- c.oneDefinition=[note];vm.runInContext('renderDictionaryList(oneDefinition);',c);assert.equal(dynamicList.children.length,1);const body=dynamicList.children[0].children[1].innerHTML;assert.deepEqual(kinds(body),['short-pause']);assert.equal(restore(body),note[1],'Dynamic dictionary preserves source text and renders quotation');
+ c.oneDefinition=[note];vm.runInContext('renderDictionaryList(oneDefinition);',c);assert.equal(dynamicList.children.length,1);const body=dynamicList.children[0].children[1].innerHTML;assert.deepEqual(kinds(body),expectedPauses);assert.equal(restore(body),note[1],'Dynamic dictionary preserves source text and renders quotation');
  const dictionary=read(prefix+'mahler-search-app/dic.html'),position=dictionary.indexOf('<div class="row" id="term-anhalten">'),next=dictionary.indexOf('<div class="row" id=',position+1),section=dictionary.slice(position,next);
- assert.equal(kinds(section).filter(k=>k==='short-pause').length,1);assert(!music.test(visible(section)),'Generated dictionary definition uses same renderer');
+ assert.equal(kinds(section).filter(k=>k==='short-pause').length,expectedPauses.length);assert(!music.test(visible(section)),'Generated dictionary definition uses same renderer');
  const gm1550=all.GM.find(r=>r.data==='M-b1-t1-380-chor&'),score=window.formatGmTranslation(gm1550.ja,gm1550);assert.equal(kinds(score).filter(k=>k==='gm1550-example').length,1);
  const svg=decodeURIComponent(score.match(/src="data:image\/svg\+xml,([^"]*)"/)[1]);assert(svg.includes('M8 62 H212')&&!svg.includes('H131.6'));assert(svg.includes('data-pitch="G2"'));assert(!svg.includes('fill="white"'));
  }

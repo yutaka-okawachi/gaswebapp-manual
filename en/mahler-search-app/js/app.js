@@ -1226,14 +1226,23 @@ function renderDictionaryNotationText(text, german, source, language, renderText
     // Translation remains verbatim; one complete approved example follows it.
     return render(value)+' '+image;
   }
-  // Preserve the quotation and its explicit short-pause meaning; only draw its sign.
+  // Preserve the quotation and its explicit short-pause meaning; only draw its signs.
   const quote = '𝄐 bedeutet hier nur ein kurzes Anhalten auf dem Taktstrich und nicht etwa eine Fermate.';
   if (String(german ?? '').normalize('NFC').trim() === 'anhalten' && String(source ?? '').includes('[GM]') && value.includes(quote)) {
     const position = value.indexOf(quote), token = '𝄐';
     const label = language === 'en' ? 'Sign for a brief pause at the barline, without a sustained hold' : '小節線上の短い休止を示す記号（長く保持しない）';
     const svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 39 48" width="39" height="48"><path d="M5 28 C8 7 31 7 34 28" fill="none" stroke="black" stroke-width="2.3"/><circle cx="19.5" cy="27" r="2.5"/></svg>';
     const image = '<img class="gm-music-notation dictionary-music-notation" data-notation="short-pause" src="data:image/svg+xml,' + encodeURIComponent(svg) + '" width="39" height="48" alt="' + escape(label) + '" aria-label="' + escape(label) + '" title="' + token + '">';
-    return render(value.slice(0, position)) + image + render(value.slice(position + token.length));
+    const positions = [position];
+    const translation = 'Here the symbol 𝄐 indicates only a brief pause at the barline, not a fermata';
+    const translatedPosition = language === 'en' ? value.indexOf(translation, position + quote.length) : -1;
+    if (translatedPosition >= 0) positions.push(translatedPosition + 'Here the symbol '.length);
+    let last = 0, html = '';
+    for (const signPosition of positions) {
+      html += render(value.slice(last, signPosition)) + image;
+      last = signPosition + token.length;
+    }
+    return html + render(value.slice(last));
   }
   if (String(german ?? '').normalize('NFC').trim() !== heading || String(source ?? '').trim() !== '[RS: Qui]' || value !== String(german ?? '')) return render(value);
   const token = 'トレモロ音符', position = value.indexOf(token), english = language === 'en';

@@ -24,7 +24,7 @@ function restoreApprovedNotation(output,data){
   restored=restored.replace(/<dfn class="german">([\s\S]*?)<\/dfn>/g,(_,body)=>'<dfn class="german">'+body.replace(image,row[0].includes(token)?token:'/')+'</dfn>');
   restored=restored.replace(image,row[1].includes(token)?token:'/');
  }
- return restored.replace(/<img\b[^>]*data-notation="quarter-tremolo-three"[^>]*>/,'トレモロ音符').replace(/<img\b[^>]*data-notation="short-pause"[^>]*>/,'𝄐');
+ return restored.replace(/<img\b[^>]*data-notation="quarter-tremolo-three"[^>]*>/,'トレモロ音符').replace(/<img\b[^>]*data-notation="short-pause"[^>]*>/g,'𝄐');
 }
 function assertExactDocument(output,original,data){
  assert.equal(restoreApprovedNotation(output,data),original,'Only approved display substitutions change; all anchors, metadata, example links and source/translated text remain identical');
@@ -49,8 +49,10 @@ for(const language of ['ja','en']){
  assert(!/<text\b|font-family|<script\b|foreignObject|data-flag|augmentation-dot/.test(svg));
  assert(svg.includes('fill="black"'));assert(svg.includes('data-stem-direction="down"')); if(language==='en')assert(!/[\p{Script=Han}\p{Script=Hiragana}\p{Script=Katakana}]/u.test(image));
  const output=c.generateDicHtml(data,[],null,[],{language});const original=old.generateDicHtml(data,[],null,[],{language});
- assert.equal((output.match(/dictionary-music-notation/g)||[]).length,8);
- const pause=output.match(/<img\b[^>]*data-notation="short-pause"[^>]*>/)[0];
+ assert.equal((output.match(/dictionary-music-notation/g)||[]).length,language==='en'?9:8);
+ const pauses=output.match(/<img\b[^>]*data-notation="short-pause"[^>]*>/g);
+ assert.equal(pauses.length,language==='en'?2:1,'Only the approved quotation and its English translation receive pause signs');
+ if(language==='en')assert.equal(pauses[1],pauses[0],'The English translation uses exactly the same short-pause SVG and accessible label');
  assertExactDocument(output,original,data);
  assertTamperingRejected(output,original,data);
  for(const r of data)if(r[0]!==target[0]&&!r[0].startsWith('Ein Stab aus einem Glockenspiel')&&!/^(?:\/ bedeutet|\[\[score:heldenleben-portamento-)/.test(r[0]))assert.equal(c.renderDictionaryNotationText(r[0],r[0],r[2],language),c.escapeHtml(r[0]),'No unrelated dictionary notation is changed');
