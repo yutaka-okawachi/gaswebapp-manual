@@ -982,8 +982,8 @@
   ["Zweitaktig, zweitaktig","“In two-bar units.” In GM, it is written as “2 taktig.”","[RS: Juan], [RS: Dom]"],
   ["Zwischen Berg und tiefem Tal","Between mountain and deep valley.","[H: Sch]"],
   ["\"Fuchstanz\" vom Wilm Wilm mit Genehmigung des Verlegers Fritz Schuberth jun. Leipzig","This is a foxtrot by Wilm-Wilm (real name Wilhelm Wieninger), quoted with permission from the Leipzig publisher Fritz Schuberth jun. Hindemith renders Foxtrott in German as Fuchstanz.","[H: KM1-1]"],
-  ["/ bedeutet stets: starkes Portamento!","The symbol / always indicates a pronounced portamento!","[RS: Held]"],
-  ["/ bedeutet: von einem Ton zum andern schleifen (portamento) ","The symbol / indicates a slide from one note to the next (portamento).","[RS: Held]"],
+  ["[[score:heldenleben-portamento-slide]] bedeutet: von einem Ton zum andern schleifen (portamento) ","The symbol [[score:heldenleben-portamento-slide]] indicates a slide from one note to the next (portamento).","[RS: Held]"],
+  ["[[score:heldenleben-portamento-strong]] bedeutet stets: starkes Portamento!","The symbol [[score:heldenleben-portamento-strong]] always indicates a pronounced portamento!","[RS: Held]"],
   ["3 teilig","Divide (the strings) into three parts.","[B: 6]"],
   ["4tel Note im Jagdthema länger","Play the quarter note in the hunting theme longer.","[B: 4-2]"],
   ["5 volle Takte lang","For five full bars.","[RS: Dom]"]
