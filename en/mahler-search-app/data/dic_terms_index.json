@@ -749,11 +749,21 @@
   "bandes": {
     "id": "term-bandes",
     "exampleVariants": [
-      "Bande"
+      "Bande",
+      "Bänder",
+      "Bändern"
     ],
     "exampleVariantDetails": [
       {
         "form": "Bande",
+        "type": "名詞の格・数"
+      },
+      {
+        "form": "Bänder",
+        "type": "名詞の格・数"
+      },
+      {
+        "form": "Bändern",
         "type": "名詞の格・数"
       }
     ]
@@ -1712,7 +1722,10 @@
     "id": "term-die-g-saiten-der-zweiten-geigen-werden-auf-fis-hinabgestimmt-der-als-g-notierte-ton-klingt-demnach-fis",
     "original": "Die G-Saiten der zweiten Geigen werden auf fis hinabgestimmt; der als g notierte Ton klingt demnach fis."
   },
-  "die-nachschlaege-sind-bestimmt-aber-sehr-leicht-zu-markieren-und-so-immer": "term-die-nachschlaege-sind-bestimmt-aber-sehr-leicht-zu-markieren-und-so-immer",
+  "die-nachschlaege-sind-bestimmt-aber-sehr-leicht-und-schwach-zu-markieren-und-so-immer": {
+    "id": "term-die-nachschlaege-sind-bestimmt-aber-sehr-leicht-und-schwach-zu-markieren-und-so-immer",
+    "original": "Die Nachschläge sind bestimmt, aber sehr leicht und schwach zu markieren; und so immer."
+  },
   "die-onkels-ganz-die-mama": "term-die-onkels-ganz-die-mama",
   "die-orgel-sehr-schwach-zu-registrieren-so-dass-sie-durchgaengig-als-begleitend-und-die-streichinstrumente-als-fuehrend-erscheinen": {
     "id": "term-die-orgel-sehr-schwach-zu-registrieren-so-dass-sie-durchgaengig-als-begleitend-und-die-streichinstrumente-als-fuehrend-erscheinen",
@@ -1903,11 +1916,26 @@
   "dumpf": {
     "id": "term-dumpf",
     "exampleVariants": [
-      "dumpfe"
+      "dumpfe",
+      "dumpfen",
+      "dumpfes",
+      "dumpfer"
     ],
     "exampleVariantDetails": [
       {
         "form": "dumpfe",
+        "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "dumpfen",
+        "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "dumpfes",
+        "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "dumpfer",
         "type": "形容詞・副詞の変化"
       }
     ]
@@ -9070,6 +9098,18 @@
     "canonical": "Bandes",
     "type": "名詞の格・数"
   },
+  "baender": {
+    "id": "term-bandes",
+    "original": "Bänder",
+    "canonical": "Bandes",
+    "type": "名詞の格・数"
+  },
+  "baendern": {
+    "id": "term-bandes",
+    "original": "Bändern",
+    "canonical": "Bandes",
+    "type": "名詞の格・数"
+  },
   "bedeutet": {
     "id": "term-bedeuten",
     "original": "bedeutet",
@@ -9105,6 +9145,12 @@
     "original": "bedeutungsvoller",
     "canonical": "bedeutungsvoll",
     "type": "形容詞・副詞の変化"
+  },
+  "bedeutungsv": {
+    "id": "term-bedeutungsvoll",
+    "original": "bedeutungsv",
+    "canonical": "bedeutungsvoll",
+    "type": "該当なし"
   },
   "bedienten": {
     "id": "term-bediente",
@@ -9418,6 +9464,12 @@
     "canonical": "bloß",
     "type": "形容詞・副詞の変化"
   },
+  "blos": {
+    "id": "term-bloss",
+    "original": "blos",
+    "canonical": "bloß",
+    "type": "該当なし"
+  },
   "blumigem": {
     "id": "term-blumige",
     "original": "blumigem",
@@ -9613,6 +9665,24 @@
   "dumpfe": {
     "id": "term-dumpf",
     "original": "dumpfe",
+    "canonical": "dumpf",
+    "type": "形容詞・副詞の変化"
+  },
+  "dumpfen": {
+    "id": "term-dumpf",
+    "original": "dumpfen",
+    "canonical": "dumpf",
+    "type": "形容詞・副詞の変化"
+  },
+  "dumpfes": {
+    "id": "term-dumpf",
+    "original": "dumpfes",
+    "canonical": "dumpf",
+    "type": "形容詞・副詞の変化"
+  },
+  "dumpfer": {
+    "id": "term-dumpf",
+    "original": "dumpfer",
     "canonical": "dumpf",
     "type": "形容詞・副詞の変化"
   },
@@ -10539,6 +10609,12 @@
     "original": "Gestalten",
     "canonical": "Gestalt",
     "type": "名詞の格・数"
+  },
+  "gestoss": {
+    "id": "term-gestossen",
+    "original": "gestoss",
+    "canonical": "gestoßen",
+    "type": "分詞"
   },
   "teilen": {
     "id": "term-geteilt",
@@ -11620,6 +11696,12 @@
     "canonical": "Schalltrichter",
     "type": "名詞の格・数"
   },
+  "schalltr": {
+    "id": "term-schalltrichter",
+    "original": "Schalltr.",
+    "canonical": "Schalltrichter",
+    "type": "省略形"
+  },
   "scharfem": {
     "id": "term-scharf",
     "original": "scharfem",
@@ -11985,6 +12067,12 @@
     "original": "Sprunge",
     "canonical": "Sprung",
     "type": "該当なし"
+  },
+  "stabe": {
+    "id": "term-stab",
+    "original": "Stabe",
+    "canonical": "Stab",
+    "type": "名詞の格・数"
   },
   "stahlstaebe": {
     "id": "term-stahlstab",
@@ -12754,6 +12842,12 @@
     "canonical": "weglassen",
     "type": "分詞"
   },
+  "wegzulassen": {
+    "id": "term-weglassen",
+    "original": "wegzulassen",
+    "canonical": "weglassen",
+    "type": "該当なし"
+  },
   "wehmuetigem": {
     "id": "term-wehmuetig",
     "original": "wehmütigem",
@@ -13023,41 +13117,5 @@
     "original": "zurückkehrende",
     "canonical": "zurückkehren",
     "type": "分詞"
-  },
-  "bedeutungsv": {
-    "id": "term-bedeutungsvoll",
-    "original": "bedeutungsv",
-    "canonical": "bedeutungsvoll",
-    "type": "該当なし"
-  },
-  "blos": {
-    "id": "term-bloss",
-    "original": "blos",
-    "canonical": "bloß",
-    "type": "該当なし"
-  },
-  "gestoss": {
-    "id": "term-gestossen",
-    "original": "gestoss",
-    "canonical": "gestoßen",
-    "type": "分詞"
-  },
-  "stabe": {
-    "id": "term-stab",
-    "original": "Stabe",
-    "canonical": "Stab",
-    "type": "名詞の格・数"
-  },
-  "wegzulassen": {
-    "id": "term-weglassen",
-    "original": "wegzulassen",
-    "canonical": "weglassen",
-    "type": "該当なし"
-  },
-  "schalltr": {
-    "id": "term-schalltrichter",
-    "original": "Schalltr.",
-    "canonical": "Schalltrichter",
-    "type": "省略形"
   }
 }
