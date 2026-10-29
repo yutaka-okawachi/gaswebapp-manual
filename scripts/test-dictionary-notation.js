@@ -18,6 +18,12 @@ function restoreApprovedNotation(output,data){
  let restored=output.replace(/<dfn class="german">([\s\S]*?)<\/dfn>/g,(_,body)=>'<dfn class="german">'+body.replace(glockImage,note[0].includes(scoreToken)?scoreToken:'(の譜例)')+'</dfn>');
  if(note[1].includes(scoreToken))restored=restored.replace(glockImage,scoreToken);
  else restored=restored.replace(/ <img\b[^>]*data-notation="glockenspiel-fsharp5"[^>]*>/g,'');
+ for(const [id,kind,prefix]of [['heldenleben-portamento-strong','down','/ bedeutet stets:'],['heldenleben-portamento-slide','up','/ bedeutet:']]){
+  const token='[[score:'+id+']]',row=data.find(r=>r[0].startsWith(prefix)||r[0].startsWith(token));if(!row)continue;
+  const image=new RegExp('<img\\b[^>]*data-notation="portamento-wave-'+kind+'"[^>]*>','g');
+  restored=restored.replace(/<dfn class="german">([\s\S]*?)<\/dfn>/g,(_,body)=>'<dfn class="german">'+body.replace(image,row[0].includes(token)?token:'/')+'</dfn>');
+  restored=restored.replace(image,row[1].includes(token)?token:'/');
+ }
  return restored.replace(/<img\b[^>]*data-notation="quarter-tremolo-three"[^>]*>/,'トレモロ音符').replace(/<img\b[^>]*data-notation="short-pause"[^>]*>/,'𝄐');
 }
 function assertExactDocument(output,original,data){
@@ -43,11 +49,11 @@ for(const language of ['ja','en']){
  assert(!/<text\b|font-family|<script\b|foreignObject|data-flag|augmentation-dot/.test(svg));
  assert(svg.includes('fill="black"'));assert(svg.includes('data-stem-direction="down"')); if(language==='en')assert(!/[\p{Script=Han}\p{Script=Hiragana}\p{Script=Katakana}]/u.test(image));
  const output=c.generateDicHtml(data,[],null,[],{language});const original=old.generateDicHtml(data,[],null,[],{language});
- assert.equal((output.match(/dictionary-music-notation/g)||[]).length,4);
+ assert.equal((output.match(/dictionary-music-notation/g)||[]).length,8);
  const pause=output.match(/<img\b[^>]*data-notation="short-pause"[^>]*>/)[0];
  assertExactDocument(output,original,data);
  assertTamperingRejected(output,original,data);
- for(const r of data)if(r[0]!==target[0]&&!r[0].startsWith('Ein Stab aus einem Glockenspiel'))assert.equal(c.renderDictionaryNotationText(r[0],r[0],r[2],language),c.escapeHtml(r[0]),'No unrelated dictionary notation is changed');
+ for(const r of data)if(r[0]!==target[0]&&!r[0].startsWith('Ein Stab aus einem Glockenspiel')&&!/^(?:\/ bedeutet|\[\[score:heldenleben-portamento-)/.test(r[0]))assert.equal(c.renderDictionaryNotationText(r[0],r[0],r[2],language),c.escapeHtml(r[0]),'No unrelated dictionary notation is changed');
  assert(!c.renderDictionaryNotationText(row[1],row[0],row[2],language).includes('<img'),'Spelled-out tremolo references in explanations remain words');
  assert(!c.renderDictionaryNotationText(row[0],row[0],'[GM]',language).includes('<img'));
  assert(!c.renderDictionaryNotationText(row[0],row[0]+' altered',row[2],language).includes('<img'));

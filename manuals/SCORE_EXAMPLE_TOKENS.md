@@ -145,3 +145,18 @@ token移行後のData同期で `日英の元行が一致しません: GM:325:de_
 修正はGASのexportコードなので、ローカル修正だけで再取得しても直りません。標準DataモードはSite以外のモードと同様、GASソース差分があれば先にGASを更新し、ソースハッシュを検証してから新snapshotを取得します。準備完了後に利用者が修正版checkoutで `./sync-data.ps1 -Mode Data` を実行すればよく、別の先行モードや手動deployは不要です。認証・GAS編集差分等で停止した場合は表示理由を確認し、繰返し実行しません。こちらではsync-data（Check含む）・commit・push・deployを実行しません。
 
 上記修復節は当時の原因・対応方針を残した履歴です。修復後のData同期と公開確認は本書前半の引き継ぎ状態のとおり完了しています。今後の通常更新では[日常保守](DEVELOPER_GUIDE.md)のモード選択・検証手順を使い、この修復を新規導入の必須工程にしません。
+
+## ポルタメント記号（Notes，2026-10-29追加）
+
+《英雄の生涯》の脚注を実見し，印刷220頁の右下がりの長い波線と，印刷210頁の右上がりの短い波線を区別して登録しています。
+
+| 対象文 | 意味ID | 図形 |
+| --- | --- | --- |
+| `/ bedeutet stets: starkes Portamento!` | `heldenleben-portamento-strong` | 右下がりの長い波線 |
+| `/ bedeutet: von einem Ton zum andern schleifen (portamento)` | `heldenleben-portamento-slide` | 右上がりの短い波線 |
+
+両者とも出典 `[RS: Held]` と原文全文で照合し，行番号は条件に使いません。de・ja・en の `/` だけを対応する `[[score:...]]` に置き換えます。ja_old はバックアップなので変更しません。旧データの先頭 `/`（英語は `The symbol /`）にも限定した表示互換があります。記号始まりの項目として，日英ともアルファベットの後にある「数字・記号」／`Other` に配置します。辞書アンカーと検索用の `/` は維持します。
+
+参照譜：[印刷220頁／PDF44頁](https://s9.imslp.org/files/imglnks/usimg/3/3e/IMSLP19168-PMLP04982-Strauss_-_Ein_Heldenleben%2C_Op._40_%28orch._score%29.pdf#page=44)，[印刷210頁／PDF34頁](https://s9.imslp.org/files/imglnks/usimg/3/3e/IMSLP19168-PMLP04982-Strauss_-_Ein_Heldenleben%2C_Op._40_%28orch._score%29.pdf#page=34)。波線の方向は脚注の見た目を再現したもので，訳文の適用を上行・下行のみに限定する変更ではありません。
+
+検証は `node scripts/test-notes-portamento.js`。静的・動的辞書の末尾配置，日英，旧・新・部分移行，異なる出典への非適用，行移動，検索・アンカー互換を確認します。公開時は上記のコード先行・シート変更・Data同期の順序に従ってください。
