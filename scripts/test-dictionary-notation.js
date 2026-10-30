@@ -77,4 +77,4 @@ for(const language of ['ja','en'])for(const scenario of ['legacy','token','parti
  assert.equal(JSON.stringify(data),fixtureBefore,'Fixture remains canonical: '+language+' '+scenario);checks+=9;
 }
 assert.equal(JSON.stringify(notes),before);
-console.log('Dictionary notation: '+checks+' checks; exact Notes21 quotation, one quarter note/three strokes, language alt text, 988-entry isolation, exact full-document legacy/token/partial fixtures in both languages, 50 anchor/metadata/example-link/source/translation tamper rejections, canonical data and safe escaping passed. Don Quixote reference-score footnote verified (PDF32/printed p.224).');
+console.log('Dictionary notation: '+checks+' checks; exact Notes21 quotation, one quarter note/three strokes, language alt text, '+notes.length+'-entry isolation, exact full-document legacy/token/partial fixtures in both languages, 50 anchor/metadata/example-link/source/translation tamper rejections, canonical data and safe escaping passed. Don Quixote reference-score footnote verified (PDF32/printed p.224).');

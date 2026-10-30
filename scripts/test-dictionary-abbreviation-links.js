@@ -135,10 +135,14 @@ assert.strictEqual(
 );
 
 const regeneratedTermsIndex = context.generateDicTermsIndex(dictionaryNotes);
+// The index keeps the first headword for each normalized key, including punctuation variants.
+const canonicalHeadwords = new Map();
 dictionaryNotes.forEach(row => {
   const original = String(row[0] || '');
   const normalizedId = context.normalizeForId(original);
-  if (!normalizedId || !regeneratedTermsIndex[normalizedId]) return;
+  if (normalizedId && !canonicalHeadwords.has(normalizedId)) canonicalHeadwords.set(normalizedId, original);
+});
+canonicalHeadwords.forEach((original, normalizedId) => {
   const entry = regeneratedTermsIndex[normalizedId];
   if (original.includes('.')) {
     assert.strictEqual(typeof entry, 'object', `dotted term should retain its spelling: ${original}`);
@@ -151,6 +155,15 @@ dictionaryNotes.forEach(row => {
     assert.strictEqual(typeof entry, 'string', `ordinary term format changed: ${original}`);
   }
 });
+for (const originals of [['Fixture phrase', 'Fixture phrase.'], ['Fixture phrase.', 'Fixture phrase']]) {
+  const index = context.generateDicTermsIndex(originals.map(original => [original, 'fixture', '[GM]']));
+  const normalizedId = context.normalizeForId(originals[0]);
+  const expected = originals[0].includes('.')
+    ? { id: `term-${normalizedId}`, original: originals[0] }
+    : `term-${normalizedId}`;
+  assert.deepStrictEqual(JSON.parse(JSON.stringify(index[normalizedId])), expected,
+    'Punctuation variants retain the first headword in either order');
+}
 assert.strictEqual(
   context.linkTermsInTranslation('rasch.', { rasch: 'term-rasch' }),
   '<a href="#term-rasch" class="term-link">rasch</a>.'
