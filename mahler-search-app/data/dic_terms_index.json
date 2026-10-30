@@ -4506,7 +4506,7 @@
   "intensiv": "term-intensiv",
   "irrwegen": "term-irrwegen",
   "jagd": "term-jagd",
-  "jagthoerner": "term-jagthoerner",
+  "jagdhoerner": "term-jagdhoerner",
   "jaeh": "term-jaeh",
   "jaemmerlich": "term-jaemmerlich",
   "je-nach": "term-je-nach",
@@ -4546,7 +4546,18 @@
   "kammerlakai": "term-kammerlakai",
   "kaprizioes": "term-kaprizioes",
   "kaum": "term-kaum",
-  "keck": "term-keck",
+  "keck": {
+    "id": "term-keck",
+    "exampleVariants": [
+      "kecker"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "kecker",
+        "type": "比較級"
+      }
+    ]
+  },
   "keifend": {
     "id": "term-keifend",
     "exampleVariants": [
@@ -5396,7 +5407,6 @@
   "nb": "term-nb",
   "nb-2te-trompete-und-1tes-2tes-horn-immer-marcirt-bis-zum-legato": "term-nb-2te-trompete-und-1tes-2tes-horn-immer-marcirt-bis-zum-legato",
   "nb-bei-den-streichern-sind-die-stricharten-genau-einzuhalten": "term-nb-bei-den-streichern-sind-die-stricharten-genau-einzuhalten",
-  "nb-das-dritte-und-vierte-hoernerpaar-uebernehmer-die-tuben": "term-nb-das-dritte-und-vierte-hoernerpaar-uebernehmer-die-tuben",
   "nb-die-erste-trompete-kann-im-notfalle-auch-die-unteren-noten-nehmen": {
     "id": "term-nb-die-erste-trompete-kann-im-notfalle-auch-die-unteren-noten-nehmen",
     "original": "NB Die erste Trompete Kann im Notfalle auch die unteren Noten nehmen."
@@ -5762,17 +5772,12 @@
   "rufen": {
     "id": "term-rufen",
     "exampleVariants": [
-      "rufend",
-      "ruhen"
+      "rufend"
     ],
     "exampleVariantDetails": [
       {
         "form": "rufend",
         "type": "分詞"
-      },
-      {
-        "form": "ruhen",
-        "type": "該当なし"
       }
     ]
   },
@@ -6463,7 +6468,7 @@
     "id": "term-sollte-diese-ganze-stelle-bis-zum-a-tempo-vor-o-vom-contrafagott-nicht-wirklich-pp-ausgefuehrt-werden-koennen-so-bittet-der-componist-die-ganze-stelle-vom-ii-fagott-das-natuerlich-dann-eine-oktave-hoeher-klingt-blasen-zu-lassen-das-contrafagott-moege-nur-dann-eintreten-wenn-z-b-13-takte-nach-m-das-zweite-fagott-den-bass-verdoppelt-ein-takt-vor-m-moege-dann-die-zweite-clarinette-die-stelle-des-zweiten-fagotts-uebernehmen",
     "original": "Sollte diese ganze Stelle bis zum a tempo vor O vom Contrafagott nicht wirklich pp ausgeführt werden können, so bittet der Componist; die ganze Stelle vom II. Fagott (das natürlich dann eine Oktave höher klingt)  blasen zu lassen; das Contrafagott möge nur dann eintreten, wenn z. B. 13 Takte nach M das zweite Fagott den Bass verdoppelt; ein Takt vor M möge dann die zweite Clarinette die Stelle des zweiten Fagotts übernehmen."
   },
-  "solo-vom-einem-verzutragen": "term-solo-vom-einem-verzutragen",
+  "solo-von-einem-vorzutragen": "term-solo-von-einem-vorzutragen",
   "sonnenaufgang": "term-sonnenaufgang",
   "sonnenuntergang": "term-sonnenuntergang",
   "sorgfaeltig": "term-sorgfaeltig",
@@ -11030,6 +11035,12 @@
     "canonical": "jeder",
     "type": "形容詞・副詞の変化"
   },
+  "kecker": {
+    "id": "term-keck",
+    "original": "kecker",
+    "canonical": "keck",
+    "type": "比較級"
+  },
   "kellnern": {
     "id": "term-kellner",
     "original": "Kellnern",
@@ -11659,12 +11670,6 @@
     "original": "rufend",
     "canonical": "rufen",
     "type": "分詞"
-  },
-  "ruhen": {
-    "id": "term-rufen",
-    "original": "ruhen",
-    "canonical": "rufen",
-    "type": "該当なし"
   },
   "ruhige": {
     "id": "term-ruhig",

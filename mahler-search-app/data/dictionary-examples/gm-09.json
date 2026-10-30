@@ -146,7 +146,7 @@
   {"__exampleOrder":2140,"de":"sich gänzlich verlierend","de_normalized":"sich gaenzlich verlierend","ja":"完全に消えていく","data":"M-2-1-141-kb&M-3-1-245-all&M-d-d01-30-v1,v2,va,vc&M-d-d01-61-v1,v2,vc&M-d-d01-62-va&"},
   {"__exampleOrder":2169,"de":"Sord. auf","de_normalized":"sord. auf","ja":"ミュートをつける","data":"M-9-1-242-pos,bt&"},
   {"__exampleOrder":2204,"de":"stets pp aber mit größtem Ausdruck","de_normalized":"stets pp aber mit groesstem ausdruck","ja":"変わらずppのままであるが，最大限の情感をもって","data":"M-a-1-215-v1&"},
-  {"__exampleOrder":2209,"de":"Straffer im Tempo","de_normalized":"straffer im tempo","ja":"より厳格なテンポで","data":"M-9-4-13-all&"},
+  {"__exampleOrder":2209,"de":"Straffer im Tempo","de_normalized":"straffer im tempo","ja":"テンポをより引き締めて","data":"M-9-4-13-all&"},
   {"__exampleOrder":2220,"de":"Tasto solo","de_normalized":"tasto solo","ja":"足鍵盤を用いず，手鍵盤だけで演奏する","data":"M-8-t2-1277-org&M-8-t2-1372-org&"},
   {"__exampleOrder":2224,"de":"Tempo des Anfangs der Symphonie","de_normalized":"tempo des anfangs der symphonie","ja":"交響曲の最初のテンポで","data":"M-102-5-284-all&"},
   {"__exampleOrder":2235,"de":"tief E nach G","de_normalized":"tief e nach g","ja":"下の E を G に","data":"M-2-1-373-pau&"},

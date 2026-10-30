@@ -146,7 +146,7 @@
   {"__exampleOrder":2188,"de":"Stetig steigernd","de_normalized":"stetig steigernd","ja":"絶え間なく（感情などを）高めて","data":"M-e-e5-73-all&"},
   {"__exampleOrder":2195,"de":"stets etwas hervortretend","de_normalized":"stets etwas hervortretend","ja":"常にいくらか目立たせて","data":"M-7-3-192-fg&M-8-t2-726-sv&"},
   {"__exampleOrder":2198,"de":"stets in der Ferne","de_normalized":"stets in der ferne","ja":"常に遠方で","data":"M-6-4-254-gl&"},
-  {"__exampleOrder":2210,"de":"Straffer im Tempo, allmählich in Halbe übergehen","de_normalized":"straffer im tempo, allmaehlich in halbe uebergehen","ja":"より厳格なテンポで，徐々に二分音符で拍を取るように移行していく","data":"M-6-4-586-all&"},
+  {"__exampleOrder":2210,"de":"Straffer im Tempo, allmählich in Halbe übergehen","de_normalized":"straffer im tempo, allmaehlich in halbe uebergehen","ja":"テンポをより引き締めて，徐々に二分音符で拍を取るように移行していく","data":"M-6-4-586-all&"},
   {"__exampleOrder":2211,"de":"strahlend","de_normalized":"strahlend","ja":"光り輝いて","data":"M-7-5-506-tr&"},
   {"__exampleOrder":2227,"de":"Tempo III. (Ländler, ganz langsam)","de_normalized":"tempo iii. (laendler, ganz langsam)","ja":"Tempo III.（レントラー，たいへんゆっくりと）","data":"M-9-2-218-all&M-9-2-333-all&"},
   {"__exampleOrder":2323,"de":"Von hier an aber wieder Viertel ausschlagen","de_normalized":"von hier an aber wieder viertel ausschlagen","ja":"しかしここからはふたたび4分音符単位で振る","data":"M-b2-t2-311-all&"},
