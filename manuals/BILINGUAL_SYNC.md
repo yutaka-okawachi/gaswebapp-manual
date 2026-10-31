@@ -20,6 +20,14 @@
 
 キャッシュのないCIでは、コミット済みの日本語 `score_metadata.js` からB列リンクだけを承継し、それ以外の楽譜情報は現在の `frontend/score-metadata.js` を使います。キャッシュの有無にかかわらず同じ形式で生成し、B列が将来更新された場合もCIで旧リンクに戻しません。認証付きsnapshotがある通常同期では、その取得時のB列を優先します。英語C列をこの日本語投影へ含めません。
 
+## Notesの楽譜PDF頁案内（2026-10-31，公開準備）
+
+Notesの日英本文にある楽譜参照ラベルはシートを正本とし，元の印刷頁とURLを保ったまま，ファイル先頭から数えた通し頁を日本語では「PDF ○頁」，英語では「PDF p. N」と記します。既存PNGへの参照は画像と明記します。サイト側で頁ラベルを重ねて追加しません。
+
+辞書ページ上部には通し頁と印刷頁の違いを一度だけ表示します。「指定頁へ移動しない場合」／「If the link does not jump to the page」を開くと，PDF閲覧画面のページ移動・サムネイル，印刷頁を使うページラベルとの区別，PCのChrome／EdgeのPDF表示設定について確認できます。開閉は標準の `details`／`summary` で，キーボードでも操作できます。自動移動の挙動は端末・ブラウザー・閲覧ソフトに依存し，Safari等の実機確認済みとは扱いません。
+
+生成元は `src/generate_dic_html.js`，英語案内は `scripts/english-phrases.json`，回帰検査は `node scripts/test-notes-pdf-guide.js` です。既存の本文・資料URL・譜例・帰還リンクを維持します。新しい楽譜画像・PDF・ビューアは追加しません。画像表示は権利を確認できた版から使う方針で，今回のDuett／Bruckner第5番の新画像は権利確認まで公開保留です。この準備ではsync-data（Check含む）・commit・push・GAS更新・公開・共有設定変更を行いません。
+
 ## 非公開の境界
 
 `scripts/english-publication.json` のpublishEnglishとenglishReleaseApprovedは英語公開時にともにtrueへ変更します。両方trueの場合だけ英語を公開対象にできます。一方だけtrue、不明なキー、同期途中の設定変更は停止します。.sync-stateキャッシュは常にGit対象外です。ゲート閉鎖中の英語出力先はGit対象外の `.sync-state/english/<buildHash>/` であり、公開enディレクトリは作りません。

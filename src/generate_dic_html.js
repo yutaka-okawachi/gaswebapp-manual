@@ -1048,6 +1048,24 @@ ${breadcrumbJSON}
             }
         }
 
+        .dictionary-score-help {
+            font-size: 0.85rem;
+            color: #555;
+            margin-bottom: 1em;
+            overflow-wrap: anywhere;
+        }
+
+        .dictionary-score-help p {
+            margin: 0.5em 0;
+        }
+
+        .dictionary-score-help summary {
+            cursor: pointer;
+            padding: 0.5em 0;
+            min-height: 44px;
+            box-sizing: border-box;
+        }
+
         /* Info Notice Box */
         .info-notice {
             background-color: #f0f7ff;
@@ -1662,6 +1680,15 @@ ${breadcrumbJSON}
                 スコアで確認したドイツ語の一般的な意味，音楽用語としての訳例・コメント・出典を一覧で確認可能．アルファベットから用語を探し，「実例を見る」から各作曲家の検索結果へ移動可能．
             </p>
             <p class="page-description" style="font-size: 0.85rem; color: #555; margin-top: 0; margin-bottom: 1em;">※「実例を見る」は，Richard Strauss についてはオペラのみ対応．</p>
+
+            <div class="page-description dictionary-score-help">
+                <p>楽譜の「PDF ○頁」は，ファイル先頭から数えたページです（印刷頁とは異なる場合があります）．</p>
+                <details>
+                    <summary>指定頁へ移動しない場合</summary>
+                    <p>PDF閲覧画面のページ移動機能やサムネイルで，ファイル先頭から数えたその頁を開いてください．閲覧画面のページラベルが印刷頁になっている場合は，通し頁と区別してください．</p>
+                    <p>PCでダウンロード後にAcrobatなどが開く場合は，Chrome／EdgeでPDFをブラウザー内で開く設定も確認できます．自動移動の動作は端末・ブラウザー・閲覧ソフトにより異なります．</p>
+                </details>
+            </div>
 
             <!-- Info Notice Section -->
             <div class="info-notice">

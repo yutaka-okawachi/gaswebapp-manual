@@ -317,5 +317,9 @@
   "管理者モード：解析・検索記録 OFF": "Admin mode: analytics and search logging OFF",
   "管理者モード：解析・通知・検索履歴 OFF\n未登録語候補のみ ON": "Admin mode: analytics, notifications and search history OFF\nUnregistered-term candidates only ON",
   "選択した作品：": "Selected works:",
-  "選択した楽器：": "Selected instruments:"
+  "選択した楽器：": "Selected instruments:",
+  "楽譜の「PDF ○頁」は，ファイル先頭から数えたページです（印刷頁とは異なる場合があります）．": "“PDF p. N” counts pages from the start of the file and may differ from the printed page number.",
+  "指定頁へ移動しない場合": "If the link does not jump to the page",
+  "PDF閲覧画面のページ移動機能やサムネイルで，ファイル先頭から数えたその頁を開いてください．閲覧画面のページラベルが印刷頁になっている場合は，通し頁と区別してください．": "Use the PDF viewer’s page navigation or thumbnails to open that page, counting from the start of the file. If the viewer uses printed page labels, distinguish these from the page count.",
+  "PCでダウンロード後にAcrobatなどが開く場合は，Chrome／EdgeでPDFをブラウザー内で開く設定も確認できます．自動移動の動作は端末・ブラウザー・閲覧ソフトにより異なります．": "If PDFs download and open in Acrobat or another desktop app, you can also check the setting for opening PDFs within Chrome or Edge. Automatic page navigation varies by device, browser, and PDF viewer."
 }
