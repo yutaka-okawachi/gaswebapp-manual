@@ -47,6 +47,7 @@
       }
     ]
   },
+  "accelerando-bis-fest-im-gewonnenen-lebhaften-zeitmass": "term-accelerando-bis-fest-im-gewonnenen-lebhaften-zeitmass",
   "achtel": {
     "id": "term-achtel",
     "exampleVariants": [
@@ -2857,7 +2858,6 @@
       }
     ]
   },
-  "fest-im-gewonnenen-lebhaften-zeitmass": "term-fest-im-gewonnenen-lebhaften-zeitmass",
   "festes-zeitmass-maessig-langsam": "term-festes-zeitmass-maessig-langsam",
   "feurig": {
     "id": "term-feurig",
