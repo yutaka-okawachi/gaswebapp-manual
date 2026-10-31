@@ -57,6 +57,12 @@ function publicTemplatePaths(directory){
   else if(/\.(html|js|css)$/.test(file)&&!/_test\.html$/.test(file)&&!file.endsWith('/release.json'))result.push(file);
  }}walk('mahler-search-app');return result;
 }
+function versionScoreViewer(html,directory){
+ const file=path.join(directory,'mahler-search-app','js','notes-score-viewer.js');
+ if(!fs.existsSync(file))return html;
+ const version=core.sha256(core.normalizeText(fs.readFileSync(file,'utf8'))).slice(0,12);
+ return html.replace(/(src=["']js\/notes-score-viewer\.js)(?:\?v=[^"']*)?(["'])/g,'$1?v='+version+'$2');
+}
 function prepare(snapshot,requestId,previous={},allowRemoval=false,options={}){
  const directory=options.root||core.root;
  const synopsis=require('../synopsis-links'),baseMetadata=synopsis.readBaseMetadata(core.root);
@@ -70,7 +76,7 @@ function prepare(snapshot,requestId,previous={},allowRemoval=false,options={}){
    // The mirror retains the shared body/CSS/operations. Relative links resolve within en/.
    const script=file.includes('/')?'js/english-locale.js':'mahler-search-app/js/english-locale.js';
    const template=/(?:rw|rs)_synopsis\.html$/.test(file)?synopsis.rewriteList(String(value),baseMetadata,projectedMetadata,'en'):String(value);
-   const html=site.localizeHtml(template).replace(/<head([^>]*)>/i,'<head$1><script>window.__SITE_LANGUAGE__="en";</script><script src="'+script+'"></script>')
+   const html=versionScoreViewer(site.localizeHtml(template),directory).replace(/<head([^>]*)>/i,'<head$1><script>window.__SITE_LANGUAGE__="en";</script><script src="'+script+'"></script>')
     .replaceAll('https://yutaka-okawachi.github.io/gaswebapp-manual/','https://yutaka-okawachi.github.io/gaswebapp-manual/en/');
    english['en/'+file]=languages.decorateHtml(html.replace(/\/en\/(favicon\.png|apple-touch-icon\.png|ogp\.png)/g,'/$1'),{language:'en',englishEnabled:true,file,targetAliases:languages.buildTargetAliases(source)});
   }else english['en/'+file]=Buffer.isBuffer(value)?value.toString('utf8'):value;
@@ -117,4 +123,4 @@ function refreshStage(options={}){
  }
  return stage(prepare(snapshot,snapshot.requestId,{},false,{root:directory}),{root:directory});
 }
-module.exports={publicationTicket,assertPolicyUnchanged,publicationPolicy,englishEnabled,assertPublicTree,assertReleaseManifest,validateEnglishSource,prepare,stage,refreshStage};
+module.exports={publicationTicket,assertPolicyUnchanged,publicationPolicy,englishEnabled,assertPublicTree,assertReleaseManifest,validateEnglishSource,versionScoreViewer,prepare,stage,refreshStage};

@@ -64,7 +64,7 @@ let symbolRows=0,paths=0;
  }
  window.appData.dic_notes=notes;assert(!music.test(visible(window.searchTermsLocal('anhalten'))));assert.equal(JSON.stringify(notes),before);
  c.oneDefinition=[note];vm.runInContext('renderDictionaryList(oneDefinition);',c);assert.equal(dynamicList.children.length,1);const body=dynamicList.children[0].children[1].innerHTML;assert.deepEqual(kinds(body),expectedPauses);assert.equal(restore(body),note[1],'Dynamic dictionary preserves source text and renders quotation');
- const dictionary=read(prefix+'mahler-search-app/dic.html'),position=dictionary.indexOf('<div class="row" id="term-anhalten">'),next=dictionary.indexOf('<div class="row" id=',position+1),section=dictionary.slice(position,next);
+  const dictionary=read(prefix+'mahler-search-app/dic.html'),position=dictionary.indexOf('<div class="row" id="term-anhalten"'),next=dictionary.indexOf('<div class="row" id=',position+1),section=dictionary.slice(position,next);assert(position>=0&&next>position,'Find the exact stable definition ID, allowing additional safe row attributes');
  assert.equal(kinds(section).filter(k=>k==='short-pause').length,expectedPauses.length);assert(!music.test(visible(section)),'Generated dictionary definition uses same renderer');
  const gm1550=all.GM.find(r=>r.data==='M-b1-t1-380-chor&'),score=window.formatGmTranslation(gm1550.ja,gm1550);assert.equal(kinds(score).filter(k=>k==='gm1550-example').length,1);
  const svg=decodeURIComponent(score.match(/src="data:image\/svg\+xml,([^"]*)"/)[1]);assert(svg.includes('M8 62 H212')&&!svg.includes('H131.6'));assert(svg.includes('data-pitch="G2"'));assert(!svg.includes('fill="white"'));
