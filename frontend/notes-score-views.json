@@ -1,4 +1,554 @@
 {
   "schemaVersion": 1,
-  "items": []
+  "items": [
+    {
+      "id": "rs-domestica-pauke-fis",
+      "match": {
+        "heading": "Wenn die Pauke nicht genau auf die Höhe des obern Fis zu bringen, dann die Stelle ganz weglassen!",
+        "source": "[RS: Dom]"
+      },
+      "title": {
+        "ja": "R. Strauss《Symphonia domestica》Bote & Bock版（1904）",
+        "en": "R. Strauss, Symphonia domestica, Bote & Bock edition (1904)"
+      },
+      "credit": {
+        "ja": "出典：IMSLP #13130．Bote & Bock，1904年版，plate 15613．原PDFから忠実に画像化．",
+        "en": "Source: IMSLP #13130. Bote & Bock, 1904 edition, plate 15613. Faithful rendering of the original PDF."
+      },
+      "rightsRecordId": "rs-domestica-pauke-fis-rights",
+      "pages": [
+        {
+          "id": "pdf-9",
+          "pdfUrl": "https://s9.imslp.org/files/imglnks/usimg/d/d8/IMSLP13130-Strauss-Sinfonia_Domestica,_Op.53.pdf#page=9",
+          "printedPage": "9",
+          "sourcePdfSha256": "4d9c4079fb3802b04fddb62d9fe27836773cd439d8f27b4069b42b6fed038288",
+          "full": {
+            "path": "images/score-pages/rs-domestica-bote-bock1904/page-9.png",
+            "width": 1323,
+            "height": 1872,
+            "sha256": "d85b33c84ef7ee5b17cac9a9393b1950e6dcb7f5f410259ad569e06da7ca3ab7",
+            "render": {
+              "dpi": 160,
+              "clipPointsXyxy": null
+            }
+          },
+          "excerpt": {
+            "path": "images/score-pages/rs-domestica-bote-bock1904/detail-9.png",
+            "width": 1816,
+            "height": 689,
+            "sha256": "3478126d4a8b19b363246f8abeed0ef3009d54fac1f56d3fe5396e2f4a12aaf4",
+            "render": {
+              "dpi": 240,
+              "clipNormalizedXyxy": [
+                0.035,
+                0.68,
+                0.95,
+                0.925
+              ],
+              "clipPointsXyxy": [
+                20.825000000000003,
+                572.5600000000001,
+                565.25,
+                778.85
+              ],
+              "clipPixelsXywh": [
+                69,
+                1908,
+                1816,
+                689
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "rs-domestica-deutlicher-ausdrucksvoller",
+      "match": {
+        "heading": "etwas deutlicher u. allmälich ausdrucksvoller",
+        "source": "[RS: Dom]"
+      },
+      "title": {
+        "ja": "R. Strauss《Symphonia domestica》Bote & Bock版（1904）",
+        "en": "R. Strauss, Symphonia domestica, Bote & Bock edition (1904)"
+      },
+      "credit": {
+        "ja": "出典：IMSLP #13130．Bote & Bock，1904年版，plate 15613．原PDFから忠実に画像化．",
+        "en": "Source: IMSLP #13130. Bote & Bock, 1904 edition, plate 15613. Faithful rendering of the original PDF."
+      },
+      "rightsRecordId": "rs-domestica-deutlicher-ausdrucksvoller-rights",
+      "pages": [
+        {
+          "id": "pdf-13",
+          "pdfUrl": "https://s9.imslp.org/files/imglnks/usimg/d/d8/IMSLP13130-Strauss-Sinfonia_Domestica,_Op.53.pdf#page=13",
+          "printedPage": "13",
+          "sourcePdfSha256": "4d9c4079fb3802b04fddb62d9fe27836773cd439d8f27b4069b42b6fed038288",
+          "full": {
+            "path": "images/score-pages/rs-domestica-bote-bock1904/page-13.png",
+            "width": 1323,
+            "height": 1872,
+            "sha256": "21c3a3e5e00d073064b11ef11a248a850b1b5bbcc1e8a7b1af37b8f6b7f4f9d5",
+            "render": {
+              "dpi": 160,
+              "clipPointsXyxy": null
+            }
+          },
+          "excerpt": {
+            "path": "images/score-pages/rs-domestica-bote-bock1904/detail-13.png",
+            "width": 1845,
+            "height": 254,
+            "sha256": "467435257ab2b87d3c46ac77895734d2418c7f33cf05d1da7ec2d388b19a7760",
+            "render": {
+              "dpi": 240,
+              "clipNormalizedXyxy": [
+                0.04,
+                0.69,
+                0.97,
+                0.78
+              ],
+              "clipPointsXyxy": [
+                23.8,
+                580.9799999999999,
+                577.15,
+                656.76
+              ],
+              "clipPixelsXywh": [
+                79,
+                1936,
+                1845,
+                254
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "rs-domestica-onkels-mama",
+      "match": {
+        "heading": "Die Onkels: \"Ganz die Mama!\":",
+        "source": "[RS: Dom]"
+      },
+      "title": {
+        "ja": "R. Strauss《Symphonia domestica》Bote & Bock版（1904）",
+        "en": "R. Strauss, Symphonia domestica, Bote & Bock edition (1904)"
+      },
+      "credit": {
+        "ja": "出典：IMSLP #13130．Bote & Bock，1904年版，plate 15613．原PDFから忠実に画像化．",
+        "en": "Source: IMSLP #13130. Bote & Bock, 1904 edition, plate 15613. Faithful rendering of the original PDF."
+      },
+      "rightsRecordId": "rs-domestica-onkels-mama-rights",
+      "pages": [
+        {
+          "id": "pdf-15",
+          "pdfUrl": "https://s9.imslp.org/files/imglnks/usimg/d/d8/IMSLP13130-Strauss-Sinfonia_Domestica,_Op.53.pdf#page=15",
+          "printedPage": "15",
+          "sourcePdfSha256": "4d9c4079fb3802b04fddb62d9fe27836773cd439d8f27b4069b42b6fed038288",
+          "full": {
+            "path": "images/score-pages/rs-domestica-bote-bock1904/page-15.png",
+            "width": 1323,
+            "height": 1872,
+            "sha256": "b6c36db1c0cf0c41d8d1eb439ff32e3db0feedc117d29a3beb8493814e269a8c",
+            "render": {
+              "dpi": 160,
+              "clipPointsXyxy": null
+            }
+          },
+          "excerpt": {
+            "path": "images/score-pages/rs-domestica-bote-bock1904/detail-15.png",
+            "width": 1855,
+            "height": 1531,
+            "sha256": "608b3a65accd161cc65f9b6ed147bd882a6ad6afbae72cf0ba7ff66cc03dee7c",
+            "render": {
+              "dpi": 240,
+              "clipNormalizedXyxy": [
+                0.035,
+                0.39,
+                0.97,
+                0.935
+              ],
+              "clipPointsXyxy": [
+                20.825000000000003,
+                328.38,
+                577.15,
+                787.2700000000001
+              ],
+              "clipPixelsXywh": [
+                69,
+                1094,
+                1855,
+                1531
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "rs-domestica-tanten-papa",
+      "match": {
+        "heading": "Die Tanten: \"Ganz der Papa!\"",
+        "source": "[RS: Dom]"
+      },
+      "title": {
+        "ja": "R. Strauss《Symphonia domestica》Bote & Bock版（1904）",
+        "en": "R. Strauss, Symphonia domestica, Bote & Bock edition (1904)"
+      },
+      "credit": {
+        "ja": "出典：IMSLP #13130．Bote & Bock，1904年版，plate 15613．原PDFから忠実に画像化．",
+        "en": "Source: IMSLP #13130. Bote & Bock, 1904 edition, plate 15613. Faithful rendering of the original PDF."
+      },
+      "rightsRecordId": "rs-domestica-tanten-papa-rights",
+      "pages": [
+        {
+          "id": "pdf-15",
+          "pdfUrl": "https://s9.imslp.org/files/imglnks/usimg/d/d8/IMSLP13130-Strauss-Sinfonia_Domestica,_Op.53.pdf#page=15",
+          "printedPage": "15",
+          "sourcePdfSha256": "4d9c4079fb3802b04fddb62d9fe27836773cd439d8f27b4069b42b6fed038288",
+          "full": {
+            "path": "images/score-pages/rs-domestica-bote-bock1904/page-15.png",
+            "width": 1323,
+            "height": 1872,
+            "sha256": "b6c36db1c0cf0c41d8d1eb439ff32e3db0feedc117d29a3beb8493814e269a8c",
+            "render": {
+              "dpi": 160,
+              "clipPointsXyxy": null
+            }
+          },
+          "excerpt": {
+            "path": "images/score-pages/rs-domestica-bote-bock1904/detail-15.png",
+            "width": 1855,
+            "height": 1531,
+            "sha256": "608b3a65accd161cc65f9b6ed147bd882a6ad6afbae72cf0ba7ff66cc03dee7c",
+            "render": {
+              "dpi": 240,
+              "clipNormalizedXyxy": [
+                0.035,
+                0.39,
+                0.97,
+                0.935
+              ],
+              "clipPointsXyxy": [
+                20.825000000000003,
+                328.38,
+                577.15,
+                787.2700000000001
+              ],
+              "clipPixelsXywh": [
+                69,
+                1094,
+                1855,
+                1531
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "rs-domestica-tempobezeichnungen",
+      "match": {
+        "heading": "Diese kleinen Tempobezeichnungen sind stets nur als unbedeutende Modifikationen desselben Zeitmasses aufzufassen.",
+        "source": "[RS: Dom]"
+      },
+      "title": {
+        "ja": "R. Strauss《Symphonia domestica》Bote & Bock版（1904）",
+        "en": "R. Strauss, Symphonia domestica, Bote & Bock edition (1904)"
+      },
+      "credit": {
+        "ja": "出典：IMSLP #13130．Bote & Bock，1904年版，plate 15613．原PDFから忠実に画像化．",
+        "en": "Source: IMSLP #13130. Bote & Bock, 1904 edition, plate 15613. Faithful rendering of the original PDF."
+      },
+      "rightsRecordId": "rs-domestica-tempobezeichnungen-rights",
+      "pages": [
+        {
+          "id": "pdf-29",
+          "pdfUrl": "https://s9.imslp.org/files/imglnks/usimg/d/d8/IMSLP13130-Strauss-Sinfonia_Domestica,_Op.53.pdf#page=29",
+          "printedPage": "29",
+          "sourcePdfSha256": "4d9c4079fb3802b04fddb62d9fe27836773cd439d8f27b4069b42b6fed038288",
+          "full": {
+            "path": "images/score-pages/rs-domestica-bote-bock1904/page-29.png",
+            "width": 1323,
+            "height": 1872,
+            "sha256": "b499c1677077064f48da801485cd0d8c8a1f0e54387ad32d50843098d192bcc2",
+            "render": {
+              "dpi": 160,
+              "clipPointsXyxy": null
+            }
+          },
+          "excerpt": {
+            "path": "images/score-pages/rs-domestica-bote-bock1904/detail-29.png",
+            "width": 1816,
+            "height": 619,
+            "sha256": "a00afad80cdd76741646a0e3f7cb8960a52f5a5a5350b87513e9dbf61c7f1dfa",
+            "render": {
+              "dpi": 240,
+              "clipNormalizedXyxy": [
+                0.035,
+                0.705,
+                0.95,
+                0.925
+              ],
+              "clipPointsXyxy": [
+                20.825000000000003,
+                593.61,
+                565.25,
+                778.85
+              ],
+              "clipPixelsXywh": [
+                69,
+                1978,
+                1816,
+                619
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "rs-domestica-clarinetten-staerke",
+      "match": {
+        "heading": "die beiden Clarinetten stets in gleicher Stärke.",
+        "source": "[RS: Dom]"
+      },
+      "title": {
+        "ja": "R. Strauss《Symphonia domestica》Bote & Bock版（1904）",
+        "en": "R. Strauss, Symphonia domestica, Bote & Bock edition (1904)"
+      },
+      "credit": {
+        "ja": "出典：IMSLP #13130．Bote & Bock，1904年版，plate 15613．原PDFから忠実に画像化．",
+        "en": "Source: IMSLP #13130. Bote & Bock, 1904 edition, plate 15613. Faithful rendering of the original PDF."
+      },
+      "rightsRecordId": "rs-domestica-clarinetten-staerke-rights",
+      "pages": [
+        {
+          "id": "pdf-35",
+          "pdfUrl": "https://s9.imslp.org/files/imglnks/usimg/d/d8/IMSLP13130-Strauss-Sinfonia_Domestica,_Op.53.pdf#page=35",
+          "printedPage": "35",
+          "sourcePdfSha256": "4d9c4079fb3802b04fddb62d9fe27836773cd439d8f27b4069b42b6fed038288",
+          "full": {
+            "path": "images/score-pages/rs-domestica-bote-bock1904/page-35.png",
+            "width": 1323,
+            "height": 1872,
+            "sha256": "e7c33c1f78b302f5fd10067d1e39f09f5404a5d29b0bc7edead0f5c110b84204",
+            "render": {
+              "dpi": 160,
+              "clipPointsXyxy": null
+            }
+          },
+          "excerpt": {
+            "path": "images/score-pages/rs-domestica-bote-bock1904/detail-35-clarinets.png",
+            "width": 1816,
+            "height": 226,
+            "sha256": "c010807a4734ca47d0efd990ebb17227dd06e9e69da2d881cbe6d00ab9b504c6",
+            "render": {
+              "dpi": 240,
+              "clipNormalizedXyxy": [
+                0.035,
+                0.86,
+                0.95,
+                0.94
+              ],
+              "clipPointsXyxy": [
+                20.825000000000003,
+                724.12,
+                565.25,
+                791.4799999999999
+              ],
+              "clipPixelsXywh": [
+                69,
+                2413,
+                1816,
+                226
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "rs-domestica-erleichterung",
+      "match": {
+        "heading": "Erleichterung",
+        "source": "[RS: Dom]"
+      },
+      "title": {
+        "ja": "R. Strauss《Symphonia domestica》Bote & Bock版（1904）",
+        "en": "R. Strauss, Symphonia domestica, Bote & Bock edition (1904)"
+      },
+      "credit": {
+        "ja": "出典：IMSLP #13130．Bote & Bock，1904年版，plate 15613．原PDFから忠実に画像化．",
+        "en": "Source: IMSLP #13130. Bote & Bock, 1904 edition, plate 15613. Faithful rendering of the original PDF."
+      },
+      "rightsRecordId": "rs-domestica-erleichterung-rights",
+      "pages": [
+        {
+          "id": "pdf-115",
+          "pdfUrl": "https://s9.imslp.org/files/imglnks/usimg/d/d8/IMSLP13130-Strauss-Sinfonia_Domestica,_Op.53.pdf#page=115",
+          "printedPage": "115",
+          "sourcePdfSha256": "4d9c4079fb3802b04fddb62d9fe27836773cd439d8f27b4069b42b6fed038288",
+          "full": {
+            "path": "images/score-pages/rs-domestica-bote-bock1904/page-115.png",
+            "width": 1323,
+            "height": 1872,
+            "sha256": "ede037ff6e193912ad082597595aa8e314e033dac2df2544b13129bacb576a15",
+            "render": {
+              "dpi": 160,
+              "clipPointsXyxy": null
+            }
+          },
+          "excerpt": {
+            "path": "images/score-pages/rs-domestica-bote-bock1904/detail-115.png",
+            "width": 715,
+            "height": 170,
+            "sha256": "132bfb8dea8e657a5731a71481dd66492e2fcfc7a81d4a5aa24acb54fe61ba47",
+            "render": {
+              "dpi": 240,
+              "clipNormalizedXyxy": [
+                0.04,
+                0.87,
+                0.4,
+                0.93
+              ],
+              "clipPointsXyxy": [
+                23.8,
+                732.54,
+                238,
+                783.0600000000001
+              ],
+              "clipPixelsXywh": [
+                79,
+                2441,
+                715,
+                170
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "rs-domestica-fuenf-takte",
+      "match": {
+        "heading": "5 volle Takte lang",
+        "source": "[RS: Dom]"
+      },
+      "title": {
+        "ja": "R. Strauss《Symphonia domestica》Bote & Bock版（1904）",
+        "en": "R. Strauss, Symphonia domestica, Bote & Bock edition (1904)"
+      },
+      "credit": {
+        "ja": "出典：IMSLP #13130．Bote & Bock，1904年版，plate 15613．原PDFから忠実に画像化．",
+        "en": "Source: IMSLP #13130. Bote & Bock, 1904 edition, plate 15613. Faithful rendering of the original PDF."
+      },
+      "rightsRecordId": "rs-domestica-fuenf-takte-rights",
+      "pages": [
+        {
+          "id": "pdf-116",
+          "pdfUrl": "https://s9.imslp.org/files/imglnks/usimg/d/d8/IMSLP13130-Strauss-Sinfonia_Domestica,_Op.53.pdf#page=116",
+          "printedPage": "116",
+          "sourcePdfSha256": "4d9c4079fb3802b04fddb62d9fe27836773cd439d8f27b4069b42b6fed038288",
+          "full": {
+            "path": "images/score-pages/rs-domestica-bote-bock1904/page-116.png",
+            "width": 1323,
+            "height": 1872,
+            "sha256": "3afe9496c25ad2e1faf51cb549bb1d4d9e46179ce6ad851c6ba76096435347bb",
+            "render": {
+              "dpi": 160,
+              "clipPointsXyxy": null
+            }
+          },
+          "excerpt": {
+            "path": "images/score-pages/rs-domestica-bote-bock1904/detail-116.png",
+            "width": 1806,
+            "height": 422,
+            "sha256": "3ecfcfe47db7810369bdeabda670148885d6cef465f92be71471286c35b91618",
+            "render": {
+              "dpi": 240,
+              "clipNormalizedXyxy": [
+                0.04,
+                0.76,
+                0.95,
+                0.91
+              ],
+              "clipPointsXyxy": [
+                23.8,
+                639.92,
+                565.25,
+                766.22
+              ],
+              "clipPixelsXywh": [
+                79,
+                2133,
+                1806,
+                422
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "rs-domestica-wiegenlied",
+      "match": {
+        "heading": "Wiegenlied",
+        "source": "[RS: Dom]"
+      },
+      "title": {
+        "ja": "R. Strauss《Symphonia domestica》Bote & Bock版（1904）",
+        "en": "R. Strauss, Symphonia domestica, Bote & Bock edition (1904)"
+      },
+      "credit": {
+        "ja": "出典：IMSLP #13130．Bote & Bock，1904年版，plate 15613．原PDFから忠実に画像化．",
+        "en": "Source: IMSLP #13130. Bote & Bock, 1904 edition, plate 15613. Faithful rendering of the original PDF."
+      },
+      "rightsRecordId": "rs-domestica-wiegenlied-rights",
+      "pages": [
+        {
+          "id": "pdf-35",
+          "pdfUrl": "https://s9.imslp.org/files/imglnks/usimg/d/d8/IMSLP13130-Strauss-Sinfonia_Domestica,_Op.53.pdf#page=35",
+          "printedPage": "35",
+          "sourcePdfSha256": "4d9c4079fb3802b04fddb62d9fe27836773cd439d8f27b4069b42b6fed038288",
+          "full": {
+            "path": "images/score-pages/rs-domestica-bote-bock1904/page-35.png",
+            "width": 1323,
+            "height": 1872,
+            "sha256": "e7c33c1f78b302f5fd10067d1e39f09f5404a5d29b0bc7edead0f5c110b84204",
+            "render": {
+              "dpi": 160,
+              "clipPointsXyxy": null
+            }
+          },
+          "excerpt": {
+            "path": "images/score-pages/rs-domestica-bote-bock1904/detail-35-wiegenlied.png",
+            "width": 1746,
+            "height": 434,
+            "sha256": "7f765e98a913836644e055ecb7e9bdd607c55a58d0c3e97b78bec2d701399ae9",
+            "render": {
+              "dpi": 240,
+              "clipNormalizedXyxy": [
+                0.055,
+                0.425,
+                0.935,
+                0.579
+              ],
+              "clipPointsXyxy": [
+                32.725,
+                357.84999999999997,
+                556.325,
+                487.518
+              ],
+              "clipPixelsXywh": [
+                109,
+                1192,
+                1746,
+                434
+              ]
+            }
+          }
+        }
+      ]
+    }
+  ]
 }

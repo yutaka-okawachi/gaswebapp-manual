@@ -480,7 +480,9 @@ GAS更新後の応答が一時的に404になる場合は自動再試行しま�
 
 ### Notesの楽譜画像（2026-10-31）
 
-現在，公開画像の登録は0件です。Mahlerの試例登録と今回追加した4画像は公開対象から外し，共通ビューアは保持しています。既存のNotes本文・元PDFリンク・譜例は変更しません。今後の画像化対象はRS・Hindemith・Brucknerに限定し，版・権利・指示箇所を確認して別途登録します。
+現在の公開対象はRS《Symphonia domestica》Bote & Bock 1904年版（plate 15613，IMSLP13130）のPDF／印刷9・13・15・29・35・115・116頁です。全頁7枚と詳細8枚を9項目に対応させ，元PDFリンクを保持します。15頁の2項目は同じ詳細画像を共用し，35頁のWiegenliedとクラリネット脚注は別の詳細画像です。表題紙と70頁は含めません。Mahlerの登録と4画像は撤去済みで，既存のNotes本文・表記統一・従来譜例は変更しません。今後もRS・Hindemith・Brucknerに限定し，版・権利・指示箇所を確認して別途登録します。
+
+例：[Wiegenlied日本語](https://yutaka-okawachi.github.io/gaswebapp-manual/mahler-search-app/dic.html#term-wiegenlied)／[英語](https://yutaka-okawachi.github.io/gaswebapp-manual/en/mahler-search-app/dic.html#term-wiegenlied)。PDFリンクの隣の「楽譜画像を見る」を選びます。
 
 対応の正本は `frontend/notes-score-views.json`，公開判定は `scripts/notes-score-rights.json` です。物理行番号を使わず，原文見出し・出典全文・同じ版のPDF頁URLで照合します。無登録の参照には画像ボタンを追加せず，通常の辞書表示とPDFリンクを保ちます。未登録のPDFを自動で画像へ変換しません。
 

@@ -1,4 +1,185 @@
 {
   "schemaVersion": 1,
-  "records": []
+  "records": [
+    {
+      "id": "rs-domestica-pauke-fis-rights",
+      "referenceId": "rs-domestica-pauke-fis",
+      "reviewStatus": "public-approved",
+      "privatePreviewApproved": true,
+      "publicReleaseApproved": true,
+      "sourcePdfSha256": "4d9c4079fb3802b04fddb62d9fe27836773cd439d8f27b4069b42b6fed038288",
+      "pdfUrls": [
+        "https://s9.imslp.org/files/imglnks/usimg/d/d8/IMSLP13130-Strauss-Sinfonia_Domestica,_Op.53.pdf#page=9"
+      ],
+      "assetSha256": [
+        "d85b33c84ef7ee5b17cac9a9393b1950e6dcb7f5f410259ad569e06da7ca3ab7",
+        "3478126d4a8b19b363246f8abeed0ef3009d54fac1f56d3fe5396e2f4a12aaf4"
+      ],
+      "sourceEdition": "Bote & Bock 1904, plate 15613, IMSLP13130; 123-page source PDF.",
+      "sourceUrl": "https://s9.imslp.org/files/imglnks/usimg/d/d8/IMSLP13130-Strauss-Sinfonia_Domestica,_Op.53.pdf",
+      "scope": "Explicit user approval: only PDF/printed pages 9,13,15,29,35,115,116, corresponding to nine existing Notes entries. No title page or PDF70.",
+      "basis": "Edition/copyright 1904 and eligible score content reviewed by project rights researcher; original PDF identity and all 15 local faithful renders verified.",
+      "rendering": "Poppler pdftoppm: full pages160dpi, details240dpi; supplied top-left normalized xyxy crops, no AI redraw."
+    },
+    {
+      "id": "rs-domestica-deutlicher-ausdrucksvoller-rights",
+      "referenceId": "rs-domestica-deutlicher-ausdrucksvoller",
+      "reviewStatus": "public-approved",
+      "privatePreviewApproved": true,
+      "publicReleaseApproved": true,
+      "sourcePdfSha256": "4d9c4079fb3802b04fddb62d9fe27836773cd439d8f27b4069b42b6fed038288",
+      "pdfUrls": [
+        "https://s9.imslp.org/files/imglnks/usimg/d/d8/IMSLP13130-Strauss-Sinfonia_Domestica,_Op.53.pdf#page=13"
+      ],
+      "assetSha256": [
+        "21c3a3e5e00d073064b11ef11a248a850b1b5bbcc1e8a7b1af37b8f6b7f4f9d5",
+        "467435257ab2b87d3c46ac77895734d2418c7f33cf05d1da7ec2d388b19a7760"
+      ],
+      "sourceEdition": "Bote & Bock 1904, plate 15613, IMSLP13130; 123-page source PDF.",
+      "sourceUrl": "https://s9.imslp.org/files/imglnks/usimg/d/d8/IMSLP13130-Strauss-Sinfonia_Domestica,_Op.53.pdf",
+      "scope": "Explicit user approval: only PDF/printed pages 9,13,15,29,35,115,116, corresponding to nine existing Notes entries. No title page or PDF70.",
+      "basis": "Edition/copyright 1904 and eligible score content reviewed by project rights researcher; original PDF identity and all 15 local faithful renders verified.",
+      "rendering": "Poppler pdftoppm: full pages160dpi, details240dpi; supplied top-left normalized xyxy crops, no AI redraw."
+    },
+    {
+      "id": "rs-domestica-onkels-mama-rights",
+      "referenceId": "rs-domestica-onkels-mama",
+      "reviewStatus": "public-approved",
+      "privatePreviewApproved": true,
+      "publicReleaseApproved": true,
+      "sourcePdfSha256": "4d9c4079fb3802b04fddb62d9fe27836773cd439d8f27b4069b42b6fed038288",
+      "pdfUrls": [
+        "https://s9.imslp.org/files/imglnks/usimg/d/d8/IMSLP13130-Strauss-Sinfonia_Domestica,_Op.53.pdf#page=15"
+      ],
+      "assetSha256": [
+        "b6c36db1c0cf0c41d8d1eb439ff32e3db0feedc117d29a3beb8493814e269a8c",
+        "608b3a65accd161cc65f9b6ed147bd882a6ad6afbae72cf0ba7ff66cc03dee7c"
+      ],
+      "sourceEdition": "Bote & Bock 1904, plate 15613, IMSLP13130; 123-page source PDF.",
+      "sourceUrl": "https://s9.imslp.org/files/imglnks/usimg/d/d8/IMSLP13130-Strauss-Sinfonia_Domestica,_Op.53.pdf",
+      "scope": "Explicit user approval: only PDF/printed pages 9,13,15,29,35,115,116, corresponding to nine existing Notes entries. No title page or PDF70.",
+      "basis": "Edition/copyright 1904 and eligible score content reviewed by project rights researcher; original PDF identity and all 15 local faithful renders verified.",
+      "rendering": "Poppler pdftoppm: full pages160dpi, details240dpi; supplied top-left normalized xyxy crops, no AI redraw."
+    },
+    {
+      "id": "rs-domestica-tanten-papa-rights",
+      "referenceId": "rs-domestica-tanten-papa",
+      "reviewStatus": "public-approved",
+      "privatePreviewApproved": true,
+      "publicReleaseApproved": true,
+      "sourcePdfSha256": "4d9c4079fb3802b04fddb62d9fe27836773cd439d8f27b4069b42b6fed038288",
+      "pdfUrls": [
+        "https://s9.imslp.org/files/imglnks/usimg/d/d8/IMSLP13130-Strauss-Sinfonia_Domestica,_Op.53.pdf#page=15"
+      ],
+      "assetSha256": [
+        "b6c36db1c0cf0c41d8d1eb439ff32e3db0feedc117d29a3beb8493814e269a8c",
+        "608b3a65accd161cc65f9b6ed147bd882a6ad6afbae72cf0ba7ff66cc03dee7c"
+      ],
+      "sourceEdition": "Bote & Bock 1904, plate 15613, IMSLP13130; 123-page source PDF.",
+      "sourceUrl": "https://s9.imslp.org/files/imglnks/usimg/d/d8/IMSLP13130-Strauss-Sinfonia_Domestica,_Op.53.pdf",
+      "scope": "Explicit user approval: only PDF/printed pages 9,13,15,29,35,115,116, corresponding to nine existing Notes entries. No title page or PDF70.",
+      "basis": "Edition/copyright 1904 and eligible score content reviewed by project rights researcher; original PDF identity and all 15 local faithful renders verified.",
+      "rendering": "Poppler pdftoppm: full pages160dpi, details240dpi; supplied top-left normalized xyxy crops, no AI redraw."
+    },
+    {
+      "id": "rs-domestica-tempobezeichnungen-rights",
+      "referenceId": "rs-domestica-tempobezeichnungen",
+      "reviewStatus": "public-approved",
+      "privatePreviewApproved": true,
+      "publicReleaseApproved": true,
+      "sourcePdfSha256": "4d9c4079fb3802b04fddb62d9fe27836773cd439d8f27b4069b42b6fed038288",
+      "pdfUrls": [
+        "https://s9.imslp.org/files/imglnks/usimg/d/d8/IMSLP13130-Strauss-Sinfonia_Domestica,_Op.53.pdf#page=29"
+      ],
+      "assetSha256": [
+        "b499c1677077064f48da801485cd0d8c8a1f0e54387ad32d50843098d192bcc2",
+        "a00afad80cdd76741646a0e3f7cb8960a52f5a5a5350b87513e9dbf61c7f1dfa"
+      ],
+      "sourceEdition": "Bote & Bock 1904, plate 15613, IMSLP13130; 123-page source PDF.",
+      "sourceUrl": "https://s9.imslp.org/files/imglnks/usimg/d/d8/IMSLP13130-Strauss-Sinfonia_Domestica,_Op.53.pdf",
+      "scope": "Explicit user approval: only PDF/printed pages 9,13,15,29,35,115,116, corresponding to nine existing Notes entries. No title page or PDF70.",
+      "basis": "Edition/copyright 1904 and eligible score content reviewed by project rights researcher; original PDF identity and all 15 local faithful renders verified.",
+      "rendering": "Poppler pdftoppm: full pages160dpi, details240dpi; supplied top-left normalized xyxy crops, no AI redraw."
+    },
+    {
+      "id": "rs-domestica-clarinetten-staerke-rights",
+      "referenceId": "rs-domestica-clarinetten-staerke",
+      "reviewStatus": "public-approved",
+      "privatePreviewApproved": true,
+      "publicReleaseApproved": true,
+      "sourcePdfSha256": "4d9c4079fb3802b04fddb62d9fe27836773cd439d8f27b4069b42b6fed038288",
+      "pdfUrls": [
+        "https://s9.imslp.org/files/imglnks/usimg/d/d8/IMSLP13130-Strauss-Sinfonia_Domestica,_Op.53.pdf#page=35"
+      ],
+      "assetSha256": [
+        "e7c33c1f78b302f5fd10067d1e39f09f5404a5d29b0bc7edead0f5c110b84204",
+        "c010807a4734ca47d0efd990ebb17227dd06e9e69da2d881cbe6d00ab9b504c6"
+      ],
+      "sourceEdition": "Bote & Bock 1904, plate 15613, IMSLP13130; 123-page source PDF.",
+      "sourceUrl": "https://s9.imslp.org/files/imglnks/usimg/d/d8/IMSLP13130-Strauss-Sinfonia_Domestica,_Op.53.pdf",
+      "scope": "Explicit user approval: only PDF/printed pages 9,13,15,29,35,115,116, corresponding to nine existing Notes entries. No title page or PDF70.",
+      "basis": "Edition/copyright 1904 and eligible score content reviewed by project rights researcher; original PDF identity and all 15 local faithful renders verified.",
+      "rendering": "Poppler pdftoppm: full pages160dpi, details240dpi; supplied top-left normalized xyxy crops, no AI redraw."
+    },
+    {
+      "id": "rs-domestica-erleichterung-rights",
+      "referenceId": "rs-domestica-erleichterung",
+      "reviewStatus": "public-approved",
+      "privatePreviewApproved": true,
+      "publicReleaseApproved": true,
+      "sourcePdfSha256": "4d9c4079fb3802b04fddb62d9fe27836773cd439d8f27b4069b42b6fed038288",
+      "pdfUrls": [
+        "https://s9.imslp.org/files/imglnks/usimg/d/d8/IMSLP13130-Strauss-Sinfonia_Domestica,_Op.53.pdf#page=115"
+      ],
+      "assetSha256": [
+        "ede037ff6e193912ad082597595aa8e314e033dac2df2544b13129bacb576a15",
+        "132bfb8dea8e657a5731a71481dd66492e2fcfc7a81d4a5aa24acb54fe61ba47"
+      ],
+      "sourceEdition": "Bote & Bock 1904, plate 15613, IMSLP13130; 123-page source PDF.",
+      "sourceUrl": "https://s9.imslp.org/files/imglnks/usimg/d/d8/IMSLP13130-Strauss-Sinfonia_Domestica,_Op.53.pdf",
+      "scope": "Explicit user approval: only PDF/printed pages 9,13,15,29,35,115,116, corresponding to nine existing Notes entries. No title page or PDF70.",
+      "basis": "Edition/copyright 1904 and eligible score content reviewed by project rights researcher; original PDF identity and all 15 local faithful renders verified.",
+      "rendering": "Poppler pdftoppm: full pages160dpi, details240dpi; supplied top-left normalized xyxy crops, no AI redraw."
+    },
+    {
+      "id": "rs-domestica-fuenf-takte-rights",
+      "referenceId": "rs-domestica-fuenf-takte",
+      "reviewStatus": "public-approved",
+      "privatePreviewApproved": true,
+      "publicReleaseApproved": true,
+      "sourcePdfSha256": "4d9c4079fb3802b04fddb62d9fe27836773cd439d8f27b4069b42b6fed038288",
+      "pdfUrls": [
+        "https://s9.imslp.org/files/imglnks/usimg/d/d8/IMSLP13130-Strauss-Sinfonia_Domestica,_Op.53.pdf#page=116"
+      ],
+      "assetSha256": [
+        "3afe9496c25ad2e1faf51cb549bb1d4d9e46179ce6ad851c6ba76096435347bb",
+        "3ecfcfe47db7810369bdeabda670148885d6cef465f92be71471286c35b91618"
+      ],
+      "sourceEdition": "Bote & Bock 1904, plate 15613, IMSLP13130; 123-page source PDF.",
+      "sourceUrl": "https://s9.imslp.org/files/imglnks/usimg/d/d8/IMSLP13130-Strauss-Sinfonia_Domestica,_Op.53.pdf",
+      "scope": "Explicit user approval: only PDF/printed pages 9,13,15,29,35,115,116, corresponding to nine existing Notes entries. No title page or PDF70.",
+      "basis": "Edition/copyright 1904 and eligible score content reviewed by project rights researcher; original PDF identity and all 15 local faithful renders verified.",
+      "rendering": "Poppler pdftoppm: full pages160dpi, details240dpi; supplied top-left normalized xyxy crops, no AI redraw."
+    },
+    {
+      "id": "rs-domestica-wiegenlied-rights",
+      "referenceId": "rs-domestica-wiegenlied",
+      "reviewStatus": "public-approved",
+      "privatePreviewApproved": true,
+      "publicReleaseApproved": true,
+      "sourcePdfSha256": "4d9c4079fb3802b04fddb62d9fe27836773cd439d8f27b4069b42b6fed038288",
+      "pdfUrls": [
+        "https://s9.imslp.org/files/imglnks/usimg/d/d8/IMSLP13130-Strauss-Sinfonia_Domestica,_Op.53.pdf#page=35"
+      ],
+      "assetSha256": [
+        "e7c33c1f78b302f5fd10067d1e39f09f5404a5d29b0bc7edead0f5c110b84204",
+        "7f765e98a913836644e055ecb7e9bdd607c55a58d0c3e97b78bec2d701399ae9"
+      ],
+      "sourceEdition": "Bote & Bock 1904, plate 15613, IMSLP13130; 123-page source PDF.",
+      "sourceUrl": "https://s9.imslp.org/files/imglnks/usimg/d/d8/IMSLP13130-Strauss-Sinfonia_Domestica,_Op.53.pdf",
+      "scope": "Explicit user approval: only PDF/printed pages 9,13,15,29,35,115,116, corresponding to nine existing Notes entries. No title page or PDF70.",
+      "basis": "Edition/copyright 1904 and eligible score content reviewed by project rights researcher; original PDF identity and all 15 local faithful renders verified.",
+      "rendering": "Poppler pdftoppm: full pages160dpi, details240dpi; supplied top-left normalized xyxy crops, no AI redraw."
+    }
+  ]
 }
