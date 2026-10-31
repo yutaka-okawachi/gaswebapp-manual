@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "releaseId": "b6661332ac0e45c1cf6bcb3d819174d4be85a490edf08d69c89c0a734b21215e",
+  "releaseId": "15f7aea4346f45588b66971d26578b41cc7ecd0a2c6705c20e0ffd3c351cf962",
   "hashes": {
     "en/index.html": "7f06a361063ea62596c62315ea90955e9b38150dd74e2023c9dc52e501b409a1",
     "en/license.html": "c69b97b54fdbf4b22f4983c40cd9924b8ea4030149e191b87309df32d1645499",
@@ -64,7 +64,7 @@
     "en/mahler-search-app/data/rs_scenes.json": "a068d3d826ef4fc1fcb0932ccbd2739135b0192dc4a715d1a41446c3e8c2f0a8",
     "en/mahler-search-app/data/rw_scenes.json": "02ea3c2e8a223150e593cfcd50eae49547a10d5798e6867f5f4233fe7547723b",
     "en/mahler-search-app/data/whom_list.json": "802985c2f1ef84b61f8f08b431901d888a88099cb0c70456e3a5427fc27e9675",
-    "en/mahler-search-app/dic.html": "5226eac376e68979ef35d7c4b9c6ed6498ad145fec0150d6187bad9fcb4db6ed",
+    "en/mahler-search-app/dic.html": "4cbd5955d1d5823b4368413b68f3cac10733e3921080ce774453d0b32d5a9971",
     "en/mahler-search-app/home.html": "118af14b953ded482a78bf3abfaf13baff900b549fe48c15930e6f80f2120589",
     "en/mahler-search-app/index.html": "8f1dce8523aca03b724c7886e31be082213eebf1a5bf5b9fd209f1a86d07bdb6",
     "en/mahler-search-app/js/analytics.js": "171fa81f3f55957572ccd511f6fe804e68ec7cea16c307f4370d2195de52ba8c",
