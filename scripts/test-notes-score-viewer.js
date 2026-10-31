@@ -38,6 +38,9 @@ try{
  const build=require('./notes-score-build');assert.throws(()=>build.approved(dir),/explicit approved manifest/);
  fs.mkdirSync(path.join(dir,'frontend'));fs.mkdirSync(path.join(dir,'scripts'));fs.writeFileSync(path.join(dir,'frontend/notes-score-views.json'),JSON.stringify(m));fs.writeFileSync(path.join(dir,'scripts/notes-score-rights.json'),JSON.stringify(l));assert.throws(()=>build.approved(dir),/Unapproved file/);
  l.records[0].reviewStatus='public-approved';l.records[0].publicReleaseApproved=true;fs.writeFileSync(path.join(dir,'scripts/notes-score-rights.json'),JSON.stringify(l));assert.equal(build.approved(dir).manifest.items.length,1);
+ fs.writeFileSync(path.join(dir,'scripts/english-publication.json'),JSON.stringify({schemaVersion:1,publishEnglish:false,englishReleaseApproved:false}));
+ const binaryPath='mahler-search-app/'+m.items[0].pages[0].full.path,bilingual=require('./sync/bilingual');
+ bilingual.assertReleaseManifest({hashes:{[binaryPath]:digest}},dir);assert.throws(()=>bilingual.assertReleaseManifest({hashes:{[binaryPath]:'0'.repeat(64)}},dir));
  fs.appendFileSync(file,'changed');assert.throws(()=>prepare(m,l,dir,'private-preview'),/digest/);
 }finally{fs.rmSync(dir,{recursive:true,force:true});}
 const context=vm.createContext({});for(const name of ['dictionary_notation','generate_dic_html'])vm.runInContext(fs.readFileSync(path.join(__dirname,'../src',name+'.js'),'utf8'),context);
@@ -48,12 +51,11 @@ assert.equal(first,second);assert(first.includes('data-notes-heading="flüchtig"
 assert(first.includes('href="'+url+'"'));assert(!first.includes('notes-score-open'),'Server retains ordinary links; only explicitly approved client registry enhances them');
 const evil=render([['"><img src=x onerror=alert(1)>','Text','[GM]']]);assert(!evil.includes('<img src=x'));assert(evil.includes('&quot;&gt;&lt;img'));
 const publicBuild=require('./notes-score-build'),publicPrepared=publicBuild.approved(),assets=publicBuild.approvedAssets();
-assert.equal(publicPrepared.manifest.items.length,1);assert.equal(publicPrepared.manifest.items[0].match.heading,'flüchtig');
-assert.deepEqual(publicPrepared.manifest.items[0].pages.map(p=>new URL(p.pdfUrl).hash),['#page=1','#page=126']);assert.equal(assets.size,4);
-assert([...assets.keys()].every(file=>/^mahler-search-app\/images\/score-pages\/mahler-v-peters1904\/(?:page|detail)-(?:1|126)\.png$/.test(file)));
-const bilingual=require('./sync/bilingual');for(const [file,sha]of assets){bilingual.assertReleaseManifest({hashes:{[file]:sha}});assert.throws(()=>bilingual.assertReleaseManifest({hashes:{[file]:'0'.repeat(64)}}));}
+assert.equal(publicPrepared.manifest.items.length,0);assert.equal(publicPrepared.ledger.records.length,0);assert.equal(assets.size,0);
+assert.equal(model.registry(publicPrepared.manifest,publicPrepared.ledger).size,0);assert.equal(model.registry(publicPrepared.manifest,publicPrepared.ledger).match(item.match.heading,item.match.source,url),null);
+const bilingual=require('./sync/bilingual');
 assert.throws(()=>bilingual.assertReleaseManifest({hashes:{'mahler-search-app/images/score-pages/unreviewed/page-1.png':hash}}));
 const version=crypto.createHash('sha256').update(fs.readFileSync(path.join(__dirname,'../mahler-search-app/js/notes-score-viewer.js'),'utf8').replace(/\r\n/g,'\n')).digest('hex').slice(0,12),root=path.resolve(__dirname,'..');
 for(const original of ['<script defer src="js/notes-score-viewer.js"></script>','<script defer src="js/notes-score-viewer.js?v=old"></script>']){const updated=bilingual.versionScoreViewer(original,root);assert(updated.includes('notes-score-viewer.js?v='+version+'"'));assert.equal(bilingual.versionScoreViewer(updated,root),updated);}
-for(const prefix of ['','en/']){const sandbox=vm.createContext({window:{},document:{currentScript:{src:'https://site.test/project/'+prefix+'mahler-search-app/js/notes-score-viewer.js?v=1'}},location:{href:'https://site.test/project/'+prefix+'mahler-search-app/dic.html',origin:'https://site.test'},URL});vm.runInContext(publicBuild.runtimeSource(),sandbox);assert.equal(sandbox.window.__NOTES_SCORE_VIEW_CONFIG__.mode,'public');assert.equal(sandbox.window.__NOTES_SCORE_VIEW_CONFIG__.assetBase,'https://site.test/project/mahler-search-app/');assert.equal(sandbox.window.__NOTES_SCORE_VIEW_CONFIG__.manifest.items.length,1);}
+for(const prefix of ['','en/']){const sandbox=vm.createContext({window:{},document:{currentScript:{src:'https://site.test/project/'+prefix+'mahler-search-app/js/notes-score-viewer.js?v=1'}},location:{href:'https://site.test/project/'+prefix+'mahler-search-app/dic.html',origin:'https://site.test'},URL});vm.runInContext(publicBuild.runtimeSource(),sandbox);assert.equal(sandbox.window.__NOTES_SCORE_VIEW_CONFIG__.mode,'public');assert.equal(sandbox.window.__NOTES_SCORE_VIEW_CONFIG__.assetBase,'https://site.test/project/mahler-search-app/');assert.equal(sandbox.window.__NOTES_SCORE_VIEW_CONFIG__.manifest.items.length,0);assert.equal(sandbox.window.__NOTES_SCORE_VIEW_CONFIG__.ledger.records.length,0);}
 console.log('Notes score viewer model: '+invalid+' malformed/ambiguous cases, private/public separation, provenance, same-origin image paths, exact stable context, reorder safety, digest gate and escaped static integration passed.');

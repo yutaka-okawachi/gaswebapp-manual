@@ -480,12 +480,12 @@ GAS更新後の応答が一時的に404になる場合は自動再試行しま�
 
 ### Notesの楽譜画像（2026-10-31）
 
-初回の公開対象は `flüchtig` のMahler《SYMPHONIE V》Peters初版［1904］（plate 8951）だけです。Sibley Music Library／IMSLP #111956の原PDF通し1頁（印刷3頁）・126頁（印刷128頁）について，全頁2枚と指示部分2枚を原譜から忠実に画像化しています。原PDFへのリンクを保持し，画像と一緒に版・出典・頁を表示します。
+現在，公開画像の登録は0件です。Mahlerの試例登録と今回追加した4画像は公開対象から外し，共通ビューアは保持しています。既存のNotes本文・元PDFリンク・譜例は変更しません。今後の画像化対象はRS・Hindemith・Brucknerに限定し，版・権利・指示箇所を確認して別途登録します。
 
-[日本語](https://yutaka-okawachi.github.io/gaswebapp-manual/mahler-search-app/dic.html#term-fluechtig)／[英語](https://yutaka-okawachi.github.io/gaswebapp-manual/en/mahler-search-app/dic.html#term-fluechtig)の該当項目でPDFリンクの隣の「楽譜画像を見る」を選びます。指示部分／全頁・前後頁・拡大縮小を切り替えられ，横に長い指示部分は画像領域内をスクロールして読みます。Tab・Enter・方向キー・+/−・0・Escが利用でき，閉じる／ブラウザーの戻るで元の項目とフォーカスへ戻ります。進むで画像を再表示できます。画像を読み込めない場合やdialog未対応時は元PDFを利用します。
+対応の正本は `frontend/notes-score-views.json`，公開判定は `scripts/notes-score-rights.json` です。物理行番号を使わず，原文見出し・出典全文・同じ版のPDF頁URLで照合します。無登録の参照には画像ボタンを追加せず，通常の辞書表示とPDFリンクを保ちます。未登録のPDFを自動で画像へ変換しません。
 
-対応の正本は `frontend/notes-score-views.json`，公開判定は `scripts/notes-score-rights.json` です。物理行番号を使わず，原文見出し・出典全文・同じ版のPDF頁URLで照合します。未登録のPDFを自動で画像へ変換しません。公開には `public-approved` と `publicReleaseApproved: true`，元PDF／全画像のSHA-256照合，日英のクレジットが必要です。私的準備のGOは公開許可ではありません。今回以外の素材や台帳全体を公開位置へコピーしないでください。
+公開には `public-approved` と `publicReleaseApproved: true`，元PDF／全画像のSHA-256照合，日英のクレジットが必要です。私的準備のGOは公開許可ではありません。`scripts/notes-score-build.js` が承認済みの対応だけを共通JSへ組み込み，公開位置の未登録画像やハッシュ違いは停止します。登録画像は公開マニフェストとPagesのGET確認でも実体を照合します。
 
-`scripts/notes-score-build.js` が承認済みの対応だけを共通JSへ組み込みます。日英は同じ4画像を参照します。同期の公開マニフェストには承認済み画像の実バイト列のSHA-256を含め，Pages確認でもGETした実体を照合します。未登録画像・ハッシュ違いの画像は許可しません。本文やPDF URLを編集せずに表示を追加します。
+登録された画像では指示部分／全頁・前後頁・拡大縮小・画像内スクロールを利用できます。閉じる・Esc・ブラウザーの戻るで元の項目とフォーカスへ戻り，進むで画像を再表示できます。取得失敗やdialog未対応時は元PDFを利用します。登録が空の間は画像UIを表示しません。
 
-検証は `node scripts/test-notes-score-viewer.js` と `node scripts/check-local.js` です。Chrome・EdgeのWindows隔離ヘッドレスで日英・320/768/1280px・キー操作・履歴復帰・画像失敗時のPDF代替を確認しています。SafariのMac/iPhone/iPad実機とタッチ操作は未確認です。
+検証は `node scripts/test-notes-score-viewer.js` と `node scripts/check-local.js` です。共通ビューアのChrome・Edge隔離ヘッドレスによる日英・320/768/1280pxの検証は保持しています。無登録時の画像ボタン0と通常PDFリンクも確認します。SafariのMac/iPhone/iPad実機とタッチ操作は未確認です。
