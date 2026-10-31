@@ -1267,3 +1267,47 @@ input#termInput,
 .gm-music-notation.gm-score-example-gm325 { width: 18.5em; height: auto; max-width: none; }
 
 .gm-music-notation.dictionary-glockenspiel-example { width: 6.5em; height: auto; max-width: 100%; vertical-align: middle; margin: 0 .12em; }
+
+/* Explicitly registered score scans: preserve the PDF link and open only on request. */
+.notes-score-open { margin: .25em .4em; }
+.notes-score-view-open { overflow: hidden; }
+.notes-score-dialog {
+    width: min(96vw, 78rem); max-width: calc(100vw - 1rem);
+    height: min(92vh, 60rem); height: min(92dvh, 60rem);
+    max-height: calc(100vh - 1rem); max-height: calc(100dvh - 1rem);
+    box-sizing: border-box; padding: 1rem; border: 1px solid #3b5275; border-radius: 6px;
+    color: #222; background: #fff; font-family: var(--font-sans); overflow: hidden;
+}
+.notes-score-dialog[open] { display: flex; flex-direction: column; gap: .5rem; }
+.notes-score-dialog::backdrop { background: rgb(0 0 0 / 65%); }
+.nsv-header, .nsv-tools { display: flex; flex-wrap: wrap; align-items: center; gap: .4rem; min-width: 0; }
+.nsv-header { justify-content: space-between; }
+.nsv-title { font-size: 1rem; margin: 0; min-width: 0; flex: 1 1 14rem; overflow-wrap: anywhere; }
+.nsv-button {
+    font: inherit; font-size: .85rem; min-width: 44px; min-height: 44px; padding: .45em .7em;
+    max-width: 100%; white-space: normal; overflow-wrap: anywhere; border: 1px solid #3b5275;
+    border-radius: 4px; background: #f0f7ff; color: #243c60; cursor: pointer;
+}
+.nsv-button:disabled { opacity: .5; cursor: default; }
+.nsv-button[aria-pressed="true"] { color: #fff; background: #3b5275; }
+.nsv-button:focus-visible, .nsv-stage:focus-visible, .nsv-pdf:focus-visible { outline: 3px solid #b6610e; outline-offset: 2px; }
+.nsv-metadata, .nsv-status, .nsv-help { font-size: .8rem; margin: 0; overflow-wrap: anywhere; }
+.nsv-stage {
+    flex: 1 1 auto; min-height: 8rem; min-width: 0; width: 100%; overflow: auto;
+    box-sizing: border-box; padding: 12px; background: #e9edf1; border: 1px solid #ccd3dc;
+    overscroll-behavior: contain; touch-action: pan-x pan-y pinch-zoom;
+}
+.nsv-stage[hidden], .nsv-status[hidden] { display: none; }
+.nsv-canvas { position: relative; margin: auto; line-height: 0; }
+.nsv-image { display: block; max-width: none; margin: 0; user-select: none; }
+.nsv-zoom { font-size: .8rem; min-width: 3em; }
+.nsv-pdf { font-size: .85rem; min-height: 44px; display: inline-flex; align-items: center; width: fit-content; max-width: 100%; overflow-wrap: anywhere; }
+@media (max-width: 480px) {
+    .notes-score-dialog { width: calc(100vw - .5rem); max-width: calc(100vw - .5rem); height: calc(100vh - .5rem); height: calc(100dvh - .5rem); padding: .65rem; gap: .35rem; }
+    .nsv-header { align-items: flex-start; }
+    .nsv-title { flex-basis: 100%; }
+    .nsv-header > .nsv-button { margin-left: auto; }
+    .nsv-button { font-size: .8rem; }
+}
+
+.notes-score-dialog .nsv-credit { margin: 0 0 .5rem; font-size: .85rem; line-height: 1.4; overflow-wrap: anywhere; }

@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "records": [
+    {
+      "id": "mahler-v-peters1904-public",
+      "referenceId": "mahler-v-fluechtig-peters1904",
+      "reviewStatus": "public-approved",
+      "privatePreviewApproved": true,
+      "publicReleaseApproved": true,
+      "sourcePdfSha256": "9d5ec4a75d1968c5c026652851871bebe4df6ec5f3e2959866c72cfab47a4d0f",
+      "pdfUrls": [
+        "https://s9.imslp.org/files/imglnks/usimg/8/8d/IMSLP111956-SIBLEY1802.15647.1cc7-39087009398233score.pdf#page=1",
+        "https://s9.imslp.org/files/imglnks/usimg/8/8d/IMSLP111956-SIBLEY1802.15647.1cc7-39087009398233score.pdf#page=126"
+      ],
+      "assetSha256": [
+        "1760489a505b1fb1ce39d687a9a9180fa251e730b4bad6668105b80b1def8745",
+        "472390266d7bc16abfb412b367b34d26a97587930439f3a41f4252301e164507",
+        "3ff753a6a1f83d763795a88368e8a26ff71b0a9a8c81328a6ac8bacd7155a663",
+        "282407bfe4a5b9c85c4b2203946cf83afc4c55b8c11ede27936b1f4639db60bb"
+      ],
+      "basis": "Peters plate 8951 first edition [1904], Sibley / IMSLP #111956. Original PDF hash and all four faithful Poppler renders checked. Explicit publication authorization is limited to PDF pages 1 and 126, full-page/detail images and the viewer.",
+      "rendering": "Poppler pdftoppm; full pages 160 dpi; details 240 dpi at supplied top-left crop coordinates; no AI redraw"
+    }
+  ]
+}

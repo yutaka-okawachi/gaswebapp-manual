@@ -19,10 +19,11 @@ function assertPublicTree(directory=core.root){
 
 function assertReleaseManifest(manifest,directory=core.root){
  if(!manifest||!manifest.hashes||typeof manifest.hashes!=='object'||Array.isArray(manifest.hashes)||!Object.keys(manifest.hashes).length)throw Error('公開記録のファイル一覧が不正です。');
- const enabled=englishEnabled(directory),dataPaths=new Set(artifacts.expectedPaths);
+ const enabled=englishEnabled(directory),dataPaths=new Set(artifacts.expectedPaths),scoreAssets=require('../notes-score-build').approvedAssets(directory);
  for(const [file,hash]of Object.entries(manifest.hashes)){
   if(!/^[a-f0-9]{64}$/.test(hash)||file.includes('\\')||/[?%#:\x00-\x1f]/.test(file)||file.split('/').some(part=>!part||part==='..'||part.startsWith('.')))throw Error('公開記録に非公開または不正なパスがあります。');
   if(file.startsWith('en/')&&!enabled)throw Error('英語公開ゲートが閉じています。再開用公開記録に英語ファイルがあります。');
+  if(scoreAssets.has(file)){if(scoreAssets.get(file)!==hash)throw Error('公開承認された楽譜画像のハッシュが不一致です。');continue;}
   const local=file.startsWith('en/')?file.slice(3):file;
   if(local.startsWith('mahler-search-app/data/')&&!dataPaths.has(local))throw Error('公開記録に想定外のデータファイルがあります。');
   if(!['index.html','license.html','privacy.html','robots.txt','sitemap.xml'].includes(local)&&!/^mahler-search-app\/[^]*\.(html|js|css|json)$/.test(local))throw Error('公開記録に許可外のファイルがあります。');

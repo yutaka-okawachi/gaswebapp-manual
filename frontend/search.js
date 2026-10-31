@@ -35,7 +35,7 @@ window.searchTermsLocal = function (query, sourceFilter) {
     let html = '';
     results.forEach(row => {
         const [german, translation, source] = row;
-        html += `<div class="row">
+        html += `<div class="row" data-notes-heading="${escapeHtml(german)}" data-notes-source="${escapeHtml(source)}">
             <dt><dfn class="german">${renderDictionaryNotationText(german, german, source, typeof document !== 'undefined' && /^en\b/i.test(document.documentElement?.lang || '') ? 'en' : 'ja')}</dfn><span class="source">${escapeHtml(source)}</span></dt>
             <dd class="translation">${renderDictionaryNotationText(translation, german, source, typeof document !== 'undefined' && /^en\b/i.test(document.documentElement?.lang || '') ? 'en' : 'ja', part => renderDictionaryReferenceText(part, escapeHtmlWithBreaks))}</dd>
         </div>`;

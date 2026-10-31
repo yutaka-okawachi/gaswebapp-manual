@@ -502,7 +502,7 @@ function generateDicListHtml(dicData, termsIndex, abbreviationIndex, dictionaryE
     }
 
     // rowのHTML生成（セマンティックHTMLで辞書構造を明示）
-    html += `<div class="row"${termIdAttr}>
+    html += `<div class="row"${termIdAttr} data-notes-heading="${escapeHtml(german)}" data-notes-source="${escapeHtml(source)}">
   <dt${letterAnchorAttr}>
     <div class="dt-main">
       <dfn class="german">${typeof renderDictionaryNotationText === 'function' ? renderDictionaryNotationText(german, german, source, language) : escapeHtml(german)}</dfn>
@@ -680,6 +680,7 @@ ${breadcrumbJSON}
 
     <link rel="preload" href="css/common.css" as="style">
     <link rel="stylesheet" href="css/common.css">
+    <script defer src="js/notes-score-viewer.js"></script>
 
     <style>
         /* dic.html specific styles */

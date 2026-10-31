@@ -44,11 +44,16 @@ async function verifyPages(slug, sha, credential, baseUrl, manifest) {
             try {
                 const live = await (await request(`${baseUrl}mahler-search-app/release.json?v=${manifest.releaseId}`)).json();
                 if (live.releaseId !== manifest.releaseId) throw new Error('公開ファイルの反映待ち');
-                // Check every published text artifact, including all 48 example shards.
+                // Check all text artifacts and the explicitly approved score image bytes.
                 const entries = Object.entries(manifest.hashes);
                 for (let offset = 0; offset < entries.length; offset += 6) {
                     await Promise.all(entries.slice(offset, offset + 6).map(async ([file, hash]) => {
-                        const text = await (await request(`${baseUrl}${file}?v=${manifest.releaseId}`)).text();
+                        const response = await request(`${baseUrl}${file}?v=${manifest.releaseId}`);
+                        if (/^mahler-search-app\/images\/score-pages\/.+\.(?:png|webp|jpg)$/.test(file)) {
+                            if (sha256(Buffer.from(await response.arrayBuffer())) !== hash) throw new Error(`公開画像が不一致: ${file}`);
+                            return;
+                        }
+                        const text = await response.text();
                         if (sha256(normalizeText(text)) !== hash) throw new Error(`公開内容が不一致: ${file}`);
                         if (file.endsWith('.json')) JSON.parse(text);
                     }));

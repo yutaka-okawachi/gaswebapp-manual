@@ -84,11 +84,15 @@ function publicFiles() {
     }
     walk('mahler-search-app');
     if (bilingual.englishEnabled() && fs.existsSync(path.join(root, 'en'))) walk('en');
-    return files.sort();
+    files.push(...require('../notes-score-build').approvedAssets(root).keys());
+    return [...new Set(files)].sort();
 }
 function releaseManifest() {
     const hashes = {};
-    for (const file of publicFiles()) hashes[file] = sha256(normalizeText(fs.readFileSync(path.join(root, file), 'utf8')));
+    const scoreAssets = require('../notes-score-build').approvedAssets(root);
+    for (const file of publicFiles()) hashes[file] = scoreAssets.has(file)
+        ? sha256(fs.readFileSync(path.join(root, file)))
+        : sha256(normalizeText(fs.readFileSync(path.join(root, file), 'utf8')));
     const releaseId = sha256(JSON.stringify(hashes));
     const manifest = { schemaVersion: 1, releaseId, hashes };
     require('./bilingual').assertReleaseManifest(manifest);

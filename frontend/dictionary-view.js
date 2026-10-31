@@ -122,6 +122,10 @@ function renderDictionaryList(data) {
 
         const rowDiv = document.createElement("div");
         rowDiv.classList.add("row");
+        if (rowDiv.setAttribute) {
+            rowDiv.setAttribute('data-notes-heading', german);
+            rowDiv.setAttribute('data-notes-source', source);
+        }
 
         // Anchor assignment
         if (german && typeof german === "string") {

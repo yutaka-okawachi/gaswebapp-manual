@@ -1,0 +1,143 @@
+(function (win) {
+    'use strict';
+    const instances = new WeakMap();
+    function init(options) {
+        const doc = options.document || win.document, model = options.model || win.NotesScoreModel;
+        if (instances.has(doc)) return instances.get(doc);
+        const registry = model.registry(options.manifest, options.ledger, {mode:options.mode});
+        const dialog = doc.createElement('dialog');
+        if (typeof dialog.showModal !== 'function') return {available:false, enhance() {}, destroy() {}};
+        const english = (options.language || doc.documentElement.lang).startsWith('en');
+        const t = english ? {
+            open:'View score image',close:'Close and return',full:'Whole page',excerpt:'Instruction detail',prev:'Previous page',next:'Next page',
+            out:'Zoom out',fit:'Fit',inside:'Zoom in',loading:'Loading score image…',error:'The image could not be displayed. Please use the original PDF.',
+            pdf:'Open original PDF',readable:'Readable size',region:'Score image. Scroll horizontally or use arrow keys when the image extends beyond the view.',help:'Scroll to read the instruction. + / − enlarges or reduces; 0 fits. Escape or Back closes the image.',printed:'printed p.',page:'PDF p.'
+        } : {
+            open:'楽譜画像を見る',close:'閉じて元へ戻る',full:'ページ全体',excerpt:'指示部分',prev:'前の頁',next:'次の頁',
+            out:'縮小',fit:'全体に合わせる',inside:'拡大',loading:'楽譜画像を読み込み中…',error:'画像を表示できませんでした。元のPDFを開いてください．',
+            pdf:'元のPDFを開く',readable:'読みやすい倍率',region:'楽譜画像。はみ出す部分は横スクロールや方向キーで読めます．',help:'指示部分は横にスクロールして読めます．+ / −で拡大・縮小，0で表示を合わせます．Escまたは「戻る」で閉じます．',printed:'印刷',page:'PDF'
+        };
+        const create = (tag, className, text) => {const e=doc.createElement(tag);if(className)e.className=className;if(text!=null)e.textContent=text;return e;};
+        const button = (label, action) => {const e=create('button','nsv-button',label);e.type='button';e.addEventListener('click',action);return e;};
+        const owner = 'nsv-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2), historyKey = 'gmtNotesScoreView';
+        let opened=false, entry=null, index=0, mode='full', zoom=0, fitted=false, image=null, loaded=false, generation=0, opener=null, savedScroll=null, resizeFrame=0;
+        const factors=[1,1.5,2,3,4,6,8], bindings=new WeakMap(), createdButtons=new Set(), returnTargets=new Map();
+        const title=create('h2','nsv-title');title.id=owner+'-title';
+        const closeButton=button(t.close,()=>close(true));
+        const header=create('div','nsv-header');header.append(title,closeButton);
+        const metadata=create('p','nsv-metadata');metadata.setAttribute('aria-live','polite');
+        const credit=create('p','nsv-credit');
+        const previous=button(t.prev,()=>select(index-1)), next=button(t.next,()=>select(index+1));
+        const full=button(t.full,()=>setMode('full')), excerpt=button(t.excerpt,()=>setMode('excerpt'));
+        const smaller=button(t.out,()=>changeZoom(-1)), fit=button(t.fit,()=>{zoom=0;fitted=true;layout(false);}), larger=button(t.inside,()=>changeZoom(1));
+        const zoomLabel=create('output','nsv-zoom');zoomLabel.setAttribute('aria-live','polite');
+        const tools=create('div','nsv-tools');tools.append(previous,next,full,excerpt,smaller,fit,larger,zoomLabel);
+        const status=create('p','nsv-status');status.setAttribute('role','status');
+        const stage=create('div','nsv-stage');stage.tabIndex=0;stage.setAttribute('role','region');stage.setAttribute('aria-label',t.region);
+        const canvas=create('div','nsv-canvas');stage.append(canvas);
+        const help=create('p','nsv-help',t.help), pdf=create('a','nsv-pdf',t.pdf);pdf.target='_blank';pdf.rel='noopener noreferrer';
+        dialog.className='notes-score-dialog';dialog.setAttribute('aria-labelledby',title.id);dialog.append(header,metadata,credit,tools,status,stage,help,pdf);doc.body.append(dialog);
+        function historyValue() {return {owner,entryId:entry.id,index,mode};}
+        function remember(replace) {
+            try {const state={...(win.history.state&&typeof win.history.state==='object'?win.history.state:{}),[historyKey]:historyValue()};win.history[replace?'replaceState':'pushState'](state,'',win.location.href);} catch (_) {/* Native close/PDF stay available if history is unavailable. */}
+        }
+        function restoreFocus() {
+            const target=opener?.isConnected?opener:[...createdButtons].find(b=>b.isConnected&&bindings.get(b)?.entry.id===entry?.id)||doc.querySelector('#termInput, #listContainer [tabindex], button, a[href]');
+            if(target)target.focus({preventScroll:true});
+            if(savedScroll)win.scrollTo(savedScroll.x,savedScroll.y);
+        }
+        function close(back) {
+            if(!opened)return;
+            const owns=win.history.state?.[historyKey]?.owner===owner;
+            opened=false;generation++;loaded=false;if(image)image.removeAttribute('src');canvas.replaceChildren();
+            doc.body.classList.remove('notes-score-view-open');if(dialog.open)dialog.close();restoreFocus();
+            if(back&&owns)win.history.back();
+        }
+        function open(value, pageIndex, from, history=true, selectedMode) {
+            if(!opened){savedScroll={x:win.scrollX,y:win.scrollY};opener=from||returnTargets.get(value.id)||null;dialog.showModal();opened=true;doc.body.classList.add('notes-score-view-open');}
+            entry=value;title.textContent=value.title[english?'en':'ja'];credit.textContent=value.credit?.[english?'en':'ja']||'';returnTargets.set(value.id,opener);
+            select(pageIndex, false, selectedMode);
+            if(history)remember(false);closeButton.focus({preventScroll:true});
+        }
+        function select(number, history=true, selectedMode) {
+            if(!entry||number<0||number>=entry.pages.length)return;
+            index=number;mode=selectedMode==='full'?'full':entry.pages[index].excerpt?'excerpt':'full';zoom=0;fitted=mode==='full';
+            load();if(history)remember(true);
+        }
+        function setMode(value) {if(value==='excerpt'&&!entry.pages[index].excerpt)return;mode=value;zoom=0;fitted=mode==='full';load();remember(true);}
+        function updateButtons() {
+            previous.disabled=index===0;next.disabled=index===entry.pages.length-1;
+            excerpt.disabled=!entry.pages[index].excerpt;full.setAttribute('aria-pressed',String(mode==='full'));excerpt.setAttribute('aria-pressed',String(mode==='excerpt'));
+            smaller.disabled=!loaded||zoom===0;larger.disabled=!loaded||zoom===factors.length-1;fit.disabled=!loaded;
+            zoomLabel.value=zoomLabel.textContent=zoom===0?(mode==='excerpt'&&!fitted?t.readable:t.fit):factors[zoom]+'×';
+        }
+        function load() {
+            const current=++generation, page=entry.pages[index], selected=page[mode];loaded=false;canvas.replaceChildren();stage.hidden=true;
+            status.hidden=false;status.textContent=t.loading;stage.setAttribute('aria-busy','true');
+            metadata.textContent=(index+1)+' / '+entry.pages.length+' · '+t.page+' '+page.pdfPage+' / '+t.printed+' '+page.printedPage+(english?'':'頁');
+            pdf.href=page.pdfUrl;updateButtons();
+            const nextImage=create('img','nsv-image');image=nextImage;nextImage.alt=title.textContent+' · '+metadata.textContent+' · '+(mode==='full'?t.full:t.excerpt);nextImage.draggable=false;nextImage.decoding='async';
+            const fail=()=>{if(current!==generation||!opened)return;loaded=false;stage.hidden=true;canvas.replaceChildren();status.hidden=false;status.textContent=t.error;stage.setAttribute('aria-busy','false');updateButtons();};
+            nextImage.addEventListener('error',fail,{once:true});
+            nextImage.addEventListener('load',()=>{
+                if(current!==generation||!opened)return;
+                if(nextImage.naturalWidth!==selected.width||nextImage.naturalHeight!==selected.height)return fail();
+                loaded=true;stage.hidden=false;status.hidden=true;stage.setAttribute('aria-busy','false');layout(false);
+            },{once:true});
+            canvas.append(nextImage);
+            try{nextImage.src=model.assetUrl(selected,options.assetBase,win.location.origin);}catch(_){fail();}
+        }
+        function layout(preserve=true) {
+            if(!opened||!loaded||!image)return;
+            const selected=entry.pages[index][mode], oldW=canvas.clientWidth||selected.width,oldH=canvas.clientHeight||selected.height;
+            const cx=(stage.scrollLeft+Math.min(stage.clientWidth,oldW)/2)/oldW,cy=(stage.scrollTop+Math.min(stage.clientHeight,oldH)/2)/oldH;
+            const fittedScale=Math.min(Math.max(stage.clientWidth-24,1)/selected.width,Math.max(stage.clientHeight-24,1)/selected.height,1);
+            const scale=(mode==='excerpt'&&!fitted?Math.max(fittedScale,.5):fittedScale)*factors[zoom];
+            canvas.style.width=selected.width*scale+'px';canvas.style.height=selected.height*scale+'px';image.style.width=selected.width*scale+'px';image.style.height=selected.height*scale+'px';
+            stage.scrollLeft=preserve?Math.max(0,cx*selected.width*scale-stage.clientWidth/2):0;stage.scrollTop=preserve?Math.max(0,cy*selected.height*scale-stage.clientHeight/2):0;updateButtons();
+        }
+        function changeZoom(delta){if(!loaded)return;zoom=Math.max(0,Math.min(factors.length-1,zoom+delta));layout(true);}
+        function enhance(scope=doc) {
+            for(const link of scope.querySelectorAll('a.dictionary-reference-link')){
+                const row=link.closest('[data-notes-heading][data-notes-source]');
+                const match=row&&registry.match(row.dataset.notesHeading,row.dataset.notesSource,link.href);
+                const existing=link.nextElementSibling,old=existing&&bindings.get(existing);
+                if(link.dataset.notesScoreEnhanced===owner&&old&&match&&old.entry.id===match.entry.id&&old.index===match.index)continue;
+                if(link.dataset.notesScoreEnhanced===owner){if(existing?.classList.contains('notes-score-open')){createdButtons.delete(existing);existing.remove();}delete link.dataset.notesScoreEnhanced;}
+                if(!match)continue;
+                const launch=button(t.open,()=>{const current=registry.match(row.dataset.notesHeading,row.dataset.notesSource,link.href);if(current&&current.entry.id===match.entry.id&&current.index===match.index)open(current.entry,current.index,launch);else enhance();});launch.classList.add('notes-score-open');
+                launch.setAttribute('aria-haspopup','dialog');launch.setAttribute('aria-label',t.open+' · '+t.page+' '+match.entry.pages[match.index].pdfPage);
+                bindings.set(launch,match);createdButtons.add(launch);link.after(launch);link.dataset.notesScoreEnhanced=owner;
+            }
+        }
+        const onKeys=event=>{
+            if(!opened)return;
+            if(event.key==='Tab'){
+                const controls=[...dialog.querySelectorAll('button:not([disabled]),a[href],[tabindex="0"]')].filter(e=>e.getClientRects().length);
+                const first=controls[0],last=controls[controls.length-1];
+                if(event.shiftKey&&doc.activeElement===first){event.preventDefault();last.focus();}
+                else if(!event.shiftKey&&doc.activeElement===last){event.preventDefault();first.focus();}
+            }
+            if(event.ctrlKey||event.metaKey||event.altKey)return;
+            if(event.key==='+'||event.key==='='){event.preventDefault();changeZoom(1);}
+            else if(event.key==='-'){event.preventDefault();changeZoom(-1);}
+            else if(event.key==='0'){event.preventDefault();zoom=0;fitted=true;layout(false);}
+        };
+        const onPop=()=>{const value=win.history.state?.[historyKey],found=value?.owner===owner&&registry.get(value.entryId);if(found&&Number.isInteger(value.index)&&value.index>=0&&value.index<found.pages.length&&['full','excerpt'].includes(value.mode))open(found,value.index,null,false,value.mode);else close(false);};
+        const onResize=()=>{if(opened&&!resizeFrame)resizeFrame=win.requestAnimationFrame(()=>{resizeFrame=0;layout(true);});};
+        // Native close events are queued. Ignore an old event after history has reopened this dialog.
+        dialog.addEventListener('keydown',onKeys);dialog.addEventListener('cancel',e=>{e.preventDefault();close(true);});dialog.addEventListener('close',()=>{if(!dialog.open)close(true);});
+        stage.addEventListener('click',()=>stage.focus({preventScroll:true}));
+        let drag=null;
+        stage.addEventListener('pointerdown',event=>{if(event.pointerType==='mouse'&&event.button===0&&zoom>0){drag={x:event.clientX,y:event.clientY,left:stage.scrollLeft,top:stage.scrollTop};stage.setPointerCapture?.(event.pointerId);stage.focus({preventScroll:true});}});
+        stage.addEventListener('pointermove',event=>{if(drag){stage.scrollLeft=drag.left+drag.x-event.clientX;stage.scrollTop=drag.top+drag.y-event.clientY;}});
+        const stopDrag=()=>{drag=null;};stage.addEventListener('pointerup',stopDrag);stage.addEventListener('pointercancel',stopDrag);stage.addEventListener('lostpointercapture',stopDrag);
+        win.addEventListener('popstate',onPop);win.addEventListener('resize',onResize);win.visualViewport?.addEventListener('resize',onResize);
+        const observer=new win.MutationObserver(records=>{if(records.some(r=>!dialog.contains(r.target))){for(const b of createdButtons)if(!b.isConnected)createdButtons.delete(b);enhance();}});observer.observe(doc.body,{childList:true,subtree:true,attributes:true,attributeFilter:['data-notes-heading','data-notes-source','href']});enhance();
+        const controller={available:true,enhance,close:()=>close(true),state:()=>({opened,entryId:entry?.id,index,mode,zoom:factors[zoom],fitted,loaded}),destroy(){close(true);observer.disconnect();win.removeEventListener('popstate',onPop);win.removeEventListener('resize',onResize);win.visualViewport?.removeEventListener('resize',onResize);if(resizeFrame)win.cancelAnimationFrame(resizeFrame);for(const b of createdButtons)b.remove();for(const link of doc.querySelectorAll('a[data-notes-score-enhanced]'))if(link.dataset.notesScoreEnhanced===owner)delete link.dataset.notesScoreEnhanced;dialog.remove();instances.delete(doc);}};
+        instances.set(doc,controller);return controller;
+    }
+    const api={init};
+    if(typeof module!=='undefined'&&module.exports)module.exports=api;else win.NotesScoreViewer=api;
+    if(win.document&&win.__NOTES_SCORE_VIEW_CONFIG__){const start=()=>{try{win.__NOTES_SCORE_VIEWER__=init(win.__NOTES_SCORE_VIEW_CONFIG__);}catch(_){win.console?.warn('Score image viewer unavailable; original PDF links remain available.');}};if(win.document.readyState==='loading')win.document.addEventListener('DOMContentLoaded',start,{once:true});else start();}
+})(typeof window!=='undefined'?window:globalThis);
