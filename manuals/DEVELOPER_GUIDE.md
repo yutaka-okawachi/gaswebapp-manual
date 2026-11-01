@@ -478,9 +478,20 @@ GAS更新後の応答が一時的に404になる場合は自動再試行しま�
 
 共通CSSの `.result-c` に `overflow-wrap: anywhere` を指定し、長い資料URLを狭い画面でも折り返します。回帰検証は `node scripts/test-result-source-links.js`、全ローカル検証は `node scripts/check-local.js` です。ブラウザーでは日英GM用語検索の `vorklingend` と作品別検索をスマートフォン幅で確認します。
 
-### Notesの楽譜画像（2026-10-31）
+### Notesの楽譜画像（2026-11-01）
 
-現在の公開対象はRS《Symphonia domestica》Bote & Bock 1904年版（plate 15613，IMSLP13130）のPDF／印刷9・13・15・29・35・115・116頁です。全頁7枚と詳細8枚を9項目に対応させ，元PDFリンクを保持します。15頁の2項目は同じ詳細画像を共用し，35頁のWiegenliedとクラリネット脚注は別の詳細画像です。表題紙と70頁は含めません。Mahlerの登録と4画像は撤去済みで，既存のNotes本文・表記統一・従来譜例は変更しません。今後もRS・Hindemith・Brucknerに限定し，版・権利・指示箇所を確認して別途登録します。
+公開対象は次のRSの確認済み楽譜ページです。既公開7頁を保持し，追加41頁を含めた全頁48枚と詳細33枚，計81画像を57項目・64のPDF頁参照に対応させ，元PDFリンクを保持します。
+
+| 作品・採用版 | PDF頁（ファイル先頭からの通し頁） | 印刷頁 |
+| --- | --- | --- |
+| Symphonia domestica：Bote & Bock1904，plate15613，IMSLP13130 | 9,13,15,29,35,70,115,116 | PDF頁と同じ |
+| Ein Heldenleben：Leuckart1899原版のDover1979復刻（Tone Poems Series II），IMSLP19168 | 34,44,61 | 210,220,237 |
+| Eine Alpensinfonie：Leuckart1915，plate F.E.C.L.7531のDover1993復刻，IMSLP20542 | 9,10,16,22,24,35,37,53,56,57,61,63,64,65,71,72,77,79,82,88,92,101,103,112,145,151 | PDF頁と同じ |
+| Don Quixote：Aibl1898，plate R.2885のDover1979復刻，IMSLP18787 | 23,32,37,59,60,62,65,70,90,93,94 | 215,224,229,251,252,254,257,262,282,285,286 |
+
+復刻版を原版当時の実物スキャンとは記載しません。対象は確認した旧譜面・脚注だけで，表題紙，現代の前付・翻訳は含めません。15頁の2項目は同じ詳細画像を共用し，35頁のWiegenliedとクラリネット脚注は別の詳細画像です。AlpenのDämpfer wegは同一項目で8頁に対応します。詳細がない参照では全頁だけを表示します。Quixote59頁のNotes本文のin Vortragは，印刷のim Vortragへ自動修正していません。
+
+多出典declamirend，Quixote PDF3/83，Till，Frau，Bruckner/Hindemith等の権利・範囲留保は登録しません。Mahlerの登録と4画像は撤去済みです。既存のNotes本文・表記統一・従来譜例は変更しません。今後もRS・Hindemith・Brucknerに限定し，版・権利・指示箇所と公開範囲を確認して別途登録します。
 
 例：[Wiegenlied日本語](https://yutaka-okawachi.github.io/gaswebapp-manual/mahler-search-app/dic.html#term-wiegenlied)／[英語](https://yutaka-okawachi.github.io/gaswebapp-manual/en/mahler-search-app/dic.html#term-wiegenlied)。PDFリンクの隣の「楽譜画像を見る」を選びます。
 

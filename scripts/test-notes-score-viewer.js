@@ -52,18 +52,39 @@ assert(first.includes('href="'+url+'"'));assert(!first.includes('notes-score-ope
 const evil=render([['"><img src=x onerror=alert(1)>','Text','[GM]']]);assert(!evil.includes('<img src=x'));assert(evil.includes('&quot;&gt;&lt;img'));
 const publicBuild=require('./notes-score-build'),publicPrepared=publicBuild.approved(),assets=publicBuild.approvedAssets();
 const emptyManifest={schemaVersion:1,items:[]},emptyLedger={schemaVersion:1,records:[]};assert.equal(model.registry(emptyManifest,emptyLedger).size,0);assert.equal(model.registry(emptyManifest,emptyLedger).match(item.match.heading,item.match.source,url),null);
-assert.equal(publicPrepared.manifest.items.length,9);assert.equal(publicPrepared.ledger.records.length,9);assert.equal(assets.size,15);
-const expectedPages={'rs-domestica-pauke-fis':9,'rs-domestica-deutlicher-ausdrucksvoller':13,'rs-domestica-onkels-mama':15,'rs-domestica-tanten-papa':15,'rs-domestica-tempobezeichnungen':29,'rs-domestica-clarinetten-staerke':35,'rs-domestica-erleichterung':115,'rs-domestica-fuenf-takte':116,'rs-domestica-wiegenlied':35};
-const publicRegistry=model.registry(publicPrepared.manifest,publicPrepared.ledger),canonicalNotes=JSON.parse(fs.readFileSync(path.join(__dirname,'../mahler-search-app/data/dic_notes.json'),'utf8'));
-for(const entry of publicPrepared.manifest.items){assert.equal(entry.match.source,'[RS: Dom]');assert.equal(entry.pages.length,1);assert.equal(Number(new URL(entry.pages[0].pdfUrl).hash.slice(6)),expectedPages[entry.id]);assert(entry.pages[0].pdfUrl.includes('IMSLP13130'));const notes=canonicalNotes.filter(n=>n[0].normalize('NFC').trim()===entry.match.heading&&n[2].trim()===entry.match.source);assert.equal(notes.length,1);assert(notes[0][1].includes(entry.pages[0].pdfUrl));assert.equal(publicRegistry.match(entry.match.heading,entry.match.source,entry.pages[0].pdfUrl).entry.id,entry.id);}
-assert.deepEqual([...new Set(Object.values(expectedPages))].sort((a,b)=>a-b),[9,13,15,29,35,115,116]);assert([...assets.keys()].every(f=>f.startsWith('mahler-search-app/images/score-pages/rs-domestica-bote-bock1904/')));
+assert.equal(publicPrepared.manifest.items.length,57);assert.equal(publicPrepared.ledger.records.length,57);assert.equal(assets.size,81);
+// Explicit release scope, independent of the manifest. Extra pages/editions fail here.
+const expectedSources={
+ IMSLP13130:{notes:10,full:8,detail:9,offset:0,folder:'rs-domestica-bote-bock1904',pages:[9,13,15,29,35,70,115,116]},
+ IMSLP19168:{notes:3,full:3,detail:3,offset:176,folder:'rs-heldenleben-dover1979',pages:[34,44,61]},
+ IMSLP20542:{notes:28,full:26,detail:10,offset:0,folder:'rs-alpensinfonie-dover1993',pages:[9,10,16,22,24,35,37,53,56,57,61,63,64,65,71,72,77,79,82,88,92,101,103,112,145,151]},
+ IMSLP18787:{notes:16,full:11,detail:11,offset:192,folder:'rs-don-quixote-dover1979',pages:[23,32,37,59,60,62,65,70,90,93,94]}
+};
+const publicRegistry=model.registry(publicPrepared.manifest,publicPrepared.ledger),notesByLanguage=['','en/'].map(prefix=>JSON.parse(fs.readFileSync(path.join(__dirname,'..',prefix+'mahler-search-app/data/dic_notes.json'),'utf8')));
+const seen=Object.fromEntries(Object.keys(expectedSources).map(id=>[id,{notes:0,pages:new Set(),full:new Set(),detail:new Set()}]));let pageMappings=0,fullOnly=0;
+for(const entry of publicPrepared.manifest.items){
+ const sourceId=entry.pages[0].pdfUrl.match(/IMSLP\d+/)?.[0],expected=expectedSources[sourceId];assert(expected,'Unapproved source PDF');seen[sourceId].notes++;
+ for(const [index,page]of entry.pages.entries()){
+  const number=Number(new URL(page.pdfUrl).hash.slice(6));assert(page.pdfUrl.includes(sourceId));assert(expected.pages.includes(number),'Unapproved PDF page');assert.equal(page.printedPage,String(number+expected.offset));
+  assert(page.full.path.startsWith('images/score-pages/'+expected.folder+'/'));seen[sourceId].pages.add(number);seen[sourceId].full.add(page.full.path);if(page.excerpt){assert(page.excerpt.path.startsWith('images/score-pages/'+expected.folder+'/'));seen[sourceId].detail.add(page.excerpt.path);}else fullOnly++;
+  for(const canonicalNotes of notesByLanguage){const notes=canonicalNotes.filter(n=>n[0].normalize('NFC').trim()===entry.match.heading&&n[2].trim()===entry.match.source);assert.equal(notes.length,1,'Exact bilingual Notes identity');assert(notes[0][1].includes(page.pdfUrl),'Original PDF retained');const found=publicRegistry.match(notes[0][0],notes[0][2],page.pdfUrl);assert.equal(found.entry.id,entry.id);assert.equal(found.index,index);}
+  pageMappings++;
+ }
+}
+for(const [id,expected]of Object.entries(expectedSources)){assert.equal(seen[id].notes,expected.notes);assert.equal(seen[id].full.size,expected.full);assert.equal(seen[id].detail.size,expected.detail);assert.deepEqual([...seen[id].pages].sort((a,b)=>a-b),expected.pages);}
+assert.equal(pageMappings,64);assert.equal(fullOnly,29);
+assert([...assets.keys()].every(f=>Object.values(expectedSources).some(s=>f.startsWith('mahler-search-app/images/score-pages/'+s.folder+'/'))));
 assert.equal(publicRegistry.match('flüchtig','[GM], [RW: Oper], [RS: Oper]','https://s9.imslp.org/files/imglnks/usimg/8/8d/IMSLP111956-SIBLEY1802.15647.1cc7-39087009398233score.pdf#page=1'),null);
-assert.equal(publicRegistry.match('Doppelfuge','[RS: Dom]',publicPrepared.manifest.items[0].pages[0].pdfUrl.replace(/#page=\d+$/,'#page=70')),null);
+assert.equal(publicRegistry.match('Doppelfuge','[RS: Dom]',publicPrepared.manifest.items[0].pages[0].pdfUrl.replace(/#page=\d+$/,'#page=70')).entry.id,'rs-domestica-doppelfuge');
+const quixoteUrl=publicPrepared.manifest.items.find(e=>e.pages[0].pdfUrl.includes('IMSLP18787')).pages[0].pdfUrl.replace(/#page=\d+$/,'#page=59');
+assert.equal(publicRegistry.match('declamirend','[RS: Qui], [RS: Oper]',quixoteUrl),null,'Multi-source scope remains held');
+const mute=publicPrepared.manifest.items.find(e=>e.match.heading==='Dämpfer weg'&&e.match.source==='[RS: Alpen]');assert.deepEqual(mute.pages.map(p=>Number(new URL(p.pdfUrl).hash.slice(6))),[9,53,61,64,71,77,92,112]);assert(mute.pages.every(p=>p.excerpt===null));
+assert(publicPrepared.manifest.items.some(e=>e.match.heading==='sehr langsam, frei declamirend, sentimental in Vortrag.'));assert(!publicPrepared.manifest.items.some(e=>e.match.heading==='sehr langsam, frei declamirend, sentimental im Vortrag.'));
 const byId=new Map(publicPrepared.manifest.items.map(e=>[e.id,e]));assert.equal(byId.get('rs-domestica-onkels-mama').pages[0].excerpt.path,byId.get('rs-domestica-tanten-papa').pages[0].excerpt.path);assert.notEqual(byId.get('rs-domestica-wiegenlied').pages[0].excerpt.path,byId.get('rs-domestica-clarinetten-staerke').pages[0].excerpt.path);
 const bilingual=require('./sync/bilingual');
 for(const [file,sha]of assets){bilingual.assertReleaseManifest({hashes:{[file]:sha}});assert.throws(()=>bilingual.assertReleaseManifest({hashes:{[file]:'0'.repeat(64)}}));}
 assert.throws(()=>bilingual.assertReleaseManifest({hashes:{'mahler-search-app/images/score-pages/unreviewed/page-1.png':hash}}));
 const version=crypto.createHash('sha256').update(fs.readFileSync(path.join(__dirname,'../mahler-search-app/js/notes-score-viewer.js'),'utf8').replace(/\r\n/g,'\n')).digest('hex').slice(0,12),root=path.resolve(__dirname,'..');
 for(const original of ['<script defer src="js/notes-score-viewer.js"></script>','<script defer src="js/notes-score-viewer.js?v=old"></script>']){const updated=bilingual.versionScoreViewer(original,root);assert(updated.includes('notes-score-viewer.js?v='+version+'"'));assert.equal(bilingual.versionScoreViewer(updated,root),updated);}
-for(const prefix of ['','en/']){const sandbox=vm.createContext({window:{},document:{currentScript:{src:'https://site.test/project/'+prefix+'mahler-search-app/js/notes-score-viewer.js?v=1'}},location:{href:'https://site.test/project/'+prefix+'mahler-search-app/dic.html',origin:'https://site.test'},URL});vm.runInContext(publicBuild.runtimeSource(),sandbox);assert.equal(sandbox.window.__NOTES_SCORE_VIEW_CONFIG__.mode,'public');assert.equal(sandbox.window.__NOTES_SCORE_VIEW_CONFIG__.assetBase,'https://site.test/project/mahler-search-app/');assert.equal(sandbox.window.__NOTES_SCORE_VIEW_CONFIG__.manifest.items.length,9);assert.equal(sandbox.window.__NOTES_SCORE_VIEW_CONFIG__.ledger.records.length,9);}
+for(const prefix of ['','en/']){const sandbox=vm.createContext({window:{},document:{currentScript:{src:'https://site.test/project/'+prefix+'mahler-search-app/js/notes-score-viewer.js?v=1'}},location:{href:'https://site.test/project/'+prefix+'mahler-search-app/dic.html',origin:'https://site.test'},URL});vm.runInContext(publicBuild.runtimeSource(),sandbox);assert.equal(sandbox.window.__NOTES_SCORE_VIEW_CONFIG__.mode,'public');assert.equal(sandbox.window.__NOTES_SCORE_VIEW_CONFIG__.assetBase,'https://site.test/project/mahler-search-app/');assert.equal(sandbox.window.__NOTES_SCORE_VIEW_CONFIG__.manifest.items.length,57);assert.equal(sandbox.window.__NOTES_SCORE_VIEW_CONFIG__.ledger.records.length,57);}
 console.log('Notes score viewer model: '+invalid+' malformed/ambiguous cases, private/public separation, provenance, same-origin image paths, exact stable context, reorder safety, digest gate and escaped static integration passed.');
