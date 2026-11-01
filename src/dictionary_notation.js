@@ -17,16 +17,82 @@ function isSafeDictionaryReferenceUrl(value) {
   return host.length<=253 && host.replace(/\.$/,'').split('.').every(part=>/^[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?$/i.test(part));
 }
 
+// Consolidate only an unambiguous existing PDF citation and matching plain
+// reference-score line. The Sheet data and unrelated references stay untouched.
+function normalizeDictionaryScoreReferences(value) {
+  const original=String(value??''),lines=original.split(/\r?\n/);
+  const identity=text=>String(text).normalize('NFKC').toLowerCase().replace(/[^\p{L}\p{N}]/gu,'');
+  let changed=false;
+  // A generic source-list link may repeat a named score citation on the same page.
+  for(let i=0;i<lines.length;i++){
+    const extra=/^\s*\[([^\]\r\n]+)\]\((https?:\/\/[^\r\n]+)\)\s*$/.exec(lines[i]);
+    if(!extra||!isSafeDictionaryReferenceUrl(extra[2]))continue;
+    const ja=/^使用楽譜一覧掲載の参照譜，当該頁/.test(extra[1]),en=/^Score linked in the source list, corresponding page/.test(extra[1]);
+    const page=/#page=([1-9][0-9]*)$/.exec(extra[2]);if((!ja&&!en)||!page)continue;
+    const matches=[];
+    for(let j=0;j<i;j++){
+      const end=lines[j].indexOf(']('+extra[2]+')');if(end<0)continue;
+      const start=lines[j].lastIndexOf('[',end),label=lines[j].slice(start+1,end);
+      const pdf=/PDF\s*(?:p\.\s*)?([0-9]+)/i.exec(label),printed=/(?:楽譜|印刷|printed\s+p\.)\s*([0-9]+)/i.exec(label);
+      if(start>=0&&pdf?.[1]===page[1]&&printed?.[1]===page[1])matches.push({j,start,end,label});
+    }
+    if(matches.length!==1)continue;
+    const m=matches[0],label=ja?'（参照譜：'+m.label+'，使用楽譜一覧掲載）':'(Reference score: '+m.label+'; linked in the source list.)';
+    lines[m.j]=lines[m.j].slice(0,m.start+1)+label+lines[m.j].slice(m.end);lines.splice(i,1);i--;changed=true;
+  }
+  for(let i=0;i<lines.length;i++){
+    const ja=/^\s*（参照譜[：:]\s*(.+)）\s*$/.exec(lines[i]);
+    const en=/^\s*\(Reference score:\s*(.+)\)\s*$/i.exec(lines[i]);
+    if(!ja&&!en)continue;
+    const spec=(ja||en)[1],parts=/^(.*)[：:]\s*((?:印刷|printed\s+p\.)\s*\d+[^]*)$/i.exec(spec);
+    if(!parts||spec.includes(']('))continue;
+    const work=parts[1].trim(),printed=parts[2].replace(/[.。．]\s*$/,'').trim(),key=identity(work);
+    if(key.length<8)continue;
+    let header=-1;for(let j=i-1;j>=0;j--)if(/^\s*【[^】]+】\s*$/.test(lines[j])){if(/^\s*【(?:参考資料|References)】\s*$/i.test(lines[j]))header=j;break;}
+    if(header<0)continue;
+    const candidates=[];
+    for(let j=header+1;j<i;j++){
+      const link=/^\s*(?:[・-]\s*)?\[([^\]\r\n]+)\]\((https?:\/\/[^\r\n]+)\)\s*$/.exec(lines[j]);
+      if(!link||!isSafeDictionaryReferenceUrl(link[2]))continue;
+      const page=/#page=([1-9][0-9]*)$/.exec(link[2]),label=/^(.*?)[：:]\s*(.*)$/.exec(link[1]);
+      if(!page||!label||identity(label[1])!==key)continue;
+      const displayed=/(?:PDF\s*(?:p\.\s*)?)([0-9]+)/i.exec(link[1]);
+      if(displayed&&displayed[1]!==page[1])continue;
+      const already=/(?:PDF\s*(?:p\.\s*)?)([0-9]+)/i.exec(printed);
+      if(already&&already[1]!==page[1])continue;
+      const printedNumber=/^(?:印刷|printed\s+p\.)\s*([0-9]+)/i.exec(printed)?.[1];
+      const labelPrinted=/(?:印刷|printed\s+p\.)\s*([0-9]+)/i.exec(label[2])?.[1];
+      const verifiedNowak=/\/IMSLP563860-PMLP10607-B_5_Nowak_IMSLP\.pdf#page=[0-9]+$/.test(link[2]);
+      if(labelPrinted ? labelPrinted!==printedNumber : !verifiedNowak||Number(printedNumber)+2!==Number(page[1]))continue;
+      const detail=label[2].replace(/[（(]\s*PDF\s*(?:p\.\s*)?[0-9]+\s*(?:頁)?\s*[）)]/i,'').trim();
+      const pages=already?printed:printed+(ja?'／PDF'+page[1]+'頁':' / PDF p. '+page[1]);
+      const caption=ja?'（参照譜：'+work+'：'+pages+(detail?'，'+detail:'')+'）':'(Reference score: '+work+': '+pages+(detail?'; '+detail:'')+'.)';
+      candidates.push({index:j,markdown:'['+caption+']('+link[2]+')'});
+    }
+    if(candidates.length!==1)continue;
+    const match=candidates[0],other=lines.slice(header+1,i).some((line,j)=>header+1+j!==match.index&&line.trim());
+    if(!other){lines.splice(header,i-header+1,match.markdown);i=header;}
+    else {lines[i]=match.markdown;lines.splice(match.index,1);i--;}
+    changed=true;
+  }
+  return changed?lines.join('\n'):original;
+}
+
 // Only [plain label](http(s) URL) and plain web URLs are interpreted. Protected
 // spans never reach the internal-term linker; all source HTML stays literal.
 function renderDictionaryReferenceText(value,renderPlain) {
-  const text=String(value??''),escape=part=>String(part).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;');
+  const text=typeof normalizeDictionaryScoreReferences==='function'?normalizeDictionaryScoreReferences(value):String(value??''),escape=part=>String(part).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;');
   const literal=part=>escape(part).replace(/\r?\n/g,'<br>');
   const plain=typeof renderPlain==='function'?renderPlain:literal;
+  const safePlain=part=>{
+    const references=/^[ \t]*[（(](?:参照譜[：:]|Reference score:)[^\r\n]*[）)][ \t]*$/gmi;let html='',last=0,m;
+    while((m=references.exec(part))){html+=plain(part.slice(last,m.index))+literal(m[0]);last=m.index+m[0].length;}
+    return html+plain(part.slice(last));
+  };
   const starts=/<a\b[^>]*>[\s\S]*?<\/a\s*>|<[^>]*>|\[[^\]\r\n]*\]\(|https?:\/\//gi;
   let html='',last=0,match;
   while((match=starts.exec(text))){
-    html+=plain(text.slice(last,match.index));
+    html+=safePlain(text.slice(last,match.index));
     const start=match.index;
     let end=starts.lastIndex,url='',label='',valid=false;
     if(match[0][0]==='['){
@@ -54,7 +120,7 @@ function renderDictionaryReferenceText(value,renderPlain) {
     html+=valid?'<a class="dictionary-reference-link" style="overflow-wrap:anywhere" href="'+escape(url)+'" target="_blank" rel="noopener noreferrer">'+escape(label)+'</a>':literal(text.slice(start,end));
     last=end;starts.lastIndex=end;
   }
-  return html+plain(text.slice(last));
+  return html+safePlain(text.slice(last));
 }
 
 // Add new approved artwork here, with semantic IDs and stable source context.

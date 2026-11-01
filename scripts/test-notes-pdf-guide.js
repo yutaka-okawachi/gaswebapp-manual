@@ -22,23 +22,11 @@ for (const language of ['ja', 'en']) {
     const html = context.generateDicHtml(notes.map(row => row.slice()), abbr, null, null, { language });
     const missing = new Set();
     const output = language === 'en' ? locale.localizeHtml(html, missing) : html;
-    const guide = output.match(/<div class="page-description dictionary-score-help">([\s\S]*?)<\/div>/);
-    assert(guide, 'Each language has page guidance');
-    assert.equal((output.match(/class="page-description dictionary-score-help"/g) || []).length, 1);
-    assert(output.indexOf(guide[0]) < output.indexOf('<div id="listContainer">'));
-    assert.match(guide[1], /<details>\s*<summary>[^<]+<\/summary>/);
-    assert(!/<a\b|<script\b|<img\b|tabindex=|role=|onclick=|<details\s+[^>]*\bopen\b/i.test(guide[1]), 'Native closed details needs no script, request or custom keyboard role');
-    if (language === 'en') {
-        assert(!/[\u3040-\u30ff\u3400-\u9fff]/.test(guide[1]));
-        assert.match(guide[1], /counts pages from the start of the file/);
-        assert.match(guide[1], /printed page labels/);
-        assert.match(guide[1], /varies by device, browser, and PDF viewer/);
-        assert(!guide[1].includes('not yet available'));
-    } else {
-        assert.match(guide[1], /ファイル先頭から数えたページ/);
-        assert.match(guide[1], /ページラベルが印刷頁/);
-    }
-    assert.match(output, /\.dictionary-score-help\s*\{[^}]*overflow-wrap:\s*anywhere/);
+    assert(!output.includes('dictionary-score-help'));
+    assert(!output.includes('指定頁へ移動しない場合'));
+    assert(!output.includes('If the link does not jump to the page'));
+    assert(!output.includes('Acrobat'));
+    assert(!output.includes('notes-score-viewer.js'), 'Notes use direct PDF links');
     const list = context.generateDicListHtml(notes.map(row => row.slice()), context.generateDicTermsIndex(notes), context.generateAbbreviationIndex(abbr), null, language);
     assert.deepEqual(ids(html), ids(list), 'All dictionary anchors retain their generated identity and order');
     assert.equal(ids(html).length, notes.length);
@@ -50,4 +38,4 @@ for (const language of ['ja', 'en']) {
 }
 assert.equal(JSON.stringify(notes), before);
 assert.equal(JSON.stringify(fixture), fixtureBefore);
-console.log('Notes PDF guide: JA/EN, native details, wrapping, unchanged labels/URLs and sample anchors passed.');
+console.log('Notes direct PDF: obsolete JA/EN guidance and viewer loader absent; original labels/URLs and sample anchors preserved.');

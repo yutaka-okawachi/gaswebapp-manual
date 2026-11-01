@@ -478,9 +478,9 @@ GAS更新後の応答が一時的に404になる場合は自動再試行しま�
 
 共通CSSの `.result-c` に `overflow-wrap: anywhere` を指定し、長い資料URLを狭い画面でも折り返します。回帰検証は `node scripts/test-result-source-links.js`、全ローカル検証は `node scripts/check-local.js` です。ブラウザーでは日英GM用語検索の `vorklingend` と作品別検索をスマートフォン幅で確認します。
 
-### Notesの楽譜画像（2026-11-01）
+### Notesの参照譜と保存済み画像（2026-11-01）
 
-公開対象は次のRSの確認済み楽譜ページです。既公開7頁を保持し，追加41頁を含めた全頁48枚と詳細33枚，計81画像を57項目・64のPDF頁参照に対応させ，元PDFリンクを保持します。
+保存済み画像の対象は次のRSの確認済み楽譜ページです。既公開7頁を保持し，追加41頁を含めた全頁48枚と詳細33枚，計81画像を57項目・64のPDF頁参照に対応させ，元PDFリンクを保持します。Notesでは独自画像ビューアを起動せず，参照譜リンクから実PDFの該当頁（#page=N）へ直接移動します。画像ファイルと台帳は保持します。
 
 | 作品・採用版 | PDF頁（ファイル先頭からの通し頁） | 印刷頁 |
 | --- | --- | --- |
@@ -489,16 +489,16 @@ GAS更新後の応答が一時的に404になる場合は自動再試行しま�
 | Eine Alpensinfonie：Leuckart1915，plate F.E.C.L.7531のDover1993復刻，IMSLP20542 | 9,10,16,22,24,35,37,53,56,57,61,63,64,65,71,72,77,79,82,88,92,101,103,112,145,151 | PDF頁と同じ |
 | Don Quixote：Aibl1898，plate R.2885のDover1979復刻，IMSLP18787 | 23,32,37,59,60,62,65,70,90,93,94 | 215,224,229,251,252,254,257,262,282,285,286 |
 
-復刻版を原版当時の実物スキャンとは記載しません。対象は確認した旧譜面・脚注だけで，表題紙，現代の前付・翻訳は含めません。15頁の2項目は同じ詳細画像を共用し，35頁のWiegenliedとクラリネット脚注は別の詳細画像です。AlpenのDämpfer wegは同一項目で8頁に対応します。詳細がない参照では全頁だけを表示します。Quixote59頁のNotes本文のin Vortragは，印刷のim Vortragへ自動修正していません。
+復刻版を原版当時の実物スキャンとは記載しません。対象は確認した旧譜面・脚注だけで，表題紙，現代の前付・翻訳は含めません。15頁の2項目は同じ詳細画像を共用し，35頁のWiegenliedとクラリネット脚注は別の詳細画像です。AlpenのDämpfer wegは同一項目で8頁に対応します。詳細のない頁には全頁画像だけを保存しています。Quixote59頁のNotes本文のin Vortragは，印刷のim Vortragへ自動修正していません。
 
 多出典declamirend，Quixote PDF3/83，Till，Frau，Bruckner/Hindemith等の権利・範囲留保は登録しません。Mahlerの登録と4画像は撤去済みです。既存のNotes本文・表記統一・従来譜例は変更しません。今後もRS・Hindemith・Brucknerに限定し，版・権利・指示箇所と公開範囲を確認して別途登録します。
 
-例：[Wiegenlied日本語](https://yutaka-okawachi.github.io/gaswebapp-manual/mahler-search-app/dic.html#term-wiegenlied)／[英語](https://yutaka-okawachi.github.io/gaswebapp-manual/en/mahler-search-app/dic.html#term-wiegenlied)。PDFリンクの隣の「楽譜画像を見る」を選びます。
+例：[Wiegenlied日本語](https://yutaka-okawachi.github.io/gaswebapp-manual/mahler-search-app/dic.html#term-wiegenlied)／[英語](https://yutaka-okawachi.github.io/gaswebapp-manual/en/mahler-search-app/dic.html#term-wiegenlied)。参照譜リンクを選ぶと元PDFの該当頁を開きます。
 
-対応の正本は `frontend/notes-score-views.json`，公開判定は `scripts/notes-score-rights.json` です。物理行番号を使わず，原文見出し・出典全文・同じ版のPDF頁URLで照合します。無登録の参照には画像ボタンを追加せず，通常の辞書表示とPDFリンクを保ちます。未登録のPDFを自動で画像へ変換しません。
+対応の正本は `frontend/notes-score-views.json`，公開判定は `scripts/notes-score-rights.json` です。物理行番号を使わず，原文見出し・出典全文・同じ版のPDF頁URLで照合します。この対応表は保存素材の検証に使い，Notesの表示には画像ボタンを追加しません。未登録のPDFを自動で画像へ変換しません。
 
-公開には `public-approved` と `publicReleaseApproved: true`，元PDF／全画像のSHA-256照合，日英のクレジットが必要です。私的準備のGOは公開許可ではありません。`scripts/notes-score-build.js` が承認済みの対応だけを共通JSへ組み込み，公開位置の未登録画像やハッシュ違いは停止します。登録画像は公開マニフェストとPagesのGET確認でも実体を照合します。
+公開には `public-approved` と `publicReleaseApproved: true`，元PDF／全画像のSHA-256照合，日英のクレジットが必要です。私的準備のGOは公開許可ではありません。`scripts/notes-score-build.js` が承認済みの対応だけを保存用の独立JSへ組み込み，公開位置の未登録画像やハッシュ違いは停止します。このJSはNotesでは読み込みません。登録画像は公開マニフェストとPagesのGET確認でも実体を照合します。
 
-登録された画像では指示部分／全頁・前後頁・拡大縮小・画像内スクロールを利用できます。閉じる・Esc・ブラウザーの戻るで元の項目とフォーカスへ戻り，進むで画像を再表示できます。取得失敗やdialog未対応時は元PDFを利用します。登録が空の間は画像UIを表示しません。
+Notesの画像ボタンとビューア読み込みは停止しています。元からの譜例画像・音符表示は保持します。同じ版のPDF引用と参照譜表示が重なる場合だけ描画側で統合し，別文献と本文は残します。URL未確定の参照譜には資料リンクを補いません。追加のPDF設定ヘルプは表示しません。
 
-検証は `node scripts/test-notes-score-viewer.js` と `node scripts/check-local.js` です。共通ビューアのChrome・Edge隔離ヘッドレスによる日英・320/768/1280pxの検証は保持しています。無登録時の画像ボタン0と通常PDFリンクも確認します。SafariのMac/iPhone/iPad実機とタッチ操作は未確認です。
+検証は `node scripts/test-notes-reference-layout.js`，素材の既存検査は `node scripts/test-notes-score-viewer.js`，全ローカル検査は `node scripts/check-local.js` です。日英・320/768/1280pxで画像ボタンとビューアがなく，通常PDFリンクをキーボードやクリックで選べることを確認します。SafariのMac/iPhone/iPad実機とタッチ操作は未確認です。

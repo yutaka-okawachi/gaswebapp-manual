@@ -7,7 +7,7 @@ assert(target);const before=JSON.stringify(notes),c=vm.createContext({});
 vm.runInContext(read('src/dictionary_notation.js'),c);vm.runInContext(read('src/generate_dic_html.js'),c);
 const old=vm.createContext({});
 const {extractFunction}=require('./test-utils/extract-function');
-for(const name of ['isSafeDictionaryReferenceUrl','renderDictionaryReferenceText'])vm.runInContext(extractFunction(read('src/dictionary_notation.js'),name),old);
+for(const name of ['isSafeDictionaryReferenceUrl','normalizeDictionaryScoreReferences','renderDictionaryReferenceText'])vm.runInContext(extractFunction(read('src/dictionary_notation.js'),name),old);
 vm.runInContext(read('src/generate_dic_html.js'),old);
 const scoreToken='[[score:hindemith-glockenspiel-fsharp5]]';
 // Reverse only the approved display substitutions, back to each fixture's exact source.
