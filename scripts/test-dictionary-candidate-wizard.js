@@ -4,7 +4,7 @@ const path = require('path');
 const vm = require('vm');
 
 const root = path.resolve(__dirname, '..');
-const source = fs.readFileSync(path.join(root, 'src/sheet_column_layout.js'), 'utf8') + '\n' + fs.readFileSync(path.join(root, 'src/dictionary_candidate_wizard.js'), 'utf8');
+const source = ['sheet_column_layout.js','maintenance_text_style.js','dictionary_candidate_wizard.js'].map(file=>fs.readFileSync(path.join(root,'src',file),'utf8')).join('\n');
 const html = fs.readFileSync(path.join(root, 'src/dictionary_candidate_dialog.html'), 'utf8');
 const manifest = JSON.parse(fs.readFileSync(path.join(root, 'src/appsscript.json'), 'utf8'));
 const context = { console, JEV_CANDIDATE_CATEGORIES: {
@@ -25,7 +25,7 @@ assert.strictEqual(context.candidateWizardDraftSchema().required.length, 11);
 const body = context.candidateWizardSuggestedBody({ english: 'side, page', italian: 'lato, pagina',
   inflections: 'Seite は名詞の原形．', translation: '側，脇\nページ',
   musicExamples: '舞台の脇で\n楽譜の105ページ', comment: '' });
-assert.ok(body.startsWith('(≒ side, page / lato, pagina)\nSeite は名詞の原形．'));
+assert.ok(body.startsWith('【英】side, page／【伊】lato, pagina\n\nSeite は名詞の原形．'));
 assert.ok(body.includes('① 側，脇．\n② ページ．'));
 assert.ok(body.includes('【音楽用語としての訳例】\n「舞台の脇で」，「楽譜の105ページ」'));
 assert.ok(!body.includes('未確認'));
@@ -77,7 +77,7 @@ function draftHarness() {
     requireSheetWithHeaders: () => sheet,
     PropertiesService: { getScriptProperties: () => ({ getProperty: () => 'test-placeholder' }) },
     LockService: { getScriptLock: () => ({ tryLock: () => true, releaseLock() {} }) },
-    UrlFetchApp: { fetch() { h.fetches++; return h.response(); } }
+    UrlFetchApp: { fetch(_url, request) { h.fetches++; h.lastRequest=JSON.parse(request.payload); return h.response(); } }
   });
   vm.runInContext(source, h);
   const notesWrites = [];
@@ -89,7 +89,8 @@ function draftHarness() {
   h.readSheetRows = () => [];
   h.candidateWizardSourceMarkers = () => ['[GM]'];
   h.candidateWizardFindLinked = () => ({ rowNumber: 10, row: row.slice() });
-  h.candidateWizardSourceExample = () => ({ german: 'vorklingend' });
+  h.candidateWizardSourceExample = () => ({ german: 'vorklingend', japanese:'【英】prominent\n\n際立たせて' });
+  h.maintenanceStyleExamples_ = () => [{de:'allgemein',ja:'【一般的な意味】\n一般的な．',en:'【General meanings】\nGeneral.',purpose:'style_only',columns:'current ja/en'}];
   h.candidateWizardState = () => ({ observation: {}, candidate: { draftStatus: row[12] } });
   return { h, row, notesWrites };
 }
@@ -330,6 +331,25 @@ async function testDraftDialogFeedback() {
   assert.strictEqual(fetches, 1, 'feedback must never cause another paid API call');
 }
 
+function testCurrentStyleRegistrationAndDraftRequest() {
+  const {h,row,notesWrites}=draftHarness();
+  const fields={headword:'vorklingend',translation:'際立って響く',musicExamples:'際立たせて',english:'prominent，striking',italian:'in rilievo',comment:'引用「Deutsch、Original。」 [[score:real]] https://example.invalid/。'};
+  h.candidateWizardSaveDraft('test',fields);
+  const body=h.candidateWizardSuggestedBody(fields);assert(body.startsWith('【英】prominent, striking／【伊】in rilievo'));
+  assert(body.includes(fields.comment));h.candidateWizardRegisterExperimental('test',body,'',true);assert.equal(notesWrites.length,1);
+  row[10]='候補';assert.throws(()=>h.candidateWizardRegisterExperimental('test',body+'\n意味が近い表現を挙げている．','',true),/断り書き/);
+  assert.throws(()=>h.candidateWizardRegisterExperimental('test',body.replace('【英】prominent, striking／【伊】in rilievo','(≒ prominent / in rilievo)'),' ',true),/類語/);
+  h.candidateWizardSourceMarkers=()=>[];assert.throws(()=>h.candidateWizardRegisterExperimental('test',body,'',true),/出典/);assert.equal(notesWrites.length,1);
+  const catalog=draftHarness();catalog.row[10]='候補';catalog.h.candidateWizardSaveDraft('test',{headword:'AV',translation:'RS の作品目録番号．',english:'unneeded',italian:'unneeded'});
+  const catalogBody=catalog.h.candidateWizardSuggestedBody({headword:'AV',translation:'RS の作品目録番号．',english:'unneeded',italian:'unneeded'});
+  catalog.h.candidateWizardRegisterExperimental('test',catalogBody,'',true);assert.equal(catalog.notesWrites.length,1);assert(!/【英】|【伊】/.test(catalogBody));
+  const ai=draftHarness();const draft={headword:'vorklingend',part_of_speech:'現在分詞',inflections:[],general_meanings:['際立って響く'],english_equivalents:['invented without evidence'],italian_equivalents:[],music_examples:['際立たせて'],category:'奏法',similar_terms:[],notes:'',uncertainties:[]};
+  ai.h.response=()=>({getResponseCode:()=>200,getContentText:()=>JSON.stringify({status:'completed',output:[{content:[{type:'output_text',text:JSON.stringify(draft)}]}]})});
+  assert.throws(()=>ai.h.candidateWizardCreateDraft('test',true),/OpenAI/);assert.equal(ai.row[12],'結果要確認');assert.equal(ai.notesWrites.length,0);
+  const input=JSON.parse(ai.h.lastRequest.input);assert.equal(input.style_version,'2026-11-01');assert.equal(input.adopted_style_examples[0].columns,'current ja/en');assert(ai.h.lastRequest.instructions.includes('対応する表現'));assert.equal(ai.h.fetches,1);
+  console.log('Notes current-style manual/AI registration: current prefixes, optional equivalents/catalogue, original quotations/links, source guard and unsupported-API-output rejection passed.');
+}
+testCurrentStyleRegistrationAndDraftRequest();
 testDraftFailuresAndRecovery();
 testIncompleteDraftAndOptionalEquivalents();
 testDraftDialogFeedback().then(() => console.log('草案：失敗理由保存・再課金防止・状態再取得・画面表示 OK'))

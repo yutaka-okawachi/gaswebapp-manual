@@ -40,6 +40,10 @@ function showSyncInstructions() {
 function onOpen() {
   const ui = SpreadsheetApp.getUi();
   addSheetRowNavigationMenu_(ui);
+  ui.createMenu('🛠 日常保守')
+    .addItem('選択行の空欄を補完', 'showRowCompletion')
+    .addItem('前回の処理結果を確認', 'showLastRowCompletion')
+    .addToUi();
   ui.createMenu('🔧 データ同期')
     .addItem('同期方法を確認', 'showSyncInstructions')
     .addItem('このシートをデータ元に設定', 'setupSpreadsheetId')

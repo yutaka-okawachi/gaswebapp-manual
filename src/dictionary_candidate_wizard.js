@@ -93,10 +93,10 @@ function candidateWizardRunJev(id, confirmed) {
 }
 
 function candidateWizardSafeText(value, label, max, required) {
-  const result = String(value == null ? '' : value).normalize('NFC').trim();
+  const result = String(value == null ? '' : value).trim();
   if ((required && !result) || result.length > max || /[\u0000-\u0008\u000b\u000e-\u001f]/.test(result) ||
       /^[=+@-]/.test(result)) throw new Error(label + 'を確認してください．');
-  return result.replace(/。/g, '．').replace(/、/g, '，');
+  return ['見出し', '英語の類語', 'イタリア語の類語'].includes(label) ? result : maintenanceStylePunctuation_(result);
 }
 
 function candidateWizardSaveReview(id, decision, category, headword, memo) {
@@ -298,6 +298,9 @@ function candidateWizardCreateDraft(id, confirmed) {
   if (!key || !model) throw new Error('OPENAI_API_KEY または OPENAI_DRAFT_MODEL が未設定です．');
   const example = candidateWizardSourceExample(found);
   if (!example.german) throw new Error('ドイツ語の実例が取得できないため，課金前に停止しました．');
+  const profile = maintenanceStyleCatalogue_(found.row[1]) ? 'catalogue' : 'dictionary';
+  const styleExamples = maintenanceStyleExamples_(found.spreadsheet, 'Notes', -1, profile);
+  const knownEquivalents = maintenanceStyleKnown_(example.japanese, '');
   const lock = LockService.getScriptLock();
   if (!lock.tryLock(10000)) throw new Error('草案の更新ロックを取得できませんでした．');
   try {
@@ -314,9 +317,12 @@ function candidateWizardCreateDraft(id, confirmed) {
       'music_examplesは実例に適した訳例だけを書く．英語・イタリア語の対応語は確信できるものだけ示し，不明なら空配列にする．' +
       '格変化形や出典を推測で補わない．未確定事項はuncertaintiesに書き，本文のコメントは作らない．' +
       'part_of_speechは日本語で書く（例：女性名詞）．inflectionsの各要素は見出しとの関係や格・数を示す日本語の説明文にし，' +
-      'ドイツ語の品詞名や語形だけの羅列にしない．確実な語形だけを記す．日本語句読点は「．」「，」を使う．',
+      'ドイツ語の品詞名や語形だけの羅列にしない．確実な語形だけを記す．日本語句読点は「．」「，」を使う．' +
+      maintenanceStyleRules_('Notes', profile).join('\n') +
+      '英伊対応はknown_equivalentsに明示されているものだけを配列に入れ，それ以外は空配列にする．',
     input: JSON.stringify({ search_term: found.row[1], german_example: example.german,
-      japanese_example: example.japanese, corpus: example.source }),
+      japanese_example: example.japanese, corpus: example.source, style_version: MAINTENANCE_STYLE_VERSION,
+      profile: profile, adopted_style_examples: styleExamples, known_equivalents: knownEquivalents }),
     text: { format: { type: 'json_schema', name: 'german_music_term_draft',
       strict: true, schema: candidateWizardDraftSchema() } }
   };
@@ -358,6 +364,13 @@ function candidateWizardCreateDraft(id, confirmed) {
         throw new Error('草案の配列形式が不正です．');
       }
     }
+    if ((draft.english_equivalents.length && maintenanceStyleForeignList_(draft.english_equivalents) !== knownEquivalents.english) ||
+        (draft.italian_equivalents.length && maintenanceStyleForeignList_(draft.italian_equivalents) !== knownEquivalents.italian)) throw new Error('根拠のない英伊対応');
+    maintenanceStyleValidate_(draft.general_meanings.concat(draft.music_examples, draft.inflections).join('\n'), 'ja',
+      { tab: 'Notes', de: draft.headword, basis: '', profile: 'annotation' });
+    const allowedReferences = maintenanceStyleReferenceTokens_((example.german || '') + '\n' + (example.japanese || ''));
+    const generatedText = Object.values(draft).flatMap(function (value) { return Array.isArray(value) ? value : typeof value === 'string' ? [value] : []; }).join('\n');
+    if (maintenanceStyleReferenceTokens_(generatedText).some(function (token) { return !allowedReferences.includes(token); })) throw new Error('根拠のない出典・リンク');
   } catch (_) {
     throw new Error(candidateWizardRecordDraftFailure(sheet, candidateId, 'response'));
   }
@@ -368,7 +381,7 @@ function candidateWizardCreateDraft(id, confirmed) {
     similar: Array.isArray(draft.similar_terms) ? draft.similar_terms.join('，') : '',
     notes: [draft.notes, ...(Array.isArray(draft.uncertainties) ? draft.uncertainties : [])]
       .filter(Boolean).join('／'),
-    english: draft.english_equivalents.join('，'), italian: draft.italian_equivalents.join('，'),
+    english: maintenanceStyleForeignList_(draft.english_equivalents), italian: maintenanceStyleForeignList_(draft.italian_equivalents),
     musicExamples: draft.music_examples.join('\n'), comment: ''
   };
   try {
@@ -448,11 +461,12 @@ function candidateWizardFormatInflections(items) {
     ? descriptions.map(value => value.replace(/[．。]+$/, '')).join('．') + '．' : '';
 }
 
-function candidateWizardValidateBodyMorphology(body) {
+function candidateWizardValidateBodyMorphology(body, headword) {
+  if (maintenanceStyleCatalogue_(headword)) return;
   const lines = String(body || '').split(/\r?\n/);
   const meaningIndex = lines.findIndex(line => line.trim() === '【一般的な意味】');
   if (meaningIndex < 0) throw new Error('B列本文に【一般的な意味】がありません．');
-  const start = lines[0].trim().startsWith('(≒ ') ? 1 : 0;
+  const start = /^(?:【英】|【伊】)/.test(lines[0].trim()) ? 1 : 0;
   for (const line of lines.slice(start, meaningIndex)) {
     candidateWizardValidateMorphology('', line.trim());
   }
@@ -463,28 +477,14 @@ function candidateWizardSourceMarkers(spreadsheet, headword) {
 }
 
 function candidateWizardEntryMissingFields(candidate) {
-  return [['headword', '見出し'], ['translation', '一般的な意味'], ['musicExamples', '音楽用語としての訳例']]
+  const fields = [['headword', '見出し'], ['translation', '一般的な意味']];
+  if (!maintenanceStyleCatalogue_(candidate.headword)) fields.push(['musicExamples', '音楽用語としての訳例']);
+  return fields
     .filter(([key]) => !String(candidate[key] || '').trim()).map(([, label]) => label);
 }
 
 function candidateWizardSuggestedBody(candidate) {
-  const meanings = String(candidate.translation || '').split(/\r?\n/).map(x => x.trim()).filter(Boolean);
-  const numbers = '①②③④⑤⑥⑦⑧⑨⑩';
-  if (meanings.length > numbers.length) throw new Error('一般的な意味は10項目以内にしてください．');
-  const numbered = meanings.map((line, i) => numbers[i] + ' ' +
-    line.replace(/^[①-⑩]\s*/, '').replace(/[．。]+$/, '') + '．').join('\n');
-  const music = String(candidate.musicExamples || '').split(/\r?\n/).map(x => x.trim()).filter(Boolean)
-    .map(x => '「' + x.replace(/^[「」]+|[「」]+$/g, '').replace(/[．。]+$/, '') + '」').join('，');
-  const partOfSpeech = String(candidate.partOfSpeech || '').trim().replace(/[．。]+$/, '');
-  const inflections = String(candidate.inflections || '').trim().replace(/[．。]+$/, '');
-  const morphology = (inflections && partOfSpeech && inflections.includes(partOfSpeech)
-    ? inflections : [partOfSpeech, inflections].filter(Boolean).join('．'));
-  const equivalents = [candidate.english, candidate.italian].map(value => String(value || '').trim()).filter(Boolean);
-  return [equivalents.length ? '(≒ ' + equivalents.join(' / ') + ')' : '',
-    morphology ? morphology + '．' : '',
-    '【一般的な意味】\n' + numbered,
-    '【音楽用語としての訳例】\n' + music].filter(Boolean).join('\n') +
-    (candidate.comment ? '\n\n' + candidate.comment : '');
+  return maintenanceStyleNotesBody_(candidate);
 }
 
 function candidateWizardRegisterExperimental(id, body, source, confirmed) {
@@ -507,14 +507,18 @@ function candidateWizardRegisterExperimental(id, body, source, confirmed) {
   const sourceMarkers = candidateWizardSourceMarkers(found.spreadsheet, headword);
   if (!sourceMarkers.length) throw new Error('RS・RW・GMの実例から出典を確認できませんでした．登録を中止しました．');
   const safeSource = sourceMarkers.join(', ');
-  for (const heading of ['【一般的な意味】', '【音楽用語としての訳例】']) {
+  const catalogue = maintenanceStyleCatalogue_(headword);
+  for (const heading of catalogue ? [] : ['【一般的な意味】', '【音楽用語としての訳例】']) {
     if (!safeBody.includes(heading)) throw new Error('B列本文に' + heading + 'がありません．');
   }
-  if (((details.english || details.italian) && !safeBody.startsWith('(≒ ')) ||
-      !/[①-⑩]/.test(safeBody) || !/「[^」]+」/.test(safeBody)) {
+  const expectedPrefix = maintenanceStyleNotesPrefix_(details.english, details.italian, headword);
+  if (!catalogue && ((expectedPrefix && !safeBody.startsWith(expectedPrefix + '\n')) ||
+      !/[①-⑩]/.test(safeBody) || !/「[^」]+」/.test(safeBody))) {
     throw new Error('B列本文の類語（入力がある場合）・番号付きの意味・音楽用語としての訳例を確認してください．');
   }
-  candidateWizardValidateBodyMorphology(safeBody);
+  maintenanceStyleValidate_(safeBody, 'ja', { tab: 'Notes', de: headword, profile: catalogue ? 'catalogue' : 'dictionary',
+    basis: '', known: { english: maintenanceStyleForeignList_(details.english), italian: maintenanceStyleForeignList_(details.italian) }, restrictEquivalents: true });
+  candidateWizardValidateBodyMorphology(safeBody, headword);
   const lock = LockService.getScriptLock();
   if (!lock.tryLock(10000)) throw new Error('辞書の更新ロックを取得できませんでした．');
   try {

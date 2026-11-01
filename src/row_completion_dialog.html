@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8"><base target="_top">
+  <style>
+    body { font: 14px/1.6 Arial,sans-serif; color: #23303e; margin: 18px; }
+    p { margin: 8px 0; } button { padding: 8px 12px; margin: 5px 5px 5px 0; cursor: pointer; }
+    button:disabled { cursor: default; opacity: .55; } textarea { box-sizing: border-box; width: 100%; min-height: 90px; font: inherit; }
+    section { border: 1px solid #aebbc8; border-radius: 7px; padding: 12px; margin: 14px 0; }
+    label { display: block; margin-top: 8px; } .context { white-space: pre-wrap; overflow-wrap: anywhere; max-height: 140px; overflow: auto; }
+    .muted { color: #526270; } #message { white-space: pre-wrap; overflow-wrap: anywhere; min-height: 26px; }
+    #message[data-error="true"] { color: #a32222; } h1 { font-size: 20px; } h2 { font-size: 16px; }
+    @media(max-width: 500px) { body { margin: 10px; } button { width: 100%; } }
+  </style>
+</head>
+<body>
+  <h1>選択行の空欄補完</h1>
+  <p>生成ボタンはOpenAI APIを使用します．毎回の課金確認は表示しません．案を確認・編集し，「確認した内容を空欄へ反映」を押すまで本文は変わりません．</p>
+  <p class="muted">原文・出典・使用箇所，正規化の配列数式，既存の値・式・書式・入力規則は保持します．Notesの出典資料そのものを自動取得する機能ではありません．</p>
+  <button id="refresh">保存状態を確認</button><button id="selection">現在の選択行を読み込む</button>
+  <p id="message" role="status" aria-live="polite"></p><p id="summary"></p>
+  <div id="rows"></div>
+  <div id="finishArea" hidden>
+    <label><input type="checkbox" id="checked"> 結果不明の場合，API利用状況と対象セルを確認した</label>
+    <button id="finish">この作業を終了する</button>
+  </div>
+  <p class="muted">案・処理結果は本人のUser Propertiesだけに保存します（前回1件）．共有シートや公開データには保存しません．終了後に新しい選択を読むと前回記録を置き換えます．反映後の公開は別途Data同期です．</p>
+  <script>
+    let state = null, busy = false, needsRefresh = false;
+    const edits = Object.create(null), $ = id => document.getElementById(id);
+    function message(text, error = false) { $('message').textContent = text; $('message').dataset.error = String(error); }
+    function lock(value) {
+      busy = value;
+      document.querySelectorAll('button,textarea,input').forEach(element => { element.disabled = value; });
+    }
+    function request(method, args, done) {
+      if (busy) return;
+      lock(true); message('処理中です．画面を閉じた場合も，次は「前回の処理結果を確認」から状態を確認できます．');
+      const runner = google.script.run.withSuccessHandler(result => {
+        needsRefresh = false; state = result; lock(false); render();
+        message(done || '保存状態を確認しました．');
+      }).withFailureHandler(error => {
+        lock(false); needsRefresh = true; render();
+        const detail = String(error && error.message || '').split('ROW_COMPLETION: ')[1];
+        message((detail ? detail.slice(0,250) + '\n' : '') + '入力は画面に保持しています．「保存状態を確認」で結果を読み直してください．生成の自動再送は行いません．', true);
+      });
+      runner[method](...args);
+    }
+    function text(parent, tag, value, className) {
+      const element = document.createElement(tag); element.textContent = value;
+      if (className) element.className = className; parent.appendChild(element); return element;
+    }
+    function button(parent, label, disabled, action) {
+      const element = text(parent, 'button', label); element.disabled = busy || needsRefresh || disabled;
+      element.addEventListener('click', action); return element;
+    }
+    function render() {
+      $('rows').replaceChildren(); const job = state && state.job;
+      $('selection').disabled = busy || needsRefresh || Boolean(job && !job.closed && job.rows.some(row => !['pending', 'blocked'].includes(row.status)));
+      $('finishArea').hidden = !job || job.closed;
+      $('finish').disabled = busy || needsRefresh;
+      if (!job) { $('summary').textContent = '作業記録はありません．対象タブで1～5行を選び，選択行を読み込んでください．'; return; }
+      $('summary').textContent = job.tab + '／処理ID ' + job.id + (job.closed ? '（終了済み）' : '') +
+        (state.apiReady ? '' : '／OpenAIのキーまたはモデルが未設定です．');
+      job.rows.forEach(row => {
+        const section = document.createElement('section'); $('rows').appendChild(section);
+        const statusLabels = { pending:'生成前', blocked:'保留', generating:'生成中', draft:'案を確認', needs_review:'案の編集が必要', uncertain:'結果要確認', applying:'反映中', partial:'反映結果を確認', applied:'反映済み' };
+        text(section, 'h2', row.number + '行：' + (statusLabels[row.status] || '状態を確認'));
+        const context = Object.entries(row.snapshot.values).map(([key, value]) => key + '：' + (value || '（空欄）')).join('\n');
+        text(section, 'p', context, 'context'); text(section, 'p', row.message);
+        if (row.status === 'pending') {
+          const requiresApi = row.targets.some(field => field !== 'whom_en');
+          button(section, requiresApi ? 'この行の翻訳案を生成' : '承認済みの指示対象訳を確認', job.closed || (requiresApi && !state.apiReady),
+            () => request('rowCompletionGenerate', [job.id, row.number], '案を確認し，必要なら編集してください．'));
+        }
+        const inputs = {};
+        if (['draft', 'needs_review', 'applying', 'partial', 'applied'].includes(row.status)) {
+          const editable = ['draft', 'needs_review'].includes(row.status);
+          row.targets.forEach(field => {
+            const label = text(section, 'label', field === 'whom_en' ? 'whom_en（既存の承認済み訳）' : field + '（確認・編集）');
+            const area = document.createElement('textarea'), key = job.id + ':' + row.number + ':' + field;
+            area.setAttribute('aria-label', label.textContent);
+            area.value = editable && Object.prototype.hasOwnProperty.call(edits, key) ? edits[key] : row.draft[field] || '';
+            area.readOnly = field === 'whom_en' || !editable || job.closed;
+            area.disabled = busy; area.addEventListener('input', () => { edits[key] = area.value; });
+            section.appendChild(area); inputs[field] = area;
+          });
+          if (row.status !== 'applied') button(section, editable ? '確認した内容を空欄へ反映' : '保存済みの確認案で反映を再開', job.closed,
+            () => request('rowCompletionApply', [job.id, row.number, Object.fromEntries(Object.entries(inputs).map(([key, area]) => [key, area.value]))], '反映結果を確認してください．'));
+        }
+      });
+    }
+    $('refresh').addEventListener('click', () => request('rowCompletionState', []));
+    $('selection').addEventListener('click', () => request('rowCompletionPreview', []));
+    $('finish').addEventListener('click', () => request('rowCompletionFinish', [state.job.id, $('checked').checked], '作業を終了しました．新しい行を選択して読み込めます．'));
+    request(<?!= preview ? "'rowCompletionPreview'" : "'rowCompletionState'" ?>, []);
+  </script>
+</body>
+</html>

@@ -94,7 +94,8 @@
       <div><label for="similar">類似語</label><input id="similar" maxlength="500"></div></div>
     <label for="draftNotes">草案作成時の未確認事項（B列には入れない）</label><textarea id="draftNotes" maxlength="1200"></textarea>
     <label for="comment">任意のコメント（必要ならご自身で記入）</label><textarea id="comment" maxlength="1200"></textarea>
-    <p class="muted">見出しがあれば途中でも保存できます．Notesへの登録には，一般的な意味と音楽用語としての訳例も必要です．類語は不明なら空欄にしてください．</p>
+    <p class="muted">見出しがあれば途中でも保存できます．Notesへの登録には，一般的な意味と音楽用語としての訳例も必要です（AV/TrVの目録説明を除く）．根拠のない英伊対応は空欄にし，確認できるものだけ記入してください．</p>
+    <p class="muted">対応語の列挙は「【英】…／【伊】…」，区切りは「, 」です．「対応する表現：」や一般的な断り書きは付けません．AV/TrVには対応語欄を作りません．</p>
     <button id="saveDraft">草案を保存する</button>
     <p id="saveMessage" class="feedback" role="status" aria-live="polite"></p>
   </section>
@@ -104,7 +105,7 @@
     <p id="entryReadiness" role="status" aria-live="polite"></p>
     <p class="muted">類語と訳例，①②…の意味区分を確認する．語形・格変化はドイツ語の羅列ではなく，日本語の説明文にする．未確認事項は本文に入れない．コメントは任意．重複見出しは登録しない．</p>
     <label for="entryBody">NotesのB列</label><textarea id="entryBody" rows="9" maxlength="6000"></textarea>
-    <label for="sourcePreview">C列の出典（RS・RW・GMを自動調査）</label><p id="sourcePreview" class="muted">登録時に実例を確認し，該当する出典を半角カンマ区切りで設定する．</p>
+    <label for="sourcePreview">source列の出典（RS・RW・GMを自動調査）</label><p id="sourcePreview" class="muted">登録時に実例を確認し，該当する出典を半角カンマ区切りで設定する．</p>
     <button id="register">この内容でNotesに登録する</button>
     <p id="registerMessage" class="feedback" role="status" aria-live="polite"></p>
   </section>

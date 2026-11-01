@@ -17,7 +17,7 @@ assert.doesNotMatch(sources, /ScriptApp\.(?:newTrigger|deleteTrigger|getProjectT
 const menus = [], entries = [];
 const c = vm.createContext({ SpreadsheetApp: { getUi: () => ({ createMenu(name) { menus.push(name); const menu = { addItem(label, handler) { entries.push({ label, handler }); return menu; }, addToUi() { return menu; } }; return menu; } }) }, addSheetRowNavigationMenu_: () => menus.push('行へ移動') });
 vm.runInContext(read('src/setup_credentials.js'), c); c.onOpen();
-assert.deepEqual(menus, ['行へ移動', '🔧 データ同期', '📊 検索履歴グラフ', '📚 辞書候補']);
+assert.deepEqual(menus, ['行へ移動', '🛠 日常保守', '🔧 データ同期', '📊 検索履歴グラフ', '📚 辞書候補']);
 for (const item of entries) assert.match(sources, new RegExp('function\\s+' + item.handler + '\\s*\\('), item.handler);
 assert.ok(entries.some(item => item.handler === 'showDictionaryCandidateWizard'));
 assert.ok(entries.some(item => item.handler === 'updateSearchHistoryCharts'));
