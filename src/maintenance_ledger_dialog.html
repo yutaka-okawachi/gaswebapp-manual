@@ -1,0 +1,25 @@
+<!doctype html><html lang="ja"><head><meta charset="utf-8"><base target="_top"><style>
+body{font:14px/1.6 Arial,sans-serif;margin:18px;color:#23303e}h1{font-size:20px}label{display:block;margin-top:12px}select,input,textarea,button{font:inherit;padding:8px;box-sizing:border-box;max-width:100%}select,textarea,input{width:100%}textarea{min-height:80px}pre{white-space:pre-wrap;overflow-wrap:anywhere}button{margin:12px 8px 0 0}#message{white-space:pre-wrap}details{margin:12px 0;border:1px solid #bbb;padding:8px}
+</style></head><body><h1>保守の判定・履歴</h1>
+<p>保存済みの判定と草案を確認します．未確認・保留・実験の記録も表示します．</p>
+<button id="refresh">状態を再読込</button><p id="message" role="status" aria-live="polite"></p><p id="counts"></p><ul id="issues"></ul>
+<label for="review">判定</label><select id="review"></select><pre id="proof"></pre>
+<label for="category">分類</label><select id="category"><option value="INFLECTION">格変化・活用形</option><option value="ORTHOGRAPHIC_VARIANT">別綴り</option><option value="TYPO">誤記候補</option><option value="NEW_TERM_CANDIDATE">新見出し候補</option><option value="UNCERTAIN">判断保留</option></select>
+<label for="headword">対応見出し（新見出し・判断保留は空欄）</label><input id="headword" maxlength="120">
+<label for="decision">人による確認</label><select id="decision"><option>未確認</option><option>保留</option><option>却下</option><option>採用</option></select>
+<label for="memo">確認メモ</label><textarea id="memo" maxlength="500"></textarea>
+<label><input id="checked" type="checkbox" style="width:auto"> 判定・文脈・見出しを確認した</label><button id="save">この判定を保存する</button>
+<p>採用の保存だけでは語形対応・Notesへ移送されません．移送済み記録の変更は，移送先との照合を先に行います．</p>
+<h2>旧草案</h2><div id="drafts"></div>
+<script>
+let state=null,busy=false;const $=id=>document.getElementById(id);
+const labels={unlinked_history:'観測と未連結の履歴',transfer_mismatch:'移送済みだが移送先と不一致：再移送前に要照合',ambiguous_link:'連結が重複',missing_review:'参照する判定が見つからない',experiment:'実験草案・本番登録禁止',no_retry:'実行結果が未確定・再送禁止'};
+function call(name,...args){return new Promise((resolve,reject)=>google.script.run.withSuccessHandler(resolve).withFailureHandler(reject)[name](...args));}
+function selected(){return state&&state.reviews.find(r=>r.id===$('review').value);}
+function renderReview(){const r=selected();$('checked').checked=false;$('proof').textContent=r?'入力語：'+r.term+'\n判定ID：'+r.id+'\n文脈：'+r.context+'\n候補：'+r.candidates:'';for(const k of ['category','headword','decision','memo'])$(k).value=r?r[k]||'':'';$('save').disabled=busy||!r;}
+function render(){const prior=$('review').value;$('counts').textContent=(state.active?'管理台帳を使用中':'旧台帳を使用中')+'／'+state.counts.map(c=>({observation:'観測',review:'判定',candidate:'候補'}[c.kind])+c.count+'件').join('・');$('issues').replaceChildren();state.issues.forEach(i=>{const li=document.createElement('li');li.textContent=i.term+'：'+(labels[i.type]||i.type);$('issues').append(li);});$('review').replaceChildren();state.reviews.forEach(r=>{const o=document.createElement('option');o.value=r.id;o.textContent=r.term+'／'+r.decision;$('review').append(o);});if(state.reviews.some(r=>r.id===prior))$('review').value=prior;$('drafts').replaceChildren();state.candidates.forEach(c=>{const d=document.createElement('details'),s=document.createElement('summary'),p=document.createElement('pre');s.textContent=c.term+'／'+c.status+'／'+c.review+(c.experimental?'／実験・本番登録禁止':'');p.textContent='候補ID：'+c.id+'\n'+c.memo+'\n'+c.draft;d.append(s,p);$('drafts').append(d);});renderReview();}
+async function operation(fn){if(busy)return;busy=true;document.querySelectorAll('button,input,select,textarea').forEach(e=>e.disabled=true);try{await fn();$('message').textContent='状態を読み込みました．';}catch(e){$('message').textContent=String(e&&e.message||e)+'\n自動再送しません．入力内容を保持したまま，保存状態を確認してください．';}finally{busy=false;document.querySelectorAll('button,input,select,textarea').forEach(e=>e.disabled=false);$('save').disabled=!selected();}}
+$('review').onchange=renderReview;$('refresh').onclick=()=>operation(async()=>{state=await call('maintenanceLedgerHistory');render();});
+$('save').onclick=()=>{const r=selected();if(!r||!$('checked').checked){$('message').textContent='判定の確認欄を選んでください．';return;}operation(async()=>{await call('maintenanceLedgerSaveReview',r.id,r.hash,$('decision').value,$('category').value,$('headword').value,$('memo').value);state=await call('maintenanceLedgerHistory');render();});};
+$('refresh').click();
+</script></body></html>

@@ -1,10 +1,10 @@
 /** Current adopted ja/en style only. Never learn from ja_old or review-workspace columns. */
-const MAINTENANCE_STYLE_VERSION = '2026-11-01';
+const MAINTENANCE_STYLE_VERSION = '2026-11-03';
 const MAINTENANCE_STYLE_EXAMPLE_TERMS = Object.freeze({
   GM: ['(Anm. f. d. Dirig. ) : Alle Betonungen consequent durchführen', '＋ Zeichen für einzelne gestopfte Töne'],
   RW: ['Farzana und Zemina treten hervor.', 'Die Feen und Geister versammeln sich um beide.'],
   RS: ['drohend', 'gut ausgehalten'],
-  Notes: ['allgemein', 'atmen', 'abwärts', 'AV']
+  Notes: ['Bogen', 'allgemein', 'atmen', 'abwärts', 'AV']
 });
 function maintenanceStyleCatalogue_(headword) { return /^(?:AV|TrV)$/i.test(String(headword).trim()); }
 function maintenanceStyleProfile_(tab, values) {
@@ -92,11 +92,12 @@ function maintenanceStyleRules_(tab, profile) {
   if (tab === 'Notes') return common.concat([
     'Notesは辞書本文または項目固有の注記．短訳用の汎用テンプレートでは処理しない．現在のprofile=' + profile + 'に従う．',
     '日本語の外国語列挙は【英】…／【伊】…から開始し，「対応する表現：」を付けない．列挙の区切りはASCII comma+space ", "．',
-    '英語本文に英語対応の列挙は不要．イタリア語対応が入力にある場合だけItalian: …を先頭に置く．Corresponding expressions:は不要．',
+    '英語本文に英語対応の列挙は不要．根拠のある既存または新規提案のイタリア語対応はItalian: …を先頭に置く．Corresponding expressions:は不要．',
     '複数行・複数義に分かれた既存の対応はknown_equivalents.groupsを見てすべて保持する．Italian:行は根拠のある語をcomma+spaceで並べ，意味ごとの固有注記は本文で訳して残す．',
-    '元々ない英伊対応を形式のために追加しない．known_equivalentsにない対応は不明として空欄・保留にし，例から借用しない．',
+    '既存本文の英訳・注記では元々ない英伊対応を形式のために追加しない．ただしnew_dictionary=trueの新規辞書項目は別で，見出し語そのものの確かな英伊対応をnotes_supportに根拠説明付きで提案する．空欄だからという理由だけで省略しない．不確かな対応は保留し，模範例の対応語を流用しない．',
+    '新規辞書項目の音楽用例を出典別に分ける場合，独立した見出しは[GM]，[RW: Oper]，[RS: Oper]を使う．sourceとusage_idsで確認できる採用実例の範囲だけを示し，文中の出典記号・譜例・URL・引用・HTMLは変更しない．',
     'AV/TrV等の作品目録略号に対応表現欄を作らない．',
-    profile === 'dictionary' ? '辞書項目の新規日本語本文は【一般的な意味】を中心に意味を区別する．【音楽用語としての訳例】は根拠があるものだけ．既存本文の英訳は段落・意味の粒度を保持する．' : '既存の項目固有説明・注記の構成を保持する．不要な辞書見出しや意味区分を一律に足さない．'
+    profile === 'dictionary' ? '辞書項目は一般義と音楽語義を区別する．新規日本語は【一般的な意味】，英語は【General meanings】を置く．usage_examplesがあれば【音楽用語としての訳例】／【Musical translation examples】で使用文脈ごとの訳を扱う．一語訳だけで済ませず，弦名・開放弦・調弦・奏法等の違いは渡された実例の範囲で説明する．既存本文の英訳は段落・意味の粒度を保持し，新しい解説を足さない．' : '既存の項目固有説明・注記の構成を保持する．不要な辞書見出しや意味区分を一律に足さない．'
   ]);
   return common.concat([
     tab + 'の原文翻訳．Notes風の【一般的な意味】・外国語対応欄・長い辞書解説を追加しない．',
@@ -107,7 +108,7 @@ function maintenanceStyleRules_(tab, profile) {
 function maintenanceStyleExamples_(book, tab, excludedRow, profile) {
   const sheet = book.getSheetByName(tab), terms = MAINTENANCE_STYLE_EXAMPLE_TERMS[tab];
   if (!sheet || !terms) throw new Error('現行採用例を確認できません．');
-  const count = Math.min(200, Math.max(0, sheet.getLastRow() - 1));
+  const count = Math.min(tab === 'Notes' ? 2000 : 200, Math.max(0, sheet.getLastRow() - 1));
   const rows = namedSheetRead_(sheet, ['de', 'ja', 'en'], 2, count).values;
   const examples = [];
   const wanted = tab === 'Notes' && profile === 'catalogue' ? ['AV'] : terms.filter(function (term) { return term !== 'AV'; });
@@ -159,6 +160,9 @@ function maintenanceStyleValidate_(text, language, options) {
     if (options.restrictEquivalents && ((equivalents.english && equivalents.english !== known.english) || (equivalents.italian && equivalents.italian !== known.italian))) throw new Error('根拠のない英伊対応を追加しないでください．');
   }
   if (language === 'en' && known.italian && !maintenanceStyleCatalogue_(options.de) && !value.startsWith('Italian: ' + known.italian + '\n')) throw new Error('入力にあるイタリア語対応をItalian:で保持してください．');
+  if (options.requireEquivalents && language === 'ja' && (known.english || known.italian) &&
+      !value.startsWith(maintenanceStyleNotesPrefix_(known.english, known.italian, options.de) + '\n')) throw new Error('確認用の英伊対応語案を日本語本文の先頭に保持してください．');
   if (options.newBody && options.profile === 'dictionary' && !value.includes(language === 'ja' ? '【一般的な意味】' : '【General meanings】')) throw new Error('新規Notesの辞書本文に一般的な意味の見出しがありません．');
+  if (options.requireMusicExamples && !value.includes(language === 'ja' ? '【音楽用語としての訳例】' : '【Musical translation examples】')) throw new Error('採用実例を踏まえた音楽用語の訳例を確認してください．');
   return text;
 }

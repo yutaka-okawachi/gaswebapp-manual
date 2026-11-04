@@ -13,9 +13,15 @@ const tables={
  'RW幕構成':[['Oper','Aufzug','Szene','日本語'],['work',1,1,'第1幕']],
  '楽譜情報':[['Oper','Publisher'],['feuersnot','Adolph Fürstner'],['work','Publisher']]
 };
-const before=JSON.stringify(tables),reads={};
+const reads={};
 const c=vm.createContext({Logger:{log(){}},SPREADSHEET_ID:'fixture-only',CacheService:{getScriptCache:()=>({remove(){}})},LockService:{getScriptLock:()=>({tryLock:()=>true,releaseLock(){}})},SpreadsheetApp:{openById:()=>({getSheetByName:name=>!tables[name]?null:({getDataRange:()=>({getValues:()=>{reads[name]=(reads[name]||0)+1;return tables[name];}})})})}});
-for(const file of ['sync_build','dictionary_notation','dictionary_example_shards','generate_dic_html','export_json'])vm.runInContext(read('src/'+file+'.js'),c);
+for(const file of ['sync_build','notes_publication_baseline','notes_publication','dictionary_notation','dictionary_example_shards','generate_dic_html','export_json'])vm.runInContext(read('src/'+file+'.js'),c);
+// This deliberately altered score-token headword is new, so its synthetic fixture needs explicit publication approval.
+c.Utilities={DigestAlgorithm:{SHA_256:'sha256'},Charset:{UTF_8:'utf8'},computeDigest:(_,text)=>[...require('node:crypto').createHash('sha256').update(text).digest()]};
+const noteFixture=tables.Notes[1];tables.Notes[0].push('maintenance_id','publication_state','maintenance_observation_id');
+noteFixture.push('score-token-publication-fixture','approved:'+c.notesPublicationHash_({de:noteFixture[0],ja:noteFixture[1],en:noteFixture[2],source:noteFixture[3]}),'');
+function approveNoteFixture(){const f=tables.Notes[1];f[5]='approved:'+c.notesPublicationHash_({de:f[0],ja:f[1],en:f[2],source:f[3]});}
+const before=JSON.stringify(tables);
 const snapshot=JSON.parse(JSON.stringify(c.exportAllDataToJson({requestId:'score-token-fixture',includeEnglish:true}))),gm=snapshot.files['mahler-search-app/data/mahler.json'][0],rs=snapshot.files['mahler-search-app/data/richard_strauss.json'][0];
 assert.equal(gm.de_normalized,'langsam');assert(gm.de.includes('[[score:'));assert(rs.de.includes(rsToken));assert.equal(rs.de_normalized,'vielleicht pultweise derart zu teilen ～ etc.','GAS export preserves the score-provided etc. search form');
 // This is the real production gate that the earlier renderer-only fixture omitted.
@@ -46,6 +52,7 @@ for(const scenario of ['legacy','partial']){
    row[index]=tab==='Notes'&&column==='de'?String(row[index]).replace(noteToken,'(の譜例)'):strip(row[index]);
   }
  }
+ approveNoteFixture();
  const originalRows=JSON.stringify(tables),batch=JSON.parse(JSON.stringify(c.exportAllDataToJson({requestId:'score-token-'+scenario,includeEnglish:true})));
  assert.doesNotThrow(()=>bilingual.validateEnglishSource(batch),scenario+' export passes the real row gate');
  const built=bilingual.prepare(batch,batch.requestId);assert.deepEqual(built.japanese,batch.files);assert.equal(JSON.stringify(tables),originalRows,'Export does not change '+scenario+' Sheet rows');assert(Object.values(reads).every(n=>n===1));
@@ -55,6 +62,7 @@ Object.assign(tables,initial);
 // Real one-read export -> full bilingual prepare -> publication gate. No production writes.
 for(const [body,expected]of [['The Japanese translation is “静かに” (“quietly”).',0],['「これは翻訳されていない日本語本文です。」 (a)',1],['English explanation with 未翻訳の本文。',1]]){
  tables.Notes[1][2]=body;
+ approveNoteFixture();
  const batch=JSON.parse(JSON.stringify(c.exportAllDataToJson({requestId:'citation-gate-fixture',includeEnglish:true})));
  const unchanged=JSON.stringify(batch),built=bilingual.prepare(batch,batch.requestId);
  assert.equal(JSON.stringify(batch),unchanged,'Citation handling never rewrites source values');

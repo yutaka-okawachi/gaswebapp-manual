@@ -1,0 +1,13 @@
+<!doctype html><html lang="ja"><head><meta charset="utf-8"><base target="_top"><style>body{font:14px/1.6 Arial,sans-serif;color:#23303e;margin:18px}h1{font-size:20px}label{display:block;margin-top:12px}select,input,button{font:inherit;padding:8px;max-width:100%}button{margin:12px 8px 0 0;cursor:pointer}#message{white-space:pre-wrap}button:disabled{opacity:.55}</style></head><body>
+<h1>既存見出しへの語形対応</h1><p>Jevは必要な場合だけ使えます．自分で対応を判断できる場合は，公開済み見出しと語形区分を選んで確認後に追加します．新しいNotes本文の作成は「項目の作成・補完」を使ってください．</p>
+<label for="observation">検索結果未登録語</label><select id="observation"></select>
+<label for="headword">対応する公開済みNotes見出し</label><input id="headword" list="words" maxlength="120"><datalist id="words"></datalist>
+<label for="category">語形区分</label><select id="category"><option value="INFLECTION">格変化・活用形など（詳細は語形対応で確認）</option><option value="ORTHOGRAPHIC_VARIANT">別綴り</option><option value="TYPO">誤記候補</option></select>
+<label><input type="checkbox" id="checked"> 見出し・原語の関係と語形区分を確認した</label>
+<button id="apply">確認して語形対応へ追加する</button><button id="refresh">状態を確認</button><button id="jev">Jevで調査・過去の判定を確認</button><p id="message" role="status" aria-live="polite"></p>
+<script>
+let busy=false,uncertain=false;const $=id=>document.getElementById(id);
+function request(method,args){if(busy)return;busy=true;document.querySelectorAll('button,input,select').forEach(e=>e.disabled=true);$('message').textContent='処理中です．';const r=google.script.run.withSuccessHandler(s=>{busy=false;uncertain=false;const selected=$('observation').value;$('observation').replaceChildren();s.observations.forEach(o=>{const e=document.createElement('option');e.textContent=o.term+'／'+o.status;e.value=o.id;$('observation').appendChild(e);});if(selected)$('observation').value=selected;$('words').replaceChildren();s.headwords.forEach(w=>{const e=document.createElement('option');e.value=w;$('words').appendChild(e);});document.querySelectorAll('button,input,select').forEach(e=>e.disabled=false);$('message').textContent=s.message||'状態を読み込みました．';}).withFailureHandler(e=>{busy=false;uncertain=true;document.querySelectorAll('button,input,select').forEach(e=>e.disabled=false);$('apply').disabled=true;$('message').textContent=String(e&&e.message||'確認できませんでした．').slice(0,350)+'\n状態を確認してください．自動再送しません．';});r[method](...args);}
+$('apply').addEventListener('click',()=>{if(!$('checked').checked){$('message').textContent='確認欄を選んでください．';return;}request('maintenanceAliasApply',[$('observation').value,$('headword').value,$('category').value,true]);});
+$('refresh').addEventListener('click',()=>request('maintenanceAliasesState',[]));$('jev').addEventListener('click',()=>{if(!busy)google.script.run.showDictionaryCandidateWizard();});request('maintenanceAliasesState',[]);
+</script></body></html>

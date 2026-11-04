@@ -53,6 +53,7 @@ function runNavigationTests(navigation, setup) {
         const entries = [];
         const menu = {
           addItem: (label, callback) => { entries.push([label, callback]); return menu; },
+          addSeparator: () => menu,
           addToUi: () => { menus.set(title, entries); return menu; }
         };
         return menu;

@@ -28,14 +28,14 @@ function buildEnglishExportSource_(tables, options) {
  Object.keys(ENGLISH_EXPORT_HEADERS).forEach(name => {
   const table = tables[name], names = ENGLISH_EXPORT_HEADERS[name];
   tabs[name] = table.values.slice(1).map((values,index) => {
-   const row = {__row:index+2};
+   const row = {__row:table.sourceRowNumbers ? table.sourceRowNumbers[index] : index+2};
    names.forEach(key => row[key] = values[table.englishColumns[key]] === undefined ? '' : values[table.englishColumns[key]]);
    // Match the Japanese export's derived search field; raw de/ja/en and context stay verbatim.
    if (Object.prototype.hasOwnProperty.call(row, 'de_normalized')) row.de_normalized = scoreExampleSearchText(row.de_normalized);
    return row;
   }).filter(row => name === 'GM' ? row.de || row.data : name === 'Notes' || EXPORT_SHEET_HEADERS[name].some(key => row[key] !== ''));
  });
- const source = {schema:1,requestId:String(options.requestId || ''),sourceHash:typeof SYNC_SOURCE_HASH === 'string' ? SYNC_SOURCE_HASH : '',readAt:new Date().toISOString(),tabs:tabs,termMappings:pickExportRows_(tables['語形対応']).filter(row => String(row[0] || '').trim() && String(row[1] || '').trim())};
+ const source = {schema:1,requestId:String(options.requestId || ''),sourceHash:typeof SYNC_SOURCE_HASH === 'string' ? SYNC_SOURCE_HASH : '',readAt:new Date().toISOString(),tabs:tabs,termMappings:notesPublicationFilterMappings_(tables.Notes.publicationRows, pickExportRows_(tables['語形対応']).filter(row => String(row[0] || '').trim() && String(row[1] || '').trim()))};
  if (tables.synopsis) source.synopsis = {schema:1,rows:tables.synopsis.values.slice(1,29).map((row,index)=>({__row:index+2,work:String(row[0]||'').trim(),ja:String(row[1]||'').trim(),en:String(row[2]||'').trim()})).filter(row=>row.work||row.ja||row.en)};
  return source;
 }
@@ -202,8 +202,8 @@ function buildExportSnapshot_(exportOptions) {
     const dicNotesJson = pickExportRows_(tables.Notes);
 
     // 本番用の見出し・関連語形対応（見出し〜補足の6項目）
-    const termMappingData = pickExportRows_(tables['語形対応'])
-        .filter(row => String(row[0] || '').trim() && String(row[1] || '').trim());
+    const termMappingData = notesPublicationFilterMappings_(tables.Notes.publicationRows, pickExportRows_(tables['語形対応'])
+        .filter(row => String(row[0] || '').trim() && String(row[1] || '').trim()));
     validateDictionaryTermMapping_(dicNotesJson, termMappingData);
 
     // 8. Abbreviation List (略記一覧)
@@ -263,6 +263,7 @@ function buildExportSnapshot_(exportOptions) {
  * @return {Object<string, {values: Array[], header: string[], columns: Object<string, number>}>}
  */
 function validateExportSheets_(ss, includeEnglish) {
+    if (typeof maintenanceSortAssertIdle_ === 'function') maintenanceSortAssertIdle_(ss);
     const tables = {};
     const names = Object.keys(EXPORT_SHEET_HEADERS).concat(Object.keys(EXPORT_POSITIONAL_SHEETS));
     names.forEach(name => {
@@ -278,6 +279,14 @@ function validateExportSheets_(ss, includeEnglish) {
         const header = values[0].map(normalizeExportHeader_);
         tables[name] = { values: values, header: header, columns: resolveExportColumns_(name, header, EXPORT_SHEET_HEADERS[name]) };
         if (includeEnglish && ENGLISH_EXPORT_HEADERS[name]) tables[name].englishColumns = resolveExportColumns_(name, header, ENGLISH_EXPORT_HEADERS[name]);
+        if (name === 'Notes') {
+            // One captured grid supplies both languages. Never export unpublished draft text or metadata.
+            const rows = notesPublicationRows_(values);
+            const published = rows.filter(notesPublicationIsPublished_);
+            tables[name].publicationRows = rows;
+            tables[name].sourceRowNumbers = published.map(row => row.number);
+            tables[name].values = [values[0]].concat(published.map(row => values[row.number - 1]));
+        }
     });
     // synopsis is an additional positional A:C source, only in the authenticated bilingual capture.
     // Read once; never write the tab or include column C in Japanese public files.

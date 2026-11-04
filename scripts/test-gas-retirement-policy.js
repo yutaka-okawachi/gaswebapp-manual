@@ -20,6 +20,27 @@ test('partial remote HEAD retirement blocks',()=>assert.throws(()=>guard.assertS
 test('already removed HEAD with old pinned deployment is safe',()=>guard.assertSafe(local,local,head,false,context));
 test('both remote copies retired no longer need a baseline deletion exception',()=>guard.assertSafe(local,local,local,false,{...context,version:1669}));
 test('unrelated unmerged change still blocks',()=>{const edited=head.map(f=>f.name==='main'?{...f,hash:'b'.repeat(64)}:f);assert.throws(()=>guard.assertSafe(local,edited,head,false,context),/未統合変更/);});
+const maintenanceFiles=['maintenance_model','morphology_survey_dialog','morphology_survey_review'].map(name=>({name,type:name.endsWith('_dialog')?'HTML':'SERVER_JS',source:'reviewed maintenance '+name+'\n'}));
+const maintenanceHead=manifest(maintenanceFiles),maintenanceApproval={schemaVersion:1,id:'maintenance-menu-20261103',baselineCommit:'c'.repeat(40),baselineVersion:1689,projectHash:sha256('synthetic'),files:maintenanceHead.filter(f=>f.name!=='appsscript'&&f.name!=='main')};
+const maintenanceContext={approval:[approval,maintenanceApproval],scriptId:'synthetic',version:1689};
+test('both fixed manifests accept only the three reviewed maintenance modules after English retirement',()=>guard.assertSafe(local,maintenanceHead,maintenanceHead,false,maintenanceContext));
+test('no maintenance manifest blocks its three missing modules',()=>assert.throws(()=>guard.assertSafe(local,maintenanceHead,maintenanceHead,false,{...maintenanceContext,approval}),/同期元にない/));
+for(const[mode,mutate]of [
+ ['wrong baseline',c=>c.approval[1].baselineVersion=1690],['wrong project',c=>c.scriptId='another'],
+ ['unknown maintenance name',c=>c.approval[1].files[0].name='unreviewed'],['partial maintenance list',c=>c.approval[1].files.pop()],
+ ['duplicate approval',c=>c.approval=[c.approval[1],c.approval[1]]],['too many approvals',c=>c.approval.push(c.approval[1])]
+])test('maintenance '+mode+' remains blocked',()=>{const c=JSON.parse(JSON.stringify(maintenanceContext));mutate(c);assert.throws(()=>guard.assertSafe(local,maintenanceHead,maintenanceHead,false,c));});
+test('maintenance HEAD edit and partial retirement remain blocked',()=>{
+ const edited=maintenanceHead.map(f=>f.name==='maintenance_model'?{...f,hash:'d'.repeat(64)}:f);
+ assert.throws(()=>guard.assertSafe(local,edited,maintenanceHead,false,maintenanceContext),/未確認/);
+ assert.throws(()=>guard.assertSafe(local,manifest(maintenanceFiles.slice(1)),maintenanceHead,false,maintenanceContext),/構成/);
+});
+test('unknown fourth module and unrelated unmerged changes are never included in the allowance',()=>{
+ assert.throws(()=>guard.assertSafe(local,manifest([...maintenanceFiles,{name:'private_unreviewed',type:'SERVER_JS',source:'x'}]),maintenanceHead,false,maintenanceContext),/private_unreviewed/);
+ const edited=maintenanceHead.map(f=>f.name==='main'?{...f,hash:'d'.repeat(64)}:f);
+ assert.throws(()=>guard.assertSafe(local,edited,maintenanceHead,false,maintenanceContext),/未統合/);
+});
+test('both maintenance remote copies already retired need no ongoing baseline exception',()=>guard.assertSafe(local,local,local,false,{...maintenanceContext,version:1690}));
 async function mainTest(){
  const dir=fs.mkdtempSync(path.join(os.tmpdir(),'gmt-retirement-test-'));
  try{
@@ -34,6 +55,15 @@ async function mainTest(){
   await assert.rejects(()=>guard.assertUnchanged(ticket,{local:read,remote}),/確認後/);passed++;
   fs.writeFileSync(file,JSON.stringify(approval));await guard.verifyUpload(ticket,{local:read,remote:async()=>({files:local,published:head,version:1668,deploymentHash:'fixed'})});passed++;
   await assert.rejects(()=>guard.verifyUpload(ticket,{local:read,remote:async()=>({files:manifest([retired[0]]),published:head,version:1668,deploymentHash:'fixed'})}),/読戻し/);passed++;
+  const maintenancePath=path.join(dir,'scripts/sync/maintenance-retirement-20261103.json');
+  fs.writeFileSync(maintenancePath,JSON.stringify(maintenanceApproval));
+  const maintenanceRemote=async()=>({files:maintenanceHead,published:maintenanceHead,version:1689,deploymentHash:'maintenance-fixed'});
+  const maintenanceTicket=await guard.preflight({GAS_DEPLOY_URL:'unused'},{local:read,remote:maintenanceRemote});
+  await guard.assertUnchanged(maintenanceTicket,{local:read,remote:maintenanceRemote});passed++;
+  fs.writeFileSync(maintenancePath,JSON.stringify({...maintenanceApproval,baselineCommit:'d'.repeat(40)}));
+  await assert.rejects(()=>guard.assertUnchanged(maintenanceTicket,{local:read,remote:maintenanceRemote}),/確認後/);passed++;
+  fs.writeFileSync(maintenancePath,JSON.stringify(maintenanceApproval));
+  await guard.verifyUpload(maintenanceTicket,{local:read,remote:async()=>({files:local,published:maintenanceHead,version:1689,deploymentHash:'maintenance-fixed'})});passed++;
  }finally{const resolved=path.resolve(dir);assert(resolved.startsWith(path.resolve(os.tmpdir())+path.sep)&&path.basename(resolved).startsWith('gmt-retirement-test-'));fs.rmSync(resolved,{recursive:true,force:true});}
  console.log('GAS retirement approval: '+passed+' cases passed; no generic deletion override, concurrent edits and incomplete removal blocked.');
 }mainTest().catch(e=>{console.error(e);process.exitCode=1;});

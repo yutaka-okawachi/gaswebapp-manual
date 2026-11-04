@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "id": "maintenance-menu-20261103",
+  "baselineCommit": "158b5fb0ba2f7979de2778aed313e018ec767db4",
+  "baselineVersion": 1689,
+  "projectHash": "914b44775c90b69355191dea7ca7de90c94e0e45f9c6cbb031ee91e5a5fbccca",
+  "files": [
+    {
+      "name": "maintenance_model",
+      "type": "SERVER_JS",
+      "hash": "09b1eab693de5a411d0dc2d2d52c4caeb585ea8bf3f5f096f217e306ee747ab1"
+    },
+    {
+      "name": "morphology_survey_dialog",
+      "type": "HTML",
+      "hash": "0e75ad1df2e9fde0ced2fe9465570c969e12c835c2fea2b30a372957be42d67c"
+    },
+    {
+      "name": "morphology_survey_review",
+      "type": "SERVER_JS",
+      "hash": "a5ec49129d2031e5957ddf0af33d1c27c280971ff9e657d64a8cc5935454ce83"
+    }
+  ]
+}

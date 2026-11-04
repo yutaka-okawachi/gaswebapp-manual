@@ -1818,6 +1818,7 @@ function testGenerateDicHtml() {
  */
 function generateDicHtmlFromSpreadsheet() {
   const ss = SpreadsheetApp.openById(SPREADSHEET_ID);
+  if (typeof maintenanceSortAssertIdle_ === 'function') maintenanceSortAssertIdle_(ss);
   
   // Notesシートから用語データを取得（見出し名 de / ja / source で列を特定し、列の並べ替えに追従する）
   const readByHeaders = (sheet, name) => {
@@ -1826,16 +1827,19 @@ function generateDicHtmlFromSpreadsheet() {
     return pickExportRows_({ values: values, columns: resolveExportColumns_(name, header, EXPORT_SHEET_HEADERS[name]) });
   };
   const dicNotesSheet = ss.getSheetByName('Notes');
-  let dicNotesData = [];
+  let dicNotesData = [], publicationRows = [];
   if (dicNotesSheet) {
-    dicNotesData = readByHeaders(dicNotesSheet, 'Notes');
+    publicationRows = notesPublicationRows_(dicNotesSheet.getDataRange().getValues());
+    dicNotesData = publicationRows.filter(notesPublicationIsPublished_)
+      .map(row => [row.values.de, row.values.ja, row.values.source]);
   }
 
   const termMappingSheet = ss.getSheetByName('語形対応');
-  const termMappingData = termMappingSheet
+  const termMappingData = notesPublicationFilterMappings_(publicationRows, termMappingSheet
     ? readByHeaders(termMappingSheet, '語形対応')
       .filter(row => String(row[0] || '').trim() && String(row[1] || '').trim())
-    : [];
+    : []);
+  validateDictionaryTermMapping_(dicNotesData, termMappingData);
   
   // 略記一覧シートからデータを取得
   const abbrSheet = ss.getSheetByName('略記一覧');

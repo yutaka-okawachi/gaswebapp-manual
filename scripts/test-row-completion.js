@@ -2,7 +2,7 @@
 // Entirely synthetic Spreadsheet/Properties/HTTP services; no credentials, Google or paid requests.
 const assert = require('node:assert/strict'), fs = require('node:fs'), path = require('node:path'), vm = require('node:vm'), crypto = require('node:crypto');
 const root = path.resolve(__dirname, '..');
-const source = ['sheet_column_layout.js', 'maintenance_text_style.js', 'row_completion.js'].map(f => fs.readFileSync(path.join(root, 'src', f), 'utf8')).join('\n');
+const source = ['sheet_column_layout.js', 'maintenance_text_style.js', 'row_completion_notes.js', 'row_completion_review.js', 'notes_entry_guard.js', 'row_completion.js'].map(f => fs.readFileSync(path.join(root, 'src', f), 'utf8')).join('\n');
 let passed = 0;
 function test(name, fn) { try { fn(); passed++; } catch (e) { e.message = name + ': ' + e.message; throw e; } }
 const schemas = {
@@ -51,7 +51,8 @@ function harness(tab = 'GM', options = {}) {
   const approvalSheet={getLastRow:()=>4+h.approved.length,getRange(r){return{getDisplayValues:()=>r===4?[approvedHeader]:h.approved.map(row=>row.slice())};}};
   let active = range(2,1);
   h.select=(r,n=1)=>{active=range(r,1,n);};
-  const book={getId:()=>'synthetic-book',getActiveSheet:()=>sheet,getActiveRange:()=>active,getSheetByName:name=>name===tab?sheet:name==='指示対象英訳確認'?approvalSheet:null};
+  h.relatedSheets={};
+  const book={getId:()=>'synthetic-book',getActiveSheet:()=>sheet,getActiveRange:()=>active,getSheetByName:name=>name===tab?sheet:name==='指示対象英訳確認'?approvalSheet:h.relatedSheets[name]||null};
   const script = new Map([['SPREADSHEET_ID','synthetic-book'],['OPENAI_API_KEY','synthetic-not-a-real-key'],['OPENAI_DRAFT_MODEL','synthetic-model']]), users=new Map();
   function props(map, personal) { return {
     getProperty:key=>{if(key==='OPENAI_API_KEY')h.keyReads++;return map.has(key)?map.get(key):null;},
@@ -73,12 +74,15 @@ function harness(tab = 'GM', options = {}) {
       if(h.onFetch)h.onFetch();
       if(h.transportFailure)throw Error('synthetic transport failure');
       const input=JSON.parse(h.lastRequest.input),fields=h.lastRequest.text.format.schema.required;
-      const draft=Object.fromEntries(fields.map(field=>[field,(tab==='Notes'&&input.profile==='dictionary'&&!input.source.ja?(field==='ja'?'【一般的な意味】\n':'【General meanings】\n'):'')+(field==='ja'?'静かに ':'Softly ')+(field==='en'&&input.source.ja?input.source.ja:input.source.de)]));
+      const draft=Object.fromEntries(fields.filter(field=>!['notes_support','review_notes'].includes(field)).map(field=>[field,(tab==='Notes'&&input.profile==='dictionary'&&!input.source.ja?(field==='ja'?'【一般的な意味】\n':'【General meanings】\n'):'')+(field==='ja'?'静かに ':'Softly ')+(field==='en'&&input.source.ja?input.source.ja:input.source.de)]));
+      if(fields.includes('notes_support'))draft.notes_support={english:'',italian:'',rationale:'不明な対応語は保留する．',usage_ids:[]};
+      if(fields.includes('review_notes'))draft.review_notes={reason:'',questions:''};
       if(h.mutateDraft)h.mutateDraft(draft);
       return {getResponseCode:()=>h.http||200,getContentText:()=>h.badJson?'not-json':JSON.stringify({status:h.incomplete?'incomplete':'completed',output:[{content:[{type:'output_text',text:JSON.stringify(draft)}]}]})};
     }}
   });
   vm.runInContext(source,c);Object.assign(h,{c,script,users,sheet,headers,rows,formulas,notes,validation});
+  if(tab==='Notes')assert.equal(c.notesEntryGuardInitialize_(),true);
   h.preview=()=>c.rowCompletionPreview().job;
   h.generate=job=>c.rowCompletionGenerate(job.id,job.rows[0].number).job;
   h.apply=job=>c.rowCompletionApply(job.id,job.rows[0].number,JSON.parse(JSON.stringify(job.rows[0].draft))).job;
@@ -88,7 +92,7 @@ function harness(tab = 'GM', options = {}) {
 for(const tab of Object.keys(schemas))for(const reverse of [false,true])test(tab+' original/reordered columns '+reverse,()=>{
   const h=harness(tab,{reverse}),before=JSON.stringify({notes:h.notes,validation:h.validation,formulas:h.formulas});
   let job=h.preview();assert.equal(h.fetches,0);assert.equal(h.writes.length,0);assert.equal(job.rows[0].status,'pending');
-  job=h.generate(job);assert.equal(h.fetches,1);assert.equal(h.writes.length,0);assert.equal(job.rows[0].status,'draft');
+  job=h.generate(job);assert.equal(h.fetches,1);assert.equal(h.writes.length,0);assert.equal(job.rows[0].status,tab==='Notes'?'needs_review':'draft');
   job=h.apply(job);assert.equal(job.rows[0].status,'applied');assert.ok(h.value('ja'));assert.ok(h.value('en'));
   assert.equal(h.value('ja_old'),'保存した旧訳');assert.equal(JSON.stringify({notes:h.notes,validation:h.validation,formulas:h.formulas}),before);
   assert(h.writes.every(w=>['ja','en','whom_en'].includes(w.column)));
@@ -122,12 +126,15 @@ test('zero page is valid, blank recipient is not invented',()=>{
 test('only uniquely approved recipient proposal, no API needed when text exists',()=>{
   const h=harness('RW');h.put('ja','既存');h.put('en','Existing');let j=h.generate(h.preview());assert.equal(h.fetches,0);assert.equal(j.rows[0].draft.whom_en,'Chorus');j=h.apply(j);assert.equal(h.value('whom_en'),'Chorus');
 });
-test('unapproved, ambiguous, or missing recipient proposals stay blank',()=>{
-  for(const mode of ['hold','duplicate','missing']){const h=harness('RS');if(mode==='hold')h.approved[0][4]='保留';if(mode==='duplicate')h.approved.push(h.approved[0].slice());if(mode==='missing')h.approved=[];const j=h.preview();assert(!j.rows[0].targets.includes('whom_en'));}
+test('unapproved, ambiguous, or missing recipient translations are held without API invention',()=>{
+  for(const mode of ['hold','duplicate','missing']){const h=harness('RS');if(mode==='hold')h.approved[0][4]='保留';if(mode==='duplicate')h.approved.push(h.approved[0].slice());if(mode==='missing')h.approved=[];
+    const j=h.preview();assert(!j.rows[0].targets.includes('whom_en'));assert.match(j.rows[0].whomReview.message,/新しい英訳の確認が必要/);assert.equal(h.fetches,0);
+    const generated=h.generate(j);assert.equal(h.fetches,1);assert(!JSON.parse(h.lastRequest.input).requested_fields.includes('whom_en'));h.apply(generated);assert.equal(h.value('whom_en'),'');
+  }
 });
 test('recipient cannot be edited or use changed approval',()=>{
   const h=harness('RS'),j=h.generate(h.preview());assert.throws(()=>h.c.rowCompletionApply(j.id,2,{...j.rows[0].draft,whom_en:'Invented'}),/承認済み/);
-  h.approved[0][4]='保留';const result=h.apply(j);assert.equal(result.rows[0].status,'partial');assert.equal(h.value('whom_en'),'');
+  h.approved[0][4]='保留';assert.throws(()=>h.apply(j),/承認済み/);assert.equal(h.writes.length,0);assert.equal(h.value('whom_en'),'');
 });
 test('column/header changes stop before API or writes',()=>{
   for(const mode of ['duplicate','rename','move']){
@@ -227,6 +234,102 @@ test('in-flight records cannot be closed early; stale ones require explicit veri
   assert.throws(()=>h.c.rowCompletionFinish(j.id,true),/生成処理中/);h.now+=7*60*1000;
   assert.throws(()=>h.c.rowCompletionFinish(j.id,false),/利用状況/);assert.equal(h.c.rowCompletionFinish(j.id,true).job.closed,true);
 });
+function notesWithPublishedUsages(sourceValue='[GM], [RS: Oper], [RW: Oper]') {
+  const h=harness('Notes');h.put('de','Saite');h.put('source',sourceValue);
+  for(const tab of ['GM','RW','RS']){
+    const file={GM:'mahler',RW:'richard_wagner',RS:'richard_strauss'}[tab],names=schemas[tab].slice().reverse();
+    const ja=JSON.parse(fs.readFileSync(path.join(root,'mahler-search-app/data/'+file+'.json'),'utf8'));
+    const en=JSON.parse(fs.readFileSync(path.join(root,'en/mahler-search-app/data/'+file+'.json'),'utf8'));
+    const identity=r=>JSON.stringify([r.de,r.data,r.Oper,r.Aufzug,r.Szene,r.page]);
+    const byId=new Map(en.map(r=>[identity(r),r]));
+    const rows=[names,...ja.map(a=>{const b=byId.get(identity(a)),v={...a,en:b?b.ja:''};return names.map(name=>v[name]===undefined?'':v[name]);})];
+    h.relatedSheets[tab]={getName:()=>tab,getLastRow:()=>rows.length,getLastColumn:()=>names.length,getRange(r,c,n=1,w=1){return{
+      getValues:()=>rows.slice(r-1,r-1+n).map(a=>a.slice(c-1,c-1+w)),getDisplayValues:()=>rows.slice(r-1,r-1+n).map(a=>a.slice(c-1,c-1+w)),getFormulas:()=>Array.from({length:n},()=>Array(w).fill(''))
+    };}};
+  }
+  h.mutateDraft=draft=>{
+    draft.ja='【英】string／【伊】corda\n\n【一般的な意味】\n① 楽器に張り，振動させて音を出す弦．\n② ラケットに張るガット．\n\n【音楽用語としての訳例】\n「弦」，「G線」，「開放弦」．';
+    draft.en='Italian: corda\n\n【General meanings】\n① A vibrating string of a musical instrument.\n② A racket string.\n\n【Musical translation examples】\nA string; the G string; open strings.';
+    const examples=JSON.parse(h.lastRequest.input).domain_context.usage_examples;
+    draft.notes_support={english:'string',italian:'corda',rationale:'弦・調弦・開放弦の語義は入力実例と対応する．英伊対応そのものは語彙知識による未承認案なので確認する．',usage_ids:examples.map(e=>e.id)};
+  };
+  return h;
+}
+test('new Saite Notes uses real adopted multilingual usages across permitted tabs and retains proposals privately',()=>{
+  const h=notesWithPublishedUsages();let j=h.preview();const snapshot=JSON.stringify(j.rows[0].snapshot);
+  assert.equal(h.fetches,0);assert.equal(h.writes.length,0);j=h.generate(j);
+  const input=JSON.parse(h.lastRequest.input),examples=input.domain_context.usage_examples;
+  assert.equal(input.domain_context.new_dictionary,true);assert.equal(examples.length,6);
+  assert.deepEqual([...new Set(examples.map(e=>e.tab))].sort(),['GM','RS','RW']);
+  assert(examples.some(e=>e.de.includes('leeren Saiten')));assert(examples.some(e=>e.de.includes('doppelten Saiten')));
+  assert(examples.every(e=>e.de&&e.ja&&e.en&&e.original_document_fetched===false));
+  assert.equal(j.rows[0].status,'needs_review');assert.equal(j.rows[0].notesSupport.italian,'corda');assert.equal(h.writes.length,0);
+  assert.equal(JSON.stringify(j.rows[0].snapshot),snapshot);assert(!JSON.stringify([...h.script]).includes('corda'));
+  assert.equal(h.lastRequest.text.format.schema.properties.notes_support.additionalProperties,false);
+  j=h.apply(j);assert.equal(j.rows[0].status,'applied');assert.equal(j.rows[0].notesSupport.humanReviewed,true);
+  assert(h.value('ja').startsWith('【英】string／【伊】corda'));assert(h.value('en').startsWith('Italian: corda'));
+  assert.equal(h.value('de'),'Saite');assert.equal(h.value('source'),'[GM], [RS: Oper], [RW: Oper]');assert.equal(h.fetches,1);
+});
+test('Notes usage matching is bounded and source-specific, covers plural/compound but not Seite',()=>{
+  const h=notesWithPublishedUsages('[RS: Oper]');h.generate(h.preview());const input=JSON.parse(h.lastRequest.input);
+  assert(input.domain_context.usage_examples.every(e=>e.tab==='RS'));assert.equal(input.domain_context.usage_scan.length,1);
+  const match=h.c.rowCompletionNotesMatch_('Saite');for(const word of ['Saite','Saiten','G-Saite','leeren Saiten'])assert(match.test(word));
+  for(const word of ['Seite','Saitenspiel','anderesaite'])assert(!match.test(word));assert.equal(h.c.rowCompletionNotesMatch_('.*'),null);
+  assert(JSON.stringify(input.domain_context.usage_examples).length<=6500);
+});
+test('new Notes requires musical section when actual usages were supplied; editable draft survives failure',()=>{
+  const h=notesWithPublishedUsages(),mutate=h.mutateDraft;h.mutateDraft=d=>{mutate(d);d.ja=d.ja.split('【音楽用語としての訳例】')[0].trim();};
+  let j=h.generate(h.preview());assert.equal(j.rows[0].status,'needs_review');assert(j.rows[0].notesSupport.examples.length);
+  assert.throws(()=>h.apply(j),/音楽用語/);assert.equal(h.writes.length,0);
+  j.rows[0].draft.ja+='\n\n【音楽用語としての訳例】\n「弦」，「開放弦」．';j=h.apply(j);assert.equal(j.rows[0].status,'applied');assert.equal(h.fetches,1);
+});
+test('English must retain Italian proposal and Japanese must retain declared counterparts',()=>{
+  for(const field of ['ja','en']){
+    const h=notesWithPublishedUsages(),mutate=h.mutateDraft;
+    h.mutateDraft=d=>{mutate(d);d[field]=d[field].split('\n\n').slice(1).join('\n\n');};
+    const j=h.generate(h.preview());assert.equal(j.rows[0].status,'needs_review');
+    assert(j.rows[0].message.includes('確認'));assert.equal(h.writes.length,0);
+    if(field==='en')assert.throws(()=>h.apply(j),/Italian:/);
+  }
+});
+test('explicit human review may correct new counterparts consistently; inconsistent Italian never writes',()=>{
+  const h=notesWithPublishedUsages();let j=h.generate(h.preview());
+  j.rows[0].draft.ja=j.rows[0].draft.ja.replace('【伊】corda','【伊】corda, corde');
+  assert.throws(()=>h.apply(j),/英伊対応|Italian:/);assert.equal(h.writes.length,0);
+  j.rows[0].draft.en=j.rows[0].draft.en.replace('Italian: corda','Italian: corda, corde');
+  j=h.apply(j);assert.equal(j.rows[0].status,'applied');assert.equal(j.rows[0].notesSupport.italian,'corda, corde');assert.equal(h.fetches,1);
+});
+test('unavailable English or Italian is held independently and is never filled just for appearance',()=>{
+  for(const [english,italian]of [['string',''],['','corda'],['','']]){
+    const h=harness('Notes');h.put('de','Saite');h.mutateDraft=d=>{
+      const prefix=[english?'【英】'+english:'',italian?'【伊】'+italian:''].filter(Boolean).join('／');
+      d.ja=(prefix?prefix+'\n\n':'')+'【一般的な意味】\n① 弦．';
+      d.en=(italian?'Italian: '+italian+'\n\n':'')+'【General meanings】\n① A string.';
+      d.notes_support={english,italian,rationale:'不明な言語だけ保留する．',usage_ids:[]};
+    };
+    let j=h.generate(h.preview());assert.equal(j.rows[0].status,'needs_review');j=h.apply(j);assert.equal(j.rows[0].status,'applied');
+    assert.equal(h.value('ja').includes('【英】'),Boolean(english));assert.equal(h.value('en').includes('Italian:'),Boolean(italian));
+  }
+});
+test('unknown or fabricated support IDs, links, controls and malformed lists are not accepted or retried',()=>{
+  for(const change of [d=>{d.notes_support.usage_ids=['RS:999999'];},d=>{d.notes_support.rationale='https://invented.invalid';},d=>{d.notes_support.italian='corda; invented';},d=>{d.notes_support.english='string\ncommand';}]){
+    const h=notesWithPublishedUsages(),mutate=h.mutateDraft;h.mutateDraft=d=>{mutate(d);change(d);};
+    const j=h.generate(h.preview());assert.equal(j.rows[0].status,'uncertain');assert.equal(h.writes.length,0);
+    assert.throws(()=>h.generate(j),/再生成/);assert.equal(h.fetches,1);
+  }
+});
+test('existing Notes, annotations, catalogue and other tabs never gain new-proposal permission',()=>{
+  const h=harness('Notes');h.put('ja','【一般的な意味】\n① 弦．');h.mutateDraft=d=>{d.en='Italian: corda\n\n【General meanings】\n① A string.';};
+  const j=h.generate(h.preview());assert.equal(JSON.parse(h.lastRequest.input).domain_context.new_dictionary,false);
+  assert(!h.lastRequest.text.format.schema.properties.notes_support);assert.equal(j.rows[0].status,'needs_review');assert.throws(()=>h.apply(j),/英伊対応/);
+  for(const tab of ['GM','RW','RS']){const s=harness(tab);s.generate(s.preview());assert(!s.lastRequest.text.format.schema.properties.notes_support);}
+  for(const de of ['AV','one long instruction with more than five words']){const n=harness('Notes');n.put('de',de);n.generate(n.preview());assert(!n.lastRequest.text.format.schema.properties.notes_support);}
+});
+test('new Notes proposals preserve conflict/lock protection and reject invented reference tokens',()=>{
+  const h=notesWithPublishedUsages(),j=h.generate(h.preview());h.put('source','user changed source');assert.throws(()=>h.apply(j),/変更/);assert.equal(h.writes.length,0);
+  const x=notesWithPublishedUsages(),mutate=x.mutateDraft;x.mutateDraft=d=>{mutate(d);d.ja+='\nhttps://invented.invalid/score#page=9';};
+  const draft=x.generate(x.preview());assert.equal(draft.rows[0].status,'needs_review');assert.throws(()=>x.apply(draft),/トークン/);assert.equal(x.writes.length,0);
+});
 test('dialog script is valid, renders text safely and has no charge confirmation step',()=>{
   const html=fs.readFileSync(path.join(root,'src/row_completion_dialog.html'),'utf8');
   const js=html.match(/<script>([\s\S]*?)<\/script>/)[1].replace(/<\?!=[^]*?\?>/g,"'rowCompletionPreview'");new vm.Script(js);
@@ -249,7 +352,7 @@ test('actual dialog flow preserves edits on failure and refreshes without regene
   const calls=[],queue=[];let fail=false;
   function runner(success,failure){return new Proxy({withSuccessHandler(fn){return runner(fn,failure);},withFailureHandler(fn){return runner(success,fn);}}, {get(object,key){if(key in object)return object[key];return(...args)=>queue.push(()=>{
     calls.push({method:key,args});if(fail){fail=false;failure({message:'ROW_COMPLETION: 保存状態を確認してください．'});return;}
-    const row=job.rows[0];if(key==='rowCompletionGenerate'){row.status='needs_review';row.draft={ja:'静かに',en:'Softly'};}
+    const row=job.rows[0];if(key==='rowCompletionGenerate'){row.status='needs_review';row.draft={ja:'静かに',en:'Softly'};row.notesSupport={english:'string',italian:'corda',rationale:'Evidence <img src=x onerror=bad()>',examples:[{id:'GM:2',location:'test',de:'Saite',ja:'弦',en:'string'}]};}
     if(key==='rowCompletionApply'){row.status='applied';row.draft=args[2];}
     success(JSON.parse(JSON.stringify({job,apiReady:true})));
   });}});}
@@ -259,6 +362,7 @@ test('actual dialog flow preserves edits on failure and refreshes without regene
   vm.runInNewContext(js,{document,google:{script:{run:runner()}}});queue.shift()();
   const byText=label=>all().find(e=>e.tagName==='BUTTON'&&e.textContent===label);
   byText('この行の翻訳案を生成').click();queue.shift()();
+  assert(all().some(e=>e.textContent==='Evidence <img src=x onerror=bad()>'));assert(!all().some(e=>e.tagName==='IMG'));
   let area=all().find(e=>e.tagName==='TEXTAREA');area.value='静かに（確認済み）';area.events.input();fail=true;
   byText('確認した内容を空欄へ反映').click();queue.shift()();
   assert.equal(all().find(e=>e.tagName==='TEXTAREA').value,'静かに（確認済み）');assert(byText('確認した内容を空欄へ反映').disabled);
@@ -268,4 +372,70 @@ test('actual dialog flow preserves edits on failure and refreshes without regene
   assert.equal(calls.filter(v=>v.method==='rowCompletionGenerate').length,1);assert.equal(calls.filter(v=>v.method==='rowCompletionState').length,1);
   assert(!all().some(e=>e.tagName==='IMG'));
 });
+function reviewColumn(h,value='',formula='') {
+ const field='理由・要確認事項';h.headers.push(field);for(const row of h.rows.slice(1))row.push('');for(const row of h.formulas)row.push('');
+ h.notes.push('keep-review-note');h.validation.push('keep-review-validation');h.put(field,value);h.formula(field,formula);return field;
+}
+test('GM/RW/RS review notes use the existing column format and are written only after review',()=>{
+ for(const tab of ['GM','RW','RS']){
+  const h=harness(tab),field=reviewColumn(h);h.mutateDraft=d=>{d.review_notes={reason:'原文の語形と入力された使用箇所に基づく。',questions:'総譜の文脈は未確認。'};};
+  const before=h.writes.length;let j=h.generate(h.preview());assert(j.rows[0].targets.includes(field));assert.equal(h.value(field),'');assert.equal(h.writes.length,before);
+  assert(j.rows[0].draft[field].startsWith('【根拠・未解決点】\n'));assert(j.rows[0].draft[field].includes('未確認．'));
+  j=h.apply(j);assert.equal(h.value(field),j.rows[0].draft[field]);assert.equal(h.value('ja_old'),'保存した旧訳');
+ }
+});
+test('existing review histories, formulas and absent columns are preserved and never sent to the model',()=>{
+ for(const mode of ['existing','formula','absent']){
+  const h=harness('RW'),field=mode==='absent'?'理由・要確認事項':reviewColumn(h,mode==='existing'?'DO_NOT_SEND_PRIVATE_REVIEW_HISTORY':'',mode==='formula'?'=""':'');
+  h.mutateDraft=d=>{d.review_notes={reason:'原文の短い指示を訳した．',questions:''};};let j=h.generate(h.preview());
+  assert(!j.rows[0].targets.includes(field));assert(j.rows[0].reviewNotes);assert(!h.lastRequest.input.includes('DO_NOT_SEND_PRIVATE_REVIEW_HISTORY'));
+  h.apply(j);if(mode!=='absent')assert.equal(h.value(field),mode==='existing'?'DO_NOT_SEND_PRIVATE_REVIEW_HISTORY':'');
+  if(mode==='formula')assert.equal(h.formulas[1][h.headers.indexOf(field)],'=""');
+ }
+});
+test('unnecessary reasons do not create an empty target or boilerplate record',()=>{
+ const h=harness(),field=reviewColumn(h),j=h.generate(h.preview());assert(!j.rows[0].targets.includes(field));h.apply(j);assert.equal(h.value(field),'');
+});
+test('review-note competition and malformed evidence do not overwrite existing user material',()=>{
+ const h=harness(),field=reviewColumn(h);h.mutateDraft=d=>{d.review_notes={reason:'文脈上の訳語を選択．',questions:''};};const j=h.generate(h.preview());h.put(field,'人の追記');assert.throws(()=>h.apply(j),/変更/);assert.equal(h.value(field),'人の追記');
+ const h2=harness();reviewColumn(h2);h2.mutateDraft=d=>{d.review_notes={reason:'https://example.invalid/fake-source',questions:''};};const j2=h2.generate(h2.preview());assert.equal(j2.rows[0].status,'needs_review');assert.equal(h2.writes.length,0);
+});
+test('missing recipient-only completion waits for canonical approval without paid request',()=>{
+ const h=harness('RS');h.approved=[];h.put('ja','既存訳');h.put('en','Existing translation');h.put('whom','Farzana, Zemina');
+ const pending=h.preview();assert.equal(pending.rows[0].status,'blocked');assert.match(pending.rows[0].message,/指示対象英訳確認/);assert.equal(h.fetches,0);assert.equal(h.writes.length,0);
+ h.approved.push(['RS','妖精 [feen]','Farzana, Zemina','自由修正','承認','','','','','Farzana and Zemina']);
+ let j=h.generate(h.preview());j=h.apply(j);assert.equal(h.value('whom'),'Farzana, Zemina');assert.equal(h.value('whom_en'),'Farzana and Zemina');assert.equal(h.value('ja'),'既存訳');assert.equal(h.value('en'),'Existing translation');assert.equal(h.fetches,0);
+});
+test('recipient matching respects work, tab, selection and safe value, not another approval',()=>{
+ for(const mode of ['work','tab','selection','empty','link','unknown']){const h=harness('RW');
+  if(mode==='work')h.approved[0][1]='別作品 [other]';if(mode==='tab')h.approved[0][0]='RS';
+  if(mode==='selection')h.approved[0][3]='第2案';if(mode==='empty')h.approved[0][5]='';
+  if(mode==='link')h.approved[0][5]='https://example.invalid';if(mode==='unknown')h.approved[0][4]='未確認';
+  const j=h.preview();assert(!j.rows[0].targets.includes('whom_en'));assert.match(j.rows[0].whomReview.message,/保存しません/);assert.equal(h.writes.length,0);
+ }
+ const h=harness('RW'),j=h.generate(h.preview());h.put('whom','別の対象');assert.throws(()=>h.apply(j),/変更/);assert.equal(h.writes.length,0);
+});
+test('recipient changed midway through writes stops remaining cells and preserves input',()=>{
+ const h=harness('RW'),j=h.generate(h.preview());h.afterWrite=()=>{h.approved[0][4]='保留';};
+ const applied=h.apply(j);assert.equal(applied.rows[0].status,'partial');assert.equal(h.value('whom_en'),'');assert.equal(h.value('whom'),'Chor');
+});
+test('GM proposal follows a unique unchanged row moved before generation or before application',()=>{
+ for(const phase of ['generate','apply']){
+  const h=harness('GM');h.put('data','M-9-9-99-v1&');let job=h.preview();
+  if(phase==='apply')job=h.generate(job);
+  [h.rows[1],h.rows[5]]=[h.rows[5],h.rows[1]];[h.formulas[1],h.formulas[5]]=[h.formulas[5],h.formulas[1]];
+  if(phase==='generate')job=h.generate(job);
+  job=h.apply(job);assert.equal(job.rows[0].number,6);assert.equal(job.rows[0].status,'applied');
+  assert(h.value('ja',6));assert.equal(h.value('ja',2),'');assert.equal(h.fetches,1);assert(h.writes.every(w=>w.row===6));
+ }
+});
+test('moved proposal refuses changed or ambiguous original content without writing or regenerating',()=>{
+ for(const mode of ['changed','ambiguous']){
+  const h=harness('GM');h.put('data','M-9-9-99-v1&');let job=h.generate(h.preview());
+  [h.rows[1],h.rows[5]]=[h.rows[5],h.rows[1]];[h.formulas[1],h.formulas[5]]=[h.formulas[5],h.formulas[1]];
+  if(mode==='changed')h.put('data','M-9-9-100-v1&',6);else{h.rows[4]=h.rows[5].slice();h.formulas[4]=h.formulas[5].slice();}
+  assert.throws(()=>h.apply(job),/変更/);assert.equal(h.writes.length,0);assert.equal(h.fetches,1);
+ }
+});
+
 console.log('Selected-row completion: '+passed+' scenarios passed; four tabs, private drafts, blank/formula guards, approved recipients, conflicts, no duplicate API, tokens/links and partial-write recovery. No real API or Sheet writes.');

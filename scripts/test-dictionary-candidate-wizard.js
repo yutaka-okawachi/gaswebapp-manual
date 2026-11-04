@@ -346,7 +346,7 @@ function testCurrentStyleRegistrationAndDraftRequest() {
   const ai=draftHarness();const draft={headword:'vorklingend',part_of_speech:'現在分詞',inflections:[],general_meanings:['際立って響く'],english_equivalents:['invented without evidence'],italian_equivalents:[],music_examples:['際立たせて'],category:'奏法',similar_terms:[],notes:'',uncertainties:[]};
   ai.h.response=()=>({getResponseCode:()=>200,getContentText:()=>JSON.stringify({status:'completed',output:[{content:[{type:'output_text',text:JSON.stringify(draft)}]}]})});
   assert.throws(()=>ai.h.candidateWizardCreateDraft('test',true),/OpenAI/);assert.equal(ai.row[12],'結果要確認');assert.equal(ai.notesWrites.length,0);
-  const input=JSON.parse(ai.h.lastRequest.input);assert.equal(input.style_version,'2026-11-01');assert.equal(input.adopted_style_examples[0].columns,'current ja/en');assert(ai.h.lastRequest.instructions.includes('対応する表現'));assert.equal(ai.h.fetches,1);
+  const input=JSON.parse(ai.h.lastRequest.input);assert.equal(input.style_version,'2026-11-03');assert.equal(input.adopted_style_examples[0].columns,'current ja/en');assert(ai.h.lastRequest.instructions.includes('対応する表現'));assert.equal(ai.h.fetches,1);
   console.log('Notes current-style manual/AI registration: current prefixes, optional equivalents/catalogue, original quotations/links, source guard and unsupported-API-output rejection passed.');
 }
 testCurrentStyleRegistrationAndDraftRequest();

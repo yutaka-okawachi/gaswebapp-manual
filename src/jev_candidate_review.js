@@ -211,29 +211,3 @@ function createJevReviewForObservation(rowNumber, expectedObservationId, confirm
     } finally { lock.releaseLock(); }
     return { reviewId, term };
 }
-
-function createJevReviewForSelectedObservationFromMenu() {
-  const ui = SpreadsheetApp.getUi();
-  const spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
-  const selection = spreadsheet.getActiveRange();
-  const sheet = spreadsheet.getActiveSheet();
-  if (sheet.getName() !== UNREGISTERED_RESULT_TERM_SHEET_NAME || !selection ||
-      selection.getNumRows() !== 1 || selection.getRow() < 2) {
-    ui.alert('対象行を選択してください',
-      '「検索結果未登録語」で，判定する語の行を1行だけ選択してください．', ui.ButtonSet.OK);
-    return;
-  }
-  try {
-    const observationId = String(sheet.getRange(selection.getRow(), 1).getValue() || '');
-    const term = String(sheet.getRange(selection.getRow(), 2).getValue() || '');
-    if (ui.alert('Jev判定を作成',
-      '「' + term + '」をJevで1回判定します．API課金が発生する可能性があります．実行しますか．',
-      ui.ButtonSet.YES_NO) !== ui.Button.YES) return;
-    createJevReviewForObservation(selection.getRow(), observationId, true);
-    ui.alert('判定を保存しました',
-      '「Jev判定」の新しい行を確認し，M列で採否を判断してください．この段階ではNotesと語形対応は変更していません．',
-      ui.ButtonSet.OK);
-  } catch (error) {
-    ui.alert('判定を完了できませんでした', String(error && error.message || error), ui.ButtonSet.OK);
-  }
-}

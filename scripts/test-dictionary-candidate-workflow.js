@@ -260,7 +260,8 @@ function testWiring() {
   const workflow = read('src/dictionary_candidate_workflow.js');
   const menu = read('src/setup_credentials.js');
   const jev = read('src/jev_candidate_review.js');
-  assert.ok(menu.includes("'選択行をJevで判定', 'createJevReviewForSelectedObservationFromMenu'"));
+  assert.ok(menu.includes("'既存見出しへの語形対応を確認', 'showMaintenanceAliases'"));
+  assert.strictEqual(menu.includes("createMenu('📚 辞書候補')"), false);
   assert.ok(jev.includes("getProperty('TYPESAFE_API_KEY')"));
   assert.ok(jev.includes("'Jev判定待ち'"));
   assert.ok(jev.includes("'Jev判定済み'"));

@@ -68,6 +68,15 @@
         text(section, 'h2', row.number + '行：' + (statusLabels[row.status] || '状態を確認'));
         const context = Object.entries(row.snapshot.values).map(([key, value]) => key + '：' + (value || '（空欄）')).join('\n');
         text(section, 'p', context, 'context'); text(section, 'p', row.message);
+        if (row.notesSupport) {
+          text(section, 'h3', '新規Notes：対応語と音楽用法の確認');
+          text(section, 'p', '生成時の根拠説明（語彙知識による提案は未検証）');
+          text(section, 'p', row.notesSupport.rationale, 'context');
+          text(section, 'p', '英語案：' + (row.notesSupport.english || '保留') + '／イタリア語案：' + (row.notesSupport.italian || '保留'));
+          row.notesSupport.examples.forEach(example => {
+            text(section, 'p', example.id + '／' + example.location + '\n' + example.de + '\n' + example.ja + '\n' + example.en, 'context');
+          });
+        }
         if (row.status === 'pending') {
           const requiresApi = row.targets.some(field => field !== 'whom_en');
           button(section, requiresApi ? 'この行の翻訳案を生成' : '承認済みの指示対象訳を確認', job.closed || (requiresApi && !state.apiReady),
@@ -88,6 +97,8 @@
           if (row.status !== 'applied') button(section, editable ? '確認した内容を空欄へ反映' : '保存済みの確認案で反映を再開', job.closed,
             () => request('rowCompletionApply', [job.id, row.number, Object.fromEntries(Object.entries(inputs).map(([key, area]) => [key, area.value]))], '反映結果を確認してください．'));
         }
+        if (row.whomReview) text(section, 'p', row.whomReview.message, 'context');
+        if (row.reviewNotes) text(section, 'p', '理由・要確認事項の案（理由欄の既存入力・数式・保護は保持し，この案は画面のみ）：\n' + row.reviewNotes, 'context');
       });
     }
     $('refresh').addEventListener('click', () => request('rowCompletionState', []));

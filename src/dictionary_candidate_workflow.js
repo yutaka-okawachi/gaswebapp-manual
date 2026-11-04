@@ -171,6 +171,8 @@ function refreshDictionarySourceMarkersForMappingsFromMenu() {
 }
 
 function requireSheetWithHeaders(spreadsheet, sheetName, requiredHeaders) {
+  const view = typeof maintenanceLedgerLegacySheet_ === 'function' && maintenanceLedgerLegacySheet_(spreadsheet, sheetName, requiredHeaders);
+  if (view) return view;
   const sheet = spreadsheet.getSheetByName(sheetName);
   if (!sheet) throw new Error('必要なタブがありません：' + sheetName);
   if (sheetName === 'Notes') { namedSheetColumns_(sheet, requiredHeaders); return sheet; }
@@ -180,7 +182,7 @@ function requireSheetWithHeaders(spreadsheet, sheetName, requiredHeaders) {
       throw new Error(sheetName + ' の列構成が一致しません：' + header);
     }
   });
-  return sheet;
+  return typeof maintenanceLedgerGuardLegacy_ === 'function' ? maintenanceLedgerGuardLegacy_(spreadsheet, sheet) : sheet;
 }
 
 function dictionaryCandidateRecordId(prefix, value) {
@@ -421,7 +423,10 @@ function promoteApprovedDictionaryCandidates() {
       newTermsUpdated: 0,
       skipped: 0
     };
-    readSheetRows(reviewSheet, JEV_REVIEW_HEADERS.length).forEach(review => {
+    const reviewed = readSheetRows(reviewSheet, JEV_REVIEW_HEADERS.length);
+    if (typeof maintenanceLedgerAssertTransfer_ === 'function') maintenanceLedgerAssertTransfer_(spreadsheet,
+      reviewed.filter(review => review[12] === '採用').map(review => review[0]));
+    reviewed.forEach(review => {
       if (review[4] !== 'Jev' || review[5] !== 'ADVISORY' || review[12] !== '採用') return;
       if (review[6] === 'NEW_TERM_CANDIDATE') {
         const status = appendApprovedNewTermCandidate(
@@ -465,6 +470,7 @@ function promoteApprovedDictionaryCandidateByReviewId(reviewId) {
     if (!review || review[4] !== 'Jev' || review[5] !== 'ADVISORY' || review[12] !== '採用') {
       throw new Error('人が採用したJev判定を1件選択してください．');
     }
+    if (typeof maintenanceLedgerAssertTransfer_ === 'function') maintenanceLedgerAssertTransfer_(spreadsheet, reviewId);
     if (review[6] === 'NEW_TERM_CANDIDATE') {
       const normalized = normalizeObservedTerm(review[3] || review[1]);
       const observationRows = readSheetRows(observationSheet, UNREGISTERED_RESULT_TERM_HEADERS.length);

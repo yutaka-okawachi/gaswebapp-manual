@@ -1805,10 +1805,10 @@ function readDashboardTranslationMap(column) {
     if (!spreadsheetId) return translations;
     const sheet = SpreadsheetApp.openById(spreadsheetId).getSheetByName('Notes');
     if (!sheet || sheet.getLastRow() < 2) return translations;
-    const rows = namedSheetRead_(sheet, ['de', column], 2, sheet.getLastRow() - 1).values;
+    const rows = notesPublicationRead_(sheet).rows.filter(notesPublicationIsPublished_);
     rows.forEach(row => {
-      const key = normalizeDashboardTerm(row[0]);
-      const translation = sanitizeDashboardTranslation(row[1]);
+      const key = normalizeDashboardTerm(row.values.de);
+      const translation = sanitizeDashboardTranslation(row.values[column]);
       if (key && translation && !translations[key]) translations[key] = translation;
     });
   } catch (error) {

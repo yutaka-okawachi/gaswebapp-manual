@@ -38,7 +38,7 @@ function candidateWizardBootstrap() {
   const rows = readSheetRows(sheet, UNREGISTERED_RESULT_TERM_HEADERS.length);
   return rows.map(row => ({ id: String(row[0] || ''), term: String(row[1] || ''),
     status: String(row[8] || ''), count: Number(row[5]) || 0 }))
-    .filter(item => item.id && item.term).reverse().slice(0, 100);
+    .filter(item => item.id && item.term).reverse();
 }
 
 function candidateWizardState(id) {
@@ -498,6 +498,7 @@ function candidateWizardRegisterExperimental(id, body, source, confirmed) {
   if (!linked || linked.row[10] === 'Notes反映済み') {
     throw new Error('登録できる確認済み草案がありません．');
   }
+  if (typeof maintenanceLedgerAssertCandidateProduction_ === 'function') maintenanceLedgerAssertCandidateProduction_(linked.row);
   const details = candidateWizardDraftDetails(linked.row[13]);
   const missing = candidateWizardEntryMissingFields({ headword: linked.row[16], translation: linked.row[19], ...details });
   if (missing.length) throw new Error('Notesへの登録には「' + missing.join('」「') + '」が必要です．草案を補って保存してください．');
@@ -522,6 +523,7 @@ function candidateWizardRegisterExperimental(id, body, source, confirmed) {
   const lock = LockService.getScriptLock();
   if (!lock.tryLock(10000)) throw new Error('辞書の更新ロックを取得できませんでした．');
   try {
+    if (typeof maintenanceLedgerAssertCurrentView_ === 'function') maintenanceLedgerAssertCurrentView_(found.spreadsheet, sheet);
     if (readSheetRows(notes, 1).some(row => normalizeObservedTerm(row[0]) === normalizeObservedTerm(headword))) {
       throw new Error('同じ見出しが既にあります．登録しません．');
     }

@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html><head><base target="_top"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<style>
+body{font:14px/1.6 Arial,sans-serif;color:#23303e;margin:18px}h1{font-size:20px}h2{font-size:17px}h3{font-size:15px}button,select{padding:8px;margin:4px 4px 4px 0;font:inherit}button{cursor:pointer}button:disabled{opacity:.55;cursor:default}select{max-width:100%}section{border:1px solid #b2bfcc;border-radius:7px;padding:12px;margin:14px 0}.context,.body-preview{white-space:pre-wrap;overflow-wrap:anywhere}.context{max-height:260px;overflow:auto}.body-preview{padding:12px;background:#f6f8fa;border:1px solid #cdd5dd;border-radius:5px;min-height:90px}textarea{box-sizing:border-box;width:100%;min-height:190px;font:inherit}details{margin:10px 0}summary{cursor:pointer}.muted{color:#526270}.error{color:#a32222}#message{white-space:pre-wrap}#message[data-error="true"]{color:#a32222}@media(min-width:700px){.bodies{display:grid;grid-template-columns:1fr 1fr;gap:14px}}@media(max-width:500px){body{margin:10px}button,select{width:100%}}
+</style></head><body>
+<h1>項目の作成・補完</h1>
+<p>GM・RW・RS・Notesの入力済みの行を補完する場合は，対象行を選択して次のボタンを押します．途中の処理も同じ入口から確認・再開できます．</p>
+<button id="selectedRows">選択行を補完・再開（GM・RW・RS・Notes）</button>
+<h2>未登録語をNotesへ登録する</h2>
+<p>出典調査から日英本文案の生成まで，一度で進めます．生成にはOpenAI APIを使用します．</p>
+<p class="muted">内容を承認するまでNotesに新しい行は追加しません．承認して登録した内容は次回の同期対象になります．この画面からサイトの同期・更新は行いません．</p>
+<label for="observation">処理する語</label><br><select id="observation" aria-label="処理する語"></select><br>
+<button id="run">出典を調べて日英案を作る</button><button id="refresh">保存状態を確認</button>
+<p id="message" role="status">読み込み中です．</p>
+<div id="current"></div>
+<div id="finishArea" hidden><details><summary>この語の作業を終了する</summary>
+<p class="muted">登録前の案が必要なら先に控えてください．Notesの既存行や履歴は削除しません．</p>
+<label><input id="checked" type="checkbox"> 必要な案を控えた．中断時はAPI利用状況とNotesの保存内容も確認した</label><br>
+<button id="finish">この語の作業を終了する</button></details></div>
+<script>
+const $=id=>document.getElementById(id);let state=null,busy=false,uncertain=false;const edits={};
+let validationSerial=0,validationTimer=null;
+function cancelValidation(){validationSerial++;if(validationTimer!==null)clearTimeout(validationTimer);validationTimer=null;}
+function text(parent,tag,value,cls){const e=document.createElement(tag);e.textContent=value;if(cls)e.className=cls;parent.appendChild(e);return e;}
+function request(method,args){
+ if(busy)return;cancelValidation();busy=true;document.querySelectorAll('button,input,select,textarea').forEach(e=>e.disabled=true);$('message').textContent='処理中です．閉じた場合は保存状態を確認してください．自動再送はしません．';
+ const failure=error=>{busy=false;uncertain=true;render();const detail=String(error&&error.message||'').split('ROW_COMPLETION: ')[1];$('message').dataset.error='true';$('message').textContent=(detail?detail.slice(0,600)+'\n':'')+'操作は自動で繰り返しません．「保存状態を確認」で確認してください．';};
+ const runner=google.script.run.withSuccessHandler(result=>{if(!result||!Array.isArray(result.observations)||result.observations.some(o=>!o||typeof o.id!=='string'||typeof o.term!=='string')){failure({message:'ROW_COMPLETION: 保存状態の応答を確認できません．'});return;}busy=false;uncertain=false;state=result;render();$('message').dataset.error='false';$('message').textContent='現在の語の状態を読み込みました．';})
+ .withFailureHandler(failure);
+ runner[method](...args);
+}
+function render(){
+ cancelValidation();
+ const selected=state&&state.selectedObservationId||$('observation').value;
+ $('observation').replaceChildren();if(state)state.observations.forEach(o=>{const e=text($('observation'),'option',o.term+'／'+o.status);e.value=o.id;});
+ if(selected)$('observation').value=selected;
+ const job=state&&state.job,row=job&&Array.isArray(job.rows)&&job.rows[0],intake=job&&job.intake,entry=state&&state.entry;
+ const editable=Boolean(row&&!job.closed&&intake&&!intake.intent&&['draft','needs_review','applied'].includes(row.status));
+ $('run').disabled=busy||uncertain||!state||!state.apiReady||Boolean(job)||Boolean(state&&state.otherWorkPending)||!$('observation').value;
+ $('refresh').disabled=busy;$('observation').disabled=busy||uncertain;
+ $('selectedRows').disabled=busy||uncertain||Boolean(job&&!job.closed);
+ $('current').replaceChildren();$('finishArea').hidden=!job||job.closed;$('finish').disabled=busy||uncertain;$('checked').disabled=busy;
+ if(!job){const s=text($('current'),'section','');text(s,'p',state&&state.otherWorkPending?'別の語または選択行の処理が未完了です．処理中の語に戻って確認・登録または終了してください．':'この語の日英本文案はまだありません．生成前にNotesは変更しません．');return;}
+ if(!intake||!intake.plan||!Array.isArray(job.rows)){const s=text($('current'),'section','');text(s,'p','保存記録の構成を確認できません．既存の案とNotesは変更せず，保存状態を確認してください．','error');$('run').disabled=true;$('selectedRows').disabled=true;$('finishArea').hidden=true;return;}
+ const s=text($('current'),'section','');text(s,'h2',intake.plan.de);
+ text(s,'p',editable?'表示中の日英本文と根拠を確認してください．本文の形式を確認してから登録できます．':state.message||intake.message);
+ const labels={pending:'生成前',generating:'生成中',needs_review:'内容確認・編集',draft:'内容確認・編集',uncertain:'API結果要確認',partial:'登録途中',applying:'登録途中',applied:'保存済み'};
+ text(s,'p',row?labels[row.status]||'保存状態を確認':'準備状態の確認が必要です．既存の記録とNotesは保持しています．');
+ const shown=job.closed&&entry?entry.values:intake.plan;
+ text(s,'p','見出し（de）：'+shown.de+'\n出典（source）：'+shown.source,'context');
+ if(entry)text(s,'p','Notes '+entry.number+'行：'+(entry.published?'登録・承認済み（サイト反映は別途同期）':'既存の未公開行を保持中．新しい重複行は追加しません．'));
+ else text(s,'p','Notes：未登録');
+ if(!row||!Object.keys(row.draft||{}).length){if(row&&row.status==='pending')$('run').disabled=busy||uncertain||!state.apiReady||job.closed;return;}
+ const bodies=text(s,'div','','bodies'),inputs={};let approval=null,confirmation=null,validatedFields=null;
+ ['ja','en'].forEach(field=>{
+  const col=text(bodies,'div','');text(col,'h3',field==='ja'?'日本語本文（ja）':'英語本文（en）');
+  const key=job.id+':'+field,saved=job.closed&&entry?entry.values[field]:row.draft[field]||'';
+  const value=editable&&Object.prototype.hasOwnProperty.call(edits,key)?edits[key]:saved;
+  const preview=text(col,'div',value||'（空欄）','body-preview');
+  if(editable){const details=text(col,'details','');text(details,'summary','本文を編集する');const area=document.createElement('textarea');
+   area.setAttribute('aria-label',field==='ja'?'登録する日本語本文':'登録する英語本文');area.value=value;area.disabled=busy;details.appendChild(area);
+   area.addEventListener('input',()=>{edits[key]=area.value;preview.textContent=area.value||'（空欄）';scheduleValidation();});inputs[field]=area;}
+ });
+ if(!job.closed)text(s,'p','ここに表示した本文を，承認時にNotesのja・enへそのまま登録します．画面の説明や根拠欄は本文には追加しません．','muted');
+ const validationBox=text(s,'div','','validation');validationBox.setAttribute('role','status');validationBox.setAttribute('aria-live','polite');
+ if(!editable)(state.validationErrors||[]).forEach(e=>text(validationBox,'p',(e.field==='ja'?'日本語本文：':'英語本文：')+e.message,'error'));
+ const fieldsNow=()=>editable?{ja:inputs.ja.value,en:inputs.en.value}:{ja:row.draft.ja,en:row.draft.en};
+ function scheduleValidation(){
+  cancelValidation();validatedFields=null;if(confirmation)confirmation.checked=false;if(approval)approval.disabled=true;
+  if(!editable||busy||uncertain)return;
+  const serial=validationSerial,jobHash=state.jobHash,fields=fieldsNow(),key=JSON.stringify(fields);
+  validationBox.replaceChildren();text(validationBox,'p','保存せずに，表示中の日英本文の形式を確認しています．','muted');
+  const current=()=>serial===validationSerial&&!busy&&!uncertain&&state&&state.job&&state.job.id===job.id&&state.jobHash===jobHash&&JSON.stringify(fieldsNow())===key;
+  const failure=error=>{if(!current())return;validatedFields=null;if(approval)approval.disabled=true;validationBox.replaceChildren();const detail=String(error&&error.message||'').split('ROW_COMPLETION: ')[1];text(validationBox,'p',(detail?detail.slice(0,300)+'\n':'')+'現在の本文の検証結果を確認できません．入力を保持しているので，「保存状態を確認」で再確認してください．','error');};
+  validationTimer=setTimeout(()=>{
+   validationTimer=null;if(!current())return;
+   google.script.run.withSuccessHandler(result=>{
+    if(!current())return;
+    if(!result||result.jobId!==job.id||result.jobHash!==jobHash||!Array.isArray(result.validationErrors)||result.validationErrors.some(e=>!e||!['ja','en'].includes(e.field)||typeof e.message!=='string')){failure(null);return;}
+    validationBox.replaceChildren();result.validationErrors.forEach(e=>text(validationBox,'p',(e.field==='ja'?'日本語本文：':'英語本文：')+e.message,'error'));
+    if(!result.validationErrors.length){validatedFields=key;text(validationBox,'p','表示中の日英本文の形式を確認しました．出典・根拠と内容も確認してから登録してください．','muted');}
+    if(approval)approval.disabled=result.validationErrors.length>0;
+   }).withFailureHandler(failure).maintenanceNotesValidateDraft(job.id,jobHash,fields);
+  },350);
+ }
+ const evidence=text(s,'details','');text(evidence,'summary','出典・根拠・用例を確認する');
+ (intake.plan.proof||[]).forEach(p=>text(evidence,'p',p.tab+' '+p.number+'行／'+p.location+'\n'+p.german,'context'));
+ if(row.notesSupport){
+  text(evidence,'h3','対応語案の根拠説明（APIによる語彙の判断は未検証）');text(evidence,'p',row.notesSupport.rationale,'context');
+  text(evidence,'p','英語対応：'+(row.notesSupport.english||'保留')+'\nイタリア語対応：'+(row.notesSupport.italian||'保留'),'context');
+  (row.notesSupport.examples||[]).forEach(e=>text(evidence,'p',e.id+'／'+e.location+'\n原文：'+e.de+'\n日本語：'+e.ja+'\n英語：'+e.en,'context'));
+ }
+ if(!job.closed&&['draft','needs_review','applying','partial','applied'].includes(row.status)){
+  const label=text(s,'label',''),checked=document.createElement('input');checked.type='checkbox';checked.disabled=busy;label.appendChild(checked);confirmation=checked;
+  text(label,'span',' 出典・日英本文・対応語を確認し，この内容をNotesへ登録する（次回同期の対象になります）');
+  const b=text(s,'button',intake.intent?'承認済み内容の登録を再開':'内容を承認してNotesに登録');b.disabled=busy||uncertain||editable;approval=b;
+  b.addEventListener('click',()=>{if(!checked.checked){$('message').textContent='本文と出典の確認欄を選んでください．';return;}
+   const fields=fieldsNow();if(editable&&validatedFields!==JSON.stringify(fields)){$('message').textContent='現在の本文の検証が終わってから，内容を確認してください．';scheduleValidation();return;}
+   request('maintenanceNotesRegister',[job.id,state.jobHash,fields,true]);});
+ }
+ if(job.closed&&entry&&!entry.published&&['de','source','ja','en'].every(k=>String(entry.values[k]||'').trim())){
+  const label=text(s,'label',''),checked=document.createElement('input');checked.type='checkbox';checked.disabled=busy;label.appendChild(checked);
+  text(label,'span',' Notesの変更後の本文・出典・対応語を確認した');
+  const b=text(s,'button','編集後の内容を再承認');b.disabled=busy||uncertain;
+  b.addEventListener('click',()=>{if(!checked.checked){$('message').textContent='変更後の内容を確認してください．';return;}
+   request('maintenanceNotesApprove',[entry.number,entry.hash,true]);});
+ }
+ if(editable)scheduleValidation();
+}
+$('observation').addEventListener('change',()=>request('maintenanceWorkbenchState',[$('observation').value]));
+$('run').addEventListener('click',()=>request('maintenanceNotesRun',[$('observation').value]));
+$('refresh').addEventListener('click',()=>request('maintenanceWorkbenchState',[$('observation').value]));
+$('finish').addEventListener('click',()=>request('maintenanceWorkbenchFinish',[state.job.id,$('checked').checked]));
+$('selectedRows').addEventListener('click',()=>{if(!busy&&!uncertain)google.script.run.showMaintenanceSelectedRows();});
+request('maintenanceWorkbenchState',[]);
+</script></body></html>

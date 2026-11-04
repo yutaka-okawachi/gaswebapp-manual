@@ -2,7 +2,7 @@
 const fs=require('node:fs'),path=require('node:path'),vm=require('node:vm'),assert=require('node:assert/strict');
 const root=path.resolve(__dirname,'..');
 const c=vm.createContext({});
-vm.runInContext(['sheet_column_layout.js','maintenance_text_style.js','row_completion.js','dictionary_candidate_wizard.js'].map(f=>fs.readFileSync(path.join(root,'src',f),'utf8')).join('\n'),c);
+vm.runInContext(['sheet_column_layout.js','maintenance_text_style.js','row_completion_notes.js','row_completion_review.js','row_completion.js','dictionary_candidate_wizard.js'].map(f=>fs.readFileSync(path.join(root,'src',f),'utf8')).join('\n'),c);
 let passed=0;const test=(name,fn)=>{try{fn();passed++;}catch(e){e.message=name+': '+e.message;throw e;}};
 function adoptedBook(tab,mode){
   const file={GM:'mahler',RW:'richard_wagner',RS:'richard_strauss',Notes:'dic_notes'}[tab];
@@ -25,7 +25,7 @@ for(const tab of ['GM','RW','RS','Notes'])test(tab+' uses two bounded current ad
 });
 for(const [tab,handler]of [['GM','rowCompletionGm_'],['RW','rowCompletionRw_'],['RS','rowCompletionRs_'],['Notes','rowCompletionNotes_']])test(tab+' named context and prompt bind tab-specific rules',()=>{
   const r=row(tab),context=c[handler](adoptedBook(tab),r),request=c.rowCompletionRequest_({tab}, {...r,targets:['ja','en']},'synthetic-model',context),input=JSON.parse(request.input);
-  assert.equal(input.tab,tab);assert.equal(context.tab,tab);assert.equal(input.style_version,'2026-11-01');assert(input.format_rules.length>=8);assert(input.adopted_style_examples.length);
+  assert.equal(input.tab,tab);assert.equal(context.tab,tab);assert.equal(input.style_version,'2026-11-03');assert(input.format_rules.length>=8);assert(input.adopted_style_examples.length);
   assert(input.format_rules.join('\n').includes('例の内容'));assert(input.format_rules.join('\n').includes('plate'));
   assert(!JSON.stringify(input).includes('NEVER_SEND'));assert.equal(request.store,false);
   if(tab==='Notes'){assert.equal(input.domain_context.task,'notes_dictionary');assert.equal(input.domain_context.source_document_fetched,false);}
@@ -34,6 +34,22 @@ for(const [tab,handler]of [['GM','rowCompletionGm_'],['RW','rowCompletionRw_'],[
 });
 test('Notes catalogue examples are safe adopted first-paragraph excerpts',()=>{
   const examples=c.maintenanceStyleExamples_(adoptedBook('Notes'),'Notes',1000,'catalogue');assert.equal(examples[0].de,'AV');assert(examples[0].excerpt);assert(!/【英】|Italian:/.test(examples[0].ja+examples[0].en));
+});
+test('Notes dictionary learns actual Bogen general/musical sections beyond the first 200 rows',()=>{
+  const examples=c.maintenanceStyleExamples_(adoptedBook('Notes'),'Notes',1000,'dictionary');
+  assert.equal(examples[0].de,'Bogen');assert(examples[0].ja.includes('【音楽用語としての訳例】'));
+  assert(examples[0].en.includes('【Musical translation examples】'));assert(examples[0].purpose==='style_only');
+});
+test('new Notes prompt separates adopted usage evidence from style examples and unverified lexical proposals',()=>{
+  const r=row('Notes',{de:'Saite',source:'[GM], [RW: Oper], [RS: Oper]'}),context=c.rowCompletionNotes_(adoptedBook('Notes'),r);
+  const request=c.rowCompletionRequest_({tab:'Notes'},{...r,targets:['ja','en']},'synthetic-model',context),input=JSON.parse(request.input);
+  assert.equal(input.domain_context.new_dictionary,true);assert.equal(input.domain_context.source_document_fetched,false);
+  assert(request.instructions.includes('語彙知識による未確認'));assert(request.instructions.includes('空欄であること自体は省略理由にしない'));
+  assert(request.instructions.includes('模範')===false||input.format_rules.join('').includes('模範'));
+  assert(request.text.format.schema.required.includes('notes_support'));
+  const existing=row('Notes',{de:'Saite',ja:'【一般的な意味】\n弦．'});
+  const old=c.rowCompletionRequest_({tab:'Notes'},{...existing,targets:['en']},'synthetic-model',c.rowCompletionNotes_(adoptedBook('Notes'),existing));
+  assert(!old.text.format.schema.properties.notes_support);assert(!JSON.parse(old.input).domain_context.new_dictionary);
 });
 test('Notes has separate dictionary, annotation, and catalogue profiles',()=>{
   assert.equal(c.maintenanceStyleProfile_('Notes',{de:'AV'}),'catalogue');assert.equal(c.maintenanceStyleProfile_('Notes',{de:'abwärts'}),'dictionary');
@@ -107,6 +123,81 @@ test('RW/RS preserve named recipients in de and never prepend an extra recipient
     assert.equal(c.rowCompletionValidateText_(r,'en','Farzana and Zemina step forward.'),'Farzana and Zemina step forward.');
     assert.throws(()=>c.rowCompletionValidateText_(r,'en','Farzana steps forward.'),/固有名詞/);
     assert.throws(()=>c.rowCompletionValidateText_(row(tab),'en','Orchestra: Softly'),/指示対象/);
+  }
+});
+function headingRow() {
+  const r=row('Notes',{de:'Saite',source:'[GM], [RW: Oper], [RS: Oper]'});
+  r.notesSupport={kind:'new_dictionary_proposal',english:'',italian:'',
+    examples:['GM','RW','RS'].map(tab=>({tab,id:tab+':2'})),usageIds:['GM:2','RW:2','RS:2']};
+  return r;
+}
+function headingBody(field,body) {
+  return (field==='ja'?'【一般的な意味】\n弦．\n\n【音楽用語としての訳例】':'【General meanings】\nA string.\n\n【Musical translation examples】')+'\n'+body;
+}
+test('evidenced source group headings have bracketed formatting and safe comparison copies',()=>{
+  const r=headingRow();
+  for(const field of ['ja','en']){
+    const draft=headingBody(field,'[GM]\nG-Saite\n\n[RW: Oper]\ndoppelte Saiten\n\n[RS: Oper]\nkeine leeren Saiten');
+    assert.equal(c.rowCompletionValidateText_(r,field,draft),draft);
+    const formatted=c.rowCompletionNotesFormatHeadings_(r,field,draft);
+    assert.equal(formatted,draft);
+    const plain=draft.replace(/^\[(GM|RW: Oper|RS: Oper)\]$/gm,'$1');
+    assert.equal(c.rowCompletionNotesFormatHeadings_(r,field,plain),draft);
+    assert.equal(c.rowCompletionNotesFormatHeadings_(r,field,formatted),formatted);
+    assert.equal(c.rowCompletionValidateText_(r,field,formatted),formatted);
+  }
+  assert(c.maintenanceStyleRules_('Notes','dictionary').join('\n').includes('独立した見出しは[GM]'));
+});
+test('heading formatting requires the source marker and a selected adopted example with the same tab',()=>{
+  for(const mode of ['source','usage','example','tab','id','kind','missing']){
+    const r=headingRow();
+    if(mode==='source')r.snapshot.values.source='[RW: Oper], [RS: Oper]';
+    if(mode==='usage')r.notesSupport.usageIds=['RW:2','RS:2'];
+    if(mode==='example')r.notesSupport.examples=[];
+    if(mode==='tab')r.notesSupport.examples[0].tab='RW';
+    if(mode==='id')r.notesSupport.examples[0].id='GM:unverified';
+    if(mode==='kind')r.notesSupport.kind='other';
+    if(mode==='missing')delete r.notesSupport;
+    const draft=headingBody('ja','[GM]\nG-Saite');
+    assert.equal(c.rowCompletionNotesFormatHeadings_(r,'ja',draft),draft,mode);
+    assert.throws(()=>c.rowCompletionValidateText_(r,'ja',draft),/トークン/);
+  }
+});
+test('formatting never rewrites existing bodies, other tabs, annotations, catalogue entries, or original markers',()=>{
+  for(const mode of ['ja','en','GM','RW','RS','annotation','catalogue','original']){
+    const r=headingRow();
+    if(mode==='ja')r.snapshot.values.ja='【一般的な意味】\n既存の本文．';
+    if(mode==='en')r.snapshot.values.en='Existing body.';
+    if(['GM','RW','RS'].includes(mode))r.tab=mode;
+    if(mode==='annotation')r.snapshot.values.de='one two three four five six seven';
+    if(mode==='catalogue')r.snapshot.values.de='AV';
+    if(mode==='original')r.snapshot.values.de='Saite [GM]';
+    const draft=headingBody('ja','[GM]\nG-Saite');
+    assert.equal(c.rowCompletionNotesFormatHeadings_(r,'ja',draft),draft,mode);
+  }
+});
+test('inline, detailed, unknown, misplaced, duplicated, and code-quoted source markers stay protected',()=>{
+  const r=headingRow();
+  for(const body of ['Text [GM]','[GM: symphony-1]','[H: KM1-1]','[GM]\nG-Saite\n[GM]\nMore',
+    '```text\n[GM]\n```','~~~text\n[GM]\n~~~','【別の説明】\n[GM]\nG-Saite']){
+    const draft=headingBody('ja',body),formatted=c.rowCompletionNotesFormatHeadings_(r,'ja',draft);
+    assert.throws(()=>c.rowCompletionValidateText_(r,'ja',formatted),/トークン/,body);
+  }
+  const misplaced='【一般的な意味】\n[GM]\n弦．\n\n【音楽用語としての訳例】\nG-Saite';
+  assert.equal(c.rowCompletionNotesFormatHeadings_(r,'ja',misplaced),misplaced);
+  const wrongLanguage=headingBody('ja','[GM]\nG-Saite');
+  assert.equal(c.rowCompletionNotesFormatHeadings_(r,'en',wrongLanguage),wrongLanguage);
+});
+test('canonical group labels do not weaken exact score, URL, HTML, title, or detailed-reference protection',()=>{
+  for(const token of ['[[score:kept]]','https://example.invalid/ref#page=7','<em>','《Original title》','[RW: Tristan-1-2]']){
+    const r=headingRow();r.snapshot.values.de='Saite '+token;
+    for(const field of ['ja','en']){
+      const draft=headingBody(field,'[GM]\nG-Saite\n'+token),formatted=c.rowCompletionNotesFormatHeadings_(r,field,draft);
+      assert(formatted.includes(token));assert.equal(c.rowCompletionValidateText_(r,field,formatted),formatted);
+      assert.throws(()=>c.rowCompletionValidateText_(r,field,formatted.replace(token,'')),/トークン/);
+      assert.throws(()=>c.rowCompletionValidateText_(r,field,formatted.replace(token,token+' '+token)),/トークン/);
+      assert.throws(()=>c.rowCompletionValidateText_(r,field,formatted+'\n[RS: Invented]'),/トークン/);
+    }
   }
 });
 console.log('Maintenance current style: '+passed+' scenarios passed; tab-specific prompts/validators, real adopted ja/en examples, Notes manual/AI shared formatting, optional equivalents, catalogue exceptions, protected quotations and contextual short translations. No API or Sheet writes.');

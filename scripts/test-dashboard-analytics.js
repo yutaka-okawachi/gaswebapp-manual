@@ -389,7 +389,11 @@ const context = {
           assert.strictEqual(name, 'Notes');
           return {
             getName() { return 'Notes'; },
-            getLastColumn() { return 2; },
+            getLastColumn() { return 3; },
+            getDataRange() {
+              const rows = this.getRange(2, 1, 2, 2).getValues();
+              return { getValues: () => [['de', 'ja', 'source'], ...rows.map(row => [...row, '[GM]'])] };
+            },
             getLastRow() {
               return 3;
             },
@@ -582,7 +586,7 @@ const context = {
 };
 
 vm.createContext(context);
-vm.runInContext(fs.readFileSync(path.join(repositoryRoot, 'src/sheet_column_layout.js'), 'utf8') + '\n' + fs.readFileSync(sourcePath, 'utf8'), context, {
+vm.runInContext(['sheet_column_layout','notes_publication_baseline','notes_publication'].map(name => fs.readFileSync(path.join(repositoryRoot, 'src/'+name+'.js'), 'utf8')).join('\n') + '\n' + fs.readFileSync(sourcePath, 'utf8'), context, {
   filename: sourcePath
 });
 
