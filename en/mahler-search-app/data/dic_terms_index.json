@@ -2755,6 +2755,7 @@
     ]
   },
   "erzaehlung": "term-erzaehlung",
+  "etwas": "term-etwas",
   "etwas-deutlicher-u-allmaelich-ausdrucksvoller": {
     "id": "term-etwas-deutlicher-u-allmaelich-ausdrucksvoller",
     "original": "etwas deutlicher u. allmälich ausdrucksvoller"
@@ -5516,6 +5517,7 @@
   "nun-laube-lindlein-laube": "term-nun-laube-lindlein-laube",
   "nur-ruhig-bewegt": "term-nur-ruhig-bewegt",
   "oder-8-bassa": "term-oder-8-bassa",
+  "offen": "term-offen",
   "ohne": "term-ohne",
   "ohnmaechtig": {
     "id": "term-ohnmaechtig",
@@ -8255,6 +8257,7 @@
   },
   "wie-frueher-sehr-leicht-und-schwach": "term-wie-frueher-sehr-leicht-und-schwach",
   "wie-ganz-von-ferne": "term-wie-ganz-von-ferne",
+  "wieder": "term-wieder",
   "wieder-ins-erste-zeitmass-gehen": "term-wieder-ins-erste-zeitmass-gehen",
   "wiederholung": {
     "id": "term-wiederholung",
