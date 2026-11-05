@@ -25,9 +25,10 @@ for(const tab of ['GM','RW','RS','Notes'])test(tab+' uses two bounded current ad
 });
 for(const [tab,handler]of [['GM','rowCompletionGm_'],['RW','rowCompletionRw_'],['RS','rowCompletionRs_'],['Notes','rowCompletionNotes_']])test(tab+' named context and prompt bind tab-specific rules',()=>{
   const r=row(tab),context=c[handler](adoptedBook(tab),r),request=c.rowCompletionRequest_({tab}, {...r,targets:['ja','en']},'synthetic-model',context),input=JSON.parse(request.input);
-  assert.equal(input.tab,tab);assert.equal(context.tab,tab);assert.equal(input.style_version,'2026-11-03');assert(input.format_rules.length>=8);assert(input.adopted_style_examples.length);
+  assert.equal(input.tab,tab);assert.equal(context.tab,tab);assert.equal(input.style_version,'2026-11-05');assert(input.format_rules.length>=8);assert(input.adopted_style_examples.length);
   assert(input.format_rules.join('\n').includes('例の内容'));assert(input.format_rules.join('\n').includes('plate'));
   assert(!JSON.stringify(input).includes('NEVER_SEND'));assert.equal(request.store,false);
+  assert.equal(input.format_rules.join('\n').includes('説明的な導入文は付けない'),tab==='Notes');
   if(tab==='Notes'){assert.equal(input.domain_context.task,'notes_dictionary');assert.equal(input.domain_context.source_document_fetched,false);}
   else if(tab==='GM'){assert.equal(input.domain_context.task,'gm_performance_translation');assert.equal(input.domain_context.location,r.snapshot.values.data);}
   else{assert.equal(input.domain_context.tab,tab);assert.equal(input.domain_context.work,'work');assert.equal(input.domain_context.approved_whom_en,'Approved recipient');}

@@ -1,5 +1,5 @@
 /** Current adopted ja/en style only. Never learn from ja_old or review-workspace columns. */
-const MAINTENANCE_STYLE_VERSION = '2026-11-03';
+const MAINTENANCE_STYLE_VERSION = '2026-11-05';
 const MAINTENANCE_STYLE_EXAMPLE_TERMS = Object.freeze({
   GM: ['(Anm. f. d. Dirig. ) : Alle Betonungen consequent durchführen', '＋ Zeichen für einzelne gestopfte Töne'],
   RW: ['Farzana und Zemina treten hervor.', 'Die Feen und Geister versammeln sich um beide.'],
@@ -96,8 +96,10 @@ function maintenanceStyleRules_(tab, profile) {
     '複数行・複数義に分かれた既存の対応はknown_equivalents.groupsを見てすべて保持する．Italian:行は根拠のある語をcomma+spaceで並べ，意味ごとの固有注記は本文で訳して残す．',
     '既存本文の英訳・注記では元々ない英伊対応を形式のために追加しない．ただしnew_dictionary=trueの新規辞書項目は別で，見出し語そのものの確かな英伊対応をnotes_supportに根拠説明付きで提案する．空欄だからという理由だけで省略しない．不確かな対応は保留し，模範例の対応語を流用しない．',
     '新規辞書項目の音楽用例を出典別に分ける場合，独立した見出しは[GM]，[RW: Oper]，[RS: Oper]を使う．sourceとusage_idsで確認できる採用実例の範囲だけを示し，文中の出典記号・譜例・URL・引用・HTMLは変更しない．',
+    '新規Notesの音楽用語としての訳例では，原文使用例とその訳だけで伝わる箇所はその対だけを示す．「舞台指示では〜を表す使用例がある」等，続く用例の内容を先取り・言い換える説明的な導入文は付けない．日本語・英語とも同じ方針にする．',
+    'ただし個別の用例だけでは伝わらない奏法上の意味・条件等，入力に根拠のある必要な情報は保持し，説明を一律に削らない．原文使用例は渡された採用実例の原文を保持し，その文脈に忠実な訳と対応させる．原文・使用例・出典・使用箇所や根拠を作り足さない．既存本文や保存済み草案をこの方針で自動改稿しない．',
     'AV/TrV等の作品目録略号に対応表現欄を作らない．',
-    profile === 'dictionary' ? '辞書項目は一般義と音楽語義を区別する．新規日本語は【一般的な意味】，英語は【General meanings】を置く．usage_examplesがあれば【音楽用語としての訳例】／【Musical translation examples】で使用文脈ごとの訳を扱う．一語訳だけで済ませず，弦名・開放弦・調弦・奏法等の違いは渡された実例の範囲で説明する．既存本文の英訳は段落・意味の粒度を保持し，新しい解説を足さない．' : '既存の項目固有説明・注記の構成を保持する．不要な辞書見出しや意味区分を一律に足さない．'
+    profile === 'dictionary' ? '辞書項目は一般義と音楽語義を区別する．新規日本語は【一般的な意味】，英語は【General meanings】を置く．usage_examplesがあれば【音楽用語としての訳例】／【Musical translation examples】で使用文脈ごとの訳を扱う．一語訳だけで済ませず，渡された原文使用例と文脈に合う訳を示す．弦名・開放弦・調弦・奏法等の違いも，用例と訳で伝わる内容を重ねて説明しない．既存本文の英訳は段落・意味の粒度を保持し，新しい解説を足さない．' : '既存の項目固有説明・注記の構成を保持する．不要な辞書見出しや意味区分を一律に足さない．'
   ]);
   return common.concat([
     tab + 'の原文翻訳．Notes風の【一般的な意味】・外国語対応欄・長い辞書解説を追加しない．',

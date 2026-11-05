@@ -270,6 +270,37 @@ test('new Saite Notes uses real adopted multilingual usages across permitted tab
   assert(h.value('ja').startsWith('【英】string／【伊】corda'));assert(h.value('en').startsWith('Italian: corda'));
   assert.equal(h.value('de'),'Saite');assert.equal(h.value('source'),'[GM], [RS: Oper], [RW: Oper]');assert.equal(h.fetches,1);
 });
+test('new Notes preserves evidenced original/translation pairs in both languages without adding introductions',()=>{
+  const h=notesWithPublishedUsages(),mutate=h.mutateDraft;let expected;
+  h.mutateDraft=d=>{
+    mutate(d);const input=JSON.parse(h.lastRequest.input),examples=input.domain_context.usage_examples;
+    const selected=['RW','RS'].map(tab=>examples.find(e=>e.tab===tab));assert(selected.every(Boolean));
+    const body=field=>selected.map(e=>'['+e.tab+': Oper]\n'+e.de+'\n'+e[field]).join('\n\n');
+    d.ja='【英】string／【伊】corda\n\n【一般的な意味】\n① 弦．\n\n【音楽用語としての訳例】\n'+body('ja');
+    d.en='Italian: corda\n\n【General meanings】\n① A string.\n\n【Musical translation examples】\n'+body('en');
+    d.notes_support.usage_ids=selected.map(e=>e.id);expected={ja:d.ja,en:d.en,examples};
+  };
+  let j=h.generate(h.preview());const input=JSON.parse(h.lastRequest.input),rules=input.format_rules.join('\n');
+  assert(rules.includes('原文使用例とその訳だけ'));assert(rules.includes('説明的な導入文は付けない'));assert(rules.includes('日本語・英語とも同じ方針'));
+  assert(rules.includes('説明を一律に削らない'));assert(rules.includes('根拠を作り足さない'));assert(rules.includes('自動改稿しない'));
+  assert(h.lastRequest.instructions.includes('原文使用例と文脈に合う訳を対で示す'));
+  assert.equal(j.rows[0].draft.ja,expected.ja);assert.equal(j.rows[0].draft.en,expected.en);assert.equal(h.writes.length,0);
+  assert.equal(input.domain_context.source_document_fetched,false);
+  assert.deepEqual(JSON.parse(JSON.stringify(j.rows[0].notesSupport.examples)),expected.examples);
+  j=h.apply(j);assert.equal(j.rows[0].status,'applied');assert.equal(h.fetches,1);
+  assert.equal(h.value('ja'),expected.ja);assert.equal(h.value('en'),expected.en);
+});
+
+test('existing Notes explanations and their complete English translation remain intact',()=>{
+  const h=harness('Notes'),ja='【一般的な意味】\n① 弓．\n\n【音楽用語としての訳例】\n弓の配分はフレーズ全体を考えて行う．',
+    en='【General meanings】\n① A bow.\n\n【Musical translation examples】\nDistribute the bow with the entire phrase in mind.';
+  h.put('ja',ja);h.mutateDraft=d=>{d.en=en;};
+  let j=h.generate(h.preview());const input=JSON.parse(h.lastRequest.input);
+  assert.equal(input.domain_context.new_dictionary,false);assert.equal(input.source.ja,ja);
+  assert.deepEqual([...input.requested_fields],['en']);assert.equal(j.rows[0].draft.en,en);
+  j=h.apply(j);assert.equal(j.rows[0].status,'applied');assert.equal(h.value('ja'),ja);assert.equal(h.value('en'),en);
+});
+
 test('Notes usage matching is bounded and source-specific, covers plural/compound but not Seite',()=>{
   const h=notesWithPublishedUsages('[RS: Oper]');h.generate(h.preview());const input=JSON.parse(h.lastRequest.input);
   assert(input.domain_context.usage_examples.every(e=>e.tab==='RS'));assert.equal(input.domain_context.usage_scan.length,1);
