@@ -228,6 +228,84 @@ test('registered private claims are released; finishing uncertain work never del
  assert.throws(()=>h2.c.maintenanceWorkbenchFinish(s.job.id,false),/確認/);h2.c.maintenanceWorkbenchFinish(s.job.id,true);
  assert.equal(h2.state().job.closed,true);assert.equal(h2.managed().length,0);assert.equal(h2.fetches,1);
 });
+// Synthetic originals and locations below exercise matching only, not real corpus claims.
+function sourceScanFixture(term, byTab) {
+ const h=harness();h.observation[1]=term;
+ for(const tab of ['GM','RW','RS']){
+  const sheet=h.relatedSheets[tab],headers=sheet.data[0];
+  const rows=(byTab[tab]||[]).map(value=>{
+   const r=typeof value==='string'?{de:value}:value;
+   const defaults={ja:'合成テスト用の訳．',en:'Synthetic fixture translation.',data:'M-1-1-1-all&',Oper:'synthetic-work',Aufzug:1,Szene:1,page:1,whom:''};
+   return headers.map(key=>r[key]!==undefined?r[key]:defaults[key]!==undefined?defaults[key]:'');
+  });
+  sheet.data.splice(1,sheet.data.length-1,...rows);
+ }
+ h.source=()=>h.c.maintenanceNotesSource_(h.c.SpreadsheetApp.getActiveSpreadsheet(),term);
+ return h;
+}
+test('Aufzug base forms remain discoverable after genitives in any corpus and row order',()=>{
+ for(const tab of ['GM','RW','RS'])for(const originals of [
+  ['Aufzuges','Aufzugs','Ein Aufzug beginnt.'],['Ein Aufzug beginnt.','Aufzuges','Aufzugs'],['Aufzugs','Unrelated word.','Aufzuges','Ein Aufzug beginnt.']
+ ]){
+  const h=sourceScanFixture('Aufzug',{[tab]:originals}),before=JSON.stringify(h.relatedSheets[tab].data),plan=h.source(),p=plan.proof[0];
+  assert.equal(plan.de,'Aufzug');assert.equal(plan.proof.length,1);assert.equal(p.tab,tab);assert.equal(p.number,originals.indexOf('Ein Aufzug beginnt.')+2);assert.equal(p.german,'Ein Aufzug beginnt.');
+  assert.equal(p.hash,h.c.rowCompletionHash_(h.c.namedSheetRead_(h.relatedSheets[tab],p.fields,p.number,1).values[0]));
+  assert.equal(JSON.stringify(h.relatedSheets[tab].data),before);assert.equal(h.fetches,0);assert.equal(h.writes.length,0);
+ }
+});
+test('source evidence prefers each available base row and keeps evidenced inflected-only corpora',()=>{
+ const h=sourceScanFixture('Aufzug',{RS:['Aufzuges','Der Aufzug.'],RW:['Aufzugs'],GM:['Aufzuges','Aufzug.']}),p=h.source();
+ assert.equal(p.source,'[RS: Oper], [RW: Oper], [GM]');assert.equal(p.de,'Aufzug');
+ assert.deepEqual([...p.proof].map(r=>[r.tab,r.number]),[['RS',3],['RW',2],['GM',3]]);
+ h.c.maintenanceNotesVerifySource_(h.c.SpreadsheetApp.getActiveSpreadsheet(),p);assert.equal(h.fetches,0);assert.equal(h.writes.length,0);
+});
+test('other words, phrases and requested case retain base-form matching after inflections',()=>{
+ for(const [word,suffix,base]of [['Saite','Saiten','G-Saite'],['Bogen','Bogens','mit Bogen'],['Märchen','Märchens','ein Märchen'],['sehr ruhig','sehr ruhigen','sehr ruhig spielen']]){
+  const h=sourceScanFixture(word,{RS:[suffix,base]}),p=h.source();assert.equal(p.de,word);assert.equal(p.proof[0].number,3);assert.equal(p.proof[0].german,base);
+ }
+ const h=sourceScanFixture('Aufzug',{RS:['Aufzuges','AUFZUG','Aufzug']}),p=h.source();assert.equal(p.de,'Aufzug');assert.equal(p.proof[0].number,4);
+});
+test('suffixes without a witnessed base form stop before generation or registration',()=>{
+ const h=sourceScanFixture('Aufzug',{RS:['Aufzuges'],RW:['Aufzugs'],GM:['Aufzuges']});
+ assert.throws(()=>h.source(),/形そのもの/);assert.throws(()=>h.run(),/形そのもの/);assert.equal(h.fetches,0);assert.equal(h.writes.length,0);assert.equal(h.managed().length,0);
+});
+test('partial compounds, other words, digits and adjacent Unicode letters never supply a base form',()=>{
+ for(const word of ['Bühnenaufzug','Aufzugsmusik','Aufzug1','1Aufzug','éAufzug','Aufzugé','Aufzug\u0301','Seite']){
+  const h=sourceScanFixture('Aufzug',{RS:[word]});assert.throws(()=>h.source(),/確認できません|特定できません/);assert.equal(h.fetches,0);assert.equal(h.writes.length,0);
+ }
+ const h=sourceScanFixture('Saite',{GM:['Seite','Saitenspiel']});assert.throws(()=>h.source(),/特定できません/);
+});
+test('a real base in another tab never admits partial or unrelated words as extra sources',()=>{
+ for(const word of ['Bühnenaufzug','Aufzugsmusik','Aufzug1','1Aufzug','éAufzug','Aufzugé','Aufzug\u0301','Seite']){
+  const h=sourceScanFixture('Aufzug',{RS:[word],RW:['Aufzug']}),p=h.source();
+  assert.equal(p.source,'[RW: Oper]');assert.equal(p.proof.length,1);assert.equal(p.proof[0].tab,'RW');assert.equal(h.fetches,0);assert.equal(h.writes.length,0);
+ }
+});
+test('the last eligible base at the existing 6000-row bound is found without guessing from earlier inflections',()=>{
+ const originals=Array(5999).fill('Aufzuges');originals.push('Aufzug');
+ const h=sourceScanFixture('Aufzug',{RS:originals}),p=h.source();assert.equal(p.de,'Aufzug');assert.equal(p.proof[0].number,6001);assert.equal(p.proof[0].german,'Aufzug');assert.equal(h.fetches,0);assert.equal(h.writes.length,0);
+});
+
+test('invalid locations and oversized first matches do not hide later eligible base forms',()=>{
+ for(const tab of ['RS','RW','GM']){
+  const invalid=tab==='GM'?[{de:'Aufzug',data:''},{de:'Aufzug',data:'不明'}]:[{de:'Aufzug',Oper:''},{de:'Aufzug',page:'?'}];
+  invalid.push({de:'Aufzug '+ 'x'.repeat(6001)});invalid.push(tab==='GM'?{de:'Aufzug',data:'x'.repeat(241)}:{de:'Aufzug',whom:'x'.repeat(241)});
+  const h=sourceScanFixture('Aufzug',{[tab]:[...invalid,{de:'Der Aufzug.',page:0}]}),p=h.source();assert.equal(p.proof[0].number,invalid.length+2);assert.equal(p.de,'Aufzug');
+ }
+});
+test('all eligible spellings are checked for ambiguity and source-size limits are preserved',()=>{
+ const h=sourceScanFixture('Märchen',{RS:['Märchens','Märchen','Maerchen']});assert.throws(()=>h.source(),/原綴りが複数/);
+ const limited=sourceScanFixture('Aufzug',{RS:['Aufzug']});limited.relatedSheets.RS.getLastRow=()=>6002;assert.throws(()=>limited.source(),/上限/);assert.equal(limited.fetches,0);assert.equal(limited.writes.length,0);
+});
+test('late Aufzug evidence reaches private review and still requires one explicit complete registration',()=>{
+ const h=sourceScanFixture('Aufzug',{RS:['Aufzuges','Aufzug'],RW:['Aufzugs','Aufzug']});
+ h.mutateDraft=d=>{d.ja='【一般的な意味】\n① 合成テスト用の意味．\n\n【音楽用語としての訳例】\n合成用例の訳．';d.en='【General meanings】\n① Synthetic fixture meaning.\n\n【Musical translation examples】\nSynthetic example translation.';
+  d.notes_support={english:'',italian:'',rationale:'合成テストの文言であり，実資料の語義を主張しない．',usage_ids:JSON.parse(h.lastRequest.input).domain_context.usage_examples.map(e=>e.id)};};
+ let s=h.run();assert.equal(s.job.rows[0].snapshot.values.de,'Aufzug');assert.equal(h.managed().length,0);assert.equal(h.writes.length,0);
+ assert.throws(()=>h.register(undefined,false),/確認/);s=h.register();assert.equal(s.job.intake.phase,'registered');assert.equal(h.managed()[0].values.de,'Aufzug');
+ h.register();h.run();assert.equal(h.managed().length,1);assert.equal(h.fetches,1);
+});
+
 test('RW/RS source requires work and numeric page, accepts zero and skips incomplete first matches',()=>{
  const h=harness(),data=h.relatedSheets.RW.data;data[1][3]='';data[1][6]='';let source=h.c.maintenanceNotesSource_(h.c.SpreadsheetApp.getActiveSpreadsheet(),'Saite');
  assert(!source.source.includes('[RW: Oper]'));const next=data[1].slice();next[3]='walküre';next[6]=0;data.push(next);

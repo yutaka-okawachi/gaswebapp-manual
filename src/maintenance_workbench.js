@@ -4,10 +4,11 @@ function maintenanceNotesObservation_(id) {
   return candidateWizardFindObservation(id);
 }
 function maintenanceNotesSource_(book, term) {
-  const normalized = normalizeObservedTerm(term);
+  const normalized = normalizeObservedTerm(term), preferred = String(term).trim().normalize('NFC');
   if (!/^[a-z0-9][a-z0-9 -]{1,119}$/.test(normalized)) throw rowCompletionError_('原文の語・句を確認できません．Notesは追加していません．');
   const formsToFind = [normalized, normalized + 'n', normalized + 'en', normalized + 's', normalized + 'es'];
-  const pattern = new RegExp('(^|[^a-z0-9])(?:' + formsToFind.map(function (form) { return form.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); }).join('|') + ')($|[^a-z0-9])', 'i');
+  const boundary = '[^\\p{L}\\p{M}\\p{N}]';
+  const pattern = new RegExp('(^|' + boundary + ')(?:' + formsToFind.map(function (form) { return form.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); }).join('|') + ')($|' + boundary + ')', 'iu');
   const proof = [], forms = [], markers = [];
   [['RS', '[RS: Oper]'], ['RW', '[RW: Oper]'], ['GM', '[GM]']].forEach(function (definition) {
     const tab = definition[0], sheet = book.getSheetByName(tab);
@@ -15,33 +16,39 @@ function maintenanceNotesSource_(book, term) {
     if (sheet.getLastRow() > 6001) throw rowCompletionError_('出典調査の上限を超えています．不確かな出典でNotesを追加しません．');
     const fields = tab === 'GM' ? ['de', 'data'] : ['de', 'Oper', 'Aufzug', 'Szene', 'page', 'whom'];
     const rows = namedSheetRead_(sheet, fields, 2, sheet.getLastRow() - 1).values;
-    const index = rows.findIndex(function (r) {
-      if (!pattern.test(normalizeObservedTerm(r[0]))) return false;
-      if (tab === 'GM') return Boolean(String(r[1] || '').trim()) && !/^(?:不明|未確認|未定|[?？-]+)$/.test(String(r[1]).trim());
-      return Boolean(String(r[1] || '').trim()) && /^(?:0|[1-9][0-9]{0,5})$/.test(String(r[4]).trim());
-    });
-    if (index < 0) return;
-    const values = rows[index], original = String(values[0]), tokens = Array.from(original.matchAll(/[A-Za-zÄÖÜäöüß]+/g));
-    let form = '';
-    for (let i = 0; i < tokens.length && !form; i++) {
-      for (let n = 1; n <= 10 && i + n <= tokens.length; n++) {
-        const last = tokens[i + n - 1], candidate = original.slice(tokens[i].index, last.index + last[0].length);
-        if (normalizeObservedTerm(candidate) === normalized) { form = candidate; break; }
+    let selected = null;
+    rows.forEach(function (values, index) {
+      if (!pattern.test(normalizeObservedTerm(values[0]))) return;
+      if (tab === 'GM') {
+        if (!String(values[1] || '').trim() || /^(?:不明|未確認|未定|[?？-]+)$/.test(String(values[1]).trim())) return;
+      } else if (!String(values[1] || '').trim() || !/^(?:0|[1-9][0-9]{0,5})$/.test(String(values[4]).trim())) return;
+      const original = String(values[0]);
+      const location = tab === 'GM' ? String(values[1] || '').split('&').filter(Boolean).slice(0, 2).join('&') :
+        values.slice(1).map(String).filter(Boolean).join(' / ');
+      if (!location || original.length > 6000 || location.length > 240) return;
+      const tokens = Array.from(original.matchAll(/[\p{L}\p{M}]+/gu)), rowForms = [];
+      for (let i = 0; i < tokens.length; i++) {
+        for (let n = 1; n <= 10 && i + n <= tokens.length; n++) {
+          const last = tokens[i + n - 1], candidate = original.slice(tokens[i].index, last.index + last[0].length);
+          if (normalizeObservedTerm(candidate) === normalized) { rowForms.push(candidate); break; }
+        }
       }
-    }
-    const location = tab === 'GM' ? String(values[1] || '').split('&').filter(Boolean).slice(0, 2).join('&') :
-      values.slice(1).map(String).filter(Boolean).join(' / ');
-    if (!location || original.length > 6000 || location.length > 240) return;
-    if (form) forms.push(form);
+      rowForms.forEach(function (form) { forms.push(form); });
+      // Inspect every eligible row: a suffix-only hit must not hide a later base form.
+      // Prefer the actual requested spelling, then another case of the base form.
+      const rank = rowForms.some(function (form) { return form.normalize('NFC') === preferred; }) ? 2 : rowForms.length ? 1 : 0;
+      if (!selected || rank > selected.rank) selected = { values: values, index: index, original: original, location: location, rank: rank };
+    });
+    if (!selected) return;
     markers.push(definition[1]);
-    proof.push({ tab: tab, sheetId: sheet.getSheetId(), number: index + 2, fields: fields,
-      hash: rowCompletionHash_(values), german: original.slice(0, 1200), location: location });
+    proof.push({ tab: tab, sheetId: sheet.getSheetId(), number: selected.index + 2, fields: fields,
+      hash: rowCompletionHash_(selected.values), german: selected.original.slice(0, 1200), location: selected.location });
   });
   if (!proof.length) throw rowCompletionError_('実例と使用箇所から出典を特定できません．Notesは追加していません．');
   if (!forms.length) throw rowCompletionError_('入力した形そのものを原文で確認できません．見出しを推測せず，語形対応で確認してください．');
   const unique = Array.from(new Set(forms.map(function (form) { return form.normalize('NFC'); })));
   if (new Set(unique.map(function (form) { return form.toLowerCase(); })).size > 1) throw rowCompletionError_('原綴りが複数あります．Notesは追加せず，語形対応で確認してください．');
-  const headword = unique.find(function (form) { return form === String(term).trim(); }) || unique[0];
+  const headword = unique.find(function (form) { return form === preferred; }) || unique[0];
   return { de: headword, source: markers.join(', '), proof: proof };
 }
 function maintenanceNotesVerifySource_(book, plan) {
