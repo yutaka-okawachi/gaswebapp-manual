@@ -1,4 +1,4 @@
-/** Unified maintenance. Notes intake stays private until explicit content approval. */
+/** Unified maintenance. Confirm complete content before one Notes row write. */
 function maintenanceNotesObservation_(id) {
   rowCompletionBook_();
   return candidateWizardFindObservation(id);
@@ -61,7 +61,7 @@ function maintenanceNotesVerifySource_(book, plan) {
 function maintenanceNotesNoDuplicate_(book, headword, ownId) {
   const notes = book.getSheetByName('Notes'), normalized = normalizeObservedTerm(headword);
   if (!notes) throw rowCompletionError_('Notesがありません．');
-  const duplicates = notesPublicationRead_(notes).rows.filter(function (row) {
+  const duplicates = notesRegistrationRead_(notes).rows.filter(function (row) {
     return normalizeObservedTerm(row.values.de) === normalized && (!ownId || row.entryId !== ownId);
   });
   if (duplicates.length) throw rowCompletionError_('同じ見出しがNotesにあります．新しい行やAPI生成を重ねず，既存行を確認してください．');
@@ -84,23 +84,18 @@ function maintenanceNotesOldWork_(found) {
   if (!sheet) return;
   const id = dictionaryCandidateRecordId('candidate', normalizeObservedTerm(found.row[2] || found.row[1]));
   const candidate = candidateWizardFindLinked(sheet, UNREGISTERED_TERM_CANDIDATE_HEADERS.length, id);
+  if (candidate && typeof maintenanceLedgerAssertCandidateProduction_ === 'function') maintenanceLedgerAssertCandidateProduction_(candidate.row);
   if (candidate && (candidate.row[13] || ['生成中', '結果要確認', '作成済み'].includes(candidate.row[12]))) {
-    throw rowCompletionError_('旧候補台帳に保存中の草案があります．重複課金を避け，旧草案・履歴を先に確認してください．');
+    if (['生成中', '結果要確認'].includes(candidate.row[12])) throw rowCompletionError_('旧草案のAPI結果を先に確認してください．自動再送しません．');
+    const details = Object.assign({ headword: String(candidate.row[16] || ''), partOfSpeech: String(candidate.row[17] || ''), inflections: String(candidate.row[18] || ''), translation: String(candidate.row[19] || '') }, candidateWizardDraftDetails(candidate.row[13]));
+    if (!details.headword) throw rowCompletionError_('旧候補台帳の草案の内容を確認できません．記録を保持して停止しました．');
+    return details;
   }
 }
 function maintenanceNotesRow_(sheet, entryId) {
-  const matches = notesPublicationRead_(sheet).rows.filter(function (row) { return row.entryId === entryId; });
+  const matches = notesRegistrationRead_(sheet).rows.filter(function (row) { return row.entryId === entryId; });
   if (matches.length > 1) throw rowCompletionError_('管理IDが重複しています．変更せず確認してください．');
   return matches[0] || null;
-}
-function maintenanceNotesCell_(sheet, number, field) {
-  return ['de', 'ja', 'en', 'source'].includes(field) ? namedSheetCell_(sheet, [field], number, 0) : notesPublicationCell_(sheet, number, field);
-}
-function maintenanceNotesPut_(sheet, number, field, value, allowed) {
-  const cell = maintenanceNotesCell_(sheet, number, field), current = String(cell.getValue() == null ? '' : cell.getValue());
-  if (cell.getFormula() || !cell.canEdit() || cell.isPartOfMerge() || !allowed.includes(current)) throw rowCompletionError_('既存値・式・保護・手動変更を検出しました．上書きしていません．');
-  if (current !== value) { cell.setValue(sheetLiteralValue_(value)); SpreadsheetApp.flush(); }
-  if (cell.getFormula() || String(cell.getValue()) !== value) throw rowCompletionError_('保存結果を確認できません．自動的にやり直さず保存状態を確認してください．');
 }
 function maintenanceNotesDraftCurrent_(job, row) {
   const book = rowCompletionBook_(), sheet = book.getSheetByName('Notes');
@@ -118,9 +113,9 @@ function maintenanceNotesPrepare_(observationId) {
     const book = rowCompletionBook_(), previous = rowCompletionStored_(), existing = previous && previous.job;
     if (existing && existing.intake && existing.intake.observationId === observationId) return existing;
     if (existing && !existing.closed) throw rowCompletionError_('別の語または選択行の処理中です．その内容を確認し，登録または終了してから切り替えてください．');
-    if (!rowCompletionSettings_().ready) throw rowCompletionError_('OpenAIの既存キー・モデルが未設定です．Notesは追加していません．');
     const found = maintenanceNotesObservation_(observationId);
-    maintenanceNotesOldWork_(found);
+    const legacy = maintenanceNotesOldWork_(found);
+    if (!legacy && !rowCompletionSettings_().ready) throw rowCompletionError_('OpenAIの既存キー・モデルが未設定です．Notesは追加していません．');
     const plan = maintenanceNotesSource_(book, String(found.row[1] || ''));
     maintenanceNotesNoDuplicate_(book, plan.de);
     const sheet = book.getSheetByName('Notes'), snapshot = {
@@ -136,6 +131,15 @@ function maintenanceNotesPrepare_(observationId) {
       }], intake: { observationId: observationId, entryId: 'notes-' + Utilities.getUuid(),
         flow: 'review_before_insert', phase: 'ready', plan: plan,
         message: '出典調査と日英案の生成を続けます．内容を承認するまでNotesには登録しません．' } };
+    if (legacy) {
+      if (normalizeObservedTerm(legacy.headword) !== normalizeObservedTerm(plan.de)) throw rowCompletionError_('旧草案と現在の見出しが一致しません．記録を保持して停止しました．');
+      const draftRow = job.rows[0], known = maintenanceStyleKnown_(candidateWizardSuggestedBody(legacy), '');
+      draftRow.draft = { ja: candidateWizardSuggestedBody(legacy), en: '' }; draftRow.status = 'needs_review';
+      draftRow.notesSupport = { kind: 'new_dictionary_proposal', english: known.english, italian: known.italian,
+        rationale: '旧保存草案の対応語です．現在の出典と日英本文を人が確認してください．', usageIds: [], examples: [], humanReviewed: false };
+      const intakeMessage = '旧保存草案を確認画面へ読み込みました．英語本文を補い，出典・日英本文を確認して登録してください．APIは呼び出していません．';
+      job.intake.message = intakeMessage;
+    }
     const claim = ROW_COMPLETION_PREFIX + 'claim:' + rowCompletionHash_(['notes-intake', book.getId(), normalizeObservedTerm(plan.de)]);
     const props = PropertiesService.getScriptProperties();
     if (props.getProperty(claim)) throw rowCompletionError_('同じ見出しの処理記録があります．既存の作業・Notesを確認してください．');
@@ -179,18 +183,31 @@ function maintenanceNotesRun(observationId) {
   }
   return maintenanceWorkbenchState(observationId);
 }
-function maintenanceNotesRegistrationCurrent_(job, sheet) {
-  const intake = job.intake, intent = intake.intent, row = maintenanceNotesRow_(sheet, intake.entryId);
-  const approved = 'approved:' + notesPublicationHash_(intent);
-  if (!row || row.number !== intake.number || row.observationId !== intake.observationId ||
-      !['writing', 'draft', approved].includes(row.state)) throw rowCompletionError_('登録先の管理情報が変わりました．上書きせず停止しました．');
+function maintenanceNotesWriteIntent_(job, sheet) {
+  const intake = job.intake, intent = intake.intent;
+  const managed = maintenanceNotesRow_(sheet, intake.entryId), number = intake.number;
+  if (managed && (managed.number !== number || !['', intake.observationId].includes(managed.observationId))) throw rowCompletionError_('登録先の識別情報が変わりました．上書きせず停止しました．');
+  if (number > sheet.getMaxRows()) sheet.insertRowsAfter(sheet.getMaxRows(), number - sheet.getMaxRows());
+  const range = sheet.getRange(number, 1, 1, sheet.getLastColumn()), before = range.getValues()[0], formulas = range.getFormulas()[0];
+  if (!managed && before.some(function (value) { return value !== ''; })) throw rowCompletionError_('登録予定の行が使用中です．別行へ重複追加せず停止しました．');
+  const columns = notesRegistrationColumns_(notesRegistrationHeader_(sheet));
   ['de', 'source', 'ja', 'en'].forEach(function (field) {
-    const cell = maintenanceNotesCell_(sheet, row.number, field), current = String(cell.getValue());
-    if (cell.getFormula() || (current !== '' && current !== intent[field]) || !rowCompletionWritable_(sheet, field, row.number)) {
-      throw rowCompletionError_('登録先に既存入力・数式・保護があります．空欄以外は変更しません．');
-    }
+    const value = notesRegistrationString_(before[columns[field]]);
+    if (columns[field] < 0 || !['', intent[field]].includes(value) || !rowCompletionWritable_(sheet, field, number)) throw rowCompletionError_('登録先に既存入力・数式・保護があります．変更せず停止しました．');
   });
-  return row;
+  if (managed && managed.observationId === intake.observationId && notesRegistrationHash_(managed.values) === notesRegistrationHash_(intent)) return managed;
+  if (formulas.some(Boolean) || !range.canEdit() || range.isPartOfMerge()) throw rowCompletionError_('登録行に数式・保護・結合セルがあります．変更せず停止しました．');
+  maintenanceNotesVerifySource_(rowCompletionBook_(), intake.plan);
+  const next = before.map(sheetLiteralValue_);
+  Object.keys(intent).forEach(function (field) { next[columns[field]] = sheetLiteralValue_(intent[field]); });
+  next[columns.maintenance_id] = sheetLiteralValue_(intake.entryId);
+  next[columns.maintenance_observation_id] = sheetLiteralValue_(intake.observationId);
+  if (JSON.stringify(range.getValues()[0]) !== JSON.stringify(before) || range.getFormulas()[0].some(Boolean)) throw rowCompletionError_('登録直前に行が変わりました．保存状態を確認してください．');
+  // The complete confirmed content and retry IDs are written together. No de-only draft row.
+  range.setValues([next]); SpreadsheetApp.flush();
+  const saved = maintenanceNotesRow_(sheet, intake.entryId);
+  if (!saved || saved.number !== number || saved.observationId !== intake.observationId || notesRegistrationHash_(saved.values) !== notesRegistrationHash_(intent)) throw rowCompletionError_('登録結果を確認できません．再生成せず保存状態を確認してください．');
+  return saved;
 }
 function maintenanceNotesRegister(id, expectedHash, fields, checked) {
   if (checked !== true) throw rowCompletionError_('日英本文・対応語・出典を確認してから登録を承認してください．');
@@ -226,30 +243,8 @@ function maintenanceNotesRegister(id, expectedHash, fields, checked) {
       throw rowCompletionError_('登録途中です．承認済みの内容だけを再開できます．既存入力は上書きしません．');
     }
     try {
-      notesPublicationEnsureColumns_(sheet);
-      let managed = maintenanceNotesRow_(sheet, intake.entryId);
-      if (!managed) {
-        const number = intake.number;
-        if (number > sheet.getMaxRows()) sheet.insertRowsAfter(sheet.getMaxRows(), number - sheet.getMaxRows());
-        const range = sheet.getRange(number, 1, 1, sheet.getLastColumn());
-        if (range.getValues()[0].some(function (value) { return value !== ''; }) || range.getFormulas()[0].some(Boolean) ||
-            !range.canEdit() || range.isPartOfMerge()) throw rowCompletionError_('登録予定の行が使用中・保護されています．別の行へ重複追加せず停止しました．');
-        maintenanceNotesPut_(sheet, number, 'maintenance_id', intake.entryId, ['']);
-        managed = maintenanceNotesRow_(sheet, intake.entryId);
-      }
-      if (managed.number !== intake.number || !['', 'writing', 'draft', 'approved:' + notesPublicationHash_(intake.intent)].includes(managed.state) ||
-          !['', intake.observationId].includes(managed.observationId)) throw rowCompletionError_('登録先の管理状態が変わりました．');
-      if (!managed.state) maintenanceNotesPut_(sheet, managed.number, 'publication_state', 'writing', ['']);
-      maintenanceNotesPut_(sheet, managed.number, 'maintenance_observation_id', intake.observationId, ['', intake.observationId]);
-      for (const field of ['de', 'source', 'ja', 'en']) {
-        maintenanceNotesRegistrationCurrent_(job, sheet);
-        maintenanceNotesPut_(sheet, managed.number, field, intake.intent[field], ['', intake.intent[field]]);
-      }
-      const completed = maintenanceNotesRegistrationCurrent_(job, sheet);
-      if (notesPublicationHash_(completed.values) !== notesPublicationHash_(intake.intent)) throw rowCompletionError_('4欄の保存を確認できません．');
-      maintenanceNotesVerifySource_(book, intake.plan);
-      maintenanceNotesNoDuplicate_(book, intake.plan.de, intake.entryId);
-      maintenanceNotesPut_(sheet, managed.number, 'publication_state', 'approved:' + notesPublicationHash_(intake.intent), [completed.state]);
+      notesRegistrationEnsureColumns_(sheet);
+      const managed = maintenanceNotesWriteIntent_(job, sheet);
       row.number = managed.number; row.status = 'applied'; row.written = ['ja', 'en'];
       intake.phase = 'registered'; intake.message = '承認した原文・出典・日英本文をNotesに登録しました．サイトへの反映は別途の同期で行います．';
       row.message = intake.message; job.closed = true; rowCompletionSave_(job);
@@ -267,37 +262,6 @@ function maintenanceNotesRegister(id, expectedHash, fields, checked) {
     return maintenanceWorkbenchState(intake.observationId);
   });
 }
-function maintenanceNotesApprove(number, expectedHash, checked) {
-  if (checked !== true || !Number.isSafeInteger(number) || number < 2 || !/^[a-f0-9]{64}$/.test(String(expectedHash))) throw rowCompletionError_('出典と本文を確認してから公開承認してください．');
-  return rowCompletionLock_(function () {
-    const book = rowCompletionBook_(), sheet = book.getSheetByName('Notes');
-    const row = notesPublicationRead_(sheet).rows.find(function (item) { return item.number === number; });
-    if (!row || notesPublicationHash_(row.values) !== expectedHash) throw rowCompletionError_('読込み後に本文・出典が変わりました．更新して確認してください．');
-    if (notesPublicationIsPublished_(row)) return maintenanceWorkbenchState();
-    const v = row.values;
-    if (['de', 'ja', 'en', 'source'].some(function (field) { return !String(v[field]).trim(); }) || /^(?:不明|未確認|未定|[?？\-ー]+)$/.test(v.source.trim())) throw rowCompletionError_('原文・日英本文・出典を完成させてください．');
-    const unmanaged = !row.state && !row.entryId && !row.observationId;
-    if (!unmanaged && row.state !== 'draft' && !/^approved:[a-f0-9]{64}$/.test(row.state)) throw rowCompletionError_('追加途中または不明な管理状態です．先に保存状態を確認してください．');
-    if (notesPublicationRead_(sheet).rows.some(function (other) { return other.number !== number && normalizeObservedTerm(other.values.de) === normalizeObservedTerm(v.de); })) throw rowCompletionError_('同じ見出しの別行があります．重複を解決するまで公開承認しません．');
-    if (row.observationId) {
-      const found = maintenanceNotesObservation_(row.observationId), proof = maintenanceNotesSource_(book, String(found.row[1] || ''));
-      if (proof.de !== v.de || proof.source !== v.source) throw rowCompletionError_('観測元の原文・出典と一致しません．公開承認を保留しました．');
-    }
-    const known = maintenanceStyleKnown_(v.ja, v.en), profile = maintenanceStyleProfile_('Notes', v);
-    ['ja', 'en'].forEach(function (field) {
-      maintenanceStyleValidate_(v[field], field, { tab: 'Notes', de: v.de, basis: field === 'en' ? v.ja : v.ja,
-        known: known, restrictEquivalents: true, profile: profile });
-    });
-    if (JSON.stringify(rowCompletionProtected_(v.ja)) !== JSON.stringify(rowCompletionProtected_(v.en))) throw rowCompletionError_('日英の譜例・リンク・作品名を確認してください．');
-    notesPublicationEnsureColumns_(sheet);
-    // Re-read all values immediately before changing only the approval marker.
-    const current = notesPublicationRead_(sheet).rows.find(function (item) { return item.number === number; });
-    if (notesPublicationHash_(current.values) !== expectedHash || current.entryId !== row.entryId || current.state !== row.state || current.observationId !== row.observationId) throw rowCompletionError_('承認直前に対象が変わりました．');
-    if (!current.entryId) maintenanceNotesPut_(sheet, number, 'maintenance_id', 'notes-' + Utilities.getUuid(), ['']);
-    maintenanceNotesPut_(sheet, number, 'publication_state', 'approved:' + expectedHash, [row.state]);
-    return maintenanceWorkbenchState();
-  });
-}
 function maintenanceWorkbenchState(observationId) {
   const book = rowCompletionBook_(), state = rowCompletionState(), sheet = book.getSheetByName('Notes');
   const observations = candidateWizardBootstrap(), stored = state.job;
@@ -305,16 +269,15 @@ function maintenanceWorkbenchState(observationId) {
   const job = stored && stored.intake && stored.intake.observationId === selected ? stored : null;
   const row = job && job.rows[0], entry = job && sheet ? maintenanceNotesRow_(sheet, job.intake.entryId) : null;
   let message = job ? job.intake.message : '';
-  if (job && job.closed && entry && !notesPublicationIsPublished_(entry)) message = 'Notesの本文・出典が承認後に変わっています．現在の内容を確認して再承認してください．';
   if (row && ['generating', 'uncertain'].includes(row.status)) {
     message = 'APIは' + (row.status === 'generating' ? '処理中または応答待ち' : '結果不明') +
-      'です．利用状況を確認するまで再送しません．' + (entry ? '既存の未公開下書きは保持しています．' : 'Notesにはまだ登録していません．');
+      'です．利用状況を確認するまで再送しません．' + (entry ? '既存のNotes行は変更していません．' : 'Notesにはまだ登録していません．');
   }
   return { observations: observations, selectedObservationId: selected, job: job,
     jobHash: job ? rowCompletionHash_(job) : '', apiReady: state.apiReady, message: message,
     otherWorkPending: Boolean(stored && !stored.closed && stored !== job),
     validationErrors: row && Object.keys(row.draft || {}).length && !job.intake.intent ? maintenanceNotesDraftErrors_(row, row.draft) : [],
-    entry: entry ? { number: entry.number, values: entry.values, hash: notesPublicationHash_(entry.values), published: notesPublicationIsPublished_(entry) } : null };
+    entry: entry ? { number: entry.number, values: entry.values, hash: notesRegistrationHash_(entry.values) } : null };
 }
 function maintenanceWorkbenchFinish(id, checked) {
   const job = rowCompletionJob_(id);
@@ -326,16 +289,16 @@ function showMaintenanceWorkbench() {
   SpreadsheetApp.getUi().showModalDialog(HtmlService.createHtmlOutputFromFile('maintenance_workbench_dialog').setWidth(780).setHeight(720), '未登録語からNotesを準備・確認');
 }
 function maintenanceAliasesState() {
-  const book = rowCompletionBook_(), published = notesPublicationRead_(book.getSheetByName('Notes')).rows.filter(notesPublicationIsPublished_);
+  const book = rowCompletionBook_(), published = notesRegistrationRead_(book.getSheetByName('Notes')).rows.filter(function (row) { return row.values.de.trim(); });
   return { observations: candidateWizardBootstrap(), headwords: published.map(function (row) { return row.values.de; }) };
 }
 function maintenanceAliasApply(observationId, headword, category, checked) {
   if (checked !== true || !Object.prototype.hasOwnProperty.call(RELATED_FORM_JEV_CATEGORIES, category)) throw rowCompletionError_('見出し・語形区分を確認してください．');
   return rowCompletionLock_(function () {
     const found = maintenanceNotesObservation_(observationId), book = found.spreadsheet;
-    const normalized = normalizeObservedTerm(headword), notes = notesPublicationRead_(book.getSheetByName('Notes')).rows.filter(notesPublicationIsPublished_);
+    const normalized = normalizeObservedTerm(headword), notes = notesRegistrationRead_(book.getSheetByName('Notes')).rows.filter(function (row) { return row.values.de.trim(); });
     const targets = notes.filter(function (row) { return normalizeObservedTerm(row.values.de) === normalized; });
-    if (targets.length !== 1) throw rowCompletionError_('公開済みの対応見出しを一意に確認できません．');
+    if (targets.length !== 1) throw rowCompletionError_('Notesの対応見出しを一意に確認できません．');
     const proof = maintenanceNotesSource_(book, String(found.row[1] || '')), term = proof.de;
     if (normalizeObservedTerm(term) === normalized) throw rowCompletionError_('見出しと同じ語形を重複登録しません．');
     const mapping = requireSheetWithHeaders(book, EXPERIMENTAL_TERM_MAPPING_SHEET_NAME, EXPERIMENTAL_TERM_MAPPING_HEADERS);

@@ -586,7 +586,7 @@ const context = {
 };
 
 vm.createContext(context);
-vm.runInContext(['sheet_column_layout','notes_publication_baseline','notes_publication'].map(name => fs.readFileSync(path.join(repositoryRoot, 'src/'+name+'.js'), 'utf8')).join('\n') + '\n' + fs.readFileSync(sourcePath, 'utf8'), context, {
+vm.runInContext(['sheet_column_layout','notes_registration'].map(name => fs.readFileSync(path.join(repositoryRoot, 'src/'+name+'.js'), 'utf8')).join('\n') + '\n' + fs.readFileSync(sourcePath, 'utf8'), context, {
   filename: sourcePath
 });
 

@@ -48,7 +48,7 @@ function render(){
  text(s,'p',row?labels[row.status]||'保存状態を確認':'準備状態の確認が必要です．既存の記録とNotesは保持しています．');
  const shown=job.closed&&entry?entry.values:intake.plan;
  text(s,'p','見出し（de）：'+shown.de+'\n出典（source）：'+shown.source,'context');
- if(entry)text(s,'p','Notes '+entry.number+'行：'+(entry.published?'登録・承認済み（サイト反映は別途同期）':'既存の未公開行を保持中．新しい重複行は追加しません．'));
+ if(entry)text(s,'p','Notes '+entry.number+'行：'+'シートの現在値が同期対象です．本文の編集はNotesで行えます．');
  else text(s,'p','Notes：未登録');
  if(!row||!Object.keys(row.draft||{}).length){if(row&&row.status==='pending')$('run').disabled=busy||uncertain||!state.apiReady||job.closed;return;}
  const bodies=text(s,'div','','bodies'),inputs={};let approval=null,confirmation=null,validatedFields=null;
@@ -97,13 +97,6 @@ function render(){
   b.addEventListener('click',()=>{if(!checked.checked){$('message').textContent='本文と出典の確認欄を選んでください．';return;}
    const fields=fieldsNow();if(editable&&validatedFields!==JSON.stringify(fields)){$('message').textContent='現在の本文の検証が終わってから，内容を確認してください．';scheduleValidation();return;}
    request('maintenanceNotesRegister',[job.id,state.jobHash,fields,true]);});
- }
- if(job.closed&&entry&&!entry.published&&['de','source','ja','en'].every(k=>String(entry.values[k]||'').trim())){
-  const label=text(s,'label',''),checked=document.createElement('input');checked.type='checkbox';checked.disabled=busy;label.appendChild(checked);
-  text(label,'span',' Notesの変更後の本文・出典・対応語を確認した');
-  const b=text(s,'button','編集後の内容を再承認');b.disabled=busy||uncertain;
-  b.addEventListener('click',()=>{if(!checked.checked){$('message').textContent='変更後の内容を確認してください．';return;}
-   request('maintenanceNotesApprove',[entry.number,entry.hash,true]);});
  }
  if(editable)scheduleValidation();
 }

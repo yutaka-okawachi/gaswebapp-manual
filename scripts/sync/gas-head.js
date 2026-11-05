@@ -97,7 +97,7 @@ function localSnapshot(options = {}) {
         if (!type || (type === 'JSON' && relative !== 'appsscript.json')) throw new Error('GAS 送信形式を確認できません。');
         return { name: relative.slice(0, -extension.length).split(path.sep).join('/'), type, source: fs.readFileSync(absolute, 'utf8') };
     });
-    const retirementTexts = ['english-retirement-20261020.json', 'maintenance-retirement-20261103.json']
+    const retirementTexts = ['english-retirement-20261020.json', 'maintenance-retirement-20261103.json', 'notes-publication-retirement-20261105.json']
         .map(name => path.join(directory, 'scripts/sync', name))
         .filter(file => fs.existsSync(file)).map(file => fs.readFileSync(file, 'utf8'));
     const retirementText = retirementTexts.join('\n');

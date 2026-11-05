@@ -35,7 +35,7 @@ function buildEnglishExportSource_(tables, options) {
    return row;
   }).filter(row => name === 'GM' ? row.de || row.data : name === 'Notes' || EXPORT_SHEET_HEADERS[name].some(key => row[key] !== ''));
  });
- const source = {schema:1,requestId:String(options.requestId || ''),sourceHash:typeof SYNC_SOURCE_HASH === 'string' ? SYNC_SOURCE_HASH : '',readAt:new Date().toISOString(),tabs:tabs,termMappings:notesPublicationFilterMappings_(tables.Notes.publicationRows, pickExportRows_(tables['語形対応']).filter(row => String(row[0] || '').trim() && String(row[1] || '').trim()))};
+ const source = {schema:1,requestId:String(options.requestId || ''),sourceHash:typeof SYNC_SOURCE_HASH === 'string' ? SYNC_SOURCE_HASH : '',readAt:new Date().toISOString(),tabs:tabs,termMappings:pickExportRows_(tables['語形対応']).filter(row => String(row[0] || '').trim() && String(row[1] || '').trim())};
  if (tables.synopsis) source.synopsis = {schema:1,rows:tables.synopsis.values.slice(1,29).map((row,index)=>({__row:index+2,work:String(row[0]||'').trim(),ja:String(row[1]||'').trim(),en:String(row[2]||'').trim()})).filter(row=>row.work||row.ja||row.en)};
  return source;
 }
@@ -202,8 +202,8 @@ function buildExportSnapshot_(exportOptions) {
     const dicNotesJson = pickExportRows_(tables.Notes);
 
     // 本番用の見出し・関連語形対応（見出し〜補足の6項目）
-    const termMappingData = notesPublicationFilterMappings_(tables.Notes.publicationRows, pickExportRows_(tables['語形対応'])
-        .filter(row => String(row[0] || '').trim() && String(row[1] || '').trim()));
+    const termMappingData = pickExportRows_(tables['語形対応'])
+        .filter(row => String(row[0] || '').trim() && String(row[1] || '').trim());
     validateDictionaryTermMapping_(dicNotesJson, termMappingData);
 
     // 8. Abbreviation List (略記一覧)
@@ -280,10 +280,8 @@ function validateExportSheets_(ss, includeEnglish) {
         tables[name] = { values: values, header: header, columns: resolveExportColumns_(name, header, EXPORT_SHEET_HEADERS[name]) };
         if (includeEnglish && ENGLISH_EXPORT_HEADERS[name]) tables[name].englishColumns = resolveExportColumns_(name, header, ENGLISH_EXPORT_HEADERS[name]);
         if (name === 'Notes') {
-            // One captured grid supplies both languages. Never export unpublished draft text or metadata.
-            const rows = notesPublicationRows_(values);
-            const published = rows.filter(notesPublicationIsPublished_);
-            tables[name].publicationRows = rows;
+            // One current grid supplies both languages. No approval or legacy-list filtering.
+            const published = notesSheetRows_(values).filter(row => row.values.de.trim());
             tables[name].sourceRowNumbers = published.map(row => row.number);
             tables[name].values = [values[0]].concat(published.map(row => values[row.number - 1]));
         }

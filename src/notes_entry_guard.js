@@ -153,7 +153,7 @@ function onEdit(event) {
       }
       notesEntryGuardSave_(context, { version: 2, sheetId: sheet.getSheetId(), rows: rows }); cache.put(key, '1', 60);
       if (warnings.length) context.book.toast('Notesの新しい見出しは日常保守の「項目の作成・補完」から登録してください．手入力した' +
-        warnings.slice(0, 5).join('・') + '行' + (warnings.length > 5 ? 'ほか' : '') + 'の内容はそのまま残しています．', 'Notesへの新規手入力', 10);
+        warnings.slice(0, 5).join('・') + '行' + (warnings.length > 5 ? 'ほか' : '') + 'の内容はそのまま残しています．これは警告であり，既存セルの編集や同期対象を制限しません．', 'Notesへの新規手入力', 10);
       return true;
     }, false);
   } catch (_) { /* Advisory only; never change a cell or call a paid service. */ }

@@ -41,6 +41,21 @@ test('unknown fourth module and unrelated unmerged changes are never included in
  assert.throws(()=>guard.assertSafe(local,edited,maintenanceHead,false,maintenanceContext),/未統合/);
 });
 test('both maintenance remote copies already retired need no ongoing baseline exception',()=>guard.assertSafe(local,local,local,false,{...maintenanceContext,version:1690}));
+const notesFiles=['notes_publication','notes_publication_baseline'].map(name=>({name,type:'SERVER_JS',source:'reviewed Notes retirement '+name+'\n'}));
+const notesHead=manifest(notesFiles),notesApproval={schemaVersion:1,id:'notes-publication-20261105',baselineCommit:'e'.repeat(40),baselineVersion:1703,projectHash:sha256('synthetic'),files:notesHead.filter(f=>f.name!=='appsscript'&&f.name!=='main')};
+const notesContext={approval:[approval,maintenanceApproval,notesApproval],scriptId:'synthetic',version:1703};
+test('Notes retirement permits only the two exact reviewed 1703 modules',()=>guard.assertSafe(local,notesHead,notesHead,false,notesContext));
+test('Notes deletion without its manifest remains blocked',()=>assert.throws(()=>guard.assertSafe(local,notesHead,notesHead,false,maintenanceContext),/同期元にない/));
+for(const [name,mutate]of [
+ ['version',c=>c.version=1704],['project',c=>c.scriptId='another'],['unknown file',c=>c.approval[2].files[0].name='unreviewed'],
+ ['hash',c=>c.approval[2].files[0].hash='f'.repeat(64)],['incomplete pair',c=>c.approval[2].files.pop()],['fourth approval',c=>c.approval.push(c.approval[2])]
+])test('Notes retirement rejects '+name,()=>{const c=JSON.parse(JSON.stringify(notesContext));mutate(c);assert.throws(()=>guard.assertSafe(local,notesHead,notesHead,false,c));});
+test('Notes HEAD edit, unrelated deletion and partial local retirement stay blocked',()=>{
+ assert.throws(()=>guard.assertSafe(local,notesHead.map(f=>f.name==='notes_publication'?{...f,hash:'f'.repeat(64)}:f),notesHead,false,notesContext),/未確認/);
+ assert.throws(()=>guard.assertSafe(local,manifest([...notesFiles,{name:'unknown_extra',type:'SERVER_JS',source:'keep'}]),notesHead,false,notesContext),/unknown_extra/);
+ assert.throws(()=>guard.assertSafe(manifest([notesFiles[0]]),notesHead,notesHead,false,notesContext),/部分的/);
+});
+test('retired Notes pair needs no continuing exception after deployment',()=>guard.assertSafe(local,local,local,false,{...notesContext,version:1704}));
 async function mainTest(){
  const dir=fs.mkdtempSync(path.join(os.tmpdir(),'gmt-retirement-test-'));
  try{
@@ -64,6 +79,15 @@ async function mainTest(){
   await assert.rejects(()=>guard.assertUnchanged(maintenanceTicket,{local:read,remote:maintenanceRemote}),/確認後/);passed++;
   fs.writeFileSync(maintenancePath,JSON.stringify(maintenanceApproval));
   await guard.verifyUpload(maintenanceTicket,{local:read,remote:async()=>({files:local,published:maintenanceHead,version:1689,deploymentHash:'maintenance-fixed'})});passed++;
+  const notesPath=path.join(dir,'scripts/sync/notes-publication-retirement-20261105.json');
+  fs.writeFileSync(notesPath,JSON.stringify(notesApproval));
+  const notesRemote=async()=>({files:notesHead,published:notesHead,version:1703,deploymentHash:'notes-fixed'});
+  const notesTicket=await guard.preflight({GAS_DEPLOY_URL:'unused'},{local:read,remote:notesRemote});
+  await guard.assertUnchanged(notesTicket,{local:read,remote:notesRemote});passed++;
+  fs.writeFileSync(notesPath,JSON.stringify({...notesApproval,baselineCommit:'f'.repeat(40)}));
+  await assert.rejects(()=>guard.assertUnchanged(notesTicket,{local:read,remote:notesRemote}),/確認後/);passed++;
+  fs.writeFileSync(notesPath,JSON.stringify(notesApproval));
+  await guard.verifyUpload(notesTicket,{local:read,remote:async()=>({files:local,published:notesHead,version:1703,deploymentHash:'notes-fixed'})});passed++;
  }finally{const resolved=path.resolve(dir);assert(resolved.startsWith(path.resolve(os.tmpdir())+path.sep)&&path.basename(resolved).startsWith('gmt-retirement-test-'));fs.rmSync(resolved,{recursive:true,force:true});}
  console.log('GAS retirement approval: '+passed+' cases passed; no generic deletion override, concurrent edits and incomplete removal blocked.');
 }mainTest().catch(e=>{console.error(e);process.exitCode=1;});

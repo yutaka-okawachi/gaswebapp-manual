@@ -1784,18 +1784,17 @@ function generateDicHtmlFromSpreadsheet() {
     return pickExportRows_({ values: values, columns: resolveExportColumns_(name, header, EXPORT_SHEET_HEADERS[name]) });
   };
   const dicNotesSheet = ss.getSheetByName('Notes');
-  let dicNotesData = [], publicationRows = [];
+  let dicNotesData = [];
   if (dicNotesSheet) {
-    publicationRows = notesPublicationRows_(dicNotesSheet.getDataRange().getValues());
-    dicNotesData = publicationRows.filter(notesPublicationIsPublished_)
+    dicNotesData = notesSheetRows_(dicNotesSheet.getDataRange().getValues()).filter(row => row.values.de.trim())
       .map(row => [row.values.de, row.values.ja, row.values.source]);
   }
 
   const termMappingSheet = ss.getSheetByName('語形対応');
-  const termMappingData = notesPublicationFilterMappings_(publicationRows, termMappingSheet
+  const termMappingData = termMappingSheet
     ? readByHeaders(termMappingSheet, '語形対応')
       .filter(row => String(row[0] || '').trim() && String(row[1] || '').trim())
-    : []);
+    : [];
   validateDictionaryTermMapping_(dicNotesData, termMappingData);
   
   // 略記一覧シートからデータを取得

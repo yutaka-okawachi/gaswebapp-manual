@@ -101,12 +101,13 @@
   </section>
 
   <section class="panel warning" id="entryPanel" hidden>
-    <h2>5．B列本文を目視確認し，Notesに登録</h2>
+    <h2>5．旧草案の本文を確認する</h2>
     <p id="entryReadiness" role="status" aria-live="polite"></p>
     <p class="muted">類語と訳例，①②…の意味区分を確認する．語形・格変化はドイツ語の羅列ではなく，日本語の説明文にする．未確認事項は本文に入れない．コメントは任意．重複見出しは登録しない．</p>
     <label for="entryBody">NotesのB列</label><textarea id="entryBody" rows="9" maxlength="6000"></textarea>
     <label for="sourcePreview">source列の出典（RS・RW・GMを自動調査）</label><p id="sourcePreview" class="muted">登録時に実例を確認し，該当する出典を半角カンマ区切りで設定する．</p>
-    <button id="register">この内容でNotesに登録する</button>
+    <p>新規Notesの登録は日常保守の「項目の作成・補完」で日英本文を確認して行います．旧草案・履歴は保持します．</p>
+    <button id="register" disabled hidden>旧登録経路は終了しました</button>
     <p id="registerMessage" class="feedback" role="status" aria-live="polite"></p>
   </section>
   <section class="panel success" id="donePanel" hidden><h2 id="doneTitle">反映済み</h2>
@@ -280,7 +281,7 @@
         visible('entryPanel', Boolean(c.headword && c.draftStatus === '作成済み'));
         if (!$('entryPanel').hidden) {
           const missing = c.entryMissingFields;
-          $('register').disabled = !Array.isArray(missing) || missing.length > 0;
+          $('register').disabled = true;
           $('entryReadiness').textContent = !Array.isArray(missing)
             ? '登録に必要な項目を確認できません．「草案の状態を確認」を押してください．'
             : missing.length ? '草案は保存済みです．Notesへの登録には「' + missing.join('」「') +
@@ -355,13 +356,7 @@
         { feedbackId: 'saveMessage', label: '草案の保存',
           errorHelp: '入力内容は画面に残しています．入力エラーの場合は修正して再保存してください．通信・保存の成否が不明な場合は，入力を控えてから「草案の状態を確認」で保存結果を確認してください．' });
     };
-    $('register').onclick = async () => {
-      if (!await confirmation('表示されたB列本文とC列出典を，Notesに見出し順で登録しますか．公開サイトの更新にはsync-dataが必要です．', 'registerMessage')) return;
-      return operation(() => call('candidateWizardRegisterExperimental', state.observation.id,
-        $('entryBody').value, '', true), 'Notesに登録しました．公開サイトへ反映するにはsync-dataを実行してください．', false, 'donePanel',
-        { feedbackId: 'registerMessage', successId: 'doneMessage', label: 'Notesへの登録',
-          errorHelp: '入力した本文は画面に残しています．入力エラーは修正してください．通信・保存の成否が不明な場合は，本文を控え，Notesと「更新」で登録状態を確認してから再操作してください．' });
-    };
+    $('register').onclick = () => { $('registerMessage').textContent = '新規登録は日常保守の統合画面で日英本文を確認してください．'; };
     refreshList();
   </script>
 </body>

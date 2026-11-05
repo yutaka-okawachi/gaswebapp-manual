@@ -1805,7 +1805,7 @@ function readDashboardTranslationMap(column) {
     if (!spreadsheetId) return translations;
     const sheet = SpreadsheetApp.openById(spreadsheetId).getSheetByName('Notes');
     if (!sheet || sheet.getLastRow() < 2) return translations;
-    const rows = notesPublicationRead_(sheet).rows.filter(notesPublicationIsPublished_);
+    const rows = notesSheetRows_(sheet.getDataRange().getValues()).filter(row => row.values.de.trim());
     rows.forEach(row => {
       const key = normalizeDashboardTerm(row.values.de);
       const translation = sanitizeDashboardTranslation(row.values[column]);

@@ -488,60 +488,9 @@ function candidateWizardSuggestedBody(candidate) {
 }
 
 function candidateWizardRegisterExperimental(id, body, source, confirmed) {
+  // Cached old clients must not write an incomplete Notes row.
   if (confirmed !== true) throw new Error('Notesへの登録確認が必要です．');
-  const safeBody = candidateWizardSafeText(body, 'B列本文', 6000, true);
-  const found = candidateWizardFindObservation(id);
-  const sheet = requireSheetWithHeaders(found.spreadsheet,
-    UNREGISTERED_TERM_CANDIDATE_SHEET_NAME, UNREGISTERED_TERM_CANDIDATE_HEADERS);
-  const candidateId = dictionaryCandidateRecordId('candidate', normalizeObservedTerm(found.row[2] || found.row[1]));
-  const linked = candidateWizardFindLinked(sheet, UNREGISTERED_TERM_CANDIDATE_HEADERS.length, candidateId);
-  if (!linked || linked.row[10] === 'Notes反映済み') {
-    throw new Error('登録できる確認済み草案がありません．');
-  }
-  if (typeof maintenanceLedgerAssertCandidateProduction_ === 'function') maintenanceLedgerAssertCandidateProduction_(linked.row);
-  const details = candidateWizardDraftDetails(linked.row[13]);
-  const missing = candidateWizardEntryMissingFields({ headword: linked.row[16], translation: linked.row[19], ...details });
-  if (missing.length) throw new Error('Notesへの登録には「' + missing.join('」「') + '」が必要です．草案を補って保存してください．');
-  const notes = found.spreadsheet.getSheetByName(EXPERIMENTAL_NOTES_SHEET_NAME);
-  if (!notes) throw new Error('Notesがありません．');
-  const headword = candidateWizardSafeText(linked.row[16], '見出し', 120, true);
-  const sourceMarkers = candidateWizardSourceMarkers(found.spreadsheet, headword);
-  if (!sourceMarkers.length) throw new Error('RS・RW・GMの実例から出典を確認できませんでした．登録を中止しました．');
-  const safeSource = sourceMarkers.join(', ');
-  const catalogue = maintenanceStyleCatalogue_(headword);
-  for (const heading of catalogue ? [] : ['【一般的な意味】', '【音楽用語としての訳例】']) {
-    if (!safeBody.includes(heading)) throw new Error('B列本文に' + heading + 'がありません．');
-  }
-  const expectedPrefix = maintenanceStyleNotesPrefix_(details.english, details.italian, headword);
-  if (!catalogue && ((expectedPrefix && !safeBody.startsWith(expectedPrefix + '\n')) ||
-      !/[①-⑩]/.test(safeBody) || !/「[^」]+」/.test(safeBody))) {
-    throw new Error('B列本文の類語（入力がある場合）・番号付きの意味・音楽用語としての訳例を確認してください．');
-  }
-  maintenanceStyleValidate_(safeBody, 'ja', { tab: 'Notes', de: headword, profile: catalogue ? 'catalogue' : 'dictionary',
-    basis: '', known: { english: maintenanceStyleForeignList_(details.english), italian: maintenanceStyleForeignList_(details.italian) }, restrictEquivalents: true });
-  candidateWizardValidateBodyMorphology(safeBody, headword);
-  const lock = LockService.getScriptLock();
-  if (!lock.tryLock(10000)) throw new Error('辞書の更新ロックを取得できませんでした．');
-  try {
-    if (typeof maintenanceLedgerAssertCurrentView_ === 'function') maintenanceLedgerAssertCurrentView_(found.spreadsheet, sheet);
-    if (readSheetRows(notes, 1).some(row => normalizeObservedTerm(row[0]) === normalizeObservedTerm(headword))) {
-      throw new Error('同じ見出しが既にあります．登録しません．');
-    }
-    const headings = readSheetRows(notes, 1);
-    const insertionIndex = headings.findIndex(row =>
-      headword.localeCompare(String(row[0] || ''), 'de', { sensitivity: 'base' }) < 0);
-    const rowNumber = insertionIndex < 0 ? notes.getLastRow() + 1 : insertionIndex + 2;
-    namedSheetColumns_(notes, ['de', 'ja', 'source']);
-    if (insertionIndex < 0) namedSheetWriteRows_(notes, ['de', 'ja', 'source'], rowNumber, [[headword, safeBody, safeSource]]);
-    else {
-      notes.insertRowBefore(rowNumber);
-      namedSheetWriteRows_(notes, ['de', 'ja', 'source'], rowNumber, [[headword, safeBody, safeSource]]);
-    }
-    sheet.getRange(linked.rowNumber, 11).setValue('Notes反映済み');
-    sheet.getRange(linked.rowNumber, 27, 1, 2).setValues([['確認済み',
-      'ユーザーがダイアログで本文を確認．' + EXPERIMENTAL_NOTES_SHEET_NAME + ' ' + rowNumber + '行の de・ja・source に反映．']]);
-    return { headword, rowNumber, state: candidateWizardState(id) };
-  } finally { lock.releaseLock(); }
+  throw new Error('新規Notesの登録は日常保守の「項目の作成・補完」で出典と日英本文を確認して行ってください．旧草案と履歴は保持しています．');
 }
 
 function showDictionaryCandidateWizard() {

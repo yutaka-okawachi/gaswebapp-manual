@@ -9,10 +9,11 @@ const maintenanceNames=Object.freeze(['maintenance_model','morphology_survey_dia
 function approvedFiles(local,head,published,context){
  if(!context)return new Set();
  const approvals=Array.isArray(context.approval)?context.approval:[context.approval],ids=new Set(),allowed=new Set();
- if(!approvals.length||approvals.length>2)throw Error('廃止承認の件数が不正です。');
+ if(!approvals.length||approvals.length>3)throw Error('廃止承認の件数が不正です。');
  for(const approval of approvals){
   const profile=approval?.id==='english-workflow-20261020'?{names,html,version:1668}:
-   approval?.id==='maintenance-menu-20261103'?{names:maintenanceNames,html:new Set(['morphology_survey_dialog']),version:1689}:null;
+   approval?.id==='maintenance-menu-20261103'?{names:maintenanceNames,html:new Set(['morphology_survey_dialog']),version:1689}:
+   approval?.id==='notes-publication-20261105'?{names:Object.freeze(['notes_publication','notes_publication_baseline']),html:new Set(),version:1703}:null;
   const expectedKeys=['baselineCommit','baselineVersion','files','id','projectHash','schemaVersion'].sort();
   if(!profile||ids.has(approval.id)||JSON.stringify(Object.keys(approval).sort())!==JSON.stringify(expectedKeys)||
      approval.schemaVersion!==1||approval.baselineVersion!==profile.version||!/^[a-f0-9]{40}$/.test(approval.baselineCommit)||

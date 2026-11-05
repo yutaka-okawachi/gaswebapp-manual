@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "id": "notes-publication-20261105",
+  "baselineCommit": "474929605508d3e3640db4f4ba132ef2162f45f4",
+  "baselineVersion": 1703,
+  "projectHash": "914b44775c90b69355191dea7ca7de90c94e0e45f9c6cbb031ee91e5a5fbccca",
+  "files": [
+    {
+      "name": "notes_publication",
+      "type": "SERVER_JS",
+      "hash": "9d559ca26078daf42be399e33e1557528cf3085c577adcf320e617ba8fb28845"
+    },
+    {
+      "name": "notes_publication_baseline",
+      "type": "SERVER_JS",
+      "hash": "7bf913cd9499a0835d1e4c15e6d9b0a4443e6ba31862c7c050a16c074d982b79"
+    }
+  ]
+}

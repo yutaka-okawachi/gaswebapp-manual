@@ -190,7 +190,7 @@ function rowCompletionCurrent_(job, row, alreadyWritten) {
   if (job.intake) {
     if (job.intake.flow === 'review_before_insert' && !job.intake.number) return maintenanceNotesDraftCurrent_(job, row);
     const owner = maintenanceNotesRow_(sheet, job.intake.entryId);
-    if (!owner || owner.state !== 'draft' || owner.observationId !== job.intake.observationId) throw rowCompletionError_('未公開下書きの管理情報が変わりました．');
+    if (!owner || owner.observationId !== job.intake.observationId) throw rowCompletionError_('登録再開用の識別情報が変わりました．');
     row.number = owner.number; job.intake.number = owner.number;
   }
   const current = rowCompletionRead_(sheet, row.number), expected = JSON.parse(JSON.stringify(row.snapshot));

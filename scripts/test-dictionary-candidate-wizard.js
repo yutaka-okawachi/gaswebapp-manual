@@ -56,9 +56,9 @@ new vm.Script(scripts[0][1], { filename: 'dictionary_candidate_dialog.html' });
 for (const label of ['Jevで判定する', 'この1件だけを移送する', 'この候補の編集を再開する',
   'OpenAI APIで草案を作る',
   '英語の類語', 'イタリア語の類語', '音楽用語としての訳例',
-  'この内容でNotesに登録する']) assert.ok(html.includes(label));
+  '旧登録経路は終了しました']) assert.ok(html.includes(label));
 
-assert.ok(source.includes('notes.insertRowBefore(rowNumber)'));
+assert.ok(!source.includes('notes.insertRowBefore(rowNumber)'));
 
 console.log('辞書候補ダイアログ：構文・確認ゲート OK');
 
@@ -104,7 +104,7 @@ function testIncompleteDraftAndOptionalEquivalents() {
   assert.strictEqual(row[19], '');
   assert.strictEqual(JSON.parse(row[13]).comment, fields.comment);
   assert.deepStrictEqual(Array.from(h.candidateWizardEntryMissingFields(fields)), ['一般的な意味']);
-  assert.throws(() => h.candidateWizardRegisterExperimental('test', '本文', '', true), /一般的な意味/);
+  assert.throws(() => h.candidateWizardRegisterExperimental('test', '本文', '', true), /日常保守/);
   assert.strictEqual(notesWrites.length, 0);
   fields.translation = '際立って響く';
   for (const pair of [['', ''], ['prominent', ''], ['', 'in rilievo'], ['prominent', 'in rilievo']]) {
@@ -115,14 +115,14 @@ function testIncompleteDraftAndOptionalEquivalents() {
     h.candidateWizardValidateBodyMorphology(body);
     row[10] = '候補';
     h.candidateWizardSaveDraft('test', fields);
-    h.candidateWizardRegisterExperimental('test', body, '', true);
+    assert.throws(()=>h.candidateWizardRegisterExperimental('test', body, '', true),/日常保守/);
   }
-  assert.strictEqual(notesWrites.length, 4, 'registration allows missing equivalents');
+  assert.strictEqual(notesWrites.length, 0, 'retired registration never writes Notes');
   assert.throws(() => h.candidateWizardValidateBodyMorphology(
     'Partizip I\n【一般的な意味】\n① 意味．\n【音楽用語としての訳例】\n「訳例」'), /日本語/);
   row[10] = '候補'; fields.musicExamples = '  ';
   h.candidateWizardSaveDraft('test', fields);
-  assert.throws(() => h.candidateWizardRegisterExperimental('test', '本文', '', true), /音楽用語としての訳例/);
+  assert.throws(() => h.candidateWizardRegisterExperimental('test', '本文', '', true), /日常保守/);
   assert.strictEqual(h.fetches, 0, 'manual saving and registration never generate a draft');
 }
 
@@ -284,7 +284,7 @@ async function testDraftDialogFeedback() {
   assert.strictEqual(elements.register.disabled, true);
   elements.translation.value = '際立って響く';
   await elements.saveDraft.onclick();
-  assert.strictEqual(elements.register.disabled, false, 'empty equivalents must not prevent proceeding');
+  assert.strictEqual(elements.register.disabled, true, 'old register remains disabled even for complete drafts');
   assert.strictEqual(elements.english.value, '');
   assert.strictEqual(elements.italian.value, '');
   assert.strictEqual(fetches, 1);
@@ -308,26 +308,7 @@ async function testDraftDialogFeedback() {
   assert.strictEqual(elements.saveMessage.scrolled, true);
   assert.strictEqual(elements.comment.value, '保存前のコメント');
   pauseSave = false;
-  const cancelled = elements.register.onclick();
-  elements.confirmNo.onclick();
-  await cancelled;
-  assert.match(elements.registerMessage.textContent, /取り消しました/);
-  assert.strictEqual(registrations, 0);
-  elements.entryBody.value = '確認中の本文';
-  failRegistration = true;
-  const failedRegistration = elements.register.onclick();
-  elements.confirmYes.onclick();
-  await failedRegistration;
-  assert.match(elements.registerMessage.textContent, /Notesへの登録を完了できません/);
-  assert.match(elements.registerMessage.textContent, /登録ロック/);
-  assert.strictEqual(elements.entryBody.value, '確認中の本文');
-  failRegistration = false;
-  const registered = elements.register.onclick();
-  elements.confirmYes.onclick();
-  await registered;
-  assert.strictEqual(elements.donePanel.hidden, false);
-  assert.strictEqual(elements.donePanel.scrolled, true);
-  assert.match(elements.doneMessage.textContent, /Notesに登録しました.*sync-data/);
+  await elements.register.onclick();assert.match(elements.registerMessage.textContent,/日常保守/);assert.equal(registrations,0);
   assert.strictEqual(fetches, 1, 'feedback must never cause another paid API call');
 }
 
@@ -336,13 +317,13 @@ function testCurrentStyleRegistrationAndDraftRequest() {
   const fields={headword:'vorklingend',translation:'際立って響く',musicExamples:'際立たせて',english:'prominent，striking',italian:'in rilievo',comment:'引用「Deutsch、Original。」 [[score:real]] https://example.invalid/。'};
   h.candidateWizardSaveDraft('test',fields);
   const body=h.candidateWizardSuggestedBody(fields);assert(body.startsWith('【英】prominent, striking／【伊】in rilievo'));
-  assert(body.includes(fields.comment));h.candidateWizardRegisterExperimental('test',body,'',true);assert.equal(notesWrites.length,1);
-  row[10]='候補';assert.throws(()=>h.candidateWizardRegisterExperimental('test',body+'\n意味が近い表現を挙げている．','',true),/断り書き/);
-  assert.throws(()=>h.candidateWizardRegisterExperimental('test',body.replace('【英】prominent, striking／【伊】in rilievo','(≒ prominent / in rilievo)'),' ',true),/類語/);
-  h.candidateWizardSourceMarkers=()=>[];assert.throws(()=>h.candidateWizardRegisterExperimental('test',body,'',true),/出典/);assert.equal(notesWrites.length,1);
+  assert(body.includes(fields.comment));assert.throws(()=>h.candidateWizardRegisterExperimental('test',body,'',true),/日常保守/);assert.equal(notesWrites.length,0);
+  row[10]='候補';assert.throws(()=>h.candidateWizardRegisterExperimental('test',body+'\n意味が近い表現を挙げている．','',true),/日常保守/);
+  assert.throws(()=>h.candidateWizardRegisterExperimental('test',body.replace('【英】prominent, striking／【伊】in rilievo','(≒ prominent / in rilievo)'),' ',true),/日常保守/);
+  h.candidateWizardSourceMarkers=()=>[];assert.throws(()=>h.candidateWizardRegisterExperimental('test',body,'',true),/日常保守/);assert.equal(notesWrites.length,0);
   const catalog=draftHarness();catalog.row[10]='候補';catalog.h.candidateWizardSaveDraft('test',{headword:'AV',translation:'RS の作品目録番号．',english:'unneeded',italian:'unneeded'});
   const catalogBody=catalog.h.candidateWizardSuggestedBody({headword:'AV',translation:'RS の作品目録番号．',english:'unneeded',italian:'unneeded'});
-  catalog.h.candidateWizardRegisterExperimental('test',catalogBody,'',true);assert.equal(catalog.notesWrites.length,1);assert(!/【英】|【伊】/.test(catalogBody));
+  assert.throws(()=>catalog.h.candidateWizardRegisterExperimental('test',catalogBody,'',true),/日常保守/);assert.equal(catalog.notesWrites.length,0);assert(!/【英】|【伊】/.test(catalogBody));
   const ai=draftHarness();const draft={headword:'vorklingend',part_of_speech:'現在分詞',inflections:[],general_meanings:['際立って響く'],english_equivalents:['invented without evidence'],italian_equivalents:[],music_examples:['際立たせて'],category:'奏法',similar_terms:[],notes:'',uncertainties:[]};
   ai.h.response=()=>({getResponseCode:()=>200,getContentText:()=>JSON.stringify({status:'completed',output:[{content:[{type:'output_text',text:JSON.stringify(draft)}]}]})});
   assert.throws(()=>ai.h.candidateWizardCreateDraft('test',true),/OpenAI/);assert.equal(ai.row[12],'結果要確認');assert.equal(ai.notesWrites.length,0);

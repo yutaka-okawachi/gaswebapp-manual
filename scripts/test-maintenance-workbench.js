@@ -11,7 +11,7 @@ function harness(options={}){
  function ensure(r,c){while(h.rows.length<r){h.rows.push(h.headers.map(()=>''));h.formulas.push(h.headers.map(()=>''));}for(let i=0;i<h.rows.length;i++){while(h.rows[i].length<c)h.rows[i].push('');while(h.formulas[i].length<c)h.formulas[i].push('');}}
  const originalRange=sheet.getRange;
  sheet.getRange=(r,c,n=1,w=1)=>{ensure(r+n-1,c+w-1);const base=originalRange(r,c,n,w);return{...base,
-  setValues(values){for(let i=0;i<n;i++)for(let j=0;j<w;j++){if(r+i===1)h.headers[c+j-1]=values[i][j];h.rows[r+i-1][c+j-1]=values[i][j];}return this;}};};
+  setValues(values){if(r>1&&h.beforeBatchWrite)h.beforeBatchWrite(r,values);if(r>1)h.writes.push({number:r,column:c,values:JSON.parse(JSON.stringify(values))});for(let i=0;i<n;i++)for(let j=0;j<w;j++){if(r+i===1)h.headers[c+j-1]=values[i][j];h.rows[r+i-1][c+j-1]=values[i][j];}if(r>1&&h.afterBatchWrite)h.afterBatchWrite(r,values);return this;}};};
  sheet.getDataRange=()=>sheet.getRange(1,1,h.rows.length,h.headers.length);
  sheet.getMaxColumns=()=>100;sheet.insertRowsAfter=(_,n)=>ensure(h.rows.length+n,h.headers.length);
  sheet.getLastRow=()=>{let i=h.rows.length;while(i>1&&!h.rows[i-1].some(v=>v!==''))i--;return i;};
@@ -23,7 +23,7 @@ function harness(options={}){
   getRange(r,c,n=1,w=1){return{getValues:()=>data.slice(r-1,r+n-1).map(a=>a.slice(c-1,c+w-1)),getDisplayValues:()=>data.slice(r-1,r+n-1).map(a=>a.slice(c-1,c+w-1)),getFormulas:()=>Array.from({length:n},()=>Array(w).fill(''))};},
   appendRow(row){data.push(row.map(v=>typeof v==='string'&&v.startsWith("'")?v.slice(1):v));}};}
  for(const [tab,rows]of Object.entries(sourceData)){const fields=tab==='GM'?['de','ja','en','data']:['de','ja','en','Oper','Aufzug','Szene','page','whom','whom_en'];h.relatedSheets[tab]=table(tab,fields,rows.map(v=>fields.map(f=>v[f]===undefined?'':v[f])));}
- for(const file of ['dictionary_candidate_workflow.js','dictionary_candidate_wizard.js','notes_publication_baseline.js','notes_publication.js','maintenance_workbench.js'])vm.runInContext(fs.readFileSync(path.join(root,'src',file),'utf8'),h.c);
+ for(const file of ['dictionary_candidate_workflow.js','dictionary_candidate_wizard.js','notes_registration.js','maintenance_workbench.js'])vm.runInContext(fs.readFileSync(path.join(root,'src',file),'utf8'),h.c);
  h.c.readSheetRows=(s,width)=>s.getRange(2,1,s.getLastRow()-1,width).getValues();
  h.observationId='observation-1234567890abcdef12345678';h.observation=[h.observationId,'Saite','saite','','',1,'terms_search.html',1,'未判定','',''];
  h.c.candidateWizardFindObservation=id=>{assert.equal(id,h.observationId);return{spreadsheet:book,row:h.observation,rowNumber:2};};
@@ -37,18 +37,17 @@ function harness(options={}){
   if(d.notes_support)d.notes_support={english:'string',italian:'corda',rationale:'実例を踏まえた未承認の語彙案．',usage_ids:JSON.parse(h.lastRequest.input).domain_context.usage_examples.map(e=>e.id)};
  };
  h.run=()=>h.c.maintenanceNotesRun(h.observationId);h.state=()=>h.c.maintenanceWorkbenchState();
- h.managed=()=>h.c.notesPublicationRead_(sheet).rows.filter(r=>r.entryId);
- h.public=r=>h.c.notesPublicationIsPublished_(r);
- h.approve=(r,checked=true)=>h.c.maintenanceNotesApprove(r.number,h.c.notesPublicationHash_(r.values),checked);
- h.putManaged=(r,field,value)=>{if(['de','ja','en','source'].includes(field))h.put(field,value,r.number);else h.c.notesPublicationCell_(sheet,r.number,field).setValue(value);};
+ h.managed=()=>h.c.notesRegistrationRead_(sheet).rows.filter(r=>r.entryId);
+ h.public=r=>Boolean(r.values.de.trim());
+ h.putManaged=(r,field,value)=>{if(['de','ja','en','source'].includes(field))h.put(field,value,r.number);else h.c.notesRegistrationCell_(sheet,r.number,field).setValue(value);};
  h.register=(fields,checked=true,hash)=>{const s=h.state();return h.c.maintenanceNotesRegister(s.job.id,hash||s.jobHash,fields||JSON.parse(JSON.stringify(s.job.rows[0].draft)),checked);};
  return h;
 }
 function legacyDraft(h) {
  const s=h.state(),job=s.job,sheet=h.sheet,number=sheet.getLastRow()+1;
- h.c.notesPublicationEnsureColumns_(sheet);sheet.getRange(number,1,1,h.headers.length);
- for(const[k,v]of Object.entries({maintenance_id:job.intake.entryId,publication_state:'draft',maintenance_observation_id:h.observationId,de:job.intake.plan.de,source:job.intake.plan.source})){
-  const cell=['de','source'].includes(k)?h.c.namedSheetCell_(sheet,[k],number,0):h.c.notesPublicationCell_(sheet,number,k);cell.setValue(v);
+ h.c.notesRegistrationEnsureColumns_(sheet);sheet.getRange(number,1,1,h.headers.length);
+ for(const[k,v]of Object.entries({maintenance_id:job.intake.entryId,maintenance_observation_id:h.observationId,de:job.intake.plan.de,source:job.intake.plan.source})){
+  const cell=['de','source'].includes(k)?h.c.namedSheetCell_(sheet,[k],number,0):h.c.notesRegistrationCell_(sheet,number,k);cell.setValue(v);
  }
  delete job.intake.flow;job.intake.number=number;job.intake.phase='ready';
  const row=job.rows[0];row.number=number;row.snapshot=h.c.rowCompletionRead_(sheet,number);row.hash=h.c.rowCompletionHash_(row.snapshot);
@@ -87,6 +86,16 @@ test('unknown source, Notes duplicate, alias, old candidate or missing settings 
   assert.throws(()=>h.run());assert.equal(h.fetches,0);assert.equal(h.writes.length,0);
  }
 });
+test('saved legacy drafts enter unified bilingual review without another API call or Sheet write',()=>{
+ const h=harness();h.relatedSheets['未登録語候補']={};const old={headword:'Saite',partOfSpeech:'女性名詞',translation:'弦',musicExamples:'弦で',english:'string',italian:'corda'};
+ h.oldCandidate={row:Array(28).fill('')};h.oldCandidate.row[13]=JSON.stringify(old);h.oldCandidate.row[16]=old.headword;h.oldCandidate.row[17]=old.partOfSpeech;h.oldCandidate.row[19]=old.translation;h.oldCandidate.row[12]='作成済み';h.script.delete('OPENAI_DRAFT_MODEL');
+ const before=JSON.stringify(h.oldCandidate),s=h.run();assert.equal(h.fetches,0);assert.equal(h.writes.length,0);assert.equal(s.job.rows[0].status,'needs_review');
+ assert(s.job.rows[0].draft.ja.includes('【一般的な意味】'));assert.equal(s.job.rows[0].draft.en,'');assert.equal(JSON.stringify(h.oldCandidate),before);
+ assert.throws(()=>h.register(),/英語本文/);assert.equal(h.managed().length,0);
+ const fields={...s.job.rows[0].draft,en:'Italian: corda\n\n【General meanings】\n① String.\n\n【Musical translation examples】\nOn a string.'};
+ h.register(fields);assert.equal(h.managed().length,1);assert.equal(h.fetches,0);assert.equal(JSON.stringify(h.oldCandidate),before);
+});
+
 test('an active regular row task is preserved and reachable through the unified entry',()=>{
  const h=harness(),old=h.preview();assert.throws(()=>h.run(),/処理中/);assert.equal(h.c.rowCompletionState().job.id,old.id);assert(h.state().otherWorkPending);assert.equal(h.state().job,null);
 });
@@ -156,7 +165,7 @@ test('stale review, source edit or added duplicate prevent any registration writ
 test('legacy etwas-style de/source draft and generated text are reused only after approval, without duplicate or regeneration',()=>{
  const h=harness();h.run();const r=legacyDraft(h),before=JSON.stringify(h.rows),saved=JSON.stringify(h.state().job.rows[0].draft);
  h.run();assert.equal(h.fetches,1);assert.equal(JSON.stringify(h.rows),before);assert.equal(JSON.stringify(h.state().job.rows[0].draft),saved);
- assert.equal(h.state().entry.number,r.number);const s=h.register();assert.equal(h.managed().length,1);assert.equal(s.entry.number,r.number);assert(s.entry.published);
+ assert.equal(h.state().entry.number,r.number);const s=h.register();assert.equal(h.managed().length,1);assert.equal(s.entry.number,r.number);assert.equal(s.entry.values.de,'Saite');
  assert.equal(h.managed()[0].values.de,r.values.de);assert.equal(h.managed()[0].values.source,r.values.source);assert.equal(h.fetches,1);
 });
 test('manual text, source edits and owner changes on a legacy draft are preserved',()=>{
@@ -166,26 +175,32 @@ test('manual text, source edits and owner changes on a legacy draft are preserve
   const before=JSON.stringify(h.rows);assert.throws(()=>h.register());assert.equal(JSON.stringify(h.rows),before);assert.equal(h.fetches,1);
  }
 });
-test('a failed registration resumes its durable accepted intent without a second charge or row',()=>{
- for(const field of ['maintenance_id','source','ja','en','publication_state']){
+test('failed atomic registration resumes the exact intent without another charge or row',()=>{
+ for(const phase of ['before','after']){
   const h=harness();h.run();let once=true;
-  h.beforeWrite=(_,col,value)=>{if(once&&h.headers[col-1]===field&&(field!=='publication_state'||String(value).startsWith('approved:'))){once=false;throw Error('synthetic write failure');}};
-  let s=h.register();assert.equal(s.job.rows[0].status,'partial');assert(h.managed().every(r=>!h.public(r)));assert.equal(h.fetches,1);
-  h.beforeWrite=null;h.run();assert.equal(h.fetches,1);assert.equal(h.state().job.rows[0].status,'partial','Run does not resume writes without the approval button');
-  s=h.register();assert.equal(s.job.intake.phase,'registered');assert.equal(h.managed().length,1);assert(h.public(h.managed()[0]));assert.equal(h.fetches,1);
+  h[phase==='before'?'beforeBatchWrite':'afterBatchWrite']=()=>{if(once){once=false;throw Error('synthetic batch outcome interruption');}};
+  let s=h.register();assert.equal(s.job.rows[0].status,'partial');assert.equal(h.fetches,1);
+  if(phase==='before')assert.equal(h.managed().length,0);
+  else {const r=h.managed()[0];assert(r.values.de&&r.values.ja&&r.values.en&&r.values.source);}
+  h.beforeBatchWrite=null;h.afterBatchWrite=null;h.run();assert.equal(h.fetches,1);assert.equal(h.state().job.rows[0].status,'partial');
+  s=h.register();assert.equal(s.job.intake.phase,'registered');assert.equal(h.managed().length,1);assert.equal(h.fetches,1);
+  assert.equal(h.writes.filter(w=>w.values&&w.number>1).length,1);
  }
 });
-test('manual interference or changed ownership between registration writes stops and preserves data',()=>{
+
+test('manual edits or owner changes after an uncertain batch are preserved on retry',()=>{
  for(const mode of ['text','owner']){
   const h=harness();h.run();let changed=false;
-  h.afterWrite=(number,col)=>{if(!changed&&h.headers[col-1]==='ja'){changed=true;if(mode==='text')h.put('en','人の英語入力',number);else h.c.notesPublicationCell_(h.sheet,number,'maintenance_id').setValue('another-owner');}};
-  const s=h.register();assert.equal(s.job.rows[0].status,'partial');assert(h.managed().every(r=>!h.public(r)));
-  if(mode==='text')assert.equal(h.managed()[0].values.en,'人の英語入力');assert.equal(h.fetches,1);
+  h.afterBatchWrite=number=>{if(!changed){changed=true;if(mode==='text')h.put('en','人の英語入力',number);else h.c.notesRegistrationCell_(h.sheet,number,'maintenance_id').setValue('another-owner');throw Error('uncertain outcome');}};
+  let s=h.register();assert.equal(s.job.rows[0].status,'partial');const before=JSON.stringify(h.rows);
+  h.afterBatchWrite=null;if(mode==='owner')assert.throws(()=>h.register(),/同じ見出し/);else {s=h.register();assert.equal(s.job.rows[0].status,'partial');}assert.equal(JSON.stringify(h.rows),before);assert.equal(h.fetches,1);
+  if(mode==='text')assert.equal(h.value('en',h.state().job.intake.number),'人の英語入力');
  }
 });
+
 test('reserved row becoming used is never replaced by a second append',()=>{
- const h=harness();h.run();let once=true;h.beforeWrite=(_,c)=>{if(once&&h.headers[c-1]==='maintenance_id'){once=false;throw Error('synthetic reservation interruption');}};
- h.register();h.beforeWrite=null;const number=h.state().job.intake.number;h.put('de','人の追加項目',number);
+ const h=harness();h.run();let once=true;h.beforeBatchWrite=()=>{if(once){once=false;throw Error('synthetic reservation interruption');}};
+ h.register();h.beforeBatchWrite=null;const number=h.state().job.intake.number;h.put('de','人の追加項目',number);
  const s=h.register();assert.equal(s.job.rows[0].status,'partial');assert.equal(h.value('de',number),'人の追加項目');assert.equal(h.managed().length,0);
 });
 test('protected, merged or array-formula Notes fields cannot receive approved content',()=>{
@@ -230,7 +245,7 @@ test('dialogs use safe text, no model controls, no historical job heading or all
   const t=fs.readFileSync(path.join(root,'src',name),'utf8'),js=t.match(/<script>([\s\S]*?)<\/script>/)[1];new vm.Script(js);
   assert(!/innerHTML|window\.confirm|setInterval|\.alert\(/.test(js));assert(js.includes('textContent'));assert(!/OPENAI_API_KEY|OPENAI_DRAFT_MODEL|TYPESAFE_API_KEY/.test(t));
  }
- assert(!/本人の前回作業|この内容を公開承認する|gpt-6.1-solを検査|state\.drafts/.test(html));
+ assert(!/本人の前回作業|公開承認|再承認|maintenanceNotesApprove|gpt-6.1-solを検査|state\.drafts/.test(html));
  assert(html.includes('showMaintenanceSelectedRows'));assert(html.includes('出典・根拠・用例'));assert(html.includes('登録する日本語本文'));assert(html.includes('登録する英語本文'));
  const code=fs.readFileSync(path.join(root,'src/maintenance_workbench.js'),'utf8');assert(!/UrlFetchApp\.fetch|setProperty\('OPENAI|deleteSheet|deleteRow/.test(code));
 });
