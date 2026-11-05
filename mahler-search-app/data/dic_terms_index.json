@@ -5797,6 +5797,7 @@
     ]
   },
   "rundfunk": "term-rundfunk",
+  "saite": "term-saite",
   "saemmtlich": {
     "id": "term-saemmtlich",
     "exampleVariants": [
@@ -6063,6 +6064,7 @@
       }
     ]
   },
+  "schluss": "term-schluss",
   "schluss-der-1-fassung": {
     "id": "term-schluss-der-1-fassung",
     "original": "Schluß der 1. Fassung"
