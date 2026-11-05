@@ -1,4 +1,4 @@
-/** One private ledger; legacy tabs remain intact until backup verification and activation. */
+/** Private runtime ledger; activation marker and immutable IDs remain required after migration. */
 const MAINTENANCE_LEDGER_NAME_ = '保守管理台帳';
 const MAINTENANCE_LEDGER_ACTIVE_ = 'MAINTENANCE_LEDGER_ACTIVE_V1';
 const MAINTENANCE_LEDGER_HEADERS_ = ['種別', '記録ID', '観測ID', '判定ID', '候補ID', '保護状態', '内容JSON', '内容ハッシュ', '更新日時'];
@@ -248,99 +248,6 @@ function maintenanceLedgerAssertTransfer_(book, reviewId) {
     return (ids.includes(i.id) && ['transfer_mismatch', 'ambiguous_link'].includes(i.type)) || i.type === 'missing_review';
   })) throw new Error('移送済み記録と現在の移送先が一致しません．再移送せず，人による照合を先に行ってください．');
 }
-/** Fingerprint every validation, including empty future-entry cells. Never rewrite a rule. */
-function maintenanceLedgerValidation_(sheet) {
-  const rows = sheet.getMaxRows(), columns = sheet.getMaxColumns();
-  if (![rows, columns].every(Number.isSafeInteger) || rows < 1 || columns < 1 || rows * columns > 1000000) throw new Error('入力規則の照合範囲を確認できません．');
-  function argument(value) {
-    if (value === null || ['string', 'boolean'].includes(typeof value)) return value;
-    if (typeof value === 'number' && Number.isFinite(value)) return value;
-    if (Object.prototype.toString.call(value) === '[object Date]' && Number.isFinite(value.getTime())) return { date: value.toISOString() };
-    if (Array.isArray(value)) return value.map(argument);
-    if (value && typeof value.getSheet === 'function' && typeof value.getA1Notation === 'function') {
-      const source = value.getSheet();
-      return { book: source.getParent().getId(), sheet: source.getSheetId() === sheet.getSheetId() ? 'self' : source.getSheetId(), range: value.getA1Notation() };
-    }
-    throw new Error('入力規則の条件を照合できません．');
-  }
-  const rules = sheet.getRange(1, 1, rows, columns).getDataValidations(), entries = [];
-  if (rules.length !== rows || rules.some(function (row) { return row.length !== columns; })) throw new Error('入力規則の読取範囲が一致しません．');
-  rules.forEach(function (row, r) {
-    row.forEach(function (rule, c) {
-      if (!rule) return;
-      entries.push([r + 1, c + 1, String(rule.getCriteriaType()), rule.getCriteriaValues().map(argument), rule.getAllowInvalid(), rule.getHelpText() || '']);
-    });
-  });
-  return { rows: rows, columns: columns, count: entries.length, hash: maintenanceLedgerHash_(JSON.stringify(entries)) };
-}
-function maintenanceLedgerSameValidation_(left, right) {
-  return Boolean(left && right && left.rows === right.rows && left.columns === right.columns && left.count === right.count && left.hash === right.hash);
-}
-
-function maintenanceLedgerMigrationPlan_(book) {
-  const sources = maintenanceLedgerDefinitions_().map(function (d) { return maintenanceLedgerReadLegacy_(book, d); });
-  const records = sources.reduce(function (all, s) { return all.concat(s.rows.map(function (r) { return maintenanceLedgerRecord_(s.definition.kind, r); })); }, []);
-  if (records.length > 10000) throw new Error('統合後の記録数が上限を超えます．移行していません．');
-  const data = records.map(function (r) { const d = maintenanceLedgerDefinitions_().find(function (v) { return v.kind === r[0]; }); return { kind: r[0], id: r[1], row: maintenanceLedgerDecode_(r[6], d.headers.length), hash: r[7] }; });
-  const issues = maintenanceLedgerIssues_(book, data);
-  if (issues.some(function (i) { return ['missing_review', 'ambiguous_link'].includes(i.type); })) throw new Error('記録IDの参照切れ・重複があります．移行せず修復案を確認してください．');
-  const summary = sources.map(function (s) {
-    s.validation = maintenanceLedgerValidation_(s.sheet);
-    return { kind: s.definition.kind, sheet: s.sheet.getSheetId(), count: s.rows.length, hash: s.hash, validation: s.validation };
-  });
-  const plan = { version: 1, book: book.getId(), sources: summary, issues: issues,
-    pendingObservations: data.filter(function (r) { return r.kind === 'observation' && r.row[8] === '未判定'; }).length };
-  return { hash: maintenanceLedgerHash_(JSON.stringify(plan)), plan: plan, records: records, sources: sources };
-}
-/** Read only. Review this hash/counts/issues before separately authorizing migration. */
-function maintenanceLedgerPlanMigration() {
-  const prepared = maintenanceLedgerMigrationPlan_(SpreadsheetApp.getActiveSpreadsheet());
-  return { planHash: prepared.hash, plan: prepared.plan };
-}
-/** Never invokes paid APIs, Notes registration, export, tab deletion, or automatic retries. */
-function maintenanceLedgerMigrate(expectedPlanHash, confirmed) {
-  if (confirmed !== true || !/^[a-f0-9]{64}$/.test(String(expectedPlanHash || ''))) throw new Error('確認した移行計画と明示承認が必要です．');
-  const lock = LockService.getScriptLock();
-  if (!lock.tryLock(10000)) throw new Error('移行ロックを取得できませんでした．');
-  try {
-    const book = SpreadsheetApp.getActiveSpreadsheet(), properties = PropertiesService.getScriptProperties();
-    const active = maintenanceLedgerPhysical_(book);
-    if (active) {
-      maintenanceLedgerRecords_(active);
-      const receipt = JSON.parse(properties.getProperty(MAINTENANCE_LEDGER_ACTIVE_));
-      if (receipt.planHash !== expectedPlanHash) throw new Error('別の移行計画で有効化されています．');
-      return { status: 'already_active', receipt: receipt };
-    }
-    if (book.getSheetByName(MAINTENANCE_LEDGER_NAME_)) throw new Error('未完了の管理台帳があります．旧台帳は維持しています．状態を調査するまで再移行しません．');
-    const prepared = maintenanceLedgerMigrationPlan_(book);
-    if (prepared.hash !== expectedPlanHash) throw new Error('計画確認後に元データ・移送先が変わりました．移行していません．');
-    if (prepared.plan.issues.some(function (i) { return i.blocksMigration; })) throw new Error('旧台帳にAPI実行中または結果不明の記録があります．利用状況・保存結果を確認するまで移行・再送しません．');
-    // Create the staging marker before copying: any interruption is visible and blocks blind retries.
-    const target = book.insertSheet(MAINTENANCE_LEDGER_NAME_);
-    target.getRange(1, 1, 1, MAINTENANCE_LEDGER_HEADERS_.length).setValues([MAINTENANCE_LEDGER_HEADERS_]);
-    const backups = [];
-    prepared.sources.forEach(function (s) {
-      const copied = s.sheet.copyTo(book);
-      copied.setName('保守控_' + s.definition.kind + '_' + copied.getSheetId());
-      const definition = { kind: s.definition.kind, name: copied.getName(), headers: s.definition.headers };
-      if (maintenanceLedgerReadLegacy_(book, definition).hash !== s.hash) throw new Error('バックアップの照合に失敗しました．旧台帳は維持しています．');
-      const validation = maintenanceLedgerValidation_(copied);
-      if (!maintenanceLedgerSameValidation_(s.validation, validation)) throw new Error('バックアップの入力規則が一致しません．有効化せず，元タブを維持しています．');
-      copied.hideSheet(); backups.push({ name: copied.getName(), sheet: copied.getSheetId(), kind: s.definition.kind, hash: s.hash, validation: validation });
-    });
-    if (prepared.records.length + 1 > target.getMaxRows()) target.insertRowsAfter(target.getMaxRows(), prepared.records.length + 1 - target.getMaxRows());
-    if (prepared.records.length) target.getRange(2, 1, prepared.records.length, MAINTENANCE_LEDGER_HEADERS_.length).setValues(prepared.records.map(function (r) { return r.map(sheetLiteralValue_); }));
-    SpreadsheetApp.flush();
-    const saved = maintenanceLedgerRecords_(target);
-    if (saved.length !== prepared.records.length || saved.some(function (r, i) { return r.kind !== prepared.records[i][0] || r.id !== prepared.records[i][1] || r.hash !== prepared.records[i][7]; })) throw new Error('移行後の全件照合に失敗しました．有効化していません．');
-    if (maintenanceLedgerMigrationPlan_(book).hash !== expectedPlanHash) throw new Error('移行中に元データが変わりました．有効化していません．');
-    const receipt = { version: 1, book: book.getId(), sheet: target.getSheetId(), planHash: prepared.hash, backups: backups, sources: prepared.plan.sources, activatedAt: new Date().toISOString() };
-    properties.setProperty(MAINTENANCE_LEDGER_ACTIVE_, JSON.stringify(receipt));
-    // A failed activation result must be inspected; a retry only verifies this same receipt.
-    maintenanceLedgerPhysical_(book);
-    return { status: 'activated', receipt: receipt, issues: prepared.plan.issues };
-  } finally { lock.releaseLock(); }
-}
 function maintenanceLedgerHistory() {
   const book = SpreadsheetApp.getActiveSpreadsheet(), records = maintenanceLedgerData_(book);
   return { active: Boolean(maintenanceLedgerPhysical_(book)), issues: maintenanceLedgerIssues_(book, records),
@@ -377,48 +284,4 @@ function maintenanceLedgerSaveReview(reviewId, expectedHash, decision, category,
 }
 function showMaintenanceLedgerHistory() {
   SpreadsheetApp.getUi().showModalDialog(HtmlService.createHtmlOutputFromFile('maintenance_ledger_dialog').setWidth(780).setHeight(720), '保守の判定・履歴');
-}
-
-/** Owner-operated bound-sheet confirmation. Never exposed as an execution-API fallback. */
-function confirmMaintenanceLedgerMigrationFromSheet() {
-  const book = rowCompletionBook_(), ui = SpreadsheetApp.getUi();
-  try {
-    const active = maintenanceLedgerPhysical_(book);
-    if (active) {
-      maintenanceLedgerRecords_(active);
-      ui.alert('管理台帳は有効化済みです．', '「保守の判定・履歴を確認」で現在の記録を確認してください．移行を重ねて実行していません．', ui.ButtonSet.OK);
-      return { status: 'already_active' };
-    }
-    if (book.getSheetByName(MAINTENANCE_LEDGER_NAME_)) {
-      ui.alert('未完了の管理台帳があります．', '旧台帳は維持しています．保存状態を照合するまで移行を繰り返さないでください．', ui.ButtonSet.OK);
-      return { status: 'unfinished' };
-    }
-    const prepared = maintenanceLedgerPlanMigration(), plan = prepared.plan;
-    const history = maintenanceLedgerHistory();
-    if (plan.book !== book.getId()) throw new Error('登録済みデータ元と移行計画が一致しません．');
-    if (plan.issues.some(function (i) { return i.blocksMigration; })) {
-      ui.alert('移行を開始していません．', '実行中または結果不明の記録があります．利用状況と保存結果を確認してください．APIを再送していません．', ui.ButtonSet.OK);
-      return { status: 'blocked' };
-    }
-    const labels = { observation: '観測', review: '判定', candidate: '旧候補' };
-    const issueLabels = { unlinked_history: '未連結の履歴を保持', transfer_mismatch: '移送先と不一致・再移送を停止', experiment: '実験草案・本番登録禁止', no_retry: '結果要確認・再送禁止' };
-    const pending = history.reviews.filter(function (r) { return ['未確認', '保留'].includes(r.decision); });
-    const text = '対象：' + book.getName() + '\n' + plan.sources.map(function (s) { return labels[s.kind] + ' ' + s.count + '件（入力規則' + s.validation.count + 'セル）'; }).join('／') +
-      '\n計画ID：' + prepared.planHash + '\n未判定の観測：' + plan.pendingObservations + '件\n\n保留・未確認の採否，原文と草案全文を保持します．\n' + pending.map(function (r) { return r.term + '：' + r.decision; }).join('\n') +
-      '\n' + plan.issues.map(function (i) { return i.term + '：' + (issueLabels[i.type] || i.type); }).join('\n') +
-      '\n\n移行中は元3タブを直接編集・並べ替えしないでください．元3タブを複製し，値・日付・入力規則を照合してから，全記録のID・内容が一致した管理台帳を有効化します．元タブは残します．\nJev・OpenAIの実行，Notes登録，サイト同期，タブ削除は行いません．\n\nこの計画で移行を開始しますか？';
-    // No lock is held across the user prompt. The backend rechecks this exact plan under lock.
-    if (ui.alert('バックアップ付きの管理台帳移行', text, ui.ButtonSet.YES_NO) !== ui.Button.YES) return { status: 'cancelled' };
-    if (rowCompletionBook_().getId() !== book.getId()) throw new Error('確認後に対象データ元が変わりました．');
-    const result = maintenanceLedgerMigrate(prepared.planHash, true);
-    const state = maintenanceLedgerHistory();
-    if (!state.active) throw new Error('有効化の確認結果が一致しません．再実行せず保存状態を確認してください．');
-    ui.alert('管理台帳への切替を確認しました．', state.counts.map(function (c) { return labels[c.kind] + ' ' + c.count + '件'; }).join('／') +
-      '\n元3タブとバックアップを保持しています．「保守の判定・履歴を確認」で未確認・保留・不一致・実験草案を確認してください．', ui.ButtonSet.OK);
-    return { status: result.status, active: true };
-  } catch (error) {
-    ui.alert('移行を自動で再試行しません．', String(error && error.message || error).slice(0, 500) +
-      '\n元タブと保存状態を確認してください．完了が確認できるまで，再度の移行や台帳削除は行わないでください．', ui.ButtonSet.OK);
-    throw error;
-  }
 }

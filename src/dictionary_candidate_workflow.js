@@ -504,22 +504,3 @@ function promoteApprovedDictionaryCandidateByReviewId(reviewId) {
     return { status, destination: EXPERIMENTAL_TERM_MAPPING_SHEET_NAME };
   } finally { lock.releaseLock(); }
 }
-
-function promoteApprovedDictionaryCandidatesFromMenu() {
-  const ui = SpreadsheetApp.getUi();
-  try {
-    const result = promoteApprovedDictionaryCandidates();
-    ui.alert(
-      '辞書候補の反映完了',
-      '関連語形の追加：' + result.relatedFormsInserted + '件\n' +
-      '関連語形の重複：' + result.relatedFormsDuplicate + '件\n' +
-      '新規用語候補の追加：' + result.newTermsInserted + '件\n' +
-      '新規用語候補の更新：' + result.newTermsUpdated + '件\n' +
-      '要確認：' + result.skipped + '件\n\n' +
-      '新規見出しは未登録語候補で確認後にNotesへ登録します．関連語形は語形対応へ反映済みです．公開サイトへの反映にはsync-dataが必要です．',
-      ui.ButtonSet.OK
-    );
-  } catch (error) {
-    ui.alert('反映できませんでした', String(error && error.message || error), ui.ButtonSet.OK);
-  }
-}

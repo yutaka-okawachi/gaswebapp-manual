@@ -44,7 +44,6 @@ function onOpen() {
     .addItem('項目の作成・補完（Notes・GM・RW・RS）', 'showMaintenanceWorkbench')
     .addItem('既存見出しへの語形対応を確認', 'showMaintenanceAliases')
     .addItem('保守の判定・履歴を確認', 'showMaintenanceLedgerHistory')
-    .addItem('管理台帳への移行を確認', 'confirmMaintenanceLedgerMigrationFromSheet')
     .addItem('既存語形対応の出典を調査', 'refreshDictionarySourceMarkersForMappingsFromMenu')
     .addItem('並べ替え', 'sortMaintenanceRows')
     .addSeparator()
@@ -88,9 +87,6 @@ function showMaintenanceFunctionRoles() {
 <details><summary>保守の判定・履歴を確認</summary>
 <p>保守管理台帳にある判定・保留・未処理の状態を確認します．判定を選び，分類・対応見出し・人による確認・メモを確認して，チェック後に「この判定を保存する」を押します．</p>
 <p>画面を開くだけではAPI調査を実行しません．判定の保存は台帳を更新します．新規Notes本文の登録は「項目の作成・補完」を使います．</p>
-</details>
-<details><summary>管理台帳への移行を確認</summary>
-<p>旧台帳を保守管理台帳へまとめる初回移行用の項目です．<strong>このシートは移行済みなので，通常の登録・補完では使いません．</strong>移行済みの場合は現在の台帳の状態を確認し，移行を繰り返しません．</p>
 </details>
 <details><summary>既存語形対応の出典を調査</summary>
 <p>登録済みの語形対応をGM・RW・RSの実例と照合し，対応するNotesのsource欄に出典記号を補います．<strong>このメニューを選ぶと調査と必要な追記が始まります．</strong>完了画面で更新件数を確認します．同じ出典は重複追記しません．OpenAI API・Jev APIは使いません．</p>

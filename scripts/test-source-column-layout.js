@@ -39,5 +39,4 @@ for (const tab of Object.keys(schemas)) {
     const h = sheet(tab, mode); assert.throws(() => context.namedSheetRead_(h.sheet, schemas[tab], 2, 1, true), /見出し|列構成/); assert.deepEqual(h.writes, []);
   });
 }
-test('named column labels cross Z safely', () => { assert.equal(context.namedSheetColumnLabel_(25), 'Z'); assert.equal(context.namedSheetColumnLabel_(26), 'AA'); });
 console.log('Shared source column layout: ' + passed + ' scenarios passed (no network or production writes).');

@@ -40,10 +40,6 @@ function namedSheetCell_(sheet, names, row, index) {
   namedSheetAssertLayout_(sheet, layout);
   return sheet.getRange(row, layout.positions[index] + 1, 1, 1);
 }
-function namedSheetColumnLabel_(position) {
-  let label = ''; for (let n = position + 1; n > 0; n = Math.floor((n - 1) / 26)) label = String.fromCharCode(65 + (n - 1) % 26) + label;
-  return label;
-}
 function namedSheetWriteRows_(sheet, names, row, rows) {
   const layout = namedSheetColumns_(sheet, names);
   if (rows.some(function (r) { return !Array.isArray(r) || r.length !== names.length; })) throw new Error('書込み項目数が一致しません。');

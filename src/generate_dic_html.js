@@ -1769,49 +1769,6 @@ ${abbrListHtml}
 }
 
 /**
- * テスト用関数：小規模なデータでHTML生成をテスト
- */
-function testGenerateDicHtml() {
-  // テストデータ
-  const testDicData = [
-    ['Wald', '森', 'GM1'],
-    ['Baum', '木', 'GM2'],
-    ['Ähre', '穂', 'GM3'],
-    ['Zeit', '時間', 'GM4'],
-    ['1. Satz', '第1楽章', 'GM5']
-  ];
-  
-  const testAbbrData = [
-    [1, 'オペラ', ''],
-    ['', 'RS', 'Richard Strauss'],
-    ['', 'RW', 'Richard Wagner'],
-    [2, '楽曲', ''],
-    ['', 'Symph.', 'Symphony（交響曲）']
-  ];
-  
-  const html = generateDicHtml(testDicData, testAbbrData);
-  
-  Logger.log('=== テスト結果 ===');
-  Logger.log('HTML長さ: ' + html.length + ' 文字');
-  Logger.log('');
-  Logger.log('含まれているか確認:');
-  Logger.log('- <div class="row": ' + (html.includes('<div class="row"') ? '✓' : '✗'));
-  Logger.log('- Wald: ' + (html.includes('Wald') ? '✓' : '✗'));
-  Logger.log('- 森: ' + (html.includes('森') ? '✓' : '✗'));
-  Logger.log('- id="letter-W": ' + (html.includes('id="letter-W"') ? '✓' : '✗'));
-  Logger.log('- id="letter-A": ' + (html.includes('id="letter-A"') ? '✓' : '✗'));
-  Logger.log('- id="letter-OTHER": ' + (html.includes('id="letter-OTHER"') ? '✓' : '✗'));
-  Logger.log('- abbr-title: ' + (html.includes('abbr-title') ? '✓' : '✗'));
-  Logger.log('- Richard Strauss: ' + (html.includes('Richard Strauss') ? '✓' : '✗'));
-  
-  Logger.log('');
-  Logger.log('生成されたHTMLの最初の1000文字:');
-  Logger.log(html.substring(0, 1000));
-  
-  return html;
-}
-
-/**
  * 実データでHTML生成（ログ出力用）
  * スプレッドシートから実際のデータを読み込んでHTMLを生成
  * 生成されたHTMLをログに出力してコピー可能にする
