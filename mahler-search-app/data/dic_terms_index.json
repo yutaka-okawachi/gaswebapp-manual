@@ -526,18 +526,7 @@
       }
     ]
   },
-  "aufzufassen": {
-    "id": "term-aufzufassen",
-    "exampleVariants": [
-      "auszulassen"
-    ],
-    "exampleVariantDetails": [
-      {
-        "form": "auszulassen",
-        "type": "該当なし"
-      }
-    ]
-  },
+  "aufzufassen": "term-aufzufassen",
   "aufzug": {
     "id": "term-aufzug",
     "exampleVariants": [
@@ -986,8 +975,7 @@
       "begleitenden",
       "begleitet",
       "begleiten",
-      "Begleitung",
-      "begreifend"
+      "Begleitung"
     ],
     "exampleVariantDetails": [
       {
@@ -1009,10 +997,6 @@
       {
         "form": "Begleitung",
         "type": "名詞の格・数"
-      },
-      {
-        "form": "begreifend",
-        "type": "該当なし"
       }
     ]
   },
@@ -1035,18 +1019,7 @@
   },
   "behaebig": "term-behaebig",
   "behaglich": "term-behaglich",
-  "behutsam": {
-    "id": "term-behutsam",
-    "exampleVariants": [
-      "bedeutsam"
-    ],
-    "exampleVariantDetails": [
-      {
-        "form": "bedeutsam",
-        "type": "該当なし"
-      }
-    ]
-  },
+  "behutsam": "term-behutsam",
   "beibehalten": "term-beibehalten",
   "beide-ohne-daempfer": "term-beide-ohne-daempfer",
   "beinahe": "term-beinahe",
@@ -1057,39 +1030,24 @@
   "beklommen": {
     "id": "term-beklommen",
     "exampleVariants": [
-      "beklommen",
-      "bekomme",
-      "bekommen"
+      "beklommen"
     ],
     "exampleVariantDetails": [
       {
         "form": "beklommen",
         "type": "過去分詞"
-      },
-      {
-        "form": "bekomme",
-        "type": "該当なし"
-      },
-      {
-        "form": "bekommen",
-        "type": "該当なし"
       }
     ]
   },
   "bemessen": {
     "id": "term-bemessen",
     "exampleVariants": [
-      "bemessen",
-      "besessen"
+      "bemessen"
     ],
     "exampleVariantDetails": [
       {
         "form": "bemessen",
         "type": "過去分詞"
-      },
-      {
-        "form": "besessen",
-        "type": "該当なし"
       }
     ]
   },
@@ -2302,17 +2260,12 @@
   "empfunden": {
     "id": "term-empfunden",
     "exampleVariants": [
-      "empfunden",
-      "empfangen"
+      "empfunden"
     ],
     "exampleVariantDetails": [
       {
         "form": "empfunden",
         "type": "過去分詞"
-      },
-      {
-        "form": "empfangen",
-        "type": "動詞の活用"
       }
     ]
   },
@@ -4328,8 +4281,7 @@
     "id": "term-hervorzubringen",
     "exampleVariants": [
       "hervorzubringen",
-      "hervorbringen",
-      "herauszubringen"
+      "hervorbringen"
     ],
     "exampleVariantDetails": [
       {
@@ -4339,10 +4291,6 @@
       {
         "form": "hervorbringen",
         "type": "動詞の活用"
-      },
-      {
-        "form": "herauszubringen",
-        "type": "該当なし"
       }
     ]
   },
@@ -4448,14 +4396,9 @@
   "hoellisch": {
     "id": "term-hoellisch",
     "exampleVariants": [
-      "höhnisch",
       "höllischer"
     ],
     "exampleVariantDetails": [
-      {
-        "form": "höhnisch",
-        "type": "該当なし"
-      },
       {
         "form": "höllischer",
         "type": "形容詞・副詞の変化"
@@ -5308,17 +5251,12 @@
   "munter": {
     "id": "term-munter",
     "exampleVariants": [
-      "munterem",
-      "Münster"
+      "munterem"
     ],
     "exampleVariantDetails": [
       {
         "form": "munterem",
         "type": "形容詞・副詞の変化"
-      },
-      {
-        "form": "Münster",
-        "type": "該当なし"
       }
     ]
   },
@@ -6636,22 +6574,12 @@
     "id": "term-steigen",
     "exampleVariants": [
       "steigen",
-      "steigernd",
-      "steigert",
       "steigend"
     ],
     "exampleVariantDetails": [
       {
         "form": "steigen",
         "type": "不定詞"
-      },
-      {
-        "form": "steigernd",
-        "type": "分詞"
-      },
-      {
-        "form": "steigert",
-        "type": "動詞の活用"
       },
       {
         "form": "steigend",
@@ -9005,12 +8933,6 @@
     "canonical": "aufstellen",
     "type": "名詞の格・数"
   },
-  "auszulassen": {
-    "id": "term-aufzufassen",
-    "original": "auszulassen",
-    "canonical": "aufzufassen",
-    "type": "該当なし"
-  },
   "augenblicke": {
     "id": "term-augenblick",
     "original": "Augenblicke",
@@ -9263,12 +9185,6 @@
     "canonical": "begleitend",
     "type": "名詞の格・数"
   },
-  "begreifend": {
-    "id": "term-begleitend",
-    "original": "begreifend",
-    "canonical": "begleitend",
-    "type": "該当なし"
-  },
   "begriffen": {
     "id": "term-begriff",
     "original": "begriffen",
@@ -9280,30 +9196,6 @@
     "original": "Begriffe",
     "canonical": "Begriff",
     "type": "名詞の格・数"
-  },
-  "bedeutsam": {
-    "id": "term-behutsam",
-    "original": "bedeutsam",
-    "canonical": "behutsam",
-    "type": "該当なし"
-  },
-  "bekomme": {
-    "id": "term-beklommen",
-    "original": "bekomme",
-    "canonical": "beklommen",
-    "type": "該当なし"
-  },
-  "bekommen": {
-    "id": "term-beklommen",
-    "original": "bekommen",
-    "canonical": "beklommen",
-    "type": "該当なし"
-  },
-  "besessen": {
-    "id": "term-bemessen",
-    "original": "besessen",
-    "canonical": "bemessen",
-    "type": "該当なし"
   },
   "berge": {
     "id": "term-berg",
@@ -9909,12 +9801,6 @@
     "id": "term-empfohlen",
     "original": "empfehlen",
     "canonical": "empfohlen",
-    "type": "動詞の活用"
-  },
-  "empfangen": {
-    "id": "term-empfunden",
-    "original": "empfangen",
-    "canonical": "empfunden",
     "type": "動詞の活用"
   },
   "endgiltige": {
@@ -10967,12 +10853,6 @@
     "canonical": "hervorzubringen",
     "type": "動詞の活用"
   },
-  "herauszubringen": {
-    "id": "term-hervorzubringen",
-    "original": "herauszubringen",
-    "canonical": "hervorzubringen",
-    "type": "該当なし"
-  },
   "heuchlerischem": {
     "id": "term-heuchlerisch",
     "original": "heuchlerischem",
@@ -11464,12 +11344,6 @@
     "original": "munterem",
     "canonical": "munter",
     "type": "形容詞・副詞の変化"
-  },
-  "muenster": {
-    "id": "term-munter",
-    "original": "Münster",
-    "canonical": "munter",
-    "type": "該当なし"
   },
   "murmelnd": {
     "id": "term-murmeln",
@@ -12119,23 +11993,23 @@
     "canonical": "stark",
     "type": "語形変化（要分類）"
   },
-  "steigernd": {
-    "id": "term-steigen",
-    "original": "steigernd",
-    "canonical": "steigen",
-    "type": "分詞"
-  },
-  "steigert": {
-    "id": "term-steigen",
-    "original": "steigert",
-    "canonical": "steigen",
-    "type": "動詞の活用"
-  },
   "steigend": {
     "id": "term-steigen",
     "original": "steigend",
     "canonical": "steigen",
     "type": "分詞"
+  },
+  "steigernd": {
+    "id": "term-steigern",
+    "original": "steigernd",
+    "canonical": "steigern",
+    "type": "分詞"
+  },
+  "steigert": {
+    "id": "term-steigern",
+    "original": "steigert",
+    "canonical": "steigern",
+    "type": "動詞の活用"
   },
   "steigerung": {
     "id": "term-steigern",
