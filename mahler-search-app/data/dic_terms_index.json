@@ -538,6 +538,23 @@
       }
     ]
   },
+  "aufzug": {
+    "id": "term-aufzug",
+    "exampleVariants": [
+      "Aufzugs",
+      "Aufzuges"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "Aufzugs",
+        "type": "語形変化（要分類）"
+      },
+      {
+        "form": "Aufzuges",
+        "type": "語形変化（要分類）"
+      }
+    ]
+  },
   "aufzustellen": {
     "id": "term-aufzustellen",
     "exampleVariants": [
@@ -13127,5 +13144,17 @@
     "original": "zurückkehrende",
     "canonical": "zurückkehren",
     "type": "分詞"
+  },
+  "aufzugs": {
+    "id": "term-aufzug",
+    "original": "Aufzugs",
+    "canonical": "Aufzug",
+    "type": "語形変化（要分類）"
+  },
+  "aufzuges": {
+    "id": "term-aufzug",
+    "original": "Aufzuges",
+    "canonical": "Aufzug",
+    "type": "語形変化（要分類）"
   }
 }
