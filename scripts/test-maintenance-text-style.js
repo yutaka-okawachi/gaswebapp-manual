@@ -36,10 +36,21 @@ for(const [tab,handler]of [['GM','rowCompletionGm_'],['RW','rowCompletionRw_'],[
 test('Notes catalogue examples are safe adopted first-paragraph excerpts',()=>{
   const examples=c.maintenanceStyleExamples_(adoptedBook('Notes'),'Notes',1000,'catalogue');assert.equal(examples[0].de,'AV');assert(examples[0].excerpt);assert(!/【英】|Italian:/.test(examples[0].ja+examples[0].en));
 });
-test('Notes dictionary learns actual Bogen general/musical sections beyond the first 200 rows',()=>{
+test('Notes dictionary learns current Bogen headings and labelled examples beyond the first 200 rows',()=>{
   const examples=c.maintenanceStyleExamples_(adoptedBook('Notes'),'Notes',1000,'dictionary');
   assert.equal(examples[0].de,'Bogen');assert(examples[0].ja.includes('【音楽用語としての訳例】'));
-  assert(examples[0].en.includes('【Musical translation examples】'));assert(examples[0].purpose==='style_only');
+  assert(examples[0].en.includes('【General meanings】'));
+  assert(examples[0].en.includes('【Examples in musical contexts】'));
+  const musical=examples[0].en.split('【Examples in musical contexts】')[1].split(/\n【[^】]+】/)[0];
+  const labels=[...musical.matchAll(/^(German|English):[ \t]+\S[^\n]*/gm)];
+  assert(labels.length>=2 && labels.length%2===0,'Current adopted examples need original/translation labels');
+  labels.forEach((label,index)=>assert.equal(label[1],index%2===0?'German':'English','Original and translation labels stay paired; multiline text is allowed'));
+  assert(examples[0].purpose==='style_only');
+});
+
+test('legacy musical heading remains valid independently of the current adopted example',()=>{
+  const legacy='Italian: arco\n\n【General meanings】\nA bow.\n\n【Musical translation examples】\nWith the bow.';
+  assert.equal(c.maintenanceStyleValidate_(legacy,'en',opts({de:'Bogen',known:{english:'bow',italian:'arco'},newBody:true,requireMusicExamples:true})),legacy);
 });
 test('new Notes prompt separates adopted usage evidence from style examples and unverified lexical proposals',()=>{
   const r=row('Notes',{de:'Saite',source:'[GM], [RW: Oper], [RS: Oper]'}),context=c.rowCompletionNotes_(adoptedBook('Notes'),r);

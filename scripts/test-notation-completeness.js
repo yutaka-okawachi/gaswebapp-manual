@@ -7,6 +7,18 @@ const entities=s=>s.replace(/&quot;/g,'"').replace(/&#0?39;/g,"'").replace(/&lt;
 const visible=html=>entities(html.replace(/<br\s*\/?\s*>/gi,'\n').replace(/<[^>]*>/g,''));
 const restore=html=>visible(html.replace(/<img\b[^>]*title="([^"]*)"[^>]*>/g,(_,token)=>token));
 const kinds=html=>[...html.matchAll(/data-notation="([^"]+)"/g)].map(m=>m[1]);
+// The renderer intentionally converts the first approved quotation and a following English bridge.
+// A Notes body may repeat those exact quotations; all other raw music symbols remain errors here.
+const pauseQuote='𝄐 bedeutet hier nur ein kurzes Anhalten auf dem Taktstrich und nicht etwa eine Fermate.';
+const pauseTranslation='Here the symbol 𝄐 indicates only a brief pause at the barline, not a fermata';
+const occurrences=(text,part)=>text.split(part).length-1;
+function assertDictionaryPauseLayout(html,original,language){
+ const text=visible(html);
+ assert.equal(occurrences(text,pauseQuote),occurrences(original,pauseQuote)-1,'Only the first approved German quotation is converted; repeated quotations stay literal');
+ assert.equal(occurrences(text,pauseTranslation),occurrences(original,pauseTranslation)-(language==='en'?1:0),'Only the approved following English bridge is converted');
+ const remaining=text.replaceAll(pauseQuote,pauseQuote.replace('𝄐','')).replaceAll(pauseTranslation,pauseTranslation.replace('𝄐',''));
+ assert(!music.test(remaining),'No raw music symbol outside exact repeated approved quotations');
+}
 const expected={338:['short-pause'],570:['half','dotted-quarter'],930:['quarter','half'],965:['half','quarter'],1354:['quarter','half'],2084:['quarter','half'],2590:['half','quarter']};
 let symbolRows=0,paths=0;
 (async()=>{for(const language of ['ja','en']){
@@ -50,22 +62,45 @@ let symbolRows=0,paths=0;
  const notes=JSON.parse(read(prefix+'mahler-search-app/data/dic_notes.json')),note=notes.find(r=>r[0]==='anhalten'),before=JSON.stringify(notes);
  const expectedPauses=language==='en'?['short-pause','short-pause']:['short-pause'];
  const html=c.renderDictionaryNotationText(note[1],note[0],note[2],language,c.escapeHtmlWithBreaks);assert.deepEqual(kinds(html),expectedPauses);assert.equal(restore(html),note[1]);
- for(const [heading,source,body]of [['other',note[2],note[1]],['anhalten','[RW: Oper]',note[1]],['anhalten',note[2],note[1].replace('nicht etwa eine Fermate','eine lange Fermate')]])assert.equal(kinds(c.renderDictionaryNotationText(body,heading,source,language)).length,0,'Strict dictionary quotation context');
+ const invalidQuotes=note[1].replaceAll(pauseQuote,pauseQuote.replace('nicht etwa eine Fermate','eine lange Fermate'));
+ assert.notEqual(invalidQuotes,note[1],'Negative fixture actually invalidates the approved quote');
+ assert(!invalidQuotes.includes(pauseQuote),'No second approved quotation may survive a zero-match fixture');
+ for(const [heading,source,body]of [['other',note[2],note[1]],['anhalten','[RW: Oper]',note[1]],['anhalten',note[2],invalidQuotes]]){
+  const rendered=c.renderDictionaryNotationText(body,heading,source,language,c.escapeHtmlWithBreaks);
+  assert.equal(kinds(rendered).length,0,'Strict dictionary quotation context');assert.equal(restore(rendered),body,'Excluded quotation remains verbatim');
+ }
+ const approved=pauseQuote+(language==='en'?'\n'+pauseTranslation:'');
+ assert.deepEqual(kinds(c.renderDictionaryNotationText(approved,note[0],note[2],language)),expectedPauses,'One complete approved context is sufficient');
+ const mixed=pauseQuote.replace('nicht etwa eine Fermate','eine lange Fermate')+'\n'+approved;
+ const mixedHtml=c.renderDictionaryNotationText(mixed,note[0],note[2],language,c.escapeHtmlWithBreaks);
+ assert.deepEqual(kinds(mixedHtml),expectedPauses,'An excluded first quotation must not hide a later approved quotation');assert.equal(restore(mixedHtml),mixed);
+ for(const changed of [pauseQuote.replace('Fermate.','Fermate．'),pauseQuote.replace('Anhalten','Anhalten,'),pauseQuote.slice(0,-1)]){
+  const body=changed+'\n'+pauseTranslation,rendered=c.renderDictionaryNotationText(body,note[0],note[2],language,c.escapeHtmlWithBreaks);
+  assert.equal(kinds(rendered).length,0,'Changed wording or punctuation is not the exact approved quotation');assert.equal(restore(rendered),body);
+ }
+ const literalProbe=pauseQuote+'\n'+pauseQuote+(language==='en'?'\n'+pauseTranslation+'\n'+pauseTranslation:'');
+ const literalHtml=c.renderDictionaryNotationText(literalProbe,note[0],note[2],language,c.escapeHtmlWithBreaks);
+ assert.deepEqual(kinds(literalHtml),expectedPauses);assertDictionaryPauseLayout(literalHtml,literalProbe,language);assert.equal(restore(literalHtml),literalProbe);
+ assert.throws(()=>assertDictionaryPauseLayout(literalHtml+' 𝄐',literalProbe+' 𝄐',language),/outside exact/,'An unrelated raw sign cannot hide behind the repeated-quotation exception');
+ const changedLiteral='\n'+pauseQuote.replace('Fermate.','Fermate．');
+ assert.throws(()=>assertDictionaryPauseLayout(literalHtml+changedLiteral,literalProbe+changedLiteral,language),/outside exact/,'A punctuation near-match is not an allowed literal repeat');
  const unsafe='<script>alert(1)</script>\n'+note[1]+'\n<img onerror="x"> & 𝄐';
  const safe=c.renderDictionaryNotationText(unsafe,note[0],note[2],language,c.escapeHtmlWithBreaks);assert(!/<script>|<img onerror/.test(safe));assert.deepEqual(kinds(safe),expectedPauses);assert.equal(restore(safe),unsafe,'Escape both sides of the signs, preserve line breaks, and leave unrelated music symbols literal');
  if(language==='en'){
-  const translation='Here the symbol 𝄐 indicates only a brief pause at the barline, not a fermata';assert(note[1].includes(translation));
-  for(const body of [note[1].replace(translation,translation.replace('brief','long')),translation,note[1].replace('nicht etwa eine Fermate','eine lange Fermate')]){
-   const rendered=c.renderDictionaryNotationText(body,note[0],note[2],language,c.escapeHtmlWithBreaks);assert.equal(kinds(rendered).length,body.includes('nicht etwa eine Fermate')?1:0,'Changed translation or missing approved quotation never authorises a second sign');assert.equal(restore(rendered),body);
+  const translation=pauseTranslation;assert(note[1].includes(translation));
+  for(const body of [note[1].replaceAll(translation,translation.replace('brief','long')),translation,invalidQuotes]){
+   const rendered=c.renderDictionaryNotationText(body,note[0],note[2],language,c.escapeHtmlWithBreaks);assert.equal(kinds(rendered).length,body.includes(pauseQuote)?1:0,'Changed translation or missing approved quotation never authorises a second sign');assert.equal(restore(rendered),body);
   }
   assert.equal(kinds(c.renderDictionaryNotationText(note[1],note[0],note[2],'ja')).length,1,'The English bridge is language-specific');
-  const quote='𝄐 bedeutet hier nur ein kurzes Anhalten auf dem Taktstrich und nicht etwa eine Fermate.';
+  const quote=pauseQuote;
   const reversed=translation+'\n'+quote;const rendered=c.renderDictionaryNotationText(reversed,note[0],note[2],language,c.escapeHtmlWithBreaks);assert.deepEqual(kinds(rendered),['short-pause'],'Only a following translation is approved');assert.equal(restore(rendered),reversed);
  }
- window.appData.dic_notes=notes;assert(!music.test(visible(window.searchTermsLocal('anhalten'))));assert.equal(JSON.stringify(notes),before);
- c.oneDefinition=[note];vm.runInContext('renderDictionaryList(oneDefinition);',c);assert.equal(dynamicList.children.length,1);const body=dynamicList.children[0].children[1].innerHTML;assert.deepEqual(kinds(body),expectedPauses);assert.equal(restore(body),note[1],'Dynamic dictionary preserves source text and renders quotation');
+ window.appData.dic_notes=notes;const searchHtml=window.searchTermsLocal('anhalten');
+ assert.deepEqual(kinds(searchHtml),expectedPauses);assertDictionaryPauseLayout(searchHtml,note[1],language);
+ const searchBody=searchHtml.match(/<dd class="translation">([^]*?)<\/dd>/)[1];assert.equal(restore(searchBody),note[1],'Search preserves the complete repeated quotation text');assert.equal(JSON.stringify(notes),before);
+ c.oneDefinition=[note];vm.runInContext('renderDictionaryList(oneDefinition);',c);assert.equal(dynamicList.children.length,1);const body=dynamicList.children[0].children[1].innerHTML;assert.deepEqual(kinds(body),expectedPauses);assert.equal(restore(body),note[1],'Dynamic dictionary preserves source text and renders quotation');assertDictionaryPauseLayout(body,note[1],language);
   const dictionary=read(prefix+'mahler-search-app/dic.html'),position=dictionary.indexOf('<div class="row" id="term-anhalten"'),next=dictionary.indexOf('<div class="row" id=',position+1),section=dictionary.slice(position,next);assert(position>=0&&next>position,'Find the exact stable definition ID, allowing additional safe row attributes');
- assert.equal(kinds(section).filter(k=>k==='short-pause').length,expectedPauses.length);assert(!music.test(visible(section)),'Generated dictionary definition uses same renderer');
+ assert.equal(kinds(section).filter(k=>k==='short-pause').length,expectedPauses.length);assertDictionaryPauseLayout(section,note[1],language);const staticBody=section.match(/<dd class="translation">([^]*?)<\/dd>/)[1];assert.equal(restore(staticBody),note[1],'Generated dictionary preserves repeated quotation text');
  const gm1550=all.GM.find(r=>r.data==='M-b1-t1-380-chor&'),score=window.formatGmTranslation(gm1550.ja,gm1550);assert.equal(kinds(score).filter(k=>k==='gm1550-example').length,1);
  const svg=decodeURIComponent(score.match(/src="data:image\/svg\+xml,([^"]*)"/)[1]);assert(svg.includes('M8 62 H212')&&!svg.includes('H131.6'));assert(svg.includes('data-pitch="G2"'));assert(!svg.includes('fill="white"'));
  }
