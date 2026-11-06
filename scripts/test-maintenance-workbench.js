@@ -231,6 +231,10 @@ test('registered private claims are released; finishing uncertain work never del
 // Synthetic originals and locations below exercise matching only, not real corpus claims.
 function sourceScanFixture(term, byTab) {
  const h=harness();h.observation[1]=term;
+ // This fixture owns its Notes table; published headwords must not affect registration tests.
+ const existing={de:'allgemein',ja:'【一般的な意味】\n① 合成テスト用の既存語．',en:'【General meanings】\n① Existing synthetic headword.',source:'[GM]'};
+ h.rows.splice(1,h.rows.length-1,h.headers.map(key=>existing[key]||''));
+ h.formulas.splice(1,h.formulas.length-1,h.headers.map(()=>''));
  for(const tab of ['GM','RW','RS']){
   const sheet=h.relatedSheets[tab],headers=sheet.data[0];
   const rows=(byTab[tab]||[]).map(value=>{
@@ -302,8 +306,15 @@ test('late Aufzug evidence reaches private review and still requires one explici
  h.mutateDraft=d=>{d.ja='【一般的な意味】\n① 合成テスト用の意味．\n\n【音楽用語としての訳例】\n合成用例の訳．';d.en='【General meanings】\n① Synthetic fixture meaning.\n\n【Musical translation examples】\nSynthetic example translation.';
   d.notes_support={english:'',italian:'',rationale:'合成テストの文言であり，実資料の語義を主張しない．',usage_ids:JSON.parse(h.lastRequest.input).domain_context.usage_examples.map(e=>e.id)};};
  let s=h.run();assert.equal(s.job.rows[0].snapshot.values.de,'Aufzug');assert.equal(h.managed().length,0);assert.equal(h.writes.length,0);
+ assert.deepEqual([...s.job.intake.plan.proof].map(p=>[p.tab,p.number,p.german]),[['RS',3,'Aufzug'],['RW',3,'Aufzug']]);
  assert.throws(()=>h.register(undefined,false),/確認/);s=h.register();assert.equal(s.job.intake.phase,'registered');assert.equal(h.managed()[0].values.de,'Aufzug');
- h.register();h.run();assert.equal(h.managed().length,1);assert.equal(h.fetches,1);
+ const registered=JSON.stringify(h.rows);h.register();h.run();assert.equal(h.managed().length,1);assert.equal(h.fetches,1);
+ assert.equal(JSON.stringify(h.rows),registered);assert.equal(h.mapping.data.length,1);
+});
+test('an explicitly existing Aufzug still blocks generation without Notes writes or aliases',()=>{
+ const h=sourceScanFixture('Aufzug',{RS:['Aufzuges','Aufzug'],RW:['Aufzugs','Aufzug']});h.put('de','Aufzug');
+ const before=JSON.stringify(h.rows);assert.throws(()=>h.run(),/同じ見出し/);
+ assert.equal(JSON.stringify(h.rows),before);assert.equal(h.fetches,0);assert.equal(h.writes.length,0);assert.equal(h.mapping.data.length,1);
 });
 
 test('RW/RS source requires work and numeric page, accepts zero and skips incomplete first matches',()=>{
