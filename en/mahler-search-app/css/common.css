@@ -1311,3 +1311,9 @@ input#termInput,
 }
 
 .notes-score-dialog .nsv-credit { margin: 0 0 .5rem; font-size: .85rem; line-height: 1.4; overflow-wrap: anywhere; }
+
+/* Explicit English Notes layout: shared by static dictionary, search and dynamic dictionary. */
+.notes-italian-pair [lang="it"] { font-style: italic; }
+.notes-italian-heading, .notes-example-heading, .notes-example-label { font-family: sans-serif; }
+.notes-example-line { overflow-wrap: anywhere; }
+.notes-example-label { color: #333; }
