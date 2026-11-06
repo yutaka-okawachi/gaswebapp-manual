@@ -10,7 +10,14 @@ for(const citation of citations){
  assert(!locale.JAPANESE.test(locale.localizeText(input)),'General UI keeps existing localization rather than preserving Japanese citations');
  assert(!locale.JAPANESE.test(locale.localizeHtml('<img alt="'+citation.replaceAll('"','&quot;')+'">',missing)),'Attributes retain existing localization and do not preserve Japanese citations');
 }
-for(const input of ['「これは翻訳されていない日本語本文です。」 (a)','“a” (これは翻訳されていない日本語本文です。)','Return to “未翻訳の日本語本文\n改行を含む”','これは未翻訳の本文です。','English introduction followed by 未翻訳の本文。','「未訳」','「未訳」 (日本語の説明)','「未訳」 (123)','The translation is “quietly” (未知の訳語).','The approved translation is “静かに” (“quietly”), but 未訳の本文 remains.']){
+// The two bilingual quotations in breit are evidence, not untranslated prose.
+const breadth='It is often translated into Japanese as 「幅広く」 (“broadly”), but I use 「ゆったりと」 (“unhurriedly”).';
+for(const input of [breadth,'<p>'+breadth+'</p>']){
+ const missing=new Set();assert.equal(englishValue(input,missing),input);assert.equal(missing.size,0);
+ assert.equal(locale.localizeHtml(input,missing),input);assert.equal(missing.size,0);
+}
+assert.equal(browser.localizeText(breadth,undefined,true),breadth);
+for(const input of ['「幅広く」','「ゆったりと」','「幅広く」 (“unhurriedly”)','「ゆったりと」 (“broadly”)',breadth+' 未翻訳の説明。','「これは翻訳されていない日本語本文です。」 (a)','“a” (これは翻訳されていない日本語本文です。)','Return to “未翻訳の日本語本文\n改行を含む”','これは未翻訳の本文です。','English introduction followed by 未翻訳の本文。','「未訳」','「未訳」 (日本語の説明)','「未訳」 (123)','The translation is “quietly” (未知の訳語).','The approved translation is “静かに” (“quietly”), but 未訳の本文 remains.']){
  for(const allow of [false,true]){const missing=new Set();assert.equal(locale.localizeText(input,missing,allow),'English text is not yet available for this note.');assert.equal(missing.size,1);assert.equal(browser.localizeText(input,undefined,allow),'English text is not yet available for this note.');}
  const missing=new Set();englishValue(input,missing);assert(missing.size>0,'Publication must still reject unreviewed Japanese');
 }
