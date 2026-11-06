@@ -492,4 +492,20 @@ test('pending Notes proposal follows identical source content after a sort and n
   assert.equal(h.fetches,1);assert.equal(before.job.rows[0].draft.ja,h.state().job.rows[0].draft.ja);
  }
 });
+test('new multiline English layout survives private generation, explicit registration and replay without extra calls',()=>{
+ for(const reverse of [false,true]){
+  const h=harness({reverse}),base=h.mutateDraft;
+  const english='Italian:\ncorda — string\n\n【General meanings】\n① A musical instrument string.\n\n【Examples in musical contexts】\n[GM]\nGerman: G-Saite\nEnglish: On the G\nstring.';
+  h.mutateDraft=d=>{base(d);d.en=english;};
+  const before=JSON.stringify(h.rows),s=h.run();
+  assert.equal(s.validationErrors.length,0);assert.equal(s.job.rows[0].draft.en,english);
+  assert.equal(JSON.stringify(h.rows),before);assert.equal(h.writes.length,0);
+  const rules=JSON.parse(h.lastRequest.input).format_rules.join('\n');
+  for(const text of ['意味ごと','German:','English:','Examples in musical contexts'])assert(rules.includes(text));
+  assert.throws(()=>h.register(undefined,false),/確認/);assert.equal(h.managed().length,0);
+  h.register();assert.equal(h.managed()[0].values.en,english);
+  h.register();h.run();assert.equal(h.managed().length,1);assert.equal(h.fetches,1);
+  assert.equal(h.mapping.data.length,1);
+ }
+});
 console.log('Unified maintenance review-before-insert: '+passed+' scenarios passed. Private generation, explicit approved registration, legacy recovery, one-word display, aliases and no live calls.');

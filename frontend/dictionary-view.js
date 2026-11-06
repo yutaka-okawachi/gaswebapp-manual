@@ -159,6 +159,7 @@ function renderDictionaryList(data) {
             ? renderDictionaryNotationText(translation, german, source, document.documentElement.lang === 'en' ? 'en' : 'ja', part => renderDictionaryReferenceText(part, escapeHtmlWithBreaks))
             : escapeHtml(translation);
 
+        translationDiv.innerHTML = renderNotesEnglishLayout(translationDiv.innerHTML, document.documentElement.lang === 'en' ? 'en' : 'ja');
         rowDiv.appendChild(translationDiv);
         container.appendChild(rowDiv);
     });

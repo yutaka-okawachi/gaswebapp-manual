@@ -294,7 +294,7 @@ function rowCompletionRequest_(job, row, model, context) {
       (job.tab !== 'Notes' ? 'review_notes.reasonとquestionsは必要な理由・未確定事項だけを日本語で短く書き，不要なら両方空文字とする．既存の理由履歴は送っていない．総譜・画像・外部資料を今回確認したと主張しない．新しいURL・出典・作品・頁は作らない．' : '') +
       'Notesは専用のformat_rulesとprofileに従う．取得していない出典資料を読んだかのように引用・断定しない．' +
       (supportRequired ? '新規Notes辞書項目では，見出し語自体の一般義と音楽語義，英語・イタリア語対応を検討する．' +
-        '確かな対応はnotes_support.english/italianへASCII comma+spaceで列挙し，jaの【英】…／【伊】…とenのItalian:…にも同じ語を入れる．' +
+        '確かな対応はnotes_support.english/italianへASCII comma+spaceで列挙し，jaの【英】…／【伊】…とenのItalian:ブロックにも同じ語を入れ，英語欄はformat_rulesの意味別改行に従う．' +
         '対応が不明ならその言語だけ空文字にし，理由をrationaleへ書く．既存の対応が空欄であること自体は省略理由にしない．' +
         'rationaleには，入力された実例で支持される判断とモデルの語彙知識による未確認の提案を区別して日本語で説明する．資料を今回取得したと偽らず，新規URLや出典を挙げない．' +
         'usage_examplesはこの語を含む採用済み原文・訳と使用箇所で，様式見本とは別の内容根拠．渡された各タブの異なる用法を見て，利用した実例IDをusage_idsに返す．' +

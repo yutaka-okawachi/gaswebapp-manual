@@ -512,7 +512,7 @@ function generateDicListHtml(dicData, termsIndex, abbreviationIndex, dictionaryE
       ${source ? `<span class="source">${linkAbbreviationsInSource(source, abbreviationIndex, termId)}</span>` : ''}
     </div>
   </dt>
-  <dd class="translation">${linkedTranslation}</dd>
+  <dd class="translation">${typeof renderNotesEnglishLayout === 'function' ? renderNotesEnglishLayout(linkedTranslation, language) : linkedTranslation}</dd>
 </div>\n`;
   });
   

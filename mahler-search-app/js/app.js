@@ -1321,6 +1321,41 @@ function renderDictionaryNotationText(text, german, source, language, renderText
   return render(value.slice(0, position)) + image + render(value.slice(position + token.length));
 }
 
+/** English Notes presentation only: legacy bodies and source data remain unchanged. */
+function renderNotesEnglishLayout(html, language) {
+  if (language !== 'en') return html;
+  const lines = html.split('<br>');
+  const layoutLines = html.replace(/<br>/g, '\u0000').replace(/&quot;[^]*?&quot;|(?<![A-Za-z0-9])&#0?39;[^]*?&#0?39;(?![A-Za-z0-9])|„[^“]*“|“[^”]*”|‘[^’]*’|«[^»]*»|「[^」]*」|『[^』]*』|`[^`]*`/g,
+    function (quoted) { return quoted.replace(/[^\u0000]/g, ' '); }).split('\u0000');
+  let italian = lines[0] === 'Italian:', musical = false, fence = null;
+  return lines.map(function (line, index) {
+    const delimiter = line.match(/^(`{3,}|~{3,})/);
+    if (delimiter) {
+      if (!fence) fence = delimiter[1];
+      else if (delimiter[1][0] === fence[0] && delimiter[1].length >= fence.length && line === delimiter[1]) fence = null;
+      return line;
+    }
+    if (fence) return line;
+    if (italian) {
+      if (!index) return '<strong class="notes-italian-heading">Italian:</strong>';
+      if (!line.trim()) italian = false;
+      else {
+        const pair = line.match(/^(.+?) — (.+)$/);
+        return pair ? '<span class="notes-italian-pair"><span lang="it">' + pair[1] + '</span> — ' + pair[2] + '</span>' : line;
+      }
+    }
+    if (/^【[^】]+】$/.test(layoutLines[index])) {
+      musical = /^【(?:Musical translation examples|Examples in musical contexts)】$/.test(layoutLines[index]);
+      if (musical) return '<strong class="notes-example-heading">' + line + '</strong>';
+    }
+    if (musical && /^(?:German|English): /.test(layoutLines[index])) {
+      const label = line.startsWith('German:') ? 'German' : 'English';
+      return '<span class="notes-example-line" lang="' + (label === 'German' ? 'de' : 'en') + '"><strong class="notes-example-label">' + label + ':</strong> ' + line.slice(label.length + 2) + '</span>';
+    }
+    return line;
+  }).join('<br>');
+}
+
 if(typeof module!=='undefined' && module.exports)module.exports={stripScoreExampleTokens,scoreExampleSearchText,SCORE_EXAMPLE_REGISTRY};
 
 
@@ -3884,6 +3919,7 @@ function renderDictionaryList(data) {
             ? renderDictionaryNotationText(translation, german, source, document.documentElement.lang === 'en' ? 'en' : 'ja', part => renderDictionaryReferenceText(part, escapeHtmlWithBreaks))
             : escapeHtml(translation);
 
+        translationDiv.innerHTML = renderNotesEnglishLayout(translationDiv.innerHTML, document.documentElement.lang === 'en' ? 'en' : 'ja');
         rowDiv.appendChild(translationDiv);
         container.appendChild(rowDiv);
     });
@@ -4011,7 +4047,7 @@ window.searchTermsLocal = function (query, sourceFilter) {
         const [german, translation, source] = row;
         html += `<div class="row" data-notes-heading="${escapeHtml(german)}" data-notes-source="${escapeHtml(source)}">
             <dt><dfn class="german">${renderDictionaryNotationText(german, german, source, typeof document !== 'undefined' && /^en\b/i.test(document.documentElement?.lang || '') ? 'en' : 'ja')}</dfn><span class="source">${escapeHtml(source)}</span></dt>
-            <dd class="translation">${renderDictionaryNotationText(translation, german, source, typeof document !== 'undefined' && /^en\b/i.test(document.documentElement?.lang || '') ? 'en' : 'ja', part => renderDictionaryReferenceText(part, escapeHtmlWithBreaks))}</dd>
+            <dd class="translation">${renderNotesEnglishLayout(renderDictionaryNotationText(translation, german, source, typeof document !== 'undefined' && /^en\b/i.test(document.documentElement?.lang || '') ? 'en' : 'ja', part => renderDictionaryReferenceText(part, escapeHtmlWithBreaks)), typeof document !== 'undefined' && /^en\b/i.test(document.documentElement?.lang || '') ? 'en' : 'ja')}</dd>
         </div>`;
     });
 

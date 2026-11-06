@@ -25,7 +25,7 @@ for(const tab of ['GM','RW','RS','Notes'])test(tab+' uses two bounded current ad
 });
 for(const [tab,handler]of [['GM','rowCompletionGm_'],['RW','rowCompletionRw_'],['RS','rowCompletionRs_'],['Notes','rowCompletionNotes_']])test(tab+' named context and prompt bind tab-specific rules',()=>{
   const r=row(tab),context=c[handler](adoptedBook(tab),r),request=c.rowCompletionRequest_({tab}, {...r,targets:['ja','en']},'synthetic-model',context),input=JSON.parse(request.input);
-  assert.equal(input.tab,tab);assert.equal(context.tab,tab);assert.equal(input.style_version,'2026-11-05');assert(input.format_rules.length>=8);assert(input.adopted_style_examples.length);
+  assert.equal(input.tab,tab);assert.equal(context.tab,tab);assert.equal(input.style_version,'2026-11-06');assert(input.format_rules.length>=8);assert(input.adopted_style_examples.length);
   assert(input.format_rules.join('\n').includes('例の内容'));assert(input.format_rules.join('\n').includes('plate'));
   assert(!JSON.stringify(input).includes('NEVER_SEND'));assert.equal(request.store,false);
   assert.equal(input.format_rules.join('\n').includes('説明的な導入文は付けない'),tab==='Notes');
@@ -200,5 +200,61 @@ test('canonical group labels do not weaken exact score, URL, HTML, title, or det
       assert.throws(()=>c.rowCompletionValidateText_(r,field,formatted+'\n[RS: Invented]'),/トークン/);
     }
   }
+});
+test('English example pairs cannot cross source boundaries or leave incomplete/extra labels',()=>{
+ for(const heading of ['【Musical translation examples】','【Examples in musical contexts】']){
+  const prefix='【General meanings】\nA string.\n\n'+heading+'\n';
+  const valid='[GM]\nGerman: One\nEnglish: Translation one.\n\nGerman: Two\nEnglish: Translation two.\n\n[RW: Oper]\nGerman: Three\nEnglish: Translation three.';
+  assert.equal(c.rowCompletionValidateText_(headingRow(),'en',prefix+valid),prefix+valid);
+  for(const invalid of ['[GM]\nGerman: Original one\n[RW: Oper]\nEnglish: Translation two.',
+   '[GM]\nGerman: One\nRW: Oper\nEnglish: Two.',
+   '[GM]\nGerman: One\nEnglish: One.\n[RW: Oper]\nEnglish: Two.',
+   '[GM]\nGerman: One\nEnglish: One.\n[RW: Oper]\nGerman: Two',
+   '[GM]\nGerman: One\nGerman: Two\nEnglish: Two.',
+   '[GM]\nGerman: One\nEnglish: One.\nEnglish: Two.'])assert.throws(()=>c.rowCompletionValidateText_(headingRow(),'en',prefix+invalid),/German:|English:/);
+ }
+});
+test('multiline quoted transcription labels are content, not layout commands',()=>{
+ const r=row('Notes',{de:'term',ja:'既存の注記．'});
+ for(const [open,close]of [['“','”'],['„','“'],['«','»'],['「','」'],['"','"'],["'","'"],['‘','’']]){
+  const text='【Usage notes】\n'+open+'Source transcription:\nGerman: Original quoted wording\nEnglish: Quoted wording\n'+close;
+  assert.equal(c.rowCompletionValidateText_(r,'en',text),text);
+ }
+ const text='【General meanings】\nA string.\n\n【Examples in musical contexts】\n[GM]\nGerman: “Quoted original”\nEnglish: “Quoted translation.”';
+ assert.equal(c.rowCompletionValidateText_(headingRow(),'en',text),text);
+});
+test('Italian glosses containing only spaces or tabs are rejected',()=>{
+ for(const blank of ['   ','\t',' \u3000 '])assert.throws(()=>c.maintenanceStyleValidate_('Italian:\nlato — '+blank+'\n\n【General meanings】\nSide.','en',opts({known:{english:'side',italian:'lato'}})),/Italian:/);
+});
+test('multiline originals and translations retain every line without a repeated label',()=>{
+ const prefix='【General meanings】\nA string.\n\n【Examples in musical contexts】\n';
+ const example='[GM]\nGerman: Original line one\nOriginal line two\nEnglish: Translation line one\nTranslation line two';
+ assert.equal(c.rowCompletionValidateText_(headingRow(),'en',prefix+example),prefix+example);
+ const after=prefix+example+'\n\n[RW: Oper]\nGerman: Second original\nEnglish: Second translation\nSecond translation continuation.\n\n【Usage notes】\nNecessary condition.';
+ assert.equal(c.rowCompletionValidateText_(headingRow(),'en',after),after);
+});
+test('new example paragraphs need labels; same-paragraph ambiguity is accepted as continuation',()=>{
+ const prefix='【General meanings】\nA string.\n\n【Examples in musical contexts】\n';
+ const pair='[GM]\nGerman: Original one\nEnglish: Translation one.';
+ for(const missing of ['\n\n[RW: Oper]\nOriginal two\nTranslation two.',
+   '\n\nRW: Oper\nOriginal two\nTranslation two.',
+   '\n\nOriginal two\nTranslation two.',
+   '\n\n[RW: Oper]\n“Original two”\n“Translation two.”',
+   '\n\n[RW: Oper]\nOriginal two\nEnglish: Translation two.']){
+  assert.throws(()=>c.rowCompletionValidateText_(headingRow(),'en',prefix+pair+missing),/German:|English:/);
+  const old=(prefix+pair+missing).replace('【Examples in musical contexts】','【Musical translation examples】');
+  // An orphan English label was already invalid in the legacy format.
+  if(!missing.includes('English:'))assert.equal(c.rowCompletionValidateText_(headingRow(),'en',old),old);
+ }
+ // The same bytes can be an English continuation or an unlabelled extra example.
+ // Without a boundary there is no reliable syntactic distinction: preserve them as continuation.
+ const ambiguous=prefix+pair+'\nOriginal two\nTranslation two.';
+ assert.equal(c.rowCompletionValidateText_(headingRow(),'en',ambiguous),ambiguous);
+ const valid=prefix+pair+'\n\n[RW: Oper]\nGerman: First original line\nSecond original line\nEnglish: Translation two.\n\n【Usage notes】\nA necessary playing condition.';
+ assert.equal(c.rowCompletionValidateText_(headingRow(),'en',valid),valid);
+});
+test('quoted translation continuations remain literal within fully labelled new examples',()=>{
+ const text="【General meanings】\nA string.\n\n【Examples in musical contexts】\n[GM]\nGerman: Original\nEnglish: 'Source transcription:\n\nGerman: Quoted wording\n【Usage notes】\nEnglish: Quoted wording\n'\n\n[RW: Oper]\nGerman: Second original\nEnglish: Second translation.";
+ assert.equal(c.rowCompletionValidateText_(headingRow(),'en',text),text);
 });
 console.log('Maintenance current style: '+passed+' scenarios passed; tab-specific prompts/validators, real adopted ja/en examples, Notes manual/AI shared formatting, optional equivalents, catalogue exceptions, protected quotations and contextual short translations. No API or Sheet writes.');

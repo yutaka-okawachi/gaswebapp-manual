@@ -15,18 +15,19 @@ function rowCompletionNotesFormatHeadings_(row, field, text, plain) {
       return example && example.tab === tab && new RegExp('^' + tab + ':[1-9][0-9]*$').test(example.id) && support.usageIds.includes(example.id);
     });
   });
-  const section = field === 'ja' ? '【音楽用語としての訳例】' : '【Musical translation examples】';
+  const sections = field === 'ja' ? ['【音楽用語としての訳例】'] : ['【Musical translation examples】', '【Examples in musical contexts】'];
   let musical = false, fence = null;
   const seen = new Set();
-  return text.split('\n').map(function (line) {
-    const heading = line.trim(), delimiter = heading.match(/^(`{3,}|~{3,})/);
+  const layoutLines = maintenanceStyleLayoutLines_(text);
+  return text.split('\n').map(function (line, index) {
+    const heading = layoutLines[index].trim(), delimiter = line.trim().match(/^(`{3,}|~{3,})/);
     if (delimiter) {
       if (!fence) fence = delimiter[1];
-      else if (delimiter[1][0] === fence[0] && delimiter[1].length >= fence.length && heading === delimiter[1]) fence = null;
+      else if (delimiter[1][0] === fence[0] && delimiter[1].length >= fence.length && line.trim() === delimiter[1]) fence = null;
       return line;
     }
     if (fence) return line;
-    if (/^【[^】]+】$/.test(heading)) musical = heading === section;
+    if (/^【[^】]+】$/.test(heading)) musical = sections.includes(heading);
     const marker = permitted.find(function (item) { return heading === item || heading === labels[item]; });
     if (!musical || !marker || seen.has(marker)) return line;
     // A verified source group heading is formatting, not an invented reference.

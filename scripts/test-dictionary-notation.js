@@ -5,9 +5,10 @@ const notes=JSON.parse(read('mahler-search-app/data/dic_notes.json')),english=JS
 const target=notes.find(r=>r[0].includes('als トレモロ音符'));
 assert(target);const before=JSON.stringify(notes),c=vm.createContext({});
 vm.runInContext(read('src/dictionary_notation.js'),c);vm.runInContext(read('src/generate_dic_html.js'),c);
+// Keep shared text layout in both contexts; isolate only notation substitutions.
 const old=vm.createContext({});
 const {extractFunction}=require('./test-utils/extract-function');
-for(const name of ['isSafeDictionaryReferenceUrl','normalizeDictionaryScoreReferences','renderDictionaryReferenceText'])vm.runInContext(extractFunction(read('src/dictionary_notation.js'),name),old);
+for(const name of ['isSafeDictionaryReferenceUrl','normalizeDictionaryScoreReferences','renderDictionaryReferenceText','renderNotesEnglishLayout'])vm.runInContext(extractFunction(read('src/dictionary_notation.js'),name),old);
 vm.runInContext(read('src/generate_dic_html.js'),old);
 const scoreToken='[[score:hindemith-glockenspiel-fsharp5]]';
 // Reverse only the approved display substitutions, back to each fixture's exact source.

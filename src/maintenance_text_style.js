@@ -1,5 +1,5 @@
 /** Current adopted ja/en style only. Never learn from ja_old or review-workspace columns. */
-const MAINTENANCE_STYLE_VERSION = '2026-11-05';
+const MAINTENANCE_STYLE_VERSION = '2026-11-06';
 const MAINTENANCE_STYLE_EXAMPLE_TERMS = Object.freeze({
   GM: ['(Anm. f. d. Dirig. ) : Alle Betonungen consequent durchführen', '＋ Zeichen für einzelne gestopfte Töne'],
   RW: ['Farzana und Zemina treten hervor.', 'Die Feen und Geister versammeln sich um beide.'],
@@ -35,9 +35,29 @@ function maintenanceStyleForeignList_(value) {
   const parts = (Array.isArray(value) ? value : [value || '']).flatMap(function (item) { return String(item).split(/[,，、;\r\n]+/); });
   return Array.from(new Set(parts.map(function (part) { return part.trim(); }).filter(Boolean))).join(', ');
 }
+/** Structural labels inside a quoted transcription are literal content. Preserve line positions. */
+function maintenanceStyleLayoutLines_(text, quotedContinuations) {
+  const value = String(text);
+  return value.replace(/"[^"]*"|(?<![A-Za-z0-9])'[^']*'(?![A-Za-z0-9])|„[^“]*“|“[^”]*”|‘[^’]*’|«[^»]*»|「[^」]*」|『[^』]*』|`[^`]*`/g,
+    function (quoted, offset) {
+      if (Array.isArray(quotedContinuations)) {
+        const start = value.slice(0, offset).split('\n').length - 1;
+        for (let line = 1; line < quoted.split('\n').length; line++) quotedContinuations[start + line] = true;
+      }
+      return quoted.replace(/[^\r\n]/g, ' ');
+    }).split('\n');
+}
 function maintenanceStyleEquivalents_(text) {
   const result = { english: '', italian: '', groups: [] }, first = String(text || '').trim().split(/\n\s*\n/)[0];
   if (!/^(?:【英】|【伊】|Italian:)/.test(first)) return result;
+  if (first.split('\n')[0] === 'Italian:') {
+    result.groups = first.split('\n').slice(1).map(function (line) {
+      const pair = line.match(/^(.+?) — (.+)$/);
+      return { english: '', italian: pair ? maintenanceStyleForeignList_(pair[1]) : '', meaning: pair ? pair[2].trim() : '', canonical: Boolean(pair && pair[1] === maintenanceStyleForeignList_(pair[1])) };
+    });
+    result.italian = maintenanceStyleForeignList_(result.groups.map(function (group) { return group.italian; }));
+    return result;
+  }
   first.split('\n').forEach(function (line) {
     if (!/^(?:【英】|【伊】|Italian:)/.test(line)) return;
     const english = line.match(/【英】(.*?)(?=／?【伊】|$)/), italian = line.match(/【伊】(.*)$/), enItalian = line.match(/^Italian:\s*(.*)$/);
@@ -92,14 +112,14 @@ function maintenanceStyleRules_(tab, profile) {
   if (tab === 'Notes') return common.concat([
     'Notesは辞書本文または項目固有の注記．短訳用の汎用テンプレートでは処理しない．現在のprofile=' + profile + 'に従う．',
     '日本語の外国語列挙は【英】…／【伊】…から開始し，「対応する表現：」を付けない．列挙の区切りはASCII comma+space ", "．',
-    '英語本文に英語対応の列挙は不要．根拠のある既存または新規提案のイタリア語対応はItalian: …を先頭に置く．Corresponding expressions:は不要．',
-    '複数行・複数義に分かれた既存の対応はknown_equivalents.groupsを見てすべて保持する．Italian:行は根拠のある語をcomma+spaceで並べ，意味ごとの固有注記は本文で訳して残す．',
+    '英語本文に英語対応の列挙は不要．根拠のある既存または新規提案のイタリア語対応はItalian:ブロックを先頭に置く．Corresponding expressions:は不要．',
+    '複数行・複数義に分かれた既存の対応はknown_equivalents.groupsを見てすべて保持する．イタリア語対応がある英語本文は先頭をItalian:だけの独立行とし，続く行を意味ごとに「イタリア語候補 — 英語の意味」の形で改行する．同義の候補はcomma+spaceでまとめ，意味の対応と固有注記は入力に根拠がある範囲だけを保持する．意味別の対応が不明なら推測して分割せず，その不明点を確認用に残す．',
     '既存本文の英訳・注記では元々ない英伊対応を形式のために追加しない．ただしnew_dictionary=trueの新規辞書項目は別で，見出し語そのものの確かな英伊対応をnotes_supportに根拠説明付きで提案する．空欄だからという理由だけで省略しない．不確かな対応は保留し，模範例の対応語を流用しない．',
     '新規辞書項目の音楽用例を出典別に分ける場合，独立した見出しは[GM]，[RW: Oper]，[RS: Oper]を使う．sourceとusage_idsで確認できる採用実例の範囲だけを示し，文中の出典記号・譜例・URL・引用・HTMLは変更しない．',
     '新規Notesの音楽用語としての訳例では，原文使用例とその訳だけで伝わる箇所はその対だけを示す．「舞台指示では〜を表す使用例がある」等，続く用例の内容を先取り・言い換える説明的な導入文は付けない．日本語・英語とも同じ方針にする．',
     'ただし個別の用例だけでは伝わらない奏法上の意味・条件等，入力に根拠のある必要な情報は保持し，説明を一律に削らない．原文使用例は渡された採用実例の原文を保持し，その文脈に忠実な訳と対応させる．原文・使用例・出典・使用箇所や根拠を作り足さない．既存本文や保存済み草案をこの方針で自動改稿しない．',
     'AV/TrV等の作品目録略号に対応表現欄を作らない．',
-    profile === 'dictionary' ? '辞書項目は一般義と音楽語義を区別する．新規日本語は【一般的な意味】，英語は【General meanings】を置く．usage_examplesがあれば【音楽用語としての訳例】／【Musical translation examples】で使用文脈ごとの訳を扱う．一語訳だけで済ませず，渡された原文使用例と文脈に合う訳を示す．弦名・開放弦・調弦・奏法等の違いも，用例と訳で伝わる内容を重ねて説明しない．既存本文の英訳は段落・意味の粒度を保持し，新しい解説を足さない．' : '既存の項目固有説明・注記の構成を保持する．不要な辞書見出しや意味区分を一律に足さない．'
+    profile === 'dictionary' ? '辞書項目は一般義と音楽語義を区別する．新規日本語は【一般的な意味】，英語は【General meanings】を置く．usage_examplesがあれば【音楽用語としての訳例】／【Examples in musical contexts】で使用文脈ごとの訳を扱う．英語欄ではすべての実例の原文にGerman:，英訳にEnglish:を付け，例ごとに空行を置く．ラベル後の同じ段落の各行は同じ原文・英訳の続きとして改行を保持する．空行・出典見出し・節見出しを区切りとし，新しい用例はGerman:／English:を付けて始める．同じ段落内の無ラベル行が英訳の続きか別例かは推測しない．引用内の改行も保持する．必要な奏法説明は【Usage notes】へ保持する．ラベル以外の原文・訳・出典は書式のために作り替えない．一語訳だけで済ませず，渡された原文使用例と文脈に合う訳を示す．弦名・開放弦・調弦・奏法等の違いも，用例と訳で伝わる内容を重ねて説明しない．既存本文の英訳は段落・意味の粒度を保持し，新しい解説を足さない．' : '既存の項目固有説明・注記の構成を保持する．不要な辞書見出しや意味区分を一律に足さない．'
   ]);
   return common.concat([
     tab + 'の原文翻訳．Notes風の【一般的な意味】・外国語対応欄・長い辞書解説を追加しない．',
@@ -145,7 +165,7 @@ function maintenanceStyleValidate_(text, language, options) {
   if (/\bplate\s*(?:no\.?|number|\d)|プレート番号/i.test(value) && !/\bplate\b|プレート番号/i.test(basis)) throw new Error('plate番号を付け足さないでください．');
   if (!notes) {
     if (/^(?:訳(?:文)?|日本語訳|Translation|Meaning|意味|説明)\s*[:：]/i.test(value) && !/^(?:訳(?:文)?|日本語訳|Translation|Meaning|意味|説明)\s*[:：]/i.test(basis)) throw new Error('訳文に独自の見出しを付け足さないでください．');
-    if (/【(?:一般的な意味|音楽用語としての訳例|英|伊)】|Italian:|General meanings|Musical translation examples/.test(value)) throw new Error('演奏指示にNotes用の辞書書式を追加しないでください．');
+    if (/【(?:一般的な意味|音楽用語としての訳例|英|伊)】|Italian:|General meanings|Musical translation examples|Examples in musical contexts/.test(value)) throw new Error('演奏指示にNotes用の辞書書式を追加しないでください．');
     const short = String(options.de || '').length < 80 && String(options.de || '').trim().split(/\s+/).length <= 4 && !/[.!?;:]\s*$/.test(String(options.de || '')) && !/\n/.test(basis);
     if (short && (/\n/.test(value) || value.length > Math.max(100, basis.length * 5))) throw new Error('短い演奏指示に冗長な説明を追加しないでください．');
     if (language === 'ja' && short && /[．。.]$/.test(value) && !/[．。.]$/.test(basis)) throw new Error('短い指示句の文末に句点を一律追加しないでください．');
@@ -154,17 +174,74 @@ function maintenanceStyleValidate_(text, language, options) {
   const equivalents = maintenanceStyleEquivalents_(value), known = options.known || { english: '', italian: '' };
   if (/^\s*[(（]≒/.test(value)) throw new Error('旧様式の対応語行ではなく現行の【英】／【伊】書式を使用してください．');
   if (maintenanceStyleCatalogue_(options.de) && /【英】|【伊】|^Italian:|^English:/m.test(prose)) throw new Error('作品目録略号に対応表現欄は不要です．');
-  if (language === 'en' && /【英】|【伊】|^English:/m.test(prose)) throw new Error('英語本文に英語対応の列挙は不要です．');
+  if (language === 'en' && /【英】|【伊】/m.test(prose)) throw new Error('英語本文に英語対応の列挙は不要です．');
+  let newMusicExamples = 0;
+  if (language === 'en') {
+    let musical = false, newMusical = false, german = false, fence = null, newGroup = false, groupExamples = 0, continuing = false;
+    const quotedContinuations = [], layoutLines = maintenanceStyleLayoutLines_(value, quotedContinuations);
+    value.split('\n').forEach(function (line, index) {
+      const heading = layoutLines[index].trim(), delimiter = line.trim().match(/^(`{3,}|~{3,})/);
+      if (delimiter) {
+        if (!fence) fence = delimiter[1];
+        else if (delimiter[1][0] === fence[0] && delimiter[1].length >= fence.length && line.trim() === delimiter[1]) fence = null;
+        return;
+      }
+      if (fence) return;
+      if (!line.trim()) {
+        if (!quotedContinuations[index]) continuing = false;
+        return;
+      }
+      if (musical && /^(?:\[[A-Z][^\]\r\n]+\]|GM|RW: Oper|RS: Oper)$/.test(heading)) {
+        if (german) throw new Error('出典をまたぐ前にGerman:の原文とEnglish:の訳を対応させてください．');
+        if (newMusical && newGroup && !groupExamples) throw new Error('新形式の各出典にGerman:とEnglish:の用例を示してください．');
+        newGroup = newMusical;
+        groupExamples = 0;
+        continuing = false;
+        return;
+      }
+      if (/^【[^】]+】$/.test(heading)) {
+        if (newMusical && newGroup && !groupExamples) throw new Error('新形式の各出典にGerman:とEnglish:の用例を示してください．');
+        if (german) throw new Error('German: の原文には対応するEnglish:の訳を付けてください．');
+        musical = /^【(?:Musical translation examples|Examples in musical contexts)】$/.test(heading);
+        newMusical = heading === '【Examples in musical contexts】';
+        newGroup = false;
+        groupExamples = 0;
+        continuing = false;
+        return;
+      }
+      if (/^(?:German|English):/.test(layoutLines[index])) {
+        if (!musical || !/^(?:German|English): \S/.test(line)) throw new Error('German:／English:は音楽用例内の原文と訳に使ってください．');
+        continuing = true;
+        if (line.startsWith('German:')) {
+          if (german) throw new Error('German: の原文には対応するEnglish:の訳を付けてください．');
+          german = true;
+        } else {
+          if (!german) throw new Error('English: の訳には対応するGerman:の原文を付けてください．');
+          german = false;
+          if (newMusical) { newMusicExamples++; groupExamples++; }
+        }
+        return;
+      }
+      // Unmarked lines in the same paragraph continue the labelled field; do not guess their language.
+      // A blank line or source/section heading starts a new block that needs an explicit label.
+      if (newMusical && !continuing && !(quotedContinuations[index] && !heading)) throw new Error('新しい用例段落にはGerman:とEnglish:を付けてください．必要な説明は【Usage notes】へ保持してください．');
+    });
+    if (newMusical && newGroup && !groupExamples) throw new Error('新形式の各出典にGerman:とEnglish:の用例を示してください．');
+    if (german) throw new Error('German: の原文には対応するEnglish:の訳を付けてください．');
+  }
   if (/【英】|【伊】|^Italian:/m.test(prose)) {
     const first = value.split('\n')[0];
     const expected = language === 'ja' ? maintenanceStyleNotesPrefix_(equivalents.english, equivalents.italian, options.de) : 'Italian: ' + equivalents.italian;
-    if (first !== expected || !expected.trim()) throw new Error('外国語列挙は現行の先頭行とASCII comma+spaceで記述してください．');
+    const grouped = language === 'en' && first === 'Italian:';
+    if (grouped && (!equivalents.groups.length || equivalents.groups.some(function (group) { return !group.italian || !group.meaning || !group.canonical; }))) throw new Error('Italian:の各行はイタリア語候補 — 英語の意味で記述してください．');
+    if ((!grouped && first !== expected) || !expected.trim()) throw new Error('外国語列挙は現行の先頭行とASCII comma+spaceで記述してください．');
     if (options.restrictEquivalents && ((equivalents.english && equivalents.english !== known.english) || (equivalents.italian && equivalents.italian !== known.italian))) throw new Error('根拠のない英伊対応を追加しないでください．');
   }
-  if (language === 'en' && known.italian && !maintenanceStyleCatalogue_(options.de) && !value.startsWith('Italian: ' + known.italian + '\n')) throw new Error('入力にあるイタリア語対応をItalian:で保持してください．');
+  if (language === 'en' && known.italian && !maintenanceStyleCatalogue_(options.de) && (equivalents.italian !== known.italian || !/^Italian:(?: |\n)/.test(value))) throw new Error('入力にあるイタリア語対応をItalian:で保持してください．');
   if (options.requireEquivalents && language === 'ja' && (known.english || known.italian) &&
       !value.startsWith(maintenanceStyleNotesPrefix_(known.english, known.italian, options.de) + '\n')) throw new Error('確認用の英伊対応語案を日本語本文の先頭に保持してください．');
   if (options.newBody && options.profile === 'dictionary' && !value.includes(language === 'ja' ? '【一般的な意味】' : '【General meanings】')) throw new Error('新規Notesの辞書本文に一般的な意味の見出しがありません．');
-  if (options.requireMusicExamples && !value.includes(language === 'ja' ? '【音楽用語としての訳例】' : '【Musical translation examples】')) throw new Error('採用実例を踏まえた音楽用語の訳例を確認してください．');
+  if (language === 'en' && options.requireMusicExamples && value.includes('【Examples in musical contexts】') && !newMusicExamples) throw new Error('音楽用例にはGerman:とEnglish:で原文と訳を示してください．');
+  if (options.requireMusicExamples && !(language === 'ja' ? value.includes('【音楽用語としての訳例】') : /(?:^|\n)【(?:Musical translation examples|Examples in musical contexts)】(?:\n|$)/.test(value))) throw new Error('採用実例を踏まえた音楽用語の訳例を確認してください．');
   return text;
 }
