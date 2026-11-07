@@ -3,6 +3,8 @@
 const assert = require('node:assert/strict'), fs = require('node:fs'), path = require('node:path'), vm = require('node:vm'), crypto = require('node:crypto');
 const root = path.resolve(__dirname, '..');
 const source = ['sheet_column_layout.js', 'maintenance_text_style.js', 'row_completion_notes.js', 'row_completion_review.js', 'notes_entry_guard.js', 'row_completion.js'].map(f => fs.readFileSync(path.join(root, 'src', f), 'utf8')).join('\n');
+// Select production-approved examples by identity, not their current exported row position.
+const styleExampleTerms = vm.runInNewContext(fs.readFileSync(path.join(root, 'src/maintenance_text_style.js'), 'utf8') + '\nMAINTENANCE_STYLE_EXAMPLE_TERMS');
 let passed = 0;
 function test(name, fn) { try { fn(); passed++; } catch (e) { e.message = name + ': ' + e.message; throw e; } }
 const schemas = {
@@ -20,8 +22,15 @@ function harness(tab = 'GM', options = {}) {
   const adoptedEn=JSON.parse(fs.readFileSync(path.join(root,'en/mahler-search-app/data/'+file+'.json'),'utf8'));
   const identity=r=>tab==='Notes'?r[0]:JSON.stringify([r.de,r.data,r.Oper,r.Aufzug,r.Szene,r.page]);
   const byId=new Map(adoptedEn.map(r=>[identity(r),r]));
-  for(let i=0;i<Math.min(80,adoptedJa.length);i++){
-    const a=adoptedJa[i],b=byId.get(identity(a)),v=tab==='Notes'?{de:a[0],ja:a[1],en:b?b[1]:''}:{de:a.de,ja:a.ja,en:b?b.ja:''};
+  if(options.reverseData) adoptedJa.reverse();
+  const exampleRows=adoptedJa.slice(0,80);
+  for(const term of styleExampleTerms[tab]){
+    const adopted=adoptedJa.find(row=>(tab==='Notes'?row[0]:row.de)===term);
+    assert(adopted,'Missing production-approved style example: '+tab+':'+term);
+    if(!exampleRows.includes(adopted))exampleRows.push(adopted);
+  }
+  for(const a of exampleRows){
+    const b=byId.get(identity(a)),v=tab==='Notes'?{de:a[0],ja:a[1],en:b?b[1]:''}:{de:a.de,ja:a.ja,en:b?b.ja:''};
     rows.push(headers.map(name=>v[name]||''));
   }
   const formulas = Array.from({ length: rows.length }, () => headers.map(() => ''));
@@ -355,6 +364,15 @@ test('existing Notes, annotations, catalogue and other tabs never gain new-propo
   assert(!h.lastRequest.text.format.schema.properties.notes_support);assert.equal(j.rows[0].status,'needs_review');assert.throws(()=>h.apply(j),/英伊対応/);
   for(const tab of ['GM','RW','RS']){const s=harness(tab);s.generate(s.preview());assert(!s.lastRequest.text.format.schema.properties.notes_support);}
   for(const de of ['AV','one long instruction with more than five words']){const n=harness('Notes');n.put('de',de);n.generate(n.preview());assert(!n.lastRequest.text.format.schema.properties.notes_support);}
+});
+test('catalogue fixtures find approved AV independent of exported row order without proposal permission',()=>{
+  for(const reverseData of [false,true]){
+    const h=harness('Notes',{reverseData});h.put('de','AV');h.generate(h.preview());
+    const input=JSON.parse(h.lastRequest.input);
+    assert(input.adopted_style_examples.some(example=>example.de==='AV'));
+    assert(!h.lastRequest.text.format.schema.properties.notes_support);
+    assert.equal(h.fetches,1);assert.equal(h.writes.length,0);
+  }
 });
 test('new Notes proposals preserve conflict/lock protection and reject invented reference tokens',()=>{
   const h=notesWithPublishedUsages(),j=h.generate(h.preview());h.put('source','user changed source');assert.throws(()=>h.apply(j),/変更/);assert.equal(h.writes.length,0);

@@ -20,9 +20,11 @@ function options(args) {
         if (args[i] === '--mode') result.mode = args[++i];
         else if (args[i] === '--message') result.message = args[++i];
         else if (args[i] === '--allow-data-removal') result.allowRemoval = true;
+        else if (args[i] === '--apply-recovery') result.applyRecovery = true;
         else throw new Error(`Unknown argument: ${args[i]}`);
     }
-    if (!['Auto', 'Data', 'Site', 'All', 'Check', 'Verify'].includes(result.mode)) throw new Error('Invalid mode');
+    if (!['Auto', 'Data', 'Site', 'All', 'Check', 'Verify', 'Recover'].includes(result.mode)) throw new Error('Invalid mode');
+    if (result.applyRecovery && result.mode !== 'Recover') throw new Error('--apply-recovery requires Recover mode');
     return result;
 }
 
@@ -104,6 +106,11 @@ async function main(args = process.argv.slice(2)) {
         logger.info('Git 作業ツリーと実行前条件を検査中…');
         let sourceFiles = repository.preflight(state.ownedData || {});
         logger.success(`事前確認完了 (ブランチ: main, 検出変更: ${sourceFiles.length ? sourceFiles.length + '件' : 'なし'})`);
+
+        if (opt.mode === 'Recover') {
+            await require('./recovery').recover(opt);
+            return;
+        }
 
         if (opt.mode !== 'Check' && state.pending &&
             (sourceFiles.length || git('rev-parse', 'HEAD') !== state.pending.commit)) {
