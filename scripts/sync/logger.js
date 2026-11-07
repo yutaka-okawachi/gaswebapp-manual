@@ -1,3 +1,4 @@
+const timing = require('./timing');
 const isColorSupported = process.stdout.isTTY !== false && !process.env.NO_COLOR;
 
 const c = {
@@ -16,6 +17,7 @@ const c = {
 };
 
 function header(step, total, title) {
+    timing.stage(step);
     console.log(`\n${c.bold}${c.brightCyan}[${step}/${total}] ${title}${c.reset}`);
 }
 

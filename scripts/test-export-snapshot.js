@@ -17,9 +17,11 @@ const sheets = {
     '楽譜情報': [['Oper', 'B', 'C', 'D', 'Publisher'], ['test', '', '', '', '出版社']]
 };
 let released = 0;
+const cacheBatches = [];
+const cache = { removeAll(keys) { cacheBatches.push(Array.from(keys)); } };
 const context = vm.createContext({
     console, Logger: { log() {} }, SPREADSHEET_ID: 'fixture',
-    CacheService: { getScriptCache: () => ({ remove() {} }) },
+    CacheService: { getScriptCache: () => cache },
     LockService: { getScriptLock: () => ({ tryLock: () => true, releaseLock: () => released++ }) },
     SpreadsheetApp: { openById: () => ({ getSheetByName: name => sheets[name] ? { getDataRange: () => ({ getValues: () => sheets[name] }) } : null }) }
 });
@@ -28,6 +30,12 @@ for (const file of ['sync_build', 'notes_registration','dictionary_notation', 'd
 }
 const first = JSON.parse(JSON.stringify(context.exportAllDataToJson({ requestId: 'fixture' })));
 validateSnapshot(first, 'fixture');
+const oldKeys = ['mahler_data_v2', 'richard_strauss_data_v2', 'richard_wagner_data_v2',
+    'rw_de_terms_cache_v2', 'rs_de_terms_cache_v2', 'whom_options_v1', 'dic_terms_index_v1', 'dic_terms_index_v2'];
+assert.deepStrictEqual(cacheBatches, [
+    oldKeys.flatMap(key => [key, key + '_count', ...Array.from({ length: 20 }, (_, i) => key + '_' + i)]),
+    ['dic_terms_index_v1', 'dic_terms_index_v2']
+], 'Batch invalidation preserves all 176 pre-read keys and two post-generation keys');
 assert.strictEqual(first.files['mahler-search-app/data/richard_wagner.json'][0]['楽譜情報'], '出版社');
 assert.strictEqual(first.files['mahler-search-app/data/richard_wagner.json'][0]['場面タイトル'], '場面');
 assert.strictEqual(first.files['mahler-search-app/data/whom_list.json'].test[0], 'Alle');
@@ -89,6 +97,12 @@ for (const mode of ['held', 'empty']) {
 }
 restore();
 
+released = 0;
+const originalRemoveAll = cache.removeAll;
+cache.removeAll = () => { throw new Error('synthetic cache failure'); };
+assert.throws(() => context.exportAllDataToJson({}), /synthetic cache failure/);
+assert.strictEqual(released, 1, 'Batch cache failures still release the export lock');
+cache.removeAll = originalRemoveAll;
 released = 0;
 
 delete sheets.RW;

@@ -14,7 +14,7 @@ const tables={
  '楽譜情報':[['Oper','Publisher'],['feuersnot','Adolph Fürstner'],['work','Publisher']]
 };
 const reads={};
-const c=vm.createContext({Logger:{log(){}},SPREADSHEET_ID:'fixture-only',CacheService:{getScriptCache:()=>({remove(){}})},LockService:{getScriptLock:()=>({tryLock:()=>true,releaseLock(){}})},SpreadsheetApp:{openById:()=>({getSheetByName:name=>!tables[name]?null:({getDataRange:()=>({getValues:()=>{reads[name]=(reads[name]||0)+1;return tables[name];}})})})}});
+const c=vm.createContext({Logger:{log(){}},SPREADSHEET_ID:'fixture-only',CacheService:{getScriptCache:()=>({removeAll(){}})},LockService:{getScriptLock:()=>({tryLock:()=>true,releaseLock(){}})},SpreadsheetApp:{openById:()=>({getSheetByName:name=>!tables[name]?null:({getDataRange:()=>({getValues:()=>{reads[name]=(reads[name]||0)+1;return tables[name];}})})})}});
 for(const file of ['sync_build','notes_registration','dictionary_notation','dictionary_example_shards','generate_dic_html','export_json'])vm.runInContext(read('src/'+file+'.js'),c);
 // This deliberately altered score-token headword is new, so its synthetic fixture needs explicit publication approval.
 c.Utilities={DigestAlgorithm:{SHA_256:'sha256'},Charset:{UTF_8:'utf8'},computeDigest:(_,text)=>[...require('node:crypto').createHash('sha256').update(text).digest()]};

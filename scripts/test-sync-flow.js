@@ -6,7 +6,7 @@ const vm = require('vm');
 const core = require('./sync/core');
 const source = fs.readFileSync(path.join(__dirname, 'sync/main.js'), 'utf8');
 
-async function scenario({ failCheck = false, failSnapshot = false, failPublish = false, failHeadAt = 0, sourceChanges = false, mode = 'Auto', blockResume = false, currentGas = false, blockEnglishResume = false, failGateAt = 0 } = {}) {
+async function scenario({ failCheck = false, failSnapshot = false, failPublish = false, failHeadAt = 0, sourceChanges = false, mode = 'Auto', blockResume = false, currentGas = false, blockEnglishResume = false, failGateAt = 0, resumeMode = 'Verify', failResumePublish = false, freshCheckFail = false, freshSnapshotFail = false, resumeMutation = '', pendingDocumentsOnly = false } = {}) {
     const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'gmt-sync-test-'));
     fs.mkdirSync(path.join(directory, 'scripts'));
     fs.writeFileSync(path.join(directory, 'scripts/english-publication.json'), JSON.stringify({schemaVersion:1,publishEnglish:false,englishReleaseApproved:false}));
@@ -17,12 +17,16 @@ async function scenario({ failCheck = false, failSnapshot = false, failPublish =
     let headChecks = 0;
     let resumeBlocked = false;
     let gateChecks = 0;
+    let checkFailure = failCheck, snapshotFailure = failSnapshot, armedMutation = '';
+    let sheetText = 'old sheet text';
+    const installedText = [];
     const fakeRequire = name => {
         const stubs = {
-            './core': { ...core, root: directory, run: () => '', git: (...args) => args[0] === 'rev-parse' ? head : '' },
+            './core': { ...core, root: directory, run: () => { events.push('api'); return ''; }, git: (...args) => args[0] === 'rev-parse' ? head : '' },
+            './timing': { start() {}, end() {}, measure: (name, action) => action() },
             './logger': {
                 c: {}, header: () => {}, success: () => {}, info: () => {},
-                warn: () => {}, error: () => {}, wait: () => {}, sub: () => {}, finish: () => {}
+                warn: () => {}, error: () => {}, wait: () => {}, sub: () => {}, finish: () => { events.push('finish'); }
             },
             './git': {
                 preflight: () => { events.push('preflight'); return changes; },
@@ -34,7 +38,7 @@ async function scenario({ failCheck = false, failSnapshot = false, failPublish =
                 configuration: () => ({ GAS_DEPLOY_URL: 'https://example.test' }), fingerprint: () => 'hash',
                 prepareBuild: () => {}, inspect: async () => ({ sourceHash: currentGas ? 'hash' : 'old' }),
                 ensureDeployment: async (settings, state, save) => { events.push('deploy'); state.gasHash = 'hash'; save(); },
-                exportSnapshotForSource: async () => { events.push('snapshot'); return { sourceHash: 'hash' }; }
+                exportSnapshotForSource: async () => { events.push('snapshot'); return { sourceHash: 'hash', sheetText }; }
             },
             './gas-head': {
                 preflight: async () => {
@@ -46,8 +50,8 @@ async function scenario({ failCheck = false, failSnapshot = false, failPublish =
             },
             './artifacts': {
                 expectedPaths: [], previousData: () => ({}),
-                validateSnapshot: () => { events.push('validate'); if (failSnapshot) throw new Error('bad snapshot'); return {}; },
-                installSnapshot: () => { events.push('install'); },
+                validateSnapshot: snapshot => { events.push('validate'); if (snapshotFailure) throw new Error('bad snapshot'); return { notes: snapshot.sheetText }; },
+                installSnapshot: values => { events.push('install'); installedText.push(values.notes); },
                 updateSitemap: () => {}, releaseManifest: () => ({ releaseId: 'release', hashes: { 'index.html': 'a'.repeat(64) } }),
                 formatJson: (file, value) => typeof value === 'string' ? value : JSON.stringify(value)
             },
@@ -60,10 +64,10 @@ async function scenario({ failCheck = false, failSnapshot = false, failPublish =
             './publish': {
                 token: () => 'secret', preflight: async () => 'https://example.test/',
                 push: () => { events.push('push'); },
-                verifyPages: async () => { events.push('verify'); if (publishFailure) { publishFailure = false; throw new Error('pending Pages'); } }
+                verifyPages: async () => { events.push('verify'); if (publishFailure) { publishFailure = false; throw new Error('pending Pages'); } if (armedMutation === 'head') head += '-user-change'; if (armedMutation === 'files') changes = ['README.md']; armedMutation = ''; }
             },
             '../build-site': { build: () => { events.push('build'); } },
-            '../check-local': { check: () => { events.push('tests'); if (failCheck) throw new Error('bad test'); } }
+            '../check-local': { check: () => { events.push('tests'); if (checkFailure) throw new Error('bad test'); } }
         };
         return Object.hasOwn(stubs, name) ? stubs[name] : require(name);
     };
@@ -100,16 +104,60 @@ async function scenario({ failCheck = false, failSnapshot = false, failPublish =
             resumeBlocked = blockResume;
             // After checkpoint commits the working tree is clean on resume.
             changes = [];
+            sheetText = 'edited while publication was pending';
+            checkFailure = freshCheckFail; snapshotFailure = freshSnapshotFail;
+            armedMutation = resumeMutation;
+            if (failResumePublish) publishFailure = true;
+            if (pendingDocumentsOnly) {
+                const f = path.join(directory, '.sync-state/state.json'), receipt = core.readJson(f);
+                receipt.pending.documentsOnly = true; core.atomicJson(f, receipt);
+            }
             if (blockEnglishResume) {
                 const file=path.join(directory,'.sync-state/state.json'), receipt=core.readJson(file);receipt.pending.manifest.hashes['en/index.html']='a'.repeat(64);core.atomicJson(file,receipt);
                 await assert.rejects(() => main(['--mode','Verify']), /英語公開ゲート/);
             } else if (blockResume) await assert.rejects(() => main(['--mode', 'Verify']), /editor-only/);
-            else await main([]);
+            else if (failResumePublish) await assert.rejects(() => main(['--mode', resumeMode]), /pending Pages/);
+            else if (resumeMutation) await assert.rejects(() => main(['--mode', resumeMode]), /ローカル変更/);
+            else if (freshCheckFail) await assert.rejects(() => main(['--mode', resumeMode]), /bad test/);
+            else if (freshSnapshotFail) await assert.rejects(() => main(['--mode', resumeMode]), /bad snapshot/);
+            else await main(['--mode', resumeMode]);
             const resume = events.slice(before);
-            if (!blockEnglishResume) assert.ok(resume.includes('head-check'));
-            if (blockResume || blockEnglishResume) assert.ok(!resume.includes('push') && !resume.includes('verify'));
-            else assert.ok(resume.includes('verify'));
-            for (const stage of ['deploy', 'snapshot', 'install', 'commit']) assert.ok(!resume.includes(stage), stage);
+            if (resumeMode === 'Check') {
+                assert(resume.includes('tests'));
+                for (const stage of ['head-check', 'snapshot', 'push', 'verify']) assert(!resume.includes(stage));
+                assert(core.readJson(path.join(directory, '.sync-state/state.json')).pending);
+            } else {
+                if (!blockEnglishResume) assert.ok(resume.includes('head-check'));
+                if (blockResume || blockEnglishResume) assert.ok(!resume.includes('push') && !resume.includes('verify'));
+                else assert.ok(resume.includes('verify'));
+                const expectedFinish = !(blockResume || blockEnglishResume || failResumePublish || resumeMutation || freshCheckFail || freshSnapshotFail);
+                assert.equal(resume.filter(e => e === 'finish').length, expectedFinish ? 1 : 0, 'No completion message before fresh sync completes');
+                const continueFresh = ['Auto', 'Data', 'All'].includes(resumeMode) &&
+                    !blockResume && !blockEnglishResume && !failResumePublish && !resumeMutation;
+                if (continueFresh) {
+                    assert(resume.indexOf('verify') < resume.indexOf('tests'), 'Prior publication completes before fresh checks');
+                    if (freshCheckFail) assert(!resume.includes('snapshot'));
+                    else assert(resume.indexOf('tests') < resume.indexOf('snapshot'));
+                    if (freshCheckFail || freshSnapshotFail) {
+                        assert(!resume.includes('install') && !resume.includes('commit'));
+                        assert.equal(resume.filter(e => e === 'push').length, 1);
+                    } else {
+                        assert.equal(resume.filter(e => e === 'snapshot').length, 1);
+                        assert.equal(installedText.at(-1), 'edited while publication was pending');
+                        assert(resume.indexOf('snapshot') < resume.lastIndexOf('commit'));
+                        assert(resume.lastIndexOf('commit') < resume.lastIndexOf('push'));
+                        assert.equal(resume.filter(e => e === 'push').length, 2);
+                        assert.equal(resume.filter(e => e === 'api').length, pendingDocumentsOnly ? 1 : 2);
+                    }
+                    assert(!core.readJson(path.join(directory, '.sync-state/state.json')).pending);
+                } else {
+                    for (const stage of ['deploy', 'snapshot', 'install', 'commit']) assert.ok(!resume.includes(stage), stage);
+                    if (failResumePublish) assert(core.readJson(path.join(directory, '.sync-state/state.json')).pending);
+                    if (resumeMutation === 'files') assert.deepEqual(changes, ['README.md']);
+                    if (resumeMutation === 'head') assert(head.endsWith('-user-change'));
+                }
+            }
+            assert(!fs.existsSync(path.join(directory, '.sync-state/lock.json')), 'Every outcome releases the sync lock');
         } else {
             assert.ok(!failed, failure && failure.stack);
             if (currentGas && mode === 'Site') {
@@ -149,5 +197,15 @@ async function scenario({ failCheck = false, failSnapshot = false, failPublish =
     await scenario({ currentGas: true, sourceChanges: true, mode: 'Site' });
     await scenario({ failPublish: true, blockEnglishResume: true });
     for (const failGateAt of [1,2,3,4]) await scenario({ failGateAt });
+    for (const resumeMode of ['Auto', 'Data', 'All', 'Site', 'Verify', 'Check'])
+        await scenario({ failPublish: true, currentGas: true, resumeMode });
+    for (const resumeMode of ['Auto', 'Data', 'All']) {
+        await scenario({ failPublish: true, currentGas: true, resumeMode, failResumePublish: true });
+        await scenario({ failPublish: true, currentGas: true, resumeMode, freshCheckFail: true });
+        await scenario({ failPublish: true, currentGas: true, resumeMode, freshSnapshotFail: true });
+        for (const resumeMutation of ['files', 'head'])
+            await scenario({ failPublish: true, currentGas: true, resumeMode, resumeMutation });
+    }
+    await scenario({ failPublish: true, currentGas: true, resumeMode: 'Auto', pendingDocumentsOnly: true });
     console.log('sync workflow ordering and failure recovery tests: OK');
 })().catch(error => { console.error(error); process.exitCode = 1; });

@@ -70,7 +70,7 @@ assert.ok(previewHtml('<html><head></head><body></body></html>', 'test', true).i
 let released = 0;
 const context = vm.createContext({
     LockService: { getScriptLock: () => ({ tryLock: () => true, releaseLock: () => released++ }) },
-    CacheService: { getScriptCache: () => ({ remove() {} }) },
+    CacheService: { getScriptCache: () => ({ removeAll() {} }) },
     SpreadsheetApp: { openById: () => ({ getSheetByName: () => null }) },
     SPREADSHEET_ID: 'test'
 });

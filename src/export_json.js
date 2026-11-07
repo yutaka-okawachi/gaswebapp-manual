@@ -59,15 +59,9 @@ function buildExportSnapshot_(exportOptions) {
         'rw_de_terms_cache_v2', 'rs_de_terms_cache_v2', 'whom_options_v1',
         'dic_terms_index_v1', 'dic_terms_index_v2'
     ];
-    cacheKeys.forEach(key => {
-        // 通常のキャッシュ削除
-        cache.remove(key);
-        // チャンクキャッシュの削除（安全のため多めに回す）
-        cache.remove(key + '_count');
-        for (let i = 0; i < 20; i++) {
-            cache.remove(`${key}_${i}`);
-        }
-    });
+    // Same pre-read invalidation set; batch the calls without dropping any keys.
+    cache.removeAll(cacheKeys.flatMap(key => [key, key + '_count',
+        ...Array.from({ length: 20 }, (_, i) => key + '_' + i)]));
     
     const ss = SpreadsheetApp.openById(SPREADSHEET_ID);
     // 各タブは1回だけ読み、見出し名から列位置を解決した結果を以降の処理で共有する
@@ -229,8 +223,8 @@ function buildExportSnapshot_(exportOptions) {
     Logger.log('dic_terms_index.json生成完了: ' + Object.keys(termsIndex).length + ' 件');
 
     // キャッシュを無効化（サーバーサイド検索用）
-    CacheService.getScriptCache().remove('dic_terms_index_v1');
-    CacheService.getScriptCache().remove('dic_terms_index_v2');
+    // Preserve the post-generation boundary if another reader repopulated these keys.
+    cache.removeAll(['dic_terms_index_v1', 'dic_terms_index_v2']);
 
     // 検証済みの生成結果をローカル同期へ返す
     const files = {

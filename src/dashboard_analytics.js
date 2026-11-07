@@ -1222,8 +1222,9 @@ function buildDashboardAnalyticsResponse(period, range, reports) {
     }
   });
 
-  const translationMap = readDashboardTranslationMap();
-  const englishTranslationMap = readDashboardTranslationMap('en');
+  const translationMaps = readDashboardTranslationMaps_();
+  const translationMap = translationMaps.ja;
+  const englishTranslationMap = translationMaps.en;
   const allTermEntries = Object.keys(termAggregates).map(key => {
     const aggregate = termAggregates[key];
     return {
@@ -1795,26 +1796,35 @@ function dashboardPageOrder(path) {
   return index < 0 ? DASHBOARD_PAGES.length : index;
 }
 
-function readDashboardTranslationMap(column) {
-  column = column || 'ja';
-  const translations = {};
+function readDashboardTranslationRows_() {
   try {
     const spreadsheetId = String(
       PropertiesService.getScriptProperties().getProperty('SPREADSHEET_ID') || ''
     ).trim();
-    if (!spreadsheetId) return translations;
+    if (!spreadsheetId) return [];
     const sheet = SpreadsheetApp.openById(spreadsheetId).getSheetByName('Notes');
-    if (!sheet || sheet.getLastRow() < 2) return translations;
-    const rows = notesSheetRows_(sheet.getDataRange().getValues()).filter(row => row.values.de.trim());
-    rows.forEach(row => {
-      const key = normalizeDashboardTerm(row.values.de);
-      const translation = sanitizeDashboardTranslation(row.values[column]);
-      if (key && translation && !translations[key]) translations[key] = translation;
-    });
+    if (!sheet || sheet.getLastRow() < 2) return [];
+    return notesSheetRows_(sheet.getDataRange().getValues()).filter(row => row.values.de.trim());
   } catch (error) {
     Logger.log('Dashboard translations unavailable: ' + String(error));
+    return [];
   }
+}
+function buildDashboardTranslationMap_(rows, column) {
+  const translations = {};
+  rows.forEach(row => {
+    const key = normalizeDashboardTerm(row.values.de);
+    const translation = sanitizeDashboardTranslation(row.values[column]);
+    if (key && translation && !translations[key]) translations[key] = translation;
+  });
   return translations;
+}
+function readDashboardTranslationMaps_() {
+  const rows = readDashboardTranslationRows_();
+  return { ja: buildDashboardTranslationMap_(rows, 'ja'), en: buildDashboardTranslationMap_(rows, 'en') };
+}
+function readDashboardTranslationMap(column) {
+  return buildDashboardTranslationMap_(readDashboardTranslationRows_(), column || 'ja');
 }
 
 function sanitizeDashboardTranslation(value) {

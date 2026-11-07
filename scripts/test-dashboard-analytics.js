@@ -20,6 +20,7 @@ const publicTermSearchPages = [
 ].map(fileName => path.join(repositoryRoot, 'mahler-search-app', fileName));
 
 let analyticsCallCount = 0;
+let notesReadCount = 0;
 let lockAcquireCount = 0;
 let lockReleaseCount = 0;
 const cacheValues = new Map();
@@ -391,6 +392,7 @@ const context = {
             getName() { return 'Notes'; },
             getLastColumn() { return 3; },
             getDataRange() {
+              notesReadCount++;
               const rows = this.getRange(2, 1, 2, 2).getValues();
               return { getValues: () => [['de', 'ja', 'source'], ...rows.map(row => [...row, '[GM]'])] };
             },
@@ -614,7 +616,9 @@ assert.deepStrictEqual(
 );
 assert.strictEqual(analyticsCallCount, 1);
 
+const readsBeforeResult = notesReadCount;
 const result = context.getDashboardAnalytics(7);
+assert.strictEqual(notesReadCount - readsBeforeResult, 1, 'One Notes grid supplies both language maps');
 assert.strictEqual(analyticsCallCount, 20);
 assert.strictEqual(lockAcquireCount, 1);
 assert.strictEqual(lockReleaseCount, 1);
@@ -1069,7 +1073,9 @@ assert.strictEqual(
   'opera_work'
 );
 
+const readsBeforeCache = notesReadCount;
 const cachedResult = context.getDashboardAnalytics(7);
+assert.strictEqual(notesReadCount, readsBeforeCache, 'Cached dashboard does not reread Notes');
 assert.strictEqual(analyticsCallCount, 20);
 assert.strictEqual(lockAcquireCount, 1);
 assert.strictEqual(lockReleaseCount, 1);
