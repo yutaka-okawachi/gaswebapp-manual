@@ -160,3 +160,14 @@ token移行後のData同期で `日英の元行が一致しません: GM:325:de_
 参照譜：[印刷220頁／PDF44頁](https://s9.imslp.org/files/imglnks/usimg/3/3e/IMSLP19168-PMLP04982-Strauss_-_Ein_Heldenleben%2C_Op._40_%28orch._score%29.pdf#page=44)，[印刷210頁／PDF34頁](https://s9.imslp.org/files/imglnks/usimg/3/3e/IMSLP19168-PMLP04982-Strauss_-_Ein_Heldenleben%2C_Op._40_%28orch._score%29.pdf#page=34)。波線の方向は脚注の見た目を再現したもので，訳文の適用を上行・下行のみに限定する変更ではありません。
 
 検証は `node scripts/test-notes-portamento.js`。静的・動的辞書の末尾配置，日英，旧・新・部分移行，異なる出典への非適用，行移動，検索・アンカー互換を確認します。公開時は上記のコード先行・シート変更・Data同期の順序に従ってください。
+
+
+## Notes の GM 訳例に含まれるトリル譜例（2026-11-08）
+
+`mahler-trill-chain` は Notes 本文の訳例でも表示できます。`【音楽用語としての訳例】`（英語は `【Examples in musical contexts】` または `【Musical translation examples】`）内の `[GM]` 節と、レジストリに登録したドイツ語原文全文を照合します。出典列にも `[GM]` が必要です。対象原文と直後の訳文の各行にあるトークンを、GM検索と同じ譜例へ置換します。英語本文の `German:` / `English:` ラベルにも対応します。
+
+原文と訳文は各一枚、同一行内の同じトークンは一枚に制限します。別の出典、未登録の引用文、本文の別節にコピーしたトークンや未知IDを自動で図へ置換しません。既存のNotes譜例、GM/RS検索、アンカー、原本データは維持します。幅の狭い画面では既存の横スクロール表示を使います。
+
+検証は `node scripts/test-notes-dicht-score.js` と `node scripts/test-dictionary-notation.js`。削除前の dicht 日英原文を専用fixtureに保持し、二つの表示経路、本文と参照の不変、旧GM譜例とのSVG一致を検査します。新しいNotes訳例を対応させる場合は `notesSource` と `notesGerman` の登録・描画関数・専用テストを追加してください。
+
+公開時は、この修正版コードを含むPCで `./sync-data.ps1 -Mode Data` を実行し、GAS更新と最新Sheet取得を同じ同期で行います。古いコードのPCから復元済みNotesだけを先に同期しないでください。`-Mode Check` はローカル検証だけで、Sheet取得や公開は行いません。

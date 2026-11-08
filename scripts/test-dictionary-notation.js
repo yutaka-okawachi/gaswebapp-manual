@@ -25,6 +25,7 @@ function restoreApprovedNotation(output,data){
   restored=restored.replace(/<dfn class="german">([\s\S]*?)<\/dfn>/g,(_,body)=>'<dfn class="german">'+body.replace(image,row[0].includes(token)?token:'/')+'</dfn>');
   restored=restored.replace(image,row[1].includes(token)?token:'/');
  }
+ restored=restored.replace(/<span class="rs-score-example-scroll"[^>]*><img\b[^>]*data-notation="gm325-example"[^>]*><\/span>/g,'[[score:mahler-trill-chain]]');
  return restored.replace(/<img\b[^>]*data-notation="quarter-tremolo-three"[^>]*>/,'トレモロ音符').replace(/<img\b[^>]*data-notation="short-pause"[^>]*>/g,'𝄐');
 }
 function assertExactDocument(output,original,data){
@@ -50,7 +51,7 @@ for(const language of ['ja','en']){
  assert(!/<text\b|font-family|<script\b|foreignObject|data-flag|augmentation-dot/.test(svg));
  assert(svg.includes('fill="black"'));assert(svg.includes('data-stem-direction="down"')); if(language==='en')assert(!/[\p{Script=Han}\p{Script=Hiragana}\p{Script=Katakana}]/u.test(image));
  const output=c.generateDicHtml(data,[],null,[],{language});const original=old.generateDicHtml(data,[],null,[],{language});
- assert.equal((output.match(/dictionary-music-notation/g)||[]).length,language==='en'?9:8);
+ assert.equal((output.match(/dictionary-music-notation/g)||[]).length,(language==='en'?9:8)+(output.match(/data-notation="gm325-example"/g)||[]).length);
  const pauses=output.match(/<img\b[^>]*data-notation="short-pause"[^>]*>/g);
  assert.equal(pauses.length,language==='en'?2:1,'Only the approved quotation and its English translation receive pause signs');
  if(language==='en')assert.equal(pauses[1],pauses[0],'The English translation uses exactly the same short-pause SVG and accessible label');
@@ -76,6 +77,13 @@ for(const language of ['ja','en'])for(const scenario of ['legacy','token','parti
  assert.equal((output.match(/data-notation="glockenspiel-fsharp5"/g)||[]).length,2,language+' '+scenario+' has one source and one translation image');
  assertExactDocument(output,original,data);assertTamperingRejected(output,original,data);
  assert.equal(JSON.stringify(data),fixtureBefore,'Fixture remains canonical: '+language+' '+scenario);checks+=9;
+}
+for(const language of ['ja','en']){
+ const fixture=require('./fixtures/notes-dicht-score.json').notes[language];
+ const data=[...(language==='ja'?notes:english).filter(row=>row[0]!=='dicht'),fixture];
+ const output=c.generateDicHtml(data,[],null,[],{language}),original=old.generateDicHtml(data,[],null,[],{language});
+ assert.equal((output.match(/data-notation="gm325-example"/g)||[]).length,2);
+ assertExactDocument(output,original,data);assertTamperingRejected(output,original,data);
 }
 assert.equal(JSON.stringify(notes),before);
 console.log('Dictionary notation: '+checks+' checks; exact Notes21 quotation, one quarter note/three strokes, language alt text, '+notes.length+'-entry isolation, exact full-document legacy/token/partial fixtures in both languages, 50 anchor/metadata/example-link/source/translation tamper rejections, canonical data and safe escaping passed. Don Quixote reference-score footnote verified (PDF32/printed p.224).');
