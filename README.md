@@ -10,6 +10,8 @@ Richard Wagner（リヒャルト・ワーグナー）、Gustav Mahler（グス�
 
 ブラウザから無料で利用できます。インストールやアカウント登録は必要ありません。
 
+[日本語版](https://yutaka-okawachi.github.io/gaswebapp-manual/)と[英語版](https://yutaka-okawachi.github.io/gaswebapp-manual/en/)があり、各ページの「Japanese / English」から表示言語を切り替えられます。どちらもドイツ語の用語を検索します。言語を切り替えると、移動先のページは検索条件を指定していない初期状態で開きます。
+
 ## できること
 
 ### Richard Wagner（RW）
@@ -104,6 +106,8 @@ Richard Wagner（リヒャルト・ワーグナー）、Gustav Mahler（グス�
 - 後継者として新しく担当する方：[継承者マニュアル](./manuals/SUCCESSOR_GUIDE.md)から権限・資産を確認します。
 - 本人が新しいPCへ移る方：[PC移行マニュアル](./manuals/PC_MIGRATION_GUIDE.md)から設定・再認証・初回確認を進めます。
 - 設定済みPCで更新する方：[日常保守マニュアル](./manuals/DEVELOPER_GUIDE.md)へ。シート変更の反映は`-Mode Data`を使います。
+
+コードや関連文書を整備して公開せずに引き渡す場合は、`.\sync-data.ps1 -Mode Check`でローカルの組み立て・検証を行い、生成差分も確認します。Checkはシートの最新取得や本番接続の確認を行いません。各モードの使い分けは[日常保守の同期手順](./manuals/DEVELOPER_GUIDE.md#2-データ同期ワークフロー)を参照してください。
 
 入口から「概要・構成 → 権限・新PC設定 → シート編集と検証 → 同期と公開確認 → 譜例追加 → 障害復旧」を辿れます。[ダッシュボード](./manuals/DASHBOARD_GUIDE.md)・日英同期・譜例・履歴資料の位置づけも入口にまとめています。[更新履歴](./CHANGELOG.md)は従来どおりです。
 

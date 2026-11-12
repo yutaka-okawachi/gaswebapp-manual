@@ -25,15 +25,15 @@ GAS、Sites、秘密設定の本番反映は以下の順序で行います。画
 
 GASの `ContentService` はエラーでもHTTP 200を返すため、HTTPコードだけで認証成功を判定しません。GASの拒否応答は `error.code=UNAUTHORIZED`、`httpStatus=401` です。Sitesプロキシは未認証をHTTP 401、GAS取得・検証失敗をHTTP 502に変換し、上流の本文や例外情報を公開しません。GETのURLへトークンを書いてもGASは認証しません。
 
-API契約の現在値は、`src/dashboard_analytics.js` の `DASHBOARD_SCHEMA_VERSION` と `scripts/dashboard-api-check.ps1` を基準にしてください。両リポジトリの `schemaVersion` は必ず一致させます。
+API契約の現在値は、`src/dashboard_analytics.js` の `DASHBOARD_SCHEMA_VERSION` と `scripts/dashboard-api-check.ps1` を基準にしてください。APIの `schemaVersion` がSites側の受け付ける範囲に含まれ、必須項目・件数・言語区分の契約が一致することを確認します。
 
 #### 通常のデータ更新
 
-通常のスプレッドシート更新では、本リポジトリで `sync-data.ps1` を実行します。固定GAS APIのURLが変わらない限り、**ダッシュボードをSitesへ再公開する必要はありません**。
+通常のスプレッドシート更新では、本リポジトリで `.\sync-data.ps1 -Mode Data` を実行します。Autoはローカル変更によってシート取得を省略するため、シート更新の反映にはDataを使います。固定GAS APIのURLが変わらない限り、**ダッシュボードをSitesへ再公開する必要はありません**。
 
 1. 実行前に `git status --short` で意図しない変更がないことを確認します。
-2. `sync-data.ps1` を実行します。
-3. 末尾で7・30・90・180日の各 `period` が `[OK]` になったことを確認します。
+2. `.\sync-data.ps1 -Mode Data` を実行します。
+3. 末尾で `Dashboard API: OK (7/30/90/180)` と同期完了の表示を確認します。
 4. 所有者アカウントでダッシュボードを再読み込みし、「最終更新」と主要な値を確認します。
 
 検索数・閲覧数・実例クリック数・「実例を見る」の表示時間・訪問経路・継続利用はGA4 Data APIの集計です。スプレッドシートの「検索履歴」タブを編集しても、これらの利用状況集計は直接変更されません。「Notes」タブは検索語の訳語補完に利用され、変更内容は `mahler-search-app/data/dic_notes.json` と生成済み `mahler-search-app/dic.html` に反映されます。`dic.html` と `data/` は生成物なので、永続的な修正はスプレッドシートまたはGAS側の生成元へ入れてください。
@@ -62,7 +62,14 @@ node --check src/dashboard_analytics.js
 git diff --check
 ```
 
-GAS公開後は `sync-data.ps1` の結果、または `scripts/dashboard-api-check.ps1` を使って、固定WebアプリURLの7・30・90・180日応答を検査します。ローカルテストの成功だけで本番APIの更新済みとは判断しません。
+GAS公開後は通常同期の結果で、固定WebアプリURLの7・30・90・180日応答を確認します。APIの再検査だけなら次を実行します。`scripts/verify-dashboard.ps1` が `scripts/dashboard-api-check.ps1` の検査関数を呼び出します。トークンは環境変数またはGit対象外の `.env` の `DASHBOARD_API_TOKEN` から読み取ります。
+
+```powershell
+$gasWebAppUrl = Read-Host '既存の固定GAS WebアプリURL'
+.\scripts\verify-dashboard.ps1 -BaseUrl $gasWebAppUrl
+```
+
+この再検査は全体（`language=all`）の4期間が対象です。日英の切替は所有者画面でも確認します。ローカルテストの成功だけで本番APIの更新済みとは判断しません。
 
 Sitesリポジトリでの検証：
 
@@ -93,7 +100,7 @@ GAS APIの更新とSitesの公開は別作業です。どちらか一方の成�
 
 ## 2. 新PC・継承時の準備
 
-閲覧だけなら開発環境は不要です。引き継いだ公開URLを所有者アカウントで開き、7・30・90日を切り替えて実データを確認します。PCを替えただけではSites再公開やGAS再デプロイは不要です。
+閲覧だけなら開発環境は不要です。引き継いだ公開URLを所有者アカウントで開き、7・30・90・180日と全体・日本語・英語を切り替えて実データを確認します。PCを替えただけではSites再公開やGAS再デプロイは不要です。
 
 画面を保守する場合は次を行います。
 
@@ -102,7 +109,7 @@ GAS APIの更新とSitesの公開は別作業です。どちらか一方の成�
 3. 新PCで[共通環境](PC_MIGRATION_GUIDE.md)を用意し、引き継いだ実際のリモートURLから画面用リポジトリを別フォルダへcloneします。フォルダ名だけからURLを推測しないでください。
 4. `package.json` の指定とロックファイルに合わせて依存関係を復元します。`package-lock.json` があるnpm構成なら `npm ci` を実行します。
 5. `.openai/hosting.json` が既存プロジェクトを指すことと、そのプロジェクトを管理できるアカウントで接続できることを確認します。欠落時は旧PC・バックアップから戻し、新規プロジェクトを作らないでください。
-6. `app/dashboard-data.ts` の `GAS_API_URL` を既存の固定APIと照合します。PCのユーザー名や保存場所を変えただけならURLを変えません。
+6. サーバー専用の `app/dashboard-proxy.ts` が参照する `GAS_API_URL` を既存の固定APIと照合します。ブラウザは同一オリジンの `/api/dashboard` を使い、GASへ直接接続しません。PCのユーザー名や保存場所を変えただけならURLを変えません。
 7. 画面用フォルダで `npm test`、`npm run lint`、`npm run build` を実行し、ローカル表示を確認します。サイト側フォルダでこれらのnpmコマンドを実行しないでください。
 8. 公開済みの所有者画面を確認します。変更を公開する場合だけ第1章の公開手順へ進みます。
 
@@ -158,7 +165,7 @@ GAS APIの更新とSitesの公開は別作業です。どちらか一方の成�
 - `daily` は期間内の推移を古い順に返す。7日・30日・90日は日別推移（`granularity: 'day'`）、180日は週別推移（約26週、`granularity: 'week'`）として集約して返す。
 - データがない日も省略せず、各値を `0` として返す。ただし英語版の公開前は `status: before_launch` を付け、画面でゼロ件と表示しない。
 - 日付境界はGA4プロパティとGASの双方を日本時間にそろえる。
-- 集計結果は期間ごとに15分間キャッシュする。
+- 集計結果は期間と言語ごとに15分間キャッシュする。
 - 同じ期間のキャッシュが同時に失効した場合は処理を直列化し、待機後に
   キャッシュを再確認してGA4 Data APIの重複呼び出しを避ける。
 
@@ -175,7 +182,7 @@ GAS APIの更新とSitesの公開は別作業です。どちらか一方の成�
   全体検索数・ページ別検索数のどちらにも含めない。
 - `result_count` の合計は検索実行数に使用しない。
 - 無効入力、検索中止、処理失敗は数えない。
-- 日ごとの検索実行数は `daily[].searches` に返す。
+- 日別または週別の検索実行数は `daily[].searches` に返す。180日だけは週別、ほかは日別とする。
 - 1日平均検索数は、期間内の検索実行数合計を選択期間の日数で割り、ダッシュボード側で四捨五入して整数表示する。
 
 ### 訪問都市ランキング（アクセス元都市）
@@ -298,7 +305,7 @@ schemaVersion 5・6を受け取ったSitesは、作品ランキングを空欄�
 - `searches`: そのパスを `source_page` とする検索イベント
 - `exampleClicks`: そのパスを `source_page` とする `view_example_search_results`
 - `topTerms`: そのパスで実行された用語検索の上位3件
-- `source_page` 導入前の既存イベントは、GA4標準の `pagePath` が上記12パスの
+- `source_page` 導入前の既存イベントは、GA4標準の `pagePath` が上記13パスの
   いずれかに完全一致する場合だけ、その値を検索元ページとして補完する。
 - `source_page` と `pagePath` のどちらでも検索元を特定できない既存検索は、
   `search_type`（例: `gm_term`、`rs_term`、`rw_term`、各作曲家の作品検索形式）
@@ -306,10 +313,10 @@ schemaVersion 5・6を受け取ったSitesは、作品ランキングを空欄�
 
 ### 並び順と件数上限
 
-- `daily`: 日付昇順、件数は必ず `period` と同じ。
-- `previous.daily`: 選択期間の直前に連続する同日数期間の日付昇順。
-  件数は必ず `period` と同じ。
-- `pages`: 上記ページ対応表の固定順、件数は12件。
+- `daily`: 期間の古い順。7・30・90日は日別で `period` と同じ件数、180日は週別で26件。
+- `previous.daily`: 選択期間の直前に連続する同日数期間の古い順。
+  日別・週別の区分と件数は `daily` と同じ。
+- `pages`: 上記ページ対応表の固定順、主要11件と補助2件の計13件。日英は同じ論理ページへ集約する。
 - `pages[].topTerms`: 検索数降順、同数は正規化済み用語の昇順、最大3件。
 - `dictionaryExampleMoves`: Wagner、Mahler、R. Straussの固定順、3件。
 - `terms`: 検索数降順、同数は正規化済み用語の昇順、最大50件。
