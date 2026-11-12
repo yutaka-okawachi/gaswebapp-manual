@@ -2,6 +2,7 @@
 // Only code-owned names, clocks and status are recorded; never payloads or errors.
 const fs=require('fs'),path=require('path'),crypto=require('crypto');
 const {performance}=require('perf_hooks'),{root}=require('./core');
+const {timingLine}=require('./log-labels');
 const modes=new Set(['Auto','Data','All','Site','Check','Verify','Recover','Local']);
 const tasks=new Set(['run','build','gas-build','checks','syntax-checks','github-preflight','remote-check',
  'gas-inspect','gas-head-before','gas-ensure','snapshot-fetch','english-prepare','english-stage',
@@ -21,8 +22,8 @@ function createRecorder(options){
  const write=options.write||(entry=>{if(!directoryReady){fs.mkdirSync(path.dirname(file),{recursive:true});directoryReady=true;}fs.appendFileSync(file,JSON.stringify(entry)+'\n','utf8');});
  function emit(event,name,extra={}){
   const entry={schemaVersion:1,runId,sequence:++sequence,mode:options.mode,at:now().toISOString(),event,name,...extra};
-  if(writing)try{write(entry);}catch(_){writing=false;say('[time] Timing file unavailable; operation continues.');}
-  say('[time] '+entry.at+' '+name+' '+event+(event==='end'?' '+entry.status+' '+(entry.elapsedMs/1000).toFixed(3)+'s':''));
+  if(writing)try{write(entry);}catch(_){writing=false;say('[注意] 所要時間の記録ファイルへ保存できません。安全検査を省略せず処理を続けます。');}
+  say(timingLine(entry));
  }
  function begin(name){assertName(name);const token={name,start:clock()};emit('start',name);return token;}
  function end(token,status){emit('end',token.name,{status,elapsedMs:Math.max(0,Math.round((clock()-token.start)*1000)/1000)});}

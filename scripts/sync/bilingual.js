@@ -101,7 +101,7 @@ function stage(prepared,options={}){
  if(!/^[a-f0-9]{64}$/.test(prepared.report.buildHash))throw Error('英語ビルドIDが不正です。');
  const actualHashes=Object.fromEntries(Object.entries(prepared.english).sort(([a],[b])=>a.localeCompare(b)).map(([file,value])=>[file,core.sha256(serialize(file,value))]));
  if(JSON.stringify(actualHashes)!==JSON.stringify(prepared.report.hashes)||core.sha256(JSON.stringify(actualHashes))!==prepared.report.buildHash)throw Error('英語成果物が検証後に変更されています。');
- for(const warning of prepared.report.warnings||[])console.warn('WARNING: '+warning);
+ for(const warning of prepared.report.warnings||[])console.warn('[注意] '+warning);
  const staging=path.join(directory,'.sync-state','english',prepared.report.buildHash);
  for(const file of Object.keys(prepared.english))safeTarget(staging,file);
  for(let item=staging;item!==path.dirname(item);item=path.dirname(item))if(fs.existsSync(item)&&fs.lstatSync(item).isSymbolicLink())throw Error('非公開ステージの保存先にリンクがあります。');fs.mkdirSync(staging,{recursive:true});

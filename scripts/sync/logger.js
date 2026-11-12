@@ -22,31 +22,31 @@ function header(step, total, title) {
 }
 
 function success(message) {
-    console.log(`  ${c.brightGreen}✔${c.reset} ${message}`);
+    console.log(`  ${c.brightGreen}✔ [完了]${c.reset} ${message}`);
 }
 
 function info(message) {
-    console.log(`  ${c.cyan}ℹ${c.reset} ${message}`);
+    console.log(`  ${c.cyan}ℹ [案内]${c.reset} ${message}`);
 }
 
 function warn(message) {
-    console.log(`  ${c.yellow}⚠${c.reset} ${message}`);
+    console.log(`  ${c.yellow}⚠ [注意]${c.reset} ${message}`);
 }
 
 function error(message) {
-    console.log(`  ${c.red}✖${c.reset} ${message}`);
+    console.log(`  ${c.red}✖ [失敗]${c.reset} ${message}`);
 }
 
 function wait(message) {
-    console.log(`  ${c.yellow}⏳${c.reset} ${message}`);
+    console.log(`  ${c.yellow}⏳ [待機中]${c.reset} ${message}`);
 }
 
 function sub(message) {
-    console.log(`    ${c.gray}・${c.reset}${message}`);
+    console.log(`    ${c.gray}・[完了]${c.reset} ${message}`);
 }
 
 function finish(message) {
-    console.log(`\n${c.bold}${c.brightGreen}✨ ${message}${c.reset}\n`);
+    console.log(`\n${c.bold}${c.brightGreen}✨ [完了] ${message}${c.reset}\n`);
 }
 
 module.exports = { c, header, success, info, warn, error, wait, sub, finish };

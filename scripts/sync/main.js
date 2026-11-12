@@ -246,5 +246,5 @@ async function main(args = process.argv.slice(2)) {
     finally { try { timing.end(outcome); } finally { release(); } }
 }
 
-if (require.main === module) main().catch(error => { console.error(`[未完了] ${error.message}`); process.exitCode = 1; });
+if (require.main === module) main().catch(error => { console.error(`[未完了] 同期処理が停止しました。\n詳細（原文を含む）: ${error.message}`); process.exitCode = 1; });
 module.exports = { options, plan, main };
