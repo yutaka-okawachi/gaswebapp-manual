@@ -29,6 +29,22 @@ function deploymentState(runs, builds, sha) {
     const build = builds.find(build => build.commit === sha);
     return !build ? 'pending' : build.status === 'built' ? 'success' : build.status === 'errored' ? 'failure' : 'pending';
 }
+// Keep at most six checks in flight, without waiting for a whole batch.
+// On failure stop scheduling, drain in-flight work, then propagate the first error.
+async function forEachLimited(entries, limit, check) {
+    let next = 0;
+    let failure;
+    let failed = false;
+    async function worker() {
+        while (!failed && next < entries.length) {
+            const entry = entries[next++];
+            try { await check(entry); }
+            catch (error) { if (!failed) { failed = true; failure = error; } }
+        }
+    }
+    await Promise.all(Array.from({ length: Math.min(limit, entries.length) }, worker));
+    if (failed) throw failure;
+}
 async function verifyPages(slug, sha, credential, baseUrl, manifest) {
     const deadline = Date.now() + 10 * 60 * 1000;
     let last = '';
@@ -46,8 +62,7 @@ async function verifyPages(slug, sha, credential, baseUrl, manifest) {
                 if (live.releaseId !== manifest.releaseId) throw new Error('公開ファイルの反映待ち');
                 // Check all text artifacts and the explicitly approved score image bytes.
                 const entries = Object.entries(manifest.hashes);
-                for (let offset = 0; offset < entries.length; offset += 6) {
-                    await Promise.all(entries.slice(offset, offset + 6).map(async ([file, hash]) => {
+                await forEachLimited(entries, 6, async ([file, hash]) => {
                         const response = await request(`${baseUrl}${file}?v=${manifest.releaseId}`);
                         if (/^mahler-search-app\/images\/score-pages\/.+\.(?:png|webp|jpg)$/.test(file)) {
                             if (sha256(Buffer.from(await response.arrayBuffer())) !== hash) throw new Error(`公開画像が不一致: ${file}`);
@@ -56,8 +71,7 @@ async function verifyPages(slug, sha, credential, baseUrl, manifest) {
                         const text = await response.text();
                         if (sha256(normalizeText(text)) !== hash) throw new Error(`公開内容が不一致: ${file}`);
                         if (file.endsWith('.json')) JSON.parse(text);
-                    }));
-                }
+                });
                 if ((await api(slug, '/git/ref/heads/main', credential)).object.sha !== sha) throw new Error('検証中に main が更新されました。再実行してください。');
                 return;
             } catch (e) { last = e.message; }

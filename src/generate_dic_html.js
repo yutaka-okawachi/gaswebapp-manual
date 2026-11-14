@@ -289,27 +289,32 @@ function generateTermPattern(normalizedTerm, originalTerm) {
  * @param {Object} termsIndex - 用語インデックス（正規化キー → ID）
  * @return {string} リンク付きHTML
  */
-function linkTermsInTranslation(text, termsIndex) {
+function prepareTermMatchers(termsIndex) {
+  return Object.keys(termsIndex).sort((a, b) => b.length - a.length).map(term => {
+    const entry = termsIndex[term];
+    const id = typeof entry === 'string' ? entry : entry && entry.id;
+    const original = typeof entry === 'object' && entry ? String(entry.original || '') : '';
+    if (Math.max(term.length, original.length) < 3 || !id) return null;
+    const pattern = generateTermPattern(term, original);
+    if (!pattern) return null;
+    try {
+      return { id, regex: new RegExp(`(?<![a-zA-Z0-9äöüßÄÖÜ])(${pattern})(?![a-zA-Z0-9äöüßÄÖÜ])`, 'gi') };
+    } catch (e) {
+      // Ignore invalid regex, as in the uncached rendering path.
+      return null;
+    }
+  }).filter(Boolean);
+}
+function linkTermsInTranslation(text, termsIndex, preparedMatchers) {
   if (!text || !termsIndex || Object.keys(termsIndex).length === 0) {
     return escapeHtmlWithBreaks(text);
   }
   
   let escaped = escapeHtml(text);
-  const terms = Object.keys(termsIndex).sort((a, b) => b.length - a.length);
   const placeholders = [];
-  
-  terms.forEach((term) => {
-    const termEntry = termsIndex[term];
-    const termId = typeof termEntry === 'string' ? termEntry : termEntry && termEntry.id;
-    const originalTerm = typeof termEntry === 'object' && termEntry
-      ? String(termEntry.original || '')
-      : '';
-    if (Math.max(term.length, originalTerm.length) < 3 || !termId) return;
-    const termPattern = generateTermPattern(term, originalTerm);
-    if (!termPattern) return;
-    
+  (preparedMatchers || prepareTermMatchers(termsIndex)).forEach(({ id: termId, regex }) => {
     try {
-      const regex = new RegExp(`(?<![a-zA-Z0-9äöüßÄÖÜ])(${termPattern})(?![a-zA-Z0-9äöüßÄÖÜ])`, 'gi');
+      regex.lastIndex = 0;
       escaped = escaped.replace(regex, (match) => {
         const placeholder = `__PLACEHOLDER_${placeholders.length}__`;
         placeholders.push({
@@ -431,6 +436,8 @@ function generateDicListHtml(dicData, termsIndex, abbreviationIndex, dictionaryE
   );
   const usedTermIds = new Set();
   
+  // Scope compiled matchers to this build: never reuse them across changed Notes or mappings.
+  const preparedMatchers = prepareTermMatchers(termsIndex || {});
   let html = '';
   let prevLetter = null;
   
@@ -454,7 +461,7 @@ function generateDicListHtml(dicData, termsIndex, abbreviationIndex, dictionaryE
     const termIdAttr = termId ? ` id="${termId}"` : '';
     
     // translationにリンクを適用
-    const renderPlainTranslation = part => termsIndex ? linkTermsInTranslation(part, termsIndex) : escapeHtmlWithBreaks(part);
+    const renderPlainTranslation = part => termsIndex ? linkTermsInTranslation(part, termsIndex, preparedMatchers) : escapeHtmlWithBreaks(part);
     const renderTranslation = part => typeof renderDictionaryReferenceText === 'function' ? renderDictionaryReferenceText(part, renderPlainTranslation) : renderPlainTranslation(part);
     const linkedTranslation = typeof renderDictionaryNotationText === 'function'
       ? renderDictionaryNotationText(translation, german, source, language, renderTranslation) : renderTranslation(translation);

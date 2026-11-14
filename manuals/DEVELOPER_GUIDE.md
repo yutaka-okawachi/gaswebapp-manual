@@ -681,3 +681,9 @@ Candidate headings are loaded lazily from the current language's `dic_notes.json
 Only a deliberate candidate-button click updates `termInput` and calls the page's existing `search()`. Match mode and other controls are not changed. Existing notifications and analytics, including administrator opt-out, remain in their original search path. Computing/displaying candidates sends no search events. Later input, mode changes, cancel/clear, or replaced results invalidate pending panels.
 
 Focused checks: `node scripts/test-spelling-suggestions.js`, plus existing term-search, dictionary-example, data-loader, privacy and bilingual tests. Regenerate with the existing site/bilingual build and run `sync-data.ps1 -Mode Check` in an environment containing its matching bilingual cache before publication. This section does not authorize ordinary sync-data, push or deployment.
+
+### Pages公開ファイル検証の並列処理
+
+公開確認はマニフェストの全ファイルを最大6件並列で検証します。6件全体の完了を待つのではなく、1件完了するごとに次のファイルを検証します。テキストの正規化後ハッシュ、画像のバイト列ハッシュ、JSON構文、リリースID、最終mainコミットの確認は省略しません。
+
+ファイル検証に失敗すると、新規投入を止め、進行中の検証が終了してから最初のエラーを既存の再試行処理へ渡します。このため、失敗表示は他のリクエストの残り時間分だけ遅れる場合がありますが、前の試行の通信を次の試行へ持ち越しません。各リクエストの45秒タイムアウト、10秒の再確認間隔、10分の外側ループ判定は従来どおりです。10分はループ開始の判定期限であり、実行中の処理を強制終了する期限ではありません。
