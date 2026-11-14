@@ -1320,5 +1320,11 @@ input#termInput,
 
 /* Zero-result alternatives: separate from normal autocomplete. */
 .spelling-suggestions { display: flex; flex-wrap: wrap; gap: .5rem; align-items: center; margin: 1rem 0; }
-.spelling-suggestions button { width: auto; min-height: 44px; padding: .4rem .9rem; }
-.spelling-suggestions button:focus-visible { outline: 3px solid currentColor; outline-offset: 3px; }
+.spelling-suggestions button {
+    width: auto; min-height: 44px; padding: .4rem .9rem;
+    color: #fff; background-color: #174a8b; background-image: none;
+    border: 2px solid #174a8b; font-weight: 600; opacity: 1; filter: none;
+}
+.spelling-suggestions button:hover { background-color: #123b70; border-color: #123b70; color: #fff; filter: none; }
+.spelling-suggestions button:active { background-color: #0f315e; border-color: #0f315e; background-image: none; color: #fff; filter: none; }
+.spelling-suggestions button:focus-visible { outline: 3px solid #8a3b00; outline-offset: 3px; }
