@@ -113,13 +113,13 @@
   </url>
   <url>
     <loc>https://yutaka-okawachi.github.io/gaswebapp-manual/en/</loc>
-    <lastmod>2026-11-06</lastmod>
+    <lastmod>2026-11-14</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
     <loc>https://yutaka-okawachi.github.io/gaswebapp-manual/en/mahler-search-app/mahler.html</loc>
-    <lastmod>2026-11-08</lastmod>
+    <lastmod>2026-11-14</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
@@ -131,7 +131,7 @@
   </url>
   <url>
     <loc>https://yutaka-okawachi.github.io/gaswebapp-manual/en/mahler-search-app/terms_search.html</loc>
-    <lastmod>2026-11-08</lastmod>
+    <lastmod>2026-11-14</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -143,7 +143,7 @@
   </url>
   <url>
     <loc>https://yutaka-okawachi.github.io/gaswebapp-manual/en/mahler-search-app/rw_terms_search.html</loc>
-    <lastmod>2026-11-11</lastmod>
+    <lastmod>2026-11-14</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -161,37 +161,37 @@
   </url>
   <url>
     <loc>https://yutaka-okawachi.github.io/gaswebapp-manual/en/mahler-search-app/rs_synopsis.html</loc>
-    <lastmod>2026-11-06</lastmod>
+    <lastmod>2026-11-14</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://yutaka-okawachi.github.io/gaswebapp-manual/en/mahler-search-app/rw_synopsis.html</loc>
-    <lastmod>2026-11-06</lastmod>
+    <lastmod>2026-11-14</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://yutaka-okawachi.github.io/gaswebapp-manual/en/mahler-search-app/notes.html</loc>
-    <lastmod>2026-11-08</lastmod>
+    <lastmod>2026-11-14</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://yutaka-okawachi.github.io/gaswebapp-manual/en/mahler-search-app/other.html</loc>
-    <lastmod>2026-11-08</lastmod>
+    <lastmod>2026-11-14</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://yutaka-okawachi.github.io/gaswebapp-manual/en/privacy.html</loc>
-    <lastmod>2026-11-06</lastmod>
+    <lastmod>2026-11-14</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>
   <url>
     <loc>https://yutaka-okawachi.github.io/gaswebapp-manual/en/license.html</loc>
-    <lastmod>2026-11-06</lastmod>
+    <lastmod>2026-11-14</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>
