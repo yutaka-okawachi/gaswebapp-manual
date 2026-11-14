@@ -16,6 +16,8 @@
 
 `scripts/sync/bilingual.js` はrequestId/sourceHash、行数、元のドイツ語・日本語・位置情報、語形対応を検証し、応答内の補助データだけで日英の検索JSON・辞書・実例を生成します。英語本文はen、対象はwhom_enで、日本語fallbackは使いません。元のde/de_normalizedの改行・句読点・IDは保存し、検索時だけ空白を正規化します。
 
+RW・RSの指示対象は、日英ともオーケストラ、舞台指示の順に上部へまとめ、登場人物との間に区切り線を表示します。英語版の項目名は `Orchestra`・`Stage directions` です。Mottlの注記は `scripts/english-phrases.json` で `Includes directions by Felix Mottl.` に訳し、日本語版と同じ作品・位置に表示します。
+
 所要時間と保留公開の再開（2026-11-06）：Auto・Data・Allは保留公開の確認成功後も最新シート取得へ続行します。Verify・Siteは取得を伴わない再開の意味を維持します。工程・検査ごとの安全な時間記録を追加し、全ローカル検査・同一取得の日英照合・語形対応・補助データ・公開実体検証は省略しません。実行手順と記録項目は[日常保守](DEVELOPER_GUIDE.md)を参照してください。
 
 ## Notesの編集とシート正本（2026-11-05）

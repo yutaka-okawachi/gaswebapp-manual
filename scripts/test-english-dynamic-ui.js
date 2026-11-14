@@ -40,4 +40,35 @@ assert.equal(label.textContent,'元の見出し語に戻る');assert.equal(local
 for(const source of ['未翻訳の本文がここにあります。','「見出し」に戻るではない本文']){
  const missing=new Set();assert.equal(locale.localizeText(source,missing),'English text is not yet available for this note.');assert(missing.has(source));assert.equal(browser.localizeText(source),'English text is not yet available for this note.');
 }
-console.log('Dynamic English UI: alias/categories/loading/counts and real abbreviation-return navigation; Node/browser localization, exact headwords/entities/quotes/newlines/whitespace, stable target ID, unchanged Japanese, empty-headword label and true missing-body fallback passed.');
+// The runtime-injected score note uses the same translation in Node and the browser.
+const operaSource=fs.readFileSync(root+'/mahler-search-app/js/wagner_strauss.js','utf8'),opera=vm.createContext({});
+vm.runInContext(extractFunction(operaSource,'injectMottlNote'),opera);
+const mottlHtml=opera.injectMottlNote('<div class="score-info-banner">Score information</div><div class="scene-header">Prelude</div>','tristan');
+const mottlNote='Felix Mottl による指示も含む',mottlEnglish='Includes directions by Felix Mottl.';
+assert(mottlHtml.includes(mottlNote));
+assert.equal(locale.localizeText(mottlNote),mottlEnglish);assert.equal(browser.localizeText(mottlNote),mottlEnglish);
+const localizedMottl=locale.localizeHtml(mottlHtml);
+assert(localizedMottl.indexOf(mottlEnglish)>localizedMottl.indexOf('Score information'));
+assert(localizedMottl.indexOf(mottlEnglish)<localizedMottl.indexOf('Prelude'));
+
+// Exercise the shared checkbox builder with every published RW/RS target list.
+function checkTargets(language,work,options){
+ const group={innerHTML:''},listeners=[],wrapper={innerHTML:'',appendChild(child){assert.equal(child,group);},querySelectorAll(){return options.map(()=>({addEventListener(event,listener){listeners.push([event,listener]);}}));}};
+ const targets=vm.createContext({window:{__SITE_LANGUAGE__:language,appData:{whom_list:{[work]:options}}},document:{getElementById:()=>wrapper,createElement:()=>group},normalizeString:value=>value,updateSelectionSummary(){}});
+ vm.runInContext(extractFunction(operaSource,'buildWhomCheckboxes'),targets);targets.buildWhomCheckboxes(work);
+ const priority=language==='en'?['Orchestra','Stage directions']:['Orchester','舞台指示'];
+ const first=priority.filter(value=>options.includes(value)),rest=options.filter(value=>!priority.includes(value));
+ const rendered=[...group.innerHTML.matchAll(/value="([^"]+)"/g)].map(match=>match[1]);
+ assert.deepEqual(rendered,[...first,...rest],language+'/'+work+': priority order with original search values');
+ assert.equal((group.innerHTML.match(/<hr\b/g)||[]).length,first.length&&rest.length?1:0);
+ if(first.length&&rest.length){assert(group.innerHTML.indexOf('<hr')>group.innerHTML.indexOf('value="'+first.at(-1)+'"'));assert(group.innerHTML.indexOf('<hr')<group.innerHTML.indexOf('value="'+rest[0]+'"'));}
+ assert.equal(listeners.length,options.length,'All checkboxes update the summary');
+ for(const [event,listener]of listeners){assert.equal(event,'change');assert.equal(listener,targets.updateSelectionSummary);}
+}
+for(const language of ['ja','en']){
+ const lists=JSON.parse(fs.readFileSync(root+(language==='en'?'/en':'')+'/mahler-search-app/data/whom_list.json','utf8'));
+ for(const [work,options]of Object.entries(lists))checkTargets(language,work,options);
+ const priority=language==='en'?['Orchestra','Stage directions']:['Orchester','舞台指示'];
+ for(const options of [['Singer'],[priority[1],'Singer'],[...priority].reverse()])checkTargets(language,'test',options);
+}
+console.log('Dynamic English UI: navigation, counts, Mottl note localization/placement and all Japanese/English RW/RS target groups, separators, search values and change listeners passed.');

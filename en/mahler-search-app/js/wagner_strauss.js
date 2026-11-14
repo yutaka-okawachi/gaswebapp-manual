@@ -557,7 +557,9 @@ function buildWhomCheckboxes(operaValue) {
     checkboxGroup.className = 'checkbox-group';
 
     // 優先表示する項目
-    const priorityItems = ['Orchester', '舞台指示'];
+    const priorityItems = window.__SITE_LANGUAGE__ === 'en'
+        ? ['Orchestra', 'Stage directions']
+        : ['Orchester', '舞台指示'];
     const priorityOptions = [];
     const otherOptions = [];
 
