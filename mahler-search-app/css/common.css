@@ -1317,3 +1317,8 @@ input#termInput,
 .notes-italian-heading, .notes-example-heading, .notes-example-label { font-family: sans-serif; }
 .notes-example-line { overflow-wrap: anywhere; }
 .notes-example-label { color: #333; }
+
+/* Zero-result alternatives: separate from normal autocomplete. */
+.spelling-suggestions { display: flex; flex-wrap: wrap; gap: .5rem; align-items: center; margin: 1rem 0; }
+.spelling-suggestions button { width: auto; min-height: 44px; padding: .4rem .9rem; }
+.spelling-suggestions button:focus-visible { outline: 3px solid currentColor; outline-offset: 3px; }

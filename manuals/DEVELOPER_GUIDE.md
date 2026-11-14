@@ -671,3 +671,13 @@ GAS更新後の応答が一時的に404になる場合は自動再試行しま�
 Notesの画像ボタンとビューア読み込みは停止しています。元からの譜例画像・音符表示は保持します。同じ版のPDF引用と参照譜表示が重なる場合だけ描画側で統合し，別文献と本文は残します。URL未確定の参照譜には資料リンクを補いません。追加のPDF設定ヘルプは表示しません。
 
 検証は `node scripts/test-notes-reference-layout.js`，素材の既存検査は `node scripts/test-notes-score-viewer.js`，全ローカル検査は `node scripts/check-local.js` です。日英・320/768/1280pxで画像ボタンとビューアがなく，通常PDFリンクをキーボードやクリックで選べることを確認します。SafariのMac/iPhone/iPad実機とタッチ操作は未確認です。
+
+### YUT-26: zero-result spelling suggestions
+
+`frontend/spelling-suggestions.js` adds an optional alternative-heading panel only after a successful normal GM/RW/RS term search returns zero results. It is not autocomplete and does not alter dictionary-example alias expansion. Japanese and English templates share the module; the panel label follows the document language.
+
+Candidate headings are loaded lazily from the current language's `dic_notes.json`. A load error hides the optional panel without altering search results. Registered index forms, known exact words, short inputs (under four normalized letters), multiword/non-Latin inputs, and dictionary-example-origin searches do not receive fuzzy suggestions. Comparison uses NFC and existing German transliteration; no blind `ue` to `ü` replacement occurs. Up to three normalized-unique headings are ranked by adjacent-transposition edit distance; 4–7 letters permit one edit, 8+ permit two edits within 20% of word length.
+
+Only a deliberate candidate-button click updates `termInput` and calls the page's existing `search()`. Match mode and other controls are not changed. Existing notifications and analytics, including administrator opt-out, remain in their original search path. Computing/displaying candidates sends no search events. Later input, mode changes, cancel/clear, or replaced results invalidate pending panels.
+
+Focused checks: `node scripts/test-spelling-suggestions.js`, plus existing term-search, dictionary-example, data-loader, privacy and bilingual tests. Regenerate with the existing site/bilingual build and run `sync-data.ps1 -Mode Check` in an environment containing its matching bilingual cache before publication. This section does not authorize ordinary sync-data, push or deployment.

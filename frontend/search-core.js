@@ -9,6 +9,7 @@ function normalizeString(str) {
   if (typeof str !== 'string') return '';
   return (typeof scoreExampleSearchText==='function'?scoreExampleSearchText(str):str)
     .replace(/\[\[score:[a-z][a-z0-9-]{0,95}\]\]/gi, '')
+    .normalize('NFC')
     .toLowerCase()
     .replace(/ä/g, 'ae')
     .replace(/ö/g, 'oe')

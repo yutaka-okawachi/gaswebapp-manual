@@ -3,6 +3,7 @@
   "frontend/state-and-notifications.js",
   "frontend/data-loader.js",
   "frontend/suggestions.js",
+  "frontend/spelling-suggestions.js",
   "frontend/strauss-view.js",
   "src/dictionary_notation.js",
   "frontend/notation-contexts.js",

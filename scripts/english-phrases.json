@@ -131,7 +131,7 @@
   "ドイツ語の歌唱・舞台指示を用語から検索": "Search German vocal and stage directions by term",
   "Richard Strauss の主要なオペラに記された歌唱・舞台指示を，ドイツ語の用語から検索可能．用語を入力し，部分一致または完全一致で検索すると，作品・場面・指示対象・スコアのページ・日本語訳を表示．検索結果のドイツ語リンクから，": "Search vocal and stage directions in Richard Strauss’s principal operas by German term. Enter a term and choose partial or whole-word matching to display the work, scene, character, score page and English translation. German links in the results open the ",
   "※管弦楽曲は検索対象外．管弦楽曲の用語は": "Orchestral works are excluded from this search. Terms from orchestral works appear in the ",
-  "検索窓は英字入力を想定しているので，特殊文字は慣例にしたがって以下のように入力する": "Enter German terms using the following conventional equivalents for special characters:",
+  "ドイツ語の特殊文字（ä・ö・ü・ß）はそのまま入力できる．以下の代替表記でも検索できる．": "You can enter German special characters (ä, ö, ü, ß) directly, or use the conventional equivalents below:",
   "用語集から移動した検索では，検索欄の見出し語に加え，登録済みの語形・別綴りも独立した単語として検索対象となる．": "When arriving from the dictionary, registered inflected forms and alternative spellings are searched as whole words alongside the headword shown in the search box.",
   "検索するドイツ語を入力": "Enter a German term to search",
   "Richard Wagner（リヒャルト・ワーグナー）の各オペラ・楽劇のあらすじ一覧．": "Synopses of Richard Wagner’s operas and music dramas.",
