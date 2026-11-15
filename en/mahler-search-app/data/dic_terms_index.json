@@ -103,7 +103,7 @@
       },
       {
         "form": "Akzents",
-        "type": "該当なし"
+        "type": "名詞の格・数"
       }
     ]
   },
@@ -137,7 +137,7 @@
       },
       {
         "form": "Allgemeines",
-        "type": "名詞の格・数"
+        "type": "形容詞・副詞の変化"
       }
     ]
   },
@@ -169,7 +169,7 @@
       },
       {
         "form": "allmählig",
-        "type": "形容詞・副詞の変化"
+        "type": "別綴り"
       }
     ]
   },
@@ -194,7 +194,7 @@
     "exampleVariantDetails": [
       {
         "form": "Anfangs",
-        "type": "該当なし"
+        "type": "名詞の格変化・関連副詞"
       },
       {
         "form": "Anfange",
@@ -296,7 +296,7 @@
     "exampleVariantDetails": [
       {
         "form": "Anhange",
-        "type": "該当なし"
+        "type": "名詞の格・数"
       }
     ]
   },
@@ -342,7 +342,7 @@
       },
       {
         "form": "anmuthig",
-        "type": "形容詞・副詞の変化"
+        "type": "旧綴り"
       }
     ]
   },
@@ -350,14 +350,9 @@
   "anschlagen": {
     "id": "term-anschlagen",
     "exampleVariants": [
-      "angeschlagen",
       "anzuschlagen"
     ],
     "exampleVariantDetails": [
-      {
-        "form": "angeschlagen",
-        "type": "分詞"
-      },
       {
         "form": "anzuschlagen",
         "type": "動詞の活用"
@@ -410,15 +405,15 @@
     "exampleVariantDetails": [
       {
         "form": "antwortet",
-        "type": "語形変化（要分類）"
+        "type": "動詞の活用"
       },
       {
         "form": "antwortend",
-        "type": "語形変化（要分類）"
+        "type": "現在分詞"
       },
       {
         "form": "Antwort",
-        "type": "名詞の格・数"
+        "type": "関連名詞"
       }
     ]
   },
@@ -594,8 +589,8 @@
     "id": "term-aufstellen",
     "exampleVariants": [
       "aufgestellt",
-      "aufgestellen",
-      "Aufstellung"
+      "Aufstellung",
+      "aufgestellten"
     ],
     "exampleVariantDetails": [
       {
@@ -603,12 +598,12 @@
         "type": "過去分詞"
       },
       {
-        "form": "aufgestellen",
-        "type": "分詞"
+        "form": "Aufstellung",
+        "type": "関連名詞"
       },
       {
-        "form": "Aufstellung",
-        "type": "名詞の格・数"
+        "form": "aufgestellten",
+        "type": "過去分詞の語尾変化"
       }
     ]
   },
@@ -623,28 +618,28 @@
     "exampleVariantDetails": [
       {
         "form": "Aufzugs",
-        "type": "語形変化（要分類）"
+        "type": "名詞の格・数"
       },
       {
         "form": "Aufzuges",
-        "type": "語形変化（要分類）"
+        "type": "名詞の格・数"
       }
     ]
   },
   "aufzustellen": {
     "id": "term-aufzustellen",
     "exampleVariants": [
-      "aufgestellen",
-      "aufstellen"
+      "aufstellen",
+      "aufgestellten"
     ],
     "exampleVariantDetails": [
       {
-        "form": "aufgestellen",
-        "type": "分詞"
-      },
-      {
         "form": "aufstellen",
         "type": "動詞の活用"
+      },
+      {
+        "form": "aufgestellten",
+        "type": "過去分詞の語尾変化"
       }
     ]
   },
@@ -921,11 +916,11 @@
     "exampleVariantDetails": [
       {
         "form": "bedeutet",
-        "type": "語形変化（要分類）"
+        "type": "過去分詞・動詞の活用"
       },
       {
         "form": "Bedeutung",
-        "type": "該当なし"
+        "type": "関連名詞"
       },
       {
         "form": "bedeutend",
@@ -938,8 +933,7 @@
     "exampleVariants": [
       "bedeutend",
       "bedeutet",
-      "bedeuten",
-      "bedeuter"
+      "bedeuten"
     ],
     "exampleVariantDetails": [
       {
@@ -948,15 +942,11 @@
       },
       {
         "form": "bedeutet",
-        "type": "該当なし"
+        "type": "過去分詞・動詞の活用"
       },
       {
         "form": "bedeuten",
         "type": "動詞の活用"
-      },
-      {
-        "form": "bedeuter",
-        "type": "該当なし"
       }
     ]
   },
@@ -983,7 +973,7 @@
       },
       {
         "form": "bedeutungsv",
-        "type": "該当なし"
+        "type": "省略形"
       }
     ]
   },
@@ -1005,7 +995,7 @@
       },
       {
         "form": "Bedienter",
-        "type": "該当なし"
+        "type": "名詞の格・数"
       }
     ]
   },
@@ -1023,7 +1013,7 @@
       },
       {
         "form": "Befehle",
-        "type": "該当なし"
+        "type": "関連名詞の複数形"
       },
       {
         "form": "befehlen",
@@ -1044,7 +1034,7 @@
       },
       {
         "form": "Befremden",
-        "type": "名詞の格・数"
+        "type": "関連名詞"
       }
     ]
   },
@@ -1056,7 +1046,7 @@
     "exampleVariantDetails": [
       {
         "form": "Befremden",
-        "type": "該当なし"
+        "type": "関連名詞"
       }
     ]
   },
@@ -1072,23 +1062,23 @@
     "exampleVariantDetails": [
       {
         "form": "begeisterter",
-        "type": "該当なし"
+        "type": "関連形容詞の変化"
       },
       {
         "form": "begeistertem",
-        "type": "形容詞・副詞の変化"
+        "type": "関連形容詞の変化"
       },
       {
         "form": "begeistert",
-        "type": "形容詞・副詞の変化"
+        "type": "関連形容詞・過去分詞"
       },
       {
         "form": "begeisterte",
-        "type": "該当なし"
+        "type": "関連形容詞の変化"
       },
       {
         "form": "begeisterten",
-        "type": "形容詞・副詞の変化"
+        "type": "関連形容詞の変化"
       }
     ]
   },
@@ -1112,7 +1102,7 @@
       },
       {
         "form": "begleitet",
-        "type": "形容詞・副詞の変化"
+        "type": "過去分詞・動詞の活用"
       },
       {
         "form": "begleiten",
@@ -1120,7 +1110,7 @@
       },
       {
         "form": "Begleitung",
-        "type": "名詞の格・数"
+        "type": "関連名詞"
       }
     ]
   },
@@ -1133,7 +1123,7 @@
     "exampleVariantDetails": [
       {
         "form": "begriffen",
-        "type": "分詞"
+        "type": "関連表現"
       },
       {
         "form": "Begriffe",
@@ -1274,7 +1264,7 @@
       },
       {
         "form": "Beschleunigung",
-        "type": "該当なし"
+        "type": "関連名詞"
       }
     ]
   },
@@ -1294,8 +1284,7 @@
     "id": "term-besetzen",
     "exampleVariants": [
       "besetzten",
-      "besetzt",
-      "besetzst"
+      "besetzt"
     ],
     "exampleVariantDetails": [
       {
@@ -1305,10 +1294,6 @@
       {
         "form": "besetzt",
         "type": "分詞"
-      },
-      {
-        "form": "besetzst",
-        "type": "動詞の活用"
       }
     ]
   },
@@ -1317,8 +1302,7 @@
     "exampleVariants": [
       "besetzt",
       "besetzen",
-      "besetzten",
-      "besetzst"
+      "besetzten"
     ],
     "exampleVariantDetails": [
       {
@@ -1332,10 +1316,6 @@
       {
         "form": "besetzten",
         "type": "形容詞・副詞の変化"
-      },
-      {
-        "form": "besetzst",
-        "type": "動詞の活用"
       }
     ]
   },
@@ -1370,17 +1350,12 @@
   "betonung": {
     "id": "term-betonung",
     "exampleVariants": [
-      "Betonungen",
-      "Betonumg"
+      "Betonungen"
     ],
     "exampleVariantDetails": [
       {
         "form": "Betonungen",
         "type": "名詞の格・数"
-      },
-      {
-        "form": "Betonumg",
-        "type": "該当なし"
       }
     ]
   },
@@ -1425,7 +1400,7 @@
       },
       {
         "form": "betreff",
-        "type": "該当なし"
+        "type": "関連名詞を含む表現"
       },
       {
         "form": "betroffen",
@@ -1469,7 +1444,7 @@
       },
       {
         "form": "bewegte",
-        "type": "動詞の活用"
+        "type": "形容詞・副詞の変化"
       },
       {
         "form": "bewegter",
@@ -1481,17 +1456,12 @@
   "bewegung": {
     "id": "term-bewegung",
     "exampleVariants": [
-      "Bewegungen",
-      "Bewegenug"
+      "Bewegungen"
     ],
     "exampleVariantDetails": [
       {
         "form": "Bewegungen",
         "type": "名詞の格・数"
-      },
-      {
-        "form": "Bewegenug",
-        "type": "該当なし"
       }
     ]
   },
@@ -1515,11 +1485,11 @@
       },
       {
         "form": "Bezeichnung",
-        "type": "該当なし"
+        "type": "関連名詞"
       },
       {
         "form": "Bezeichnungen",
-        "type": "名詞の格・数"
+        "type": "関連名詞の複数形"
       }
     ]
   },
@@ -1533,7 +1503,7 @@
     "exampleVariantDetails": [
       {
         "form": "bisbigliando",
-        "type": "現在分詞"
+        "type": "ジェルンディオ"
       },
       {
         "form": "bispigliando",
@@ -1644,7 +1614,7 @@
       },
       {
         "form": "bloss",
-        "type": "該当なし"
+        "type": "別綴り"
       }
     ]
   },
@@ -1780,7 +1750,7 @@
       },
       {
         "form": "Dämpf",
-        "type": "該当なし"
+        "type": "省略形"
       }
     ]
   },
@@ -1830,11 +1800,11 @@
     "exampleVariantDetails": [
       {
         "form": "darstellen",
-        "type": "動詞の活用"
+        "type": "関連動詞"
       },
       {
         "form": "darstellende",
-        "type": "形容詞・副詞の変化"
+        "type": "関連動詞の現在分詞変化形"
       }
     ]
   },
@@ -1852,7 +1822,7 @@
     "exampleVariantDetails": [
       {
         "form": "derselbe",
-        "type": "該当なし"
+        "type": "代名詞の性・数・格変化"
       },
       {
         "form": "dieselbe",
@@ -1898,7 +1868,7 @@
       },
       {
         "form": "demüthig",
-        "type": "形容詞・副詞の変化"
+        "type": "旧綴り"
       }
     ]
   },
@@ -2020,7 +1990,7 @@
       },
       {
         "form": "Dienerin",
-        "type": "該当なし"
+        "type": "女性形"
       }
     ]
   },
@@ -2052,7 +2022,7 @@
       },
       {
         "form": "dasselbe",
-        "type": "該当なし"
+        "type": "代名詞の性・数・格変化"
       }
     ]
   },
@@ -2108,7 +2078,7 @@
     "exampleVariantDetails": [
       {
         "form": "Dpf",
-        "type": "該当なし"
+        "type": "省略形"
       }
     ]
   },
@@ -2223,11 +2193,11 @@
       },
       {
         "form": "dunkelt",
-        "type": "動詞の活用"
+        "type": "関連動詞の活用"
       },
       {
         "form": "dunkeln",
-        "type": "動詞の活用"
+        "type": "形容詞・関連動詞"
       }
     ]
   },
@@ -2328,7 +2298,7 @@
     "exampleVariantDetails": [
       {
         "form": "Eifersucht",
-        "type": "該当なし"
+        "type": "関連名詞"
       }
     ]
   },
@@ -2430,7 +2400,7 @@
       },
       {
         "form": "Einhalt",
-        "type": "名詞の格・数"
+        "type": "関連名詞"
       }
     ]
   },
@@ -2469,7 +2439,7 @@
     "exampleVariantDetails": [
       {
         "form": "Einleitung",
-        "type": "名詞の格・数"
+        "type": "関連名詞"
       }
     ]
   },
@@ -2636,11 +2606,11 @@
     "exampleVariantDetails": [
       {
         "form": "entfernen",
-        "type": "該当なし"
+        "type": "関連動詞"
       },
       {
         "form": "entfernend",
-        "type": "該当なし"
+        "type": "関連動詞の現在分詞"
       }
     ]
   },
@@ -2679,7 +2649,7 @@
       },
       {
         "form": "Entschluss",
-        "type": "該当なし"
+        "type": "関連名詞"
       }
     ]
   },
@@ -2776,7 +2746,7 @@
       },
       {
         "form": "Entzücken",
-        "type": "名詞の格・数"
+        "type": "関連名詞"
       }
     ]
   },
@@ -3184,7 +3154,18 @@
       }
     ]
   },
-  "fenster": "term-fenster",
+  "fenster": {
+    "id": "term-fenster",
+    "exampleVariants": [
+      "Fenstern"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "Fenstern",
+        "type": "名詞の格・数"
+      }
+    ]
+  },
   "ferne": {
     "id": "term-ferne",
     "exampleVariants": [
@@ -3648,11 +3629,21 @@
   "fuss": {
     "id": "term-fuss",
     "exampleVariants": [
-      "Füsse"
+      "Fusse",
+      "Füsse",
+      "Füssen"
     ],
     "exampleVariantDetails": [
       {
+        "form": "Fusse",
+        "type": "名詞の格・数"
+      },
+      {
         "form": "Füsse",
+        "type": "名詞の格・数"
+      },
+      {
+        "form": "Füssen",
         "type": "名詞の格・数"
       }
     ]
@@ -3843,12 +3834,17 @@
   "gegen": {
     "id": "term-gegen",
     "exampleVariants": [
-      "gegens"
+      "gegens",
+      "gegen’s"
     ],
     "exampleVariantDetails": [
       {
         "form": "gegens",
-        "type": "該当なし"
+        "type": "縮約形"
+      },
+      {
+        "form": "gegen’s",
+        "type": "縮約形"
       }
     ]
   },
@@ -3898,7 +3894,7 @@
       },
       {
         "form": "geheimnißvoll",
-        "type": "該当なし"
+        "type": "旧綴り"
       },
       {
         "form": "geheimnißvoller",
@@ -4006,7 +4002,6 @@
     "id": "term-gemaessigt",
     "exampleVariants": [
       "gemässigt",
-      "gemäßigster",
       "gemässigter",
       "gemässigtes",
       "gemässigte",
@@ -4015,11 +4010,7 @@
     "exampleVariantDetails": [
       {
         "form": "gemässigt",
-        "type": "過去分詞・旧綴り"
-      },
-      {
-        "form": "gemäßigster",
-        "type": "形容詞・副詞の変化"
+        "type": "過去分詞・別綴り"
       },
       {
         "form": "gemässigter",
@@ -4097,7 +4088,7 @@
       },
       {
         "form": "gemüthlich",
-        "type": "該当なし"
+        "type": "旧綴り"
       },
       {
         "form": "gemüthliches",
@@ -4321,7 +4312,7 @@
       },
       {
         "form": "gestoss",
-        "type": "分詞"
+        "type": "省略形"
       }
     ]
   },
@@ -4361,11 +4352,11 @@
       },
       {
         "form": "getheilt",
-        "type": "該当なし"
+        "type": "旧綴り"
       },
       {
         "form": "geteilte",
-        "type": "該当なし"
+        "type": "形容詞・副詞の変化"
       }
     ]
   },
@@ -4381,7 +4372,7 @@
     "exampleVariantDetails": [
       {
         "form": "geteilt",
-        "type": "該当なし"
+        "type": "現代綴り"
       }
     ]
   },
@@ -4637,7 +4628,7 @@
     "exampleVariantDetails": [
       {
         "form": "gleichmäßig",
-        "type": "現代綴り"
+        "type": "別綴り"
       },
       {
         "form": "gleichmässigem",
@@ -4715,7 +4706,7 @@
       },
       {
         "form": "gross",
-        "type": "該当なし"
+        "type": "別綴り"
       }
     ]
   },
@@ -4777,7 +4768,7 @@
       },
       {
         "form": "hallender",
-        "type": "該当なし"
+        "type": "形容詞・副詞の変化"
       }
     ]
   },
@@ -4890,11 +4881,16 @@
   "haus": {
     "id": "term-haus",
     "exampleVariants": [
+      "Hause",
       "Hauses",
       "Häuser",
       "Häusern"
     ],
     "exampleVariantDetails": [
+      {
+        "form": "Hause",
+        "type": "名詞の格・数"
+      },
       {
         "form": "Hauses",
         "type": "名詞の格・数"
@@ -5032,6 +5028,7 @@
     "exampleVariants": [
       "Hellstes",
       "hellem",
+      "hellen",
       "helleren",
       "hellerer",
       "helles",
@@ -5044,6 +5041,10 @@
       },
       {
         "form": "hellem",
+        "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "hellen",
         "type": "形容詞・副詞の変化"
       },
       {
@@ -5088,7 +5089,7 @@
     "exampleVariantDetails": [
       {
         "form": "herausgestossen",
-        "type": "過去分詞・旧綴り"
+        "type": "過去分詞・別綴り"
       }
     ]
   },
@@ -5113,7 +5114,6 @@
     "exampleVariants": [
       "hervortretend",
       "hervortreten",
-      "hervotretend",
       "hervortret",
       "hervorgetreten"
     ],
@@ -5127,12 +5127,8 @@
         "type": "動詞の活用"
       },
       {
-        "form": "hervotretend",
-        "type": "動詞の活用"
-      },
-      {
         "form": "hervortret",
-        "type": "動詞の活用"
+        "type": "省略形"
       },
       {
         "form": "hervorgetreten",
@@ -5372,7 +5368,7 @@
     "exampleVariantDetails": [
       {
         "form": "in's",
-        "type": "該当なし"
+        "type": "別綴り"
       }
     ]
   },
@@ -5499,7 +5495,7 @@
     "exampleVariantDetails": [
       {
         "form": "Kellnern",
-        "type": "動詞の活用"
+        "type": "名詞の格・数"
       }
     ]
   },
@@ -5676,7 +5672,8 @@
     "id": "term-knix",
     "exampleVariants": [
       "Knix",
-      "knixt"
+      "knixt",
+      "Knicks"
     ],
     "exampleVariantDetails": [
       {
@@ -5686,6 +5683,10 @@
       {
         "form": "knixt",
         "type": "動詞の活用"
+      },
+      {
+        "form": "Knicks",
+        "type": "別綴り"
       }
     ]
   },
@@ -5714,11 +5715,21 @@
   "kopf": {
     "id": "term-kopf",
     "exampleVariants": [
-      "Kopfes"
+      "Kopfe",
+      "Kopfes",
+      "Köpfe"
     ],
     "exampleVariantDetails": [
       {
+        "form": "Kopfe",
+        "type": "名詞の格・数"
+      },
+      {
         "form": "Kopfes",
+        "type": "名詞の格・数"
+      },
+      {
+        "form": "Köpfe",
         "type": "名詞の格・数"
       }
     ]
@@ -6226,7 +6237,8 @@
     "exampleVariants": [
       "Mannes",
       "Männer",
-      "Männern"
+      "Männern",
+      "Manne"
     ],
     "exampleVariantDetails": [
       {
@@ -6239,6 +6251,10 @@
       },
       {
         "form": "Männern",
+        "type": "名詞の格・数"
+      },
+      {
+        "form": "Manne",
         "type": "名詞の格・数"
       }
     ]
@@ -6521,7 +6537,7 @@
       },
       {
         "form": "Nachschl",
-        "type": "該当なし"
+        "type": "省略形"
       }
     ]
   },
@@ -6656,7 +6672,7 @@
       },
       {
         "form": "nöthig",
-        "type": "形容詞・副詞の変化"
+        "type": "旧綴り"
       }
     ]
   },
@@ -6719,7 +6735,6 @@
       "plötzlichen",
       "plötzlichem",
       "plötzlicher",
-      "Plöztlich",
       "Plötzliches"
     ],
     "exampleVariantDetails": [
@@ -6734,10 +6749,6 @@
       {
         "form": "plötzlicher",
         "type": "形容詞・副詞の変化"
-      },
-      {
-        "form": "Plöztlich",
-        "type": "該当なし"
       },
       {
         "form": "Plötzliches",
@@ -7033,11 +7044,11 @@
     "exampleVariantDetails": [
       {
         "form": "sämtlich",
-        "type": "該当なし"
+        "type": "現代綴り"
       },
       {
         "form": "sämtliche",
-        "type": "該当なし"
+        "type": "形容詞・副詞の変化"
       }
     ]
   },
@@ -7112,7 +7123,7 @@
     "exampleVariantDetails": [
       {
         "form": "Schalltricht",
-        "type": "名詞の格・数"
+        "type": "省略形"
       },
       {
         "form": "Schalltr.",
@@ -7517,7 +7528,7 @@
       },
       {
         "form": "schnellen",
-        "type": "動詞の活用"
+        "type": "形容詞・副詞の変化"
       }
     ]
   },
@@ -7570,7 +7581,7 @@
     "exampleVariantDetails": [
       {
         "form": "Schritte",
-        "type": "語形変化（要分類）"
+        "type": "名詞の格・数"
       },
       {
         "form": "Schritten",
@@ -7780,7 +7791,7 @@
     "exampleVariantDetails": [
       {
         "form": "seiten",
-        "type": "語形変化（要分類）"
+        "type": "名詞の格・数"
       }
     ]
   },
@@ -7986,7 +7997,7 @@
     "exampleVariantDetails": [
       {
         "form": "Sprunge",
-        "type": "該当なし"
+        "type": "名詞の格・数"
       }
     ]
   },
@@ -8027,7 +8038,7 @@
       },
       {
         "form": "staerker",
-        "type": "語形変化（要分類）"
+        "type": "比較級"
       }
     ]
   },
@@ -8208,7 +8219,7 @@
     "exampleVariantDetails": [
       {
         "form": "Streiche",
-        "type": "複数形"
+        "type": "名詞の格・数"
       }
     ]
   },
@@ -8409,7 +8420,7 @@
     "exampleVariantDetails": [
       {
         "form": "taktig",
-        "type": "該当なし"
+        "type": "現代綴り"
       }
     ]
   },
@@ -8426,7 +8437,7 @@
       },
       {
         "form": "Tact",
-        "type": "該当なし"
+        "type": "旧綴り"
       }
     ]
   },
@@ -8439,7 +8450,7 @@
     "exampleVariantDetails": [
       {
         "form": "Thal",
-        "type": "該当なし"
+        "type": "旧綴り"
       }
     ]
   },
@@ -8651,7 +8662,7 @@
     "exampleVariantDetails": [
       {
         "form": "auftreten",
-        "type": "名詞の格・数"
+        "type": "不定詞"
       }
     ]
   },
@@ -8721,7 +8732,7 @@
       },
       {
         "form": "Thür",
-        "type": "名詞の格・数"
+        "type": "旧綴り"
       }
     ]
   },
@@ -8783,7 +8794,7 @@
       },
       {
         "form": "übermütig",
-        "type": "該当なし"
+        "type": "現代綴り"
       }
     ]
   },
@@ -8810,7 +8821,7 @@
       },
       {
         "form": "übermüthig",
-        "type": "該当なし"
+        "type": "旧綴り"
       }
     ]
   },
@@ -8947,7 +8958,7 @@
     "exampleVariantDetails": [
       {
         "form": "Umständen",
-        "type": "該当なし"
+        "type": "名詞の格・数"
       }
     ]
   },
@@ -9010,7 +9021,7 @@
       },
       {
         "form": "ungeheurer",
-        "type": "該当なし"
+        "type": "形容詞・副詞の変化"
       },
       {
         "form": "ungeheure",
@@ -9120,7 +9131,7 @@
       },
       {
         "form": "Unsichtbarer",
-        "type": "名詞の格・数"
+        "type": "形容詞・副詞の変化"
       }
     ]
   },
@@ -9154,14 +9165,9 @@
   "unterbrechung": {
     "id": "term-unterbrechung",
     "exampleVariants": [
-      "Unterbrechnung",
       "unterbrechen"
     ],
     "exampleVariantDetails": [
-      {
-        "form": "Unterbrechnung",
-        "type": "該当なし"
-      },
       {
         "form": "unterbrechen",
         "type": "動詞の活用"
@@ -9831,7 +9837,7 @@
     "exampleVariantDetails": [
       {
         "form": "Visionärer",
-        "type": "名詞の格・数"
+        "type": "形容詞・副詞の変化"
       }
     ]
   },
@@ -9990,8 +9996,7 @@
     "id": "term-vorschlag",
     "exampleVariants": [
       "Vorschläge",
-      "Vorschlägen",
-      "Vorschlage"
+      "Vorschlägen"
     ],
     "exampleVariantDetails": [
       {
@@ -10000,10 +10005,6 @@
       },
       {
         "form": "Vorschlägen",
-        "type": "名詞の格・数"
-      },
-      {
-        "form": "Vorschlage",
         "type": "名詞の格・数"
       }
     ]
@@ -10078,9 +10079,8 @@
   "wand": "term-wand",
   "wanderung": "term-wanderung",
   "wanderung-neben-dem-bache": "term-wanderung-neben-dem-bache",
-  "warm": "term-warm",
-  "waerme": {
-    "id": "term-waerme",
+  "warm": {
+    "id": "term-warm",
     "exampleVariants": [
       "wärmer"
     ],
@@ -10091,6 +10091,7 @@
       }
     ]
   },
+  "waerme": "term-waerme",
   "wasser": {
     "id": "term-wasser",
     "exampleVariants": [
@@ -10141,7 +10142,7 @@
       },
       {
         "form": "wegzulassen",
-        "type": "該当なし"
+        "type": "zu不定詞"
       }
     ]
   },
@@ -10158,7 +10159,7 @@
       },
       {
         "form": "wehmüthig",
-        "type": "該当なし"
+        "type": "旧綴り"
       }
     ]
   },
@@ -10416,7 +10417,7 @@
       },
       {
         "form": "wüthend",
-        "type": "該当なし"
+        "type": "旧綴り"
       }
     ]
   },
@@ -10735,6 +10736,12 @@
     "canonical": "abreißen",
     "type": "分詞"
   },
+  "abwechselndem": {
+    "id": "term-abwechselnd",
+    "original": "abwechselndem",
+    "canonical": "abwechselnd",
+    "type": "分詞"
+  },
   "abweichende": {
     "id": "term-abweichen",
     "original": "Abweichende",
@@ -10769,7 +10776,7 @@
     "id": "term-akzente",
     "original": "Akzents",
     "canonical": "Akzente",
-    "type": "該当なし"
+    "type": "名詞の格・数"
   },
   "allgemeiner": {
     "id": "term-allgemein",
@@ -10793,7 +10800,7 @@
     "id": "term-allgemein",
     "original": "Allgemeines",
     "canonical": "allgemein",
-    "type": "名詞の格・数"
+    "type": "形容詞・副詞の変化"
   },
   "allmaehlicher": {
     "id": "term-allmaehlich",
@@ -10823,13 +10830,13 @@
     "id": "term-allmaehlich",
     "original": "allmählig",
     "canonical": "allmählich",
-    "type": "形容詞・副詞の変化"
+    "type": "別綴り"
   },
   "anfangs": {
     "id": "term-anfang",
     "original": "Anfangs",
     "canonical": "Anfang",
-    "type": "該当なし"
+    "type": "名詞の格変化・関連副詞"
   },
   "anfange": {
     "id": "term-anfang",
@@ -10883,7 +10890,13 @@
     "id": "term-anhang",
     "original": "Anhange",
     "canonical": "Anhang",
-    "type": "該当なし"
+    "type": "名詞の格・数"
+  },
+  "anhoehen": {
+    "id": "term-anhoehe",
+    "original": "Anhöhen",
+    "canonical": "Anhöhe",
+    "type": "名詞の格・数"
   },
   "anmutigen": {
     "id": "term-anmutig",
@@ -10913,13 +10926,7 @@
     "id": "term-anmutig",
     "original": "anmuthig",
     "canonical": "anmutig",
-    "type": "形容詞・副詞の変化"
-  },
-  "angeschlagen": {
-    "id": "term-anschlagen",
-    "original": "angeschlagen",
-    "canonical": "anschlagen",
-    "type": "分詞"
+    "type": "旧綴り"
   },
   "anzuschlagen": {
     "id": "term-anschlagen",
@@ -10955,19 +10962,19 @@
     "id": "term-antworten",
     "original": "antwortet",
     "canonical": "antworten",
-    "type": "語形変化（要分類）"
+    "type": "動詞の活用"
   },
   "antwortend": {
     "id": "term-antworten",
     "original": "antwortend",
     "canonical": "antworten",
-    "type": "語形変化（要分類）"
+    "type": "現在分詞"
   },
   "antwort": {
     "id": "term-antworten",
     "original": "Antwort",
     "canonical": "antworten",
-    "type": "名詞の格・数"
+    "type": "関連名詞"
   },
   "anwachsendes": {
     "id": "term-anwachsen",
@@ -10980,6 +10987,30 @@
     "original": "anwachsend",
     "canonical": "anwachsen",
     "type": "分詞"
+  },
+  "aergerliche": {
+    "id": "term-aergerlich",
+    "original": "Ärgerliche",
+    "canonical": "ärgerlich",
+    "type": "形容詞・副詞の変化"
+  },
+  "aergerlicher": {
+    "id": "term-aergerlich",
+    "original": "ärgerlicher",
+    "canonical": "ärgerlich",
+    "type": "形容詞・副詞の変化"
+  },
+  "arme": {
+    "id": "term-arm",
+    "original": "Arme",
+    "canonical": "Arm",
+    "type": "名詞の格・数"
+  },
+  "atemloser": {
+    "id": "term-atemlos",
+    "original": "atemloser",
+    "canonical": "atemlos",
+    "type": "形容詞・副詞の変化"
   },
   "atmet": {
     "id": "term-atmen",
@@ -11035,22 +11066,46 @@
     "canonical": "aufgeregt",
     "type": "形容詞・副詞の変化"
   },
+  "aufmerksamer": {
+    "id": "term-aufmerksam",
+    "original": "aufmerksamer",
+    "canonical": "aufmerksam",
+    "type": "形容詞・副詞の変化"
+  },
   "aufgestellt": {
     "id": "term-aufstellen",
     "original": "aufgestellt",
     "canonical": "aufstellen",
     "type": "過去分詞"
   },
-  "aufgestellen": {
-    "id": "term-aufstellen",
-    "original": "aufgestellen",
-    "canonical": "aufstellen",
-    "type": "分詞"
-  },
   "aufstellung": {
     "id": "term-aufstellen",
     "original": "Aufstellung",
     "canonical": "aufstellen",
+    "type": "関連名詞"
+  },
+  "aufzugs": {
+    "id": "term-aufzug",
+    "original": "Aufzugs",
+    "canonical": "Aufzug",
+    "type": "名詞の格・数"
+  },
+  "aufzuges": {
+    "id": "term-aufzug",
+    "original": "Aufzuges",
+    "canonical": "Aufzug",
+    "type": "名詞の格・数"
+  },
+  "augen": {
+    "id": "term-auge",
+    "original": "Augen",
+    "canonical": "Auge",
+    "type": "名詞の格・数"
+  },
+  "auges": {
+    "id": "term-auge",
+    "original": "Auges",
+    "canonical": "Auge",
     "type": "名詞の格・数"
   },
   "augenblicke": {
@@ -11179,23 +11234,29 @@
     "canonical": "Bandes",
     "type": "名詞の格・数"
   },
+  "bedeckt": {
+    "id": "term-bedecken",
+    "original": "bedeckt",
+    "canonical": "bedecken",
+    "type": "動詞の活用"
+  },
+  "bedeckte": {
+    "id": "term-bedecken",
+    "original": "bedeckte",
+    "canonical": "bedecken",
+    "type": "分詞"
+  },
   "bedeutet": {
     "id": "term-bedeuten",
     "original": "bedeutet",
     "canonical": "bedeuten",
-    "type": "語形変化（要分類）"
+    "type": "過去分詞・動詞の活用"
   },
   "bedeutung": {
     "id": "term-bedeuten",
     "original": "Bedeutung",
     "canonical": "bedeuten",
-    "type": "該当なし"
-  },
-  "bedeuter": {
-    "id": "term-bedeutend",
-    "original": "bedeuter",
-    "canonical": "bedeutend",
-    "type": "該当なし"
+    "type": "関連名詞"
   },
   "bedeutungsvollem": {
     "id": "term-bedeutungsvoll",
@@ -11219,7 +11280,7 @@
     "id": "term-bedeutungsvoll",
     "original": "bedeutungsv",
     "canonical": "bedeutungsvoll",
-    "type": "該当なし"
+    "type": "省略形"
   },
   "bedienten": {
     "id": "term-bediente",
@@ -11231,13 +11292,13 @@
     "id": "term-bediente",
     "original": "Bedienter",
     "canonical": "Bediente",
-    "type": "該当なし"
+    "type": "名詞の格・数"
   },
   "befehle": {
     "id": "term-befehlend",
     "original": "Befehle",
     "canonical": "befehlend",
-    "type": "該当なし"
+    "type": "関連名詞の複数形"
   },
   "befehlen": {
     "id": "term-befehlend",
@@ -11249,37 +11310,37 @@
     "id": "term-befremdet",
     "original": "Befremden",
     "canonical": "befremdet",
-    "type": "名詞の格・数"
+    "type": "関連名詞"
   },
   "begeisterter": {
     "id": "term-begeisterung",
     "original": "begeisterter",
     "canonical": "Begeisterung",
-    "type": "該当なし"
+    "type": "関連形容詞の変化"
   },
   "begeistertem": {
     "id": "term-begeisterung",
     "original": "begeistertem",
     "canonical": "Begeisterung",
-    "type": "形容詞・副詞の変化"
+    "type": "関連形容詞の変化"
   },
   "begeistert": {
     "id": "term-begeisterung",
     "original": "begeistert",
     "canonical": "Begeisterung",
-    "type": "形容詞・副詞の変化"
+    "type": "関連形容詞・過去分詞"
   },
   "begeisterte": {
     "id": "term-begeisterung",
     "original": "begeisterte",
     "canonical": "Begeisterung",
-    "type": "該当なし"
+    "type": "関連形容詞の変化"
   },
   "begeisterten": {
     "id": "term-begeisterung",
     "original": "begeisterten",
     "canonical": "Begeisterung",
-    "type": "形容詞・副詞の変化"
+    "type": "関連形容詞の変化"
   },
   "begleitenden": {
     "id": "term-begleitend",
@@ -11291,7 +11352,7 @@
     "id": "term-begleitend",
     "original": "begleitet",
     "canonical": "begleitend",
-    "type": "形容詞・副詞の変化"
+    "type": "過去分詞・動詞の活用"
   },
   "begleiten": {
     "id": "term-begleitend",
@@ -11303,19 +11364,61 @@
     "id": "term-begleitend",
     "original": "Begleitung",
     "canonical": "begleitend",
-    "type": "名詞の格・数"
+    "type": "関連名詞"
   },
   "begriffen": {
     "id": "term-begriff",
     "original": "begriffen",
     "canonical": "Begriff",
-    "type": "分詞"
+    "type": "関連表現"
   },
   "begriffe": {
     "id": "term-begriff",
     "original": "Begriffe",
     "canonical": "Begriff",
     "type": "名詞の格・数"
+  },
+  "belebend": {
+    "id": "term-beleben",
+    "original": "belebend",
+    "canonical": "beleben",
+    "type": "分詞"
+  },
+  "belebt": {
+    "id": "term-beleben",
+    "original": "belebt",
+    "canonical": "beleben",
+    "type": "分詞"
+  },
+  "belebter": {
+    "id": "term-beleben",
+    "original": "belebter",
+    "canonical": "beleben",
+    "type": "形容詞・副詞の変化"
+  },
+  "belebterem": {
+    "id": "term-beleben",
+    "original": "belebterem",
+    "canonical": "beleben",
+    "type": "形容詞・副詞の変化"
+  },
+  "belebtes": {
+    "id": "term-beleben",
+    "original": "belebtes",
+    "canonical": "beleben",
+    "type": "形容詞・副詞の変化"
+  },
+  "beobachtend": {
+    "id": "term-beobachten",
+    "original": "beobachtend",
+    "canonical": "beobachten",
+    "type": "分詞"
+  },
+  "beobachtet": {
+    "id": "term-beobachten",
+    "original": "beobachtet",
+    "canonical": "beobachten",
+    "type": "動詞の活用"
   },
   "berge": {
     "id": "term-berg",
@@ -11351,19 +11454,13 @@
     "id": "term-beschleunigen",
     "original": "Beschleunigung",
     "canonical": "beschleunigen",
-    "type": "該当なし"
+    "type": "関連名詞"
   },
   "besetzten": {
     "id": "term-besetzen",
     "original": "besetzten",
     "canonical": "besetzen",
     "type": "分詞"
-  },
-  "besetzst": {
-    "id": "term-besetzen",
-    "original": "besetzst",
-    "canonical": "besetzen",
-    "type": "動詞の活用"
   },
   "bestimmter": {
     "id": "term-bestimmt",
@@ -11389,11 +11486,17 @@
     "canonical": "Betonung",
     "type": "名詞の格・数"
   },
-  "betonumg": {
-    "id": "term-betonung",
-    "original": "Betonumg",
-    "canonical": "Betonung",
-    "type": "該当なし"
+  "betrachtend": {
+    "id": "term-betrachten",
+    "original": "betrachtend",
+    "canonical": "betrachten",
+    "type": "分詞"
+  },
+  "betrachtet": {
+    "id": "term-betrachten",
+    "original": "betrachtet",
+    "canonical": "betrachten",
+    "type": "動詞の活用"
   },
   "betreffenden": {
     "id": "term-betreffen",
@@ -11417,13 +11520,19 @@
     "id": "term-betreffen",
     "original": "betreff",
     "canonical": "betreffen",
-    "type": "該当なし"
+    "type": "関連名詞を含む表現"
   },
   "betroffen": {
     "id": "term-betreffen",
     "original": "betroffen",
     "canonical": "betreffen",
     "type": "分詞"
+  },
+  "bettes": {
+    "id": "term-bett",
+    "original": "Bettes",
+    "canonical": "Bett",
+    "type": "名詞の格・数"
   },
   "bewegten": {
     "id": "term-bewegt",
@@ -11441,7 +11550,7 @@
     "id": "term-bewegt",
     "original": "bewegte",
     "canonical": "bewegt",
-    "type": "動詞の活用"
+    "type": "形容詞・副詞の変化"
   },
   "bewegter": {
     "id": "term-bewegt",
@@ -11454,12 +11563,6 @@
     "original": "Bewegungen",
     "canonical": "Bewegung",
     "type": "名詞の格・数"
-  },
-  "bewegenug": {
-    "id": "term-bewegung",
-    "original": "Bewegenug",
-    "canonical": "Bewegung",
-    "type": "該当なし"
   },
   "bezeichneten": {
     "id": "term-bezeichnen",
@@ -11477,13 +11580,13 @@
     "id": "term-bezeichnen",
     "original": "Bezeichnung",
     "canonical": "bezeichnen",
-    "type": "該当なし"
+    "type": "関連名詞"
   },
   "bezeichnungen": {
     "id": "term-bezeichnen",
     "original": "Bezeichnungen",
     "canonical": "bezeichnen",
-    "type": "名詞の格・数"
+    "type": "関連名詞の複数形"
   },
   "bitterer": {
     "id": "term-bitter",
@@ -11497,6 +11600,24 @@
     "canonical": "bleibt",
     "type": "動詞の活用"
   },
+  "bleicher": {
+    "id": "term-bleich",
+    "original": "bleicher",
+    "canonical": "bleich",
+    "type": "形容詞・副詞の変化"
+  },
+  "bleiches": {
+    "id": "term-bleich",
+    "original": "bleiches",
+    "canonical": "bleich",
+    "type": "形容詞・副詞の変化"
+  },
+  "blickes": {
+    "id": "term-blick",
+    "original": "Blickes",
+    "canonical": "Blick",
+    "type": "名詞の格・数"
+  },
   "blosse": {
     "id": "term-bloss",
     "original": "bloße",
@@ -11508,6 +11629,12 @@
     "original": "blos",
     "canonical": "bloß",
     "type": "該当なし"
+  },
+  "blumen": {
+    "id": "term-blume",
+    "original": "Blumen",
+    "canonical": "Blume",
+    "type": "名詞の格・数"
   },
   "blumigem": {
     "id": "term-blumige",
@@ -11527,6 +11654,30 @@
     "canonical": "Charakter",
     "type": "名詞の格・数"
   },
+  "chore": {
+    "id": "term-chor",
+    "original": "Chore",
+    "canonical": "Chor",
+    "type": "名詞の格・数"
+  },
+  "chores": {
+    "id": "term-chor",
+    "original": "Chores",
+    "canonical": "Chor",
+    "type": "名詞の格・数"
+  },
+  "chors": {
+    "id": "term-chor",
+    "original": "Chors",
+    "canonical": "Chor",
+    "type": "名詞の格・数"
+  },
+  "choere": {
+    "id": "term-chor",
+    "original": "Chöre",
+    "canonical": "Chor",
+    "type": "名詞の格・数"
+  },
   "componisten": {
     "id": "term-componist",
     "original": "Componisten",
@@ -11543,7 +11694,7 @@
     "id": "term-daempfer",
     "original": "Dämpf",
     "canonical": "Dämpfer",
-    "type": "該当なし"
+    "type": "省略形"
   },
   "darstellt": {
     "id": "term-darstellen",
@@ -11585,7 +11736,7 @@
     "id": "term-demuetig",
     "original": "demüthig",
     "canonical": "demütig",
-    "type": "形容詞・副詞の変化"
+    "type": "旧綴り"
   },
   "desselben": {
     "id": "term-derselbe",
@@ -11617,6 +11768,12 @@
     "canonical": "deutlich",
     "type": "形容詞・副詞の変化"
   },
+  "dichtem": {
+    "id": "term-dicht",
+    "original": "dichtem",
+    "canonical": "dicht",
+    "type": "形容詞・副詞の変化"
+  },
   "dienern": {
     "id": "term-diener",
     "original": "Dienern",
@@ -11627,7 +11784,7 @@
     "id": "term-diener",
     "original": "Dienerin",
     "canonical": "Diener",
-    "type": "該当なし"
+    "type": "女性形"
   },
   "dieselben": {
     "id": "term-dieselbe",
@@ -11657,7 +11814,7 @@
     "id": "term-dpfr",
     "original": "Dpf",
     "canonical": "Dpfr",
-    "type": "該当なし"
+    "type": "省略形"
   },
   "draengender": {
     "id": "term-draengend",
@@ -11735,13 +11892,13 @@
     "id": "term-dunkel",
     "original": "dunkelt",
     "canonical": "dunkel",
-    "type": "動詞の活用"
+    "type": "関連動詞の活用"
   },
   "dunkeln": {
     "id": "term-dunkel",
     "original": "dunkeln",
     "canonical": "dunkel",
-    "type": "動詞の活用"
+    "type": "形容詞・関連動詞"
   },
   "durchwegs": {
     "id": "term-durchweg",
@@ -11779,6 +11936,18 @@
     "canonical": "düster",
     "type": "形容詞・副詞の変化"
   },
+  "echos": {
+    "id": "term-echo",
+    "original": "Echos",
+    "canonical": "Echo",
+    "type": "名詞の格・数"
+  },
+  "ecken": {
+    "id": "term-ecke",
+    "original": "Ecken",
+    "canonical": "Ecke",
+    "type": "名詞の格・数"
+  },
   "edlen": {
     "id": "term-edel",
     "original": "edlen",
@@ -11789,7 +11958,19 @@
     "id": "term-eifersuechtig",
     "original": "Eifersucht",
     "canonical": "eifersüchtig",
-    "type": "該当なし"
+    "type": "関連名詞"
+  },
+  "eifriger": {
+    "id": "term-eifrig",
+    "original": "eifriger",
+    "canonical": "eifrig",
+    "type": "形容詞・副詞の変化"
+  },
+  "eifrigst": {
+    "id": "term-eifrig",
+    "original": "eifrigst",
+    "canonical": "eifrig",
+    "type": "形容詞・副詞の変化"
   },
   "eigenhaendiger": {
     "id": "term-eigenhaendig",
@@ -11837,7 +12018,7 @@
     "id": "term-einhalten",
     "original": "Einhalt",
     "canonical": "einhalten",
-    "type": "名詞の格・数"
+    "type": "関連名詞"
   },
   "einiger": {
     "id": "term-einige",
@@ -11929,17 +12110,23 @@
     "canonical": "endgültige",
     "type": "旧綴り"
   },
+  "energischer": {
+    "id": "term-energisch",
+    "original": "energischer",
+    "canonical": "energisch",
+    "type": "形容詞・副詞の変化"
+  },
   "entfernen": {
     "id": "term-entfernung",
     "original": "entfernen",
     "canonical": "Entfernung",
-    "type": "該当なし"
+    "type": "関連動詞"
   },
   "entfernend": {
     "id": "term-entfernung",
     "original": "entfernend",
     "canonical": "Entfernung",
-    "type": "該当なし"
+    "type": "関連動詞の現在分詞"
   },
   "entschlossener": {
     "id": "term-entschlossen",
@@ -11957,7 +12144,13 @@
     "id": "term-entschlossen",
     "original": "Entschluss",
     "canonical": "entschlossen",
-    "type": "該当なし"
+    "type": "関連名詞"
+  },
+  "entsetzens": {
+    "id": "term-entsetzen",
+    "original": "Entsetzens",
+    "canonical": "Entsetzen",
+    "type": "名詞の格・数"
   },
   "entsetzten": {
     "id": "term-entsetzt",
@@ -11993,7 +12186,25 @@
     "id": "term-entzueckt",
     "original": "Entzücken",
     "canonical": "entzückt",
-    "type": "名詞の格・数"
+    "type": "関連名詞"
+  },
+  "erblickend": {
+    "id": "term-erblicken",
+    "original": "erblickend",
+    "canonical": "erblicken",
+    "type": "分詞"
+  },
+  "erblickt": {
+    "id": "term-erblicken",
+    "original": "erblickt",
+    "canonical": "erblicken",
+    "type": "動詞の活用"
+  },
+  "erfuellt": {
+    "id": "term-erfuellen",
+    "original": "erfüllt",
+    "canonical": "erfüllen",
+    "type": "動詞の活用"
   },
   "ergriffenem": {
     "id": "term-ergriffen",
@@ -12030,6 +12241,12 @@
     "original": "erhoben",
     "canonical": "erhobener",
     "type": "分詞"
+  },
+  "erinnerungen": {
+    "id": "term-erinnerung",
+    "original": "Erinnerungen",
+    "canonical": "Erinnerung",
+    "type": "名詞の格・数"
   },
   "ermattet": {
     "id": "term-ermattend",
@@ -12175,6 +12392,12 @@
     "canonical": "feierlich",
     "type": "形容詞・副詞の変化"
   },
+  "fenstern": {
+    "id": "term-fenster",
+    "original": "Fenstern",
+    "canonical": "Fenster",
+    "type": "名詞の格・数"
+  },
   "fern": {
     "id": "term-ferne",
     "original": "fern",
@@ -12211,6 +12434,12 @@
     "canonical": "fest",
     "type": "形容詞・副詞の変化"
   },
+  "feuers": {
+    "id": "term-feuer",
+    "original": "Feuers",
+    "canonical": "Feuer",
+    "type": "名詞の格・数"
+  },
   "feurige": {
     "id": "term-feurig",
     "original": "feurige",
@@ -12227,6 +12456,60 @@
     "id": "term-feurig",
     "original": "feuriger",
     "canonical": "feurig",
+    "type": "形容詞・副詞の変化"
+  },
+  "finstere": {
+    "id": "term-finster",
+    "original": "finstere",
+    "canonical": "finster",
+    "type": "形容詞・副詞の変化"
+  },
+  "finsteren": {
+    "id": "term-finster",
+    "original": "finsteren",
+    "canonical": "finster",
+    "type": "形容詞・副詞の変化"
+  },
+  "finsterer": {
+    "id": "term-finster",
+    "original": "finsterer",
+    "canonical": "finster",
+    "type": "形容詞・副詞の変化"
+  },
+  "finsteres": {
+    "id": "term-finster",
+    "original": "finsteres",
+    "canonical": "finster",
+    "type": "形容詞・副詞の変化"
+  },
+  "finstern": {
+    "id": "term-finster",
+    "original": "finstern",
+    "canonical": "finster",
+    "type": "形容詞・副詞の変化"
+  },
+  "finstrem": {
+    "id": "term-finster",
+    "original": "finstrem",
+    "canonical": "finster",
+    "type": "形容詞・副詞の変化"
+  },
+  "finstereres": {
+    "id": "term-finster",
+    "original": "finstereres",
+    "canonical": "finster",
+    "type": "形容詞・副詞の変化"
+  },
+  "finstres": {
+    "id": "term-finster",
+    "original": "finstres",
+    "canonical": "finster",
+    "type": "形容詞・副詞の変化"
+  },
+  "finstre": {
+    "id": "term-finster",
+    "original": "finstre",
+    "canonical": "finster",
     "type": "形容詞・副詞の変化"
   },
   "fliessender": {
@@ -12289,10 +12572,64 @@
     "canonical": "fortlaufend",
     "type": "形容詞・副詞の変化"
   },
+  "frauen": {
+    "id": "term-frau",
+    "original": "Frauen",
+    "canonical": "Frau",
+    "type": "名詞の格・数"
+  },
   "freihaengenden": {
     "id": "term-freihaengend",
     "original": "freihängenden",
     "canonical": "freihängend",
+    "type": "形容詞・副詞の変化"
+  },
+  "freudigem": {
+    "id": "term-freudig",
+    "original": "freudigem",
+    "canonical": "freudig",
+    "type": "形容詞・副詞の変化"
+  },
+  "freudigen": {
+    "id": "term-freudig",
+    "original": "freudigen",
+    "canonical": "freudig",
+    "type": "形容詞・副詞の変化"
+  },
+  "freudiger": {
+    "id": "term-freudig",
+    "original": "freudiger",
+    "canonical": "freudig",
+    "type": "形容詞・副詞の変化"
+  },
+  "freudigsten": {
+    "id": "term-freudig",
+    "original": "freudigsten",
+    "canonical": "freudig",
+    "type": "形容詞・副詞の変化"
+  },
+  "freudigster": {
+    "id": "term-freudig",
+    "original": "freudigster",
+    "canonical": "freudig",
+    "type": "形容詞・副詞の変化"
+  },
+  "freundlicher": {
+    "id": "term-freundlich",
+    "original": "Freundlicher",
+    "canonical": "freundlich",
+    "type": "形容詞・副詞の変化"
+  },
+  "freundlichem": {
+    "id": "term-freundlich",
+    "original": "freundlichem",
+    "canonical": "freundlich",
+    "type": "形容詞・副詞の変化"
+  },
+  "freundlichen": {
+    "id": "term-freundlich",
+    "original": "freundlichen",
+    "canonical": "freundlich",
     "type": "形容詞・副詞の変化"
   },
   "frischer": {
@@ -12373,6 +12710,24 @@
     "canonical": "furchtbar",
     "type": "形容詞・副詞の変化"
   },
+  "fusse": {
+    "id": "term-fuss",
+    "original": "Fusse",
+    "canonical": "Fuß",
+    "type": "名詞の格・数"
+  },
+  "fuesse": {
+    "id": "term-fuss",
+    "original": "Füsse",
+    "canonical": "Fuß",
+    "type": "名詞の格・数"
+  },
+  "fuessen": {
+    "id": "term-fuss",
+    "original": "Füssen",
+    "canonical": "Fuß",
+    "type": "名詞の格・数"
+  },
   "galantem": {
     "id": "term-galant",
     "original": "galantem",
@@ -12390,6 +12745,24 @@
     "original": "ganze",
     "canonical": "ganz",
     "type": "形容詞・副詞の変化"
+  },
+  "gaenzliche": {
+    "id": "term-gaenzlich",
+    "original": "gänzliche",
+    "canonical": "gänzlich",
+    "type": "形容詞・副詞の変化"
+  },
+  "gaenzlichen": {
+    "id": "term-gaenzlich",
+    "original": "gänzlichen",
+    "canonical": "gänzlich",
+    "type": "形容詞・副詞の変化"
+  },
+  "gebete": {
+    "id": "term-gebet",
+    "original": "Gebete",
+    "canonical": "Gebet",
+    "type": "名詞の格・数"
   },
   "gebrochener": {
     "id": "term-gebrochen",
@@ -12461,7 +12834,7 @@
     "id": "term-gegen",
     "original": "gegens",
     "canonical": "gegen",
-    "type": "該当なし"
+    "type": "縮約形"
   },
   "gehaltene": {
     "id": "term-gehalten",
@@ -12497,7 +12870,7 @@
     "id": "term-geheimnisvoll",
     "original": "geheimnißvoll",
     "canonical": "geheimnisvoll",
-    "type": "該当なし"
+    "type": "旧綴り"
   },
   "geheimnissvoller": {
     "id": "term-geheimnisvoll",
@@ -12523,6 +12896,42 @@
     "canonical": "gehend",
     "type": "形容詞・副詞の変化"
   },
+  "geleitend": {
+    "id": "term-geleiten",
+    "original": "geleitend",
+    "canonical": "geleiten",
+    "type": "分詞"
+  },
+  "geleitenden": {
+    "id": "term-geleiten",
+    "original": "geleitenden",
+    "canonical": "geleiten",
+    "type": "分詞"
+  },
+  "gemache": {
+    "id": "term-gemach",
+    "original": "Gemache",
+    "canonical": "Gemach",
+    "type": "名詞の格・数"
+  },
+  "gemaches": {
+    "id": "term-gemach",
+    "original": "Gemaches",
+    "canonical": "Gemach",
+    "type": "名詞の格・数"
+  },
+  "gemachs": {
+    "id": "term-gemach",
+    "original": "Gemachs",
+    "canonical": "Gemach",
+    "type": "名詞の格・数"
+  },
+  "gemaecher": {
+    "id": "term-gemach",
+    "original": "Gemächer",
+    "canonical": "Gemach",
+    "type": "名詞の格・数"
+  },
   "gemaechlicher": {
     "id": "term-gemaechlich",
     "original": "gemächlicher",
@@ -12539,12 +12948,6 @@
     "id": "term-gemaechlich",
     "original": "Gemächliches",
     "canonical": "gemächlich",
-    "type": "形容詞・副詞の変化"
-  },
-  "gemaessigster": {
-    "id": "term-gemaessigt",
-    "original": "gemäßigster",
-    "canonical": "gemässigt",
     "type": "形容詞・副詞の変化"
   },
   "gemaessigter": {
@@ -12611,13 +13014,19 @@
     "id": "term-gemuetlich",
     "original": "gemüthlich",
     "canonical": "gemütlich",
-    "type": "該当なし"
+    "type": "旧綴り"
   },
   "gemuethliches": {
     "id": "term-gemuetlich",
     "original": "gemüthliches",
     "canonical": "gemütlich",
     "type": "形容詞・副詞の変化"
+  },
+  "geraeusche": {
+    "id": "term-geraeusch",
+    "original": "Geräusche",
+    "canonical": "Geräusch",
+    "type": "名詞の格・数"
   },
   "geruehrter": {
     "id": "term-geruehrt",
@@ -12630,6 +13039,48 @@
     "original": "gerührten",
     "canonical": "gerührt",
     "type": "形容詞・副詞の変化"
+  },
+  "gesange": {
+    "id": "term-gesang",
+    "original": "Gesange",
+    "canonical": "Gesang",
+    "type": "名詞の格・数"
+  },
+  "gesanges": {
+    "id": "term-gesang",
+    "original": "Gesanges",
+    "canonical": "Gesang",
+    "type": "名詞の格・数"
+  },
+  "gesichter": {
+    "id": "term-gesicht",
+    "original": "Gesichter",
+    "canonical": "Gesicht",
+    "type": "名詞の格・数"
+  },
+  "gesichtern": {
+    "id": "term-gesicht",
+    "original": "Gesichtern",
+    "canonical": "Gesicht",
+    "type": "名詞の格・数"
+  },
+  "gesichtes": {
+    "id": "term-gesicht",
+    "original": "Gesichtes",
+    "canonical": "Gesicht",
+    "type": "名詞の格・数"
+  },
+  "gesichts": {
+    "id": "term-gesicht",
+    "original": "Gesichts",
+    "canonical": "Gesicht",
+    "type": "名詞の格・数"
+  },
+  "gesichte": {
+    "id": "term-gesicht",
+    "original": "Gesichte",
+    "canonical": "Gesicht",
+    "type": "名詞の格・数"
   },
   "sprechen": {
     "id": "term-gesprochen",
@@ -12647,7 +13098,7 @@
     "id": "term-gestossen",
     "original": "gestoss",
     "canonical": "gestoßen",
-    "type": "分詞"
+    "type": "省略形"
   },
   "teilen": {
     "id": "term-geteilt",
@@ -12659,7 +13110,7 @@
     "id": "term-geteilt",
     "original": "geteilte",
     "canonical": "geteilt",
-    "type": "該当なし"
+    "type": "形容詞・副詞の変化"
   },
   "tragen": {
     "id": "term-getragen",
@@ -12678,6 +13129,24 @@
     "original": "getragener",
     "canonical": "getragen",
     "type": "形容詞・副詞の変化"
+  },
+  "gewandes": {
+    "id": "term-gewand",
+    "original": "Gewandes",
+    "canonical": "Gewand",
+    "type": "名詞の格・数"
+  },
+  "gewaender": {
+    "id": "term-gewand",
+    "original": "Gewänder",
+    "canonical": "Gewand",
+    "type": "名詞の格・数"
+  },
+  "gewaendern": {
+    "id": "term-gewand",
+    "original": "Gewändern",
+    "canonical": "Gewand",
+    "type": "名詞の格・数"
   },
   "gewinnend": {
     "id": "term-gewinnen",
@@ -12732,6 +13201,12 @@
     "original": "glänzender",
     "canonical": "glänzend",
     "type": "形容詞・副詞の変化"
+  },
+  "glaeser": {
+    "id": "term-glas",
+    "original": "Gläser",
+    "canonical": "Glas",
+    "type": "名詞の格・数"
   },
   "gleichem": {
     "id": "term-gleich",
@@ -12833,7 +13308,7 @@
     "id": "term-hallend",
     "original": "hallender",
     "canonical": "hallend",
-    "type": "該当なし"
+    "type": "形容詞・副詞の変化"
   },
   "haemmert": {
     "id": "term-haemmernd",
@@ -12847,10 +13322,82 @@
     "canonical": "hämmernd",
     "type": "動詞の活用"
   },
+  "haende": {
+    "id": "term-hand",
+    "original": "Hände",
+    "canonical": "Hand",
+    "type": "名詞の格・数"
+  },
+  "haenden": {
+    "id": "term-hand",
+    "original": "Händen",
+    "canonical": "Hand",
+    "type": "名詞の格・数"
+  },
+  "hastigen": {
+    "id": "term-hastig",
+    "original": "hastigen",
+    "canonical": "hastig",
+    "type": "形容詞・副詞の変化"
+  },
+  "hastiger": {
+    "id": "term-hastig",
+    "original": "hastiger",
+    "canonical": "hastig",
+    "type": "形容詞・副詞の変化"
+  },
+  "haupte": {
+    "id": "term-haupt",
+    "original": "Haupte",
+    "canonical": "Haupt",
+    "type": "名詞の格・数"
+  },
+  "hauptes": {
+    "id": "term-haupt",
+    "original": "Hauptes",
+    "canonical": "Haupt",
+    "type": "名詞の格・数"
+  },
+  "haeupter": {
+    "id": "term-haupt",
+    "original": "Häupter",
+    "canonical": "Haupt",
+    "type": "名詞の格・数"
+  },
+  "haeuptern": {
+    "id": "term-haupt",
+    "original": "Häuptern",
+    "canonical": "Haupt",
+    "type": "名詞の格・数"
+  },
   "hauptzeitmasses": {
     "id": "term-hauptzeitmass",
     "original": "Hauptzeitmaßes",
     "canonical": "Hauptzeitmaß",
+    "type": "名詞の格・数"
+  },
+  "hause": {
+    "id": "term-haus",
+    "original": "Hause",
+    "canonical": "Haus",
+    "type": "名詞の格・数"
+  },
+  "hauses": {
+    "id": "term-haus",
+    "original": "Hauses",
+    "canonical": "Haus",
+    "type": "名詞の格・数"
+  },
+  "haeuser": {
+    "id": "term-haus",
+    "original": "Häuser",
+    "canonical": "Haus",
+    "type": "名詞の格・数"
+  },
+  "haeusern": {
+    "id": "term-haus",
+    "original": "Häusern",
+    "canonical": "Haus",
     "type": "名詞の格・数"
   },
   "haushofmeisters": {
@@ -12943,15 +13490,63 @@
     "canonical": "heiter",
     "type": "形容詞・副詞の変化"
   },
+  "hellstes": {
+    "id": "term-hell",
+    "original": "Hellstes",
+    "canonical": "hell",
+    "type": "形容詞・副詞の変化"
+  },
+  "hellem": {
+    "id": "term-hell",
+    "original": "hellem",
+    "canonical": "hell",
+    "type": "形容詞・副詞の変化"
+  },
+  "hellen": {
+    "id": "term-hell",
+    "original": "hellen",
+    "canonical": "hell",
+    "type": "形容詞・副詞の変化"
+  },
+  "helleren": {
+    "id": "term-hell",
+    "original": "helleren",
+    "canonical": "hell",
+    "type": "形容詞・副詞の変化"
+  },
+  "hellerer": {
+    "id": "term-hell",
+    "original": "hellerer",
+    "canonical": "hell",
+    "type": "形容詞・副詞の変化"
+  },
+  "helles": {
+    "id": "term-hell",
+    "original": "helles",
+    "canonical": "hell",
+    "type": "形容詞・副詞の変化"
+  },
+  "hellsten": {
+    "id": "term-hell",
+    "original": "hellsten",
+    "canonical": "hell",
+    "type": "形容詞・副詞の変化"
+  },
+  "helme": {
+    "id": "term-helm",
+    "original": "Helme",
+    "canonical": "Helm",
+    "type": "名詞の格・数"
+  },
+  "herdes": {
+    "id": "term-herd",
+    "original": "Herdes",
+    "canonical": "Herd",
+    "type": "名詞の格・数"
+  },
   "hervortreten": {
     "id": "term-hervortretend",
     "original": "hervortreten",
-    "canonical": "hervortretend",
-    "type": "動詞の活用"
-  },
-  "hervotretend": {
-    "id": "term-hervortretend",
-    "original": "hervotretend",
     "canonical": "hervortretend",
     "type": "動詞の活用"
   },
@@ -12959,7 +13554,7 @@
     "id": "term-hervortretend",
     "original": "hervortret",
     "canonical": "hervortretend",
-    "type": "動詞の活用"
+    "type": "省略形"
   },
   "hervorgetreten": {
     "id": "term-hervortretend",
@@ -12991,6 +13586,12 @@
     "canonical": "heulend",
     "type": "該当なし"
   },
+  "himmels": {
+    "id": "term-himmel",
+    "original": "Himmels",
+    "canonical": "Himmel",
+    "type": "名詞の格・数"
+  },
   "hintergrundes": {
     "id": "term-hintergrund",
     "original": "Hintergrundes",
@@ -13002,6 +13603,12 @@
     "original": "Hintergrunde",
     "canonical": "Hintergrund",
     "type": "名詞の格・数"
+  },
+  "hoele": {
+    "id": "term-hoehle",
+    "original": "Höle",
+    "canonical": "Höhle",
+    "type": "旧綴り"
   },
   "hoehnischer": {
     "id": "term-hoehnisch",
@@ -13031,7 +13638,7 @@
     "id": "term-ins",
     "original": "in's",
     "canonical": "ins",
-    "type": "該当なし"
+    "type": "別綴り"
   },
   "jedes": {
     "id": "term-jeder",
@@ -13057,6 +13664,36 @@
     "canonical": "jeder",
     "type": "形容詞・副詞の変化"
   },
+  "jubelnde": {
+    "id": "term-jubelnd",
+    "original": "jubelnde",
+    "canonical": "jubelnd",
+    "type": "分詞"
+  },
+  "jubelndes": {
+    "id": "term-jubelnd",
+    "original": "jubelndes",
+    "canonical": "jubelnd",
+    "type": "分詞"
+  },
+  "kammern": {
+    "id": "term-kammer",
+    "original": "Kammern",
+    "canonical": "Kammer",
+    "type": "名詞の格・数"
+  },
+  "kampfe": {
+    "id": "term-kampf",
+    "original": "Kampfe",
+    "canonical": "Kampf",
+    "type": "名詞の格・数"
+  },
+  "kampfes": {
+    "id": "term-kampf",
+    "original": "Kampfes",
+    "canonical": "Kampf",
+    "type": "名詞の格・数"
+  },
   "kecker": {
     "id": "term-keck",
     "original": "kecker",
@@ -13067,7 +13704,31 @@
     "id": "term-kellner",
     "original": "Kellnern",
     "canonical": "Kellner",
-    "type": "動詞の活用"
+    "type": "名詞の格・数"
+  },
+  "kerzen": {
+    "id": "term-kerze",
+    "original": "Kerzen",
+    "canonical": "Kerze",
+    "type": "名詞の格・数"
+  },
+  "kinder": {
+    "id": "term-kind",
+    "original": "Kinder",
+    "canonical": "Kind",
+    "type": "名詞の格・数"
+  },
+  "kindern": {
+    "id": "term-kind",
+    "original": "Kindern",
+    "canonical": "Kind",
+    "type": "名詞の格・数"
+  },
+  "kindes": {
+    "id": "term-kind",
+    "original": "Kindes",
+    "canonical": "Kind",
+    "type": "名詞の格・数"
   },
   "klagenden": {
     "id": "term-klagend",
@@ -13117,17 +13778,35 @@
     "canonical": "Klöppel",
     "type": "名詞の格・数"
   },
+  "knaben": {
+    "id": "term-knabe",
+    "original": "Knaben",
+    "canonical": "Knabe",
+    "type": "名詞の格・数"
+  },
   "knappen": {
     "id": "term-knappe",
     "original": "Knappen",
     "canonical": "Knappe",
     "type": "複数形・弱変化形"
   },
+  "kniee": {
+    "id": "term-knie",
+    "original": "Kniee",
+    "canonical": "Knie",
+    "type": "名詞の格・数"
+  },
   "knixt": {
     "id": "term-knix",
     "original": "knixt",
     "canonical": "Knix",
     "type": "動詞の活用"
+  },
+  "knicks": {
+    "id": "term-knix",
+    "original": "Knicks",
+    "canonical": "Knix",
+    "type": "別綴り"
   },
   "koketten": {
     "id": "term-kokett",
@@ -13140,6 +13819,24 @@
     "original": "kokettem",
     "canonical": "kokett",
     "type": "形容詞・副詞の変化"
+  },
+  "kopfe": {
+    "id": "term-kopf",
+    "original": "Kopfe",
+    "canonical": "Kopf",
+    "type": "名詞の格・数"
+  },
+  "kopfes": {
+    "id": "term-kopf",
+    "original": "Kopfes",
+    "canonical": "Kopf",
+    "type": "名詞の格・数"
+  },
+  "koepfe": {
+    "id": "term-kopf",
+    "original": "Köpfe",
+    "canonical": "Kopf",
+    "type": "名詞の格・数"
   },
   "kraeftigen": {
     "id": "term-kraeftig",
@@ -13189,6 +13886,12 @@
     "canonical": "kriegerisch",
     "type": "形容詞・副詞の変化"
   },
+  "kulissen": {
+    "id": "term-kulisse",
+    "original": "Kulissen",
+    "canonical": "Kulisse",
+    "type": "名詞の格・数"
+  },
   "kurze": {
     "id": "term-kurz",
     "original": "kurze",
@@ -13206,6 +13909,12 @@
     "original": "lachenden",
     "canonical": "lachend",
     "type": "形容詞・副詞の変化"
+  },
+  "lagers": {
+    "id": "term-lager",
+    "original": "Lagers",
+    "canonical": "Lager",
+    "type": "名詞の格・数"
   },
   "laendlers": {
     "id": "term-laendler",
@@ -13235,6 +13944,12 @@
     "id": "term-langsam",
     "original": "langsame",
     "canonical": "langsam",
+    "type": "形容詞・副詞の変化"
+  },
+  "lautlosen": {
+    "id": "term-lautlos",
+    "original": "lautlosen",
+    "canonical": "lautlos",
     "type": "形容詞・副詞の変化"
   },
   "lebendiger": {
@@ -13290,6 +14005,12 @@
     "original": "Leiblakei",
     "canonical": "Leiblakai",
     "type": "該当なし"
+  },
+  "leichen": {
+    "id": "term-leiche",
+    "original": "Leichen",
+    "canonical": "Leiche",
+    "type": "名詞の格・数"
   },
   "leichtem": {
     "id": "term-leicht",
@@ -13357,6 +14078,12 @@
     "canonical": "Leute",
     "type": "名詞の格・数"
   },
+  "lichtern": {
+    "id": "term-licht",
+    "original": "Lichtern",
+    "canonical": "Licht",
+    "type": "名詞の格・数"
+  },
   "livr-e": {
     "id": "term-livree",
     "original": "Livrée",
@@ -13417,6 +14144,42 @@
     "canonical": "majestätisch, majestätische",
     "type": "形容詞・副詞の変化"
   },
+  "mannes": {
+    "id": "term-mann",
+    "original": "Mannes",
+    "canonical": "Mann",
+    "type": "名詞の格・数"
+  },
+  "maenner": {
+    "id": "term-mann",
+    "original": "Männer",
+    "canonical": "Mann",
+    "type": "名詞の格・数"
+  },
+  "maennern": {
+    "id": "term-mann",
+    "original": "Männern",
+    "canonical": "Mann",
+    "type": "名詞の格・数"
+  },
+  "manne": {
+    "id": "term-mann",
+    "original": "Manne",
+    "canonical": "Mann",
+    "type": "名詞の格・数"
+  },
+  "mantels": {
+    "id": "term-mantel",
+    "original": "Mantels",
+    "canonical": "Mantel",
+    "type": "名詞の格・数"
+  },
+  "maentel": {
+    "id": "term-mantel",
+    "original": "Mäntel",
+    "canonical": "Mantel",
+    "type": "名詞の格・数"
+  },
   "markiert": {
     "id": "term-markieren-markiert-marcirt-markirt",
     "original": "markiert",
@@ -13447,11 +14210,29 @@
     "canonical": "mäßigen",
     "type": "分詞"
   },
+  "meere": {
+    "id": "term-meer",
+    "original": "Meere",
+    "canonical": "Meer",
+    "type": "名詞の格・数"
+  },
   "merklicher": {
     "id": "term-merklich",
     "original": "merklicher",
     "canonical": "merklich",
     "type": "形容詞・副詞の変化"
+  },
+  "mienen": {
+    "id": "term-miene",
+    "original": "Mienen",
+    "canonical": "Miene",
+    "type": "名詞の格・数"
+  },
+  "mundes": {
+    "id": "term-mund",
+    "original": "Mundes",
+    "canonical": "Mund",
+    "type": "名詞の格・数"
   },
   "munterem": {
     "id": "term-munter",
@@ -13470,6 +14251,18 @@
     "original": "murmelt",
     "canonical": "murmeln",
     "type": "動詞の活用"
+  },
+  "musikern": {
+    "id": "term-musiker",
+    "original": "Musikern",
+    "canonical": "Musiker",
+    "type": "名詞の格・数"
+  },
+  "musikers": {
+    "id": "term-musiker",
+    "original": "Musikers",
+    "canonical": "Musiker",
+    "type": "名詞の格・数"
   },
   "nachahmen": {
     "id": "term-nachahmung",
@@ -13499,7 +14292,7 @@
     "id": "term-nachschlag",
     "original": "Nachschl",
     "canonical": "Nachschlag",
-    "type": "該当なし"
+    "type": "省略形"
   },
   "naeseln": {
     "id": "term-naeselnd",
@@ -13547,7 +14340,7 @@
     "id": "term-noetig",
     "original": "nöthig",
     "canonical": "nötig",
-    "type": "形容詞・副詞の変化"
+    "type": "旧綴り"
   },
   "ohnmaechtiger": {
     "id": "term-ohnmaechtig",
@@ -13584,12 +14377,6 @@
     "original": "plötzlicher",
     "canonical": "plötzlich",
     "type": "形容詞・副詞の変化"
-  },
-  "ploeztlich": {
-    "id": "term-ploetzlich",
-    "original": "Plöztlich",
-    "canonical": "plötzlich",
-    "type": "該当なし"
   },
   "ploetzliches": {
     "id": "term-ploetzlich",
@@ -13645,6 +14432,18 @@
     "canonical": "recht",
     "type": "形容詞・副詞の変化"
   },
+  "regungslose": {
+    "id": "term-regungslos",
+    "original": "regungslose",
+    "canonical": "regungslos",
+    "type": "形容詞・副詞の変化"
+  },
+  "regungsloser": {
+    "id": "term-regungslos",
+    "original": "regungsloser",
+    "canonical": "regungslos",
+    "type": "形容詞・副詞の変化"
+  },
   "reiche": {
     "id": "term-reich",
     "original": "Reiche",
@@ -13656,6 +14455,18 @@
     "original": "reichlicher",
     "canonical": "reichlich",
     "type": "形容詞・副詞の変化"
+  },
+  "richtungen": {
+    "id": "term-richtung",
+    "original": "Richtungen",
+    "canonical": "Richtung",
+    "type": "名詞の格・数"
+  },
+  "ringes": {
+    "id": "term-ring",
+    "original": "Ringes",
+    "canonical": "Ring",
+    "type": "名詞の格・数"
   },
   "rittern": {
     "id": "term-ritter",
@@ -13681,17 +14492,35 @@
     "canonical": "rufen",
     "type": "分詞"
   },
+  "ruhebetts": {
+    "id": "term-ruhebett",
+    "original": "Ruhebetts",
+    "canonical": "Ruhebett",
+    "type": "名詞の格・数"
+  },
   "ruhige": {
     "id": "term-ruhig",
     "original": "Ruhige",
     "canonical": "ruhig",
     "type": "形容詞・副詞の変化"
   },
+  "saales": {
+    "id": "term-saal",
+    "original": "Saales",
+    "canonical": "Saal",
+    "type": "名詞の格・数"
+  },
+  "saele": {
+    "id": "term-saal",
+    "original": "Säle",
+    "canonical": "Saal",
+    "type": "名詞の格・数"
+  },
   "saemtliche": {
     "id": "term-saemmtlich",
     "original": "sämtliche",
     "canonical": "sämmtlich",
-    "type": "該当なし"
+    "type": "形容詞・副詞の変化"
   },
   "saemmtliche": {
     "id": "term-saemtlich",
@@ -13705,11 +14534,29 @@
     "canonical": "sanft",
     "type": "形容詞・副詞の変化"
   },
+  "saengern": {
+    "id": "term-saenger",
+    "original": "Sängern",
+    "canonical": "Sänger",
+    "type": "名詞の格・数"
+  },
+  "saengers": {
+    "id": "term-saenger",
+    "original": "Sängers",
+    "canonical": "Sänger",
+    "type": "名詞の格・数"
+  },
+  "saengerinnen": {
+    "id": "term-saengerin",
+    "original": "Sängerinnen",
+    "canonical": "Sängerin",
+    "type": "名詞の格・数"
+  },
   "schalltricht": {
     "id": "term-schalltrichter",
     "original": "Schalltricht",
     "canonical": "Schalltrichter",
-    "type": "名詞の格・数"
+    "type": "省略形"
   },
   "schalltr": {
     "id": "term-schalltrichter",
@@ -13728,6 +14575,12 @@
     "original": "scharfer",
     "canonical": "scharf",
     "type": "形容詞・副詞の変化"
+  },
+  "schattens": {
+    "id": "term-schatten",
+    "original": "Schattens",
+    "canonical": "Schatten",
+    "type": "名詞の格・数"
   },
   "schaudert": {
     "id": "term-schaudernd",
@@ -13770,6 +14623,36 @@
     "original": "schäumende",
     "canonical": "schäumend",
     "type": "形容詞・副詞の変化"
+  },
+  "scheuer": {
+    "id": "term-scheu",
+    "original": "scheuer",
+    "canonical": "scheu",
+    "type": "形容詞・副詞の変化"
+  },
+  "scheues": {
+    "id": "term-scheu",
+    "original": "scheues",
+    "canonical": "scheu",
+    "type": "形容詞・副詞の変化"
+  },
+  "schiffes": {
+    "id": "term-schiff",
+    "original": "Schiffes",
+    "canonical": "Schiff",
+    "type": "名詞の格・数"
+  },
+  "schilde": {
+    "id": "term-schild",
+    "original": "Schilde",
+    "canonical": "Schild",
+    "type": "名詞の格・数"
+  },
+  "schilden": {
+    "id": "term-schild",
+    "original": "Schilden",
+    "canonical": "Schild",
+    "type": "名詞の格・数"
   },
   "schlaege": {
     "id": "term-schlag",
@@ -13867,6 +14750,36 @@
     "canonical": "schmeicheln",
     "type": "分詞"
   },
+  "schmerzlicher": {
+    "id": "term-schmerzlich",
+    "original": "Schmerzlicher",
+    "canonical": "schmerzlich",
+    "type": "形容詞・副詞の変化"
+  },
+  "schmerzliche": {
+    "id": "term-schmerzlich",
+    "original": "schmerzliche",
+    "canonical": "schmerzlich",
+    "type": "形容詞・副詞の変化"
+  },
+  "schmerzlichem": {
+    "id": "term-schmerzlich",
+    "original": "schmerzlichem",
+    "canonical": "schmerzlich",
+    "type": "形容詞・副詞の変化"
+  },
+  "schmerzlichen": {
+    "id": "term-schmerzlich",
+    "original": "schmerzlichen",
+    "canonical": "schmerzlich",
+    "type": "形容詞・副詞の変化"
+  },
+  "schmerzlichsten": {
+    "id": "term-schmerzlich",
+    "original": "schmerzlichsten",
+    "canonical": "schmerzlich",
+    "type": "形容詞・副詞の変化"
+  },
   "schmettert": {
     "id": "term-schmetternd",
     "original": "schmettert",
@@ -13889,7 +14802,7 @@
     "id": "term-schnell",
     "original": "schnellen",
     "canonical": "schnell",
-    "type": "動詞の活用"
+    "type": "形容詞・副詞の変化"
   },
   "schreiend": {
     "id": "term-schreien",
@@ -13919,7 +14832,7 @@
     "id": "term-schritt",
     "original": "Schritte",
     "canonical": "Schritt",
-    "type": "語形変化（要分類）"
+    "type": "名詞の格・数"
   },
   "schritten": {
     "id": "term-schritt",
@@ -13956,6 +14869,12 @@
     "original": "schwacher",
     "canonical": "schwach",
     "type": "形容詞・副詞の変化"
+  },
+  "schwammschlaegeln": {
+    "id": "term-schwammschlaegel",
+    "original": "Schwammschlägeln",
+    "canonical": "Schwammschlägel",
+    "type": "名詞の格・数"
   },
   "schwebt": {
     "id": "term-schweben",
@@ -14017,16 +14936,34 @@
     "canonical": "Schwert",
     "type": "名詞の格・数"
   },
+  "seiles": {
+    "id": "term-seil",
+    "original": "Seiles",
+    "canonical": "Seil",
+    "type": "名詞の格・数"
+  },
   "seiten": {
     "id": "term-seite",
     "original": "seiten",
     "canonical": "Seite",
-    "type": "語形変化（要分類）"
+    "type": "名詞の格・数"
   },
   "selige": {
     "id": "term-selig",
     "original": "Selige",
     "canonical": "selig",
+    "type": "形容詞・副詞の変化"
+  },
+  "sichtbare": {
+    "id": "term-sichtbar",
+    "original": "sichtbare",
+    "canonical": "sichtbar",
+    "type": "形容詞・副詞の変化"
+  },
+  "sichtbaren": {
+    "id": "term-sichtbar",
+    "original": "sichtbaren",
+    "canonical": "sichtbar",
     "type": "形容詞・副詞の変化"
   },
   "singen": {
@@ -14041,6 +14978,12 @@
     "canonical": "sinnen",
     "type": "分詞"
   },
+  "soellers": {
+    "id": "term-soeller",
+    "original": "Söllers",
+    "canonical": "Söller",
+    "type": "名詞の格・数"
+  },
   "spaetere": {
     "id": "term-spaeter",
     "original": "Spätere",
@@ -14052,6 +14995,12 @@
     "original": "spät",
     "canonical": "später",
     "type": "形容詞・副詞の変化"
+  },
+  "speeres": {
+    "id": "term-speer",
+    "original": "Speeres",
+    "canonical": "Speer",
+    "type": "名詞の格・数"
   },
   "spielenden": {
     "id": "term-spielend",
@@ -14081,7 +15030,7 @@
     "id": "term-sprung",
     "original": "Sprunge",
     "canonical": "Sprung",
-    "type": "該当なし"
+    "type": "名詞の格・数"
   },
   "stabe": {
     "id": "term-stab",
@@ -14105,7 +15054,25 @@
     "id": "term-stark",
     "original": "staerker",
     "canonical": "stark",
-    "type": "語形変化（要分類）"
+    "type": "比較級"
+  },
+  "starrem": {
+    "id": "term-starr",
+    "original": "starrem",
+    "canonical": "starr",
+    "type": "形容詞・副詞の変化"
+  },
+  "starrer": {
+    "id": "term-starr",
+    "original": "starrer",
+    "canonical": "starr",
+    "type": "形容詞・副詞の変化"
+  },
+  "starres": {
+    "id": "term-starr",
+    "original": "starres",
+    "canonical": "starr",
+    "type": "形容詞・副詞の変化"
   },
   "steigend": {
     "id": "term-steigen",
@@ -14131,11 +15098,29 @@
     "canonical": "steigern",
     "type": "該当なし"
   },
+  "stellungen": {
+    "id": "term-stellung",
+    "original": "Stellungen",
+    "canonical": "Stellung",
+    "type": "名詞の格・数"
+  },
   "stetiger": {
     "id": "term-stetig",
     "original": "stetiger",
     "canonical": "stetig",
     "type": "形容詞・副詞の変化"
+  },
+  "stirne": {
+    "id": "term-stirn",
+    "original": "Stirne",
+    "canonical": "Stirn",
+    "type": "名詞の格・数"
+  },
+  "stirnen": {
+    "id": "term-stirn",
+    "original": "Stirnen",
+    "canonical": "Stirn",
+    "type": "名詞の格・数"
   },
   "stock": {
     "id": "term-stoecken",
@@ -14167,6 +15152,12 @@
     "canonical": "strahlen",
     "type": "分詞"
   },
+  "strassen": {
+    "id": "term-strasse",
+    "original": "Straßen",
+    "canonical": "Straße",
+    "type": "名詞の格・数"
+  },
   "streichelnd": {
     "id": "term-streicheln",
     "original": "streichelnd",
@@ -14191,11 +15182,71 @@
     "canonical": "streng",
     "type": "名詞の格・数"
   },
+  "stuehle": {
+    "id": "term-stuhl",
+    "original": "Stühle",
+    "canonical": "Stuhl",
+    "type": "名詞の格・数"
+  },
+  "stuehlen": {
+    "id": "term-stuhl",
+    "original": "Stühlen",
+    "canonical": "Stuhl",
+    "type": "名詞の格・数"
+  },
+  "stumme": {
+    "id": "term-stumm",
+    "original": "stumme",
+    "canonical": "stumm",
+    "type": "形容詞・副詞の変化"
+  },
+  "stummem": {
+    "id": "term-stumm",
+    "original": "stummem",
+    "canonical": "stumm",
+    "type": "形容詞・副詞の変化"
+  },
+  "stummen": {
+    "id": "term-stumm",
+    "original": "stummen",
+    "canonical": "stumm",
+    "type": "形容詞・副詞の変化"
+  },
+  "stummer": {
+    "id": "term-stumm",
+    "original": "stummer",
+    "canonical": "stumm",
+    "type": "形容詞・副詞の変化"
+  },
+  "stummes": {
+    "id": "term-stumm",
+    "original": "stummes",
+    "canonical": "stumm",
+    "type": "形容詞・副詞の変化"
+  },
   "sturme": {
     "id": "term-sturm",
     "original": "Sturme",
     "canonical": "Sturm",
     "type": "名詞の格・数"
+  },
+  "stuermische": {
+    "id": "term-stuermisch",
+    "original": "stürmische",
+    "canonical": "stürmisch",
+    "type": "形容詞・副詞の変化"
+  },
+  "stuermischer": {
+    "id": "term-stuermisch",
+    "original": "stürmischer",
+    "canonical": "stürmisch",
+    "type": "形容詞・副詞の変化"
+  },
+  "stuermischen": {
+    "id": "term-stuermisch",
+    "original": "stürmischen",
+    "canonical": "stürmisch",
+    "type": "形容詞・副詞の変化"
   },
   "stuerzen": {
     "id": "term-stuerzt",
@@ -14207,7 +15258,7 @@
     "id": "term-tactig",
     "original": "taktig",
     "canonical": "tactig",
-    "type": "該当なし"
+    "type": "現代綴り"
   },
   "takte": {
     "id": "term-takt",
@@ -14219,18 +15270,48 @@
     "id": "term-takt",
     "original": "Tact",
     "canonical": "Takt",
-    "type": "該当なし"
+    "type": "旧綴り"
   },
   "thal": {
     "id": "term-tal",
     "original": "Thal",
     "canonical": "Tal",
-    "type": "該当なし"
+    "type": "旧綴り"
+  },
+  "tanzes": {
+    "id": "term-tanz",
+    "original": "Tanzes",
+    "canonical": "Tanz",
+    "type": "名詞の格・数"
+  },
+  "taenze": {
+    "id": "term-tanz",
+    "original": "Tänze",
+    "canonical": "Tanz",
+    "type": "名詞の格・数"
+  },
+  "theaters": {
+    "id": "term-theater",
+    "original": "Theaters",
+    "canonical": "Theater",
+    "type": "名詞の格・数"
+  },
+  "theatersaals": {
+    "id": "term-theatersaal",
+    "original": "Theatersaals",
+    "canonical": "Theatersaal",
+    "type": "名詞の格・数"
   },
   "tiefe": {
     "id": "term-tief",
     "original": "Tiefe",
     "canonical": "tief",
+    "type": "名詞の格・数"
+  },
+  "tisches": {
+    "id": "term-tisch",
+    "original": "Tisches",
+    "canonical": "Tisch",
     "type": "名詞の格・数"
   },
   "tobendem": {
@@ -14275,11 +15356,29 @@
     "canonical": "treten",
     "type": "分詞"
   },
+  "trinkhorns": {
+    "id": "term-trinkhorn",
+    "original": "Trinkhorns",
+    "canonical": "Trinkhorn",
+    "type": "名詞の格・数"
+  },
+  "trinkhoerner": {
+    "id": "term-trinkhorn",
+    "original": "Trinkhörner",
+    "canonical": "Trinkhorn",
+    "type": "名詞の格・数"
+  },
+  "triolen": {
+    "id": "term-triole",
+    "original": "Triolen",
+    "canonical": "Triole",
+    "type": "名詞の格・数"
+  },
   "auftreten": {
     "id": "term-tritt-auf",
     "original": "auftreten",
     "canonical": "tritt auf",
-    "type": "名詞の格・数"
+    "type": "不定詞"
   },
   "trocknen": {
     "id": "term-trocken",
@@ -14305,6 +15404,12 @@
     "canonical": "trotzig",
     "type": "形容詞・副詞の変化"
   },
+  "truhen": {
+    "id": "term-truhe",
+    "original": "Truhen",
+    "canonical": "Truhe",
+    "type": "名詞の格・数"
+  },
   "tuere": {
     "id": "term-tuer",
     "original": "Türe",
@@ -14315,7 +15420,7 @@
     "id": "term-tuer",
     "original": "Thür",
     "canonical": "Tür",
-    "type": "名詞の格・数"
+    "type": "旧綴り"
   },
   "uebergehend": {
     "id": "term-uebergehen",
@@ -14365,11 +15470,47 @@
     "canonical": "übrig",
     "type": "形容詞・副詞の変化"
   },
+  "ufern": {
+    "id": "term-ufer",
+    "original": "Ufern",
+    "canonical": "Ufer",
+    "type": "名詞の格・数"
+  },
+  "umarmend": {
+    "id": "term-umarmen",
+    "original": "umarmend",
+    "canonical": "umarmen",
+    "type": "分詞"
+  },
+  "umarmt": {
+    "id": "term-umarmen",
+    "original": "umarmt",
+    "canonical": "umarmen",
+    "type": "動詞の活用"
+  },
+  "umarmungen": {
+    "id": "term-umarmung",
+    "original": "Umarmungen",
+    "canonical": "Umarmung",
+    "type": "名詞の格・数"
+  },
+  "umgibt": {
+    "id": "term-umgeben",
+    "original": "umgibt",
+    "canonical": "umgeben",
+    "type": "動詞の活用"
+  },
+  "umgiebt": {
+    "id": "term-umgeben",
+    "original": "umgiebt",
+    "canonical": "umgeben",
+    "type": "旧綴り"
+  },
   "umstaenden": {
     "id": "term-umstaende",
     "original": "Umständen",
     "canonical": "Umstände",
-    "type": "該当なし"
+    "type": "名詞の格・数"
   },
   "ungeduldige": {
     "id": "term-ungeduldig",
@@ -14423,12 +15564,24 @@
     "id": "term-ungeheuer",
     "original": "ungeheurer",
     "canonical": "ungeheuer",
-    "type": "該当なし"
+    "type": "形容詞・副詞の変化"
   },
   "ungeheure": {
     "id": "term-ungeheuer",
     "original": "ungeheure",
     "canonical": "ungeheuer",
+    "type": "形容詞・副詞の変化"
+  },
+  "ungestuemem": {
+    "id": "term-ungestuem",
+    "original": "ungestümem",
+    "canonical": "ungestüm",
+    "type": "形容詞・副詞の変化"
+  },
+  "ungestuemer": {
+    "id": "term-ungestuem",
+    "original": "ungestümer",
+    "canonical": "ungestüm",
     "type": "形容詞・副詞の変化"
   },
   "unheimlichem": {
@@ -14501,7 +15654,7 @@
     "id": "term-unsichtbar",
     "original": "Unsichtbarer",
     "canonical": "unsichtbar",
-    "type": "名詞の格・数"
+    "type": "形容詞・副詞の変化"
   },
   "unterbrochene": {
     "id": "term-unterbrechen",
@@ -14527,12 +15680,6 @@
     "canonical": "unterbrechen",
     "type": "動詞の活用"
   },
-  "unterbrechnung": {
-    "id": "term-unterbrechung",
-    "original": "Unterbrechnung",
-    "canonical": "Unterbrechung",
-    "type": "該当なし"
-  },
   "unwillkuerlichen": {
     "id": "term-unwillkuerlich",
     "original": "unwillkürlichen",
@@ -14556,6 +15703,18 @@
     "original": "ursprünglichen",
     "canonical": "ursprüngliche",
     "type": "形容詞・副詞の変化"
+  },
+  "verbirgt": {
+    "id": "term-verbergen",
+    "original": "verbirgt",
+    "canonical": "verbergen",
+    "type": "動詞の活用"
+  },
+  "verborgen": {
+    "id": "term-verbergen",
+    "original": "verborgen",
+    "canonical": "verbergen",
+    "type": "分詞"
   },
   "verbeugungen": {
     "id": "term-verbeugung",
@@ -14581,6 +15740,36 @@
     "canonical": "verhalten",
     "type": "形容詞・副詞の変化"
   },
+  "verhuellt": {
+    "id": "term-verhuellen",
+    "original": "verhüllt",
+    "canonical": "verhüllen",
+    "type": "動詞の活用"
+  },
+  "verhuellte": {
+    "id": "term-verhuellen",
+    "original": "verhüllte",
+    "canonical": "verhüllen",
+    "type": "分詞"
+  },
+  "verhuellten": {
+    "id": "term-verhuellen",
+    "original": "verhüllten",
+    "canonical": "verhüllen",
+    "type": "分詞"
+  },
+  "verklaerten": {
+    "id": "term-verklaert",
+    "original": "verklärten",
+    "canonical": "verklärt",
+    "type": "分詞"
+  },
+  "verklaerter": {
+    "id": "term-verklaert",
+    "original": "verklärter",
+    "canonical": "verklärt",
+    "type": "形容詞・副詞の変化"
+  },
   "verklingenden": {
     "id": "term-verklingend",
     "original": "verklingenden",
@@ -14593,11 +15782,29 @@
     "canonical": "verklingend",
     "type": "動詞の活用"
   },
+  "verlassend": {
+    "id": "term-verlassen",
+    "original": "verlassend",
+    "canonical": "verlassen",
+    "type": "分詞"
+  },
+  "verlaesst": {
+    "id": "term-verlassen",
+    "original": "verlässt",
+    "canonical": "verlassen",
+    "type": "動詞の活用"
+  },
   "verlaufe": {
     "id": "term-verlauf",
     "original": "Verlaufe",
     "canonical": "Verlauf",
     "type": "名詞の格・数"
+  },
+  "verlegenen": {
+    "id": "term-verlegen",
+    "original": "verlegenen",
+    "canonical": "verlegen",
+    "type": "形容詞・副詞の変化"
   },
   "verloeschend": {
     "id": "term-verloeschen",
@@ -14623,11 +15830,47 @@
     "canonical": "vernehmbar",
     "type": "形容詞・副詞の変化"
   },
+  "vernehmend": {
+    "id": "term-vernehmen",
+    "original": "vernehmend",
+    "canonical": "vernehmen",
+    "type": "分詞"
+  },
+  "vernimmt": {
+    "id": "term-vernehmen",
+    "original": "vernimmt",
+    "canonical": "vernehmen",
+    "type": "動詞の活用"
+  },
+  "vernommen": {
+    "id": "term-vernehmen",
+    "original": "vernommen",
+    "canonical": "vernehmen",
+    "type": "分詞"
+  },
+  "vernommenen": {
+    "id": "term-vernehmen",
+    "original": "vernommenen",
+    "canonical": "vernehmen",
+    "type": "分詞"
+  },
   "vernehmlicher": {
     "id": "term-vernehmlich",
     "original": "vernehmlicher",
     "canonical": "vernehmlich",
     "type": "形容詞・副詞の変化"
+  },
+  "verneigend": {
+    "id": "term-verneigen",
+    "original": "verneigend",
+    "canonical": "verneigen",
+    "type": "分詞"
+  },
+  "verneigt": {
+    "id": "term-verneigen",
+    "original": "verneigt",
+    "canonical": "verneigen",
+    "type": "動詞の活用"
   },
   "verschwunden": {
     "id": "term-verschwinden",
@@ -14665,6 +15908,30 @@
     "canonical": "versetzen",
     "type": "分詞"
   },
+  "versinkend": {
+    "id": "term-versinken",
+    "original": "versinkend",
+    "canonical": "versinken",
+    "type": "分詞"
+  },
+  "versinkt": {
+    "id": "term-versinken",
+    "original": "versinkt",
+    "canonical": "versinken",
+    "type": "動詞の活用"
+  },
+  "versunken": {
+    "id": "term-versinken",
+    "original": "versunken",
+    "canonical": "versinken",
+    "type": "分詞"
+  },
+  "versunkenen": {
+    "id": "term-versinken",
+    "original": "versunkenen",
+    "canonical": "versinken",
+    "type": "分詞"
+  },
   "vertraulichem": {
     "id": "term-vertraulich",
     "original": "vertraulichem",
@@ -14675,6 +15942,54 @@
     "id": "term-vertraulich",
     "original": "vertraulicher",
     "canonical": "vertraulich",
+    "type": "形容詞・副詞の変化"
+  },
+  "verwandelt": {
+    "id": "term-verwandeln",
+    "original": "verwandelt",
+    "canonical": "verwandeln",
+    "type": "動詞の活用"
+  },
+  "verwandelten": {
+    "id": "term-verwandeln",
+    "original": "verwandelten",
+    "canonical": "verwandeln",
+    "type": "分詞"
+  },
+  "verweilt": {
+    "id": "term-verweilen",
+    "original": "verweilt",
+    "canonical": "verweilen",
+    "type": "動詞の活用"
+  },
+  "verweilend": {
+    "id": "term-verweilen",
+    "original": "verweilend",
+    "canonical": "verweilen",
+    "type": "分詞"
+  },
+  "verwirrter": {
+    "id": "term-verwirrt",
+    "original": "verwirrter",
+    "canonical": "verwirrt",
+    "type": "形容詞・副詞の変化"
+  },
+  "verwirrtem": {
+    "id": "term-verwirrt",
+    "original": "verwirrtem",
+    "canonical": "verwirrt",
+    "type": "分詞"
+  },
+  "verwunderter": {
+    "id": "term-verwundert",
+    "original": "verwunderter",
+    "canonical": "verwundert",
+    "type": "形容詞・副詞の変化"
+  },
+  "verwunderte": {
+    "id": "term-verwundert",
+    "original": "verwunderte",
+    "canonical": "verwundert",
     "type": "形容詞・副詞の変化"
   },
   "verzweifeltem": {
@@ -14717,6 +16032,18 @@
     "id": "term-visionaer",
     "original": "Visionärer",
     "canonical": "visionär",
+    "type": "形容詞・副詞の変化"
+  },
+  "volke": {
+    "id": "term-volk",
+    "original": "Volke",
+    "canonical": "Volk",
+    "type": "名詞の格・数"
+  },
+  "volkes": {
+    "id": "term-volk",
+    "original": "Volkes",
+    "canonical": "Volk",
     "type": "名詞の格・数"
   },
   "vollenden": {
@@ -14791,6 +16118,12 @@
     "canonical": "vorherigen",
     "type": "形容詞・副詞の変化"
   },
+  "vorn": {
+    "id": "term-vorne",
+    "original": "Vorn",
+    "canonical": "vorne",
+    "type": "形容詞・副詞の変化"
+  },
   "vorschlaege": {
     "id": "term-vorschlag",
     "original": "Vorschläge",
@@ -14800,12 +16133,6 @@
   "vorschlaegen": {
     "id": "term-vorschlag",
     "original": "Vorschlägen",
-    "canonical": "Vorschlag",
-    "type": "名詞の格・数"
-  },
-  "vorschlage": {
-    "id": "term-vorschlag",
-    "original": "Vorschlage",
     "canonical": "Vorschlag",
     "type": "名詞の格・数"
   },
@@ -14821,6 +16148,12 @@
     "canonical": "vorzutragen",
     "type": "分詞"
   },
+  "waffen": {
+    "id": "term-waffe",
+    "original": "Waffen",
+    "canonical": "Waffe",
+    "type": "名詞の格・数"
+  },
   "wahnsinnig": {
     "id": "term-wahnsinn",
     "original": "wahnsinnig",
@@ -14834,10 +16167,16 @@
     "type": "名詞の格・数"
   },
   "waermer": {
-    "id": "term-waerme",
+    "id": "term-warm",
     "original": "wärmer",
-    "canonical": "Wärme",
+    "canonical": "warm",
     "type": "形容詞・副詞の変化"
+  },
+  "wassers": {
+    "id": "term-wasser",
+    "original": "Wassers",
+    "canonical": "Wasser",
+    "type": "名詞の格・数"
   },
   "wasserfalles": {
     "id": "term-wasserfall",
@@ -14861,7 +16200,7 @@
     "id": "term-weglassen",
     "original": "wegzulassen",
     "canonical": "weglassen",
-    "type": "該当なし"
+    "type": "zu不定詞"
   },
   "wehmuetigem": {
     "id": "term-wehmuetig",
@@ -14873,7 +16212,7 @@
     "id": "term-wehmuetig",
     "original": "wehmüthig",
     "canonical": "wehmütig",
-    "type": "該当なし"
+    "type": "旧綴り"
   },
   "weiche": {
     "id": "term-weich",
@@ -14959,6 +16298,24 @@
     "canonical": "wirklich",
     "type": "形容詞・副詞の変化"
   },
+  "worte": {
+    "id": "term-wort",
+    "original": "Worte",
+    "canonical": "Wort",
+    "type": "名詞の格・数"
+  },
+  "worten": {
+    "id": "term-wort",
+    "original": "Worten",
+    "canonical": "Wort",
+    "type": "名詞の格・数"
+  },
+  "wortes": {
+    "id": "term-wort",
+    "original": "Wortes",
+    "canonical": "Wort",
+    "type": "名詞の格・数"
+  },
   "wuchtiger": {
     "id": "term-wuchtig",
     "original": "wuchtiger",
@@ -14987,7 +16344,7 @@
     "id": "term-wuetend",
     "original": "wüthend",
     "canonical": "wütend",
-    "type": "該当なし"
+    "type": "旧綴り"
   },
   "zahlreicher": {
     "id": "term-zahlreich",
@@ -15055,6 +16412,12 @@
     "canonical": "ziemlich",
     "type": "形容詞・副詞の変化"
   },
+  "zimmers": {
+    "id": "term-zimmer",
+    "original": "Zimmers",
+    "canonical": "Zimmer",
+    "type": "名詞の格・数"
+  },
   "zoegernde": {
     "id": "term-zoegernd",
     "original": "zögernde",
@@ -15066,6 +16429,12 @@
     "original": "zögernden",
     "canonical": "zögernd",
     "type": "形容詞・副詞の変化"
+  },
+  "zorne": {
+    "id": "term-zorn",
+    "original": "Zorne",
+    "canonical": "Zorn",
+    "type": "名詞の格・数"
   },
   "zorniges": {
     "id": "term-zornig",
@@ -15127,1390 +16496,22 @@
     "canonical": "zurückkehren",
     "type": "分詞"
   },
-  "aufzugs": {
-    "id": "term-aufzug",
-    "original": "Aufzugs",
-    "canonical": "Aufzug",
-    "type": "語形変化（要分類）"
-  },
-  "aufzuges": {
-    "id": "term-aufzug",
-    "original": "Aufzuges",
-    "canonical": "Aufzug",
-    "type": "語形変化（要分類）"
-  },
-  "haende": {
-    "id": "term-hand",
-    "original": "Hände",
-    "canonical": "Hand",
-    "type": "名詞の格・数"
-  },
-  "haenden": {
-    "id": "term-hand",
-    "original": "Händen",
-    "canonical": "Hand",
-    "type": "名詞の格・数"
-  },
-  "blickes": {
-    "id": "term-blick",
-    "original": "Blickes",
-    "canonical": "Blick",
-    "type": "名詞の格・数"
-  },
-  "arme": {
-    "id": "term-arm",
-    "original": "Arme",
-    "canonical": "Arm",
-    "type": "名詞の格・数"
-  },
-  "augen": {
-    "id": "term-auge",
-    "original": "Augen",
-    "canonical": "Auge",
-    "type": "名詞の格・数"
-  },
-  "auges": {
-    "id": "term-auge",
-    "original": "Auges",
-    "canonical": "Auge",
-    "type": "名詞の格・数"
-  },
-  "frauen": {
-    "id": "term-frau",
-    "original": "Frauen",
-    "canonical": "Frau",
-    "type": "名詞の格・数"
-  },
-  "chore": {
-    "id": "term-chor",
-    "original": "Chore",
-    "canonical": "Chor",
-    "type": "名詞の格・数"
-  },
-  "chores": {
-    "id": "term-chor",
-    "original": "Chores",
-    "canonical": "Chor",
-    "type": "名詞の格・数"
-  },
-  "chors": {
-    "id": "term-chor",
-    "original": "Chors",
-    "canonical": "Chor",
-    "type": "名詞の格・数"
-  },
-  "choere": {
-    "id": "term-chor",
-    "original": "Chöre",
-    "canonical": "Chor",
-    "type": "名詞の格・数"
-  },
-  "haupte": {
-    "id": "term-haupt",
-    "original": "Haupte",
-    "canonical": "Haupt",
-    "type": "名詞の格・数"
-  },
-  "hauptes": {
-    "id": "term-haupt",
-    "original": "Hauptes",
-    "canonical": "Haupt",
-    "type": "名詞の格・数"
-  },
-  "haeupter": {
-    "id": "term-haupt",
-    "original": "Häupter",
-    "canonical": "Haupt",
-    "type": "名詞の格・数"
-  },
-  "haeuptern": {
-    "id": "term-haupt",
-    "original": "Häuptern",
-    "canonical": "Haupt",
-    "type": "名詞の格・数"
-  },
-  "kopfes": {
-    "id": "term-kopf",
-    "original": "Kopfes",
-    "canonical": "Kopf",
-    "type": "名詞の格・数"
-  },
-  "hauses": {
-    "id": "term-haus",
-    "original": "Hauses",
-    "canonical": "Haus",
-    "type": "名詞の格・数"
-  },
-  "haeuser": {
-    "id": "term-haus",
-    "original": "Häuser",
-    "canonical": "Haus",
-    "type": "名詞の格・数"
-  },
-  "haeusern": {
-    "id": "term-haus",
-    "original": "Häusern",
-    "canonical": "Haus",
-    "type": "名詞の格・数"
-  },
-  "fuesse": {
-    "id": "term-fuss",
-    "original": "Füsse",
-    "canonical": "Fuß",
-    "type": "名詞の格・数"
-  },
-  "vorn": {
-    "id": "term-vorne",
-    "original": "Vorn",
-    "canonical": "vorne",
-    "type": "形容詞・副詞の変化"
-  },
-  "gesichter": {
-    "id": "term-gesicht",
-    "original": "Gesichter",
-    "canonical": "Gesicht",
-    "type": "名詞の格・数"
-  },
-  "gesichtern": {
-    "id": "term-gesicht",
-    "original": "Gesichtern",
-    "canonical": "Gesicht",
-    "type": "名詞の格・数"
-  },
-  "gesichtes": {
-    "id": "term-gesicht",
-    "original": "Gesichtes",
-    "canonical": "Gesicht",
-    "type": "名詞の格・数"
-  },
-  "gesichts": {
-    "id": "term-gesicht",
-    "original": "Gesichts",
-    "canonical": "Gesicht",
-    "type": "名詞の格・数"
-  },
-  "gesichte": {
-    "id": "term-gesicht",
-    "original": "Gesichte",
-    "canonical": "Gesicht",
-    "type": "名詞の格・数"
-  },
-  "mannes": {
-    "id": "term-mann",
-    "original": "Mannes",
-    "canonical": "Mann",
-    "type": "名詞の格・数"
-  },
-  "maenner": {
-    "id": "term-mann",
-    "original": "Männer",
-    "canonical": "Mann",
-    "type": "名詞の格・数"
-  },
-  "maennern": {
-    "id": "term-mann",
-    "original": "Männern",
-    "canonical": "Mann",
-    "type": "名詞の格・数"
-  },
-  "kniee": {
-    "id": "term-knie",
-    "original": "Kniee",
-    "canonical": "Knie",
-    "type": "名詞の格・数"
-  },
-  "hellstes": {
-    "id": "term-hell",
-    "original": "Hellstes",
-    "canonical": "hell",
-    "type": "形容詞・副詞の変化"
-  },
-  "hellem": {
-    "id": "term-hell",
-    "original": "hellem",
-    "canonical": "hell",
-    "type": "形容詞・副詞の変化"
-  },
-  "helleren": {
-    "id": "term-hell",
-    "original": "helleren",
-    "canonical": "hell",
-    "type": "形容詞・副詞の変化"
-  },
-  "hellerer": {
-    "id": "term-hell",
-    "original": "hellerer",
-    "canonical": "hell",
-    "type": "形容詞・副詞の変化"
-  },
-  "helles": {
-    "id": "term-hell",
-    "original": "helles",
-    "canonical": "hell",
-    "type": "形容詞・副詞の変化"
-  },
-  "hellsten": {
-    "id": "term-hell",
-    "original": "hellsten",
-    "canonical": "hell",
-    "type": "形容詞・副詞の変化"
-  },
-  "volke": {
-    "id": "term-volk",
-    "original": "Volke",
-    "canonical": "Volk",
-    "type": "名詞の格・数"
-  },
-  "volkes": {
-    "id": "term-volk",
-    "original": "Volkes",
-    "canonical": "Volk",
-    "type": "名詞の格・数"
-  },
-  "dichtem": {
-    "id": "term-dicht",
-    "original": "dichtem",
-    "canonical": "dicht",
-    "type": "形容詞・副詞の変化"
-  },
-  "saengern": {
-    "id": "term-saenger",
-    "original": "Sängern",
-    "canonical": "Sänger",
-    "type": "名詞の格・数"
-  },
-  "saengers": {
-    "id": "term-saenger",
-    "original": "Sängers",
-    "canonical": "Sänger",
-    "type": "名詞の格・数"
-  },
-  "erblickend": {
-    "id": "term-erblicken",
-    "original": "erblickend",
-    "canonical": "erblicken",
-    "type": "分詞"
-  },
-  "erblickt": {
-    "id": "term-erblicken",
-    "original": "erblickt",
-    "canonical": "erblicken",
-    "type": "動詞の活用"
-  },
-  "hastigen": {
-    "id": "term-hastig",
-    "original": "hastigen",
-    "canonical": "hastig",
-    "type": "形容詞・副詞の変化"
-  },
-  "hastiger": {
-    "id": "term-hastig",
-    "original": "hastiger",
-    "canonical": "hastig",
-    "type": "形容詞・副詞の変化"
-  },
-  "versinkend": {
-    "id": "term-versinken",
-    "original": "versinkend",
-    "canonical": "versinken",
-    "type": "分詞"
-  },
-  "versinkt": {
-    "id": "term-versinken",
-    "original": "versinkt",
-    "canonical": "versinken",
-    "type": "動詞の活用"
-  },
-  "versunken": {
-    "id": "term-versinken",
-    "original": "versunken",
-    "canonical": "versinken",
-    "type": "分詞"
-  },
-  "versunkenen": {
-    "id": "term-versinken",
-    "original": "versunkenen",
-    "canonical": "versinken",
-    "type": "分詞"
-  },
-  "gaenzliche": {
-    "id": "term-gaenzlich",
-    "original": "gänzliche",
-    "canonical": "gänzlich",
-    "type": "形容詞・副詞の変化"
-  },
-  "gaenzlichen": {
-    "id": "term-gaenzlich",
-    "original": "gänzlichen",
-    "canonical": "gänzlich",
-    "type": "形容詞・副詞の変化"
-  },
-  "lichtern": {
-    "id": "term-licht",
-    "original": "Lichtern",
-    "canonical": "Licht",
-    "type": "名詞の格・数"
-  },
-  "stellungen": {
-    "id": "term-stellung",
-    "original": "Stellungen",
-    "canonical": "Stellung",
-    "type": "名詞の格・数"
-  },
-  "speeres": {
-    "id": "term-speer",
-    "original": "Speeres",
-    "canonical": "Speer",
-    "type": "名詞の格・数"
-  },
-  "tisches": {
-    "id": "term-tisch",
-    "original": "Tisches",
-    "canonical": "Tisch",
-    "type": "名詞の格・数"
-  },
-  "ringes": {
-    "id": "term-ring",
-    "original": "Ringes",
-    "canonical": "Ring",
-    "type": "名詞の格・数"
-  },
-  "betrachtend": {
-    "id": "term-betrachten",
-    "original": "betrachtend",
-    "canonical": "betrachten",
-    "type": "分詞"
-  },
-  "betrachtet": {
-    "id": "term-betrachten",
-    "original": "betrachtet",
-    "canonical": "betrachten",
-    "type": "動詞の活用"
-  },
-  "gesange": {
-    "id": "term-gesang",
-    "original": "Gesange",
-    "canonical": "Gesang",
-    "type": "名詞の格・数"
-  },
-  "gesanges": {
-    "id": "term-gesang",
-    "original": "Gesanges",
-    "canonical": "Gesang",
-    "type": "名詞の格・数"
-  },
-  "sichtbare": {
-    "id": "term-sichtbar",
-    "original": "sichtbare",
-    "canonical": "sichtbar",
-    "type": "形容詞・副詞の変化"
-  },
-  "sichtbaren": {
-    "id": "term-sichtbar",
-    "original": "sichtbaren",
-    "canonical": "sichtbar",
-    "type": "形容詞・副詞の変化"
-  },
-  "ufern": {
-    "id": "term-ufer",
-    "original": "Ufern",
-    "canonical": "Ufer",
-    "type": "名詞の格・数"
-  },
-  "verlassend": {
-    "id": "term-verlassen",
-    "original": "verlassend",
-    "canonical": "verlassen",
-    "type": "分詞"
-  },
-  "verlaesst": {
-    "id": "term-verlassen",
-    "original": "verlässt",
-    "canonical": "verlassen",
-    "type": "動詞の活用"
-  },
-  "kinder": {
-    "id": "term-kind",
-    "original": "Kinder",
-    "canonical": "Kind",
-    "type": "名詞の格・数"
-  },
-  "kindern": {
-    "id": "term-kind",
-    "original": "Kindern",
-    "canonical": "Kind",
-    "type": "名詞の格・数"
-  },
-  "kindes": {
-    "id": "term-kind",
-    "original": "Kindes",
-    "canonical": "Kind",
-    "type": "名詞の格・数"
-  },
-  "worte": {
-    "id": "term-wort",
-    "original": "Worte",
-    "canonical": "Wort",
-    "type": "名詞の格・数"
-  },
-  "worten": {
-    "id": "term-wort",
-    "original": "Worten",
-    "canonical": "Wort",
-    "type": "名詞の格・数"
-  },
-  "wortes": {
-    "id": "term-wort",
-    "original": "Wortes",
-    "canonical": "Wort",
-    "type": "名詞の格・数"
-  },
-  "vernehmend": {
-    "id": "term-vernehmen",
-    "original": "vernehmend",
-    "canonical": "vernehmen",
-    "type": "分詞"
-  },
-  "vernimmt": {
-    "id": "term-vernehmen",
-    "original": "vernimmt",
-    "canonical": "vernehmen",
-    "type": "動詞の活用"
-  },
-  "vernommen": {
-    "id": "term-vernehmen",
-    "original": "vernommen",
-    "canonical": "vernehmen",
-    "type": "分詞"
-  },
-  "vernommenen": {
-    "id": "term-vernehmen",
-    "original": "vernommenen",
-    "canonical": "vernehmen",
-    "type": "分詞"
-  },
-  "geleitend": {
-    "id": "term-geleiten",
-    "original": "geleitend",
-    "canonical": "geleiten",
-    "type": "分詞"
-  },
-  "geleitenden": {
-    "id": "term-geleiten",
-    "original": "geleitenden",
-    "canonical": "geleiten",
-    "type": "分詞"
-  },
-  "belebend": {
-    "id": "term-beleben",
-    "original": "belebend",
-    "canonical": "beleben",
-    "type": "分詞"
-  },
-  "belebt": {
-    "id": "term-beleben",
-    "original": "belebt",
-    "canonical": "beleben",
-    "type": "分詞"
-  },
-  "belebter": {
-    "id": "term-beleben",
-    "original": "belebter",
-    "canonical": "beleben",
-    "type": "形容詞・副詞の変化"
-  },
-  "belebterem": {
-    "id": "term-beleben",
-    "original": "belebterem",
-    "canonical": "beleben",
-    "type": "形容詞・副詞の変化"
-  },
-  "belebtes": {
-    "id": "term-beleben",
-    "original": "belebtes",
-    "canonical": "beleben",
-    "type": "形容詞・副詞の変化"
-  },
-  "freudigem": {
-    "id": "term-freudig",
-    "original": "freudigem",
-    "canonical": "freudig",
-    "type": "形容詞・副詞の変化"
-  },
-  "freudigen": {
-    "id": "term-freudig",
-    "original": "freudigen",
-    "canonical": "freudig",
-    "type": "形容詞・副詞の変化"
-  },
-  "freudiger": {
-    "id": "term-freudig",
-    "original": "freudiger",
-    "canonical": "freudig",
-    "type": "形容詞・副詞の変化"
-  },
-  "freudigsten": {
-    "id": "term-freudig",
-    "original": "freudigsten",
-    "canonical": "freudig",
-    "type": "形容詞・副詞の変化"
-  },
-  "freudigster": {
-    "id": "term-freudig",
-    "original": "freudigster",
-    "canonical": "freudig",
-    "type": "形容詞・副詞の変化"
-  },
-  "leichen": {
-    "id": "term-leiche",
-    "original": "Leichen",
-    "canonical": "Leiche",
-    "type": "名詞の格・数"
-  },
-  "mienen": {
-    "id": "term-miene",
-    "original": "Mienen",
-    "canonical": "Miene",
-    "type": "名詞の格・数"
-  },
-  "schilde": {
-    "id": "term-schild",
-    "original": "Schilde",
-    "canonical": "Schild",
-    "type": "名詞の格・数"
-  },
-  "schilden": {
-    "id": "term-schild",
-    "original": "Schilden",
-    "canonical": "Schild",
-    "type": "名詞の格・数"
-  },
-  "hoele": {
-    "id": "term-hoehle",
-    "original": "Höle",
-    "canonical": "Höhle",
-    "type": "旧綴り"
-  },
-  "finstere": {
-    "id": "term-finster",
-    "original": "finstere",
-    "canonical": "finster",
-    "type": "形容詞・副詞の変化"
-  },
-  "finsteren": {
-    "id": "term-finster",
-    "original": "finsteren",
-    "canonical": "finster",
-    "type": "形容詞・副詞の変化"
-  },
-  "finsterer": {
-    "id": "term-finster",
-    "original": "finsterer",
-    "canonical": "finster",
-    "type": "形容詞・副詞の変化"
-  },
-  "finsteres": {
-    "id": "term-finster",
-    "original": "finsteres",
-    "canonical": "finster",
-    "type": "形容詞・副詞の変化"
-  },
-  "finstern": {
-    "id": "term-finster",
-    "original": "finstern",
-    "canonical": "finster",
-    "type": "形容詞・副詞の変化"
-  },
-  "finstrem": {
-    "id": "term-finster",
-    "original": "finstrem",
-    "canonical": "finster",
-    "type": "形容詞・副詞の変化"
-  },
-  "finstereres": {
-    "id": "term-finster",
-    "original": "finstereres",
-    "canonical": "finster",
-    "type": "形容詞・副詞の変化"
-  },
-  "finstres": {
-    "id": "term-finster",
-    "original": "finstres",
-    "canonical": "finster",
-    "type": "形容詞・副詞の変化"
-  },
-  "finstre": {
-    "id": "term-finster",
-    "original": "finstre",
-    "canonical": "finster",
-    "type": "形容詞・副詞の変化"
-  },
-  "eifriger": {
-    "id": "term-eifrig",
-    "original": "eifriger",
-    "canonical": "eifrig",
-    "type": "形容詞・副詞の変化"
-  },
-  "eifrigst": {
-    "id": "term-eifrig",
-    "original": "eifrigst",
-    "canonical": "eifrig",
-    "type": "形容詞・副詞の変化"
-  },
-  "schmerzlicher": {
-    "id": "term-schmerzlich",
-    "original": "Schmerzlicher",
-    "canonical": "schmerzlich",
-    "type": "形容詞・副詞の変化"
-  },
-  "schmerzliche": {
-    "id": "term-schmerzlich",
-    "original": "schmerzliche",
-    "canonical": "schmerzlich",
-    "type": "形容詞・副詞の変化"
-  },
-  "schmerzlichem": {
-    "id": "term-schmerzlich",
-    "original": "schmerzlichem",
-    "canonical": "schmerzlich",
-    "type": "形容詞・副詞の変化"
-  },
-  "schmerzlichen": {
-    "id": "term-schmerzlich",
-    "original": "schmerzlichen",
-    "canonical": "schmerzlich",
-    "type": "形容詞・副詞の変化"
-  },
-  "schmerzlichsten": {
-    "id": "term-schmerzlich",
-    "original": "schmerzlichsten",
-    "canonical": "schmerzlich",
-    "type": "形容詞・副詞の変化"
-  },
-  "starrem": {
-    "id": "term-starr",
-    "original": "starrem",
-    "canonical": "starr",
-    "type": "形容詞・副詞の変化"
-  },
-  "starrer": {
-    "id": "term-starr",
-    "original": "starrer",
-    "canonical": "starr",
-    "type": "形容詞・副詞の変化"
-  },
-  "starres": {
-    "id": "term-starr",
-    "original": "starres",
-    "canonical": "starr",
-    "type": "形容詞・副詞の変化"
-  },
-  "stirne": {
-    "id": "term-stirn",
-    "original": "Stirne",
-    "canonical": "Stirn",
-    "type": "名詞の格・数"
-  },
-  "stirnen": {
-    "id": "term-stirn",
-    "original": "Stirnen",
-    "canonical": "Stirn",
-    "type": "名詞の格・数"
-  },
-  "tanzes": {
-    "id": "term-tanz",
-    "original": "Tanzes",
-    "canonical": "Tanz",
-    "type": "名詞の格・数"
-  },
-  "taenze": {
-    "id": "term-tanz",
-    "original": "Tänze",
-    "canonical": "Tanz",
-    "type": "名詞の格・数"
-  },
-  "schiffes": {
-    "id": "term-schiff",
-    "original": "Schiffes",
-    "canonical": "Schiff",
-    "type": "名詞の格・数"
-  },
-  "verneigend": {
-    "id": "term-verneigen",
-    "original": "verneigend",
-    "canonical": "verneigen",
-    "type": "分詞"
-  },
-  "verneigt": {
-    "id": "term-verneigen",
-    "original": "verneigt",
-    "canonical": "verneigen",
-    "type": "動詞の活用"
-  },
-  "gewandes": {
-    "id": "term-gewand",
-    "original": "Gewandes",
-    "canonical": "Gewand",
-    "type": "名詞の格・数"
-  },
-  "gewaender": {
-    "id": "term-gewand",
-    "original": "Gewänder",
-    "canonical": "Gewand",
-    "type": "名詞の格・数"
-  },
-  "gewaendern": {
-    "id": "term-gewand",
-    "original": "Gewändern",
-    "canonical": "Gewand",
-    "type": "名詞の格・数"
-  },
-  "umarmend": {
-    "id": "term-umarmen",
-    "original": "umarmend",
-    "canonical": "umarmen",
-    "type": "分詞"
-  },
-  "umarmt": {
-    "id": "term-umarmen",
-    "original": "umarmt",
-    "canonical": "umarmen",
-    "type": "動詞の活用"
-  },
-  "musikern": {
-    "id": "term-musiker",
-    "original": "Musikern",
-    "canonical": "Musiker",
-    "type": "名詞の格・数"
-  },
-  "musikers": {
-    "id": "term-musiker",
-    "original": "Musikers",
-    "canonical": "Musiker",
-    "type": "名詞の格・数"
-  },
-  "gemache": {
-    "id": "term-gemach",
-    "original": "Gemache",
-    "canonical": "Gemach",
-    "type": "名詞の格・数"
-  },
-  "gemaches": {
-    "id": "term-gemach",
-    "original": "Gemaches",
-    "canonical": "Gemach",
-    "type": "名詞の格・数"
-  },
-  "gemachs": {
-    "id": "term-gemach",
-    "original": "Gemachs",
-    "canonical": "Gemach",
-    "type": "名詞の格・数"
-  },
-  "gemaecher": {
-    "id": "term-gemach",
-    "original": "Gemächer",
-    "canonical": "Gemach",
-    "type": "名詞の格・数"
-  },
-  "stumme": {
-    "id": "term-stumm",
-    "original": "stumme",
-    "canonical": "stumm",
-    "type": "形容詞・副詞の変化"
-  },
-  "stummem": {
-    "id": "term-stumm",
-    "original": "stummem",
-    "canonical": "stumm",
-    "type": "形容詞・副詞の変化"
-  },
-  "stummen": {
-    "id": "term-stumm",
-    "original": "stummen",
-    "canonical": "stumm",
-    "type": "形容詞・副詞の変化"
-  },
-  "stummer": {
-    "id": "term-stumm",
-    "original": "stummer",
-    "canonical": "stumm",
-    "type": "形容詞・副詞の変化"
-  },
-  "stummes": {
-    "id": "term-stumm",
-    "original": "stummes",
-    "canonical": "stumm",
-    "type": "形容詞・副詞の変化"
-  },
-  "lagers": {
-    "id": "term-lager",
-    "original": "Lagers",
-    "canonical": "Lager",
-    "type": "名詞の格・数"
-  },
-  "zimmers": {
-    "id": "term-zimmer",
-    "original": "Zimmers",
-    "canonical": "Zimmer",
-    "type": "名詞の格・数"
-  },
-  "wassers": {
-    "id": "term-wasser",
-    "original": "Wassers",
-    "canonical": "Wasser",
-    "type": "名詞の格・数"
-  },
-  "mantels": {
-    "id": "term-mantel",
-    "original": "Mantels",
-    "canonical": "Mantel",
-    "type": "名詞の格・数"
-  },
-  "maentel": {
-    "id": "term-mantel",
-    "original": "Mäntel",
-    "canonical": "Mantel",
-    "type": "名詞の格・数"
-  },
-  "knaben": {
-    "id": "term-knabe",
-    "original": "Knaben",
-    "canonical": "Knabe",
-    "type": "名詞の格・数"
-  },
-  "verwunderter": {
-    "id": "term-verwundert",
-    "original": "verwunderter",
-    "canonical": "verwundert",
-    "type": "形容詞・副詞の変化"
-  },
-  "verwunderte": {
-    "id": "term-verwundert",
-    "original": "verwunderte",
-    "canonical": "verwundert",
-    "type": "形容詞・副詞の変化"
-  },
-  "verhuellt": {
-    "id": "term-verhuellen",
-    "original": "verhüllt",
-    "canonical": "verhüllen",
-    "type": "動詞の活用"
-  },
-  "verhuellte": {
-    "id": "term-verhuellen",
-    "original": "verhüllte",
-    "canonical": "verhüllen",
-    "type": "分詞"
-  },
-  "verhuellten": {
-    "id": "term-verhuellen",
-    "original": "verhüllten",
-    "canonical": "verhüllen",
-    "type": "分詞"
-  },
-  "saales": {
-    "id": "term-saal",
-    "original": "Saales",
-    "canonical": "Saal",
-    "type": "名詞の格・数"
-  },
-  "saele": {
-    "id": "term-saal",
-    "original": "Säle",
-    "canonical": "Saal",
-    "type": "名詞の格・数"
-  },
-  "strassen": {
-    "id": "term-strasse",
-    "original": "Straßen",
-    "canonical": "Straße",
-    "type": "名詞の格・数"
-  },
-  "freundlicher": {
-    "id": "term-freundlich",
-    "original": "Freundlicher",
-    "canonical": "freundlich",
-    "type": "形容詞・副詞の変化"
-  },
-  "freundlichem": {
-    "id": "term-freundlich",
-    "original": "freundlichem",
-    "canonical": "freundlich",
-    "type": "形容詞・副詞の変化"
-  },
-  "freundlichen": {
-    "id": "term-freundlich",
-    "original": "freundlichen",
-    "canonical": "freundlich",
-    "type": "形容詞・副詞の変化"
-  },
-  "theaters": {
-    "id": "term-theater",
-    "original": "Theaters",
-    "canonical": "Theater",
-    "type": "名詞の格・数"
-  },
-  "himmels": {
-    "id": "term-himmel",
-    "original": "Himmels",
-    "canonical": "Himmel",
-    "type": "名詞の格・数"
-  },
-  "herdes": {
-    "id": "term-herd",
-    "original": "Herdes",
-    "canonical": "Herd",
-    "type": "名詞の格・数"
-  },
-  "aufmerksamer": {
-    "id": "term-aufmerksam",
-    "original": "aufmerksamer",
-    "canonical": "aufmerksam",
-    "type": "形容詞・副詞の変化"
-  },
-  "aergerliche": {
-    "id": "term-aergerlich",
-    "original": "Ärgerliche",
-    "canonical": "ärgerlich",
-    "type": "形容詞・副詞の変化"
-  },
-  "aergerlicher": {
-    "id": "term-aergerlich",
-    "original": "ärgerlicher",
-    "canonical": "ärgerlich",
-    "type": "形容詞・副詞の変化"
-  },
-  "beobachtend": {
-    "id": "term-beobachten",
-    "original": "beobachtend",
-    "canonical": "beobachten",
-    "type": "分詞"
-  },
-  "beobachtet": {
-    "id": "term-beobachten",
-    "original": "beobachtet",
-    "canonical": "beobachten",
-    "type": "動詞の活用"
-  },
-  "umarmungen": {
-    "id": "term-umarmung",
-    "original": "Umarmungen",
-    "canonical": "Umarmung",
-    "type": "名詞の格・数"
-  },
-  "triolen": {
-    "id": "term-triole",
-    "original": "Triolen",
-    "canonical": "Triole",
-    "type": "名詞の格・数"
-  },
-  "stuehle": {
-    "id": "term-stuhl",
-    "original": "Stühle",
-    "canonical": "Stuhl",
-    "type": "名詞の格・数"
-  },
-  "stuehlen": {
-    "id": "term-stuhl",
-    "original": "Stühlen",
-    "canonical": "Stuhl",
-    "type": "名詞の格・数"
-  },
-  "helme": {
-    "id": "term-helm",
-    "original": "Helme",
-    "canonical": "Helm",
-    "type": "名詞の格・数"
-  },
-  "feuers": {
-    "id": "term-feuer",
-    "original": "Feuers",
-    "canonical": "Feuer",
-    "type": "名詞の格・数"
-  },
-  "richtungen": {
-    "id": "term-richtung",
-    "original": "Richtungen",
-    "canonical": "Richtung",
-    "type": "名詞の格・数"
-  },
-  "bedeckt": {
-    "id": "term-bedecken",
-    "original": "bedeckt",
-    "canonical": "bedecken",
-    "type": "動詞の活用"
-  },
-  "bedeckte": {
-    "id": "term-bedecken",
-    "original": "bedeckte",
-    "canonical": "bedecken",
-    "type": "分詞"
-  },
-  "zorne": {
-    "id": "term-zorn",
-    "original": "Zorne",
-    "canonical": "Zorn",
-    "type": "名詞の格・数"
-  },
-  "waffen": {
-    "id": "term-waffe",
-    "original": "Waffen",
-    "canonical": "Waffe",
-    "type": "名詞の格・数"
-  },
-  "ruhebetts": {
-    "id": "term-ruhebett",
-    "original": "Ruhebetts",
-    "canonical": "Ruhebett",
-    "type": "名詞の格・数"
-  },
-  "mundes": {
-    "id": "term-mund",
-    "original": "Mundes",
-    "canonical": "Mund",
-    "type": "名詞の格・数"
-  },
-  "verwirrter": {
-    "id": "term-verwirrt",
-    "original": "verwirrter",
-    "canonical": "verwirrt",
-    "type": "形容詞・副詞の変化"
-  },
-  "verwirrtem": {
-    "id": "term-verwirrt",
-    "original": "verwirrtem",
-    "canonical": "verwirrt",
-    "type": "分詞"
-  },
-  "verwandelt": {
-    "id": "term-verwandeln",
-    "original": "verwandelt",
-    "canonical": "verwandeln",
-    "type": "動詞の活用"
-  },
-  "verwandelten": {
-    "id": "term-verwandeln",
-    "original": "verwandelten",
-    "canonical": "verwandeln",
-    "type": "分詞"
-  },
-  "jubelnde": {
-    "id": "term-jubelnd",
-    "original": "jubelnde",
-    "canonical": "jubelnd",
-    "type": "分詞"
-  },
-  "jubelndes": {
-    "id": "term-jubelnd",
-    "original": "jubelndes",
-    "canonical": "jubelnd",
-    "type": "分詞"
-  },
-  "blumen": {
-    "id": "term-blume",
-    "original": "Blumen",
-    "canonical": "Blume",
-    "type": "名詞の格・数"
-  },
-  "ecken": {
-    "id": "term-ecke",
-    "original": "Ecken",
-    "canonical": "Ecke",
-    "type": "名詞の格・数"
-  },
-  "verlegenen": {
-    "id": "term-verlegen",
-    "original": "verlegenen",
-    "canonical": "verlegen",
-    "type": "形容詞・副詞の変化"
-  },
-  "regungslose": {
-    "id": "term-regungslos",
-    "original": "regungslose",
-    "canonical": "regungslos",
-    "type": "形容詞・副詞の変化"
-  },
-  "regungsloser": {
-    "id": "term-regungslos",
-    "original": "regungsloser",
-    "canonical": "regungslos",
-    "type": "形容詞・副詞の変化"
-  },
-  "verweilt": {
-    "id": "term-verweilen",
-    "original": "verweilt",
-    "canonical": "verweilen",
-    "type": "動詞の活用"
-  },
-  "verweilend": {
-    "id": "term-verweilen",
-    "original": "verweilend",
-    "canonical": "verweilen",
-    "type": "分詞"
-  },
-  "umgibt": {
-    "id": "term-umgeben",
-    "original": "umgibt",
-    "canonical": "umgeben",
-    "type": "動詞の活用"
-  },
-  "umgiebt": {
-    "id": "term-umgeben",
-    "original": "umgiebt",
-    "canonical": "umgeben",
-    "type": "旧綴り"
-  },
-  "bettes": {
-    "id": "term-bett",
-    "original": "Bettes",
-    "canonical": "Bett",
-    "type": "名詞の格・数"
-  },
-  "echos": {
-    "id": "term-echo",
-    "original": "Echos",
-    "canonical": "Echo",
-    "type": "名詞の格・数"
-  },
-  "seiles": {
-    "id": "term-seil",
-    "original": "Seiles",
-    "canonical": "Seil",
-    "type": "名詞の格・数"
-  },
-  "glaeser": {
-    "id": "term-glas",
-    "original": "Gläser",
-    "canonical": "Glas",
-    "type": "名詞の格・数"
-  },
-  "energischer": {
-    "id": "term-energisch",
-    "original": "energischer",
-    "canonical": "energisch",
-    "type": "形容詞・副詞の変化"
-  },
-  "scheuer": {
-    "id": "term-scheu",
-    "original": "scheuer",
-    "canonical": "scheu",
-    "type": "形容詞・副詞の変化"
-  },
-  "scheues": {
-    "id": "term-scheu",
-    "original": "scheues",
-    "canonical": "scheu",
-    "type": "形容詞・副詞の変化"
-  },
-  "verklaerten": {
-    "id": "term-verklaert",
-    "original": "verklärten",
-    "canonical": "verklärt",
-    "type": "分詞"
-  },
-  "verklaerter": {
-    "id": "term-verklaert",
-    "original": "verklärter",
-    "canonical": "verklärt",
-    "type": "形容詞・副詞の変化"
-  },
-  "meere": {
-    "id": "term-meer",
-    "original": "Meere",
-    "canonical": "Meer",
-    "type": "名詞の格・数"
-  },
-  "kampfe": {
-    "id": "term-kampf",
-    "original": "Kampfe",
-    "canonical": "Kampf",
-    "type": "名詞の格・数"
-  },
-  "kampfes": {
-    "id": "term-kampf",
-    "original": "Kampfes",
-    "canonical": "Kampf",
-    "type": "名詞の格・数"
-  },
-  "lautlosen": {
-    "id": "term-lautlos",
-    "original": "lautlosen",
-    "canonical": "lautlos",
-    "type": "形容詞・副詞の変化"
-  },
-  "bleicher": {
-    "id": "term-bleich",
-    "original": "bleicher",
-    "canonical": "bleich",
-    "type": "形容詞・副詞の変化"
-  },
-  "bleiches": {
-    "id": "term-bleich",
-    "original": "bleiches",
-    "canonical": "bleich",
-    "type": "形容詞・副詞の変化"
-  },
-  "verbirgt": {
-    "id": "term-verbergen",
-    "original": "verbirgt",
-    "canonical": "verbergen",
-    "type": "動詞の活用"
-  },
-  "verborgen": {
-    "id": "term-verbergen",
-    "original": "verborgen",
-    "canonical": "verbergen",
-    "type": "分詞"
-  },
   "zuschauers": {
     "id": "term-zuschauer",
     "original": "Zuschauers",
     "canonical": "Zuschauer",
     "type": "名詞の格・数"
   },
-  "saengerinnen": {
-    "id": "term-saengerin",
-    "original": "Sängerinnen",
-    "canonical": "Sängerin",
-    "type": "名詞の格・数"
+  "gegen-s": {
+    "id": "term-gegen",
+    "original": "gegen’s",
+    "canonical": "gegen",
+    "type": "縮約形"
   },
-  "erinnerungen": {
-    "id": "term-erinnerung",
-    "original": "Erinnerungen",
-    "canonical": "Erinnerung",
-    "type": "名詞の格・数"
-  },
-  "gebete": {
-    "id": "term-gebet",
-    "original": "Gebete",
-    "canonical": "Gebet",
-    "type": "名詞の格・数"
-  },
-  "soellers": {
-    "id": "term-soeller",
-    "original": "Söllers",
-    "canonical": "Söller",
-    "type": "名詞の格・数"
-  },
-  "trinkhorns": {
-    "id": "term-trinkhorn",
-    "original": "Trinkhorns",
-    "canonical": "Trinkhorn",
-    "type": "名詞の格・数"
-  },
-  "trinkhoerner": {
-    "id": "term-trinkhorn",
-    "original": "Trinkhörner",
-    "canonical": "Trinkhorn",
-    "type": "名詞の格・数"
-  },
-  "entsetzens": {
-    "id": "term-entsetzen",
-    "original": "Entsetzens",
-    "canonical": "Entsetzen",
-    "type": "名詞の格・数"
-  },
-  "kulissen": {
-    "id": "term-kulisse",
-    "original": "Kulissen",
-    "canonical": "Kulisse",
-    "type": "名詞の格・数"
-  },
-  "kerzen": {
-    "id": "term-kerze",
-    "original": "Kerzen",
-    "canonical": "Kerze",
-    "type": "名詞の格・数"
-  },
-  "stuermische": {
-    "id": "term-stuermisch",
-    "original": "stürmische",
-    "canonical": "stürmisch",
-    "type": "形容詞・副詞の変化"
-  },
-  "stuermischer": {
-    "id": "term-stuermisch",
-    "original": "stürmischer",
-    "canonical": "stürmisch",
-    "type": "形容詞・副詞の変化"
-  },
-  "stuermischen": {
-    "id": "term-stuermisch",
-    "original": "stürmischen",
-    "canonical": "stürmisch",
-    "type": "形容詞・副詞の変化"
-  },
-  "abwechselndem": {
-    "id": "term-abwechselnd",
-    "original": "abwechselndem",
-    "canonical": "abwechselnd",
-    "type": "分詞"
-  },
-  "erfuellt": {
-    "id": "term-erfuellen",
-    "original": "erfüllt",
-    "canonical": "erfüllen",
-    "type": "動詞の活用"
-  },
-  "geraeusche": {
-    "id": "term-geraeusch",
-    "original": "Geräusche",
-    "canonical": "Geräusch",
-    "type": "名詞の格・数"
-  },
-  "anhoehen": {
-    "id": "term-anhoehe",
-    "original": "Anhöhen",
-    "canonical": "Anhöhe",
-    "type": "名詞の格・数"
-  },
-  "theatersaals": {
-    "id": "term-theatersaal",
-    "original": "Theatersaals",
-    "canonical": "Theatersaal",
-    "type": "名詞の格・数"
-  },
-  "schwammschlaegeln": {
-    "id": "term-schwammschlaegel",
-    "original": "Schwammschlägeln",
-    "canonical": "Schwammschlägel",
-    "type": "名詞の格・数"
-  },
-  "atemloser": {
-    "id": "term-atemlos",
-    "original": "atemloser",
-    "canonical": "atemlos",
-    "type": "形容詞・副詞の変化"
-  },
-  "ungestuemem": {
-    "id": "term-ungestuem",
-    "original": "ungestümem",
-    "canonical": "ungestüm",
-    "type": "形容詞・副詞の変化"
-  },
-  "ungestuemer": {
-    "id": "term-ungestuem",
-    "original": "ungestümer",
-    "canonical": "ungestüm",
-    "type": "形容詞・副詞の変化"
-  },
-  "schattens": {
-    "id": "term-schatten",
-    "original": "Schattens",
-    "canonical": "Schatten",
-    "type": "名詞の格・数"
-  },
-  "truhen": {
-    "id": "term-truhe",
-    "original": "Truhen",
-    "canonical": "Truhe",
-    "type": "名詞の格・数"
-  },
-  "kammern": {
-    "id": "term-kammer",
-    "original": "Kammern",
-    "canonical": "Kammer",
-    "type": "名詞の格・数"
+  "aufgestellten": {
+    "id": "term-aufstellen",
+    "original": "aufgestellten",
+    "canonical": "aufstellen",
+    "type": "過去分詞の語尾変化"
   }
 }
