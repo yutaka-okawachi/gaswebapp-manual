@@ -18,6 +18,19 @@ test('legacy single-line Italian and old musical heading remain valid',()=>{
  assert.equal(c.maintenanceStyleValidate_(old,'en',{...options,requireMusicExamples:true}),old);
  assert.equal(c.renderNotesEnglishLayout('Italian: lato, pagina<br>Existing summary.','en'),'Italian: lato, pagina<br>Existing summary.');
 });
+test('Italian-only lists retain grammar and example translations without English glosses',()=>{
+ const plain=body.replace(header,'Italian:\nlato, pagina');
+ assert.equal(c.maintenanceStyleValidate_(plain,'en',options),plain);
+ const withGrammar=plain.replace('lato, pagina','lato, pagina\nNouns; invariable here.');
+ assert.equal(c.maintenanceStyleEquivalents_(withGrammar).italian,'lato, pagina');
+ assert.equal(c.maintenanceStyleValidate_(withGrammar,'en',options),withGrammar);
+ for(const invalid of ['lato','lato, inventato','lato,pagina'])assert.throws(()=>c.maintenanceStyleValidate_(plain.replace('lato, pagina',invalid),'en',options));
+ const html=c.generateDicListHtml([['Term',plain,'[GM]']],null,null,null,'en');
+ assert(html.includes('Italian:</strong><br>lato, pagina<br><br>【General meanings】'));
+ assert(!html.includes('— side'));assert(!html.includes('— page'));
+ assert(html.includes('Side; page.'));assert(html.includes('English:</strong> Adopted translation.'));
+});
+
 test('malformed, added, lost and noncanonical Italian terms are rejected',()=>{
  for(const bad of [body.replace('lato — side','lato'),body.replace('lato — side','lato,pagina — side'),body.replace('pagina — page','inventato — page'),body.replace('pagina — page\n',''),body.replace('pagina — page','pagina — ')])assert.throws(()=>c.maintenanceStyleValidate_(bad,'en',options));
 });

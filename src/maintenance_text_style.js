@@ -51,6 +51,14 @@ function maintenanceStyleEquivalents_(text) {
   const result = { english: '', italian: '', groups: [] }, first = String(text || '').trim().split(/\n\s*\n/)[0];
   if (!/^(?:【英】|【伊】|Italian:)/.test(first)) return result;
   if (first.split('\n')[0] === 'Italian:') {
+    const candidates = first.split('\n')[1] || '';
+    // The current format has one Italian-only list; following prose is not an equivalent.
+    if (!candidates.includes(' — ')) {
+      const italian = maintenanceStyleForeignList_(candidates);
+      result.groups = [{ english: '', italian: italian, plain: true, canonical: candidates === italian }];
+      result.italian = italian;
+      return result;
+    }
     result.groups = first.split('\n').slice(1).map(function (line) {
       const pair = line.match(/^(.+?) — (.+)$/);
       return { english: '', italian: pair ? maintenanceStyleForeignList_(pair[1]) : '', meaning: pair ? pair[2].trim() : '', canonical: Boolean(pair && pair[1] === maintenanceStyleForeignList_(pair[1])) };
@@ -113,7 +121,7 @@ function maintenanceStyleRules_(tab, profile) {
     'Notesは辞書本文または項目固有の注記．短訳用の汎用テンプレートでは処理しない．現在のprofile=' + profile + 'に従う．',
     '日本語の外国語列挙は【英】…／【伊】…から開始し，「対応する表現：」を付けない．列挙の区切りはASCII comma+space ", "．',
     '英語本文に英語対応の列挙は不要．根拠のある既存または新規提案のイタリア語対応はItalian:ブロックを先頭に置く．Corresponding expressions:は不要．',
-    '複数行・複数義に分かれた既存の対応はknown_equivalents.groupsを見てすべて保持する．イタリア語対応がある英語本文は先頭をItalian:だけの独立行とし，続く行を意味ごとに「イタリア語候補 — 英語の意味」の形で改行する．同義の候補はcomma+spaceでまとめ，意味の対応と固有注記は入力に根拠がある範囲だけを保持する．意味別の対応が不明なら推測して分割せず，その不明点を確認用に残す．',
+    '複数行・複数義に分かれた既存のイタリア語対応はknown_equivalents.groupsを見てすべて保持する．英語本文は先頭をItalian:だけの独立行とし，次の1行にイタリア語候補だけをASCII comma+spaceで列挙する．対応語の後にダッシュと英語の意味を付けない．一般的な意味・文法説明・固有注記・原文使用例と英訳は本文の該当箇所に保持し，形式のために追加や削除をしない．',
     '既存本文の英訳・注記では元々ない英伊対応を形式のために追加しない．ただしnew_dictionary=trueの新規辞書項目は別で，見出し語そのものの確かな英伊対応をnotes_supportに根拠説明付きで提案する．空欄だからという理由だけで省略しない．不確かな対応は保留し，模範例の対応語を流用しない．',
     '新規辞書項目の音楽用例を出典別に分ける場合，独立した見出しは[GM]，[RW: Oper]，[RS: Oper]を使う．sourceとusage_idsで確認できる採用実例の範囲だけを示し，文中の出典記号・譜例・URL・引用・HTMLは変更しない．',
     '新規Notesの音楽用語としての訳例では，原文使用例とその訳だけで伝わる箇所はその対だけを示す．「舞台指示では〜を表す使用例がある」等，続く用例の内容を先取り・言い換える説明的な導入文は付けない．日本語・英語とも同じ方針にする．',
@@ -233,7 +241,7 @@ function maintenanceStyleValidate_(text, language, options) {
     const first = value.split('\n')[0];
     const expected = language === 'ja' ? maintenanceStyleNotesPrefix_(equivalents.english, equivalents.italian, options.de) : 'Italian: ' + equivalents.italian;
     const grouped = language === 'en' && first === 'Italian:';
-    if (grouped && (!equivalents.groups.length || equivalents.groups.some(function (group) { return !group.italian || !group.meaning || !group.canonical; }))) throw new Error('Italian:の各行はイタリア語候補 — 英語の意味で記述してください．');
+    if (grouped && (!equivalents.groups.length || equivalents.groups.some(function (group) { return !group.italian || (!group.plain && !group.meaning) || !group.canonical; }))) throw new Error('Italian:の下には正しいイタリア語対応をASCII comma+spaceで列挙してください．');
     if ((!grouped && first !== expected) || !expected.trim()) throw new Error('外国語列挙は現行の先頭行とASCII comma+spaceで記述してください．');
     if (options.restrictEquivalents && ((equivalents.english && equivalents.english !== known.english) || (equivalents.italian && equivalents.italian !== known.italian))) throw new Error('根拠のない英伊対応を追加しないでください．');
   }

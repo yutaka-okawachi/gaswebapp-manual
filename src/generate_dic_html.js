@@ -1217,7 +1217,7 @@ ${breadcrumbJSON}
 
         .example-wrapper {
             display: flex;
-            align-items: center;
+            align-items: baseline;
             flex-wrap: wrap;
             gap: 6px;
             margin-top: 2px;
