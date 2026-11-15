@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "releaseId": "f21aee29bc038248f38d8e3ef842855aa30ad6536cde4b725aa0958023a78e9c",
+  "releaseId": "5948d0941c2b87c337a7602c3735bb0006f86ddaee03ffdf7584c9bcebf155a8",
   "hashes": {
     "en/index.html": "4ff3a4c893effdfd7757d8b03c7810f2cbf3e276c6d1bc26f0667dd977146c54",
     "en/license.html": "79e59f346cd8aad8219769842c351cdc64005e980f00ffec3bd88570216d35e9",
@@ -64,7 +64,7 @@
     "en/mahler-search-app/data/rs_scenes.json": "a068d3d826ef4fc1fcb0932ccbd2739135b0192dc4a715d1a41446c3e8c2f0a8",
     "en/mahler-search-app/data/rw_scenes.json": "02ea3c2e8a223150e593cfcd50eae49547a10d5798e6867f5f4233fe7547723b",
     "en/mahler-search-app/data/whom_list.json": "9744376100f2c8edf622d502e3fce934e568989bfa0b3ffd98336242deaa4abb",
-    "en/mahler-search-app/dic.html": "2e3f26965ddd6cfb381ed47598e4f0e1863d2e8df8b82ffbe04050ff2f743504",
+    "en/mahler-search-app/dic.html": "9484d39d83bf08202f2071b25b1c9b8aa01c99552cf46f62a8648fa98b44f3d2",
     "en/mahler-search-app/home.html": "118af14b953ded482a78bf3abfaf13baff900b549fe48c15930e6f80f2120589",
     "en/mahler-search-app/index.html": "8f1dce8523aca03b724c7886e31be082213eebf1a5bf5b9fd209f1a86d07bdb6",
     "en/mahler-search-app/js/analytics.js": "171fa81f3f55957572ccd511f6fe804e68ec7cea16c307f4370d2195de52ba8c",
@@ -249,6 +249,6 @@
     "mahler-search-app/terms_search.html": "5d5f14cc6bd38a9f21dd9f1c19755364ba4583364feb0abe9469deabb3d33462",
     "privacy.html": "90a7d9aa62609e45ca5222a7860dd9552778a21c3966084d4857a55363df8d5c",
     "robots.txt": "f8e564433b1070c88c346790607f4e5be1e23bb9e605359e0347f3c87855183f",
-    "sitemap.xml": "fb2696fa1059aeedf067874fa7f693f8776f671d2d00be6bc0184b2a50031e30"
+    "sitemap.xml": "14bcc247d0f28aa79d81587c7daf4aac1a9fe4877e8daaa1b2acb98d84aaf2fe"
   }
 }
