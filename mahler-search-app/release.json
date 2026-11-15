@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "releaseId": "b46895c810aa7bf9135684bd3b39c5d3adce0faa83ad23af9b82b75a6971644f",
+  "releaseId": "ce7bc1632d8c3992ffcb1b64be6b7a7e88c3498d3b27b4488728ef23d21c7c52",
   "hashes": {
     "en/index.html": "4ff3a4c893effdfd7757d8b03c7810f2cbf3e276c6d1bc26f0667dd977146c54",
     "en/license.html": "79e59f346cd8aad8219769842c351cdc64005e980f00ffec3bd88570216d35e9",
@@ -64,7 +64,7 @@
     "en/mahler-search-app/data/rs_scenes.json": "a068d3d826ef4fc1fcb0932ccbd2739135b0192dc4a715d1a41446c3e8c2f0a8",
     "en/mahler-search-app/data/rw_scenes.json": "02ea3c2e8a223150e593cfcd50eae49547a10d5798e6867f5f4233fe7547723b",
     "en/mahler-search-app/data/whom_list.json": "9744376100f2c8edf622d502e3fce934e568989bfa0b3ffd98336242deaa4abb",
-    "en/mahler-search-app/dic.html": "8355863b0ece53c29de562cf3fcc8657900111b0ef34ffd3d97dac1029f96748",
+    "en/mahler-search-app/dic.html": "eae706e54dd241fe741502dad1aaecd671ce376fa1edea490684553c2392e15d",
     "en/mahler-search-app/home.html": "118af14b953ded482a78bf3abfaf13baff900b549fe48c15930e6f80f2120589",
     "en/mahler-search-app/index.html": "8f1dce8523aca03b724c7886e31be082213eebf1a5bf5b9fd209f1a86d07bdb6",
     "en/mahler-search-app/js/analytics.js": "171fa81f3f55957572ccd511f6fe804e68ec7cea16c307f4370d2195de52ba8c",
@@ -147,7 +147,7 @@
     "mahler-search-app/data/rs_scenes.json": "a980504cc562139eefd611ba0ec3def24861fb1eac6c31c9dcc56c5a9b5138ff",
     "mahler-search-app/data/rw_scenes.json": "cc72ce69726c9fe69c9b25d082956e93c61cf976a72e2d8f71ddcc4d42493ae4",
     "mahler-search-app/data/whom_list.json": "142cfe2b1ee036ac90c0a8334665c295eabd09710ab34cc5ffab4acaebb9aed2",
-    "mahler-search-app/dic.html": "1989997f93a40da6f830c3508e5d302c4286063bfd36a7d7fe950ccffe3b3da0",
+    "mahler-search-app/dic.html": "403da2a7f3072714e3df6a7d73360eef756860402e48df466551b129d7b91f4e",
     "mahler-search-app/home.html": "0f5bdff34c68ffe6ab6d7aa0fe2d580f4af1f2e5c124a57dfa9f25dcc55c033a",
     "mahler-search-app/images/score-pages/rs-alpensinfonie-dover1993/detail-10-0.png": "3fb8ce0618c0011df245ea89f4f16dda033dee8b5c50ca3041a551acad31f305",
     "mahler-search-app/images/score-pages/rs-alpensinfonie-dover1993/detail-101-0.png": "c6a11e3af738dce9767ee6dd438705683910de0c3550e7dc5aa200b28999ef9f",
