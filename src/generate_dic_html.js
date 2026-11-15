@@ -421,6 +421,218 @@ function sortDicData(data) {
  * @param {Object} termsIndex - 用語インデックス（正規化キー → ID）
  * @return {string} 生成されたHTML
  */
+/**
+ * YUT-44 transitional repair: exact reviewed English contexts only.
+ * This is NOT a language detector and does not solve future homographs.
+ * Fail closed on changed text, target, spelling, occurrence count or duplicate
+ * source lines. Unknown contexts retain existing links pending review.
+ */
+const REVIEWED_ENGLISH_LINK_CONTEXTS = [
+  {"headword":"abdämpfen","line":"On percussion instruments, damping reduces or stops the after-ring by restraining the vibration of the head, metal plate or other vibrating part. On timpani, for example, the after-ring can be stopped by touching the head with the hand. The method and timing depend on the instrument, notation and musical context.","links":[["#term-ring","ring",2],["#term-hand","hand",1]]},
+  {"headword":"Allmählich wieder ins schnelle Tempo","line":"Gradually (return) to the fast tempo.","links":[["#term-fast","fast",1]]},
+  {"headword":"Almosenier","line":"For the servants in Der Rosenkavalier Op.59, see the entry “Haushofmeister”.","links":[["#term-see","see",1]]},
+  {"headword":"angehalten","line":"See the entry for anhalten.","links":[["#term-see","See",1]]},
+  {"headword":"ängstlich","line":"See the entry for Angst.","links":[["#term-see","See",1]]},
+  {"headword":"anhalten","line":"Gehalten can refer to sustaining tone and phrasing, in a sense close to tenuto or sostenuto, as well as to restraining the tempo or expression. Its distinction from anhalten depends on the particular use and the surrounding context. See also the entry for gehalten.","links":[["#term-see","See",1]]},
+  {"headword":"Arm","line":"① An arm.","links":[["#term-arm","arm",1]]},
+  {"headword":"Arm","line":"② An arm-like projection; a branch of a river or similar feature.","links":[["#term-arm","arm",1]]},
+  {"headword":"Arm","line":"English: Takes her by the arm.","links":[["#term-arm","arm",1]]},
+  {"headword":"Art","line":"④ A kind or type; in biology, a species.","links":[["#term-kind","kind",1]]},
+  {"headword":"Art","line":"English: Matteo has emerged on the left at the same time as Adelaide; Zdenka follows shyly behind him in boy's clothes, a kind of black tailcoat, sheltering behind a column.","links":[["#term-kind","kind",1]]},
+  {"headword":"aufstellen","line":"English: He gestures to the vassals towards the Rhine. Some of them hurry up onto the rise, while others take their places along the bank to see those arriving.","links":[["#term-see","see",1]]},
+  {"headword":"aufzustellen","line":"The zu-infinitive of aufstellen. See the entry “aufstellen.”","links":[["#term-see","See",1]]},
+  {"headword":"ausgelassen","line":"English: In exuberant high spirits, Siegfried puts his arm around Gutrune and draws her with him into the hall. The vassals and women, carried away by his example, follow him.","links":[["#term-arm","arm",1]]},
+  {"headword":"ausholen","line":"① To draw one's arm back (for a blow or throw), gather momentum, or prepare oneself.","links":[["#term-arm","arm",1]]},
+  {"headword":"ausser sich","line":"See the entry for “außer sich.”","links":[["#term-see","See",1]]},
+  {"headword":"äusserst","line":"See the entry for “äußerst.”","links":[["#term-see","See",1]]},
+  {"headword":"bedeutend","line":"English: The quarter notes considerably faster than before, though not twice as fast.","links":[["#term-fast","fast",1]]},
+  {"headword":"Bediente","line":"For the servants in Der Rosenkavalier Op.59, see “Haushofmeister.”","links":[["#term-see","see",1]]},
+  {"headword":"beinahe doppelt so schnell","line":"Almost twice as fast.","links":[["#term-fast","fast",1]]},
+  {"headword":"beiseite","line":"See also für sich and vor sich.","links":[["#term-see","See",1]]},
+  {"headword":"bereits","line":"English: Startled, she pauses for a moment; meanwhile, Guntram, who has quickly regained his composure, has already hurried after her and holds her fast.","links":[["#term-fast","fast",1]]},
+  {"headword":"besetzt","line":"Past participle of besetzen. See the entry for “besetzen.”","links":[["#term-see","See",1]]},
+  {"headword":"Bett","line":"English: Lit by this glow, the three Rhinemaidens can be seen swimming in a circle on the calmer waves of the Rhine, which has gradually returned to its bed, playing merrily with the ring.","links":[["#term-ring","ring",1]]},
+  {"headword":"bispigliando","line":"See the entry for bisbigliando.","links":[["#term-see","See",1]]},
+  {"headword":"Blatt","line":"③ A playing card, a hand of cards, or a pack.","links":[["#term-hand","hand",1]]},
+  {"headword":"Blitz","line":"English: Darkness, a flash; the nurse leads the apparition of the young man forward by the hand.","links":[["#term-hand","hand",1]]},
+  {"headword":"bloß","line":"English: Menelas, bare sword in hand, steps behind Helena.","links":[["#term-hand","hand",1]]},
+  {"headword":"Bord","line":"English: The girls hand their baskets over the side of the ship to the sailors.","links":[["#term-hand","hand",1]]},
+  {"headword":"Cäsur","line":"For a break involving a breath, see also “Luftpause.”","links":[["#term-see","see",1]]},
+  {"headword":"cuivrez","line":"This is French. See “schmetternd.”","links":[["#term-see","See",1]]},
+  {"headword":"dahinhuschend","line":"In an alternative reference edition of Karg-Elert’s 30 Capricen für Flöte solo Op.107, No. 30, Variation XIII, dahinhuschend accompanies “So rasch als möglich” (as fast as possible), alongside “Presto il più possibile.”","links":[["#term-fast","fast",1]]},
+  {"headword":"Dämpfer","line":"For removable mutes, mit Dämpfer means “with the mute on” (con sordino), and Dämpfer ab / weg means “remove the mute” (senza sordino). See also “Dämpfer auf.”","links":[["#term-see","See",1]]},
+  {"headword":"Dämpfer ab","line":"Short for “Dämpfer abnehmen” or “Dämpfer absetzen.” See “Dämpfer auf.”","links":[["#term-see","See",1]]},
+  {"headword":"Dämpfer auf","line":"On the other hand, auf can also generally mean 「open」. When offen (open) or gestopft (stopped) is indicated for brass instruments, its relationship to open tones, hand-stopping, the use of a mute, and so forth must be interpreted according to the instrument and the surrounding context. The auf in Dämpfer auf does not denote this sense of 「open」, but rather the fitting of the mute.","links":[["#term-hand","hand",2]]},
+  {"headword":"Dämpfer weg","line":"It means “remove the mute,” but there are no examples of Dämpfer weg in GM. Weg means “taken away” or “removed.” See “Dämpfer auf.”","links":[["#term-see","See",1]]},
+  {"headword":"decken","line":"English: Matteo has emerged on the left at the same time as Adelaide; Zdenka follows shyly behind him in boy's clothes, a kind of black tailcoat, sheltering behind a column.","links":[["#term-kind","kind",1]]},
+  {"headword":"devot","line":"This comparison describes a relative tendency in connotation: demütig can also express submissiveness or self-abasement. Sense ② of devot represents historical usage and should be distinguished from its modern general meaning. The examples “as if rubbing one’s hands in ingratiation” and “bowing and scraping” figuratively convey an excessively deferential manner; devot itself does not necessarily prescribe hand-rubbing or bowing.","links":[["#term-hand","hand",1]]},
+  {"headword":"Diener","line":"For the servants in Der Rosenkavalier Op.59, see the entry \"Haushofmeister.\"","links":[["#term-see","see",1]]},
+  {"headword":"Dienerschaft","line":"For the servants in Der Rosenkavalier Op.59, see the entry \"Haushofmeister.\"","links":[["#term-see","see",1]]},
+  {"headword":"doppelt","line":"English: The quarter notes considerably faster than before, though not twice as fast.","links":[["#term-fast","fast",1]]},
+  {"headword":"doppelt","line":"In GM, the examples concern doubling the players or instruments assigned to a part. As a tempo instruction, for example, \"doppelt so schnell (langsam)\" means \"twice as fast (at half the speed)\".","links":[["#term-fast","fast",1]]},
+  {"headword":"Duenna","line":"For the servants in Der Rosenkavalier Op.59, see the entry for Haushofmeister.","links":[["#term-see","see",1]]},
+  {"headword":"eigenhändig","line":"① With one’s own hand; personally; directly (without an intermediary).","links":[["#term-hand","hand",1]]},
+  {"headword":"Eintragung","line":"English: Vocal part, bars 83–85: possibly tacet, according to an annotation in Mahler’s own hand in a performance score.","links":[["#term-hand","hand",1]]},
+  {"headword":"entschlossen","line":"English: He quickly and decisively takes Matteo's hand and leads him towards Waldner.","links":[["#term-hand","hand",1]]},
+  {"headword":"entsprechen","line":"English: The differing dynamics of the first violins (relative to the others) reflect a correction in Mahler’s own hand.","links":[["#term-hand","hand",1]]},
+  {"headword":"erblicken","line":"② To see or regard someone or something as something.","links":[["#term-see","see",1]]},
+  {"headword":"erhobener","line":"See the entry for “erhobner.”","links":[["#term-see","See",1]]},
+  {"headword":"erhobner","line":"English: The lights dim; only moonlight comes in from outside. A beam falls on Helena's face. Menelas, his dagger raised to strike her in the throat, stands spellbound by her beauty. His arm holding the weapon sinks.","links":[["#term-arm","arm",1]]},
+  {"headword":"ermüdet","line":"English: He looks elegant but tired and short of sleep, crosses the room as if he did not see the others, and sinks into an armchair at the front right.","links":[["#term-see","see",1]]},
+  {"headword":"erreicht","line":"③ To get in touch with someone or something; to reach (with the hand, etc.).","links":[["#term-hand","hand",1]]},
+  {"headword":"Fackel","line":"English: Elektra takes the torch from the ring, runs down towards him (Ägisth) and bows before him.","links":[["#term-ring","ring",1]]},
+  {"headword":"fest","line":"English: Startled, she pauses for a moment; meanwhile, Guntram, who has quickly regained his composure, has already hurried after her and holds her fast.","links":[["#term-fast","fast",1]]},
+  {"headword":"Finger","line":"English: He takes his ring off his finger, kisses it, and holds it out threateningly.","links":[["#term-ring","ring",1]]},
+  {"headword":"freundlich","line":"① Friendly, kind or amiable in dealing with others. Stage directions describe a friendly expression, tone or gesture.","links":[["#term-kind","kind",1]]},
+  {"headword":"führend","line":"English: Baron Ochs appears with his arm in a sling, leading Octavian with his left hand, with the personal footman behind him. The Baron surveys the room. Octavian looks around, runs to the mirror, and arranges his hair.","links":[["#term-arm","arm",1],["#term-hand","hand",1]]},
+  {"headword":"gehalten","line":"See also the entry “anhalten.”","links":[["#term-see","See",1]]},
+  {"headword":"geleiten","line":"English: Taking him under the arm and escorting him.","links":[["#term-arm","arm",1]]},
+  {"headword":"genau","line":"English: Juts his head forward, as shortsighted people do, to see the major-domo more clearly.","links":[["#term-see","see",1]]},
+  {"headword":"geschrieen","line":"Historical spelling of geschrien, the past participle of schreien. See “geschrien”. In GM, the only occurrence is in “Revelge” from Des Knaben Wunderhorn.","links":[["#term-see","See",1]]},
+  {"headword":"geschwind","line":"① Fast, swift, or quick.","links":[["#term-fast","Fast",1]]},
+  {"headword":"Geschwindmarsch","line":"“Quick march”. Geschwind means “fast” or “swift”.","links":[["#term-fast","fast",1]]},
+  {"headword":"gespr.","line":"See “gesprochen”.","links":[["#term-see","See",1]]},
+  {"headword":"gesprochen","line":"English: Spoken: The woman is mad! Light a fire so I can see her face!","links":[["#term-see","see",1]]},
+  {"headword":"gestossen","line":"Swiss spelling of gestoßen, or a spelling that substitutes ss for ß. See “gestoßen”.","links":[["#term-see","See",1]]},
+  {"headword":"get.","line":"Abbreviation of geteilt. See “geteilt”.","links":[["#term-see","See",1]]},
+  {"headword":"geth.","line":"Abbreviation of getheilt. See “geteilt”.","links":[["#term-see","See",1]]},
+  {"headword":"getheilt","line":"Historical spelling of geteilt. See “geteilt”.","links":[["#term-see","See",1]]},
+  {"headword":"gewonnen","line":"English: Flosshilde, swimming ahead of the others towards the back of the stage, holds the ring she has won aloft in triumph.","links":[["#term-ring","ring",1]]},
+  {"headword":"gewonnen","line":"See “gewinnen”. In Wagner’s Tannhäuser, it has been translated as “prevailed over”.","links":[["#term-see","See",1]]},
+  {"headword":"gezogen","line":"For the relationship between the two terms and the score example, see the entry for 「gestrichen」.","links":[["#term-see","see",1]]},
+  {"headword":"Glas","line":"English: Everyone clinks glasses; the glasses ring, and they drink them dry. Silence.","links":[["#term-ring","ring",1]]},
+  {"headword":"halblaut","line":"English: Looking at herself in the hand mirror, in a low voice.","links":[["#term-hand","hand",1]]},
+  {"headword":"Hand","line":"① A hand.","links":[["#term-hand","hand",1]]},
+  {"headword":"Hand","line":"English: He kisses her hand.","links":[["#term-hand","hand",1]]},
+  {"headword":"hastig","line":"English: Still equally fast and hurried (but in 4/4).","links":[["#term-fast","fast",1]]},
+  {"headword":"Hausknecht","line":"For the servants in Der Rosenkavalier Op.59, see “Haushofmeister”.","links":[["#term-see","see",1]]},
+  {"headword":"Hess","line":"See also “WoO”.","links":[["#term-see","See",1]]},
+  {"headword":"Himmel","line":"English: Gurnemanz raises his right arm and looks up to heaven.","links":[["#term-arm","arm",1]]},
+  {"headword":"jedoch","line":"English: At this point Lohengrin has disappeared from the audience’s view behind the trees at the bend in the river on the right; the performers on stage, however, see him coming ever closer on the right side of the stage.","links":[["#term-see","see",1]]},
+  {"headword":"Kammerdiener","line":"For the servants in Der Rosenkavalier Op.59, see “Haushofmeister”.","links":[["#term-see","see",1]]},
+  {"headword":"Kammerlakai","line":"For the servants in Der Rosenkavalier Op.59, see “Haushofmeister”.","links":[["#term-see","see",1]]},
+  {"headword":"kaum","line":"English: As Barak raises his right hand as if taking an oath, a flashing sword falls from the air into it. The brothers together scarcely have the strength to restrain him.","links":[["#term-hand","hand",1]]},
+  {"headword":"Kellner","line":"For the servants in Der Rosenkavalier Op.59, see “Haushofmeister”.","links":[["#term-see","see",1]]},
+  {"headword":"kleiner Neger","line":"For the servants in Der Rosenkavalier Op.59, see the entry “Haushofmeister”.","links":[["#term-see","see",1]]},
+  {"headword":"klingen","line":"① To sound, ring, resonate, or echo.","links":[["#term-ring","ring",1]]},
+  {"headword":"klingen","line":"English: Always let it ring.","links":[["#term-ring","ring",1]]},
+  {"headword":"klingen","line":"English: Everyone clinks glasses; the glasses ring, and they drink them dry. Silence.","links":[["#term-ring","ring",1]]},
+  {"headword":"Lady Macbeth. O, eile! Eile her! damit ich meinen Geist in deinen giesse, durch meine tapfere Zunge diese Zweifel und Furchtgespenster aus dem Felde schlage, die dich wegschrecken von dem goldnen Reif, womit das Glück dich gern bekrönen möchte.","line":"The scene can be interpreted as follows. Having read Macbeth’s letter describing the witches’ prophecy, Lady Macbeth sees that her husband is “too kind to resolve to become king”. She decides to take on the task of pouring that resolve into him and driving out his hesitation through words. Here, “Geist” (“spirit”) means courage, boldness, and the ability to make ruthless decisions, while “tapfere Zunge” (“valiant tongue”) shows her awareness of the power of manipulative language as a weapon. “Goldner Reif” (“golden circlet”) is an indirect expression for the crown, while “Glück” (“fortune” or “luck”) can also be read as a perilous turn of phrase that presents the temptation to sin as though it were fate’s blessing.","links":[["#term-kind","kind",1]]},
+  {"headword":"Lakai","line":"For the servants in Der Rosenkavalier Op.59, see “Haushofmeister”.","links":[["#term-see","see",1]]},
+  {"headword":"lebhaft","line":"As a tempo indication, it can also be rendered “at a fairly fast tempo”.","links":[["#term-fast","fast",1]]},
+  {"headword":"Leibjäger","line":"For the servants in Der Rosenkavalier Op.59, see “Haushofmeister”.","links":[["#term-see","see",1]]},
+  {"headword":"Leibkammerdiener","line":"For the servants in Der Rosenkavalier Op.59, see “Haushofmeister”.","links":[["#term-see","see",1]]},
+  {"headword":"Leiblakai","line":"For the servants in Der Rosenkavalier Op.59, see “Haushofmeister”.","links":[["#term-see","see",1]]},
+  {"headword":"Leute","line":"For the servants in Der Rosenkavalier Op.59, see “Haushofmeister”.","links":[["#term-see","see",1]]},
+  {"headword":"liebenswürdig","line":"① Amiable, pleasant, or kind.","links":[["#term-kind","kind",1]]},
+  {"headword":"liebevoll","line":"② Gentle, considerate, or kind.","links":[["#term-kind","kind",1]]},
+  {"headword":"links","line":"② (Colloquially) With the left hand.","links":[["#term-hand","hand",1]]},
+  {"headword":"Livree","line":"For the servants in Der Rosenkavalier Op.59, see the entry “Haushofmeister”.","links":[["#term-see","see",1]]},
+  {"headword":"Lümmel","line":"For the servants in Der Rosenkavalier Op.59, see the entry “Haushofmeister”.","links":[["#term-see","see",1]]},
+  {"headword":"m.d.","line":"In the relevant keyboard-instrument examples in GM, the abbreviation stands for Italian mano destra and indicates “with the right hand”.","links":[["#term-hand","hand",1]]},
+  {"headword":"m.Dpf.","line":"An abbreviation of mit Dämpfer (“with a mute”). See the entry “mit Dämpfer”.","links":[["#term-see","See",1]]},
+  {"headword":"m.s.","line":"In the relevant keyboard-instrument examples in GM, the abbreviation stands for Italian mano sinistra and indicates “with the left hand”.","links":[["#term-hand","hand",1]]},
+  {"headword":"Magd","line":"For the servants in Der Rosenkavalier Op.59, see the entry “Haushofmeister”.","links":[["#term-see","see",1]]},
+  {"headword":"mässig","line":"See the entry for “mäßig”.","links":[["#term-see","See",1]]},
+  {"headword":"Meer","line":"English: The shepherd turns and peers out towards the sea, shading his eyes with his hand.","links":[["#term-hand","hand",1]]},
+  {"headword":"Mehr schnell","line":"The opening marking of the finale of Bruckner’s II. SYMPHONIE C-MOLL (1877 version). Literally it may suggest “faster”, but here “mehr” is best understood as characterizing the tempo, “rather fast”, rather than asking for an increase from a preceding speed.","links":[["#term-fast","fast",1]]},
+  {"headword":"murmeln","line":"English: Alberich touches the ring with his lips and secretly murmurs a command.","links":[["#term-ring","ring",1]]},
+  {"headword":"NB","line":"See the entry “N.B.”.","links":[["#term-see","See",1]]},
+  {"headword":"Nicht zu schnell. Keinefalls schleppend","line":"Not too fast. Never dragging.","links":[["#term-fast","fast",1]]},
+  {"headword":"nimmt","line":"English: Welko deftly takes the empty tray from her hand and disappears.","links":[["#term-hand","hand",1]]},
+  {"headword":"nimmt","line":"When an instrument is specified, senses ① and ② may be rendered as “changes to” that instrument. See the entry for “nehmen”.","links":[["#term-see","See",1]]},
+  {"headword":"noch einmal","line":"English: Note for the conductor: By this point, through the imperceptible increase, the tempo has become approximately twice as fast as at the beginning (but still conduct in quarter notes).","links":[["#term-fast","fast",1]]},
+  {"headword":"offen","line":"As a playing instruction, offen: open (cease hand-stopping, or remove the mute).","links":[["#term-hand","hand",1]]},
+  {"headword":"Paar","line":"English: The door remains open. Outside, it is a spring night. The full moon shines into the room, casting its bright light on the couple, who can now suddenly see each other with complete clarity.","links":[["#term-see","see",1]]},
+  {"headword":"recht","line":"③ Right; right-hand.","links":[["#term-hand","hand",1]]},
+  {"headword":"recht","line":"English: Loge unties the loop around his right hand.","links":[["#term-hand","hand",1]]},
+  {"headword":"Ring","line":"anello; cerchio; ring","links":[["#term-ring","ring",1]]},
+  {"headword":"Ring","line":"① A ring or circular object or part.","links":[["#term-ring","ring",1]]},
+  {"headword":"Ring","line":"② A finger ring.","links":[["#term-ring","ring",1]]},
+  {"headword":"Ring","line":"④ An arena or ring for a contest or fight.","links":[["#term-ring","ring",1]]},
+  {"headword":"Ring","line":"⑤ A ring road or circular district.","links":[["#term-ring","ring",1]]},
+  {"headword":"Ring","line":"English: Siegfried looks intently at the ring on his finger.","links":[["#term-ring","ring",1]]},
+  {"headword":"Ring","line":"English: They form a ring around David and dance around him.","links":[["#term-ring","ring",1]]},
+  {"headword":"Ring","line":"English: The maid (one of the servants) fastens the torch to an iron ring in the doorpost.","links":[["#term-ring","ring",1]]},
+  {"headword":"RONDO\nAllegro ma non troppo (in cominciando un poco esitando)","line":"Rondo. Allegro, but not too fast; a little hesitant at the beginning.","links":[["#term-fast","fast",1]]},
+  {"headword":"Ruhebett","line":"English: Standing, supporting herself with one hand on the couch.","links":[["#term-hand","hand",1]]},
+  {"headword":"Saal","line":"English: At this point the creditors break through the line of guards and rush wildly into the hall towards the rickety throne, papers in hand.","links":[["#term-hand","hand",1]]},
+  {"headword":"sämmtlich","line":"An older spelling of “sämtlich”. See the entry for “sämtlich”.","links":[["#term-see","See",1]]},
+  {"headword":"Schale","line":"English: Isolde does not throw the cup away; instead, it slips from her gradually opening hand.","links":[["#term-hand","hand",1]]},
+  {"headword":"Schallbecher","line":"A general term for the end of a woodwind or brass instrument and for the resonator of certain organ reed pipes. In wind-instrument contexts, it is broadly synonymous with Schalltrichter and Schallstück. On the horn, it denotes the part into which the right hand is inserted for stopped playing or tone modification.","links":[["#term-hand","hand",1]]},
+  {"headword":"Schemel","line":"English: Octavian kneels on a footstool in front of the bed, half embracing the Marschallin, who is lying in bed. Her face cannot be seen, only her very beautiful hand and the arm from which her lace nightdress has slipped.","links":[["#term-hand","hand",1],["#term-arm","arm",1]]},
+  {"headword":"Schlag","line":"See also the entry for “Takt”.","links":[["#term-see","See",1]]},
+  {"headword":"schleichen","line":"English: Annina has entered through the anteroom and stealthily creeps closer, a letter in her hand.","links":[["#term-hand","hand",1]]},
+  {"headword":"Schluss","line":"English: “For the Paris version of this ending, see Appendix V, page 568.”","links":[["#term-see","see",1]]},
+  {"headword":"schnell","line":"Fast; quick; rapid.","links":[["#term-fast","Fast",1]]},
+  {"headword":"Schwanendreher","line":"In his 1938 concert notes, Hindemith is said to have explained that this folk song apparently mocked a person who turned a swan on a spit in the kitchen. The translation above follows this interpretation. Another theory holds that the word refers to a player of a hand-cranked organ decorated with a swan.","links":[["#term-hand","hand",1]]},
+  {"headword":"Seil","line":"English: Kunrad pulls himself up a little on the rope and, with his arm outstretched, just manages to catch hold of the ends of a few strands of her hair.","links":[["#term-arm","arm",1]]},
+  {"headword":"später","line":"English: The woodwind figures, and later the violins’ figures, always equally fast, disregarding the slow tempo of the passage.","links":[["#term-fast","fast",1]]},
+  {"headword":"spielend","line":"As an expression marking: playfully, frolicsomely, or merrily. At the opening of No.17 of Karg-Elert’s 30 Capricen für Flöte solo Op.107, “Leggero veloce, giocoso.” appears alongside “Leicht, spielend, sehr rasch.” (lightly, playfully, very fast).","links":[["#term-fast","fast",1]]},
+  {"headword":"spitzig","line":"An adjective related in meaning to spitz. See the entry for “spitz”.","links":[["#term-see","See",1]]},
+  {"headword":"spottend","line":"The degree and tone of mockery depend on the context; it is not necessarily milder than direct ridicule. It may carry contempt, indifference, or coldness. See also “spöttisch”.","links":[["#term-see","See",1]]},
+  {"headword":"spöttisch","line":"See also “spottend”.","links":[["#term-see","See",1]]},
+  {"headword":"steigen","line":"English: He turns to leave, hesitates, then turns to go again, dejectedly. Arabella appears upstairs, looks down to see whether he is still there, and her face lights up. She takes the glass and slowly comes down with it, Welko following her. Mandryka, almost gone, turns and sees Arabella descending slowly and solemnly, carrying the glass on a tray held in both hands. Startled with joy, he steps back.","links":[["#term-see","see",1]]},
+  {"headword":"Stille","line":"English: Everyone clinks glasses; the glasses ring, and they drink them dry. Silence.","links":[["#term-ring","ring",1]]},
+  {"headword":"streichelt","line":"See “streicheln”.","links":[["#term-see","See",1]]},
+  {"headword":"Stufe","line":"English: She pulls the resisting Eva by the arm up the steps to the door.","links":[["#term-arm","arm",1]]},
+  {"headword":"überhetzt","line":"By contrast, “überhitzt”, for which no example was found in GM, has a different meaning. The word itself means “overheated”; figuratively, it describes excessive emotional or expressive excitement. It does not in itself specify a fast tempo. In such a context, possible translations include “emotionally overheated”, “as if feverish”, or “with excessive intensity”.","links":[["#term-fast","fast",1]]},
+  {"headword":"übermüthig","line":"See the entry for “übermütig”.","links":[["#term-see","See",1]]},
+  {"headword":"übernimmt","line":"See the entry for “übernehmen”.","links":[["#term-see","See",1]]},
+  {"headword":"übernommen","line":"See the entry for “übernehmen”.","links":[["#term-see","See",1]]},
+  {"headword":"überreicht","line":"① To hand over, offer, or present an object; as a past participle, handed over, offered, or presented.","links":[["#term-hand","hand",1]]},
+  {"headword":"überreicht","line":"② To submit or hand over a document; as a past participle, submitted or handed over.","links":[["#term-hand","hand",1]]},
+  {"headword":"übrig","line":"English: Gunther, who has let go of Brünnhilde's violently trembling hand, and everyone else stand transfixed in dismay at her behaviour.","links":[["#term-hand","hand",1]]},
+  {"headword":"umgeben","line":"English: She lays a blue cloak, which had hung folded over her arm, around Apollo's shoulders. It unfolds, enveloping him broadly and majestically. At the same time a strange light plays around him.","links":[["#term-arm","arm",1]]},
+  {"headword":"Umstände","line":"See the entry for “Umstand”.","links":[["#term-see","See",1]]},
+  {"headword":"Variationen \"Seid ihr nicht der Schwanendreher\"","line":"\"Schwanendreher\" is translated here as “the person who turns a swan on a spit to roast it”. See the entry for \"Schwanendreher\".","links":[["#term-see","See",1]]},
+  {"headword":"vgl.","line":"(= vergleiche) See …; refer to …","links":[["#term-see","See",1]]},
+  {"headword":"Vgl. Kritischer Bericht: Bewertung","line":"“For further details, see the ‘Evaluation’ section of the critical report.”","links":[["#term-see","see",1]]},
+  {"headword":"Vgl. Kritischer Bericht: Lesaerten","line":"“For further details, see the ‘Variant readings’ section of the critical report.”","links":[["#term-see","see",1]]},
+  {"headword":"vide","line":"The imperative of the Latin videre (“to see”).","links":[["#term-see","see",1]]},
+  {"headword":"vide","line":"“See”, “refer to” or “see the specified passage”.","links":[["#term-see","See",1],["#term-see","see",1]]},
+  {"headword":"Waffe","line":"English: The lights dim; only moonlight comes in from outside. A beam falls on Helena's face. Menelas, his dagger raised to strike her in the throat, stands spellbound by her beauty. His arm holding the weapon sinks.","links":[["#term-arm","arm",1]]},
+  {"headword":"Wald","line":"English: Robert offers Freihild his hand and leads her off towards the wood; the old Duke goes with them.","links":[["#term-hand","hand",1]]},
+  {"headword":"warm","line":"① Warm; mild (of the climate).","links":[["#term-warm","Warm",1]]},
+  {"headword":"warm","line":"② Warm-hearted, kind or affectionate (in feeling).","links":[["#term-warm","Warm",1],["#term-kind","kind",1]]},
+  {"headword":"warm","line":"③ Warm (of colours); having a warm quality.","links":[["#term-warm","Warm",1],["#term-warm","warm",1]]},
+  {"headword":"Wärme","line":"mit Wärme: with warm feeling.","links":[["#term-warm","warm",1]]},
+  {"headword":"Wink","line":"① A signal or gesture made with the hand, eyes, head, or similar movement.","links":[["#term-hand","hand",1]]},
+  {"headword":"WoO","line":"See also “Hess”.","links":[["#term-see","See",1]]},
+  {"headword":"Zofe","line":"For the servants in Der Rosenkavalier Op.59, see “Haushofmeister.”","links":[["#term-see","see",1]]},
+  {"headword":"zögernd","line":"English: Flowing, but not fast. In the opening bars, still somewhat hesitant.","links":[["#term-fast","fast",1]]},
+  {"headword":"zornig","line":"English: The door opens and the wigmaker staggers out, just receiving a slap from the tenor. Dressed as Bacchus, but with his head bare and the curly wig in his hand, the tenor follows him out angrily.","links":[["#term-hand","hand",1]]},
+  {"headword":"zu","line":"“Nicht zu schnell”: not too fast (similar in sense to Non troppo allegro).","links":[["#term-fast","fast",1]]},
+  {"headword":"zu","line":"“Dämpfer zu”: interpreted here as meaning to put on the mute (sense ③). Incidentally, “Dämpfer auf” in GM also means to put on the mute. See the entry “Dämpfer auf.”","links":[["#term-see","See",1]]},
+  {"headword":"zugleich","line":"English: She signals to the vassals to carry Siegfried’s body onto the pyre; at the same time, she removes the ring from Siegfried’s finger and contemplates it, lost in thought.","links":[["#term-ring","ring",1]]},
+  {"headword":"zuletzt","line":"English: The three orphans, and finally their mother too, have kissed the Marschallin’s hand.","links":[["#term-hand","hand",1]]},
+  {"headword":"Zungenschlag","line":"There is no example in the GM entries. In Variation II of [RS: Qui], where a flock of sheep is imitated, the term presumably means “flutter-tonguing” (quite apart from the brass, asking the clarinets to do the same at p or pp is diabolically demanding). An early orchestral example of flute flutter-tonguing occurs in Tchaikovsky's The Nutcracker. See also “Zungenstoß.”","links":[["#term-see","See",1]]},
+  {"headword":"zus.","line":"See the entry for zusammen.","links":[["#term-see","See",1]]}
+];
+
+function removeReviewedEnglishTermLinks(rendered, headword, sourceText, language) {
+  if (language !== 'en' || !rendered || typeof sourceText !== 'string') return rendered;
+  const sourceLines = sourceText.split(/\r?\n/);
+  const rules = REVIEWED_ENGLISH_LINK_CONTEXTS.filter(rule => rule.headword === headword &&
+    sourceLines.filter(line => line === rule.line).length === 1);
+  if (!rules.length) return rendered;
+  return rendered.split('<br>').map(line => {
+    // Compare exact visible source text after the existing escaping/rendering.
+    // Only generated tags are stripped for comparison; source HTML is escaped.
+    const literal = line.replace(/<[^>]*>/g, '');
+    for (const rule of rules) {
+      if (literal !== escapeHtml(rule.line)) continue;
+      const replacements = rule.links.map(([target, text, count]) => ({
+        anchor: `<a href="${escapeHtml(target)}" class="term-link">${escapeHtml(text)}</a>`,
+        text: escapeHtml(text), count
+      }));
+      if (!replacements.every(item => line.split(item.anchor).length - 1 === item.count)) continue;
+      for (const item of replacements) line = line.split(item.anchor).join(item.text);
+    }
+    return line;
+  }).join('<br>');
+}
+
 function generateDicListHtml(dicData, termsIndex, abbreviationIndex, dictionaryExampleIndex, language) {
   if (!dicData || dicData.length === 0) {
     return '<div class="result-message">データが存在しません。</div>';
@@ -519,7 +731,7 @@ function generateDicListHtml(dicData, termsIndex, abbreviationIndex, dictionaryE
       ${source ? `<span class="source">${linkAbbreviationsInSource(source, abbreviationIndex, termId)}</span>` : ''}
     </div>
   </dt>
-  <dd class="translation">${typeof renderNotesEnglishLayout === 'function' ? renderNotesEnglishLayout(linkedTranslation, language) : linkedTranslation}</dd>
+  <dd class="translation">${removeReviewedEnglishTermLinks(typeof renderNotesEnglishLayout === 'function' ? renderNotesEnglishLayout(linkedTranslation, language) : linkedTranslation, german, translation, language)}</dd>
 </div>\n`;
   });
   
