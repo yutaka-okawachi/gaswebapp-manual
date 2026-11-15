@@ -1222,12 +1222,12 @@ ${breadcrumbJSON}
             gap: 6px;
             margin-top: 2px;
             margin-bottom: 4px;
-            font-size: 0.95rem;
+            font-size: 0.85rem;
         }
 
         .example-label {
             color: #1a73e8;
-            font-size: 0.95rem;
+            font-size: 0.85rem;
             font-weight: 500;
             user-select: none;
         }
@@ -1236,7 +1236,7 @@ ${breadcrumbJSON}
             display: inline-flex;
             flex-wrap: wrap;
             gap: 6px;
-            font-size: 0.95rem;
+            font-size: 1.0rem;
             font-family: 'Lora', 'Meiryo', 'メイリオ', sans-serif;
         }
 
