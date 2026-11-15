@@ -64,19 +64,36 @@ function render(){
  if(!job.closed)text(s,'p','ここに表示した本文を，承認時にNotesのja・enへそのまま登録します．画面の説明や根拠欄は本文には追加しません．','muted');
  const validationBox=text(s,'div','','validation');validationBox.setAttribute('role','status');validationBox.setAttribute('aria-live','polite');
  if(!editable)(state.validationErrors||[]).forEach(e=>text(validationBox,'p',(e.field==='ja'?'日本語本文：':'英語本文：')+e.message,'error'));
+ const linkBox=!job.closed?text(s,'section','','link-advisory'):null;
+ function showLinkAdvice(a){
+  if(!linkBox)return;linkBox.replaceChildren();text(linkBox,'h3','英訳版の自動リンクを確認');
+  text(linkBox,'p','英単語がドイツ語見出しと同じ綴りだと誤リンクになることがあります．候補は誤り確定ではなく，独文引用や意図した参照は残します．');
+  text(linkBox,'p','意味や綴りを無理に変えず，誤リンクなら「見出し・該当英文・リンク先」を控えて公開前に個別修正を依頼してください．この表示は本文やリンクを変更せず，登録を妨げません．','muted');
+  const valid=a&&a.status==='ready'&&Array.isArray(a.candidates)&&Array.isArray(a.german)&&Number.isSafeInteger(a.candidateCount)&&Number.isSafeInteger(a.germanCount)&&[...a.candidates,...a.german].every(x=>x&&typeof x.label==='string'&&typeof x.target==='string'&&typeof x.context==='string'&&Number.isSafeInteger(x.line)&&Number.isSafeInteger(x.count));
+  if(!valid){text(linkBox,'p',a&&a.status==='checking'?'現在の本文を照合中です．':'リンク候補は未確認です．公開前に英訳版プレビューで確認してください．','muted');return;}
+  text(linkBox,'p','英文・混在文の候補：'+a.candidateCount+'箇所／German: 実例のリンク：'+a.germanCount+'箇所');
+  function group(rows,label,open){if(!rows.length)return;const d=text(linkBox,'details','');d.open=open;text(d,'summary',label);rows.forEach(x=>text(d,'p',x.line+'行目：'+x.label+' → '+x.target+'（'+x.count+'箇所）\n'+x.context,'context'));}
+  group(a.candidates,'英文・混在文（独語引用なら誤リンクとは限りません）',true);group(a.german,'German: と明示された実例（通常は残す）',false);
+  if(!a.candidateCount)text(linkBox,'p','今回の候補はありません．誤リンクがないことの保証ではありません．','muted');
+  if(a.truncated)text(linkBox,'p','表示は各区分60組までです．残りは英訳版プレビューで確認してください．','muted');
+  text(linkBox,'p','現在のNotes・語形対応と登録予定見出しを照合しています．新見出しが他の既存英文へ与える影響は未検査です．','muted');
+ }
+ showLinkAdvice(null);
  const fieldsNow=()=>editable?{ja:inputs.ja.value,en:inputs.en.value}:{ja:row.draft.ja,en:row.draft.en};
  function scheduleValidation(){
   cancelValidation();validatedFields=null;if(confirmation)confirmation.checked=false;if(approval)approval.disabled=true;
   if(!editable||busy||uncertain)return;
+  showLinkAdvice({status:"checking"});
   const serial=validationSerial,jobHash=state.jobHash,fields=fieldsNow(),key=JSON.stringify(fields);
   validationBox.replaceChildren();text(validationBox,'p','保存せずに，表示中の日英本文の形式を確認しています．','muted');
   const current=()=>serial===validationSerial&&!busy&&!uncertain&&state&&state.job&&state.job.id===job.id&&state.jobHash===jobHash&&JSON.stringify(fieldsNow())===key;
-  const failure=error=>{if(!current())return;validatedFields=null;if(approval)approval.disabled=true;validationBox.replaceChildren();const detail=String(error&&error.message||'').split('ROW_COMPLETION: ')[1];text(validationBox,'p',(detail?detail.slice(0,300)+'\n':'')+'現在の本文の検証結果を確認できません．入力を保持しているので，「保存状態を確認」で再確認してください．','error');};
+  const failure=error=>{if(!current())return;showLinkAdvice(null);validatedFields=null;if(approval)approval.disabled=true;validationBox.replaceChildren();const detail=String(error&&error.message||'').split('ROW_COMPLETION: ')[1];text(validationBox,'p',(detail?detail.slice(0,300)+'\n':'')+'現在の本文の検証結果を確認できません．入力を保持しているので，「保存状態を確認」で再確認してください．','error');};
   validationTimer=setTimeout(()=>{
    validationTimer=null;if(!current())return;
    google.script.run.withSuccessHandler(result=>{
     if(!current())return;
     if(!result||result.jobId!==job.id||result.jobHash!==jobHash||!Array.isArray(result.validationErrors)||result.validationErrors.some(e=>!e||!['ja','en'].includes(e.field)||typeof e.message!=='string')){failure(null);return;}
+    showLinkAdvice(result.linkAdvisory);
     validationBox.replaceChildren();result.validationErrors.forEach(e=>text(validationBox,'p',(e.field==='ja'?'日本語本文：':'英語本文：')+e.message,'error'));
     if(!result.validationErrors.length){validatedFields=key;text(validationBox,'p','表示中の日英本文の形式を確認しました．出典・根拠と内容も確認してから登録してください．','muted');}
     if(approval)approval.disabled=result.validationErrors.length>0;

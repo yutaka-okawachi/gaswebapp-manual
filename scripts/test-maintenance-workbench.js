@@ -23,7 +23,7 @@ function harness(options={}){
   getRange(r,c,n=1,w=1){return{getValues:()=>data.slice(r-1,r+n-1).map(a=>a.slice(c-1,c+w-1)),getDisplayValues:()=>data.slice(r-1,r+n-1).map(a=>a.slice(c-1,c+w-1)),getFormulas:()=>Array.from({length:n},()=>Array(w).fill(''))};},
   appendRow(row){data.push(row.map(v=>typeof v==='string'&&v.startsWith("'")?v.slice(1):v));}};}
  for(const [tab,rows]of Object.entries(sourceData)){const fields=tab==='GM'?['de','ja','en','data']:['de','ja','en','Oper','Aufzug','Szene','page','whom','whom_en'];h.relatedSheets[tab]=table(tab,fields,rows.map(v=>fields.map(f=>v[f]===undefined?'':v[f])));}
- for(const file of ['dictionary_candidate_workflow.js','dictionary_candidate_wizard.js','notes_registration.js','maintenance_workbench.js'])vm.runInContext(fs.readFileSync(path.join(root,'src',file),'utf8'),h.c);
+ for(const file of ['dictionary_candidate_workflow.js','dictionary_candidate_wizard.js','notes_registration.js','dictionary_notation.js','generate_dic_html.js','notes_link_advisory.js','maintenance_workbench.js'])vm.runInContext(fs.readFileSync(path.join(root,'src',file),'utf8'),h.c);
  h.c.readSheetRows=(s,width)=>s.getRange(2,1,s.getLastRow()-1,width).getValues();
  h.observationId='observation-1234567890abcdef12345678';h.observation=[h.observationId,'Saite','saite','','',1,'terms_search.html',1,'未判定','',''];
  h.c.candidateWizardFindObservation=id=>{assert.equal(id,h.observationId);return{spreadsheet:book,row:h.observation,rowNumber:2};};
@@ -507,5 +507,16 @@ test('new multiline English layout survives private generation, explicit registr
   h.register();h.run();assert.equal(h.managed().length,1);assert.equal(h.fetches,1);
   assert.equal(h.mapping.data.length,1);
  }
+});
+
+test('rebuilt advice is read-only and dialog separates English and German without blocking',()=>{
+ const h=harness();h.put('de','Hand',2);h.put('de','Kind',3);h.run();const ui=dialogHarness(h),en=ui.all().find(e=>e['aria-label']==='登録する英語本文');
+ const before=JSON.stringify(h.rows),fetches=h.fetches;en.value+='\nGerman: die Hand\nEnglish: A kind hand.';en.events.input();ui.validate();
+ assert(ui.all().some(e=>e.textContent.includes('英文・混在文の候補：2箇所')));assert(ui.all().some(e=>e.textContent.includes('German: 実例のリンク：1箇所')));
+ assert(!ui.button('内容を承認してNotesに登録').disabled);assert.equal(JSON.stringify(h.rows),before);assert.equal(h.fetches,fetches);
+});
+test('rebuilt unavailable advice never claims zero candidates or blocks valid form',()=>{
+ const h=harness();h.run();h.c.maintenanceNotesLinkAdvisory_=()=>({status:'unavailable'});const ui=dialogHarness(h);ui.validate();
+ assert(ui.all().some(e=>e.textContent.includes('リンク候補は未確認')));assert(!ui.button('内容を承認してNotesに登録').disabled);
 });
 console.log('Unified maintenance review-before-insert: '+passed+' scenarios passed. Private generation, explicit approved registration, legacy recovery, one-word display, aliases and no live calls.');

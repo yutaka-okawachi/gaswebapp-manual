@@ -10,6 +10,8 @@ const old=vm.createContext({});
 const {extractFunction}=require('./test-utils/extract-function');
 for(const name of ['isSafeDictionaryReferenceUrl','normalizeDictionaryScoreReferences','renderDictionaryReferenceText','renderNotesEnglishLayout'])vm.runInContext(extractFunction(read('src/dictionary_notation.js'),name),old);
 vm.runInContext(read('src/generate_dic_html.js'),old);
+// Isolate notation; combined links/images are checked by reviewed-link integration.
+for(const ctx of [c,old])vm.runInContext('removeReviewedEnglishTermLinks = function(rendered) { return rendered; };',ctx);
 const scoreToken='[[score:hindemith-glockenspiel-fsharp5]]';
 // Reverse only the approved display substitutions, back to each fixture's exact source.
 // Keep the whole-document equality: anchors, metadata, links and all other text stay strict.

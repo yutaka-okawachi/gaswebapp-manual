@@ -29,13 +29,14 @@ const rules=vm.runInContext('REVIEWED_ENGLISH_LINK_CONTEXTS',c),fixtureIndex={};
 for(const rule of rules)for(const [target,text] of rule.links)fixtureIndex[c.normalizeForId(text)]=target.slice(1);
 let fixtureRemoved=0;
 for(const rule of rules){
-  const input=c.linkTermsInTranslation(rule.line,fixtureIndex);
+  let input=c.linkTermsInTranslation(rule.line,fixtureIndex);
+  if(rule.notationMarkup) input=input.replace(rule.notationText,rule.notationMarkup);
   const output=c.removeReviewedEnglishTermLinks(input,rule.headword,rule.line,'en');
   const removed=links(input).length-links(output).length;
   assert.equal(removed,rule.links.reduce((n,item)=>n+item[2],0),rule.headword+': '+rule.line);
   assert.equal(visible(input),visible(output));fixtureRemoved+=removed;
 }
-assert.equal(fixtureRemoved,188);
+assert.equal(fixtureRemoved,590);
 const anchor=(w,t)=>`<a href="#term-${t}" class="term-link">${w}</a>`;
 const altered=['genau','English: Juts his head forward, as shortsighted people do, to see the major-domo more distinctly.',''];
 assert(c.generateDicListHtml([altered],index,null,null,'en').includes(anchor('see','see')),'changed context must retain legacy links');
@@ -50,4 +51,11 @@ for(const [word,source,lang,output] of [
 const ja=JSON.parse(fs.readFileSync('mahler-search-app/data/dic_notes.json','utf8'));
 assert.equal(c.generateDicListHtml(ja,index,null,null,'ja'),baseline.generateDicListHtml(ja,index,null,null,'ja'));
 assert.equal(JSON.stringify(rows),snapshot);
-console.log('Reviewed English links: 188 fixed-context removals; current dataset removed '+(oldLinks.length-newLinks.length)+'; original snapshot exact-anchor check when applicable; visible text unchanged, JA identical, stale/duplicate/changed target fail closed.');
+console.log('Reviewed English links: 590 fixed-context removals; current dataset removed '+(oldLinks.length-newLinks.length)+'; original snapshot exact-anchor check when applicable; visible text unchanged, JA identical, stale/duplicate/changed target fail closed.');
+
+const audit=JSON.parse(fs.readFileSync('scripts/fixtures/yut44-reviewed-contexts.json','utf8'));let expected=before,total=0;
+for(const r of audit){const heading='data-notes-heading="'+c.escapeHtml(r.headword)+'"';const matching=[...expected.matchAll(/<div class="row"[^>]*>[\s\S]*?<dd class="translation">([\s\S]*?)<\/dd>\n<\/div>/g)].filter(m=>m[0].includes(heading));assert.equal(matching.length,1);const row=matching[0],parts=row[1].split('<br>');const matches=parts.map((part,i)=>({part,i})).filter(o=>visible(r.notationMarkup?o.part.replace(r.notationMarkup,c.escapeHtml(r.notationText)):o.part)===c.escapeHtml(r.line));assert.equal(matches.length,1,r.headword+': '+r.line);let part=matches[0].part;for(const [href,text,count]of r.links){const a='<a href="'+c.escapeHtml(href)+'" class="term-link">'+c.escapeHtml(text)+'</a>';assert.equal(part.split(a).length-1,count);part=part.split(a).join(c.escapeHtml(text));total+=count;}parts[matches[0].i]=part;expected=expected.replace(row[0],row[0].replace(row[1],parts.join('<br>')));}
+assert.equal(total,590);assert.equal(after,expected);assert.deepEqual(links(after),links(expected));assert.deepEqual(after.match(/<img\b[^>]*>/g),before.match(/<img\b[^>]*>/g));
+const wholeBefore=baseline.generateDicHtml(rows,[],null,[],{language:'en'}),wholeAfter=c.generateDicHtml(rows,[],null,[],{language:'en'}),wholeIndex=c.generateDicTermsIndex(rows,[]),lb=baseline.generateDicListHtml(rows,wholeIndex,{},null,'en'),la=c.generateDicListHtml(rows,wholeIndex,{},null,'en');assert(wholeBefore.includes(lb));assert.equal(wholeAfter,wholeBefore.replace(lb,la));assert.deepEqual(wholeAfter.match(/<img\b[^>]*>/g),wholeBefore.match(/<img\b[^>]*>/g));
+const nr=audit.find(r=>r.notationMarkup),ni=c.linkTermsInTranslation(nr.line,fixtureIndex).replace(nr.notationText,nr.notationMarkup);assert(c.removeReviewedEnglishTermLinks(ni,nr.headword,nr.line,'en').includes(nr.notationMarkup));for(const changed of [ni.replace('data-notation="short-pause"','data-notation="other"'),ni.replace(nr.notationMarkup,nr.notationMarkup+nr.notationMarkup),ni.replace(nr.notationMarkup,'𝄐')])assert.equal(c.removeReviewedEnglishTermLinks(changed,nr.headword,nr.line,'en'),changed);
+console.log('Current-data unconditional audit: 590 only; full HTML, remaining anchors and images preserved; notation stale guards pass.');

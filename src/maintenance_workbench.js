@@ -179,7 +179,7 @@ function maintenanceNotesValidateDraft(id, expectedHash, fields) {
   }
   // The review helper changes only its copy; actual approval and all current-row guards remain in Register.
   const reviewed = rowCompletionReviewNotes_(row, fields);
-  return { jobId: job.id, jobHash: expectedHash, validationErrors: maintenanceNotesDraftErrors_(reviewed, fields) };
+  return { jobId: job.id, jobHash: expectedHash, validationErrors: maintenanceNotesDraftErrors_(reviewed, fields), linkAdvisory: maintenanceNotesLinkAdvisory_(job.intake.plan, fields.en) };
 }
 function maintenanceNotesRun(observationId) {
   let job = maintenanceNotesPrepare_(observationId);
