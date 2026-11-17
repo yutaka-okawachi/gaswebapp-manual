@@ -264,7 +264,36 @@ function testWiring() {
   assert.strictEqual(menu.includes("createMenu('📚 辞書候補')"), false);
   assert.ok(jev.includes("getProperty('TYPESAFE_API_KEY')"));
   assert.ok(jev.includes("'Jev判定待ち'"));
-  assert.ok(jev.includes("'Jev判定済み'"));
+  assert.ok(jev.includes('singleOperatorJudgmentLinkPaid_(observations, observation, reviewId)'));
+  const intake = read('src/unified_intake_entry.js');
+  const helper = intake.slice(intake.indexOf('function singleOperatorJudgmentLocate_('),
+    intake.indexOf('function singleOperatorJudgmentFailed_('));
+  const writes = [];
+  let rows;
+  const context = {
+    readSheetRows: () => rows,
+    singleOperatorJudgmentError_: code => { throw new Error(code); }
+  };
+  vm.createContext(context);
+  vm.runInContext(helper, context);
+  const sheet = { getRange: (...range) => ({
+    setValues: values => writes.push({ range, values: JSON.parse(JSON.stringify(values)) })
+  }) };
+  const original = ['observation-1', 'grossem', 'grossem', '', '', '', 'GM', 1, '未判定', '', ''];
+  const pending = original.slice();
+  pending[8] = 'Jev判定待ち';
+  // Locate by ID after a row reorder; preserve the paid review link and completed status.
+  rows = [['another'], pending];
+  context.singleOperatorJudgmentLinkPaid_(sheet, original, 'review-1');
+  assert.deepStrictEqual(writes, [{
+    range: [3, 9, 1, 3], values: [['Jev判定済み', 'review-1', '']]
+  }]);
+  for (const invalid of [[], [pending, pending], [Object.assign(pending.slice(), { 1: 'changed' })]]) {
+    rows = invalid;
+    assert.throws(() => context.singleOperatorJudgmentLinkPaid_(sheet, original, 'review-1'),
+      /judgment_paid_review_unlinked/);
+  }
+  assert.strictEqual(writes.length, 1);
   assert.ok(workflow.includes("EXPERIMENTAL_TERM_MAPPING_SHEET_NAME = '語形対応'"));
   assert.ok(workflow.includes("EXPERIMENTAL_NOTES_SHEET_NAME = 'Notes'"));
   assert.ok(workflow.includes("UNREGISTERED_RESULT_TERM_SHEET_NAME = '検索結果未登録語'"));

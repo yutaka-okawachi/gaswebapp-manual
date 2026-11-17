@@ -41,6 +41,26 @@ function fixture() {
     rowCompletionError_: message => Error(message)
   });
   for (const name of ['dictionary_candidate_workflow.js', 'dictionary_candidate_wizard.js', 'jev_candidate_review.js', 'maintenance_workbench.js', 'maintenance_ledger.js']) vm.runInContext(fs.readFileSync(path.join(root, 'src', name), 'utf8'), c, { filename: name });
+  // Exercise the ledger adapter with the real judgment guards. Intake jobs/alias jobs
+  // are absent in this storage fixture; the production public entry remains retired.
+  const intakeSource = fs.readFileSync(path.join(root, 'src/unified_intake_entry.js'), 'utf8');
+  const memoEnd = intakeSource.indexOf('/** ISOLATED');
+  assert(memoEnd > 0);
+  vm.runInContext(intakeSource.slice(0, memoEnd), c);
+  c.rowCompletionBook_ = () => book;
+  c.rowCompletionStored_ = () => null;
+  c.rowCompletionHash_ = value => crypto.createHash('sha256').update(JSON.stringify(value)).digest('hex');
+  c.createSingleOperatorAlias_ = () => ({ status: () => ({ status: 'idle' }) });
+  c.singleOperatorIntake_ = { view: id => {
+    const found = c.candidateWizardFindObservation(id);
+    const rows = c.readSheetRows(c.requireSheetWithHeaders(book, 'Jev判定', vm.runInContext('JEV_REVIEW_HEADERS', c)), 15);
+    const review = rows.find(row => row[0] === found.row[9]) || null;
+    return { observation: found.row, review, state: { code: 'ready' },
+      snapshot: c.rowCompletionHash_([found.row, review]) };
+  } };
+  const judgmentStart = intakeSource.indexOf('var singleOperatorJudgmentExpected_ = null;');
+  assert(judgmentStart > 0);
+  vm.runInContext(intakeSource.slice(judgmentStart), c);
   h.c = c; h.defs = c.maintenanceLedgerDefinitions_();
   const obs = (id, term, status = '未判定', review = '') => [id, term, term.toLowerCase(), new Date('2026-09-01T00:00:00Z'), '', 1, '用語から検索 (GM)', 1, status, review, ''];
   const review = (id, term, category, headword, decision) => [id, term, 'Original context ' + term, term.toLowerCase(), 'Jev', 'ADVISORY', category, headword, '', 0.8, 0.7, 'original candidates', decision, '', new Date('2026-09-02T00:00:00Z')];
@@ -86,9 +106,9 @@ test('orphan review can be explicitly held by ID, with full evidence retained', 
 test('review approval still requires fresh hash and valid classification; moved reviews immutable', () => { const h = fixture(); h.activate(); const state = h.c.maintenanceLedgerHistory(), pending = state.reviews.find(r => r.id === 'pending-linked'), moved = state.reviews.find(r => r.id === 'review-5'); assert.throws(() => h.c.maintenanceLedgerSaveReview(pending.id, 'f'.repeat(64), '保留', 'NEW_TERM_CANDIDATE', '', ''), /判定が変わり/); assert.throws(() => h.c.maintenanceLedgerSaveReview(pending.id, pending.hash, '採用', 'UNCERTAIN', '', ''), /採否/); assert.throws(() => h.c.maintenanceLedgerSaveReview(moved.id, moved.hash, '却下', moved.category, moved.headword, ''), /移送済み/); h.finish(); });
 test('transfer mismatch cannot be automatically re-promoted, including bulk preflight', () => { const h = fixture(); h.activate(); const before = h.writes; assert.throws(() => h.c.promoteApprovedDictionaryCandidateByReviewId('review-21'), /不一致|一致しません/); assert.throws(() => h.c.promoteApprovedDictionaryCandidates(), /不一致|一致しません/); assert.equal(h.writes, before); h.finish(); });
 test('experimental candidate cannot enter production Notes even when reachable by a normal ID', () => { const h = fixture(); const o = h.raw('observation').data[1], id = h.c.dictionaryCandidateRecordId('candidate', o[2]); const candidate = h.raw('candidate').data[1]; candidate[0] = id; h.activate(); const before = h.writes; assert.throws(() => h.c.candidateWizardRegisterExperimental(o[0], 'reviewed body', '', true), /日常保守/); assert.throws(() => h.c.maintenanceNotesOldWork_(h.c.candidateWizardFindObservation(o[0])), /実験草案/); assert.equal(h.writes, before); h.finish(); });
-test('existing review still prevents duplicate Jev call after migration and physical reorder', () => { const h = fixture(); h.activate(); const observation = h.raw('observation').data[3]; const found = h.c.candidateWizardFindObservation(observation[0]); assert.throws(() => h.c.createJevReviewForObservation(found.rowNumber, observation[0], true), /未判定ではありません/); h.finish(); });
-test('unlinked same-term historical review also prevents duplicate Jev call', () => { const h = fixture(); const o = h.raw('observation').data[1]; o[1] = 'markiren'; o[2] = 'markiren'; h.activate(); const found = h.c.candidateWizardFindObservation(o[0]); assert.throws(() => h.c.createJevReviewForObservation(found.rowNumber, o[0], true), /既にあります/); h.finish(); });
-test('uncertain paid-call state remains protected and cannot be retried', () => { const h = fixture(); const o = h.raw('observation').data[1]; h.activate(); h.view('observation').getRange(2, 9).setValue('Jev判定待ち'); h.view('observation').getRange(2, 11).setValue('outcome unknown'); const found = h.c.candidateWizardFindObservation(o[0]); assert(h.c.maintenanceLedgerHistory().issues.some(i => i.type === 'no_retry')); assert.throws(() => h.c.createJevReviewForObservation(found.rowNumber, o[0], true), /未判定ではありません/); h.finish(); });
+test('existing review still prevents duplicate Jev call after migration and physical reorder', () => { const h = fixture(); h.activate(); const observation = h.raw('observation').data[3]; const found = h.c.candidateWizardFindObservation(observation[0]); assert.throws(() => h.c.singleOperatorJudgmentOriginalJev_(found.rowNumber, observation[0], true), /未判定ではありません/); h.finish(); });
+test('unlinked same-term historical review also prevents duplicate Jev call', () => { const h = fixture(); const o = h.raw('observation').data[1]; o[1] = 'markiren'; o[2] = 'markiren'; h.activate(); const found = h.c.candidateWizardFindObservation(o[0]); assert.throws(() => h.c.singleOperatorJudgmentOriginalJev_(found.rowNumber, o[0], true), /既にあります/); h.finish(); });
+test('uncertain paid-call state remains protected and cannot be retried', () => { const h = fixture(); const o = h.raw('observation').data[1]; h.activate(); h.view('observation').getRange(2, 9).setValue('Jev判定待ち'); h.view('observation').getRange(2, 11).setValue('outcome unknown'); const found = h.c.candidateWizardFindObservation(o[0]); assert(h.c.maintenanceLedgerHistory().issues.some(i => i.type === 'no_retry')); assert.throws(() => h.c.singleOperatorJudgmentOriginalJev_(found.rowNumber, o[0], true), /未判定ではありません/); h.finish(); });
 test('unified Notes guard still detects existing accepted alias and old draft after legacy removal', () => { const h = fixture(); h.activate(); h.legacy.forEach(s => h.sheets.delete(s.name)); const found = h.c.candidateWizardFindObservation(h.raw('observation').data[14][0]); assert.throws(() => h.c.maintenanceNotesOldWork_(found), /既存見出しへの判定/); h.finish(); });
 test('saved old draft remains protected by ID when original tabs are absent', () => { const h = fixture(), o = h.raw('observation').data[1]; h.raw('candidate').data[2][0] = h.c.dictionaryCandidateRecordId('candidate', o[2]); h.activate(); h.legacy.forEach(s => h.sheets.delete(s.name)); const before=h.writes, saved=h.c.maintenanceNotesOldWork_(h.c.candidateWizardFindObservation(o[0])); assert(saved.headword); assert.equal(h.writes,before); h.finish(); });
 test('duplicate Notes headwords do not count as a verified transfer', () => { const h = fixture(), headword = h.raw('candidate').data[2][16]; h.notes.data.push([headword, '', '']); h.activate(); assert(h.c.maintenanceLedgerHistory().issues.some(i => i.id === 'review-4' && i.type === 'transfer_mismatch')); h.finish(); });
@@ -98,13 +118,13 @@ for (const failed of [false, true]) test('Jev business workflow through unified 
   const h = fixture(); h.activate(); const o = h.raw('observation').data[1], found = h.c.candidateWizardFindObservation(o[0]); let calls = 0;
   h.c.jevCandidateContext = () => 'original context'; h.c.jevCandidateHeadwords = () => [{ option: 'candidate_1', headword: 'base', dictionaryId: 'base-id', distance: 1 }];
   h.c.callJevForCandidate = () => { calls++; if (failed) throw Error('simulated unknown response'); return { category: { choice: 'NEW_TERM_CANDIDATE', confidence: 0.8 }, target: { choice: 'candidate_1', confidence: 0.7 } }; };
-  if (failed) assert.throws(() => h.c.createJevReviewForObservation(found.rowNumber, o[0], true), /unknown/);
-  else { h.c.createJevReviewForObservation(found.rowNumber, o[0], true); assert.equal(h.c.maintenanceLedgerHistory().reviews.length, 24); }
+  if (failed) assert.throws(() => h.c.singleOperatorJudgmentOriginalJev_(found.rowNumber, o[0], true), /unknown/);
+  else { h.c.singleOperatorJudgmentOriginalJev_(found.rowNumber, o[0], true); assert.equal(h.c.maintenanceLedgerHistory().reviews.length, 24); }
   const after = h.c.candidateWizardFindObservation(o[0]); assert.equal(after.row[8], failed ? 'Jev判定待ち' : 'Jev判定済み');
-  assert.throws(() => h.c.createJevReviewForObservation(after.rowNumber, o[0], true), /未判定ではありません/); assert.equal(calls, 1); h.finish();
+  assert.throws(() => h.c.singleOperatorJudgmentOriginalJev_(after.rowNumber, o[0], true), /未判定ではありません/); assert.equal(calls, 1); h.finish();
 });
 test('pre-activation handler cannot write its old Sheet handle after activation', () => { const h = fixture(), old = h.view('observation'), id = old.getRange(2, 1).getValue(); h.activate(); const before = h.writes; assert.throws(() => old.getRange(2, 9).setValue('Jev判定待ち'), /切り替わり/); assert.throws(() => old.appendRow(h.obs('other', 'other')), /切り替わり/); assert.equal(h.writes, before); assert.equal(h.c.candidateWizardFindObservation(id).row[8], '未判定'); h.finish(); });
-test('activation during Jev preflight aborts before the simulated paid call', () => { const h = fixture(), o = h.raw('observation').data[1], found = h.c.candidateWizardFindObservation(o[0]); h.c.jevCandidateContext = () => { h.activate(); return 'original context'; }; h.c.callJevForCandidate = () => { throw Error('PAID CALL MUST NOT RUN'); }; assert.throws(() => h.c.createJevReviewForObservation(found.rowNumber, o[0], true), /切り替わり/); assert.equal(h.c.candidateWizardFindObservation(o[0]).row[8], '未判定'); h.finish(); });
+test('activation during Jev preflight aborts before the simulated paid call', () => { const h = fixture(), o = h.raw('observation').data[1], found = h.c.candidateWizardFindObservation(o[0]); h.c.jevCandidateContext = () => { h.activate(); return 'original context'; }; h.c.callJevForCandidate = () => { throw Error('PAID CALL MUST NOT RUN'); }; assert.throws(() => h.c.singleOperatorJudgmentOriginalJev_(found.rowNumber, o[0], true), /切り替わり/); assert.equal(h.c.candidateWizardFindObservation(o[0]).row[8], '未判定'); h.finish(); });
 test('a preflight view sees another request append before duplicate recheck without moving existing IDs', () => {
   const h = fixture(); h.activate(); const older = h.view('review'), first = older.getRange(2, 1).getValue(), newer = h.view('review');
   newer.appendRow(h.review('new-concurrent-review', 'unique', 'INFLECTION', 'base', '未確認'));
@@ -124,7 +144,7 @@ for (const removed of ['originals', 'backups', 'both']) test('active business op
   assert(state.candidates.find(r => r.term === 'hingebungsvoll').experimental);
   assert.equal(h.c.candidateWizardBootstrap().length, 132); assert.equal(h.writes, before);
   const reviewed = h.raw('observation').data[3], found = h.c.candidateWizardFindObservation(reviewed[0]);
-  assert.throws(() => h.c.createJevReviewForObservation(found.rowNumber, reviewed[0], true), /未判定ではありません/);
+  assert.throws(() => h.c.singleOperatorJudgmentOriginalJev_(found.rowNumber, reviewed[0], true), /未判定ではありません/);
   assert.throws(() => h.c.maintenanceNotesOldWork_(h.c.candidateWizardFindObservation(h.raw('observation').data[14][0])), /既存見出しへの判定/);
   const held = state.reviews.find(r => r.id === 'held-orphan');
   h.c.maintenanceLedgerSaveReview(held.id, held.hash, '保留', held.category, held.headword, 'verified by ID after cleanup');
@@ -165,6 +185,22 @@ test('retired migration entry points are absent and current menu preserves busin
   assert(!items.some(i => /移行/.test(i.label)));
   for (const name of ['showMaintenanceWorkbench', 'showMaintenanceAliases', 'showMaintenanceLedgerHistory',
     'refreshDictionarySourceMarkersForMappingsFromMenu', 'sortMaintenanceRows', 'showMaintenanceFunctionRoles']) assert(items.some(i => i.handler === name));
+  assert.equal(h.writes, before); h.finish();
+});
+
+test('managed review memo is rejected without changing ledger evidence', () => {
+  const h = fixture();
+  h.raw('review').data[1][13] = 'YUT40_managed';
+  h.activate();
+  const row = h.c.maintenanceLedgerHistory().reviews.find(r => r.id === 'held-orphan'), before = h.writes;
+  assert.throws(() => h.c.maintenanceLedgerSaveReview(row.id, row.hash, '保留', row.category, row.headword, 'replace'), /旧画面/);
+  assert.equal(h.writes, before); h.finish();
+});
+
+test('legacy Jev public entry stays retired without network or writes', () => {
+  const h = fixture(), before = h.writes;
+  assert.throws(() => h.c.createJevReviewForObservation(2, 'unused', true),
+    error => error.code === 'legacy_retired');
   assert.equal(h.writes, before); h.finish();
 });
 

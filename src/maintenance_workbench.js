@@ -3,7 +3,7 @@ function maintenanceNotesObservation_(id) {
   rowCompletionBook_();
   return candidateWizardFindObservation(id);
 }
-function maintenanceNotesSource_(book, term) {
+function maintenanceNotesSource_(book, term, purpose) {
   const normalized = normalizeObservedTerm(term), preferred = String(term).trim().normalize('NFC');
   if (!/^[a-z0-9][a-z0-9 -]{1,119}$/.test(normalized)) throw rowCompletionError_('原文の語・句を確認できません．Notesは追加していません．');
   const formsToFind = [normalized, normalized + 'n', normalized + 'en', normalized + 's', normalized + 'es'];
@@ -39,7 +39,7 @@ function maintenanceNotesSource_(book, term) {
       const rank = rowForms.some(function (form) { return form.normalize('NFC') === preferred; }) ? 2 : rowForms.length ? 1 : 0;
       if (!selected || rank > selected.rank) selected = { values: values, index: index, original: original, location: location, rank: rank };
     });
-    if (!selected) return;
+    if (!selected || (purpose === 'alias' && selected.rank === 0)) return;
     markers.push(definition[1]);
     proof.push({ tab: tab, sheetId: sheet.getSheetId(), number: selected.index + 2, fields: fields,
       hash: rowCompletionHash_(selected.values), german: selected.original.slice(0, 1200), location: selected.location });
@@ -47,8 +47,8 @@ function maintenanceNotesSource_(book, term) {
   if (!proof.length) throw rowCompletionError_('実例と使用箇所から出典を特定できません．Notesは追加していません．');
   if (!forms.length) throw rowCompletionError_('入力した形そのものを原文で確認できません．見出しを推測せず，語形対応で確認してください．');
   const unique = Array.from(new Set(forms.map(function (form) { return form.normalize('NFC'); })));
-  if (new Set(unique.map(function (form) { return form.toLowerCase(); })).size > 1) throw rowCompletionError_('原綴りが複数あります．Notesは追加せず，語形対応で確認してください．');
-  const headword = unique.find(function (form) { return form === preferred; }) || unique[0];
+  if (purpose !== 'alias' && new Set(unique.map(function (form) { return form.toLowerCase(); })).size > 1) throw rowCompletionError_('原綴りが複数あります．Notesは追加せず，語形対応で確認してください．');
+  const headword = purpose === 'alias' ? preferred : unique.find(function (form) { return form === preferred; }) || unique[0];
   return { de: headword, source: markers.join(', '), proof: proof };
 }
 function maintenanceNotesVerifySource_(book, plan) {
@@ -117,6 +117,7 @@ function maintenanceNotesDraftCurrent_(job, row) {
 }
 function maintenanceNotesPrepare_(observationId) {
   return rowCompletionLock_(function () {
+    unifiedIntakePreflight_('prepare', observationId);
     const book = rowCompletionBook_(), previous = rowCompletionStored_(), existing = previous && previous.job;
     if (existing && existing.intake && existing.intake.observationId === observationId) return existing;
     if (existing && !existing.closed) throw rowCompletionError_('別の語または選択行の処理中です．その内容を確認し，登録または終了してから切り替えてください．');
@@ -155,6 +156,7 @@ function maintenanceNotesPrepare_(observationId) {
     return job;
   });
 }
+
 function maintenanceNotesDraftErrors_(row, fields) {
   const errors = [];
   ['ja', 'en'].forEach(function (field) {
@@ -219,6 +221,7 @@ function maintenanceNotesWriteIntent_(job, sheet) {
 function maintenanceNotesRegister(id, expectedHash, fields, checked) {
   if (checked !== true) throw rowCompletionError_('日英本文・対応語・出典を確認してから登録を承認してください．');
   return rowCompletionLock_(function () {
+    unifiedIntakePreflight_('register', id);
     const job = rowCompletionJob_(id), intake = job.intake, row = job.rows[0], book = rowCompletionBook_(), sheet = book.getSheetByName('Notes');
     if (!intake || !row || rowCompletionHash_(job) !== expectedHash) throw rowCompletionError_('表示後に処理状態が変わりました．保存状態を確認してください．');
     if (!sheet || sheet.getSheetId() !== job.sheetId) throw rowCompletionError_('Notesの対象タブが変わりました．');
@@ -269,6 +272,7 @@ function maintenanceNotesRegister(id, expectedHash, fields, checked) {
     return maintenanceWorkbenchState(intake.observationId);
   });
 }
+
 function maintenanceWorkbenchState(observationId) {
   const book = rowCompletionBook_(), state = rowCompletionState(), sheet = book.getSheetByName('Notes');
   const observations = candidateWizardBootstrap(), stored = state.job;
@@ -322,6 +326,4 @@ function maintenanceAliasApply(observationId, headword, category, checked) {
     return result;
   });
 }
-function showMaintenanceAliases() {
-  SpreadsheetApp.getUi().showModalDialog(HtmlService.createHtmlOutputFromFile('maintenance_alias_dialog').setWidth(720).setHeight(650), '既存見出しへの語形対応');
-}
+function showMaintenanceAliases() { return showMaintenanceWorkbench(); }

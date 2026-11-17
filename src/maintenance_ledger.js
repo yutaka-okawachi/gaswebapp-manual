@@ -272,6 +272,8 @@ function maintenanceLedgerSaveReview(reviewId, expectedHash, decision, category,
     if (safeHeadword && !readSheetRows(book.getSheetByName('Notes'), 1).some(function (r) { return normalizeObservedTerm(r[0]) === normalizeObservedTerm(safeHeadword); })) throw new Error('対応見出しがNotesにありません．');
     const sheet = requireSheetWithHeaders(book, JEV_REVIEW_SHEET_NAME, JEV_REVIEW_HEADERS), found = candidateWizardFindLinked(sheet, JEV_REVIEW_HEADERS.length, String(reviewId));
     if (!found || maintenanceLedgerHash_(maintenanceLedgerEncode_(found.row)) !== expectedHash || found.row[4] !== 'Jev' || found.row[5] !== 'ADVISORY') throw new Error('保存前に判定の内容・経路が変わりました．保存していません．');
+    yut40AssertLegacyReviewMemo_(found.row[13]);
+    singleOperatorJudgmentReviewGuard_(String(reviewId));
     const row = found.row.slice(), oldCategory = row[6];
     if (row[6] !== category) row[9] = '';
     if (row[7] !== safeHeadword) row[10] = '';
@@ -282,6 +284,7 @@ function maintenanceLedgerSaveReview(reviewId, expectedHash, decision, category,
     return { saved: reviewId };
   } finally { lock.releaseLock(); }
 }
+
 function showMaintenanceLedgerHistory() {
   SpreadsheetApp.getUi().showModalDialog(HtmlService.createHtmlOutputFromFile('maintenance_ledger_dialog').setWidth(780).setHeight(720), '保守の判定・履歴');
 }

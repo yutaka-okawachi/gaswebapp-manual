@@ -123,6 +123,7 @@ function candidateWizardSaveReview(id, decision, category, headword, memo) {
         throw new Error('対応見出しがNotesにありません．');
       }
     }
+    yut40AssertLegacyReviewMemo_(linked.row[13]);
     const row = linked.row;
     const original = String(row[6] || '');
     const originalHeadword = String(row[7] || '');
@@ -493,8 +494,4 @@ function candidateWizardRegisterExperimental(id, body, source, confirmed) {
   throw new Error('新規Notesの登録は日常保守の「項目の作成・補完」で出典と日英本文を確認して行ってください．旧草案と履歴は保持しています．');
 }
 
-function showDictionaryCandidateWizard() {
-  const html = HtmlService.createHtmlOutputFromFile('dictionary_candidate_dialog')
-    .setWidth(700).setHeight(680);
-  SpreadsheetApp.getUi().showModalDialog(html, '未登録語の確認');
-}
+function showDictionaryCandidateWizard() { return showMaintenanceWorkbench(); }

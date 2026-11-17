@@ -155,6 +155,7 @@ function rowCompletionPreview() {
       if (reason) { row.status = 'blocked'; row.message = reason; row.targets = []; row.draft = {}; }
       job.rows.push(row);
     }
+    unifiedIntakeCarryHeld_(job);
     const reserve = job.rows.reduce(function (n, r) { return n + rowCompletionApiFields_(r).length * 12200 + (job.tab !== 'Notes' && r.status === 'pending' ? 4500 : 0) +
       (rowCompletionNewNotes_(r) && r.status === 'pending' ? 9000 : 0); }, 0);
     if (JSON.stringify(job).length + reserve > 65000) throw rowCompletionError_('生成結果を安全に保存するため，選択行を減らしてください．');
@@ -162,6 +163,7 @@ function rowCompletionPreview() {
     return rowCompletionView_(job);
   });
 }
+
 function rowCompletionClaimKey_(job, row) {
   return ROW_COMPLETION_PREFIX + 'claim:' + rowCompletionHash_([job.book, job.sheetId, row.number, row.hash]);
 }
@@ -310,6 +312,7 @@ function rowCompletionRequest_(job, row, model, context) {
 function rowCompletionGenerate(id, number) {
   // Explicit button only; no trigger, automatic retry, or per-call charge dialog.
   const reservation = rowCompletionLock_(function () {
+    unifiedIntakePreflight_('generate', id);
     const job = rowCompletionJob_(id), row = job.rows.find(function (r) { return r.number === number; });
     if (job.closed || !row || row.status !== 'pending') throw rowCompletionError_('再生成しません．保存状態を確認してください．');
     rowCompletionCurrent_(job, row);

@@ -90,7 +90,14 @@ function harness(tab = 'GM', options = {}) {
       return {getResponseCode:()=>h.http||200,getContentText:()=>h.badJson?'not-json':JSON.stringify({status:h.incomplete?'incomplete':'completed',output:[{content:[{type:'output_text',text:JSON.stringify(draft)}]}]})};
     }}
   });
-  vm.runInContext(source,c);Object.assign(h,{c,script,users,sheet,headers,rows,formulas,notes,validation});
+  vm.runInContext(source,c);
+  // Load the production completion hooks introduced by the unified intake flow.
+  // This fixture exercises completion in isolation, with no active intake execution.
+  const intake = fs.readFileSync(path.join(root, 'src/unified_intake_entry.js'), 'utf8');
+  const hooks = intake.slice(intake.indexOf('let UNIFIED_LAB_EXECUTION_=null;'),
+    intake.indexOf('function createUnifiedIntakeLab_()'));
+  vm.runInContext('const UNIFIED_LAB_ORIGINALS_={stored:rowCompletionStored_,save:rowCompletionSave_};\n' + hooks, c);
+  Object.assign(h,{c,script,users,sheet,headers,rows,formulas,notes,validation});
   if(tab==='Notes')assert.equal(c.notesEntryGuardInitialize_(),true);
   h.preview=()=>c.rowCompletionPreview().job;
   h.generate=job=>c.rowCompletionGenerate(job.id,job.rows[0].number).job;

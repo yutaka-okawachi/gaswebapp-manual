@@ -177,6 +177,7 @@ function createJevReviewForObservation(rowNumber, expectedObservationId, confirm
     const lock = LockService.getScriptLock();
     if (!lock.tryLock(10000)) throw new Error('判定の更新ロックを取得できませんでした．');
     try {
+      singleOperatorJudgmentBeforeJev_(observation, request);
       const current = observations.getRange(rowNumber, 1, 1, UNREGISTERED_RESULT_TERM_HEADERS.length).getValues()[0];
       if (String(current[0]) !== String(observation[0]) || current[8] !== '未判定' || current[9] ||
           readSheetRows(reviews, JEV_REVIEW_HEADERS.length).some(row =>
@@ -190,8 +191,7 @@ function createJevReviewForObservation(rowNumber, expectedObservationId, confirm
     let answer;
     try { answer = callJevForCandidate(request, apiKey); }
     catch (error) {
-      observations.getRange(rowNumber, 11).setValue('Jev呼出しの成否を確認してください：' +
-        String(error && error.message || error).slice(0, 180));
+      singleOperatorJudgmentFailed_(observations, observation);
       throw error;
     }
     const selected = candidates.find(item => item.option === answer.target.choice);
@@ -207,7 +207,7 @@ function createJevReviewForObservation(rowNumber, expectedObservationId, confirm
         candidates.map(item => item.option + ': ' + item.headword + '（距離 ' + item.distance + '）').join(' / '),
         '未確認', '', new Date()
       ].map(sheetLiteralValue_));
-      observations.getRange(rowNumber, 9, 1, 3).setValues([['Jev判定済み', reviewId, '']]);
+      singleOperatorJudgmentLinkPaid_(observations, observation, reviewId);
     } finally { lock.releaseLock(); }
     return { reviewId, term };
 }
