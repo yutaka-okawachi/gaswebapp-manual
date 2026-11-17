@@ -56,6 +56,29 @@ test('Notes HEAD edit, unrelated deletion and partial local retirement stay bloc
  assert.throws(()=>guard.assertSafe(manifest([notesFiles[0]]),notesHead,notesHead,false,notesContext),/部分的/);
 });
 test('retired Notes pair needs no continuing exception after deployment',()=>guard.assertSafe(local,local,local,false,{...notesContext,version:1704}));
+
+const ledgerApproval=JSON.parse(fs.readFileSync(path.join(__dirname,'sync/maintenance-ledger-retirement-20261117.json'),'utf8'));
+const ledgerFiles=ledgerApproval.files.map(f=>({...f})),ledgerHead=[...local,...ledgerFiles],ledgerContext={approval:[approval,maintenanceApproval,notesApproval,ledgerApproval],scriptId:'synthetic',version:1716};
+ledgerContext.approval[3]={...ledgerApproval,projectHash:sha256('synthetic')};
+test('six exact ledger retirement files allow removal only on reviewed baseline',()=>guard.assertSafe(local,ledgerHead,ledgerHead,false,ledgerContext));
+test('ledger removal without manifest remains blocked',()=>assert.throws(()=>guard.assertSafe(local,ledgerHead,ledgerHead,false,notesContext)));
+for(const [label,mutate] of [
+ ['wrong version',c=>c.version++],['wrong project',c=>c.scriptId='other'],['missing member',c=>c.approval[3].files.pop()],
+ ['unknown member',c=>c.approval[3].files[0].name='other'],['wrong hash',c=>c.approval[3].files[0].hash='f'.repeat(64)],
+ ['duplicate manifest',c=>c.approval.push(c.approval[3])]
+])test('ledger retirement rejects '+label,()=>{const c=JSON.parse(JSON.stringify(ledgerContext));mutate(c);assert.throws(()=>guard.assertSafe(local,ledgerHead,ledgerHead,false,c));});
+test('ledger retired files edited at HEAD or partially deleted remain blocked',()=>{
+ const edited=ledgerHead.map(f=>f.name==='maintenance_ledger'?{...f,hash:'f'.repeat(64)}:f);
+ assert.throws(()=>guard.assertSafe(local,edited,ledgerHead,false,ledgerContext));
+ assert.throws(()=>guard.assertSafe(local,ledgerHead.slice(0,-1),ledgerHead,false,ledgerContext));
+ assert.throws(()=>guard.assertSafe([...local,ledgerFiles[0]],ledgerHead,ledgerHead,false,ledgerContext));
+});
+test('unknown deletion cannot borrow ledger retirement permission',()=>assert.throws(()=>guard.assertSafe(local,[...ledgerHead,{name:'unknown',type:'SERVER_JS',hash:'a'.repeat(64)}],ledgerHead,false,ledgerContext)));
+test('ledger retirement supports upload-completed and fully-published states',()=>{
+ guard.assertSafe(local,local,ledgerHead,false,ledgerContext);
+ guard.assertSafe(local,local,local,false,{...ledgerContext,version:1717});
+});
+
 async function mainTest(){
  const dir=fs.mkdtempSync(path.join(os.tmpdir(),'gmt-retirement-test-'));
  try{
@@ -88,6 +111,13 @@ async function mainTest(){
   await assert.rejects(()=>guard.assertUnchanged(notesTicket,{local:read,remote:notesRemote}),/確認後/);passed++;
   fs.writeFileSync(notesPath,JSON.stringify(notesApproval));
   await guard.verifyUpload(notesTicket,{local:read,remote:async()=>({files:local,published:notesHead,version:1703,deploymentHash:'notes-fixed'})});passed++;
+  const ledgerPath=path.join(dir,'scripts/sync/maintenance-ledger-retirement-20261117.json');
+  fs.writeFileSync(ledgerPath,JSON.stringify(ledgerContext.approval[3]));
+  const ledgerRemote=async()=>({files:ledgerHead,published:ledgerHead,version:1716,deploymentHash:'ledger-fixed'});
+  const ledgerTicket=await guard.preflight({GAS_DEPLOY_URL:'unused'},{local:read,remote:ledgerRemote});
+  assert.equal(ledgerTicket.local.retirement.length,4);passed++;
+  fs.writeFileSync(ledgerPath,JSON.stringify({...ledgerContext.approval[3],baselineCommit:'f'.repeat(40)}));
+  await assert.rejects(()=>guard.assertUnchanged(ledgerTicket,{local:read,remote:ledgerRemote}));passed++;
  }finally{const resolved=path.resolve(dir);assert(resolved.startsWith(path.resolve(os.tmpdir())+path.sep)&&path.basename(resolved).startsWith('gmt-retirement-test-'));fs.rmSync(resolved,{recursive:true,force:true});}
  console.log('GAS retirement approval: '+passed+' cases passed; no generic deletion override, concurrent edits and incomplete removal blocked.');
 }mainTest().catch(e=>{console.error(e);process.exitCode=1;});

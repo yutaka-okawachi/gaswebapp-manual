@@ -58,14 +58,17 @@ test('All external history fields are stored literally while the original text i
     assert.equal(s.history.rows[2][7], '=4+4');
   }
 });
-test('Formula-like text stays literal through observation creation, update and candidate promotion', () => {
-  const s = sandbox(); assert.equal(s.observe({ term: '=1+1' }).recorded, true);
-  assert.equal(s.observation.rows[1][1], '=1+1'); assert.equal(s.writes[0][1], "'=1+1");
-  assert.equal(s.observe({ term: '=1+1', eventId: 'bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb' }).recorded, true);
-  assert.equal(s.observation.rows[1][5], 2);
-  const review = ['jev-synthetic', '=1+1', '', '=1+1', '', '', 'NEW_TERM_CANDIDATE', '', '', 0.8, 0.9, '', '採用'];
-  const destination = { appendRow: row => { assert.equal(row[1], "'=1+1"); assert.equal(row[2], "'=1+1"); }, getLastRow: () => 2 };
-  assert.equal(s.c.appendApprovedNewTermCandidate(review, new Map([['=1+1', { row: s.observation.rows[1], sheet: s.observation, sheetRow: 2 }]]), destination, new Map()), 'inserted');
+test('Retired observation action rejects requests without ledger writes, notifications or budgets', () => {
+  const s = sandbox(), before = JSON.stringify([...s.props]);
+  for (const data of [{}, {term:'=1+1'}, {term:{}}, {eventId:{}}, {resultCount:'2'}]) {
+    assert.equal(s.observe(data).status, 'error');
+  }
+  assert.equal(s.writes.length,0); assert.equal(s.observation.rows.length,1);
+  assert.equal(s.history.rows.length,1); assert.equal(s.mails.length,0);
+  assert.equal(JSON.stringify([...s.props]),before);
+});
+test('Spreadsheet literal helper preserves formula-like values as text', () => {
+  const s=sandbox();
   for (const value of ['=1', ' \t=1', '+1', '-1', '@x']) assert.equal(s.c.sheetLiteralValue_(value), "'" + value);
   for (const value of ['langsam', "'=1", 0, false, null]) assert.equal(s.c.sheetLiteralValue_(value), value);
 });
@@ -81,14 +84,14 @@ test('Global notification burst cap survives cache eviction and changing terms a
   assert.equal(s.send({ term: 'over-limit' }).limited, true); assert.equal(s.history.rows.length, 31);
   s.advance(60000); s.send({ term: 'next-minute' }); assert.equal(s.history.rows.length, 32);
 });
-test('Observation budget does not trust a fresh event ID and is independent of notifications', () => {
-  const s = sandbox();
-  for (let i = 0; i < 30; i++) assert.equal(s.observe({ term: 'word' + i, eventId: i.toString(16).padStart(32, '0') }).recorded, true);
-  assert.equal(s.observe({ term: 'extra' }).limited, true); assert.equal(s.observation.rows.length, 31);
-  s.send({}); assert.equal(s.history.rows.length, 2);
+test('Repeated retired observation requests never create records or consume the notification budget', () => {
+  const s=sandbox();
+  for(let i=0;i<40;i++) assert.equal(s.observe({term:'word'+i,eventId:i.toString(16).padStart(32,'0')}).status,'error');
+  assert.equal(s.writes.length,0);assert.equal(s.observation.rows.length,1);assert.equal(s.mails.length,0);
+  assert.equal(s.send({}).status,'success');assert.equal(s.history.rows.length,2);
 });
 test('Persistent daily caps survive minute changes and reset on the next JST day', () => {
-  for (const [kind, maximum] of [['notification', 3000], ['observation', 3000], ['mail', 80]]) {
+  for (const [kind, maximum] of [['notification', 3000], ['mail', 80]]) {
     const s = sandbox();
     for (let i = 0; i < maximum; i++) { if (i % (kind === 'mail' ? 10 : 30) === 0) s.advance(60000); assert.equal(s.reserve(kind), true); }
     s.advance(60000); assert.equal(s.reserve(kind), false);

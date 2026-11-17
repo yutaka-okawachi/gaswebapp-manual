@@ -50,7 +50,7 @@ function rowCompletionStored_() {
     } catch (_) { /* Keep the other complete snapshot; never retry an API call here. */ }
   });
   copies.sort(function (a, b) { return b.revision - a.revision; });
-  return copies[0] || null;
+  return copies.find(function (copy) { return !copy.job.intake; }) || null;
 }
 function rowCompletionSave_(job) {
   const text = JSON.stringify(job);
@@ -125,7 +125,7 @@ function rowCompletionWhom_(book, tab, values) { return rowCompletionWhomState_(
 function rowCompletionPreview() {
   return rowCompletionLock_(function () {
     const book = rowCompletionBook_(), old = rowCompletionStored_();
-    if (old && old.job.book === book.getId() && !old.job.closed && (old.job.intake || old.job.rows.some(function (r) { return r.status !== 'pending' && r.status !== 'blocked'; }))) {
+    if (old && !old.job.intake && old.job.book === book.getId() && !old.job.closed && old.job.rows.some(function (r) { return r.status !== 'pending' && r.status !== 'blocked'; })) {
       return rowCompletionView_(old.job);
     }
     const sheet = book.getActiveSheet(), selection = book.getActiveRange();
@@ -155,7 +155,6 @@ function rowCompletionPreview() {
       if (reason) { row.status = 'blocked'; row.message = reason; row.targets = []; row.draft = {}; }
       job.rows.push(row);
     }
-    unifiedIntakeCarryHeld_(job);
     const reserve = job.rows.reduce(function (n, r) { return n + rowCompletionApiFields_(r).length * 12200 + (job.tab !== 'Notes' && r.status === 'pending' ? 4500 : 0) +
       (rowCompletionNewNotes_(r) && r.status === 'pending' ? 9000 : 0); }, 0);
     if (JSON.stringify(job).length + reserve > 65000) throw rowCompletionError_('生成結果を安全に保存するため，選択行を減らしてください．');
@@ -189,12 +188,7 @@ function rowCompletionLocateSnapshot_(sheet, expected) {
 function rowCompletionCurrent_(job, row, alreadyWritten) {
   const book = rowCompletionBook_(), sheet = book.getSheetByName(job.tab);
   if (!sheet || sheet.getSheetId() !== job.sheetId) throw rowCompletionError_('対象タブが変わりました．');
-  if (job.intake) {
-    if (job.intake.flow === 'review_before_insert' && !job.intake.number) return maintenanceNotesDraftCurrent_(job, row);
-    const owner = maintenanceNotesRow_(sheet, job.intake.entryId);
-    if (!owner || owner.observationId !== job.intake.observationId) throw rowCompletionError_('登録再開用の識別情報が変わりました．');
-    row.number = owner.number; job.intake.number = owner.number;
-  }
+
   const current = rowCompletionRead_(sheet, row.number), expected = JSON.parse(JSON.stringify(row.snapshot));
   Object.keys(alreadyWritten || {}).forEach(function (k) {
     if (k === ROW_COMPLETION_REVIEW_FIELD && expected.review) expected.review = { layout: expected.review.layout, hash: rowCompletionHash_(alreadyWritten[k]), blank: false, formula: false };
@@ -312,7 +306,6 @@ function rowCompletionRequest_(job, row, model, context) {
 function rowCompletionGenerate(id, number) {
   // Explicit button only; no trigger, automatic retry, or per-call charge dialog.
   const reservation = rowCompletionLock_(function () {
-    unifiedIntakePreflight_('generate', id);
     const job = rowCompletionJob_(id), row = job.rows.find(function (r) { return r.number === number; });
     if (job.closed || !row || row.status !== 'pending') throw rowCompletionError_('再生成しません．保存状態を確認してください．');
     rowCompletionCurrent_(job, row);
@@ -393,8 +386,6 @@ function rowCompletionGenerate(id, number) {
 }
 
 function rowCompletionApply(id, number, fields) {
-  const currentJob = rowCompletionJob_(id);
-  if (currentJob.intake) return maintenanceNotesRegister(id, rowCompletionHash_(currentJob), fields, true);
   return rowCompletionLock_(function () {
     const job = rowCompletionJob_(id), row = job.rows.find(function (r) { return r.number === number; });
     if (job.closed || !row || !['draft', 'needs_review', 'applying', 'partial'].includes(row.status)) throw rowCompletionError_('確認できる生成案がありません．');
@@ -451,7 +442,6 @@ function rowCompletionApply(id, number, fields) {
 function rowCompletionFinish(id, checked) {
   return rowCompletionLock_(function () {
     const job = rowCompletionJob_(id);
-    if (job.intake && job.intake.phase === 'preparing' && checked !== true) throw rowCompletionError_('Notesの追加が途中です．保存内容を確認してから終了してください．');
     if (job.rows.some(function (r) { return r.status === 'generating' && Date.now() - r.startedAt < 7 * 60 * 1000; })) {
       throw rowCompletionError_('生成処理中です．中断した場合は7分以上待ってから，利用状況を確認してください．');
     }
@@ -465,14 +455,10 @@ function rowCompletionFinish(id, checked) {
       const claim = row.claim || rowCompletionClaimKey_(job, row);
       if (props.getProperty(claim) === job.id) props.deleteProperty(claim);
     });
-    if (job.intake && props.getProperty(job.intake.claim) === job.id) props.deleteProperty(job.intake.claim);
     return rowCompletionView_(job);
   });
 }
 function rowCompletionDialog_(preview) {
-  const saved = rowCompletionStored_();
-  if (saved && saved.job.book === rowCompletionBook_().getId() && saved.job.intake &&
-      (!saved.job.closed || preview === false)) return showMaintenanceWorkbench();
   const template = HtmlService.createTemplateFromFile('row_completion_dialog');
   template.preview = preview;
   SpreadsheetApp.getUi().showModalDialog(template.evaluate().setWidth(760).setHeight(680), '選択行の空欄補完');

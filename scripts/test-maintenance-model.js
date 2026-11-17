@@ -6,7 +6,7 @@ assert.equal(fs.existsSync(path.join(root,'src/maintenance_model.js')),false);
 const c=vm.createContext({addSheetRowNavigationMenu_(){},SpreadsheetApp:{getUi:()=>({createMenu(){const m={addItem(label,handler){entries.push({label,handler});return m;},addSeparator(){return m;},addToUi(){return m;}};return m;}})}});
 vm.runInContext(read('src/setup_credentials.js'),c);c.onOpen();
 for(const label of ['選択行の空欄を補完','前回の処理結果を確認','モデル検査の状態を確認（API送信なし）','gpt-6.1-solを検査して使用する','一括調査の語形対応を確認'])assert(!entries.some(e=>e.label===label),label);
-assert(entries.some(e=>e.handler==='showMaintenanceWorkbench'));assert(entries.some(e=>e.handler==='showMaintenanceAliases'));
+assert(entries.some(e=>e.handler==='showMaintenanceWorkbench'));assert(entries.some(e=>e.handler==='showMaintenanceSelectedRows'));
 const source=fs.readdirSync(path.join(root,'src')).filter(f=>/\.(js|html)$/.test(f)).map(f=>read('src/'+f)).join('\n');
 assert(!/\b(?:maintenanceModel\w*|maintenanceCheckRequestedModel_|maintenanceUseRequestedModel\w*|showMaintenanceModelStatus|showLastRowCompletion|showRowCompletion)\s*\(/.test(source));
 assert(!/api\.openai\.com\/v1\/models\//.test(source));

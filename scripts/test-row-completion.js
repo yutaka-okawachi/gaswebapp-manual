@@ -91,12 +91,6 @@ function harness(tab = 'GM', options = {}) {
     }}
   });
   vm.runInContext(source,c);
-  // Load the production completion hooks introduced by the unified intake flow.
-  // This fixture exercises completion in isolation, with no active intake execution.
-  const intake = fs.readFileSync(path.join(root, 'src/unified_intake_entry.js'), 'utf8');
-  const hooks = intake.slice(intake.indexOf('let UNIFIED_LAB_EXECUTION_=null;'),
-    intake.indexOf('function createUnifiedIntakeLab_()'));
-  vm.runInContext('const UNIFIED_LAB_ORIGINALS_={stored:rowCompletionStored_,save:rowCompletionSave_};\n' + hooks, c);
   Object.assign(h,{c,script,users,sheet,headers,rows,formulas,notes,validation});
   if(tab==='Notes')assert.equal(c.notesEntryGuardInitialize_(),true);
   h.preview=()=>c.rowCompletionPreview().job;
@@ -492,6 +486,13 @@ test('moved proposal refuses changed or ambiguous original content without writi
   if(mode==='changed')h.put('data','M-9-9-100-v1&',6);else{h.rows[4]=h.rows[5].slice();h.formulas[4]=h.formulas[5].slice();}
   assert.throws(()=>h.apply(job),/変更/);assert.equal(h.writes.length,0);assert.equal(h.fetches,1);
  }
+});
+
+test('retired intake does not reopen an old candidate instead of selected-row completion',()=>{
+ const h=harness('GM');const old=h.preview();old.intake={flow:'review_before_insert'};old.rows[0].status='draft';
+ h.c.rowCompletionStored_=()=>({job:old});h.c.rowCompletionSave_=()=>{};
+ const fresh=h.preview();assert(!fresh.intake);assert.equal(fresh.rows[0].status,'pending');assert.equal(h.fetches,0);assert.equal(h.writes.length,0);
+ assert(!source.includes('maintenanceNotesRegister'));assert(!source.includes('maintenanceNotesDraftCurrent_'));assert(!source.includes('maintenanceNotesRow_'));
 });
 
 console.log('Selected-row completion: '+passed+' scenarios passed; four tabs, private drafts, blank/formula guards, approved recipients, conflicts, no duplicate API, tokens/links and partial-write recovery. No real API or Sheet writes.');

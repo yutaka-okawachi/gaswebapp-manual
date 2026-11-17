@@ -177,58 +177,34 @@ function trackSearchResults(options) {
 }
 window.trackSearchResults = trackSearchResults;
 
-function dictionaryCandidateIndexKey(value) {
-    return normalizeString(String(value || ''))
-        .replace(/[^a-z0-9]+/g, '-')
-        .replace(/^-+|-+$/g, '');
+// Maintenance is entered directly in the authenticated spreadsheet, not logged by searches.
+function showMaintenanceTermCopy(searchTerm, resultRoot) {
+    const old = document.getElementById('maintenance-term-copy');
+    if (old) old.remove();
+    if (!resultRoot || typeof window.isAdminDeviceOptOut !== 'function' || !window.isAdminDeviceOptOut()) return;
+    const term = String(searchTerm || '').normalize('NFC').trim();
+    if (!term) return;
+    const english = document.documentElement.lang.toLowerCase().startsWith('en');
+    const box = document.createElement('div');
+    box.id = 'maintenance-term-copy';
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.textContent = english ? 'Copy term for maintenance' : '整備する語をコピー';
+    const status = document.createElement('span');
+    status.setAttribute('role', 'status');
+    button.addEventListener('click', async () => {
+        try {
+            await navigator.clipboard.writeText(term);
+            status.textContent = english ? ' Copied. Paste into the spreadsheet maintenance dialog.' : ' コピーした．スプレッドシートの日常保守に貼り付ける．';
+        } catch (_) {
+            status.textContent = english ? ' Select and copy the term: ' + term : ' 次の語を選択してコピー：' + term;
+        }
+    });
+    box.appendChild(button);
+    box.appendChild(status);
+    resultRoot.appendChild(box);
 }
-
-function shouldObserveUnregisteredResultTermSearch(options) {
-    if (!options || !Number.isInteger(options.resultCount) || options.resultCount <= 0) return false;
-    const searchTerm = String(options.searchTerm || '').normalize('NFC').trim();
-    if (!searchTerm || searchTerm.length > 120) return false;
-    const queryKey = dictionaryCandidateIndexKey(searchTerm);
-    if (queryKey && options.termsIndex && options.termsIndex[queryKey]) return false;
-    return true;
-}
-window.shouldObserveUnregisteredResultTermSearch = shouldObserveUnregisteredResultTermSearch;
-
-function createUnregisteredResultTermObservationEventId() {
-    if (window.crypto && typeof window.crypto.randomUUID === 'function') {
-        return window.crypto.randomUUID();
-    }
-    return `${Date.now().toString(16)}-${Math.random().toString(16).slice(2)}-${Math.random().toString(16).slice(2)}`;
-}
-
-async function observeUnregisteredResultTermSearch(options, pageName) {
-    if (!shouldObserveUnregisteredResultTermSearch(options)) return false;
-    const adminOptOut = typeof window.isAdminDeviceOptOut === 'function' && window.isAdminDeviceOptOut();
-    const candidateObservationEnabled = typeof window.isAdminCandidateObservationEnabled === 'function' &&
-        window.isAdminCandidateObservationEnabled();
-    if (window.__LOCAL_PREVIEW__ &&
-        (window.__ALLOW_EXPERIMENTAL_CANDIDATE_OBSERVATION__ !== true || !candidateObservationEnabled)) return false;
-    if (adminOptOut && !candidateObservationEnabled) return false;
-    if (GAS_NOTIFICATION_URL === 'YOUR_GAS_WEB_APP_URL_HERE' || !GAS_NOTIFICATION_URL) return false;
-    try {
-        await fetch(GAS_NOTIFICATION_URL, {
-            method: 'POST',
-            mode: 'no-cors',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                action: 'observe_unregistered_result_term',
-                term: String(options.searchTerm || '').normalize('NFC').trim(),
-                page: pageName,
-                resultCount: options.resultCount,
-                eventId: createUnregisteredResultTermObservationEventId()
-            })
-        });
-        return true;
-    } catch (error) {
-        console.error('検索結果にある未登録語の観測を送信できませんでした．', error);
-        return false;
-    }
-}
-window.observeUnregisteredResultTermSearch = observeUnregisteredResultTermSearch;
+window.showMaintenanceTermCopy = showMaintenanceTermCopy;
 
 function escapeRegExpLiteral(value) {
     return String(value).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');

@@ -228,10 +228,9 @@ function doPost(e) {
         return handleDashboardAnalyticsRequest(data);
     }
 
-    // 検索結果が1件以上ある辞書未登録語を観測タブへ記録する．
-    // メール通知と本番の検索履歴とは独立した経路で処理する．
-    if (data.action === 'observe_unregistered_result_term' && !data.token) {
-        return handleUnregisteredResultTermObservation(data);
+    // Retired clients must never recreate a maintenance ledger or send a notification.
+    if (data.action === 'observe_unregistered_result_term') {
+        return createJsonResponse({ status: 'error', error: 'This observation endpoint has been retired.' }, 410);
     }
     
     // Route 1: Search Notification
@@ -308,7 +307,7 @@ function normalizeSearchNotificationData_(input) {
 // Call only while holding the script lock. Properties survive CacheService eviction.
 // Budgets are global, never keyed by a caller-controlled User-Agent or event ID.
 function consumePublicRequestBudget_(kind) {
-  const limits = { notification: [30, 3000], observation: [30, 3000], mail: [10, 80] };
+  const limits = { notification: [30, 3000], mail: [10, 80] };
   if (!Object.prototype.hasOwnProperty.call(limits, kind)) throw new Error('Invalid public request budget');
   const props = PropertiesService.getScriptProperties();
   const key = 'public_request_budget_v1_' + kind;

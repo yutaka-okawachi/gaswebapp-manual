@@ -1,0 +1,39 @@
+{
+  "schemaVersion": 1,
+  "id": "maintenance-ledger-20261117",
+  "baselineCommit": "509583b237e53d11263faa7e7b5af8eb1a210412",
+  "baselineVersion": 1716,
+  "projectHash": "914b44775c90b69355191dea7ca7de90c94e0e45f9c6cbb031ee91e5a5fbccca",
+  "files": [
+    {
+      "name": "dictionary_candidate_dialog",
+      "type": "HTML",
+      "hash": "e31c5578a42c3ee09e02d5db9da76cde862f3018f2bd38229ffbd83a46b7d3de"
+    },
+    {
+      "name": "dictionary_candidate_wizard",
+      "type": "SERVER_JS",
+      "hash": "e8b31d7df7b5ba0e9d9563f6dd3022b412de5f827df46dada2ed29cd044cbe0c"
+    },
+    {
+      "name": "maintenance_ledger",
+      "type": "SERVER_JS",
+      "hash": "41f6bc2d25de208cc407abe25e1c1379d8678a32523832f489bf5297f8670823"
+    },
+    {
+      "name": "maintenance_ledger_dialog",
+      "type": "HTML",
+      "hash": "4510f1446295ce3a42baeafcaa93190415eac347fa540c306256fc28d477d24c"
+    },
+    {
+      "name": "maintenance_workbench_dialog",
+      "type": "HTML",
+      "hash": "1e94f05cc427008c25287d5bdbcf46a2c8dd677e47b839fbc101cb28d7109b9a"
+    },
+    {
+      "name": "unified_intake_entry",
+      "type": "SERVER_JS",
+      "hash": "080ab0df9dedcbe73aec25a4276d9fec3040f675152fda68769f410b1ad7c423"
+    }
+  ]
+}

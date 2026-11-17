@@ -2,7 +2,7 @@
 const fs=require('node:fs'),path=require('node:path'),vm=require('node:vm'),assert=require('node:assert/strict');
 const root=path.resolve(__dirname,'..');
 const c=vm.createContext({});
-vm.runInContext(['sheet_column_layout.js','maintenance_text_style.js','row_completion_notes.js','row_completion_review.js','row_completion.js','dictionary_candidate_wizard.js'].map(f=>fs.readFileSync(path.join(root,'src',f),'utf8')).join('\n'),c);
+vm.runInContext(['sheet_column_layout.js','maintenance_text_style.js','row_completion_notes.js','row_completion_review.js','row_completion.js'].map(f=>fs.readFileSync(path.join(root,'src',f),'utf8')).join('\n'),c);
 let passed=0;const test=(name,fn)=>{try{fn();passed++;}catch(e){e.message=name+': '+e.message;throw e;}};
 function adoptedBook(tab,mode){
   const file={GM:'mahler',RW:'richard_wagner',RS:'richard_strauss',Notes:'dic_notes'}[tab];
@@ -68,28 +68,15 @@ test('Notes has separate dictionary, annotation, and catalogue profiles',()=>{
   assert.equal(c.maintenanceStyleProfile_('Notes',{de:'a very long quoted instruction with many separate words'}),'annotation');
   assert.equal(c.maintenanceStyleProfile_('Notes',{de:'short',ja:'項目固有の解説．'}),'annotation');
 });
-test('manual Notes formatter uses exact current prefix and ASCII comma delimiters',()=>{
-  const body=c.candidateWizardSuggestedBody({headword:'test',english:'side， page、 flank',italian:'lato,pagina',translation:'側，脇',musicExamples:'舞台の脇で'});
-  assert(body.startsWith('【英】side, page, flank／【伊】lato, pagina\n\n'));assert(!body.includes('(≒'));assert(!body.includes('対応する表現'));assert(body.includes('【一般的な意味】'));
-});
-test('no foreign fields are invented; English and Italian remain independently optional',()=>{
-  for(const [en,it,prefix]of [['','','【一般的な意味】'],['side','','【英】side'],['','lato','【伊】lato']]){
-    const body=c.candidateWizardSuggestedBody({headword:'term',english:en,italian:it,translation:'意味',musicExamples:'訳例'});assert(body.startsWith(prefix));
-    if(!en)assert(!body.includes('【英】'));if(!it)assert(!body.includes('【伊】'));
-  }
-});
 test('catalogue abbreviations do not get correspondence or generic dictionary sections',()=>{
   for(const headword of ['AV','TrV']){
-    const body=c.candidateWizardSuggestedBody({headword,english:'not used',italian:'not used',translation:'Richard Strauss の作品目録番号．'});
-    assert.equal(body,'Richard Strauss の作品目録番号．');assert.equal(c.candidateWizardEntryMissingFields({headword,translation:'目録番号'}).length,0);
     assert.throws(()=>c.maintenanceStyleValidate_('【英】catalogue\n\n目録番号．','ja',opts({de:headword})),/作品目録/);
   }
 });
 test('new Japanese punctuation is formatted selectively, foreign quotation/URL/code/tokens preserved',()=>{
   const input='本文、説明。「Deutsch、Original。」 https://example.invalid/。 `code、。` [[score:example]] <span title="原文、。">';
   const expected='本文，説明．「Deutsch、Original。」 https://example.invalid/。 `code、。` [[score:example]] <span title="原文、。">';
-  assert.equal(c.maintenanceStylePunctuation_(input),expected);assert.equal(c.candidateWizardSafeText(input,'説明',6000,true),expected);
-  assert.equal(c.candidateWizardSafeText('Original、。','見出し',100,true),'Original、。');
+  assert.equal(c.maintenanceStylePunctuation_(input),expected);
   assert.throws(()=>c.maintenanceStyleValidate_('意味, 解説.','ja',opts({profile:'annotation'})),/ASCII/);
 });
 test('foreign header prefaces, generic disclaimers and invented equivalents are rejected',()=>{
@@ -108,9 +95,7 @@ test('multiple meaning groups retain all corresponding terms and item-specific a
   assert.equal(c.maintenanceStyleValidate_(en,'en',opts({known,basis:ja})),en);
   assert.throws(()=>c.maintenanceStyleValidate_('Italian: coordinato\n\nMeaning.','en',opts({known,basis:ja})),/Italian:|英伊対応/);
 });
-test('manual body formatter preserves quoted originals, musical tokens, and literal URL endings',()=>{
-  const body=c.candidateWizardSuggestedBody({headword:'term',translation:'https://example.invalid/。',musicExamples:'「Original、。 [[score:real]]」',comment:'引用「Hindemithの原文、。」'});
-  assert(body.includes('① https://example.invalid/。\n'));assert(body.includes('「Original、。 [[score:real]]」'));assert(body.includes('引用「Hindemithの原文、。」'));
+test('Shared punctuation preserves possessive proper names',()=>{
   assert.equal(c.maintenanceStylePunctuation_("Strauss's 作品、Bruckner's 作品。"),"Strauss's 作品，Bruckner's 作品．");
 });
 test('new dictionary needs proper meaning section; existing annotation is not forced into it',()=>{
@@ -268,4 +253,4 @@ test('quoted translation continuations remain literal within fully labelled new 
  const text="【General meanings】\nA string.\n\n【Examples in musical contexts】\n[GM]\nGerman: Original\nEnglish: 'Source transcription:\n\nGerman: Quoted wording\n【Usage notes】\nEnglish: Quoted wording\n'\n\n[RW: Oper]\nGerman: Second original\nEnglish: Second translation.";
  assert.equal(c.rowCompletionValidateText_(headingRow(),'en',text),text);
 });
-console.log('Maintenance current style: '+passed+' scenarios passed; tab-specific prompts/validators, real adopted ja/en examples, Notes manual/AI shared formatting, optional equivalents, catalogue exceptions, protected quotations and contextual short translations. No API or Sheet writes.');
+console.log('Maintenance current style: '+passed+' scenarios passed; tab-specific prompts/validators, real adopted ja/en examples, Notes shared formatting, optional equivalents, catalogue exceptions, protected quotations and contextual short translations. No API or Sheet writes.');
