@@ -10076,7 +10076,18 @@
       }
     ]
   },
-  "waehrend": "term-waehrend",
+  "waehrend": {
+    "id": "term-waehrend",
+    "exampleVariants": [
+      "waehrenddem"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "waehrenddem",
+        "type": "別綴り"
+      }
+    ]
+  },
   "wald": {
     "id": "term-wald",
     "exampleVariants": [
@@ -16538,5 +16549,11 @@
     "original": "grosser",
     "canonical": "groß",
     "type": "語形変化（要分類）"
+  },
+  "waehrenddem": {
+    "id": "term-waehrend",
+    "original": "waehrenddem",
+    "canonical": "während",
+    "type": "別綴り"
   }
 }
