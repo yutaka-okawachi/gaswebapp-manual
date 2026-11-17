@@ -4697,7 +4697,8 @@
     "id": "term-gross",
     "exampleVariants": [
       "große",
-      "gross"
+      "gross",
+      "grossen"
     ],
     "exampleVariantDetails": [
       {
@@ -4707,6 +4708,10 @@
       {
         "form": "gross",
         "type": "別綴り"
+      },
+      {
+        "form": "grossen",
+        "type": "語形変化（要分類）"
       }
     ]
   },
@@ -8134,6 +8139,7 @@
   "stets": "term-stets",
   "stets-sehr-virtuos-aber-ohne-anstrengung": "term-stets-sehr-virtuos-aber-ohne-anstrengung",
   "stille": "term-stille",
+  "stimme": "term-stimme",
   "stirn": {
     "id": "term-stirn",
     "exampleVariants": [
@@ -10064,6 +10070,7 @@
       }
     ]
   },
+  "waehrend": "term-waehrend",
   "wald": {
     "id": "term-wald",
     "exampleVariants": [
@@ -16513,5 +16520,11 @@
     "original": "aufgestellten",
     "canonical": "aufstellen",
     "type": "過去分詞の語尾変化"
+  },
+  "grossen": {
+    "id": "term-gross",
+    "original": "grossen",
+    "canonical": "groß",
+    "type": "語形変化（要分類）"
   }
 }
