@@ -4698,7 +4698,8 @@
     "exampleVariants": [
       "große",
       "gross",
-      "grossen"
+      "grossen",
+      "grosser"
     ],
     "exampleVariantDetails": [
       {
@@ -4711,6 +4712,10 @@
       },
       {
         "form": "grossen",
+        "type": "語形変化（要分類）"
+      },
+      {
+        "form": "grosser",
         "type": "語形変化（要分類）"
       }
     ]
@@ -5363,6 +5368,7 @@
   "in-gleicher-staerke-ohne-anschwellung": "term-in-gleicher-staerke-ohne-anschwellung",
   "in-memoriam": "term-in-memoriam",
   "inbrunst": "term-inbrunst",
+  "inhalt": "term-inhalt",
   "innen": "term-innen",
   "innig": "term-innig",
   "ins": {
@@ -16524,6 +16530,12 @@
   "grossen": {
     "id": "term-gross",
     "original": "grossen",
+    "canonical": "groß",
+    "type": "語形変化（要分類）"
+  },
+  "grosser": {
+    "id": "term-gross",
+    "original": "grosser",
     "canonical": "groß",
     "type": "語形変化（要分類）"
   }
