@@ -177,35 +177,6 @@ function trackSearchResults(options) {
 }
 window.trackSearchResults = trackSearchResults;
 
-// Maintenance is entered directly in the authenticated spreadsheet, not logged by searches.
-function showMaintenanceTermCopy(searchTerm, resultRoot) {
-    const old = document.getElementById('maintenance-term-copy');
-    if (old) old.remove();
-    if (!resultRoot || typeof window.isAdminDeviceOptOut !== 'function' || !window.isAdminDeviceOptOut()) return;
-    const term = String(searchTerm || '').normalize('NFC').trim();
-    if (!term) return;
-    const english = document.documentElement.lang.toLowerCase().startsWith('en');
-    const box = document.createElement('div');
-    box.id = 'maintenance-term-copy';
-    const button = document.createElement('button');
-    button.type = 'button';
-    button.textContent = english ? 'Copy term for maintenance' : '整備する語をコピー';
-    const status = document.createElement('span');
-    status.setAttribute('role', 'status');
-    button.addEventListener('click', async () => {
-        try {
-            await navigator.clipboard.writeText(term);
-            status.textContent = english ? ' Copied. Paste into the spreadsheet maintenance dialog.' : ' コピーした．スプレッドシートの日常保守に貼り付ける．';
-        } catch (_) {
-            status.textContent = english ? ' Select and copy the term: ' + term : ' 次の語を選択してコピー：' + term;
-        }
-    });
-    box.appendChild(button);
-    box.appendChild(status);
-    resultRoot.appendChild(box);
-}
-window.showMaintenanceTermCopy = showMaintenanceTermCopy;
-
 function escapeRegExpLiteral(value) {
     return String(value).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
