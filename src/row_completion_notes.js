@@ -37,7 +37,7 @@ function rowCompletionNotesFormatHeadings_(row, field, text, plain) {
   }).join('\n');
 }
 function rowCompletionNotesMatch_(headword) {
-  const word = String(headword).normalize('NFKC').trim().toLowerCase();
+  const word = normalizeObservedTerm(String(headword).normalize('NFKC'));
   if (!/^[a-zäöüß][a-zäöüß -]{1,79}$/.test(word)) return null;
   // Exact word/phrase and simple noun plurals, including hyphenated string names.
   // No fuzzy match: Saite must never select Seite.
@@ -56,7 +56,7 @@ function rowCompletionNotesUsages_(book, values) {
     const result = namedSheetRead_(sheet, fields, 2, count).values, seen = new Set(), candidates = [];
     result.forEach(function (cells, index) {
       const v = {}; fields.forEach(function (field, i) { v[field] = String(cells[i] === undefined ? '' : cells[i]); });
-      if (!match.test(v.de) || !v.ja.trim() || !v.en.trim() || seen.has(v.de)) return;
+      if (!match.test(normalizeObservedTerm(v.de)) || !v.ja.trim() || !v.en.trim() || seen.has(v.de)) return;
       if (v.de.length + v.ja.length + v.en.length > 1500 || /https?:|\S+@\S+|\[\[score:|<\/?[a-z]/i.test(v.de + v.ja + v.en)) return;
       const location = tab === 'GM' ? v.data.split('&').filter(Boolean).slice(0, 2).join('&') :
         [v.Oper, v.Aufzug, v.Szene, v.page, v.whom].filter(Boolean).join(' / ');

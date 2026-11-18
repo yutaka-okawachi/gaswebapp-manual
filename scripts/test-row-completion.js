@@ -2,7 +2,7 @@
 // Entirely synthetic Spreadsheet/Properties/HTTP services; no credentials, Google or paid requests.
 const assert = require('node:assert/strict'), fs = require('node:fs'), path = require('node:path'), vm = require('node:vm'), crypto = require('node:crypto');
 const root = path.resolve(__dirname, '..');
-const source = ['sheet_column_layout.js', 'maintenance_text_style.js', 'row_completion_notes.js', 'row_completion_review.js', 'notes_entry_guard.js', 'row_completion.js'].map(f => fs.readFileSync(path.join(root, 'src', f), 'utf8')).join('\n');
+const source = ['dictionary_candidate_workflow.js', 'sheet_column_layout.js', 'maintenance_text_style.js', 'row_completion_notes.js', 'row_completion_review.js', 'notes_entry_guard.js', 'row_completion.js'].map(f => fs.readFileSync(path.join(root, 'src', f), 'utf8')).join('\n');
 // Select production-approved examples by identity, not their current exported row position.
 const styleExampleTerms = vm.runInNewContext(fs.readFileSync(path.join(root, 'src/maintenance_text_style.js'), 'utf8') + '\nMAINTENANCE_STYLE_EXAMPLE_TERMS');
 let passed = 0;
@@ -316,6 +316,10 @@ test('Notes usage matching is bounded and source-specific, covers plural/compoun
   assert(input.domain_context.usage_examples.every(e=>e.tab==='RS'));assert.equal(input.domain_context.usage_scan.length,1);
   const match=h.c.rowCompletionNotesMatch_('Saite');for(const word of ['Saite','Saiten','G-Saite','leeren Saiten'])assert(match.test(word));
   for(const word of ['Seite','Saitenspiel','anderesaite'])assert(!match.test(word));assert.equal(h.c.rowCompletionNotesMatch_('.*'),null);
+  for(const [a,b] of [['während','waehrend'],['schön','schoen'],['süßen','suessen'],['groß','gross']]) {
+    for(const [headword,original] of [[a,b],[b,a]])assert(h.c.rowCompletionNotesMatch_(headword).test(h.c.normalizeObservedTerm(original)));
+  }
+  for(const [headword,original] of [['Saite','Seite'],['suessen','versüßen'],['gross','grossartig']])assert(!h.c.rowCompletionNotesMatch_(headword).test(h.c.normalizeObservedTerm(original)));
   assert(JSON.stringify(input.domain_context.usage_examples).length<=6500);
 });
 test('new Notes requires musical section when actual usages were supplied; editable draft survives failure',()=>{

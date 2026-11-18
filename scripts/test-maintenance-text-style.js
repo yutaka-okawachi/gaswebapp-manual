@@ -2,7 +2,7 @@
 const fs=require('node:fs'),path=require('node:path'),vm=require('node:vm'),assert=require('node:assert/strict');
 const root=path.resolve(__dirname,'..');
 const c=vm.createContext({});
-vm.runInContext(['sheet_column_layout.js','maintenance_text_style.js','row_completion_notes.js','row_completion_review.js','row_completion.js'].map(f=>fs.readFileSync(path.join(root,'src',f),'utf8')).join('\n'),c);
+vm.runInContext(['dictionary_candidate_workflow.js','sheet_column_layout.js','maintenance_text_style.js','row_completion_notes.js','row_completion_review.js','row_completion.js'].map(f=>fs.readFileSync(path.join(root,'src',f),'utf8')).join('\n'),c);
 let passed=0;const test=(name,fn)=>{try{fn();passed++;}catch(e){e.message=name+': '+e.message;throw e;}};
 function adoptedBook(tab,mode){
   const file={GM:'mahler',RW:'richard_wagner',RS:'richard_strauss',Notes:'dic_notes'}[tab];
