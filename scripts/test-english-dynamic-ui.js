@@ -72,3 +72,20 @@ for(const language of ['ja','en']){
  for(const options of [['Singer'],[priority[1],'Singer'],[...priority].reverse()])checkTargets(language,'test',options);
 }
 console.log('Dynamic English UI: navigation, counts, Mottl note localization/placement and all Japanese/English RW/RS target groups, separators, search values and change listeners passed.');
+
+// Single-act works expose only the preselected whole-work option; other works keep all scene choices.
+function checkScenes(language, options) {
+ const group={innerHTML:''};let boxes=[],summaryUpdates=0;
+ const wrapper={innerHTML:'',appendChild(){boxes=[...group.innerHTML.matchAll(/<input[^>]*value="([^"]+)"([^>]*)>/g)].map(m=>({value:m[1],checked:m[2].includes('checked'),listeners:[],addEventListener(event,fn){this.listeners.push(fn);}}));},querySelectorAll(){return boxes;},querySelector(){return boxes.find(b=>b.value==='all');}};
+ const ctx=vm.createContext({window:{__SITE_LANGUAGE__:language},document:{getElementById:()=>wrapper,createElement:()=>group},updateSelectionSummary(){summaryUpdates++;}});
+ vm.runInContext(extractFunction(operaSource,'buildSceneCheckboxes'),ctx);ctx.buildSceneCheckboxes('test',options);
+ if(options.length===1){assert.deepEqual(boxes.map(b=>b.value),['all']);assert.equal(boxes[0].checked,true);assert(group.innerHTML.includes(language==='en'?'Entire work':'全一幕'));assert(!group.innerHTML.includes('<hr>'));}
+ else {assert.deepEqual(boxes.map(b=>b.value),['all',...options.map(o=>o.value)]);assert(boxes.every(b=>!b.checked));boxes[0].checked=true;boxes[1].checked=true;boxes[1].listeners[0]();assert.equal(boxes[0].checked,false);boxes[0].checked=true;boxes[0].listeners[0]();assert.equal(boxes[1].checked,false);}
+ assert(summaryUpdates>=1,'Initial selection summary is refreshed');assert(boxes.every(b=>b.listeners.length));
+}
+for(const language of ['ja','en'])for(const file of ['rw_scenes','rs_scenes']){
+ const rows=JSON.parse(fs.readFileSync(root+'/mahler-search-app/data/'+file+'.json','utf8')),works={};
+ for(const r of rows)(works[r.Oper]??=[]).push({value:String(r.Aufzug)+'-'+String(r.Szene),text:r['日本語']});
+ for(const options of Object.values(works))checkScenes(language,options);
+}
+console.log('Japanese/English RW/RS scene choices: single-act default and multi-scene exclusivity passed.');
