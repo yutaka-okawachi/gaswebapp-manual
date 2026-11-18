@@ -187,15 +187,16 @@ function buildSceneCheckboxes(operaValue, sceneOptionsData) {
     const checkboxGroup = document.createElement('div');
     checkboxGroup.className = 'checkbox-group';
 
-    // 「すべて」チェックボックス
-    checkboxGroup.innerHTML += `<label><input type="checkbox" name="${operaValue}-scene" value="all"> すべて</label>`;
-    if (options.length > 1) {
-        checkboxGroup.innerHTML += '<hr>';
+    // 全一幕のみの作品は、作品全体を選ぶチェックボックス一つにする。
+    if (options.length === 1) {
+        const label = window.__SITE_LANGUAGE__ === 'en' ? 'Entire work' : '全一幕';
+        checkboxGroup.innerHTML = `<label><input type="checkbox" name="${operaValue}-scene" value="all" checked> ${label}</label>`;
+    } else {
+        checkboxGroup.innerHTML = `<label><input type="checkbox" name="${operaValue}-scene" value="all"> すべて</label><hr>`;
+        options.forEach(opt => {
+            checkboxGroup.innerHTML += `<label><input type="checkbox" name="${operaValue}-scene" value="${opt.value}"> ${opt.text}</label>`;
+        });
     }
-
-    options.forEach(opt => {
-        checkboxGroup.innerHTML += `<label><input type="checkbox" name="${operaValue}-scene" value="${opt.value}"> ${opt.text}</label>`;
-    });
 
     wrapper.appendChild(checkboxGroup);
 
@@ -225,6 +226,7 @@ function buildSceneCheckboxes(operaValue, sceneOptionsData) {
             cb.addEventListener('change', updateSelectionSummary);
         });
     }
+    updateSelectionSummary();
 }
 
 /**
