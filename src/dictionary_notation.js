@@ -89,12 +89,13 @@ function renderDictionaryReferenceText(value,renderPlain) {
     while((m=references.exec(part))){html+=plain(part.slice(last,m.index))+literal(m[0]);last=m.index+m[0].length;}
     return html+plain(part.slice(last));
   };
-  const starts=/<a\b[^>]*>[\s\S]*?<\/a\s*>|<[^>]*>|\[[^\]\r\n]*\]\(|https?:\/\//gi;
+  const starts=/\[\[nolink:[^\[\]\r\n]{1,120}\]\]|<a\b[^>]*>[\s\S]*?<\/a\s*>|<[^>]*>|\[[^\]\r\n]*\]\(|https?:\/\//gi;
   let html='',last=0,match;
   while((match=starts.exec(text))){
     html+=safePlain(text.slice(last,match.index));
     const start=match.index;
     let end=starts.lastIndex,url='',label='',valid=false;
+    if(match[0].startsWith('[[nolink:')){html+=literal(match[0].slice(9,-2));last=end;continue;}
     if(match[0][0]==='['){
       label=match[0].slice(1,-2);
       let depth=1,index=end;

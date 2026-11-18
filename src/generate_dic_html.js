@@ -956,7 +956,7 @@ const REVIEWED_ENGLISH_LINK_CONTEXTS = [
 
 function removeReviewedEnglishTermLinks(rendered, headword, sourceText, language) {
   if (language !== 'en' || !rendered || typeof sourceText !== 'string') return rendered;
-  const sourceLines = sourceText.split(/\r?\n/);
+  const sourceLines = sourceText.replace(/\[\[nolink:([^\[\]\r\n]{1,120})\]\]/g,'$1').split(/\r?\n/);
   const rules = REVIEWED_ENGLISH_LINK_CONTEXTS.filter(rule => rule.headword === headword &&
     sourceLines.filter(line => line === rule.line).length === 1);
   if (!rules.length) return rendered;
