@@ -1658,7 +1658,18 @@
   "bord": "term-bord",
   "boshaft": "term-boshaft",
   "bravour": "term-bravour",
-  "breit": "term-breit",
+  "breit": {
+    "id": "term-breit",
+    "exampleVariants": [
+      "breiter"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "breiter",
+        "type": "語形変化（要分類）"
+      }
+    ]
+  },
   "breit-majestaetische-halbe": "term-breit-majestaetische-halbe",
   "brief": "term-brief",
   "bruckner-hat-selbst-die-besetzung-mit-vier-hoernern-empfohlen-d-h": {
@@ -1981,7 +1992,8 @@
     "id": "term-diener",
     "exampleVariants": [
       "Dienern",
-      "Dienerin"
+      "Dienerin",
+      "dienende"
     ],
     "exampleVariantDetails": [
       {
@@ -1991,6 +2003,10 @@
       {
         "form": "Dienerin",
         "type": "女性形"
+      },
+      {
+        "form": "dienende",
+        "type": "語形変化（要分類）"
       }
     ]
   },
@@ -3339,6 +3355,18 @@
       }
     ]
   },
+  "flott": {
+    "id": "term-flott",
+    "exampleVariants": [
+      "flotter"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "flotter",
+        "type": "語形変化（要分類）"
+      }
+    ]
+  },
   "fluechtig": {
     "id": "term-fluechtig",
     "exampleVariants": [
@@ -3670,12 +3698,17 @@
   "ganz": {
     "id": "term-ganz",
     "exampleVariants": [
-      "ganze"
+      "ganze",
+      "Ganzes"
     ],
     "exampleVariantDetails": [
       {
         "form": "ganze",
         "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "Ganzes",
+        "type": "語形変化（要分類）"
       }
     ]
   },
@@ -5042,7 +5075,8 @@
       "helleren",
       "hellerer",
       "helles",
-      "hellsten"
+      "hellsten",
+      "heller"
     ],
     "exampleVariantDetails": [
       {
@@ -5072,6 +5106,10 @@
       {
         "form": "hellsten",
         "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "heller",
+        "type": "語形変化（要分類）"
       }
     ]
   },
@@ -16555,5 +16593,35 @@
     "original": "waehrenddem",
     "canonical": "während",
     "type": "別綴り"
+  },
+  "heller": {
+    "id": "term-hell",
+    "original": "heller",
+    "canonical": "hell",
+    "type": "語形変化（要分類）"
+  },
+  "breiter": {
+    "id": "term-breit",
+    "original": "breiter",
+    "canonical": "breit",
+    "type": "語形変化（要分類）"
+  },
+  "ganzes": {
+    "id": "term-ganz",
+    "original": "Ganzes",
+    "canonical": "ganz",
+    "type": "語形変化（要分類）"
+  },
+  "flotter": {
+    "id": "term-flott",
+    "original": "flotter",
+    "canonical": "flott",
+    "type": "語形変化（要分類）"
+  },
+  "dienende": {
+    "id": "term-diener",
+    "original": "dienende",
+    "canonical": "Diener",
+    "type": "語形変化（要分類）"
   }
 }

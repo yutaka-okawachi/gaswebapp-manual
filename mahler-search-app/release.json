@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "releaseId": "b682eb61fdcacaaa4260b80529befff550e36a42ef3bed307df3477bf513ae85",
+  "releaseId": "aa3a4847c6d3e7d0752cabc453cec45ad4f57a2ddee3a4563bae7f80831b0be6",
   "hashes": {
     "en/index.html": "930b1d466cdca0d850f6ee8876d48d1ef057ca4e0b6c791ff353f872202b8441",
     "en/license.html": "e8f442f38089e8422c691a8370f9bc905a81930f41f12acbcda8cf4868ff6d95",
@@ -8,8 +8,8 @@
     "en/mahler-search-app/css/common_terms.css": "30f34aafa29c8c7f63e805717d26e03e438c61e9d71598094ec6032ad0eee666",
     "en/mahler-search-app/css/style.css": "b91d1b5764cc3031156a75e7456faeb351eb92f4a28f01981f9a9aaa242392c8",
     "en/mahler-search-app/data/abbr_list.json": "084237801872d97357d7d03da592c32282950c3da06fefd06b0ae06019974d17",
-    "en/mahler-search-app/data/dic_notes.json": "ed6ed9171874c72f1e52fb70eb0aeecce7d818ece373b90571a70b243f3b4304",
-    "en/mahler-search-app/data/dic_terms_index.json": "37f4abf3388baebe9166b7a724d74ea6ff9ea5d239a44b64389f8aa1498e6844",
+    "en/mahler-search-app/data/dic_notes.json": "555a5e79cc5b1d2e1978df22e86f4a3cebab4671fb7afe1b87954b77659f8652",
+    "en/mahler-search-app/data/dic_terms_index.json": "5c2d367228f65a7100d494220c16044e3e71f36b56fa6ef8e8656828c20ea74e",
     "en/mahler-search-app/data/dictionary-examples/gm-00.json": "d3825e6e3eed65bb0c5294d3951b96203c5a2ff4540abb13c8882c46c4990089",
     "en/mahler-search-app/data/dictionary-examples/gm-01.json": "cdd3a80be8220473bcb37568a33cdc1661ced620819d591e4bb3e708731a37ed",
     "en/mahler-search-app/data/dictionary-examples/gm-02.json": "74810e4720fbc61d22193fb2b3b5333072280805c5605e071fe991affa9925e7",
@@ -64,7 +64,7 @@
     "en/mahler-search-app/data/rs_scenes.json": "a068d3d826ef4fc1fcb0932ccbd2739135b0192dc4a715d1a41446c3e8c2f0a8",
     "en/mahler-search-app/data/rw_scenes.json": "02ea3c2e8a223150e593cfcd50eae49547a10d5798e6867f5f4233fe7547723b",
     "en/mahler-search-app/data/whom_list.json": "9744376100f2c8edf622d502e3fce934e568989bfa0b3ffd98336242deaa4abb",
-    "en/mahler-search-app/dic.html": "89b045d539e5239f88124ba532ea0cf601367c0e3e0796faa57b6216892694ef",
+    "en/mahler-search-app/dic.html": "6197d63aa65dee34c13fe79e2e7c96c4b2ffccb246bd5e0a546f9f9281671f5e",
     "en/mahler-search-app/home.html": "118af14b953ded482a78bf3abfaf13baff900b549fe48c15930e6f80f2120589",
     "en/mahler-search-app/index.html": "e4526b19129931e633ed8c9c9fe5f117ff8fc9b831009552881ea1a54ef77585",
     "en/mahler-search-app/js/analytics.js": "1032d1f53b8f3041b2501cdc43c9bae48ded8854ff3f4ddfc617c226f02bbda3",
@@ -91,8 +91,8 @@
     "mahler-search-app/css/common_terms.css": "30f34aafa29c8c7f63e805717d26e03e438c61e9d71598094ec6032ad0eee666",
     "mahler-search-app/css/style.css": "b91d1b5764cc3031156a75e7456faeb351eb92f4a28f01981f9a9aaa242392c8",
     "mahler-search-app/data/abbr_list.json": "084237801872d97357d7d03da592c32282950c3da06fefd06b0ae06019974d17",
-    "mahler-search-app/data/dic_notes.json": "4da42a3c5fb2888c52302454aec2c8ffe0df598ff4445ee2379e12f49537e147",
-    "mahler-search-app/data/dic_terms_index.json": "37f4abf3388baebe9166b7a724d74ea6ff9ea5d239a44b64389f8aa1498e6844",
+    "mahler-search-app/data/dic_notes.json": "67a2bcb9f2befb68b2ab77572a5f7d3a7b2464ea64a3dedeff2a25a1b2145350",
+    "mahler-search-app/data/dic_terms_index.json": "5c2d367228f65a7100d494220c16044e3e71f36b56fa6ef8e8656828c20ea74e",
     "mahler-search-app/data/dictionary-examples/gm-00.json": "e8d9a547537cbd011fa2fd1e509c684f1debde5081502799c94dce31d56ba457",
     "mahler-search-app/data/dictionary-examples/gm-01.json": "610275159e9763d650438b1dcace99833dcfecc47850c48bfc080208f411e080",
     "mahler-search-app/data/dictionary-examples/gm-02.json": "63d274ba44f7f7ec6a549f6bd249709de8a4074e47d010ebdda0d12adf2cbbaf",
@@ -147,7 +147,7 @@
     "mahler-search-app/data/rs_scenes.json": "a980504cc562139eefd611ba0ec3def24861fb1eac6c31c9dcc56c5a9b5138ff",
     "mahler-search-app/data/rw_scenes.json": "cc72ce69726c9fe69c9b25d082956e93c61cf976a72e2d8f71ddcc4d42493ae4",
     "mahler-search-app/data/whom_list.json": "142cfe2b1ee036ac90c0a8334665c295eabd09710ab34cc5ffab4acaebb9aed2",
-    "mahler-search-app/dic.html": "f5c8b8c770ec292696e661944635b2f9af605a7915e16672fa4754729e72a5e3",
+    "mahler-search-app/dic.html": "7e914b087b09b6771e91cfe164df78b469e3ce7ade0971ce2c14bc7e81203d20",
     "mahler-search-app/home.html": "0f5bdff34c68ffe6ab6d7aa0fe2d580f4af1f2e5c124a57dfa9f25dcc55c033a",
     "mahler-search-app/images/score-pages/rs-alpensinfonie-dover1993/detail-10-0.png": "3fb8ce0618c0011df245ea89f4f16dda033dee8b5c50ca3041a551acad31f305",
     "mahler-search-app/images/score-pages/rs-alpensinfonie-dover1993/detail-101-0.png": "c6a11e3af738dce9767ee6dd438705683910de0c3550e7dc5aa200b28999ef9f",
@@ -249,6 +249,6 @@
     "mahler-search-app/terms_search.html": "13b3b76ad9dbdd568e3d75c6743d68e0a9611c126a477e3810c87cbf35823e08",
     "privacy.html": "6cad5cabd8e08a2babb2b1c0d85abb6dda49c0863e6c0f3fa045e4177b421fb6",
     "robots.txt": "f8e564433b1070c88c346790607f4e5be1e23bb9e605359e0347f3c87855183f",
-    "sitemap.xml": "585ac72f13595f1c05da660ad63d210be85c5528ffd48ac54c06c2fa134a7168"
+    "sitemap.xml": "79af933231d94afa211015e190615ff03c195ab5e895a4b0825f6e795ce91c23"
   }
 }
