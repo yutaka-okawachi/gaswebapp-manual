@@ -8462,6 +8462,18 @@
       }
     ]
   },
+  "suessen": {
+    "id": "term-suessen",
+    "exampleVariants": [
+      "süßer"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "süßer",
+        "type": "語形変化（要分類）"
+      }
+    ]
+  },
   "tactig": {
     "id": "term-tactig",
     "exampleVariants": [
@@ -16622,6 +16634,12 @@
     "id": "term-diener",
     "original": "dienende",
     "canonical": "Diener",
+    "type": "語形変化（要分類）"
+  },
+  "suesser": {
+    "id": "term-suessen",
+    "original": "süßer",
+    "canonical": "süßen",
     "type": "語形変化（要分類）"
   }
 }
