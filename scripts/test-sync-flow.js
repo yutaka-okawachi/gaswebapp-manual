@@ -6,7 +6,7 @@ const vm = require('vm');
 const core = require('./sync/core');
 const source = fs.readFileSync(path.join(__dirname, 'sync/main.js'), 'utf8');
 
-async function scenario({ failCheck = false, failSnapshot = false, failPublish = false, failHeadAt = 0, sourceChanges = false, mode = 'Auto', blockResume = false, currentGas = false, blockEnglishResume = false, failGateAt = 0, resumeMode = 'Verify', failResumePublish = false, freshCheckFail = false, freshSnapshotFail = false, resumeMutation = '', pendingDocumentsOnly = false } = {}) {
+async function scenario({ failCheck = false, failSnapshot = false, failPublish = false, failHeadAt = 0, sourceChanges = false, mode = 'Auto', args = ['--mode', mode], blockResume = false, currentGas = false, blockEnglishResume = false, failGateAt = 0, resumeMode = 'Verify', failResumePublish = false, freshCheckFail = false, freshSnapshotFail = false, resumeMutation = '', pendingDocumentsOnly = false, confirm = null, fastForward = null, expectAbort = false, removeLockInVerify = false } = {}) {
     const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'gmt-sync-test-'));
     fs.mkdirSync(path.join(directory, 'scripts'));
     fs.writeFileSync(path.join(directory, 'scripts/english-publication.json'), JSON.stringify({schemaVersion:1,publishEnglish:false,englishReleaseApproved:false}));
@@ -32,6 +32,7 @@ async function scenario({ failCheck = false, failSnapshot = false, failPublish =
                 preflight: () => { events.push('preflight'); return changes; },
                 repoSlug: () => 'owner/repo', changed: () => changes,
                 checkRemote: () => { events.push('remote'); return 'remote-head'; },
+                ...(fastForward ? { fastForwardIfClean: () => { events.push('fast-forward'); return fastForward(); } } : {}),
                 commitChanges: () => { events.push('commit'); head += '-commit'; }
             },
             './gas': {
@@ -64,7 +65,7 @@ async function scenario({ failCheck = false, failSnapshot = false, failPublish =
             './publish': {
                 token: () => 'secret', preflight: async () => 'https://example.test/',
                 push: () => { events.push('push'); },
-                verifyPages: async () => { events.push('verify'); if (publishFailure) { publishFailure = false; throw new Error('pending Pages'); } if (armedMutation === 'head') head += '-user-change'; if (armedMutation === 'files') changes = ['README.md']; armedMutation = ''; }
+                verifyPages: async () => { events.push('verify'); if (removeLockInVerify) { const lockPath = path.join(directory, '.sync-state/lock.json'); if (fs.existsSync(lockPath)) fs.unlinkSync(lockPath); } if (publishFailure) { publishFailure = false; throw new Error('pending Pages'); } if (armedMutation === 'head') head += '-user-change'; if (armedMutation === 'files') changes = ['README.md']; armedMutation = ''; }
             },
             '../build-site': { build: () => { events.push('build'); } },
             '../check-local': { check: () => { events.push('tests'); if (checkFailure) throw new Error('bad test'); } }
@@ -78,8 +79,12 @@ async function scenario({ failCheck = false, failSnapshot = false, failPublish =
     const main = context.module.exports.main;
     try {
         let failed = false, failure;
-        try { await main(['--mode', mode]); } catch (error) { failed = true; failure = error; }
-        if (mode === 'Check') {
+        try { await main(args, confirm ? { confirm } : {}); } catch (error) { failed = true; failure = error; }
+        if (expectAbort) {
+            assert.ok(failed && /ユーザー確認により同期を中止/.test(failure && failure.message));
+            for (const stage of ['tests', 'commit', 'deploy', 'push']) assert.ok(!events.includes(stage), stage);
+            assert.ok(!fs.existsSync(path.join(directory, '.sync-state/lock.json')));
+        } else if (mode === 'Check') {
             assert.ok(!failed, failure && failure.stack);
             assert.ok(events.includes('tests'));
             for (const stage of ['head-check', 'commit', 'deploy', 'snapshot', 'push']) assert.ok(!events.includes(stage), stage);
@@ -169,13 +174,14 @@ async function scenario({ failCheck = false, failSnapshot = false, failPublish =
             if (!(currentGas && mode === 'Site')) {
                 assert.ok(events.indexOf('validate') < events.indexOf('english-stage'));
                 assert.ok(events.indexOf('english-stage') < events.indexOf('install'));
-                assert.ok(events.indexOf('install') < events.indexOf('commit'));
+                assert.ok(events.indexOf('install') < events.lastIndexOf('commit'));
             }
-            assert.ok(events.indexOf('commit') < events.indexOf('push'));
+            assert.ok(events.lastIndexOf('commit') < events.indexOf('push'));
             assert.ok(events.indexOf('push') < events.indexOf('verify'));
         }
         const state = core.readJson(path.join(directory, '.sync-state/state.json'), {});
         assert.ok(!JSON.stringify(state).includes('secret'));
+        return { events, failure };
     } finally {
         const resolved = path.resolve(directory);
         assert.ok(resolved.startsWith(path.resolve(os.tmpdir()) + path.sep) && path.basename(resolved).startsWith('gmt-sync-test-'));
@@ -207,5 +213,43 @@ async function scenario({ failCheck = false, failSnapshot = false, failPublish =
             await scenario({ failPublish: true, currentGas: true, resumeMode, resumeMutation });
     }
     await scenario({ failPublish: true, currentGas: true, resumeMode: 'Auto', pendingDocumentsOnly: true });
+
+    let confirmCalls = 0;
+    await scenario({ sourceChanges: true, expectAbort: true, confirm: async () => { confirmCalls++; return false; } });
+    assert.strictEqual(confirmCalls, 1);
+
+    confirmCalls = 0;
+    await scenario({ sourceChanges: true, confirm: async () => { confirmCalls++; return true; } });
+    assert.strictEqual(confirmCalls, 1);
+
+    confirmCalls = 0;
+    await scenario({ sourceChanges: true, args: ['--mode', 'Auto', '--yes'], confirm: async () => { confirmCalls++; return false; } });
+    assert.strictEqual(confirmCalls, 0);
+
+    confirmCalls = 0;
+    await scenario({ sourceChanges: false, confirm: async () => { confirmCalls++; return false; } });
+    assert.strictEqual(confirmCalls, 0);
+
+    confirmCalls = 0;
+    await scenario({ mode: 'Check', sourceChanges: true, confirm: async () => { confirmCalls++; return false; } });
+    assert.strictEqual(confirmCalls, 0);
+
+    const ffResult = await scenario({
+        sourceChanges: false,
+        fastForward: () => ({ updated: true, reason: 'fast-forwarded', behind: 1, before: '1111111', after: '2222222' })
+    });
+    assert.ok(ffResult.events.indexOf('fast-forward') !== -1);
+    assert.ok(ffResult.events.indexOf('fast-forward') < ffResult.events.indexOf('build'));
+    assert.ok(ffResult.events.indexOf('fast-forward') < ffResult.events.indexOf('tests'));
+    assert.strictEqual(ffResult.events.filter(e => e === 'preflight').length, 2);
+
+    const dirtyFfResult = await scenario({
+        sourceChanges: true,
+        fastForward: () => ({ updated: true, reason: 'fast-forwarded', behind: 1, before: '1111111', after: '2222222' })
+    });
+    assert.ok(!dirtyFfResult.events.includes('fast-forward'));
+
+    await scenario({ removeLockInVerify: true });
+
     console.log('sync workflow ordering and failure recovery tests: OK');
 })().catch(error => { console.error(error); process.exitCode = 1; });

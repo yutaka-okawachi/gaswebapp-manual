@@ -44,6 +44,20 @@ function checkRemote() {
     }
     return git('rev-parse', 'origin/main');
 }
+function fastForwardIfClean(deps = {}) {
+    const getChanged = deps.changed || changed;
+    const runGit = deps.git || git;
+    if (getChanged().length > 0) return { updated: false, reason: 'dirty' };
+    runGit('fetch', 'origin', 'main');
+    const behind = Number(runGit('rev-list', '--count', 'HEAD..origin/main'));
+    if (behind === 0) return { updated: false, reason: 'up-to-date' };
+    const ahead = Number(runGit('rev-list', '--count', 'origin/main..HEAD'));
+    if (ahead > 0) return { updated: false, reason: 'diverged', behind, ahead };
+    const before = runGit('rev-parse', 'HEAD');
+    runGit('merge', '--ff-only', 'origin/main');
+    const after = runGit('rev-parse', 'HEAD');
+    return { updated: before !== after, reason: 'fast-forwarded', behind, before, after };
+}
 function commitChanges(message) {
     const files = changed();
     if (!files.length) return;
@@ -56,4 +70,4 @@ function repoSlug() {
     if (!match) throw new Error('GitHub origin URL を確認してください。');
     return `${match[1]}/${match[2]}`;
 }
-module.exports = { isAllowed, isData, parseStatus, changed, preflight, checkRemote, commitChanges, repoSlug };
+module.exports = { isAllowed, isData, parseStatus, changed, preflight, checkRemote, fastForwardIfClean, commitChanges, repoSlug };

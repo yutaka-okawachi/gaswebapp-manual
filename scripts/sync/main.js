@@ -15,12 +15,13 @@ const { check } = require('../check-local');
 const directory = path.join(root, '.sync-state');
 
 function options(args) {
-    const result = { mode: 'Auto', message: '自動同期アップデート', allowRemoval: false };
+    const result = { mode: 'Auto', message: '自動同期アップデート', allowRemoval: false, yes: false };
     for (let i = 0; i < args.length; i++) {
         if (args[i] === '--mode') result.mode = args[++i];
         else if (args[i] === '--message') result.message = args[++i];
         else if (args[i] === '--allow-data-removal') result.allowRemoval = true;
         else if (args[i] === '--apply-recovery') result.applyRecovery = true;
+        else if (args[i] === '--yes') result.yes = true;
         else throw new Error(`Unknown argument: ${args[i]}`);
     }
     if (!['Auto', 'Data', 'Site', 'All', 'Check', 'Verify', 'Recover'].includes(result.mode)) throw new Error('Invalid mode');
@@ -38,6 +39,11 @@ function plan(mode, files, gasChanged) {
     };
 }
 
+function unlinkSafe(file) {
+    try { fs.unlinkSync(file); }
+    catch (e) { if (e.code !== 'ENOENT') throw e; }
+}
+
 function lock() {
     fs.mkdirSync(directory, { recursive: true });
     const file = path.join(directory, 'lock.json');
@@ -45,12 +51,29 @@ function lock() {
         const old = readJson(file);
         try { process.kill(old.pid, 0); throw new Error('別の sync-data が実行中です。'); }
         catch (e) { if (e.code !== 'ESRCH') throw e; }
-        fs.unlinkSync(file);
+        unlinkSafe(file);
     }
     const fd = fs.openSync(file, 'wx');
     fs.writeFileSync(fd, JSON.stringify({ pid: process.pid }));
     fs.closeSync(fd);
-    return () => fs.unlinkSync(file);
+    return () => unlinkSafe(file);
+}
+
+function logFileList(title, fileList, limit = 20) {
+    logger.info(`${title} (${fileList.length}件):`);
+    for (const file of fileList.slice(0, limit)) console.log(`    - ${file}`);
+    if (fileList.length > limit) console.log(`    …ほか ${fileList.length - limit} 件`);
+}
+
+function promptYesNo(question) {
+    const readline = require('readline');
+    return new Promise(resolve => {
+        const rl = readline.createInterface({ input: process.stdin, output: process.stdout });
+        rl.question(question, answer => {
+            rl.close();
+            resolve(/^(?:y|yes)$/i.test(String(answer || '').trim()));
+        });
+    });
 }
 
 async function verify(state, settings, credential, slug, save, gateTicket, continueData = false) {
@@ -90,7 +113,7 @@ async function verify(state, settings, credential, slug, save, gateTicket, conti
     else logger.finish('同期完了: GitHub Pages の公開内容を確認しました。' + (receipt.documentsOnly ? '' : ' ダッシュボード API も正常です。'));
 }
 
-async function main(args = process.argv.slice(2)) {
+async function main(args = process.argv.slice(2), hooks = {}) {
     const opt = options(args);
     const gateTicket = bilingual.publicationTicket();
     bilingual.assertPublicTree();
@@ -112,6 +135,22 @@ async function main(args = process.argv.slice(2)) {
             return;
         }
 
+        if (['Auto', 'Data', 'All', 'Site'].includes(opt.mode) && sourceFiles.length > 0) {
+            logFileList('未コミットの変更', sourceFiles);
+            logger.warn('このまま続行すると、上記の未コミット変更も本番へコミット・公開されます。');
+            if (!opt.yes && (typeof hooks.confirm === 'function' || hooks.interactive === true)) {
+                let approved;
+                if (typeof hooks.confirm === 'function') {
+                    approved = await hooks.confirm(sourceFiles, opt);
+                } else if (!process.stdin.isTTY) {
+                    throw new Error('未コミットの変更があります。対話端末で確認するか、内容を確認済みであれば -Yes を指定して再実行してください。');
+                } else {
+                    approved = await promptYesNo('  未コミットの変更を含めて同期を続行しますか？ [y/N]: ');
+                }
+                if (!approved) throw new Error('ユーザー確認により同期を中止しました。本番への変更はありません。');
+            }
+        }
+
         if (opt.mode !== 'Check' && state.pending &&
             (sourceFiles.length || git('rev-parse', 'HEAD') !== state.pending.commit)) {
             delete state.pending;
@@ -129,6 +168,15 @@ async function main(args = process.argv.slice(2)) {
                 throw new Error('公開確認の再開中にローカル変更がありました。変更を保持して停止しました。最新取得を改めて実行してください。');
             sourceFiles = repository.preflight(state.ownedData || {});
             logger.header(1, 7, '最新データ同期の事前確認');
+        }
+
+        if (['Auto', 'Data', 'All', 'Site'].includes(opt.mode) && sourceFiles.length === 0 &&
+            typeof repository.fastForwardIfClean === 'function') {
+            const synced = repository.fastForwardIfClean();
+            if (synced && synced.updated) {
+                logger.info(`リモート (origin/main) の未取得コミット ${synced.behind} 件を安全に取り込みました (${synced.before.slice(0, 7)} → ${synced.after.slice(0, 7)})。`);
+                sourceFiles = repository.preflight(state.ownedData || {});
+            }
         }
 
         if (fs.existsSync(path.join(root, '.env'))) {
@@ -163,6 +211,12 @@ async function main(args = process.argv.slice(2)) {
         const headCheck = await timing.measure('gas-head-before', () => editorHead.preflight(settings));
 
         logger.info(`同期モード: ${opt.mode} (GAS更新: ${selected.deploy ? '要' : '不要'}, データ取得: ${selected.data ? '要' : '不要'})`);
+        const pendingCommitFiles = repository.changed();
+        if (pendingCommitFiles.length) logFileList('今回コミットするローカル変更', pendingCommitFiles);
+        if (unpushed.length) logFileList('未送信のローカルコミット差分', unpushed);
+        if (opt.mode === 'Auto' && !selected.data) {
+            logger.warn('Auto モードのため今回はスプレッドシートからのデータ取得を省略します（シート編集も反映する場合は -Mode Data を指定してください）。');
+        }
 
         bilingual.assertPolicyUnchanged(gateTicket);
         // Save a source checkpoint before mutating the live GAS deployment.
@@ -246,5 +300,5 @@ async function main(args = process.argv.slice(2)) {
     finally { try { timing.end(outcome); } finally { release(); } }
 }
 
-if (require.main === module) main().catch(error => { console.error(`[未完了] 同期処理が停止しました。\n詳細（原文を含む）: ${error.message}`); process.exitCode = 1; });
+if (require.main === module) main(process.argv.slice(2), { interactive: true }).catch(error => { console.error(`[未完了] 同期処理が停止しました。\n詳細（原文を含む）: ${error.message}`); process.exitCode = 1; });
 module.exports = { options, plan, main };

@@ -1,9 +1,11 @@
 const assert = require('assert');
 const fs = require('fs');
+const os = require('os');
 const path = require('path');
 const vm = require('vm');
+const { execFileSync } = require('child_process');
 const { root } = require('./sync/core');
-const { parseStatus, isAllowed } = require('./sync/git');
+const { parseStatus, isAllowed, fastForwardIfClean } = require('./sync/git');
 const { expectedPaths, validateSnapshot, previousData, formatJson } = require('./sync/artifacts');
 const { deploymentState } = require('./sync/publish');
 const { plan, options } = require('./sync/main');
@@ -23,6 +25,9 @@ assert.strictEqual(plan('Auto', ['frontend/search-core.js'], false).data, false)
 assert.ok(!fs.existsSync(path.join(root, 'src/asset_versions.js')), 'Public asset versions must not be part of GAS source');
 assert.ok(!fs.readFileSync(path.join(root, 'scripts/build-site.js'), 'utf8').includes("writeIfChanged('src/asset_versions.js'"));
 assert.strictEqual(options(['--message', 'literal $(secret) `text`']).message, 'literal $(secret) `text`');
+assert.strictEqual(options([]).yes, false);
+assert.strictEqual(options(['--yes']).yes, true);
+assert.deepStrictEqual([...fs.readFileSync(path.join(root, 'sync-data.ps1')).slice(0, 3)], [0xef, 0xbb, 0xbf], 'sync-data.ps1 must keep UTF-8 BOM for Windows PowerShell 5.1');
 
 // formatJson 仕様テスト
 const rsSample = [{ Oper: 'guntram', page: 16 }, { Oper: 'guntram', page: 17 }];
@@ -86,5 +91,79 @@ assert.strictEqual(context.normalizeString(42), '');
 const app = fs.readFileSync(path.join(root, 'mahler-search-app/js/app.js'), 'utf8');
 for (const name of ['normalizeString', 'isTermWordCharacter', 'matchesTermQuery', 'normalizeForId', 'generateOriginalTermPattern', 'generateTermPattern', 'linkTermsInTranslation']) {
     assert.strictEqual((app.match(new RegExp('^function ' + name + '\\(', 'gm')) || []).length, 1, name);
+}
+
+// fastForwardIfClean 仕様テスト（一時リポジトリ）
+{
+    const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'gmt-ff-test-'));
+    try {
+        const gitIn = (...args) => execFileSync('git', args, { cwd: tmp, encoding: 'utf8' }).trim();
+        gitIn('init', '-b', 'main');
+        gitIn('config', 'user.name', 'Test');
+        gitIn('config', 'user.email', 'test@example.com');
+        fs.writeFileSync(path.join(tmp, 'a.txt'), 'v1\n', 'utf8');
+        gitIn('add', '.');
+        gitIn('commit', '-m', 'init');
+        const c1 = gitIn('rev-parse', 'HEAD');
+
+        gitIn('checkout', '-b', 'remote-sim');
+        fs.writeFileSync(path.join(tmp, 'b.txt'), 'v2\n', 'utf8');
+        gitIn('add', '.');
+        gitIn('commit', '-m', 'remote 1');
+        const c2 = gitIn('rev-parse', 'HEAD');
+
+        fs.writeFileSync(path.join(tmp, 'c.txt'), 'v3\n', 'utf8');
+        gitIn('add', '.');
+        gitIn('commit', '-m', 'remote 2');
+        const c3 = gitIn('rev-parse', 'HEAD');
+
+        gitIn('checkout', 'main');
+        gitIn('update-ref', 'refs/remotes/origin/main', c1);
+
+        let fetchCalls = 0;
+        const runGit = (...args) => {
+            if (args[0] === 'fetch') {
+                assert.deepStrictEqual(args, ['fetch', 'origin', 'main']);
+                fetchCalls++;
+                return '';
+            }
+            return gitIn(...args);
+        };
+        const localChanged = () => parseStatus(execFileSync('git', ['status', '--porcelain=v1', '-z', '--untracked-files=all'], { cwd: tmp, encoding: 'utf8' }));
+
+        assert.deepStrictEqual(fastForwardIfClean({ git: runGit, changed: localChanged }), { updated: false, reason: 'up-to-date' });
+        assert.strictEqual(fetchCalls, 1);
+
+        gitIn('update-ref', 'refs/remotes/origin/main', c2);
+        const ffRes = fastForwardIfClean({ git: runGit, changed: localChanged });
+        assert.strictEqual(ffRes.updated, true);
+        assert.strictEqual(ffRes.reason, 'fast-forwarded');
+        assert.strictEqual(ffRes.behind, 1);
+        assert.strictEqual(gitIn('rev-parse', 'HEAD'), c2);
+        assert.strictEqual(fetchCalls, 2);
+
+        gitIn('update-ref', 'refs/remotes/origin/main', c3);
+        fs.writeFileSync(path.join(tmp, 'dirty.txt'), 'uncommitted\n', 'utf8');
+        const dirtyRes = fastForwardIfClean({ git: runGit, changed: localChanged });
+        assert.deepStrictEqual(dirtyRes, { updated: false, reason: 'dirty' });
+        assert.strictEqual(fetchCalls, 2);
+        assert.strictEqual(fs.existsSync(path.join(tmp, 'dirty.txt')), true);
+        assert.strictEqual(gitIn('rev-parse', 'HEAD'), c2);
+        fs.unlinkSync(path.join(tmp, 'dirty.txt'));
+
+        fs.writeFileSync(path.join(tmp, 'local.txt'), 'local commit\n', 'utf8');
+        gitIn('add', '.');
+        gitIn('commit', '-m', 'local commit');
+        const divergedHead = gitIn('rev-parse', 'HEAD');
+        const divRes = fastForwardIfClean({ git: runGit, changed: localChanged });
+        assert.strictEqual(divRes.updated, false);
+        assert.strictEqual(divRes.reason, 'diverged');
+        assert.strictEqual(divRes.behind, 1);
+        assert.strictEqual(divRes.ahead, 1);
+        assert.strictEqual(fs.existsSync(path.join(tmp, 'local.txt')), true);
+        assert.strictEqual(gitIn('rev-parse', 'HEAD'), divergedHead);
+    } finally {
+        fs.rmSync(tmp, { recursive: true, force: true });
+    }
 }
 console.log('sync safety, snapshot, publication and preview tests: OK');

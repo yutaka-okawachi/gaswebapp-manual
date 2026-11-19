@@ -3,7 +3,8 @@
     [ValidateSet('Auto', 'Data', 'Site', 'All', 'Check', 'Verify', 'Recover')]
     [string]$Mode = 'Auto',
     [switch]$AllowDataRemoval,
-    [switch]$ApplyRecovery
+    [switch]$ApplyRecovery,
+    [switch]$Yes
 )
 $ErrorActionPreference = 'Stop'
 Push-Location $PSScriptRoot
@@ -11,6 +12,7 @@ try {
     $arguments = @('scripts/sync/main.js', '--mode', $Mode, '--message', $message)
     if ($AllowDataRemoval) { $arguments += '--allow-data-removal' }
     if ($ApplyRecovery) { $arguments += '--apply-recovery' }
+    if ($Yes) { $arguments += '--yes' }
     & node @arguments
     $syncExitCode = $LASTEXITCODE
 } finally {
