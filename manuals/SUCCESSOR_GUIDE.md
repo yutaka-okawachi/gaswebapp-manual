@@ -98,7 +98,7 @@ GitHub の `Settings > Account > Successor settings` にて、後継者の GitHu
 
 ### 5-1. あらすじ集の構成
 
-RW/RSの日英PDFリンクの列契約・生成は[日英統合同期のSynopsis](BILINGUAL_SYNC.md#synopsis-pdfリンク2026-10-22)、画面・計測の保守は[日常保守](DEVELOPER_GUIDE.md#3-楽譜情報の更新手順)を参照します。
+RW/RSの日英PDFリンクの列契約・生成は[日英統合同期のSynopsis](BILINGUAL_SYNC.md#synopsis-pdfリンク)、画面・計測の保守は[日常保守](DEVELOPER_GUIDE.md#3-楽譜情報の更新手順)を参照します。
 
 ### 5-2. 公開画面とサイドバーメニューの管理（超重要）
 

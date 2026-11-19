@@ -62,3 +62,27 @@ test('nolink wrappers preserve exact adopted text; blank-separated manual source
  const p=h.c.notesExamplePrepare_(h.book,{ja:'',en});assert.equal(p.en.added,1);assert.ok(p.en.text.includes('[[nolink:See]]'));
  const manual=en+'\n\nDas Liebesverbot, WWV 38, p. 14';assert.equal(h.c.notesExamplePrepare_(h.book,{ja:'',en:manual}).en.text,manual);
 });
+
+test('unique original gives identical work for differing Japanese and English translations without rewriting',()=>{
+ const h=fixture();h.tables.RS.pop();
+ const fields={ja:'[RS: Oper]\nsüßen\n甘く',en:'[RS: Oper]\nGerman: süßen\nEnglish: sweetly'};
+ const p=h.c.notesExamplePrepare_(h.book,fields);
+ assert.equal(p.ja.text,fields.ja+'\n《Die Frau ohne Schatten》 Op. 65 / TrV 234');
+ assert.equal(p.en.text,fields.en+'\nDie Frau ohne Schatten, Op. 65 / TrV 234');
+ assert.equal(h.c.notesExamplePrepare_(h.book,{ja:p.ja.text,en:p.en.text}).en.added,0);
+ assert.equal(h.c.notesExamplePrepare_(h.book,fields,fields).en.added,0);
+ const manual={ja:'',en:fields.en+'\nMy verified manual citation'};
+ assert.equal(h.c.notesExamplePrepare_(h.book,manual).en.text,manual.en);
+});
+test('same original in conflicting works is not disambiguated by translation',()=>{
+ const h=fixture();h.tables.RS[2][1]='別の訳';h.tables.RS[2][2]='other translation';
+ const p=h.c.notesExamplePrepare_(h.book,{ja:'[RS: Oper]\nsüßen\n甘い',en:'[RS: Oper]\nGerman: süßen\nEnglish: other translation'});
+ assert.equal(p.ja.added,0);assert.equal(p.en.added,0);
+});
+test('unique-original fallback handles repeated examples under one tag and declines uncertain continuations',()=>{
+ const h=fixture();h.tables.RS.pop();h.tables.RS.push(['Anderes','別','Other','schatten']);
+ const en='[RS: Oper]\nGerman: süßen\nEnglish: sweetly\n\nGerman: Anderes\nEnglish: Differently';
+ assert.equal(h.c.notesExamplePrepare_(h.book,{ja:'',en}).en.added,2);
+ const multiline='[RS: Oper]\nGerman: süßen\nEnglish: altered first\nunknown second';
+ assert.equal(h.c.notesExamplePrepare_(h.book,{ja:'',en:multiline}).en.text,multiline);
+});

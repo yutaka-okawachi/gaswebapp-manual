@@ -60,7 +60,16 @@ function notesExampleCitation_(works, language) {
 }
 function notesExamplePlan_(text, language, evidence, previous) {
   const lines = String(text || '').split('\n'), changes = [], ranges = [], oldPairs = new Set();
-  const groups = Object.create(null);
+  const groups = Object.create(null), originals = Object.create(null);
+  evidence.forEach(function (example) {
+    const key = JSON.stringify([example.tab, example.de]);
+    if (!originals[key]) originals[key] = { tab: example.tab, de: example.de, works: [], unknown: false };
+    const original = originals[key];
+    if (!example.works.length) original.unknown = true;
+    example.works.forEach(function (work) {
+      if (!original.works.some(function (w) { return JSON.stringify(w) === JSON.stringify(work); })) original.works.push(work);
+    });
+  });
   evidence.forEach(function (example) {
     if (!example[language]) return;
     const key = JSON.stringify([example.tab, example.de, example[language]]);
@@ -70,7 +79,16 @@ function notesExamplePlan_(text, language, evidence, previous) {
       if (!groups[key].works.some(function (w) { return JSON.stringify(w) === JSON.stringify(work); })) groups[key].works.push(work);
     });
   });
-  const all = Object.keys(groups).map(function (key) { return groups[key]; });
+  // Translation variants must never attribute the same original to conflicting works.
+  const all = Object.keys(groups).map(function (key) { return groups[key]; }).filter(function (group) {
+    const original = originals[JSON.stringify([group.tab, group.de])];
+    return !original.unknown && group.works.length === original.works.length && original.works.every(function (work) {
+      return group.works.some(function (w) { return JSON.stringify(w) === JSON.stringify(work); });
+    });
+  });
+  const unique = Object.keys(originals).map(function (key) { return originals[key]; }).filter(function (original) {
+    return !original.unknown && original.works.length === 1;
+  });
   function matchesAt(input, start, content, label) {
     const expected = content.split('\n');
     if (start + expected.length > input.length) return false;
@@ -89,10 +107,22 @@ function notesExamplePlan_(text, language, evidence, previous) {
       if (marker) { tab = marker[1].slice(0, 2); continue; }
       if (/^【[^】]+】$/.test(line)) { tab = ''; continue; }
       if (!tab) continue;
-      const matches = all.filter(function (group) {
+      let matches = all.filter(function (group) {
         if (group.tab !== tab || !matchesAt(input, i, group.de, language === 'en' ? /^\s*German:\s*/ : null)) return false;
         return matchesAt(input, i + group.de.split('\n').length, group.translation, language === 'en' ? /^\s*English:\s*/ : null);
       });
+      if (!matches.length) {
+        matches = unique.filter(function (original) {
+          return original.tab === tab && matchesAt(input, i, original.de, language === 'en' ? /^\s*German:\s*/ : null);
+        }).map(function (original) {
+          const translation = input[i + original.de.split('\n').length] || '';
+          const value = notesExampleKey_(translation.replace(language === 'en' ? /^\s*English:\s*/ : /$^/, ''));
+          // Unknown multiline boundaries and citation-only blocks are left untouched.
+          if (!value || /^\[|^【|^《|^(?:German|Source|Work):/.test(value) || original.works.some(function (work) { return value.startsWith(work.title); })) return null;
+          return { tab: original.tab, de: original.de, translation: value, works: original.works, unknown: false,
+            key: JSON.stringify([original.tab, original.de, value]) };
+        }).filter(Boolean);
+      }
       if (matches.length !== 1) continue;
       const group = matches[0], end = i + group.de.split('\n').length + group.translation.split('\n').length;
       visit(group, end, input); i = end - 1;

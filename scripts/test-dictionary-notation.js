@@ -8,7 +8,7 @@ vm.runInContext(read('src/dictionary_notation.js'),c);vm.runInContext(read('src/
 // Keep shared text layout in both contexts; isolate only notation substitutions.
 const old=vm.createContext({});
 const {extractFunction}=require('./test-utils/extract-function');
-for(const name of ['isSafeDictionaryReferenceUrl','normalizeDictionaryScoreReferences','renderDictionaryReferenceText','renderNotesEnglishLayout'])vm.runInContext(extractFunction(read('src/dictionary_notation.js'),name),old);
+for(const name of ['isSafeDictionaryReferenceUrl','normalizeDictionaryScoreReferences','renderDictionaryReferenceText','renderNotesWorkCitations','renderNotesEnglishLayout'])vm.runInContext(extractFunction(read('src/dictionary_notation.js'),name),old);
 vm.runInContext(read('src/generate_dic_html.js'),old);
 // Isolate notation; combined links/images are checked by reviewed-link integration.
 for(const ctx of [c,old])vm.runInContext('removeReviewedEnglishTermLinks = function(rendered) { return rendered; };',ctx);
