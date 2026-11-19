@@ -141,8 +141,6 @@ function rowCompletionPreview() {
       else if (Object.keys(v).some(function (k) { return String(v[k]).length > 6000; })) reason = '入力が長すぎます（各欄6000文字以内）．';
       else if (job.tab === 'GM' && !String(v.data || '').trim()) reason = 'dataに使用箇所を入力してください．';
       else if (['RW', 'RS'].includes(job.tab) && (!String(v.Oper || '').trim() || v.page === '' || !String(v.page).trim())) reason = 'Operとpageに出典・使用箇所を入力してください．';
-      else if (job.tab === 'Notes' && !notesEntryGuardExisting_(book, sheet, n)) reason = 'Notesの新規項目は未登録語からの登録メニューを使ってください．手入力の値は保持しています．';
-      else if (job.tab === 'Notes' && (!String(v.source || '').trim() || /^(?:不明|未確認|未定|[?？\-ー]+)$/.test(String(v.source).trim()))) reason = 'sourceに確認できる出典を入力してください．';
       ['ja', 'en'].forEach(function (field) {
         if (rowCompletionBlank_(snapshot, field) && rowCompletionWritable_(sheet, field, n)) row.targets.push(field);
       });
@@ -150,6 +148,14 @@ function rowCompletionPreview() {
       if (['RW', 'RS'].includes(job.tab) && String(v.whom || '').trim() && rowCompletionBlank_(snapshot, 'whom_en')) {
         if (recipient.value && rowCompletionWritable_(sheet, 'whom_en', n)) { row.targets.push('whom_en'); row.draft.whom_en = recipient.value; }
         else if (recipient.status !== 'approved') { row.whomReview = recipient; row.message = recipient.message; }
+      }
+      if (!reason && job.tab === 'Notes' && rowCompletionBlank_(snapshot, 'source') && rowCompletionWritable_(sheet, 'source', n)) {
+        const sourceCandidate = rowCompletionNotesSourceCandidate_(book, v);
+        if (sourceCandidate) {
+          row.targets.push('source');
+          row.draft.source = sourceCandidate.value;
+          row.sourceCandidate = sourceCandidate;
+        }
       }
       if (!reason && !row.targets.length) reason = row.whomReview ? row.whomReview.message : '補完できる空欄がありません（既存値・数式・保護セルは保持）．';
       if (reason) { row.status = 'blocked'; row.message = reason; row.targets = []; row.draft = {}; }
@@ -235,8 +241,9 @@ function rowCompletionRs_(book, row) {
 }
 function rowCompletionNotes_(book, row) {
   const context = rowCompletionStyleContext_(book, 'Notes', row);
-  const usages = rowCompletionNewNotes_(row) ? rowCompletionNotesUsages_(book, row.snapshot.values) : { examples: [], scanned: [] };
-  context.domain = { task: 'notes_' + context.profile, headword: row.snapshot.values.de, source: row.snapshot.values.source,
+  const effectiveSource = rowCompletionNotesEffectiveSource_(row);
+  const usages = rowCompletionNewNotes_(row) ? rowCompletionNotesUsages_(book, { de: row.snapshot.values.de, source: effectiveSource }) : { examples: [], scanned: [] };
+  context.domain = { task: 'notes_' + context.profile, headword: row.snapshot.values.de, source: effectiveSource,
     source_document_fetched: false, new_dictionary: rowCompletionNewNotes_(row),
     usage_examples: usages.examples, usage_scan: usages.scanned };
   return context;
@@ -323,7 +330,8 @@ function rowCompletionGenerate(id, number) {
     if (props.getKeys().filter(function (k) { return k.indexOf(ROW_COMPLETION_PREFIX + 'claim:') === 0; }).length >= 100) throw rowCompletionError_('未完了の作業記録を先に確認してください．');
     row.claim = claim;
     row.status = fields.length ? 'generating' : 'draft'; row.startedAt = Date.now();
-    row.message = fields.length ? '送信予約済み．結果不明でも自動再送しません．' : '承認済みの指示対象訳です（API未使用）．';
+    row.message = fields.length ? '送信予約済み．結果不明でも自動再送しません．'
+      : (row.targets.includes('source') ? 'GM・RW・RSの実在用例から抽出した出典候補です（API未使用）．確認してから反映してください．' : '承認済みの指示対象訳です（API未使用）．');
     rowCompletionSave_(job);
     props.setProperty(claim, job.id);
     if (props.getProperty(claim) !== job.id) throw rowCompletionError_('送信予約を保存できません．');
@@ -392,15 +400,24 @@ function rowCompletionApply(id, number, fields) {
     if (['draft', 'needs_review'].includes(row.status)) {
       if (!fields || JSON.stringify(Object.keys(fields).sort()) !== JSON.stringify(row.targets.slice().sort())) throw rowCompletionError_('反映項目が一致しません．');
       const reviewedRow = rowCompletionReviewNotes_(row, fields);
+      const book = rowCompletionBook_();
+      const nextTargets = [], nextFields = {};
       row.targets.forEach(function (field) {
         if (field === 'whom_en') {
-          if (fields[field] !== row.draft[field] || rowCompletionWhom_(rowCompletionBook_(), job.tab, row.snapshot.values) !== row.draft[field]) throw rowCompletionError_('指示対象は現在も一致する承認済みの訳だけを反映できます．');
+          if (fields[field] !== row.draft[field] || rowCompletionWhom_(book, job.tab, row.snapshot.values) !== row.draft[field]) throw rowCompletionError_('指示対象は現在も一致する承認済みの訳だけを反映できます．');
+          nextTargets.push(field); nextFields[field] = fields[field];
+        } else if (field === 'source') {
+          const text = rowCompletionValidateSource_(row, fields[field], book);
+          if (text) { nextTargets.push(field); nextFields[field] = text; }
+        } else {
+          rowCompletionValidateText_(reviewedRow, field, fields[field]);
+          nextTargets.push(field); nextFields[field] = fields[field];
         }
-        else rowCompletionValidateText_(reviewedRow, field, fields[field]);
       });
+      if (!nextTargets.length) throw rowCompletionError_('反映する空欄の内容がありません．空欄のままにする場合は作業を終了してください．');
       rowCompletionCurrent_(job, row);
       if (reviewedRow.notesSupport) row.notesSupport = reviewedRow.notesSupport;
-      row.draft = fields; row.reviewed = true; row.written = []; row.status = 'applying';
+      row.targets = nextTargets; row.draft = nextFields; row.reviewed = true; row.written = []; row.status = 'applying';
       rowCompletionSave_(job); // Intent is durable before any cell write.
     }
     try {
@@ -421,6 +438,10 @@ function rowCompletionApply(id, number, fields) {
         const currentSheet = rowCompletionCurrent_(job, row, accepted);
         if (!rowCompletionWritable_(currentSheet, field, row.number)) throw rowCompletionError_('数式・保護・結合セルへは反映できません．');
         if (field === 'whom_en' && rowCompletionWhom_(rowCompletionBook_(), job.tab, row.snapshot.values) !== row.draft[field]) throw rowCompletionError_('指示対象の承認案が変更されました．');
+        if (field === 'source' && row.sourceCandidate && row.draft[field] === row.sourceCandidate.value) {
+          const currentSource = rowCompletionNotesSourceCandidate_(rowCompletionBook_(), row.snapshot.values);
+          if (!currentSource || currentSource.value !== row.draft[field]) throw rowCompletionError_('出典候補の根拠となる用例が変更されました．');
+        }
         const cell = namedSheetCell_(currentSheet, [field], row.number, 0);
         cell.setValue(sheetLiteralValue_(row.draft[field]));
         SpreadsheetApp.flush();

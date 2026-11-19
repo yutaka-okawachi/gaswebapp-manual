@@ -3,12 +3,53 @@ function rowCompletionNewNotes_(row) {
   const v = row.snapshot.values;
   return row.tab === 'Notes' && !v.ja && !v.en && maintenanceStyleProfile_('Notes', v) === 'dictionary';
 }
+function rowCompletionNotesSourceCandidate_(book, values) {
+  if (typeof maintenanceNotesSource_ !== 'function') return null;
+  try {
+    const plan = maintenanceNotesSource_(book, values.de, 'alias');
+    if (!plan || !plan.source || !Array.isArray(plan.proof) || !plan.proof.length) return null;
+    return {
+      value: plan.source,
+      proof: plan.proof.map(function (item) {
+        return {
+          tab: item.tab,
+          number: item.number,
+          location: String(item.location || '').slice(0, 240),
+          german: String(item.german || '').slice(0, 300)
+        };
+      })
+    };
+  } catch (_) {
+    return null;
+  }
+}
+function rowCompletionNotesEffectiveSource_(row) {
+  if (!row || !row.snapshot || !row.snapshot.values) return '';
+  if (row.snapshot.values.source) return String(row.snapshot.values.source);
+  if (row.draft && Object.prototype.hasOwnProperty.call(row.draft, 'source')) return String(row.draft.source || '');
+  if (row.sourceCandidate && typeof row.sourceCandidate.value === 'string') return row.sourceCandidate.value;
+  return '';
+}
+function rowCompletionValidateSource_(row, text, book) {
+  if (typeof text !== 'string') throw rowCompletionError_('出典の形式を確認してください．');
+  if (text === '') return '';
+  if (!text.trim() || text.trim() !== text || text.length > 500 ||
+      /[\r\n\u0000-\u001f]|https?:|<[^>]*>|\[\[score:/.test(text)) {
+    throw rowCompletionError_('出典の形式・長さを確認してください．');
+  }
+  try { encodeURIComponent(text); } catch (_) { throw rowCompletionError_('出典に不正な文字があります．'); }
+  if (row.sourceCandidate && text === row.sourceCandidate.value && book) {
+    const current = rowCompletionNotesSourceCandidate_(book, row.snapshot.values);
+    if (!current || current.value !== text) throw rowCompletionError_('出典候補の根拠となる用例が変更されました．');
+  }
+  return text;
+}
 function rowCompletionNotesFormatHeadings_(row, field, text, plain) {
   const support = row.notesSupport;
   if (!['ja', 'en'].includes(field) || !rowCompletionNewNotes_(row) || !support ||
       support.kind !== 'new_dictionary_proposal' || !Array.isArray(support.examples) || !Array.isArray(support.usageIds)) return text;
   const labels = { '[GM]': 'GM', '[RW: Oper]': 'RW: Oper', '[RS: Oper]': 'RS: Oper' };
-  const sources = rowCompletionProtected_(row.snapshot.values.source);
+  const sources = rowCompletionProtected_(rowCompletionNotesEffectiveSource_(row));
   const permitted = Object.keys(labels).filter(function (marker) {
     const tab = labels[marker].slice(0, 2);
     return sources.includes(marker) && !String(row.snapshot.values.de).includes(marker) && support.examples.some(function (example) {
@@ -112,10 +153,16 @@ function rowCompletionNotesKnown_(row) {
 function rowCompletionReviewNotes_(row, fields) {
   // Corrections to newly proposed equivalents are allowed only at the explicit human Apply step.
   // An existing body/annotation/catalogue never acquires this exception.
-  if (!rowCompletionNewNotes_(row) || !row.notesSupport) return row;
-  const reviewed = JSON.parse(JSON.stringify(row)), terms = maintenanceStyleEquivalents_(fields.ja || '');
-  reviewed.notesSupport.english = rowCompletionNotesList_(terms.english);
-  reviewed.notesSupport.italian = rowCompletionNotesList_(terms.italian);
-  reviewed.notesSupport.humanReviewed = true;
+  const hasSourceEdit = row.tab === 'Notes' && fields && Object.prototype.hasOwnProperty.call(fields, 'source');
+  const isNew = rowCompletionNewNotes_(row) && Boolean(row.notesSupport);
+  if (!hasSourceEdit && !isNew) return row;
+  const reviewed = JSON.parse(JSON.stringify(row));
+  if (hasSourceEdit) reviewed.draft = Object.assign({}, reviewed.draft, { source: String(fields.source || '') });
+  if (isNew) {
+    const terms = maintenanceStyleEquivalents_(fields.ja || '');
+    reviewed.notesSupport.english = rowCompletionNotesList_(terms.english);
+    reviewed.notesSupport.italian = rowCompletionNotesList_(terms.italian);
+    reviewed.notesSupport.humanReviewed = true;
+  }
   return reviewed;
 }

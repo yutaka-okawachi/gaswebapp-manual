@@ -2,7 +2,7 @@
 const ROW_COMPLETION_REVIEW_FIELD = '理由・要確認事項';
 function rowCompletionApiFields_(row) {
   return row.targets.filter(function (field) {
-    return field !== ROW_COMPLETION_REVIEW_FIELD && field !== 'whom_en';
+    return field !== ROW_COMPLETION_REVIEW_FIELD && field !== 'whom_en' && field !== 'source';
   });
 }
 function rowCompletionReviewRead_(sheet, number) {

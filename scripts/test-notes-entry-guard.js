@@ -19,7 +19,7 @@ function harness(){
 test('manual new heading warns once, keeps every cell and makes no API or credential reads',()=>{
  const h=harness(),n=h.append('NEW_PRIVATE_HEADING'),before=JSON.stringify(h.rows);h.c.onEdit(h.event(n));
  assert.equal(h.toasts.length,1);assert(!h.toasts[0].message.includes('NEW_PRIVATE_HEADING'));assert.equal(JSON.stringify(h.rows),before);assert.equal(h.writes.length,0);assert.equal(h.fetches,0);assert.equal(h.keyReads,0);
- assert.equal(h.registry().rows[n-2][1],1);h.select(n);assert.equal(h.preview().rows[0].status,'blocked');assert(h.c.rowCompletionState().job.rows[0].message.includes('登録メニュー'));
+ assert.equal(h.registry().rows[n-2][1],1);h.select(n);assert.equal(h.preview().rows[0].status,'pending');assert.deepEqual(Array.from(h.c.rowCompletionState().job.rows[0].targets),['ja','en']);assert.equal(h.fetches,0);assert.equal(h.writes.length,0);
 });
 test('simple plus installable trigger wake-ups deduplicate irrespective of auth/trigger identity',()=>{
  const h=harness(),n=h.append('manual new term'),event=h.event(n);h.c.onEdit({...event,authMode:'LIMITED'});h.c.onEdit({...event,authMode:'FULL',triggerUid:'synthetic-installed'});

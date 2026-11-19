@@ -16,7 +16,7 @@
 <body>
   <h1>選択行の空欄補完</h1>
   <p>生成ボタンはOpenAI APIを使用します．毎回の課金確認は表示しません．案を確認・編集し，「確認した内容を空欄へ反映」を押すまで本文は変わりません．</p>
-  <p class="muted">原文・出典・使用箇所，正規化の配列数式，既存の値・式・書式・入力規則は保持します．Notesの出典資料そのものを自動取得する機能ではありません．</p>
+  <p class="muted">原文・使用箇所・既存の出典，正規化の配列数式，既存の値・式・書式・入力規則は保持します．Notesの出典が空欄のときだけGM・RW・RSの実在用例から出典候補を提示します（根拠がなければ空欄のまま）．出典資料そのものを自動取得する機能ではありません．</p>
   <button id="refresh">保存状態を確認</button><button id="selection">現在の選択行を読み込む</button>
   <p id="message" role="status" aria-live="polite"></p><p id="summary"></p>
   <div id="rows"></div>
@@ -77,16 +77,23 @@
             text(section, 'p', example.id + '／' + example.location + '\n' + example.de + '\n' + example.ja + '\n' + example.en, 'context');
           });
         }
+        if (row.sourceCandidate) {
+          text(section, 'h3', '出典候補の根拠（GM・RW・RSの実在用例）');
+          text(section, 'p', '候補：' + row.sourceCandidate.value + '（AIではなくシートの実在用例から抽出．空欄のままにする場合はsource欄を消去）');
+          (row.sourceCandidate.proof || []).forEach(item => {
+            text(section, 'p', item.tab + ':' + item.number + '／' + item.location + '\n' + item.german, 'context');
+          });
+        }
         if (row.status === 'pending') {
-          const requiresApi = row.targets.some(field => field !== 'whom_en');
-          button(section, requiresApi ? 'この行の翻訳案を生成' : '承認済みの指示対象訳を確認', job.closed || (requiresApi && !state.apiReady),
+          const requiresApi = row.targets.some(field => field !== 'whom_en' && field !== 'source');
+          button(section, requiresApi ? 'この行の翻訳案を生成' : (row.targets.includes('source') ? '出典候補を確認' : '承認済みの指示対象訳を確認'), job.closed || (requiresApi && !state.apiReady),
             () => request('rowCompletionGenerate', [job.id, row.number], '案を確認し，必要なら編集してください．'));
         }
         const inputs = {};
         if (['draft', 'needs_review', 'applying', 'partial', 'applied'].includes(row.status)) {
           const editable = ['draft', 'needs_review'].includes(row.status);
           row.targets.forEach(field => {
-            const label = text(section, 'label', field === 'whom_en' ? 'whom_en（既存の承認済み訳）' : field + '（確認・編集）');
+            const label = text(section, 'label', field === 'whom_en' ? 'whom_en（既存の承認済み訳）' : field === 'source' ? 'source（出典候補・確認／空欄のままにする場合は消去）' : field + '（確認・編集）');
             const area = document.createElement('textarea'), key = job.id + ':' + row.number + ':' + field;
             area.setAttribute('aria-label', label.textContent);
             area.value = editable && Object.prototype.hasOwnProperty.call(edits, key) ? edits[key] : row.draft[field] || '';

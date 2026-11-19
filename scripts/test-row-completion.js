@@ -2,7 +2,7 @@
 // Entirely synthetic Spreadsheet/Properties/HTTP services; no credentials, Google or paid requests.
 const assert = require('node:assert/strict'), fs = require('node:fs'), path = require('node:path'), vm = require('node:vm'), crypto = require('node:crypto');
 const root = path.resolve(__dirname, '..');
-const source = ['dictionary_candidate_workflow.js', 'sheet_column_layout.js', 'maintenance_text_style.js', 'row_completion_notes.js', 'row_completion_review.js', 'notes_entry_guard.js', 'row_completion.js'].map(f => fs.readFileSync(path.join(root, 'src', f), 'utf8')).join('\n');
+const source = ['dictionary_candidate_workflow.js', 'sheet_column_layout.js', 'maintenance_workbench.js', 'maintenance_text_style.js', 'row_completion_notes.js', 'row_completion_review.js', 'notes_entry_guard.js', 'row_completion.js'].map(f => fs.readFileSync(path.join(root, 'src', f), 'utf8')).join('\n');
 // Select production-approved examples by identity, not their current exported row position.
 const styleExampleTerms = vm.runInNewContext(fs.readFileSync(path.join(root, 'src/maintenance_text_style.js'), 'utf8') + '\nMAINTENANCE_STYLE_EXAMPLE_TERMS');
 let passed = 0;
@@ -125,8 +125,8 @@ test('normalization ARRAYFORMULA and review columns never touched',()=>{
   const h=harness();h.formula('de_normalized','=ARRAYFORMULA(LOWER(A2:A))');let j=h.generate(h.preview());h.apply(j);
   assert.equal(h.formulas[1][h.headers.indexOf('de_normalized')],'=ARRAYFORMULA(LOWER(A2:A))');
 });
-test('missing context/unknown Notes source is held without API',()=>{
-  for(const [tab,key,value]of [['Notes','source',''],['Notes','source','不明'],['GM','data',''],['RW','Oper',''],['RS','page',''],['GM','de','']]){
+test('missing required corpus context is held without API',()=>{
+  for(const [tab,key,value]of [['GM','data',''],['RW','Oper',''],['RS','page',''],['GM','de','']]){
     const h=harness(tab);h.put(key,value);assert.equal(h.preview().rows[0].status,'blocked');assert.equal(h.fetches,0);
   }
 });
@@ -253,7 +253,7 @@ function notesWithPublishedUsages(sourceValue='[GM], [RS: Oper], [RW: Oper]') {
     const identity=r=>JSON.stringify([r.de,r.data,r.Oper,r.Aufzug,r.Szene,r.page]);
     const byId=new Map(en.map(r=>[identity(r),r]));
     const rows=[names,...ja.map(a=>{const b=byId.get(identity(a)),v={...a,en:b?b.ja:''};return names.map(name=>v[name]===undefined?'':v[name]);})];
-    h.relatedSheets[tab]={getName:()=>tab,getLastRow:()=>rows.length,getLastColumn:()=>names.length,getRange(r,c,n=1,w=1){return{
+    h.relatedSheets[tab]={getName:()=>tab,getSheetId:()=>({GM:101,RW:102,RS:103}[tab]),getLastRow:()=>rows.length,getLastColumn:()=>names.length,getRange(r,c,n=1,w=1){return{
       getValues:()=>rows.slice(r-1,r-1+n).map(a=>a.slice(c-1,c-1+w)),getDisplayValues:()=>rows.slice(r-1,r-1+n).map(a=>a.slice(c-1,c-1+w)),getFormulas:()=>Array.from({length:n},()=>Array(w).fill(''))
     };}};
   }
@@ -497,6 +497,170 @@ test('retired intake does not reopen an old candidate instead of selected-row co
  h.c.rowCompletionStored_=()=>({job:old});h.c.rowCompletionSave_=()=>{};
  const fresh=h.preview();assert(!fresh.intake);assert.equal(fresh.rows[0].status,'pending');assert.equal(h.fetches,0);assert.equal(h.writes.length,0);
  assert(!source.includes('maintenanceNotesRegister'));assert(!source.includes('maintenanceNotesDraftCurrent_'));assert(!source.includes('maintenanceNotesRow_'));
+});
+
+test('Notes heading alone is eligible independent of entry history; source stays untouched',()=>{
+ for(const existing of ['','【一般的な意味】\n既存の日本語本文']) for(const sourceValue of ['', '不明', '[RS: Oper], [RW: Oper]']) {
+  const h=harness('Notes');h.put('de','süßen');h.put('ja',existing);h.put('source',sourceValue);
+  h.c.notesEntryGuardExisting_=()=>{throw Error('entry history must not gate completion');};
+  let job=h.preview();assert.equal(job.rows[0].status,'pending');
+  assert.deepEqual(Array.from(job.rows[0].targets),existing?['en']:['ja','en']);
+  assert.equal(h.fetches,0);assert.equal(h.writes.length,0);
+  job=h.generate(job);assert.equal(h.fetches,1);assert.equal(h.writes.length,0);
+  assert(!job.rows[0].targets.includes('source'));assert(!Object.keys(job.rows[0].draft).includes('source'));
+  assert.equal(h.lastRequest.text.format.schema.properties.source,undefined);
+  assert.equal(h.value('source'),sourceValue);if(existing)assert.equal(h.value('ja'),existing);
+  job=h.apply(job);assert.equal(job.rows[0].status,'applied');
+  assert.equal(h.value('de'),'süßen');assert.equal(h.value('source'),sourceValue);
+  if(existing)assert.equal(h.value('ja'),existing);
+  assert(h.writes.every(w=>existing?w.column==='en':['ja','en'].includes(w.column)));
+ }
+});
+test('Notes existing English and whitespace or formula source remain untouched',()=>{
+ for(const sourceValue of [' ', '']) {
+  const h=harness('Notes');h.put('de','süßen');h.put('en','Existing English.');h.put('source',sourceValue);
+  if(!sourceValue)h.formula('source','=""');
+  let job=h.preview();assert.deepEqual(Array.from(job.rows[0].targets),['ja']);
+  job=h.generate(job);assert.equal(h.writes.length,0);job=h.apply(job);
+  assert.equal(job.rows[0].status,'applied');assert.equal(h.value('en'),'Existing English.');assert.equal(h.value('source'),sourceValue);
+  if(!sourceValue)assert.equal(h.formulas[1][h.headers.indexOf('source')],'=""');
+  assert(h.writes.every(w=>w.column==='ja'));
+ }
+});
+
+test('Notes heading alone with blank source proposes corpus-evidenced source alongside ja/en and honors clearing source',()=>{
+ const h=notesWithPublishedUsages('');
+ let job=h.preview();assert.equal(job.rows[0].status,'pending');
+ assert.deepEqual(Array.from(job.rows[0].targets),['ja','en','source']);
+ assert.equal(job.rows[0].draft.source,'[RS: Oper], [RW: Oper], [GM]');
+ assert.equal(job.rows[0].sourceCandidate.proof.length,3);
+ assert.equal(h.fetches,0);assert.equal(h.writes.length,0);
+ job=h.generate(job);assert.equal(h.fetches,1);assert.equal(h.writes.length,0);
+ const input=JSON.parse(h.lastRequest.input);
+ assert.deepEqual(Array.from(input.requested_fields),['ja','en']);
+ assert.equal(h.lastRequest.text.format.schema.properties.source,undefined);
+ assert.equal(input.domain_context.source,'[RS: Oper], [RW: Oper], [GM]');
+ assert.equal(input.domain_context.usage_examples.length,6);
+ assert.equal(h.value('source'),'');
+ job=h.apply(job);assert.equal(job.rows[0].status,'applied');
+ assert.equal(h.value('source'),'[RS: Oper], [RW: Oper], [GM]');
+ assert.equal(h.value('ja_old'),'保存した旧訳');
+ assert(h.writes.every(w=>['ja','en','source'].includes(w.column)));
+
+ const h2=notesWithPublishedUsages('');
+ const mutate=h2.mutateDraft;
+ h2.mutateDraft=d=>{
+  mutate(d);
+  d.ja='【英】string／【伊】corda\n\n【一般的な意味】\n① 弦．\n\n【音楽用語としての訳例】\n[GM]\nG-Saite\nG線';
+  d.en='Italian: corda\n\n【General meanings】\n① A string.\n\n【Examples in musical contexts】\n[GM]\nGerman: G-Saite\nEnglish: G string.';
+  const ex=JSON.parse(h2.lastRequest.input).domain_context.usage_examples.filter(e=>e.tab==='GM');
+  d.notes_support.usage_ids=ex.map(e=>e.id);
+ };
+ let j2=h2.generate(h2.preview());
+ assert.throws(()=>h2.c.rowCompletionApply(j2.id,2,{...j2.rows[0].draft,source:''}),/トークン/);
+ assert.equal(h2.writes.length,0);
+ const cleaned={
+  ja:j2.rows[0].draft.ja.replace('\n[GM]\n','\n'),
+  en:j2.rows[0].draft.en.replace('\n[GM]\n','\n'),
+  source:''
+ };
+ j2=h2.c.rowCompletionApply(j2.id,2,cleaned).job;
+ assert.equal(j2.rows[0].status,'applied');assert.equal(h2.value('source'),'');
+ assert(h2.value('ja').startsWith('【英】string'));assert(h2.value('en').startsWith('Italian: corda'));
+ assert(h2.writes.every(w=>['ja','en'].includes(w.column)));
+});
+test('Notes existing Japanese and blank English (süßen) preserves existing source or suggests evidenced source',()=>{
+ const h=notesWithPublishedUsages('[RS: Oper], [RW: Oper]');h.put('de','süßen');
+ h.put('ja','【英】sweet／【伊】dolce\n\n【一般的な意味】\n① 甘い．\n\n【音楽用語としての訳例】\n[RS: Oper]\nMit einem süßen Lächeln\n甘い微笑みを浮かべて');
+ h.mutateDraft=d=>{d.en='Italian: dolce\n\n【General meanings】\n① Sweet.\n\n【Examples in musical contexts】\n[RS: Oper]\nGerman: Mit einem süßen Lächeln\nEnglish: With a sweet smile.';};
+ let job=h.preview();assert.deepEqual(Array.from(job.rows[0].targets),['en']);
+ assert.equal(job.rows[0].sourceCandidate,undefined);
+ job=h.generate(job);assert.deepEqual(Array.from(JSON.parse(h.lastRequest.input).requested_fields),['en']);
+ job=h.apply(job);assert.equal(job.rows[0].status,'applied');
+ assert.equal(h.value('source'),'[RS: Oper], [RW: Oper]');assert(h.writes.every(w=>w.column==='en'));
+
+ const h2=notesWithPublishedUsages('');h2.put('de','süßen');
+ h2.put('ja','【英】sweet／【伊】dolce\n\n【一般的な意味】\n① 甘い．');
+ h2.mutateDraft=d=>{d.en='Italian: dolce\n\n【General meanings】\n① Sweet.';};
+ let j2=h2.preview();assert.deepEqual(Array.from(j2.rows[0].targets),['en','source']);
+ assert.equal(j2.rows[0].draft.source,'[RS: Oper]');
+ j2=h2.generate(j2);assert.deepEqual(Array.from(JSON.parse(h2.lastRequest.input).requested_fields),['en']);
+ j2=h2.apply(j2);assert.equal(j2.rows[0].status,'applied');
+ assert.equal(h2.value('source'),'[RS: Oper]');assert(h2.value('ja').startsWith('【英】sweet'));
+ assert(h2.writes.every(w=>['en','source'].includes(w.column)));
+
+ const h3=notesWithPublishedUsages('');h3.put('de','UnattestedTerm');
+ h3.put('ja','【一般的な意味】\n① 未収録テスト．');
+ h3.mutateDraft=d=>{d.en='【General meanings】\n① Unattested test.';};
+ let j3=h3.preview();assert.deepEqual(Array.from(j3.rows[0].targets),['en']);
+ assert.equal(j3.rows[0].sourceCandidate,undefined);
+ j3=h3.generate(j3);j3=h3.apply(j3);assert.equal(h3.value('source'),'');
+});
+test('Notes source-only completion uses zero API calls, rejects clearing all targets, and guards existing/formula/invalid source',()=>{
+ const h=notesWithPublishedUsages('');h.put('de','süßen');
+ h.put('ja','【一般的な意味】\n① 甘い．');h.put('en','【General meanings】\n① Sweet.');
+ h.script.delete('OPENAI_API_KEY');
+ let job=h.preview();assert.deepEqual(Array.from(job.rows[0].targets),['source']);
+ assert.equal(h.c.rowCompletionState().apiReady,false);
+ job=h.generate(job);assert.equal(h.fetches,0);assert.equal(job.rows[0].status,'draft');
+ assert.throws(()=>h.c.rowCompletionApply(job.id,2,{source:''}),/空欄のまま/);assert.equal(h.writes.length,0);
+ job=h.apply(job);assert.equal(job.rows[0].status,'applied');assert.equal(h.value('source'),'[RS: Oper]');
+ assert.equal(h.value('ja'),'【一般的な意味】\n① 甘い．');assert.equal(h.value('en'),'【General meanings】\n① Sweet.');
+ assert(h.writes.every(w=>w.column==='source'));
+
+ for(const mode of ['space','formula','protected','merged']){
+  const h2=notesWithPublishedUsages(mode==='space'?' ':'');
+  if(mode==='formula')h2.formula('source','=""');
+  if(mode==='protected')h2.editable=false;
+  if(mode==='merged')h2.merged=true;
+  const p=h2.preview();assert(!p.rows[0].targets.includes('source'),mode);
+ }
+
+ const h3=notesWithPublishedUsages('');h3.put('de','süßen');
+ h3.put('ja','【一般的な意味】\n① 甘い．');h3.put('en','【General meanings】\n① Sweet.');
+ const j3=h3.generate(h3.preview());
+ for(const bad of ['   ',' [RS: Oper]','https://example.invalid','<b>[RS: Oper]</b>','[[score:x]]','[RS: Oper]\n[RW: Oper]']){
+  assert.throws(()=>h3.c.rowCompletionApply(j3.id,2,{source:bad}),/出典/);
+ }
+ assert.equal(h3.writes.length,0);
+ const jLiteral=h3.c.rowCompletionApply(j3.id,2,{source:'=not_a_formula'}).job;
+ assert.equal(jLiteral.rows[0].status,'applied');assert.equal(h3.value('source'),'=not_a_formula');
+ assert.equal(h3.writes[0].value,"'=not_a_formula");
+
+ const h4=notesWithPublishedUsages('');h4.put('de','süßen');
+ h4.put('ja','【一般的な意味】\n① 甘い．');h4.put('en','【General meanings】\n① Sweet.');
+ const j4=h4.generate(h4.preview());
+ h4.relatedSheets.RS=null;
+ assert.throws(()=>h4.apply(j4),/根拠/);assert.equal(h4.writes.length,0);
+});
+test('dialog renders sourceCandidate safely and enables source-only check even when apiReady is false',()=>{
+ class Element {
+  constructor(tag){this.tagName=tag.toUpperCase();this.children=[];this.dataset={};this.events={};this.value='';this.disabled=false;this.textContent='';this.checked=false;}
+  appendChild(child){this.children.push(child);return child;}
+  replaceChildren(){this.children=[];}
+  addEventListener(type,fn){this.events[type]=fn;}
+  setAttribute(name,value){this[name]=value;}
+  click(){assert(!this.disabled,'button should be enabled: '+this.textContent);this.events.click();}
+ }
+ const ids=Object.fromEntries(['refresh','selection','message','summary','rows','finishArea','finish','checked'].map(id=>[id,new Element(id==='checked'?'input':id==='refresh'||id==='selection'||id==='finish'?'button':'div')]));
+ const all=()=>{const found=[];function walk(e){found.push(e);e.children.forEach(walk);}Object.values(ids).forEach(walk);return found;};
+ const job={id:'ui-source',tab:'Notes',closed:false,rows:[{number:2,status:'pending',message:'',targets:['source'],draft:{source:'[RS: Oper]'},
+  sourceCandidate:{value:'[RS: Oper]',proof:[{tab:'RS',number:12,location:'Work / 1 / 1 / 5',german:'Mit <img src=x onerror=bad()>'}]},
+  snapshot:{values:{de:'süßen',ja:'既存',en:'Existing',source:''}}}]};
+ const queue=[];
+ function runner(success,failure){return new Proxy({withSuccessHandler(fn){return runner(fn,failure);},withFailureHandler(fn){return runner(success,fn);}},{get(o,k){if(k in o)return o[k];return(...args)=>queue.push(()=>{
+  if(k==='rowCompletionGenerate')job.rows[0].status='draft';
+  success(JSON.parse(JSON.stringify({job,apiReady:false})));
+ });}});}
+ const document={getElementById:id=>ids[id],createElement:tag=>new Element(tag),querySelectorAll:selector=>all().filter(e=>selector.split(',').map(s=>s.toUpperCase()).includes(e.tagName))};
+ const html=fs.readFileSync(path.join(root,'src/row_completion_dialog.html'),'utf8');
+ const js=html.match(/<script>([\s\S]*?)<\/script>/)[1].replace(/<\?!=[^]*?\?>/g,"'rowCompletionPreview'");
+ vm.runInNewContext(js,{document,google:{script:{run:runner()}}});queue.shift()();
+ const byText=label=>all().find(e=>e.tagName==='BUTTON'&&e.textContent===label);
+ assert(all().some(e=>e.textContent.includes('Mit <img src=x onerror=bad()>')));assert(!all().some(e=>e.tagName==='IMG'));
+ byText('出典候補を確認').click();queue.shift()();
+ assert(all().some(e=>e.tagName==='LABEL'&&e.textContent.includes('source（出典候補・確認／空欄のままにする場合は消去）')));
+ assert.equal(all().find(e=>e.tagName==='TEXTAREA').readOnly,false);
 });
 
 console.log('Selected-row completion: '+passed+' scenarios passed; four tabs, private drafts, blank/formula guards, approved recipients, conflicts, no duplicate API, tokens/links and partial-write recovery. No real API or Sheet writes.');
