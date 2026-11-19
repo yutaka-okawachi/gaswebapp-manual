@@ -1419,7 +1419,7 @@ function renderDictionaryNotationText(text, german, source, language, renderText
 /** Present only standalone work citations following a corpus example; never change stored text. */
 function renderNotesWorkCitations(html, language) {
   let corpus = false, count = 0, fence = false;
-  const gm = /^(?:Symphonie Nr\. (?:[1-9]|10)|Das Lied von der Erde|Das klagende Lied(?: ?(?:（(?:1880|1899)年版）|\((?:1880|1899) version\)))?|Lieder eines fahrenden Gesellen|Des Knaben Wunderhorn|Kindertotenlieder|Fünf Rückert-Lieder|Blumine|Totenfeier)$/;
+  const gm = /^(?:(?:Symphonie Nr\.|Symphony No\.) (?:[1-9]|10)|Das Lied von der Erde|Das klagende Lied(?: ?(?:（(?:1880|1899)年版）|\((?:1880|1899) version\)))?|Lieder eines fahrenden Gesellen|Des Knaben Wunderhorn|Kindertotenlieder|Fünf Rückert-Lieder|Blumine|Totenfeier)$/;
   const catalogue = /^(?:WWV|Op\.|TrV)\s*\d+[A-Za-z]?(?:\s*\/\s*(?:WWV|Op\.|TrV)\s*\d+[A-Za-z]?)?$/;
   function citation(value) {
     const parts = value.split(language === 'en' ? '; ' : ' ／ ');

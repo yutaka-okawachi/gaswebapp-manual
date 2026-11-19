@@ -1,6 +1,8 @@
 'use strict';
 const JAPANESE=/[\u3040-\u30ff\u3400-\u9fff]/;
 const phrases={
+ 'Das klagende Lied（1880年版）':'Das klagende Lied (1880 version)',
+ 'Das klagende Lied（1899年版）':'Das klagende Lied (1899 version)',
  'ドイツ語の音楽用語集':'German Music Terms Dictionary','ドイツ語の音楽用語':'German Music Terms',
  '作品・楽器等から検索':'Search by work and instrument','作品・場面等から検索':'Search by work and scene','作品から検索':'Search by work','用語から検索':'Search by term','あらすじ集':'Synopses','使用楽譜など':'Scores and sources','使用楽譜':'Scores used','音楽之友社':'ONGAKU NO TOMO SHA CORP.','全音楽譜出版社':'Zen-On Music Co., Ltd.',
  '指示対象（登場人物）':'Target (character)','検索方法を選択':'Select a search mode','作品を選択':'Select a work','楽器を選択':'Select instruments','場面から検索':'Search by scene','ページから検索':'Search by page','指示対象から検索':'Search by target','検索方法':'Search mode','指示対象':'Target','ページ番号を半角で入力':'Enter page numbers','ページ番号':'Page number',

@@ -15,3 +15,6 @@ for(const raw of ['Explanation<br>Other line<br>Die schweigsame Frau, Op. 80 / T
 assert(c.renderNotesEnglishLayout('[GM]<br>Langsam<br>Slowly<br>Das Lied von der Erde','en').includes('notes-work-citation'));
 for(const p of ['mahler-search-app/css/common.css']){const css=fs.readFileSync(p,'utf8');assert(/\.notes-work-citation \{[^}]*font-size: 0\.84em;[^}]*font-style: normal;/.test(css));assert(/\.notes-work-citation\[lang="en"\] \{ font-style: italic;/.test(css));}
 console.log('Notes work citation: actual JA/EN forms, GM, links, exclusions and CSS passed');
+
+const many='Symphony No. 1; Symphony No. 3; Symphony No. 4; Symphony No. 5; Symphony No. 6; Symphony No. 7; Symphony No. 8; Das Lied von der Erde; Das klagende Lied（1899年版）';
+assert(c.renderNotesEnglishLayout('[GM]<br>German: A-Saite<br>English: On the A string.<br>'+many,'en').includes('notes-work-citation'));

@@ -29,3 +29,13 @@ const dom=vm.createContext({window:{alert(){}},document:{documentElement:{queryS
 vm.runInContext(locale.browserSource(),dom);events.DOMContentLoaded();let cycles=0;while(tasks.length){assert(++cycles<4,'Observer must settle');tasks.shift()();}
 assert.equal(writes,1);assert.equal(nodes[0].nodeValue,values[0]);assert.equal(nodes[1].nodeValue,'Search');assert.equal(nodes[2].nodeValue,values[2]);assert.equal(dom.window.__ENGLISH_PREVIEW_MISSING__.size,0);
 console.log('English reviewed citations: '+citations.length+' exact bilingual pairs preserved; arbitrary Japanese, misleading glosses, attributes and non-navigation return text rejected in Node/browser; DOM observer settles without repeated writes.');
+
+// Edition labels in newly added Notes work citations are translated, not exempted.
+for(const year of ['1880','1899']){
+ const source='Symphony No. 1; Symphony No. 3; Symphony No. 4; Symphony No. 5; Symphony No. 6; Symphony No. 7; Symphony No. 8; Das Lied von der Erde; Das klagende Lied（'+year+'年版）';
+ const expected=source.replace('（'+year+'年版）',' ('+year+' version)'),missing=new Set();
+ assert.equal(locale.localizeText(source,missing,true),expected);assert.equal(missing.size,0);
+ assert.equal(browser.localizeText(source,undefined,true),expected);
+ assert.equal(locale.localizeHtml('<span>'+source+'</span>',missing),'<span>'+expected+'</span>');assert.equal(missing.size,0);
+ const invalid=new Set();locale.localizeText(source+' 未翻訳の本文。',invalid,true);assert.equal(invalid.size,1);
+}
