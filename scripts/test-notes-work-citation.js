@@ -18,3 +18,21 @@ console.log('Notes work citation: actual JA/EN forms, GM, links, exclusions and 
 
 const many='Symphony No. 1; Symphony No. 3; Symphony No. 4; Symphony No. 5; Symphony No. 6; Symphony No. 7; Symphony No. 8; Das Lied von der Erde; Das klagende Lied（1899年版）';
 assert(c.renderNotesEnglishLayout('[GM]<br>German: A-Saite<br>English: On the A string.<br>'+many,'en').includes('notes-work-citation'));
+
+// Stable representative selection, independent of language and authored ordering.
+const jaWorks='《Symphonie Nr. 8》／《Das Lied von der Erde》／《Fünf Rückert-Lieder》／《Symphonie Nr. 9》';
+const enWorks='Symphony No. 8; Das Lied von der Erde; Fünf Rückert-Lieder; Symphony No. 9';
+function selected(raw,lang){const out=c.renderNotesWorkCitations(raw,lang);return (out.match(/notes-work-citation[^>]*>([^<]+)<\/span>/)||[])[1];}
+const selectedJa=selected('[GM]<br>Schwebend<br>漂うように<br>'+jaWorks,'ja');
+const selectedEn=selected('[GM]<br>German: Schwebend<br>English: Floating<br>'+enWorks,'en');
+assert.equal(selectedJa.replace(/[《》]/g,'').replace('Symphonie Nr.','Symphony No.'),selectedEn);
+assert.equal(selected('[GM]<br>Schwebend<br>漂うように<br>'+jaWorks.split('／').reverse().join(' ／ '),'ja'),selectedJa);
+assert.equal(selected('[GM]<br>A-Saite: 「A線で」．使用する弦の指定．<br>《Symphonie Nr. 3》','ja'),'《Symphonie Nr. 3》');
+assert.equal(selected('[GM]<br>ただの説明<br>《Symphonie Nr. 3》','ja'),undefined);
+assert(c.renderNotesWorkCitations('[RW: Oper]<br>Original<br>Translation<br><a href="https://example.test">Parsifal</a>, WWV 111; Tristan und Isolde, WWV 90','en').includes('Tristan und Isolde'));
+const synthetic=c.generateDicListHtml([['future-test','[GM]\nNeu: 「新しく」\n'+jaWorks,'[GM]']],null,null,null,'ja');assert(synthetic.includes('notes-work-citation'));assert(synthetic.includes('Neu: 「新しく」'));
+console.log('Stable representative, order/language, inline example and explicit-link preservation passed');
+
+const newEn=c.generateDicListHtml([['future-test','[GM]\nGerman: Neu\nEnglish: Newly\n'+enWorks,'[GM]']],null,null,null,'en');assert(newEn.includes('notes-work-citation'));assert(newEn.includes('Newly'));
+const rsJa=selected('[RS: Oper]<br>eifrig<br>熱心に<br>《Der Rosenkavalier》 Op. 59 / TrV 227／《Intermezzo》 Op. 72 / TrV 246','ja');
+const rsEn=selected('[RS: Oper]<br>German: eifrig<br>English: Eagerly.<br>Intermezzo, Op. 72 / TrV 246; Der Rosenkavalier, Op. 59 / TrV 227','en');assert.equal(rsJa.replace(/[《》]/g,'').replace(' Op.',', Op.'),rsEn);assert.equal(rsEn,'Intermezzo, Op. 72 / TrV 246');

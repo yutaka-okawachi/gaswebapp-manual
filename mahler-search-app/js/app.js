@@ -1418,11 +1418,11 @@ function renderDictionaryNotationText(text, german, source, language, renderText
 
 /** Present only standalone work citations following a corpus example; never change stored text. */
 function renderNotesWorkCitations(html, language) {
-  let corpus = false, count = 0, fence = false;
+  let corpus = false, count = 0, fence = false, inlineExample = false;
   const gm = /^(?:(?:Symphonie Nr\.|Symphony No\.) (?:[1-9]|10)|Das Lied von der Erde|Das klagende Lied(?: ?(?:（(?:1880|1899)年版）|\((?:1880|1899) version\)))?|Lieder eines fahrenden Gesellen|Des Knaben Wunderhorn|Kindertotenlieder|Fünf Rückert-Lieder|Blumine|Totenfeier)$/;
   const catalogue = /^(?:WWV|Op\.|TrV)\s*\d+[A-Za-z]?(?:\s*\/\s*(?:WWV|Op\.|TrV)\s*\d+[A-Za-z]?)?$/;
   function citation(value) {
-    const parts = value.split(language === 'en' ? '; ' : ' ／ ');
+    const parts = value.split(language === 'en' ? /;\s*/ : /\s*／\s*(?=《)/);
     return parts.every(function (part) {
       const match = language === 'en' ? part.match(/^([^<>]+?), ((?:WWV|Op\.|TrV).+)$/) : part.match(/^《([^《》]+)》(?: (.+))?$/);
       if (match) return /^[A-ZÄÖÜ]/.test(match[1]) && (match[2] ? catalogue.test(match[2]) : true);
@@ -1431,17 +1431,32 @@ function renderNotesWorkCitations(html, language) {
   }
   return String(html).split('<br>').map(function (line) {
     const plain = line.replace(/<[^>]*>/g, '').trim();
-    if (/^(?:\x60{3}|~~~)/.test(plain)) { fence = !fence; count = 0; return line; }
+    if (/^(?:\x60{3}|~~~)/.test(plain)) { fence = !fence; count = 0; inlineExample = false; return line; }
     if (fence) return line;
-    if (/^\[(?:GM|RW: Oper|RS: Oper)\]$/.test(plain)) { corpus = true; count = 0; return line; }
-    if (/^【[^】]+】$/.test(plain)) { corpus = false; count = 0; return line; }
-    if (!plain) { count = 0; return line; }
-    if (corpus && count >= 2 && citation(plain)) {
+    if (/^\[(?:GM|RW: Oper|RS: Oper)\]$/.test(plain)) { corpus = true; count = 0; inlineExample = false; return line; }
+    if (/^【[^】]+】$/.test(plain)) { corpus = false; count = 0; inlineExample = false; return line; }
+    if (!plain) { count = 0; inlineExample = false; return line; }
+    if (corpus && (count >= 2 || inlineExample) && citation(plain)) {
       count = 0;
       // Only automatic dictionary links are removed; explicit source/reference links survive.
-      const content = line.replace(/<a\b([^>]*class=["'][^"']*\bterm-link\b[^"']*["'][^>]*)>([\s\S]*?)<\/a>/gi, '$2');
+      let content = line.replace(/<a\b([^>]*class=["'][^"']*\bterm-link\b[^"']*["'][^>]*)>([\s\S]*?)<\/a>/gi, '$2');
+      // Only collapse plain/automatic-linked citations; never discard explicit source links.
+      if (!/<a\b/i.test(content)) {
+        const parts = content.split(language === 'en' ? /;\s*/ : /\s*／\s*(?=《)/);
+        const keyed = parts.map(function (text) {
+          const catalog = text.match(/(?:WWV|Op\.|TrV)\s*\d+[A-Za-z]?(?:\s*\/\s*(?:WWV|Op\.|TrV)\s*\d+[A-Za-z]?)?/);
+          const key = catalog ? catalog[0].replace(/\s+/g, '') : text.replace(/[《》]/g, '').replace('Symphony No.', 'Symphonie Nr.').replace(/（(1880|1899)年版）/g, ' ($1 version)').replace(/\s+/g, ' ').trim();
+          return {text: text, key: key};
+        }).sort(function (a, b) { return a.key < b.key ? -1 : a.key > b.key ? 1 : 0; });
+        let hash = 2166136261;
+        const seed = keyed.map(function (item) { return item.key; }).join('|');
+        for (let i = 0; i < seed.length; i++) { hash ^= seed.charCodeAt(i); hash = Math.imul(hash, 16777619) >>> 0; }
+        content = keyed[hash % keyed.length].text;
+      }
+      inlineExample = false;
       return '<span class="notes-work-citation" lang="' + (language === 'en' ? 'en' : 'ja') + '">' + content + '</span>';
     }
+    inlineExample = language !== 'en' && /^[^「」]+[:：]\s*「[^」]+」/.test(plain);
     count++;
     return line;
   }).join('<br>');
