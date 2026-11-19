@@ -1416,8 +1416,40 @@ function renderDictionaryNotationText(text, german, source, language, renderText
   return render(value.slice(0, position)) + image + render(value.slice(position + token.length));
 }
 
+/** Present only standalone work citations following a corpus example; never change stored text. */
+function renderNotesWorkCitations(html, language) {
+  let corpus = false, count = 0, fence = false;
+  const gm = /^(?:(?:Symphonie Nr\.|Symphony No\.) (?:[1-9]|10)|Das Lied von der Erde|Das klagende Lied(?: ?(?:（(?:1880|1899)年版）|\((?:1880|1899) version\)))?|Lieder eines fahrenden Gesellen|Des Knaben Wunderhorn|Kindertotenlieder|Fünf Rückert-Lieder|Blumine|Totenfeier)$/;
+  const catalogue = /^(?:WWV|Op\.|TrV)\s*\d+[A-Za-z]?(?:\s*\/\s*(?:WWV|Op\.|TrV)\s*\d+[A-Za-z]?)?$/;
+  function citation(value) {
+    const parts = value.split(language === 'en' ? '; ' : ' ／ ');
+    return parts.every(function (part) {
+      const match = language === 'en' ? part.match(/^([^<>]+?), ((?:WWV|Op\.|TrV).+)$/) : part.match(/^《([^《》]+)》(?: (.+))?$/);
+      if (match) return /^[A-ZÄÖÜ]/.test(match[1]) && (match[2] ? catalogue.test(match[2]) : true);
+      return language === 'en' && gm.test(part);
+    });
+  }
+  return String(html).split('<br>').map(function (line) {
+    const plain = line.replace(/<[^>]*>/g, '').trim();
+    if (/^(?:\x60{3}|~~~)/.test(plain)) { fence = !fence; count = 0; return line; }
+    if (fence) return line;
+    if (/^\[(?:GM|RW: Oper|RS: Oper)\]$/.test(plain)) { corpus = true; count = 0; return line; }
+    if (/^【[^】]+】$/.test(plain)) { corpus = false; count = 0; return line; }
+    if (!plain) { count = 0; return line; }
+    if (corpus && count >= 2 && citation(plain)) {
+      count = 0;
+      // Only automatic dictionary links are removed; explicit source/reference links survive.
+      const content = line.replace(/<a\b([^>]*class=["'][^"']*\bterm-link\b[^"']*["'][^>]*)>([\s\S]*?)<\/a>/gi, '$2');
+      return '<span class="notes-work-citation" lang="' + (language === 'en' ? 'en' : 'ja') + '">' + content + '</span>';
+    }
+    count++;
+    return line;
+  }).join('<br>');
+}
+
 /** English Notes presentation only: legacy bodies and source data remain unchanged. */
 function renderNotesEnglishLayout(html, language) {
+  html = renderNotesWorkCitations(html, language);
   if (language !== 'en') return html;
   const lines = html.split('<br>');
   const layoutLines = html.replace(/<br>/g, '\u0000').replace(/&quot;[^]*?&quot;|(?<![A-Za-z0-9])&#0?39;[^]*?&#0?39;(?![A-Za-z0-9])|„[^“]*“|“[^”]*”|‘[^’]*’|«[^»]*»|「[^」]*」|『[^』]*』|`[^`]*`/g,

@@ -1328,3 +1328,7 @@ input#termInput,
 .spelling-suggestions button:hover { background-color: #123b70; border-color: #123b70; color: #fff; filter: none; }
 .spelling-suggestions button:active { background-color: #0f315e; border-color: #0f315e; background-image: none; color: #fff; filter: none; }
 .spelling-suggestions button:focus-visible { outline: 3px solid #8a3b00; outline-offset: 3px; }
+
+/* Example-level work provenance, shared by Japanese and English Notes. */
+.translation .notes-work-citation { font-size: 0.84em; font-style: normal; line-height: 1.5; overflow-wrap: anywhere; }
+.translation .notes-work-citation[lang="en"] { font-style: italic; }
