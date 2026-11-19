@@ -41,13 +41,15 @@ function directMaintenanceDraft(term) {
       try { rowCompletionValidateText_(row, field, draft[field]); } catch (error) { warnings.push(String(error.message)); }
     });
   } catch (error) { warnings.push(String(error.message)); }
+  const provenance = notesExamplePrepare_(book, draft);
+  draft.ja = provenance.ja.text; draft.en = provenance.en.text;
   return { term: term, de: plan.de, source: plan.source, ja: draft.ja, en: draft.en,
     warnings: warnings, linkAdvisory: maintenanceNotesLinkAdvisory_(plan, draft.en) };
 }
 function directMaintenanceNotesSave(term, fields) {
   term = directMaintenanceTerm_(term);
   if (!fields || typeof fields !== 'object' || Array.isArray(fields)) throw new Error('日英本文を確認してください．');
-  const ja = directMaintenanceNotesText_(fields.ja), en = directMaintenanceNotesText_(fields.en);
+  let ja = directMaintenanceNotesText_(fields.ja), en = directMaintenanceNotesText_(fields.en);
   const book = rowCompletionBook_(), lock = LockService.getScriptLock();
   if (!lock.tryLock(10000)) throw new Error('別の保存中です．少し待って再度登録してください．');
   try {
@@ -57,13 +59,18 @@ function directMaintenanceNotesSave(term, fields) {
     if (existing) return { status: 'existing', row: existing.number, term: existing.values.de };
     const plan = maintenanceNotesSource_(book, term, 'alias');
     const layout = namedSheetColumns_(sheet, ['de', 'ja', 'en', 'source']);
+    const provenance = notesExamplePrepare_(book, { ja: ja, en: en });
+    ja = directMaintenanceNotesText_(provenance.ja.text); en = directMaintenanceNotesText_(provenance.en.text);
     const values = [plan.de, ja, en, plan.source], number = sheet.getLastRow() + 1;
     if (number > sheet.getMaxRows()) sheet.insertRowsAfter(sheet.getMaxRows(), 1);
     const cells = Array(sheet.getLastColumn()).fill('');
     layout.positions.forEach(function (column, i) { cells[column] = values[i]; });
     const range = sheet.getRange(number, 1, 1, cells.length);
     if ((typeof range.canEdit === 'function' && !range.canEdit()) || (typeof range.isPartOfMerge === 'function' && range.isPartOfMerge())) throw new Error('Notesの追加行へ書き込めません．');
-    range.setValues([cells]);
+    const rich = cells.map(function (value) { return SpreadsheetApp.newRichTextValue().setText(value).build(); });
+    rich[layout.positions[1]] = notesExampleRich_(provenance.ja, 'ja');
+    rich[layout.positions[2]] = notesExampleRich_(provenance.en, 'en');
+    range.setRichTextValues([rich]);
     SpreadsheetApp.flush();
     const saved = directMaintenanceNotesExisting_(sheet, plan.de);
     if (!saved || saved.values.ja !== ja || saved.values.en !== en || saved.values.source !== plan.source) throw new Error('保存結果を確認できません．Notesを確認してください．再実行しても既存行は上書きしません．');

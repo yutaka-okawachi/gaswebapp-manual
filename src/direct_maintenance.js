@@ -88,7 +88,18 @@ function directMaintenanceEdit(term,signature,fields) {
     const layout=namedSheetColumns_(s.notesSheet,['ja','en']);
     const cells=layout.positions.map(c=>s.notesSheet.getRange(entry.row,c+1));
     if(cells.some(c=>c.getFormula()||!c.canEdit()||c.isPartOfMerge()))throw new Error('編集先が数式・保護・結合されています．本文は変更していません．');
-    cells.forEach((cell,i)=>cell.setValue(sheetLiteralValue_(fields[['ja','en'][i]])));
+    const provenance = notesExamplePrepare_(s.book, fields, entry);
+    const output = {};
+    ['ja','en'].forEach(function (field) {
+      output[field] = provenance[field].text;
+      if (output[field].length > 6000) throw new Error('作品名を加えると本文が6000文字を超えます．本文を確認してください．');
+    });
+    const rich = cells.map(function (cell, i) {
+      const field = ['ja','en'][i];
+      return output[field] === entry[field] ? null : notesExampleRich_(provenance[field], field, cell.getRichTextValue());
+    });
+    cells.forEach(function (cell, i) { if (rich[i]) cell.setRichTextValue(rich[i]); });
+    fields = output;
     SpreadsheetApp.flush();
     const saved=directMaintenanceEntry(term);
     if(saved.ja!==fields.ja||saved.en!==fields.en)throw new Error('保存結果を確認できません．画面の編集内容を保ったままNotesを確認してください．');
