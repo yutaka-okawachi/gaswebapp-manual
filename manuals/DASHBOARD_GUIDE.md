@@ -33,7 +33,7 @@ API契約の現在値は、`src/dashboard_analytics.js` の `DASHBOARD_SCHEMA_VE
 
 1. 実行前に `git status --short` で意図しない変更がないことを確認します。
 2. `.\sync-data.ps1 -Mode Data` を実行します。
-3. 末尾で `Dashboard API: OK (7/30/90/180)` と同期完了の表示を確認します。
+3. GitHub Pages の公開確認と同期完了の表示を確認します。辞書・サイトのデータだけを更新した場合、ダッシュボード API 検査は省略されます。
 4. 所有者アカウントでダッシュボードを再読み込みし、「最終更新」と主要な値を確認します。
 
 検索数・閲覧数・実例クリック数・「実例を見る」の表示時間・訪問経路・継続利用はGA4 Data APIの集計です。スプレッドシートの「検索履歴」タブを編集しても、これらの利用状況集計は直接変更されません。「Notes」タブは検索語の訳語補完に利用され、変更内容は `mahler-search-app/data/dic_notes.json` と生成済み `mahler-search-app/dic.html` に反映されます。`dic.html` と `data/` は生成物なので、永続的な修正はスプレッドシートまたはGAS側の生成元へ入れてください。
@@ -62,7 +62,7 @@ node --check src/dashboard_analytics.js
 git diff --check
 ```
 
-GAS公開後は通常同期の結果で、固定WebアプリURLの7・30・90・180日応答を確認します。APIの再検査だけなら次を実行します。`scripts/verify-dashboard.ps1` が `scripts/dashboard-api-check.ps1` の検査関数を呼び出します。トークンは環境変数またはGit対象外の `.env` の `DASHBOARD_API_TOKEN` から読み取ります。
+ダッシュボードの集計コード・GAS の API 経路・認証関連コードなどの差分があるとき、または前回の公開確認と今回のコミットを安全に比較できないときは、通常同期で固定 Web アプリ URL の 7・30・90・180 日応答を検査します。Git 管理外の `.env` や GAS のスクリプトプロパティ、GA4 側の設定だけを変えた場合は、次の単独検査で確認してください。`scripts/verify-dashboard.ps1` が `scripts/dashboard-api-check.ps1` の検査関数を呼び出します。トークンは環境変数または Git 対象外の `.env` の `DASHBOARD_API_TOKEN` から読み取ります。
 
 ```powershell
 $gasWebAppUrl = Read-Host '既存の固定GAS WebアプリURL'

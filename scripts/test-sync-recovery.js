@@ -31,6 +31,7 @@ async function route(apply, fail) {
     let calls = 0;
     const forbidden = () => { throw new Error('unexpected normal-sync action'); };
     const stubs = {
+        './dashboard-policy': require('./sync/dashboard-policy'),
         './core': { ...core, root, run: forbidden, git: forbidden },
         './git': { preflight: () => [], changed: forbidden }, './gas': {}, './gas-head': {}, './artifacts': {},
         './bilingual': { publicationTicket: () => ({}), assertPublicTree() {} }, './publish': {},

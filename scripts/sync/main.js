@@ -10,6 +10,7 @@ const bilingual = require('./bilingual');
 const publication = require('./publish');
 const logger = require('./logger');
 const timing = require('./timing');
+const { dashboardVerificationRequired, receiptNeedsDashboard } = require('./dashboard-policy');
 const { build } = require('../build-site');
 const { check } = require('../check-local');
 const directory = path.join(root, '.sync-state');
@@ -81,6 +82,7 @@ async function verify(state, settings, credential, slug, save, gateTicket, conti
     bilingual.assertPublicTree();
     const receipt = state.pending;
     if (!receipt || !receipt.commit) throw new Error('再開可能な公開記録がありません。通常の sync-data を実行してください。');
+    const needsDashboard = receiptNeedsDashboard(receipt);
     bilingual.assertReleaseManifest(receipt.manifest);
     if (git('rev-parse', 'HEAD') !== receipt.commit) throw new Error('未完了の公開後に HEAD が変更されています。先に元の公開コミットの確認が必要です。');
 
@@ -92,17 +94,19 @@ async function verify(state, settings, credential, slug, save, gateTicket, conti
     timing.measure('push', () => publication.push()); // An interrupted push can safely be retried without a new commit.
     logger.success('GitHub リモートへのプッシュが完了しました。');
 
-    logger.header(7, 7, 'GitHub Pages 公開確認 & ダッシュボード API 検査');
+    logger.header(7, 7, needsDashboard ? "GitHub Pages 公開確認 & ダッシュボード API 検査" : "GitHub Pages 公開確認");
     logger.info('最終コミットの Pages 公開と全公開ファイルを確認します。');
     await timing.measure('pages-verify', () => publication.verifyPages(slug, receipt.commit, credential, receipt.baseUrl, receipt.manifest));
     logger.success('GitHub Pages への全公開ファイル反映を確認しました。');
 
-    if (!receipt.documentsOnly) {
+    if (needsDashboard) {
         logger.info('管理者ダッシュボード API の応答を検査中…');
         process.stdout.write(timing.measure('dashboard-verify', () => run(process.platform === 'win32' ? 'powershell.exe' : 'pwsh',
             ['-NoProfile', '-ExecutionPolicy', 'Bypass', '-File', 'scripts/verify-dashboard.ps1', '-BaseUrl', settings.GAS_DEPLOY_URL],
             { env: { ...process.env, DASHBOARD_API_TOKEN: settings.DASHBOARD_API_TOKEN }, redactError: true })));
         logger.success('ダッシュボード API 正常性確認 (7/30/90/180日)');
+    } else {
+        logger.info("ダッシュボード関連の変更がないため、API 検査は省略します。");
     }
 
     state.lastSuccess = { commit: receipt.commit, releaseId: receipt.manifest.releaseId, gasHash: state.gasHash, verifiedAt: new Date().toISOString() };
@@ -110,7 +114,7 @@ async function verify(state, settings, credential, slug, save, gateTicket, conti
     delete state.ownedData;
     save();
     if (continueData) logger.info('保留していた公開確認が完了しました。続けて最新シートの取得へ進みます。');
-    else logger.finish('同期完了: GitHub Pages の公開内容を確認しました。' + (receipt.documentsOnly ? '' : ' ダッシュボード API も正常です。'));
+    else logger.finish('同期完了: GitHub Pages の公開内容を確認しました。' + (!needsDashboard ? '' : ' ダッシュボード API も正常です。'));
 }
 
 async function main(args = process.argv.slice(2), hooks = {}) {
@@ -293,7 +297,9 @@ async function main(args = process.argv.slice(2), hooks = {}) {
 
         // No automatic rebase after deployment: another writer must never be silently merged.
         if (timing.measure('remote-check', () => repository.checkRemote()) !== remote) throw new Error('同期中にリモートが変更されました。公開を停止しました。');
-        state.pending = { commit: git('rev-parse', 'HEAD'), baseUrl, manifest, documentsOnly: selected.documentsOnly };
+        const receiptCommit = git('rev-parse', 'HEAD');
+        const dashboardRequired = dashboardVerificationRequired(state.lastSuccess, receiptCommit, remote, git);
+        state.pending = { commit: receiptCommit, baseUrl, manifest, documentsOnly: selected.documentsOnly, dashboardRequired };
         save();
         await verify(state, settings, credential, slug, save, gateTicket);
     } catch (error) { outcome = 'failure'; throw error; }

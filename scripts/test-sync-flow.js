@@ -4,9 +4,10 @@ const os = require('os');
 const path = require('path');
 const vm = require('vm');
 const core = require('./sync/core');
+const dashboardPolicy = require('./sync/dashboard-policy');
 const source = fs.readFileSync(path.join(__dirname, 'sync/main.js'), 'utf8');
 
-async function scenario({ failCheck = false, failSnapshot = false, failPublish = false, failHeadAt = 0, sourceChanges = false, mode = 'Auto', args = ['--mode', mode], blockResume = false, currentGas = false, blockEnglishResume = false, failGateAt = 0, resumeMode = 'Verify', failResumePublish = false, freshCheckFail = false, freshSnapshotFail = false, resumeMutation = '', pendingDocumentsOnly = false, confirm = null, fastForward = null, expectAbort = false, removeLockInVerify = false } = {}) {
+async function scenario({ failCheck = false, failSnapshot = false, failPublish = false, failHeadAt = 0, sourceChanges = false, mode = 'Auto', args = ['--mode', mode], blockResume = false, currentGas = false, blockEnglishResume = false, failGateAt = 0, resumeMode = 'Verify', failResumePublish = false, freshCheckFail = false, freshSnapshotFail = false, resumeMutation = '', pendingDocumentsOnly = false, dashboardRequired = true, confirm = null, fastForward = null, expectAbort = false, removeLockInVerify = false } = {}) {
     const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'gmt-sync-test-'));
     fs.mkdirSync(path.join(directory, 'scripts'));
     fs.writeFileSync(path.join(directory, 'scripts/english-publication.json'), JSON.stringify({schemaVersion:1,publishEnglish:false,englishReleaseApproved:false}));
@@ -23,6 +24,7 @@ async function scenario({ failCheck = false, failSnapshot = false, failPublish =
     const fakeRequire = name => {
         const stubs = {
             './core': { ...core, root: directory, run: () => { events.push('api'); return ''; }, git: (...args) => args[0] === 'rev-parse' ? head : '' },
+            './dashboard-policy': { ...dashboardPolicy, dashboardVerificationRequired: () => { events.push('dashboard-policy'); return dashboardRequired; } },
             './timing': { start() {}, end() {}, measure: (name, action) => action() },
             './logger': {
                 c: {}, header: () => {}, success: () => {}, info: () => {},
@@ -115,7 +117,7 @@ async function scenario({ failCheck = false, failSnapshot = false, failPublish =
             if (failResumePublish) publishFailure = true;
             if (pendingDocumentsOnly) {
                 const f = path.join(directory, '.sync-state/state.json'), receipt = core.readJson(f);
-                receipt.pending.documentsOnly = true; core.atomicJson(f, receipt);
+                receipt.pending.documentsOnly = true; delete receipt.pending.dashboardRequired; core.atomicJson(f, receipt);
             }
             if (blockEnglishResume) {
                 const file=path.join(directory,'.sync-state/state.json'), receipt=core.readJson(file);receipt.pending.manifest.hashes['en/index.html']='a'.repeat(64);core.atomicJson(file,receipt);
@@ -152,7 +154,7 @@ async function scenario({ failCheck = false, failSnapshot = false, failPublish =
                         assert(resume.indexOf('snapshot') < resume.lastIndexOf('commit'));
                         assert(resume.lastIndexOf('commit') < resume.lastIndexOf('push'));
                         assert.equal(resume.filter(e => e === 'push').length, 2);
-                        assert.equal(resume.filter(e => e === 'api').length, pendingDocumentsOnly ? 1 : 2);
+                        assert.equal(resume.filter(e => e === 'api').length, dashboardRequired ? (pendingDocumentsOnly ? 1 : 2) : 0);
                     }
                     assert(!core.readJson(path.join(directory, '.sync-state/state.json')).pending);
                 } else {
@@ -178,6 +180,7 @@ async function scenario({ failCheck = false, failSnapshot = false, failPublish =
             }
             assert.ok(events.lastIndexOf('commit') < events.indexOf('push'));
             assert.ok(events.indexOf('push') < events.indexOf('verify'));
+            assert.equal(events.filter(e => e === 'api').length, dashboardRequired ? 1 : 0);
         }
         const state = core.readJson(path.join(directory, '.sync-state/state.json'), {});
         assert.ok(!JSON.stringify(state).includes('secret'));
@@ -189,7 +192,26 @@ async function scenario({ failCheck = false, failSnapshot = false, failPublish =
     }
 }
 (async () => {
+    const baseline = '1'.repeat(40), candidate = '2'.repeat(40), remote = '3'.repeat(40);
+    const verified = { commit: baseline, releaseId: 'release', verifiedAt: '2026-11-20T00:00:00.000Z' };
+    const calls = [];
+    const mockGit = paths => (...args) => { calls.push(args); return args[0] === 'diff' ? paths : ''; };
+    assert.equal(dashboardPolicy.dashboardVerificationRequired(verified, candidate, remote, mockGit('src/sync_build.js\0en/mahler-search-app/data/dic_notes.json\0')), false);
+    assert.deepEqual(calls, [['merge-base','--is-ancestor',baseline,remote],['merge-base','--is-ancestor',baseline,candidate],['diff','--name-only','--no-renames','-z',baseline,candidate,'--']]);
+    assert.equal(dashboardPolicy.dashboardVerificationRequired(verified, candidate, remote, mockGit('src/web_trigger.js\0')), true, 'Deletions must be classified by old path');
+    assert.equal(dashboardPolicy.dashboardVerificationRequired(null, candidate, remote, mockGit('')), true);
+    assert.equal(dashboardPolicy.dashboardVerificationRequired(verified, candidate, remote, () => { throw new Error('cannot prove ancestry'); }), true);
+    assert.equal(dashboardPolicy.dashboardVerificationRequired(verified, candidate, remote, mockGit('bad-output')), true);
+    assert.equal(dashboardPolicy.receiptNeedsDashboard({ documentsOnly: true, dashboardRequired: true }), true);
+    assert.equal(dashboardPolicy.receiptNeedsDashboard({ documentsOnly: false, dashboardRequired: false }), false);
+    assert.equal(dashboardPolicy.receiptNeedsDashboard({ documentsOnly: true }), false);
+    assert.equal(dashboardPolicy.receiptNeedsDashboard({ documentsOnly: false }), true);
     await scenario();
+    await scenario({ dashboardRequired: false });
+    const skipped = await scenario({ failPublish: true, currentGas: true, resumeMode: 'Verify', dashboardRequired: false });
+    assert.equal(skipped.events.filter(e => e === 'dashboard-policy').length, 1, 'Resume uses persisted decision');
+    assert.equal(skipped.events.filter(e => e === 'verify').length, 2, 'Pages check still runs');
+    assert.ok(!skipped.events.includes('api'));
     await scenario({ failCheck: true });
     await scenario({ failSnapshot: true });
     await scenario({ failPublish: true });
