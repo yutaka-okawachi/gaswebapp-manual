@@ -14,6 +14,14 @@ const { dashboardVerificationRequired, receiptNeedsDashboard } = require('./dash
 const { build } = require('../build-site');
 const { check } = require('../check-local');
 const directory = path.join(root, '.sync-state');
+const dashboardSeconds = '(?:na|[0-9]{1,8}\\.[0-9]{1,9})';
+const dashboardTelemetryLine = new RegExp(
+    '^DASHBOARD_CHECK (?:preflight=missing_token|period=(?:7|30|90|180)' +
+    ' result=(?:ok|timeout|curl_error|unauthorized|http_error|invalid_response|check_error)' +
+    ' phase=(?:redirect_chain|before_http|http_response|after_response_headers|unknown)' +
+    ' curl=(?:na|[0-9]{1,3}) http=(?:na|[0-9]{3}) redirects=(?:na|[0-9]{1,3})' +
+    ['dns', 'connect', 'tls', 'ttfb', 'redirect', 'total'].map(key => ` ${key}_s=${dashboardSeconds}`).join('') + ')$'
+);
 
 function options(args) {
     const result = { mode: 'Auto', message: '自動同期アップデート', allowRemoval: false, yes: false };
@@ -103,7 +111,12 @@ async function verify(state, settings, credential, slug, save, gateTicket, conti
         logger.info('管理者ダッシュボード API の応答を検査中…');
         process.stdout.write(timing.measure('dashboard-verify', () => run(process.platform === 'win32' ? 'powershell.exe' : 'pwsh',
             ['-NoProfile', '-ExecutionPolicy', 'Bypass', '-File', 'scripts/verify-dashboard.ps1', '-BaseUrl', settings.GAS_DEPLOY_URL],
-            { env: { ...process.env, DASHBOARD_API_TOKEN: settings.DASHBOARD_API_TOKEN }, redactError: true })));
+            {
+                env: { ...process.env, DASHBOARD_API_TOKEN: settings.DASHBOARD_API_TOKEN },
+                redactError: true,
+                redactedFailure: 'dashboard verification incomplete',
+                safeStdoutPattern: dashboardTelemetryLine
+            })));
         logger.success('ダッシュボード API 正常性確認 (7/30/90/180日)');
     } else {
         logger.info("ダッシュボード関連の変更がないため、API 検査は省略します。");

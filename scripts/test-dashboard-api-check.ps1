@@ -13,6 +13,7 @@ function Assert-True {
     }
 }
 
+$script:testDashboardPayloads = @{}
 foreach ($period in @(7, 30, 90, 180)) {
     $daily = @()
     $dailyCount = if ($period -eq 180) { 26 } else { $period }
@@ -193,6 +194,7 @@ foreach ($period in @(7, 30, 90, 180)) {
         )
     } | ConvertTo-Json -Depth 8
 
+    $script:testDashboardPayloads[$period] = $payload
     $result = Test-DashboardApiPayload -Payload $payload -ExpectedPeriod $period
     Assert-True -Condition $result.Success -Message "valid $period-day payload: $($result.Message)"
     $withLanguages = $payload | ConvertFrom-Json
@@ -232,25 +234,35 @@ Assert-True `
     -Message "HTTP status and content type must be captured"
 
 $syncSource = Get-Content (Join-Path $PSScriptRoot "verify-dashboard.ps1") -Raw
-Assert-True `
-    -Condition ($syncSource -match '@\(0, 10, 20, 40, 60\)') `
-    -Message "dashboard API retries must allow propagation time"
-Assert-True `
-    -Condition ($syncSource -match '\$pending = @\(7, 30, 90, 180\)') `
-    -Message "all periods must share one retry schedule"
+Assert-True -Condition ($syncSource -match 'Invoke-DashboardApiVerification') -Message 'standalone verifier uses the four-period policy'
 
 # Exercise the transport with synthetic data; never contact the live deployment.
 $script:dashboardCurlCalls = 0
 $script:dashboardSentBody = $null
 $script:dashboardSentArgs = $null
+$script:dashboardPlan = $null
+$script:dashboardResponseBody = $payload
+$script:dashboardCurlExit = 0
+$script:dashboardMetadata = @('200|application/json', 'DASHBOARD_CURL_METRICS|1|0.010000|0.020000|0.030000|0.050000|0.040000|0.060000')
 function curl.exe {
     $script:dashboardCurlCalls++
     $script:dashboardSentArgs = @($args)
     $script:dashboardSentBody = ($input | Out-String) | ConvertFrom-Json
+    if ($null -ne $script:dashboardPlan) {
+        $attempt = $script:dashboardPlan.Dequeue()
+        $period = [int]$script:dashboardSentBody.period
+        Assert-True -Condition ($period -eq $attempt.Period) -Message 'unexpected verifier attempt order'
+        $script:dashboardElapsed += $attempt.Seconds
+        $script:dashboardResponseBody = $script:testDashboardPayloads[$period]
+        $script:dashboardCurlExit = $attempt.Curl
+        $script:dashboardMetadata = $attempt.Metadata
+    }
     $outputIndex = [array]::IndexOf($args, '-o')
-    [System.IO.File]::WriteAllText($args[$outputIndex + 1], $payload, (New-Object System.Text.UTF8Encoding($false)))
-    $global:LASTEXITCODE = 0
-    '200|application/json'
+    [System.IO.File]::WriteAllText($args[$outputIndex + 1], $script:dashboardResponseBody, (New-Object System.Text.UTF8Encoding($false)))
+    $errorIndex = [array]::IndexOf($args, '--stderr')
+    [System.IO.File]::WriteAllText($args[$errorIndex + 1], 'raw-stderr should never be emitted')
+    $global:LASTEXITCODE = $script:dashboardCurlExit
+    $script:dashboardMetadata
 }
 try {
     $testToken = 'synthetic-read-only-dashboard-token'
@@ -263,6 +275,68 @@ try {
     $missing = Invoke-DashboardApiCheck -BaseUrl 'https://script.google.com/macros/s/synthetic/exec' -Period 7 -DashboardToken ''
     $wrongHost = Invoke-DashboardApiCheck -BaseUrl 'https://example.invalid/exec' -Period 7 -DashboardToken $testToken
     Assert-True -Condition (-not $missing.Success -and -not $wrongHost.Success -and $script:dashboardCurlCalls -eq 1) -Message 'missing credentials or wrong host never send a request'
+    Assert-True -Condition ($transport.Telemetry -eq 'DASHBOARD_CHECK period=180 result=ok phase=redirect_chain curl=0 http=200 redirects=1 dns_s=0.010000 connect_s=0.020000 tls_s=0.030000 ttfb_s=0.050000 redirect_s=0.040000 total_s=0.060000') -Message 'success metadata is complete and numeric'
+    $timeoutIndex = [array]::IndexOf($script:dashboardSentArgs, '--max-time')
+    $connectIndex = [array]::IndexOf($script:dashboardSentArgs, '--connect-timeout')
+    Assert-True -Condition ($script:dashboardSentArgs -contains '-L' -and $script:dashboardSentArgs[$timeoutIndex + 1] -eq '225' -and $script:dashboardSentArgs[$connectIndex + 1] -eq '20') -Message 'allow a long response without extending connection setup'
+
+    $script:dashboardCurlExit = 28
+    $script:dashboardMetadata = @('000|', 'DASHBOARD_CURL_METRICS|0|0.010000|0.020000|0.030000|0.000000|0.000000|90.001000')
+    $beforeHttp = Invoke-DashboardApiCheck -BaseUrl 'https://script.google.com/macros/s/synthetic/exec' -Period 180 -DashboardToken $testToken
+    Assert-True -Condition (-not $beforeHttp.Success -and -not $beforeHttp.CanRetry -and $beforeHttp.Telemetry -match 'result=timeout phase=before_http curl=28 http=000 redirects=0') -Message 'timeout with no observed response retains curl code and stage'
+    $script:dashboardMetadata = @('302|text/html', 'DASHBOARD_CURL_METRICS|1|0.010000|0.020000|0.030000|12.100000|12.110000|90.001000')
+    $afterRedirect = Invoke-DashboardApiCheck -BaseUrl 'https://script.google.com/macros/s/synthetic/exec' -Period 180 -DashboardToken $testToken
+    Assert-True -Condition (-not $afterRedirect.Success -and -not $afterRedirect.CanRetry -and $afterRedirect.Telemetry -match 'result=timeout phase=redirect_chain curl=28 http=302 redirects=1 .*redirect_s=12\.110000') -Message 'a redirect-chain timeout cannot be mistaken for no observed HTTP response'
+
+    # Even a valid JSON prefix must fail when curl has not finished the 2xx body.
+    $script:dashboardMetadata = @('200|application/json', 'DASHBOARD_CURL_METRICS|1|0.010000|0.020000|0.030000|12.100000|11.000000|225.000000')
+    $partialBody = Invoke-DashboardApiCheck -BaseUrl 'https://script.google.com/macros/s/synthetic/exec' -Period 180 -DashboardToken $testToken
+    Assert-True -Condition (-not $partialBody.Success -and -not $partialBody.CanRetry -and $partialBody.Telemetry -match 'result=timeout phase=after_response_headers curl=28 http=200 redirects=1') -Message 'HTTP 200 with incomplete body never passes or repeats POST'
+
+    $script:dashboardCurlExit = 0
+    $script:dashboardResponseBody = '{"error":{"code":"UNAUTHORIZED"}}'
+    $script:dashboardMetadata = @('200|application/json', 'DASHBOARD_CURL_METRICS|1|0.010000|0.020000|0.030000|0.050000|0.040000|0.060000')
+    $denied = Invoke-DashboardApiCheck -BaseUrl 'https://script.google.com/macros/s/synthetic/exec' -Period 180 -DashboardToken $testToken
+    Assert-True -Condition (-not $denied.Success -and -not $denied.CanRetry -and $denied.Telemetry -match 'result=unauthorized phase=redirect_chain curl=0 http=200') -Message 'authentication denial is recognized from the normal JSON validator'
+
+    $script:dashboardResponseBody = '{"error":{"code":"https://example.invalid/private"}}'
+    $script:dashboardMetadata = @("200|application/json; $testToken", "DASHBOARD_CURL_METRICS|1|$testToken|0.020000|0.030000|0.050000|0.040000|0.060000")
+    $invalid = Invoke-DashboardApiCheck -BaseUrl 'https://script.google.com/macros/s/synthetic/exec' -Period 180 -DashboardToken $testToken
+    Assert-True -Condition (-not $invalid.Success -and -not $invalid.CanRetry -and $invalid.Telemetry -match 'result=invalid_response phase=http_response curl=0 http=200 redirects=na dns_s=na') -Message 'untrusted metadata is rejected'
+    Assert-True -Condition ($invalid.Telemetry -notmatch 'https:|private|raw-stderr|application/json' -and -not $invalid.Telemetry.Contains($testToken)) -Message 'raw response, header, stderr, and token never enter telemetry'
+
+    $successMeta = @('200|application/json', 'DASHBOARD_CURL_METRICS|1|0.010000|0.020000|0.030000|0.050000|0.040000|0.060000')
+    $slowMeta = @('200|application/json', 'DASHBOARD_CURL_METRICS|1|0.010000|0.020000|0.030000|185.000000|184.000000|185.000000')
+    $preconnectMeta = @('000|', 'DASHBOARD_CURL_METRICS|0|0.010000|0.000000|0.000000|0.000000|0.000000|20.000000')
+    $preRedirect503 = @('503|text/html', 'DASHBOARD_CURL_METRICS|0|0.010000|0.020000|0.030000|219.000000|0.000000|220.000000')
+    foreach ($roomForRetry in @($true, $false)) {
+        $script:dashboardElapsed = 0
+        $script:dashboardWaits = @()
+        $script:dashboardPlan = New-Object System.Collections.Queue
+        if ($roomForRetry) {
+            $script:dashboardPlan.Enqueue(@{ Period=7; Seconds=20; Curl=7; Metadata=$preconnectMeta })
+        } else {
+            $script:dashboardPlan.Enqueue(@{ Period=7; Seconds=220; Curl=0; Metadata=$preRedirect503 })
+        }
+        $regularSeconds = if ($roomForRetry) { 13 } else { 210 }
+        $script:dashboardPlan.Enqueue(@{ Period=30; Seconds=$regularSeconds; Curl=0; Metadata=$successMeta })
+        $script:dashboardPlan.Enqueue(@{ Period=90; Seconds=$regularSeconds; Curl=0; Metadata=$successMeta })
+        $script:dashboardPlan.Enqueue(@{ Period=180; Seconds=185; Curl=0; Metadata=$slowMeta })
+        if ($roomForRetry) {
+            $script:dashboardPlan.Enqueue(@{ Period=7; Seconds=13; Curl=0; Metadata=$successMeta })
+        }
+
+        $results = @(Invoke-DashboardApiVerification -BaseUrl 'https://script.google.com/macros/s/synthetic/exec' -DashboardToken $testToken `
+            -ElapsedSeconds { $script:dashboardElapsed } -DelaySeconds { param($seconds) $script:dashboardElapsed += $seconds; $script:dashboardWaits += $seconds })
+        $expected = if ($roomForRetry) { '7,30,90,180,7' } else { '7,30,90,180' }
+        Assert-True -Condition (($results.Period -join ',') -eq $expected -and $script:dashboardPlan.Count -eq 0) -Message 'all four first attempts come before any retry with budget'
+        Assert-True -Condition (-not $results[0].Success -and $results[0].CanRetry -and $results[3].Success -and $results[3].Telemetry -match 'total_s=185\.000000$') -Message 'a genuinely slow fourth response still validates fully'
+        if ($roomForRetry) {
+            Assert-True -Condition ($results[4].Success -and ($script:dashboardWaits -join ',') -eq '5') -Message 'one retry gets the full window after five seconds'
+        } else {
+            Assert-True -Condition ($script:dashboardWaits.Count -eq 0) -Message 'no retry delay when the full attempt cannot fit'
+        }
+    }
 } finally { Remove-Item Function:curl.exe }
 
 Write-Output "sync dashboard API checks: OK"

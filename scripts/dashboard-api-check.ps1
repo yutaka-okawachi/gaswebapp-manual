@@ -1,4 +1,7 @@
-﻿function New-DashboardApiCheckResult {
+﻿$script:DashboardApiAttemptSeconds = 225
+$script:DashboardApiPeriods = @(7, 30, 90, 180)
+
+function New-DashboardApiCheckResult {
     param(
         [bool]$Success,
         [int]$Period,
@@ -506,6 +509,79 @@ function Invoke-DashboardApiCheck {
         [string]$DashboardToken = $env:DASHBOARD_API_TOKEN
     )
 
+    $metrics = @{ Curl = 'na'; Http = 'na'; Redirects = 'na'; Dns = 'na'; Connect = 'na'; Tls = 'na'; Ttfb = 'na'; RedirectTime = 'na'; Total = 'na' }
+    $result = Invoke-DashboardApiCheckTransport -BaseUrl $BaseUrl -Period $Period -Language $Language -DashboardToken $DashboardToken -Metrics $metrics
+
+    # This line is the only per-period output forwarded by the sync runner.
+    # No response text, native stderr, URL, or credentials are used.
+    $phase = if ($metrics.Curl -notin @('na', '0') -and $metrics.Http -match '^2[0-9]{2}$') {
+        'after_response_headers'
+    } elseif (($metrics.Redirects -ne 'na' -and [int]$metrics.Redirects -gt 0) -or $metrics.Http -match '^3[0-9]{2}$') {
+        'redirect_chain'
+    } elseif ($metrics.Http -eq '000') {
+        'before_http'
+    } elseif ($metrics.Http -ne 'na') {
+        'http_response'
+    } else {
+        'unknown'
+    }
+    $outcome = if ($result.Success) {
+        'ok'
+    } elseif ($metrics.Curl -eq '28') {
+        'timeout'
+    } elseif ($metrics.Curl -notin @('na', '0')) {
+        'curl_error'
+    } elseif ($result.Message -eq 'API error: UNAUTHORIZED') {
+        'unauthorized'
+    } elseif ($metrics.Http -ne 'na' -and $metrics.Http -notmatch '^2[0-9]{2}$') {
+        'http_error'
+    } elseif ($metrics.Http -match '^2[0-9]{2}$') {
+        'invalid_response'
+    } else {
+        'check_error'
+    }
+    $line = "DASHBOARD_CHECK period=$Period result=$outcome phase=$phase curl=$($metrics.Curl) http=$($metrics.Http) redirects=$($metrics.Redirects) dns_s=$($metrics.Dns) connect_s=$($metrics.Connect) tls_s=$($metrics.Tls) ttfb_s=$($metrics.Ttfb) redirect_s=$($metrics.RedirectTime) total_s=$($metrics.Total)"
+    # A timeout after connecting may have left doPost running. Do not replay it,
+    # and do not replay a POST after a redirect or an incomplete 2xx response.
+    $canRetry = (-not $result.Success) -and $metrics.Redirects -eq '0' -and (
+        ($metrics.Curl -in @('6', '7', '28') -and $metrics.Http -eq '000' -and
+            $metrics.Connect -match '^0+\.0+$' -and $metrics.Tls -match '^0+\.0+$' -and $metrics.Ttfb -match '^0+\.0+$') -or
+        ($metrics.Curl -eq '0' -and $metrics.Http -in @('429', '502', '503', '504'))
+    )
+    return ($result | Add-Member -NotePropertyMembers @{ Telemetry = $line; CanRetry = $canRetry } -PassThru)
+}
+
+function Invoke-DashboardApiVerification {
+    param(
+        [string]$BaseUrl,
+        [string]$DashboardToken,
+        [scriptblock]$ElapsedSeconds,
+        [scriptblock]$DelaySeconds
+    )
+    $clock = [System.Diagnostics.Stopwatch]::StartNew()
+    if (-not $ElapsedSeconds) { $ElapsedSeconds = { $clock.Elapsed.TotalSeconds } }
+    if (-not $DelaySeconds) { $DelaySeconds = { param($seconds) Start-Sleep -Seconds $seconds } }
+    $budgetSeconds = 930
+    $retryDelaySeconds = 5
+
+    $retryPeriods = @()
+    foreach ($period in $script:DashboardApiPeriods) {
+        $result = Invoke-DashboardApiCheck -BaseUrl $BaseUrl -Period $period -DashboardToken $DashboardToken
+        Write-Output $result
+        if ($result.CanRetry) { $retryPeriods += $period }
+    }
+    foreach ($period in $retryPeriods) {
+        # Always reserve the same full request window, and check again after sleep.
+        if ((& $ElapsedSeconds) + $retryDelaySeconds + $script:DashboardApiAttemptSeconds -gt $budgetSeconds) { break }
+        & $DelaySeconds $retryDelaySeconds
+        if ((& $ElapsedSeconds) + $script:DashboardApiAttemptSeconds -gt $budgetSeconds) { break }
+        Invoke-DashboardApiCheck -BaseUrl $BaseUrl -Period $period -DashboardToken $DashboardToken
+    }
+}
+
+function Invoke-DashboardApiCheckTransport {
+    param([string]$BaseUrl, [int]$Period, [string]$Language, [string]$DashboardToken, [hashtable]$Metrics)
+
     if (-not $BaseUrl) {
         return New-DashboardApiCheckResult -Success $false -Period $Period -Message "GAS_DEPLOY_URL is missing"
     }
@@ -531,15 +607,31 @@ function Invoke-DashboardApiCheck {
         $metadataLines = $requestBody | & curl.exe `
             -sS `
             -L `
-            --max-time 90 `
+            --connect-timeout 20 `
+            --max-time $script:DashboardApiAttemptSeconds `
             -H "Content-Type: application/json" `
             --data-binary "@-" `
             -o "$bodyPath" `
-            -w "%{http_code}|%{content_type}" `
-            "$url" 2> "$errorPath"
+            -w '%{http_code}|%{content_type}\nDASHBOARD_CURL_METRICS|%{num_redirects}|%{time_namelookup}|%{time_connect}|%{time_appconnect}|%{time_starttransfer}|%{time_redirect}|%{time_total}\n' `
+            --stderr "$errorPath" `
+            "$url"
         $curlExitCode = $LASTEXITCODE
-        if ($curlExitCode -ne 0) {
-            return New-DashboardApiCheckResult -Success $false -Period $Period -Message "HTTP request failed"
+        if ($null -ne $curlExitCode -and [string]$curlExitCode -match '^[0-9]{1,3}$') {
+            $Metrics.Curl = [string]$curlExitCode
+        }
+
+        $timingLine = @($metadataLines) |
+            Where-Object { $_ -cmatch '^DASHBOARD_CURL_METRICS\|' } |
+            Select-Object -Last 1
+        if ($timingLine) {
+            $seconds = '([0-9]{1,8}\.[0-9]{1,9})'
+            $timings = [regex]::Match([string]$timingLine, '^DASHBOARD_CURL_METRICS\|([0-9]{1,3})\|' + ((@($seconds) * 6) -join '\|') + '$')
+            if ($timings.Success) {
+                $keys = @('Redirects', 'Dns', 'Connect', 'Tls', 'Ttfb', 'RedirectTime', 'Total')
+                for ($i = 0; $i -lt $keys.Count; $i++) {
+                    $Metrics[$keys[$i]] = $timings.Groups[$i + 1].Value
+                }
+            }
         }
 
         $metadata = @($metadataLines) |
@@ -549,6 +641,12 @@ function Invoke-DashboardApiCheck {
             [regex]::Match([string]$metadata, "^(\d{3})\|(.*)$")
         } else {
             $null
+        }
+        if ($metadataMatch -and $metadataMatch.Success) {
+            $Metrics.Http = $metadataMatch.Groups[1].Value
+        }
+        if ($curlExitCode -ne 0) {
+            return New-DashboardApiCheckResult -Success $false -Period $Period -Message "HTTP request failed"
         }
         if (-not $metadataMatch -or -not $metadataMatch.Success) {
             return New-DashboardApiCheckResult -Success $false -Period $Period -Message "HTTP metadata is missing"

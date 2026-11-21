@@ -11,14 +11,21 @@ function gasSourceFingerprint(directory = root) {
     return sha256(files.map(name => name + '\n' + normalizeText(fs.readFileSync(path.join(directory, 'src', name), 'utf8'))).join('\n'));
 }
 function run(command, args = [], options = {}) {
-    const { redactError = false, ...spawnOptions } = options;
+    const { redactError = false, safeStdoutPattern, redactedFailure = 'authentication unavailable', ...spawnOptions } = options;
     const result = spawnSync(command, args, {
         cwd: root, encoding: 'utf8', windowsHide: true, maxBuffer: 64 * 1024 * 1024,
         ...spawnOptions
     });
     if (result.error) throw result.error;
-    if (result.status !== 0) throw new Error(`${command} failed (${result.status}): ${redactError ? 'authentication unavailable' : result.stderr || result.stdout || ''}`);
-    return result.stdout || '';
+    const rawStdout = result.stdout || '';
+    const safeStdout = safeStdoutPattern ? rawStdout.split(/\r?\n/).filter(line => safeStdoutPattern.test(line)).join('\n') : '';
+    if (result.status !== 0) {
+        const details = redactError
+            ? redactedFailure + (safeStdout ? '\n' + safeStdout : '')
+            : result.stderr || rawStdout;
+        throw new Error(`${command} failed (${result.status}): ${details}`);
+    }
+    return safeStdoutPattern ? safeStdout + (safeStdout ? '\n' : '') : rawStdout;
 }
 function git(...args) { return run('git', args).trim(); }
 function writeIfChanged(relative, content) {

@@ -12,20 +12,18 @@ if (-not $dashboardToken) {
         }
     }
 }
-if (-not $dashboardToken -or $dashboardToken.Length -lt 32) { throw 'DASHBOARD_API_TOKEN を非公開の .env に設定してください。' }
-$pending = @(7, 30, 90, 180)
-foreach ($seconds in @(0, 10, 20, 40, 60)) {
-    if ($seconds) { Start-Sleep -Seconds $seconds }
-    $next = @()
-    foreach ($period in $pending) {
-        $result = Invoke-DashboardApiCheck -BaseUrl $BaseUrl -Period $period -DashboardToken $dashboardToken
-        if (-not $result.Success) {
-            Write-Host "[注意] ダッシュボードAPIの$($period)日分の応答を確認できませんでした。詳細（原文）: $($result.Message)"
-            $next += $period
-        }
-    }
-    $pending = $next
-    if ($pending.Count -eq 0) { Write-Host '[完了] ダッシュボードAPIの7・30・90・180日分の応答を確認しました。'; exit 0 }
+if (-not $dashboardToken -or $dashboardToken.Length -lt 32) {
+    Write-Output 'DASHBOARD_CHECK preflight=missing_token'
+    throw 'DASHBOARD_API_TOKEN を非公開の .env に設定してください。'
+}
+$checked = @{}
+Invoke-DashboardApiVerification -BaseUrl $BaseUrl -DashboardToken $dashboardToken | ForEach-Object {
+    Write-Output $_.Telemetry
+    $checked[$_.Period] = $_.Success
+}
+if ($checked.Count -eq $script:DashboardApiPeriods.Count -and $checked.Values -notcontains $false) {
+    Write-Host '[完了] ダッシュボードAPIの7・30・90・180日分の応答を確認しました。'
+    exit 0
 }
 Write-Error 'ダッシュボード API の確認が未完了です。再実行すると確認から再開します。'
 exit 1
