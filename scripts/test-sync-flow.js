@@ -210,7 +210,7 @@ async function scenario({ failCheck = false, failSnapshot = false, failPublish =
     assert.equal(dashboardPolicy.dashboardVerificationRequired(verified, candidate, remote, mockGit('src/web_trigger.js\0')), true, 'Deletions must be classified by old path');
     for (const filename of ['scripts/sync/main.js', 'scripts/sync/dashboard-policy.js', 'scripts/sync/core.js',
         'scripts/sync/gas-head.js', 'src/new_api_handler.js', 'sync-data.ps1']) {
-        assert.equal(dashboardPolicy.dashboardVerificationRequired(verified, candidate, remote, mockGit(filename + '\\0')),
+        assert.equal(dashboardPolicy.dashboardVerificationRequired(verified, candidate, remote, mockGit(filename + '\0')),
             true, filename + ' must trigger API verification');
     }
     assert.equal(dashboardPolicy.isDashboardDependency('src/sync_build.js'), false);
