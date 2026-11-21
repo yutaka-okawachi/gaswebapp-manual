@@ -46,7 +46,7 @@
   {"__exampleOrder":740,"de":"Ein wenig (unmerklich) mäßiger werden","de_normalized":"ein wenig (unmerklich) maessiger werden","ja":"わずかに（さりげなく）穏やかになっていく","data":"M-b2-t1-90-all&"},
   {"__exampleOrder":757,"de":"einzige Stelle","de_normalized":"einzige stelle","ja":"ハープが登場する（第3楽章での）唯一の箇所","data":"M-102-3-168-hp&"},
   {"__exampleOrder":779,"de":"Es tief nach F, A nach C","de_normalized":"es tief nach f, a nach c","ja":"下の Es を F に，A を C に","data":"M-3-1-721-pau&"},
-  {"__exampleOrder":790,"de":"Etwas bewegter (Alla breve) Geheimnisvoll","de_normalized":"etwas bewegter (alla breve) geheimnisvoll","ja":"いくらかより動きをもって（2/2拍子で），神秘的に","data":"M-b1-t2-232-all&"},
+  {"__exampleOrder":790,"de":"Etwas bewegter (Alla breve) Geheimnisvoll","de_normalized":"etwas bewegter (alla breve) geheimnisvoll","ja":"いくらかより動きをもって（2つ振りで），神秘的に","data":"M-b1-t2-232-all&"},
   {"__exampleOrder":810,"de":"Etwas frischer","de_normalized":"etwas frischer","ja":"いくらかはつらつと","data":"M-1-2-229-all&M-9-1-80-all&M-102-1-112-all&"},
   {"__exampleOrder":820,"de":"etwas hastig","de_normalized":"etwas hastig","ja":"いくらか慌ただしく","data":"M-8-t1-170-all&"},
   {"__exampleOrder":827,"de":"Etwas langsamer, als zu Anfang","de_normalized":"etwas langsamer, als zu anfang","ja":"最初よりもいくらかゆっくりと","data":"M-5-2-520-all&"},
