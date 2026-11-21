@@ -62,12 +62,20 @@ node --check src/dashboard_analytics.js
 git diff --check
 ```
 
-ダッシュボードの集計コード・GAS の API 経路・認証関連コードなどの差分があるとき、または前回の公開確認と今回のコミットを安全に比較できないときは、通常同期で固定 Web アプリ URL の 7・30・90・180 日応答を検査します。Git 管理外の `.env` や GAS のスクリプトプロパティ、GA4 側の設定だけを変えた場合は、次の単独検査で確認してください。`scripts/verify-dashboard.ps1` が `scripts/dashboard-api-check.ps1` の検査関数を呼び出します。トークンは環境変数または Git 対象外の `.env` の `DASHBOARD_API_TOKEN` から読み取ります。
+ダッシュボードの集計コード・GASソース・同期／認証関連コードに差分があるとき，前回公開コミットと安全に比較できないとき，ローカルの `.env` にある固定API URL・管理用／ダッシュボード用トークンが変わったとき，または前回の**実API検査成功**から7日以上経過したときは，通常同期で固定 Web アプリ URL の7・30・90・180日応答を検査します．Pages公開確認とAPI検査の成功日時は `.sync-state/state.json` に別々に記録し，検査省略時にはAPI成功日時を更新しません．このファイルと認証情報はGitへ登録しません．Git管理外のGASスクリプトプロパティ・Sitesのシークレット・GA4設定は自動検出できないため，それらを変更した場合は次の強制検査を行ってください．Sites経由の認証と所有者表示も別途確認します．`scripts/verify-dashboard.ps1` が `scripts/dashboard-api-check.ps1` の検査関数を呼び出します。トークンは環境変数または Git 対象外の `.env` の `DASHBOARD_API_TOKEN` から読み取ります。
 
 ```powershell
 $gasWebAppUrl = Read-Host '既存の固定GAS WebアプリURL'
 .\scripts\verify-dashboard.ps1 -BaseUrl $gasWebAppUrl
 ```
+
+通常同期と同じ公開確認でAPI検査を**強制**する場合は，次のオプションも使えます．既存の`.env`やGASプロパティを書き換えず，API検査を実行します．
+
+```powershell
+.\sync-data.ps1 -Mode Data -VerifyDashboard
+```
+
+検査が失敗した場合は，Pages公開が済んでいても同期は未完了として保留されます．失敗したまま認証情報を再発行・上書きしないでください．7日ごとの再検査は問題の早期検出を目的とするもので，Git管理外の設定変更を即時に検出できる保証ではありません．
 
 この再検査は全体（`language=all`）の4期間が対象です。日英の切替は所有者画面でも確認します。ローカルテストの成功だけで本番APIの更新済みとは判断しません。
 

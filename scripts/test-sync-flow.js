@@ -7,11 +7,20 @@ const core = require('./sync/core');
 const dashboardPolicy = require('./sync/dashboard-policy');
 const source = fs.readFileSync(path.join(__dirname, 'sync/main.js'), 'utf8');
 
-async function scenario({ failCheck = false, failSnapshot = false, failPublish = false, failHeadAt = 0, sourceChanges = false, mode = 'Auto', args = ['--mode', mode], blockResume = false, currentGas = false, blockEnglishResume = false, failGateAt = 0, resumeMode = 'Verify', failResumePublish = false, freshCheckFail = false, freshSnapshotFail = false, resumeMutation = '', pendingDocumentsOnly = false, dashboardRequired = true, confirm = null, fastForward = null, expectAbort = false, removeLockInVerify = false } = {}) {
+async function scenario({ failCheck = false, failSnapshot = false, failPublish = false, failHeadAt = 0, sourceChanges = false, mode = 'Auto', args = ['--mode', mode], blockResume = false, currentGas = false, blockEnglishResume = false, failGateAt = 0, resumeMode = 'Verify', failResumePublish = false, freshCheckFail = false, freshSnapshotFail = false, resumeMutation = '', pendingDocumentsOnly = false, dashboardRequired = true, configChanged = false, staleDashboard = false, forceDashboard = false, confirm = null, fastForward = null, expectAbort = false, removeLockInVerify = false } = {}) {
     const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'gmt-sync-test-'));
     fs.mkdirSync(path.join(directory, 'scripts'));
     fs.writeFileSync(path.join(directory, 'scripts/english-publication.json'), JSON.stringify({schemaVersion:1,publishEnglish:false,englishReleaseApproved:false}));
     const events = [];
+    const mockSettings = { GAS_DEPLOY_URL: 'https://example.test', GAS_SECRET_TOKEN: 'fake-admin-token',
+        DASHBOARD_API_TOKEN: 't'.repeat(32) };
+    const settingsHash = dashboardPolicy.dashboardSettingsHash(mockSettings);
+    const stateFile = path.join(directory, '.sync-state/state.json');
+    fs.mkdirSync(path.dirname(stateFile), { recursive: true });
+    core.atomicJson(stateFile, { dashboardCheck: { commit: '0'.repeat(40),
+        verifiedAt: new Date(Date.now() - (staleDashboard ? 8 * 86400000 : 0)).toISOString(),
+        settingsHash: configChanged ? '0'.repeat(64) : settingsHash } });
+    const expectedApi = dashboardRequired || configChanged || staleDashboard || forceDashboard;
     let head = 'source-head';
     let changes = sourceChanges ? ['src/synthetic.js'] : [];
     let publishFailure = failPublish;
@@ -38,7 +47,7 @@ async function scenario({ failCheck = false, failSnapshot = false, failPublish =
                 commitChanges: () => { events.push('commit'); head += '-commit'; }
             },
             './gas': {
-                configuration: () => ({ GAS_DEPLOY_URL: 'https://example.test' }), fingerprint: () => 'hash',
+                configuration: () => mockSettings, fingerprint: () => 'hash',
                 prepareBuild: () => {}, inspect: async () => ({ sourceHash: currentGas ? 'hash' : 'old' }),
                 ensureDeployment: async (settings, state, save) => { events.push('deploy'); state.gasHash = 'hash'; save(); },
                 exportSnapshotForSource: async () => { events.push('snapshot'); return { sourceHash: 'hash', sheetText }; }
@@ -81,7 +90,7 @@ async function scenario({ failCheck = false, failSnapshot = false, failPublish =
     const main = context.module.exports.main;
     try {
         let failed = false, failure;
-        try { await main(args, confirm ? { confirm } : {}); } catch (error) { failed = true; failure = error; }
+        try { await main(forceDashboard ? [...args, '--verify-dashboard'] : args, confirm ? { confirm } : {}); } catch (error) { failed = true; failure = error; }
         if (expectAbort) {
             assert.ok(failed && /ユーザー確認により同期を中止/.test(failure && failure.message));
             for (const stage of ['tests', 'commit', 'deploy', 'push']) assert.ok(!events.includes(stage), stage);
@@ -154,7 +163,7 @@ async function scenario({ failCheck = false, failSnapshot = false, failPublish =
                         assert(resume.indexOf('snapshot') < resume.lastIndexOf('commit'));
                         assert(resume.lastIndexOf('commit') < resume.lastIndexOf('push'));
                         assert.equal(resume.filter(e => e === 'push').length, 2);
-                        assert.equal(resume.filter(e => e === 'api').length, dashboardRequired ? (pendingDocumentsOnly ? 1 : 2) : 0);
+                        assert.equal(resume.filter(e => e === 'api').length, expectedApi ? (pendingDocumentsOnly ? 1 : 2) : 0);
                     }
                     assert(!core.readJson(path.join(directory, '.sync-state/state.json')).pending);
                 } else {
@@ -180,7 +189,7 @@ async function scenario({ failCheck = false, failSnapshot = false, failPublish =
             }
             assert.ok(events.lastIndexOf('commit') < events.indexOf('push'));
             assert.ok(events.indexOf('push') < events.indexOf('verify'));
-            assert.equal(events.filter(e => e === 'api').length, dashboardRequired ? 1 : 0);
+            assert.equal(events.filter(e => e === 'api').length, expectedApi ? 1 : 0);
         }
         const state = core.readJson(path.join(directory, '.sync-state/state.json'), {});
         assert.ok(!JSON.stringify(state).includes('secret'));
@@ -199,6 +208,23 @@ async function scenario({ failCheck = false, failSnapshot = false, failPublish =
     assert.equal(dashboardPolicy.dashboardVerificationRequired(verified, candidate, remote, mockGit('src/sync_build.js\0en/mahler-search-app/data/dic_notes.json\0')), false);
     assert.deepEqual(calls, [['merge-base','--is-ancestor',baseline,remote],['merge-base','--is-ancestor',baseline,candidate],['diff','--name-only','--no-renames','-z',baseline,candidate,'--']]);
     assert.equal(dashboardPolicy.dashboardVerificationRequired(verified, candidate, remote, mockGit('src/web_trigger.js\0')), true, 'Deletions must be classified by old path');
+    for (const filename of ['scripts/sync/main.js', 'scripts/sync/dashboard-policy.js', 'scripts/sync/core.js',
+        'scripts/sync/gas-head.js', 'src/new_api_handler.js', 'sync-data.ps1']) {
+        assert.equal(dashboardPolicy.dashboardVerificationRequired(verified, candidate, remote, mockGit(filename + '\0')),
+            true, filename + ' must trigger API verification');
+    }
+    assert.equal(dashboardPolicy.isDashboardDependency('src/sync_build.js'), false);
+    const currentSettings = { GAS_DEPLOY_URL: 'https://example.test', GAS_SECRET_TOKEN: 'admin',
+        DASHBOARD_API_TOKEN: 't'.repeat(32) };
+    const hash = dashboardPolicy.dashboardSettingsHash(currentSettings);
+    assert.match(hash, /^[a-f0-9]{64}$/);
+    assert.notEqual(hash, dashboardPolicy.dashboardSettingsHash({ ...currentSettings, DASHBOARD_API_TOKEN: 'u'.repeat(32) }));
+    const now = Date.parse('2026-11-21T00:00:00.000Z');
+    const check = { verifiedAt: '2026-11-20T00:00:00.000Z', settingsHash: hash };
+    assert.equal(dashboardPolicy.dashboardCheckFresh(check, hash, now), true);
+    assert.equal(dashboardPolicy.dashboardCheckFresh(check, '0'.repeat(64), now), false);
+    assert.equal(dashboardPolicy.dashboardCheckFresh(check, hash, now + 8 * 86400000), false);
+    assert.equal(dashboardPolicy.dashboardCheckFresh(null, hash, now), false);
     assert.equal(dashboardPolicy.dashboardVerificationRequired(null, candidate, remote, mockGit('')), true);
     assert.equal(dashboardPolicy.dashboardVerificationRequired(verified, candidate, remote, () => { throw new Error('cannot prove ancestry'); }), true);
     assert.equal(dashboardPolicy.dashboardVerificationRequired(verified, candidate, remote, mockGit('bad-output')), true);
@@ -208,6 +234,9 @@ async function scenario({ failCheck = false, failSnapshot = false, failPublish =
     assert.equal(dashboardPolicy.receiptNeedsDashboard({ documentsOnly: false }), true);
     await scenario();
     await scenario({ dashboardRequired: false });
+    await scenario({ dashboardRequired: false, configChanged: true });
+    await scenario({ dashboardRequired: false, staleDashboard: true });
+    await scenario({ dashboardRequired: false, forceDashboard: true });
     const skipped = await scenario({ failPublish: true, currentGas: true, resumeMode: 'Verify', dashboardRequired: false });
     assert.equal(skipped.events.filter(e => e === 'dashboard-policy').length, 1, 'Resume uses persisted decision');
     assert.equal(skipped.events.filter(e => e === 'verify').length, 2, 'Pages check still runs');
@@ -222,6 +251,9 @@ async function scenario({ failCheck = false, failSnapshot = false, failPublish =
     await scenario({ failHeadAt: 3 });
     await scenario({ failPublish: true, blockResume: true });
     await scenario({ mode: 'Check' });
+    assert.equal(require('./sync/main').options(['--mode', 'Data', '--verify-dashboard']).verifyDashboard, true);
+    assert.throws(() => require('./sync/main').options(['--mode', 'Check', '--verify-dashboard']),
+        /requires a publishing or Verify mode/);
     await scenario({ currentGas: true, sourceChanges: true, mode: 'Site' });
     await scenario({ failPublish: true, blockEnglishResume: true });
     for (const failGateAt of [1,2,3,4]) await scenario({ failGateAt });

@@ -10,7 +10,7 @@ const bilingual = require('./bilingual');
 const publication = require('./publish');
 const logger = require('./logger');
 const timing = require('./timing');
-const { dashboardVerificationRequired, receiptNeedsDashboard } = require('./dashboard-policy');
+const { dashboardVerificationRequired, receiptNeedsDashboard, dashboardSettingsHash, dashboardCheckFresh } = require('./dashboard-policy');
 const { build } = require('../build-site');
 const { check } = require('../check-local');
 const directory = path.join(root, '.sync-state');
@@ -24,17 +24,19 @@ const dashboardTelemetryLine = new RegExp(
 );
 
 function options(args) {
-    const result = { mode: 'Auto', message: '自動同期アップデート', allowRemoval: false, yes: false };
+    const result = { mode: 'Auto', message: '自動同期アップデート', allowRemoval: false, yes: false, verifyDashboard: false };
     for (let i = 0; i < args.length; i++) {
         if (args[i] === '--mode') result.mode = args[++i];
         else if (args[i] === '--message') result.message = args[++i];
         else if (args[i] === '--allow-data-removal') result.allowRemoval = true;
         else if (args[i] === '--apply-recovery') result.applyRecovery = true;
         else if (args[i] === '--yes') result.yes = true;
+        else if (args[i] === '--verify-dashboard') result.verifyDashboard = true;
         else throw new Error(`Unknown argument: ${args[i]}`);
     }
     if (!['Auto', 'Data', 'Site', 'All', 'Check', 'Verify', 'Recover'].includes(result.mode)) throw new Error('Invalid mode');
     if (result.applyRecovery && result.mode !== 'Recover') throw new Error('--apply-recovery requires Recover mode');
+    if (result.verifyDashboard && ['Check', 'Recover'].includes(result.mode)) throw new Error('--verify-dashboard requires a publishing or Verify mode');
     return result;
 }
 
@@ -85,12 +87,13 @@ function promptYesNo(question) {
     });
 }
 
-async function verify(state, settings, credential, slug, save, gateTicket, continueData = false) {
+async function verify(state, settings, credential, slug, save, gateTicket, continueData = false, forceDashboard = false) {
     bilingual.assertPolicyUnchanged(gateTicket);
     bilingual.assertPublicTree();
     const receipt = state.pending;
     if (!receipt || !receipt.commit) throw new Error('再開可能な公開記録がありません。通常の sync-data を実行してください。');
-    const needsDashboard = receiptNeedsDashboard(receipt);
+    const settingsHash = dashboardSettingsHash(settings);
+    const needsDashboard = forceDashboard || receiptNeedsDashboard(receipt) || !dashboardCheckFresh(state.dashboardCheck, settingsHash);
     bilingual.assertReleaseManifest(receipt.manifest);
     if (git('rev-parse', 'HEAD') !== receipt.commit) throw new Error('未完了の公開後に HEAD が変更されています。先に元の公開コミットの確認が必要です。');
 
@@ -118,6 +121,8 @@ async function verify(state, settings, credential, slug, save, gateTicket, conti
                 safeStdoutPattern: dashboardTelemetryLine
             })));
         logger.success('ダッシュボード API 正常性確認 (7/30/90/180日)');
+        // Only actual API success advances this record; Pages success is separate.
+        state.dashboardCheck = { commit: receipt.commit, verifiedAt: new Date().toISOString(), settingsHash };
     } else {
         logger.info("ダッシュボード関連の変更がないため、API 検査は省略します。");
     }
@@ -178,7 +183,7 @@ async function main(args = process.argv.slice(2), hooks = {}) {
             const resumeCommit = state.pending && state.pending.commit;
             const continueData = ['Auto', 'Data', 'All'].includes(opt.mode);
             await timing.measure('resume-verify', () => verify(state, gas.configuration(), publication.token(),
-                repository.repoSlug(), save, gateTicket, continueData));
+                repository.repoSlug(), save, gateTicket, continueData, opt.verifyDashboard));
             if (!continueData) return;
             bilingual.assertPolicyUnchanged(gateTicket);
             if (git('rev-parse', 'HEAD') !== resumeCommit || repository.changed().length)
@@ -311,10 +316,12 @@ async function main(args = process.argv.slice(2), hooks = {}) {
         // No automatic rebase after deployment: another writer must never be silently merged.
         if (timing.measure('remote-check', () => repository.checkRemote()) !== remote) throw new Error('同期中にリモートが変更されました。公開を停止しました。');
         const receiptCommit = git('rev-parse', 'HEAD');
-        const dashboardRequired = dashboardVerificationRequired(state.lastSuccess, receiptCommit, remote, git);
+        const dashboardRequired = opt.verifyDashboard ||
+            !dashboardCheckFresh(state.dashboardCheck, dashboardSettingsHash(settings)) ||
+            dashboardVerificationRequired(state.lastSuccess, receiptCommit, remote, git);
         state.pending = { commit: receiptCommit, baseUrl, manifest, documentsOnly: selected.documentsOnly, dashboardRequired };
         save();
-        await verify(state, settings, credential, slug, save, gateTicket);
+        await verify(state, settings, credential, slug, save, gateTicket, false, opt.verifyDashboard);
     } catch (error) { outcome = 'failure'; throw error; }
     finally { try { timing.end(outcome); } finally { release(); } }
 }

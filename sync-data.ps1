@@ -4,7 +4,8 @@
     [string]$Mode = 'Auto',
     [switch]$AllowDataRemoval,
     [switch]$ApplyRecovery,
-    [switch]$Yes
+    [switch]$Yes,
+    [switch]$VerifyDashboard
 )
 $ErrorActionPreference = 'Stop'
 Push-Location $PSScriptRoot
@@ -13,6 +14,7 @@ try {
     if ($AllowDataRemoval) { $arguments += '--allow-data-removal' }
     if ($ApplyRecovery) { $arguments += '--apply-recovery' }
     if ($Yes) { $arguments += '--yes' }
+    if ($VerifyDashboard) { $arguments += '--verify-dashboard' }
     & node @arguments
     $syncExitCode = $LASTEXITCODE
 } finally {
