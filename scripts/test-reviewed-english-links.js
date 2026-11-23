@@ -48,13 +48,47 @@ for(const [word,source,lang,output] of [
  ['angehalten',known,'en',rendered.replace('#term-see','#term-new')],
  ['angehalten',known,'en',rendered+anchor('See','see')]
 ])assert.equal(c.removeReviewedEnglishTermLinks(output,word,source,lang),output);
+const ergriffen = rules.find(rule => rule.headword === 'ergriffen');
+const numberedMeaning = '② ' + ergriffen.line;
+const numberedHtml = c.linkTermsInTranslation(numberedMeaning, fixtureIndex);
+assert.equal(c.removeReviewedEnglishTermLinks(numberedHtml, 'ergriffen', numberedMeaning, 'en'), numberedMeaning);
+assert.equal(c.removeReviewedEnglishTermLinks(numberedHtml, 'ergriffen', numberedMeaning + '\n③ ' + ergriffen.line, 'en'), numberedHtml);
+const gleichfalls = rules.find(rule => rule.headword === 'gleichfalls');
+for (const prefix of ['', '③ ']) {
+  const meaning = gleichfalls.line.replace('① ', prefix);
+  const linkedMeaning = c.linkTermsInTranslation(meaning, fixtureIndex);
+  assert.equal(c.removeReviewedEnglishTermLinks(linkedMeaning, 'gleichfalls', meaning, 'en'), meaning);
+}
 const ja=JSON.parse(fs.readFileSync('mahler-search-app/data/dic_notes.json','utf8'));
 assert.equal(c.generateDicListHtml(ja,index,null,null,'ja'),baseline.generateDicListHtml(ja,index,null,null,'ja'));
 assert.equal(JSON.stringify(rows),snapshot);
 console.log('Reviewed English links: 590 fixed-context removals; current dataset removed '+(oldLinks.length-newLinks.length)+'; original snapshot exact-anchor check when applicable; visible text unchanged, JA identical, stale/duplicate/changed target fail closed.');
 
 const audit=JSON.parse(fs.readFileSync('scripts/fixtures/yut44-reviewed-contexts.json','utf8'));let expected=before,total=0;
-for(const r of audit){const heading='data-notes-heading="'+c.escapeHtml(r.headword)+'"';const matching=[...expected.matchAll(/<div class="row"[^>]*>[\s\S]*?<dd class="translation">([\s\S]*?)<\/dd>\n<\/div>/g)].filter(m=>m[0].includes(heading));if(!matching.length)continue;assert.equal(matching.length,1);const row=matching[0],parts=row[1].split('<br>');const matches=parts.map((part,i)=>({part,i})).filter(o=>visible(r.notationMarkup?o.part.replace(r.notationMarkup,c.escapeHtml(r.notationText)):o.part)===c.escapeHtml(r.line));if(!matches.length)continue;assert.equal(matches.length,1,r.headword+': '+r.line);let part=matches[0].part;for(const [href,text,count]of r.links){const a='<a href="'+c.escapeHtml(href)+'" class="term-link">'+c.escapeHtml(text)+'</a>';assert.equal(part.split(a).length-1,count);part=part.split(a).join(c.escapeHtml(text));total+=count;}parts[matches[0].i]=part;expected=expected.replace(row[0],row[0].replace(row[1],parts.join('<br>')));}
+for (const rule of audit) {
+  const heading = 'data-notes-heading="' + c.escapeHtml(rule.headword) + '"';
+  const matching = [...expected.matchAll(/<div class="row"[^>]*>[\s\S]*?<dd class="translation">([\s\S]*?)<\/dd>\n<\/div>/g)]
+    .filter(match => match[0].includes(heading));
+  if (!matching.length) continue;
+  assert.equal(matching.length, 1);
+  const row = matching[0];
+  const parts = row[1].split('<br>');
+  const matches = parts.map((part, index) => ({part, index})).filter(({part}) => {
+    const withSourceNotation = rule.notationMarkup ? part.replace(rule.notationMarkup, c.escapeHtml(rule.notationText)) : part;
+    return c.withoutLeadingSenseNumber(visible(withSourceNotation)) === c.escapeHtml(c.withoutLeadingSenseNumber(rule.line));
+  });
+  if (!matches.length) continue;
+  assert.equal(matches.length, 1, rule.headword + ': ' + rule.line);
+  let {part, index} = matches[0];
+  for (const [href, text, count] of rule.links) {
+    const link = '<a href="' + c.escapeHtml(href) + '" class="term-link">' + c.escapeHtml(text) + '</a>';
+    assert.equal(part.split(link).length - 1, count);
+    part = part.split(link).join(c.escapeHtml(text));
+    total += count;
+  }
+  parts[index] = part;
+  expected = expected.replace(row[0], row[0].replace(row[1], parts.join('<br>')));
+}
 assert(total<=fixtureRemoved,'current-data removals cannot exceed the reviewed fixture');assert.equal(after,expected);assert.deepEqual(links(after),links(expected));assert.deepEqual(after.match(/<img\b[^>]*>/g),before.match(/<img\b[^>]*>/g));
 const wholeBefore=baseline.generateDicHtml(rows,[],null,[],{language:'en'}),wholeAfter=c.generateDicHtml(rows,[],null,[],{language:'en'}),wholeIndex=c.generateDicTermsIndex(rows,[]),lb=baseline.generateDicListHtml(rows,wholeIndex,{},null,'en'),la=c.generateDicListHtml(rows,wholeIndex,{},null,'en');assert(wholeBefore.includes(lb));assert.equal(wholeAfter,wholeBefore.replace(lb,la));assert.deepEqual(wholeAfter.match(/<img\b[^>]*>/g),wholeBefore.match(/<img\b[^>]*>/g));
 const nr=audit.find(r=>r.notationMarkup),ni=c.linkTermsInTranslation(nr.line,fixtureIndex).replace(nr.notationText,nr.notationMarkup);assert(c.removeReviewedEnglishTermLinks(ni,nr.headword,nr.line,'en').includes(nr.notationMarkup));for(const changed of [ni.replace('data-notation="short-pause"','data-notation="other"'),ni.replace(nr.notationMarkup,nr.notationMarkup+nr.notationMarkup),ni.replace(nr.notationMarkup,'𝄐')])assert.equal(c.removeReviewedEnglishTermLinks(changed,nr.headword,nr.line,'en'),changed);

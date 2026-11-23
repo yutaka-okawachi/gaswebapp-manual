@@ -32,6 +32,8 @@ assert(!JSON.stringify(prepared.english).includes('PRIVATE_OLD'));assert.equal(p
 assert.equal(Object.keys(prepared.english).filter(n=>n.includes('/dictionary-examples/')).length,48);
 assert(prepared.english['en/index.html'].includes('window.__SITE_LANGUAGE__="en"'));
 assert(prepared.english['en/mahler-search-app/dic.html'].includes('lang="en"'));
+assert.match(prepared.japanese['mahler-search-app/dic.html'], /<p class="page-description"[^>]*>\s*<span class="dictionary-entry-count">収録項目数：<strong>1<\/strong>件<\/span>/);
+assert.match(prepared.english['en/mahler-search-app/dic.html'], /<p class="page-description"[^>]*>\s*<span class="dictionary-entry-count"><strong>1<\/strong> dictionary entry<\/span>/);
 assert(!prepared.english['en/index.html'].includes('/en/favicon.png'));
 assert.equal(typeof prepared.english['en/mahler-search-app/js/app.js'],'string');
 const initial=JSON.parse(JSON.stringify(tables));

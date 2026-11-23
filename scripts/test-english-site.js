@@ -23,6 +23,7 @@ assert.equal(files['mahler-search-app/data/richard_strauss.json'][1].whom,'');
 assert.deepEqual(files['mahler-search-app/data/whom_list.json'].test,['Chorus','Singer','Target translation unavailable']);
 assert(!JSON.stringify(files).includes('PRIVATE_'),'No Japanese data fallback');
 const notes=files['mahler-search-app/data/dic_notes.json'];
+assert.match(files['mahler-search-app/dic.html'], /<span class="dictionary-entry-count"><strong>2<\/strong> dictionary entries<\/span>/);
 assert.equal(notes[0][0],source.tabs.Notes[0].de,'German key stays stable');
 assert.equal(notes[0][1],'Play gently; softly means softly.');
 assert.equal(notes[1][1],'English translation is not yet available.');

@@ -954,14 +954,18 @@ const REVIEWED_ENGLISH_LINK_CONTEXTS = [
   {"headword":"Vorhang","line":"English: Inside the donkey driver's hut, very modest but neatly kept. A large bed, a low table with seats, and many colourful cloths in Eastern style. An old carpet hangs across the doorway. Bright sunlight streams in everywhere, through the open window and the hanging at the entrance.","links":[["#term-hut","hut",1]]}
 ];
 
+function withoutLeadingSenseNumber(line) {
+  return line.replace(/^[①-⑳]\s*/, '');
+}
+
 function removeReviewedEnglishTermLinks(rendered, headword, sourceText, language) {
   if (language !== 'en' || !rendered || typeof sourceText !== 'string') return rendered;
-  const sourceLines = sourceText.replace(/\[\[nolink:([^\[\]\r\n]{1,120})\]\]/g,'$1').split(/\r?\n/);
+  const sourceLines = sourceText.replace(/\[\[nolink:([^\[\]\r\n]{1,120})\]\]/g,'$1').split(/\r?\n/).map(withoutLeadingSenseNumber);
   const rules = REVIEWED_ENGLISH_LINK_CONTEXTS.filter(rule => rule.headword === headword &&
-    sourceLines.filter(line => line === rule.line).length === 1);
+    sourceLines.filter(line => line === withoutLeadingSenseNumber(rule.line)).length === 1);
   if (!rules.length) return rendered;
   return rendered.split('<br>').map(line => {
-    // Compare exact visible source text after the existing escaping/rendering.
+    // Compare the visible wording exactly, ignoring only a leading sense number.
     // Only generated tags are stripped for comparison; source HTML is escaped.
     const literal = line.replace(/<[^>]*>/g, '');
     for (const rule of rules) {
@@ -970,7 +974,7 @@ function removeReviewedEnglishTermLinks(rendered, headword, sourceText, language
         if (line.split(rule.notationMarkup).length - 1 !== 1) continue;
         reviewedLiteral = line.replace(rule.notationMarkup, escapeHtml(rule.notationText)).replace(/<[^>]*>/g, '');
       }
-      if (reviewedLiteral !== escapeHtml(rule.line)) continue;
+      if (withoutLeadingSenseNumber(reviewedLiteral) !== escapeHtml(withoutLeadingSenseNumber(rule.line))) continue;
       const replacements = rule.links.map(([target, text, count]) => ({
         anchor: `<a href="${escapeHtml(target)}" class="term-link">${escapeHtml(text)}</a>`,
         text: escapeHtml(text), count
@@ -1141,11 +1145,12 @@ function generateAbbrListHtml(abbrData) {
  * @return {string} 完全なHTMLファイルの内容
  */
 function generateDicHtml(dicData, abbrData, dictionaryExampleIndex, mappingData, options) {
+  const language = options && options.language === 'en' ? 'en' : 'ja';
   // 用語インデックスを生成
   const termsIndex = generateDicTermsIndex(dicData, mappingData);
   const abbreviationIndex = generateAbbreviationIndex(abbrData);
   
-  const dicListHtml = generateDicListHtml(dicData, termsIndex, abbreviationIndex, dictionaryExampleIndex, options && options.language === 'en' ? 'en' : 'ja');
+  const dicListHtml = generateDicListHtml(dicData, termsIndex, abbreviationIndex, dictionaryExampleIndex, language);
   const abbrListHtml = generateAbbrListHtml(abbrData);
 
   // 構造化データの生成 (SEO対策)
@@ -1161,6 +1166,11 @@ function generateDicHtml(dicData, abbrData, dictionaryExampleIndex, mappingData,
         "description": plainTranslation || "ドイツ語の音楽用語"
       };
     });
+
+  const entryCount = definedTerms.length;
+  const entryCountHtml = language === 'en'
+    ? `<strong>${entryCount.toLocaleString('en-US')}</strong> dictionary ${entryCount === 1 ? 'entry' : 'entries'}`
+    : `収録項目数：<strong>${entryCount}</strong>件`;
 
   const structuredDataObj = {
     "@context": "https://schema.org",
@@ -2228,6 +2238,7 @@ ${breadcrumbJSON}
             <h1>ドイツ語の音楽用語集</h1>
 
             <p class="page-description" style="font-size: 0.85rem; color: #555; margin-top: 0.5em; margin-bottom: 1em;">
+                <span class="dictionary-entry-count">${entryCountHtml}</span><br>
                 スコアで確認したドイツ語の一般的な意味，音楽用語としての訳例・コメント・出典を一覧で確認可能．アルファベットから用語を探し，「実例を見る」から各作曲家の検索結果へ移動可能．
             </p>
             <p class="page-description" style="font-size: 0.85rem; color: #555; margin-top: 0; margin-bottom: 1em;">※「実例を見る」は，Richard Strauss についてはオペラのみ対応．</p>

@@ -13,8 +13,49 @@ for(const text of ['管理者モード：解析・検索記録 OFF','管理者�
 }
 assert.equal(locale.localizeText('選択した作品：'),'Selected works:');assert.equal(locale.localizeText('選択した楽器：'),'Selected instruments:');
 context.window.__SITE_LANGUAGE__='ja';assert(locale.JAPANESE.test(context.buildDictionaryExampleAliasNotice('abnehmen',index)),'Japanese explanation preserved');
-// Exercise the actual dynamic Japanese navigation label, before browser localization.
 const {extractFunction}=require('./test-utils/extract-function');
+const mahlerSource = fs.readFileSync(root+'/mahler-search-app/mahler.html','utf8');
+const mahlerSummary = { innerHTML: '' };
+let orchestraOption = 'on';
+let selectedWorks = [];
+let selectedInstruments = [];
+const mahler = vm.createContext({
+    window: { __SITE_LANGUAGE__: 'en' },
+    document: {
+        getElementById: () => mahlerSummary,
+        querySelectorAll: () => [],
+        querySelector: () => ({ value: orchestraOption })
+    },
+    getSelectedWorks: () => selectedWorks,
+    getSelectedInstruments: () => selectedInstruments,
+    adjustFloatingBarSpacing() {}
+});
+vm.runInContext(extractFunction(mahlerSource,'updateSelectionSummary'),mahler);
+mahler.updateSelectionSummary();
+assert(mahlerSummary.innerHTML.includes('Selected works:'));
+assert(mahlerSummary.innerHTML.includes('Selected instruments: <span'));
+assert(mahlerSummary.innerHTML.includes('(Includes directions for the whole orchestra)'));
+assert.equal((mahlerSummary.innerHTML.match(/>None</g) || []).length, 2);
+assert(!locale.JAPANESE.test(mahlerSummary.innerHTML));
+orchestraOption = 'off';
+selectedWorks = ['ALL'];
+selectedInstruments = ['ALL_GLOBAL'];
+mahler.updateSelectionSummary();
+assert(mahlerSummary.innerHTML.includes('(Excludes directions for the whole orchestra)'));
+assert.equal((mahlerSummary.innerHTML.match(/>All</g) || []).length, 2);
+assert(!locale.JAPANESE.test(mahlerSummary.innerHTML));
+mahler.window.__SITE_LANGUAGE__ = undefined;
+for (const [value, label] of [
+    ['on', 'オーケストラ全体への指示を含める'],
+    ['off', 'オーケストラ全体への指示は含めない']
+]) {
+    orchestraOption = value;
+    mahler.updateSelectionSummary();
+    assert(mahlerSummary.innerHTML.includes('選択した楽器：'));
+    assert(mahlerSummary.innerHTML.includes(`(${label})`));
+}
+
+// Exercise the actual dynamic Japanese navigation label, before browser localization.
 const panel={hidden:true,attributes:{},setAttribute(name,value){this.attributes[name]=value;}},label={textContent:''};
 let inserted=null;
 const targetElement={parentNode:{insertBefore(element,target){inserted={element,target};}}};

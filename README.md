@@ -58,6 +58,7 @@ Richard Wagner（リヒャルト・ワーグナー）、Gustav Mahler（グス�
 ### ドイツ語の音楽用語集
 
 [ドイツ語の音楽用語集](https://yutaka-okawachi.github.io/gaswebapp-manual/mahler-search-app/dic.html)では、検索ページに収録された用語をまとめて調べられます。
+日英どちらの用語集でも、ページ上部に収録項目数を表示します。
 
 - 一般的な意味
 - 音楽用語としての訳例
