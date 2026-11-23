@@ -1059,6 +1059,11 @@
       const summaryDiv = document.getElementById('selection-summary');
       if (!summaryDiv) return;
 
+      const isEnglish = window.__SITE_LANGUAGE__ === 'en';
+      const noneLabel = isEnglish ? 'None' : 'なし';
+      const allLabel = isEnglish ? 'All' : 'すべて';
+      const worksLabel = isEnglish ? 'Selected works:' : '選択した作品：';
+      const instrumentsLabel = isEnglish ? 'Selected instruments:' : '選択した楽器：';
       const selectedWorks = getSelectedWorks();
       const selectedInstruments = getSelectedInstruments();
 
@@ -1072,11 +1077,11 @@
         workLabelMap[key] = labelText;
       });
 
-      let workValue = 'なし';
+      let workValue = noneLabel;
 
       if (selectedWorks.length > 0) {
         if (selectedWorks[0] === 'ALL') {
-          workValue = 'すべて';
+          workValue = allLabel;
         }
 
         else {
@@ -1088,11 +1093,11 @@
         }
       }
 
-      let instrumentValue = 'なし';
+      let instrumentValue = noneLabel;
 
       if (selectedInstruments.length > 0) {
         if (selectedInstruments.includes('ALL_GLOBAL')) {
-          instrumentValue = 'すべて';
+          instrumentValue = allLabel;
         }
 
         else {
@@ -1109,14 +1114,16 @@
       const includeOrchRadio = document.querySelector('input[name="include-orchestra-all"]:checked');
       let includeOrchMsg = '';
       if (includeOrchRadio) {
-          if (includeOrchRadio.value === 'off') {
-              includeOrchMsg = '<span style="color:#d32f2f; margin-left: 8px;">(オーケストラ全体への指示は含めない)</span>';
-          } else {
-              includeOrchMsg = '<span style="color:#388e3c; margin-left: 8px;">(オーケストラ全体への指示を含める)</span>';
-          }
+        const excluded = includeOrchRadio.value === 'off';
+        const color = excluded ? '#d32f2f' : '#388e3c';
+        const orchestraLabel = isEnglish
+          ? (excluded ? 'Excludes directions for the whole orchestra' : 'Includes directions for the whole orchestra')
+          : (excluded ? 'オーケストラ全体への指示は含めない' : 'オーケストラ全体への指示を含める');
+        includeOrchMsg = ` <span style="color:${color}; margin-left: 8px;">(${orchestraLabel})</span>`;
       }
 
-      summaryDiv.innerHTML = '<div class="summary-block">' + '<div class="summary-title">選択した作品：</div>' + '<div class="summary-value">' + workValue + '</div>' + '</div>' + '<div class="summary-block">' + '<div class="summary-title">選択した楽器：' + includeOrchMsg + '</div>' + '<div class="summary-value">' + instrumentValue + '</div>' + '</div>';
+      summaryDiv.innerHTML = `<div class="summary-block"><div class="summary-title">${worksLabel}</div><div class="summary-value">${workValue}</div></div>
+        <div class="summary-block"><div class="summary-title">${instrumentsLabel}${includeOrchMsg}</div><div class="summary-value">${instrumentValue}</div></div>`;
 
       adjustFloatingBarSpacing();
     }
