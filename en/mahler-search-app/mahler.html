@@ -41,7 +41,7 @@
 
   <link rel="preload" href="css/common.css?v=96724ab1e7a4" as="style">
   <link rel="stylesheet" href="css/common.css?v=96724ab1e7a4">
-  <script src="js/app.js?v=b8f66a09683b"></script>
+  <script src="js/app.js?v=2b0837221e93"></script>
   <style>
     /* index.html固有のスタイル */
     
@@ -431,6 +431,14 @@
     }, {});
 
     // 楽器群のALL選択時の表示名マッピング
+    const groupAllEnglishDisplayMap = {
+      'ALL_STRINGS': 'Strings',
+      'ALL_WOODWINDS': 'Woodwinds',
+      'ALL_BRASS': 'Brass',
+      'ALL_PERCUSSIONS': 'Percussion and others',
+      'ALL_VOCAL': 'Voices and chorus'
+    };
+
     const groupAllDisplayMap = {
       'ALL_STRINGS': '弦楽器群',
       'ALL_WOODWINDS': '木管楽器群',
@@ -668,7 +676,9 @@
       const searchButton = document.querySelector('#floating-bar .btn-action');
       const resultsDiv = document.getElementById('results');
       currentSearchId++;
-      resultsDiv.innerHTML = '<div class="result-message">検索が中止されました。</div>';
+      resultsDiv.innerHTML = window.__SITE_LANGUAGE__ === 'en'
+        ? '<div class="result-message">Search cancelled.</div>'
+        : '<div class="result-message">検索が中止されました。</div>';
       searchButton.disabled = false;
     }
 
@@ -813,7 +823,8 @@
     function search() {
       const searchButton = document.querySelector('#floating-bar .btn-action');
       const resultsDiv = document.getElementById('results');
-      const loadingHtml = '<p class="loading">検索中・・・</p>';
+      const isEnglish = window.__SITE_LANGUAGE__ === 'en';
+      const loadingHtml = isEnglish ? '<p class="loading">Searching…</p>' : '<p class="loading">検索中・・・</p>';
       resultsDiv.innerHTML = loadingHtml;
 
       focusResultsPanel({ instant: true });
@@ -823,14 +834,14 @@
       const includeOrchestraAll = document.querySelector('input[name="include-orchestra-all"]:checked').value === 'on';
 
       if (works.length === 0) {
-        resultsDiv.innerHTML = '<p class="loading">作品を選択してください。</p>';
+        resultsDiv.innerHTML = isEnglish ? '<p class="loading">Select a work.</p>' : '<p class="loading">作品を選択してください。</p>';
         searchButton.disabled = false;
         focusResultsPanel({ instant: true });
         return;
       }
 
       if (!includeOrchestraAll && instruments.length === 0) {
-        resultsDiv.innerHTML = '<p class="loading">楽器を選択してください。</p>';
+        resultsDiv.innerHTML = isEnglish ? '<p class="loading">Select at least one instrument.</p>' : '<p class="loading">楽器を選択してください。</p>';
         searchButton.disabled = false;
         focusResultsPanel({ instant: true });
         return;
@@ -874,12 +885,16 @@
                   }
               } else {
                   console.error("window.searchMahlerDataLocal is not a function");
-                  resultsDiv.innerHTML = '<div class="result-message">検索機能が見つかりません (searchMahlerDataLocal missing)</div>';
+                  resultsDiv.innerHTML = isEnglish
+                    ? '<div class="result-message">Search is unavailable. Reload the page and try again.</div>'
+                    : '<div class="result-message">検索機能が見つかりません (searchMahlerDataLocal missing)</div>';
                   searchButton.disabled = false;
               }
           } catch (e) {
               console.error("Search failed:", e);
-              resultsDiv.innerHTML = `<div class="result-message">エラーが発生しました: ${e.message}</div>`;
+              resultsDiv.innerHTML = isEnglish
+                ? '<div class="result-message">Search failed. Please try again.</div>'
+                : `<div class="result-message">エラーが発生しました: ${e.message}</div>`;
               searchButton.disabled = false;
           }
       }, 100);
@@ -893,19 +908,22 @@
 
     function renderSearchResults(results) {
         const container = document.getElementById('results');
+        const isEnglish = window.__SITE_LANGUAGE__ === 'en';
         container.innerHTML = "";
 
         if (!results || results.length === 0) {
-            container.innerHTML = '<div class="result-message">該当するデータが見つかりませんでした。</div>';
+            container.innerHTML = isEnglish
+              ? '<div class="result-message">No matching entries found.</div>'
+              : '<div class="result-message">該当するデータが見つかりませんでした。</div>';
             return;
         }
 
-        const scoreInfoHtml = `<div class="score-info-banner" style="text-align: left; padding: 12px; font-size: 0.85em; line-height: 1.6;">` +
-            `<div style="font-weight: bold; border-bottom: 1px solid #ccc; margin-bottom: 8px; padding-bottom: 4px;">楽譜情報 (Score Information)</div>` +
-            `<div>使用楽譜の一覧は，<a href="other.html#score-mahler" target="_blank" rel="noopener noreferrer" style="color: #0066cc; text-decoration: underline; font-weight: bold;">楽譜情報(Score information) ↗</a> を参照．</div>` +
-            `</div>`;
+        const scoreInfoHtml = buildMahlerScoreInfoBanner();
 
-        container.innerHTML = `<div class="result-message">${results.length}件見つかりました．</div>${scoreInfoHtml}<div id="result-list"></div>`;
+        const resultCount = isEnglish
+          ? `${results.length} ${results.length === 1 ? 'entry' : 'entries'}`
+          : `${results.length}件見つかりました．`;
+        container.innerHTML = `<div class="result-message">${resultCount}</div>${scoreInfoHtml}<div id="result-list"></div>`;
         const listContainer = document.getElementById('result-list');
 
         currentSearchResults = results;
@@ -942,7 +960,9 @@
             item.locs.forEach(loc => {
                 html += `<div class="result-loc">${escapeHtml(loc)}</div>`;
             });
-            html += `<div class="result-loc">(${item.count}件)</div>`;
+            const count = window.__SITE_LANGUAGE__ === 'en'
+                ? `${item.count} ${item.count === 1 ? 'entry' : 'entries'}` : `${item.count}件`;
+            html += `<div class="result-loc">(${count})</div>`;
             
             entryDiv.innerHTML = html;
             fragment.appendChild(entryDiv);
@@ -1101,7 +1121,8 @@
         }
 
         else {
-          const instrumentNames = selectedInstruments.map(code => groupAllDisplayMap[code] || window.dMapping[code.toLowerCase()] || code).filter(name => name && name !== 'ALL_GLOBAL');
+          const groupLabels = isEnglish ? groupAllEnglishDisplayMap : groupAllDisplayMap;
+          const instrumentNames = selectedInstruments.map(code => groupLabels[code] || window.dMapping[code.toLowerCase()] || code).filter(name => name && name !== 'ALL_GLOBAL');
 
           if (instrumentNames.length > 0) {
             instrumentValue = instrumentNames.join('<br>');

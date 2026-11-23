@@ -781,7 +781,8 @@ function updateSelectionSummary() {
 
     // 1. 曲名
     const selectedOpera = document.querySelector('input[name="opera"]:checked');
-    let operaText = 'なし';
+    const isEnglish = window.__SITE_LANGUAGE__ === 'en';
+    let operaText = isEnglish ? 'None' : 'なし';
     if (selectedOpera) {
         operaText = selectedOpera.parentElement.textContent.trim();
     }
@@ -801,7 +802,7 @@ function updateSelectionSummary() {
             if (sceneCheckboxes.length > 0) {
                  const scenes = Array.from(sceneCheckboxes).map(cb => cb.parentElement.textContent.trim());
                  const scenesStr = scenes.join(', ');
-                 detailsText += `<div class="summary-block"><div class="summary-title">選んだ場面：</div><div class="summary-value">${scenesStr}</div></div>`;
+                 detailsText += `<div class="summary-block"><div class="summary-title">${isEnglish ? 'Selected scenes:' : '選んだ場面：'}</div><div class="summary-value">${scenesStr}</div></div>`;
             }
         }
 
@@ -811,7 +812,7 @@ function updateSelectionSummary() {
             if (whomCheckboxes.length > 0) {
                  const whoms = Array.from(whomCheckboxes).map(cb => cb.value); 
                  const whomsStr = whoms.join(', ');
-                 detailsText += `<div class="summary-block"><div class="summary-title">選んだ指示対象：</div><div class="summary-value">${whomsStr}</div></div>`;
+                 detailsText += `<div class="summary-block"><div class="summary-title">${isEnglish ? 'Selected targets:' : '選んだ指示対象：'}</div><div class="summary-value">${whomsStr}</div></div>`;
             }
         }
     }
@@ -820,11 +821,11 @@ function updateSelectionSummary() {
     if (typeValue === 'page') {
         const pageInput = document.getElementById('page-input');
         if (pageInput && pageInput.value.trim()) {
-            detailsText += `<div class="summary-block"><div class="summary-title">入力したページ：</div><div class="summary-value">${escapeHtml(pageInput.value.trim())}</div></div>`;
+            detailsText += `<div class="summary-block"><div class="summary-title">${isEnglish ? 'Pages entered:' : '入力したページ：'}</div><div class="summary-value">${escapeHtml(pageInput.value.trim())}</div></div>`;
         }
     }
 
-    summaryDiv.innerHTML = `<div class="summary-block"><div class="summary-title">選んだ作品：</div><div class="summary-value">${operaText}</div></div>${detailsText}`;
+    summaryDiv.innerHTML = `<div class="summary-block"><div class="summary-title">${isEnglish ? 'Selected work:' : '選んだ作品：'}</div><div class="summary-value">${operaText}</div></div>${detailsText}`;
     
     adjustFloatingBarSpacing();
 }
