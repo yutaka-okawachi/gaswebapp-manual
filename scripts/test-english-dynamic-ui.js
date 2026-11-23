@@ -63,6 +63,45 @@ const navigation=vm.createContext({document:{getElementById:id=>({abbrReturnPane
 vm.runInContext(extractFunction(fs.readFileSync(root+'/src/generate_dic_html.js','utf8'),'showAbbreviationReturnPanel'),navigation);
 const browser=vm.createContext({window:{alert(){}},document:{documentElement:{},addEventListener(){}},MutationObserver:class{observe(){}},queueMicrotask(){},NodeFilter:{SHOW_TEXT:4}});
 vm.runInContext(locale.browserSource(),browser);
+
+const validationResults = { innerHTML: '' };
+const validationButton = { disabled: true };
+let validationOrchestra = 'off';
+let scheduledSearches = 0;
+const mahlerValidation = vm.createContext({
+    document: {
+        getElementById: () => validationResults,
+        querySelector: selector => selector.startsWith('#floating-bar') ? validationButton : { value: validationOrchestra }
+    },
+    getSelectedWorks: () => ['交響曲第4番'],
+    getSelectedInstruments: () => [],
+    focusResultsPanel() {},
+    currentSearchId: 0,
+    setTimeout() { scheduledSearches++; }
+});
+vm.runInContext(extractFunction(mahlerSource, 'search'), mahlerValidation);
+mahlerValidation.search();
+assert.equal(validationResults.innerHTML, '<p class="loading">楽器を選択してください。</p>');
+assert.equal(browser.localizeText(validationResults.innerHTML.replace(/<[^>]+>/g, '')), 'Select at least one instrument.');
+assert.equal(validationButton.disabled, false);
+assert.equal(scheduledSearches, 0);
+validationOrchestra = 'on';
+mahlerValidation.search();
+assert.equal(scheduledSearches, 1, 'Whole-orchestra-only searches remain valid');
+
+for (const page of ['terms_search', 'rw_terms_search', 'rs_terms_search']) {
+    const results = { innerHTML: '' };
+    const termValidation = vm.createContext({
+        document: { getElementById: id => id === 'termInput' ? { value: ' ' } : results },
+        getTermMatchMode: () => 'partial',
+        setTimeout() { assert.fail('An empty term must not start a search'); }
+    });
+    const source = fs.readFileSync(path.join(root, 'mahler-search-app', page + '.html'), 'utf8');
+    vm.runInContext(extractFunction(source, 'search'), termValidation);
+    termValidation.search();
+    assert.equal(locale.localizeHtml(results.innerHTML), '<p class="result-message">Enter a search term.</p>', page);
+}
+
 const headwords=['Ein Stab aus einem Glockenspiel (Klang Fis , ebenso notiert)','mäßig','m.d.','alle als トレモロ音符 notirten Stellen','A &amp; B &lt;C&gt;','„leise“','first line\nsecond line'];
 for(const headword of headwords){
  const termId='term-original-headword',missing=new Set(),expected='Return to “'+headword+'”';
