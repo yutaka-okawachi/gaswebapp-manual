@@ -61,6 +61,14 @@ window.getTermsListLocal = function (sourceFilter) {
     return terms;
 }
 
+function buildMahlerScoreInfoBanner() {
+    const isEnglish = window.__SITE_LANGUAGE__ === 'en';
+    return `<div class="score-info-banner" style="text-align: left; padding: 12px; font-size: 0.85em; line-height: 1.6;">` +
+        `<div style="font-weight: bold; border-bottom: 1px solid #ccc; margin-bottom: 8px; padding-bottom: 4px;">${isEnglish ? 'Score information' : '楽譜情報 (Score Information)'}</div>` +
+        `<div>${isEnglish ? 'For the editions used, see ' : '使用楽譜の一覧は，'}<a href="other.html#score-mahler" target="_blank" rel="noopener noreferrer" style="color: #0066cc; text-decoration: underline; font-weight: bold;">${isEnglish ? 'Mahler score information ↗' : '楽譜情報(Score information) ↗'}</a>${isEnglish ? '.' : ' を参照．'}</div>` +
+        `</div>`;
+}
+
 // --- Mahler Search Logic (Local Fallback) ---
 
 window.aMapping = {
@@ -115,9 +123,12 @@ function formatMovementNumber(a, b) {
 }
 
 window.searchMahlerDataLocal = function (choice1Arr, choice2Arr, includeOrchestraAll) {
+    const isEnglish = window.__SITE_LANGUAGE__ === 'en';
     const data = window.appData.mahler;
     if (!data || data.length === 0) {
-        return '<div class="result-message">データが読み込まれていません。</div>';
+        return isEnglish
+            ? '<div class="result-message">Search data has not loaded. Reload the page and try again.</div>'
+            : '<div class="result-message">データが読み込まれていません。</div>';
     }
 
     const groupAllMap = {
@@ -202,21 +213,25 @@ window.searchMahlerDataLocal = function (choice1Arr, choice2Arr, includeOrchestr
                 matchedLocList.forEach(loc => {
                     resultHTML += `<div class="result-loc">${escapeHtml(loc)}</div>`;
                 });
-                resultHTML += `<div class="result-loc">(${segmentCount}件)</div>`;
+                const count = isEnglish ? `${segmentCount} ${segmentCount === 1 ? 'entry' : 'entries'}` : `${segmentCount}件`;
+                resultHTML += `<div class="result-loc">(${count})</div>`;
                 resultHTML += '<hr style="border-top: 1px dashed #ccc; margin: 10px 0;">';
             }
         });
     } catch (e) {
         console.error("Error in searchMahlerDataLocal:", e);
-        return `<div class="result-message">検索中にエラーが発生しました: ${e.message}</div>`;
+        return isEnglish
+            ? '<div class="result-message">Search failed. Please try again.</div>'
+            : `<div class="result-message">検索中にエラーが発生しました: ${e.message}</div>`;
     }
 
-    const scoreInfoHtml = `<div class="score-info-banner" style="text-align: left; padding: 12px; font-size: 0.85em; line-height: 1.6;">` +
-        `<div style="font-weight: bold; border-bottom: 1px solid #ccc; margin-bottom: 8px; padding-bottom: 4px;">楽譜情報 (Score Information)</div>` +
-        `<div>使用楽譜の一覧は，<a href="other.html#score-mahler" target="_blank" rel="noopener noreferrer" style="color: #0066cc; text-decoration: underline; font-weight: bold;">楽譜情報(Score information) ↗</a> を参照．</div>` +
-        `</div>`;
-
-    return totalMatches === 0 ? '<div class="result-message">該当するデータが見つかりませんでした。</div>' : `<div>${totalMatches}件ありました。</div>${scoreInfoHtml}${resultHTML}`;
+    if (totalMatches === 0) {
+        return isEnglish
+            ? '<div class="result-message">No matching entries found.</div>'
+            : '<div class="result-message">該当するデータが見つかりませんでした。</div>';
+    }
+    const count = isEnglish ? `${totalMatches} ${totalMatches === 1 ? 'entry' : 'entries'}` : `${totalMatches}件ありました。`;
+    return `<div>${count}</div>${buildMahlerScoreInfoBanner()}${resultHTML}`;
 };
 
 // --- Mahler Terms Search Logic (Local Fallback) ---

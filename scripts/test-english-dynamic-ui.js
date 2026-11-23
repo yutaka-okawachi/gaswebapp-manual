@@ -30,6 +30,11 @@ const mahler = vm.createContext({
     getSelectedInstruments: () => selectedInstruments,
     adjustFloatingBarSpacing() {}
 });
+for (const name of ['groupAllDisplayMap', 'groupAllEnglishDisplayMap']) {
+    const map = mahlerSource.match(new RegExp('const ' + name + ' = \{[^}]+\};'));
+    assert(map, name);
+    vm.runInContext(map[0], mahler);
+}
 vm.runInContext(extractFunction(mahlerSource,'updateSelectionSummary'),mahler);
 mahler.updateSelectionSummary();
 assert(mahlerSummary.innerHTML.includes('Selected works:'));
@@ -44,6 +49,10 @@ mahler.updateSelectionSummary();
 assert(mahlerSummary.innerHTML.includes('(Excludes directions for the whole orchestra)'));
 assert.equal((mahlerSummary.innerHTML.match(/>All</g) || []).length, 2);
 assert(!locale.JAPANESE.test(mahlerSummary.innerHTML));
+selectedInstruments = ['ALL_STRINGS', 'ALL_WOODWINDS'];
+mahler.updateSelectionSummary();
+assert(mahlerSummary.innerHTML.includes('Strings<br>Woodwinds'));
+assert(!locale.JAPANESE.test(mahlerSummary.innerHTML));
 mahler.window.__SITE_LANGUAGE__ = undefined;
 for (const [value, label] of [
     ['on', 'オーケストラ全体への指示を含める'],
@@ -52,6 +61,7 @@ for (const [value, label] of [
     orchestraOption = value;
     mahler.updateSelectionSummary();
     assert(mahlerSummary.innerHTML.includes('選択した楽器：'));
+    assert(mahlerSummary.innerHTML.includes('弦楽器群<br>木管楽器群'));
     assert(mahlerSummary.innerHTML.includes(`(${label})`));
 }
 
@@ -69,6 +79,7 @@ const validationButton = { disabled: true };
 let validationOrchestra = 'off';
 let scheduledSearches = 0;
 const mahlerValidation = vm.createContext({
+    window: {},
     document: {
         getElementById: () => validationResults,
         querySelector: selector => selector.startsWith('#floating-bar') ? validationButton : { value: validationOrchestra }

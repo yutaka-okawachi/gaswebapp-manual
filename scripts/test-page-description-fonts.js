@@ -154,9 +154,12 @@ const otherPage = read('mahler-search-app/other.html');
 assert.match(otherPage, /id="score-mahler"/, 'other.html should have score-mahler id anchor');
 
 const mahlerPage = read('mahler-search-app/mahler.html');
-assert.match(mahlerPage, /score-info-banner/, 'mahler.html should render score-info-banner');
-assert.match(mahlerPage, /other\.html#score-mahler/, 'mahler.html should link to other.html#score-mahler');
-assert.match(mahlerPage, /楽譜情報\(Score information\)/, 'mahler.html should contain score information link text');
-assert.match(mahlerPage, /使用楽譜の一覧は，<a href="other\.html#score-mahler"[^>]*>楽譜情報\(Score information\) ↗<\/a> を参照．/, 'mahler.html score info banner text should use を参照． with Japanese comma/period');
+assert.match(mahlerPage, /buildMahlerScoreInfoBanner\(\)/, 'mahler.html should render its shared score-info banner');
+const { extractFunction } = require('./test-utils/extract-function');
+const banner = require('node:vm').runInNewContext(
+  extractFunction(read('frontend/search.js'), 'buildMahlerScoreInfoBanner') + '\nbuildMahlerScoreInfoBanner()',
+  { window: {} }
+);
+assert.match(banner, /使用楽譜の一覧は，<a href="other\.html#score-mahler"[^>]*>楽譜情報\(Score information\) ↗<\/a> を参照．/, 'Japanese score info banner should retain the link and punctuation');
 
 console.log('Page description font tests passed.');
