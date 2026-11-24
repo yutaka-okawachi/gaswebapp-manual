@@ -1670,7 +1670,7 @@
       }
     ]
   },
-  "breit-majestaetische-halbe": "term-breit-majestaetische-halbe",
+  "breite-majestaetische-halbe": "term-breite-majestaetische-halbe",
   "brief": "term-brief",
   "bruckner-hat-selbst-die-besetzung-mit-vier-hoernern-empfohlen-d-h": {
     "id": "term-bruckner-hat-selbst-die-besetzung-mit-vier-hoernern-empfohlen-d-h",
@@ -2483,7 +2483,7 @@
       }
     ]
   },
-  "einstudiren": "term-einstudiren",
+  "einstudieren": "term-einstudieren",
   "eintragung": {
     "id": "term-eintragung",
     "exampleVariants": [
@@ -4677,7 +4677,7 @@
   },
   "gleichzeitig": "term-gleichzeitig",
   "gletscher": "term-gletscher",
-  "glissando-ueber-die-ganze-griffbrett": "term-glissando-ueber-die-ganze-griffbrett",
+  "glissando-ueber-das-ganze-griffbrett": "term-glissando-ueber-das-ganze-griffbrett",
   "glissando-ueber-die-ganze-klaviatur": "term-glissando-ueber-die-ganze-klaviatur",
   "glockengelaeute": "term-glockengelaeute",
   "gluehen": {
@@ -6462,7 +6462,7 @@
   "mit-grossem-wurf": "term-mit-grossem-wurf",
   "mit-grosser-ruhe": "term-mit-grosser-ruhe",
   "mit-ironischem-ausdruck": "term-mit-ironischem-ausdruck",
-  "mit-kraft-maessig-schnell-viertel-ohne-pathos-und-stets-lebendig": "term-mit-kraft-maessig-schnell-viertel-ohne-pathos-und-stets-lebendig",
+  "mit-kraft-maessig-schnelle-viertel-ohne-pathos-und-stets-lebendig": "term-mit-kraft-maessig-schnelle-viertel-ohne-pathos-und-stets-lebendig",
   "mit-vollausladendem-ton": "term-mit-vollausladendem-ton",
   "mit-vollster-kraft-im-tempo-etwas-verzoegernd-und-auch-so-bleiben-bis-tempo-i": "term-mit-vollster-kraft-im-tempo-etwas-verzoegernd-und-auch-so-bleiben-bis-tempo-i",
   "mitte": "term-mitte",
@@ -6594,7 +6594,7 @@
   },
   "nacht": "term-nacht",
   "nachtstueck": "term-nachtstueck",
-  "nachtwanderlied": "term-nachtwanderlied",
+  "nachtwandlerlied": "term-nachtwandlerlied",
   "nadelscharf": "term-nadelscharf",
   "naehe": "term-naehe",
   "naiv": "term-naiv",
@@ -7396,7 +7396,8 @@
     "id": "term-schleifen",
     "exampleVariants": [
       "schleift",
-      "schleifend"
+      "schleifend",
+      "geschliffen"
     ],
     "exampleVariantDetails": [
       {
@@ -7406,6 +7407,10 @@
       {
         "form": "schleifend",
         "type": "分詞"
+      },
+      {
+        "form": "geschliffen",
+        "type": "過去分詞"
       }
     ]
   },
@@ -10251,7 +10256,7 @@
       }
     ]
   },
-  "weiches-arpeggio-vom-oben-nach-unten": "term-weiches-arpeggio-vom-oben-nach-unten",
+  "weiches-arpeggio-von-oben-nach-unten": "term-weiches-arpeggio-von-oben-nach-unten",
   "weile": "term-weile",
   "wein": "term-wein",
   "weinerlich": {
@@ -10318,9 +10323,9 @@
       }
     ]
   },
-  "wenn-der-sprung-gemacht-wird-so-sind-die-takte-520-bis-527-in-beiden-violinen-acht-toene-tiefer-zu-spielen-erst-von-den-beiden-letzten-noten-takt-527-an-in-der-hoeheren-oktavlage-der-herausgeber": {
-    "id": "term-wenn-der-sprung-gemacht-wird-so-sind-die-takte-520-bis-527-in-beiden-violinen-acht-toene-tiefer-zu-spielen-erst-von-den-beiden-letzten-noten-takt-527-an-in-der-hoeheren-oktavlage-der-herausgeber",
-    "original": "Wenn der Sprung gemacht wird, so sind die Takte 520 bis 527 in beiden Violinen acht Töne tiefer zu spielen, erst von den beiden letzten Noten Takt 527, an in der höheren Oktavlage. Der Herausgeber"
+  "wenn-der-sprung-gemacht-wird-so-sind-die-takte-520-bis-527-in-beiden-violinen-acht-toene-tiefer-zu-spielen-erst-von-den-beiden-letzten-noten-von-takt-527-an-in-der-hoeheren-oktavlage-der-herausgeber": {
+    "id": "term-wenn-der-sprung-gemacht-wird-so-sind-die-takte-520-bis-527-in-beiden-violinen-acht-toene-tiefer-zu-spielen-erst-von-den-beiden-letzten-noten-von-takt-527-an-in-der-hoeheren-oktavlage-der-herausgeber",
+    "original": "Wenn der Sprung gemacht wird, so sind die Takte 520 bis 527 in beiden Violinen acht Töne tiefer zu spielen, erst von den beiden letzten Noten von Takt 527 an in der höheren Oktavlage. Der Herausgeber"
   },
   "wenn-die-pauke-nicht-genau-auf-die-hoehe-des-obern-fis-zu-bringen-dann-die-stelle-ganz-weglassen": "term-wenn-die-pauke-nicht-genau-auf-die-hoehe-des-obern-fis-zu-bringen-dann-die-stelle-ganz-weglassen",
   "wenn-kontrabass-mit-c-saite-eine-oktave-tiefer": "term-wenn-kontrabass-mit-c-saite-eine-oktave-tiefer",
