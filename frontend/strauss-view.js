@@ -58,8 +58,8 @@ function renderRichardStraussSearch(container) {
             <div id="page-selection-container" class="accordion-content" style="display: none;">
                 <fieldset>
                     <legend>ページ番号</legend>
-                    <p style="font-size: 0.9em; color: #555;">ページ番号は半角で入力(例: 3,14,15-92)</p>
-                    <input type="text" id="page-input" placeholder="例 3, 14, 15-92">
+                    <p id="page-input-help" style="font-size: 0.9em; color: #555;"><a href="${getScoreEditionsHref()}">使用楽譜</a>の印刷ページ番号を半角で入力する．pdfの通算ページ番号ではないことに注意．</p>
+                    <input type="text" id="page-input" aria-describedby="page-input-help" placeholder="例 3, 14, 15-92">
                 </fieldset>
                 <div class="button-container">
                     <button type="button" id="btn-search-page" class="btn-search">検索</button>

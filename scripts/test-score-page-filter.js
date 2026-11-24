@@ -24,7 +24,7 @@ for (const [label, text] of [['frontend', source], ['generated public bundle', r
     buildTermResolutionNotice: () => '', createTermHighlightRegexForQueries: () => /term/g,
     linkTermsInTranslation: value => value, escapeHtml: String, escapeHtmlWithBreaks: String
   });
-  const names = ['hasScorePage', 'normalizeString', 'normalizeTermSearchText', 'parsePageInput', 'searchRichardWagnerByScene', 'searchRichardStraussByScene', 'searchRichardWagnerByPage', 'searchRichardStraussByPage', 'searchGenericTermsLocal'];
+  const names = ['hasScorePage', 'normalizeString', 'normalizeTermSearchText', 'parsePageInput', 'searchRichardWagnerByScene', 'searchRichardStraussByScene', 'searchRichardWagnerByPage', 'searchRichardStraussByPage', 'getScoreEditionsHref','formatPrintedScorePageNotice','searchGenericTermsLocal'];
   vm.runInContext(names.map(name => extract(text, name)).join('\n'), c);
   for (const value of blank) { assert.equal(c.hasScorePage({ page: value }), false, label + ': blank ' + JSON.stringify(value)); passed++; }
   for (const value of present) { assert.equal(c.hasScorePage({ page: value }), true, label + ': present ' + JSON.stringify(value)); passed++; }

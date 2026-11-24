@@ -6,7 +6,7 @@ const german='Vollendet am Geburtstage und zur höheren Ehre des „Allmächtige
 let checks=0;
 for(const source of [[read('frontend/search-core.js'),read('frontend/result-format.js'),read('frontend/search.js')].join('\n'),read('mahler-search-app/js/app.js')]){
  const c=vm.createContext({window:{appData:{dic_terms_index:{}}},console});
- vm.runInContext(['normalizeString','normalizeTermSearchText','termSearchTextVariants','isTermWordCharacter','matchesTermQuery','matchesAnyTermQuery','hasScorePage','searchGenericTermsLocal','escapeHtml','escapeHtmlWithBreaks'].map(n=>extract(source,n)).join('\n'),c);
+ vm.runInContext(['normalizeString','normalizeTermSearchText','termSearchTextVariants','isTermWordCharacter','matchesTermQuery','matchesAnyTermQuery','hasScorePage','getScoreEditionsHref','formatPrintedScorePageNotice','searchGenericTermsLocal','escapeHtml','escapeHtmlWithBreaks'].map(n=>extract(source,n)).join('\n'),c);
  const canonical=c.normalizeString(german),row={Oper:'feuersnot',Aufzug:'',Szene:'',page:331,whom:'',de:german,de_normalized:canonical,ja:'Completion note.'};
  c.window.appData.richard_strauss=[row];c.isDictionaryExampleSearch=()=>false;c.getDictionaryExampleSearchQueries=q=>[q];c.buildTermResolutionNotice=()=>'';c.createTermHighlightRegexForQueries=()=>/THIS_WILL_NOT_MATCH/g;c.linkTermsInTranslation=x=>x;
  const before=JSON.stringify(row);

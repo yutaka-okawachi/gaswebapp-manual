@@ -242,6 +242,19 @@ function formatGmTranslation(text, row) {
 window.formatGmTranslation = formatGmTranslation;
 window.formatNotationTranslation = formatGmTranslation;
 
+function getScoreEditionsHref() {
+    const nested = /(?:^|\/)mahler-search-app(?:\/|$)/.test(window.location?.pathname ?? '');
+    return (nested ? '' : 'mahler-search-app/') + 'other.html#scores-used';
+}
+
+function formatPrintedScorePageNotice() {
+    const href = getScoreEditionsHref();
+    const note = window.__SITE_LANGUAGE__ === 'en'
+        ? `“p.” refers to the page number printed on the <a href="${href}">score used for this site</a>, not the PDF viewer’s page number.`
+        : `「p.」は<a href="${href}">使用楽譜</a>の印刷ページ番号を示す．pdfの通算ページ番号ではないことに注意．`;
+    return `<p class="printed-score-page-note" style="font-size: 0.9em; color: #555;">${note}</p>`;
+}
+
 function formatGenericResults(data) {
     if (data.length === 0) {
         return '<div class="result-message">該当するデータが見つかりませんでした。</div>';
@@ -307,6 +320,8 @@ function formatGenericResults(data) {
             html += `<div class="score-info-banner">楽譜情報: ${escapeHtml(data[0]['楽譜情報'])}</div>`;
         }
     }
+
+    if (data.some(hasScorePage)) html += formatPrintedScorePageNotice();
 
     let prevAufzug = null;
     let prevSzene = null;

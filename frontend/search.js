@@ -369,7 +369,7 @@ function searchGenericTermsLocal(query, dataKey, type, resultMeta, matchMode) {
     const headwordCount = Object.keys(groupedByDe).length;
     if (resultMeta) resultMeta.resultCount = headwordCount;
     const notice = buildTermResolutionNotice(query, window.appData.dic_terms_index, headwordCount, isDictionaryExample);
-    let html = `${notice}<div class="result-message">${headwordCount}件ありました。</div>`;
+    let html = `${notice}<div class="result-message">${headwordCount}件ありました。</div>${formatPrintedScorePageNotice()}`;
     
     const sortedDeKeys = Object.keys(groupedByDe).sort((a, b) => a.localeCompare(b, 'de'));
     
