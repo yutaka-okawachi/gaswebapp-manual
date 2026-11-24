@@ -42,7 +42,7 @@
     <link rel="preload" href="css/common.css?v=96724ab1e7a4" as="style">
     <link rel="stylesheet" href="css/common.css?v=96724ab1e7a4">
     <script src="js/score_metadata.js?v=48edbc08c426"></script>
-    <script src="js/app.js?v=2b0837221e93"></script>
+    <script src="js/app.js?v=8eae7dee2db7"></script>
     <script src="js/wagner_strauss.js?v=a805b125e24e"></script>
     <style>
         .big-label {
@@ -266,8 +266,8 @@
         <div id="page-selection-container" class="accordion-content">
             <fieldset>
                 <legend>Page number</legend>
-                <p style="font-size: 0.9em; color: #555;">Enter page numbers</p>
-                <input type="text" id="page-input" placeholder="e.g. 3,14,15-92">
+                <p id="page-input-help" style="font-size: 0.9em; color: #555;"><a href="other.html#scores-used">Scores used</a>: Enter the printed page number for the edition listed, not the page number shown by the PDF viewer.</p>
+                <input type="text" id="page-input" aria-describedby="page-input-help" placeholder="e.g. 3,14,15-92">
             </fieldset>
             <div class="button-container">
                 <button type="button" onclick="searchByPage()" class="btn-search">Search</button>
