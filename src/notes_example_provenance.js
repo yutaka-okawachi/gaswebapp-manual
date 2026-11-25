@@ -20,20 +20,32 @@ function notesExampleWorks_(book) {
   });
   return map;
 }
-function notesExampleGmWorks_(data) {
+function notesExampleGmWorks_(data, catalogTitles) {
   const names = { a: 'Das Lied von der Erde', b1: 'Das klagende Lied（1880年版）', b2: 'Das klagende Lied（1899年版）',
     c: 'Lieder eines fahrenden Gesellen', d: 'Des Knaben Wunderhorn', e: 'Kindertotenlieder',
     f: 'Fünf Rückert-Lieder', g: 'Blumine', h: 'Totenfeier' };
+  // Canonical new-entry labels follow 「使用楽譜」, including the two distinct tenth-symphony entries.
+  const catalog = {
+    1: 'SYMPHONIE I (Revidierte Fassung)', 2: 'SYMPHONIE II (Revidierte Fassung)',
+    3: 'SYMPHONIE III (Revidierte Fassung)', 4: 'SYMPHONIE IV (Endgültige Fassung)',
+    5: 'SYMPHONIE V (Revidierte Fassung)', 6: 'SYMPHONIE VI (Revidierte Ausgabe)',
+    7: 'SYMPHONIE VII (Revidierte Fassung)', 8: 'SYMPHONIE VIII (Revidierte Fassung)',
+    9: 'SYMPHONIE IX (Revidierte Fassung)', 101: 'Adagio aus der Symphonie Nr. 10',
+    102: 'a performing version of the draft for the TENTH SYMPHONY（Deryck Cooke）',
+    a: 'DAS LIED VON DER ERDE', b1: 'Das Klagende Lied Fassung 1880 in drei Sätzen',
+    b2: 'Das Klagende Lied Fassung 1899 in zwei Sätzen', f: 'Lieder nach Texten von Friedrich Rückert',
+    g: 'Symphonischer Satz „Blumine“'
+  };
   const works = [];
   for (const record of String(data || '').split('&').filter(Boolean)) {
     const match = record.trim().match(/^M-(1|2|3|4|5|6|7|8|9|101|102|a|b1|b2|c|d|e|f|g|h)-[^\s]+$/);
     if (!match) return []; // Never label only the known part of a mixed/unknown work cell.
-    const code = match[1], title = names[code] || ('Symphonie Nr. ' + (code === '101' || code === '102' ? '10' : code));
+    const code = match[1], title = (catalogTitles && catalog[code]) || names[code] || ('Symphonie Nr. ' + (code === '101' || code === '102' ? '10' : code));
     works.push({ title: title, number: '' });
   }
   return works;
 }
-function notesExampleEvidence_(book, fields) {
+function notesExampleEvidence_(book, fields, catalogTitles) {
   const evidence = [], text = String(fields.ja || '') + '\n' + String(fields.en || '');
   if (typeof namedSheetRead_ !== 'function') return evidence;
   const works = notesExampleWorks_(book);
@@ -45,7 +57,7 @@ function notesExampleEvidence_(book, fields) {
     let rows;
     try { rows = namedSheetRead_(sheet, names, 2, sheet.getLastRow() - 1).values; } catch (_) { return; }
     rows.forEach(function (row) {
-      const titles = tab === 'GM' ? notesExampleGmWorks_(row[3]) : [works[tab + ':' + notesExampleKey_(row[3])]].filter(Boolean);
+      const titles = tab === 'GM' ? notesExampleGmWorks_(row[3], catalogTitles) : [works[tab + ':' + notesExampleKey_(row[3])]].filter(Boolean);
       if (!notesExampleKey_(row[0])) return;
       evidence.push({ tab: tab, de: notesExampleKey_(row[0]), ja: notesExampleKey_(row[1]), en: notesExampleKey_(row[2]), works: titles });
     });
@@ -156,8 +168,8 @@ function notesExamplePlan_(text, language, evidence, previous) {
   if (changes.some(function (x) { return x.line === lines.length; })) output = output.replace(/\n$/, '');
   return { text: output, ranges: styled, added: changes.length };
 }
-function notesExamplePrepare_(book, fields, previous) {
-  const evidence = notesExampleEvidence_(book, fields), result = {};
+function notesExamplePrepare_(book, fields, previous, catalogTitles) {
+  const evidence = notesExampleEvidence_(book, fields, catalogTitles), result = {};
   ['ja', 'en'].forEach(function (field) { result[field] = notesExamplePlan_(fields[field], field, evidence, previous && previous[field]); });
   return result;
 }

@@ -9,6 +9,44 @@ function directMaintenanceNotesExisting_(sheet, term) {
     return normalizeObservedTerm(row.values.de) === normalizeObservedTerm(term);
   });
 }
+// Public-facing examples come from the corpus, not from model-formatted location fields.
+function directMaintenanceDraftExamples_(text, field, examples) {
+  const en = field === 'en';
+  const heading = en ? '【Examples in musical contexts】' : '【音楽用語としての訳例】';
+  const aliases = [heading, en ? '【Musical translation examples】' : heading];
+  const lines = text.replace(/\r\n/g, '\n').split('\n');
+  const body = [];
+  let inExamples = false, insertion = -1;
+  lines.forEach(function (line) {
+    const section = line.trim().replace(/^〖([^〗]+)〗$/, '【$1】');
+    if (aliases.includes(section)) {
+      if (insertion === -1) insertion = body.length;
+      inExamples = true;
+      return;
+    }
+    if (section === '【参考資料】' || section === '【References】') {
+      inExamples = true; // The API has no independently verified score pages to cite.
+      return;
+    }
+    if (/^【[^】]+】$/.test(section)) inExamples = false;
+    if (!inExamples) body.push(line);
+  });
+  if (!examples.length) return body.join('\n').trim();
+  if (insertion === -1) {
+    insertion = body.findIndex(function (line) { return /^(?:【|〖)(?:補足|Usage notes|参考資料|References)(?:】|〗)$/.test(line.trim()); });
+    if (insertion === -1) insertion = body.length;
+  }
+  const block = [heading];
+  const markers = { GM: '[GM]', RW: '[RW: Oper]', RS: '[RS: Oper]' };
+  let previous = '';
+  examples.forEach(function (example) {
+    if (!Object.prototype.hasOwnProperty.call(markers, example.tab)) return;
+    if (example.tab !== previous) block.push(markers[example.tab]);
+    block.push((en ? 'German: ' : '') + example.de, (en ? 'English: ' : '') + example[field], '');
+    previous = example.tab;
+  });
+  return body.slice(0, insertion).concat(block, body.slice(insertion)).join('\n').trim();
+}
 function directMaintenanceDraft(term) {
   term = directMaintenanceTerm_(term);
   const book = rowCompletionBook_(), sheet = book.getSheetByName('Notes');
@@ -24,7 +62,7 @@ function directMaintenanceDraft(term) {
   try {
     const response = UrlFetchApp.fetch('https://api.openai.com/v1/responses', {
       method: 'post', contentType: 'application/json', headers: { Authorization: 'Bearer ' + key },
-      payload: JSON.stringify(rowCompletionRequest_({ tab: 'Notes' }, row, model, context)), muteHttpExceptions: true });
+      payload: JSON.stringify(rowCompletionRequest_({ tab: 'Notes', directNotesDraft: true }, row, model, context)), muteHttpExceptions: true });
     if (response.getResponseCode() < 200 || response.getResponseCode() >= 300) throw new Error('http');
     const body = JSON.parse(response.getContentText());
     if (!body || body.status !== 'completed') throw new Error('incomplete');
@@ -33,6 +71,18 @@ function directMaintenanceDraft(term) {
     directMaintenanceNotesText_(draft.ja); directMaintenanceNotesText_(draft.en);
   } catch (_) { throw new Error('APIから日英案を取得できませんでした．Notesは変更していません．再試行は草案作成ボタンから行えます．'); }
   const warnings = [];
+  const examples = (context.domain && context.domain.usage_examples) || [];
+  ['ja', 'en'].forEach(function (field) {
+    draft[field] = directMaintenanceDraftExamples_(draft[field], field, examples);
+    if (/https?:\/\//i.test(draft[field])) {
+      throw new Error('未確認のURLが草案に含まれていました．Notesは変更していません．草案を作り直してください．');
+    }
+    const heading = field === 'ja' ? '補足' : 'Usage notes';
+    if (examples.length && !draft[field].split('\n').some(function (line) {
+      return line.trim() === '【' + heading + '】' || line.trim() === '〖' + heading + '〗';
+    })) warnings.push(field === 'ja' ? '日本語の【補足】に，実例での意味・訳し分けを補ってください．' :
+      '英語の【Usage notes】に，実例での意味・訳し分けを補ってください．');
+  });
   // Style/evidence checks are editing advice, not a historical reservation or a new approval step.
   try {
     if (rowCompletionNewNotes_(row)) row.notesSupport = rowCompletionNotesSupport_(draft.notes_support, context);
@@ -41,7 +91,10 @@ function directMaintenanceDraft(term) {
       try { rowCompletionValidateText_(row, field, draft[field]); } catch (error) { warnings.push(String(error.message)); }
     });
   } catch (error) { warnings.push(String(error.message)); }
-  const provenance = notesExamplePrepare_(book, draft);
+  const provenance = notesExamplePrepare_(book, draft, null, true);
+  if (examples.length && ['ja', 'en'].some(function (field) { return provenance[field].ranges.length < examples.length; })) {
+    warnings.push('作品名を確定できない実例があります．管理番号の代わりに推測した作品名を入れず，実例と使用楽譜を確認してください．');
+  }
   draft.ja = provenance.ja.text; draft.en = provenance.en.text;
   return { term: term, de: plan.de, source: plan.source, ja: draft.ja, en: draft.en,
     warnings: warnings, linkAdvisory: maintenanceNotesLinkAdvisory_(plan, draft.en) };
@@ -59,7 +112,7 @@ function directMaintenanceNotesSave(term, fields) {
     if (existing) return { status: 'existing', row: existing.number, term: existing.values.de };
     const plan = maintenanceNotesSource_(book, term, 'alias');
     const layout = namedSheetColumns_(sheet, ['de', 'ja', 'en', 'source']);
-    const provenance = notesExamplePrepare_(book, { ja: ja, en: en });
+    const provenance = notesExamplePrepare_(book, { ja: ja, en: en }, null, true);
     ja = directMaintenanceNotesText_(provenance.ja.text); en = directMaintenanceNotesText_(provenance.en.text);
     const values = [plan.de, ja, en, plan.source], number = sheet.getLastRow() + 1;
     if (number > sheet.getMaxRows()) sheet.insertRowsAfter(sheet.getMaxRows(), 1);

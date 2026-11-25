@@ -62,3 +62,30 @@ f=fixture();{
  assert.equal(f.calls,0);assert.equal(f.rows[2][0],'[GM]');assert.equal(f.writes,1);
  f.context.directMaintenanceNotesSave('neu',fields);assert.equal(f.writes,1);
 }
+
+// Reproduce the Teller draft without ever touching the live Notes sheet.
+f=fixture();{
+ const sheet=f.context.rowCompletionBook_().getSheetByName('Notes');
+ const corpus={getLastRow:()=>3};
+ const rows=[
+   ['Teller','シンバルを打ち合わせて','With clash cymbals.','M-7-1-495-bec'],
+   ['mit Tellern (klingen lassen)','シンバルを打ち合わせて（響かせたままにする）','With clash cymbals (let them ring).','M-5-3-791-bec']
+ ];
+ f.context.rowCompletionBook_=()=>({getSheetByName:n=>n==='Notes'?sheet:n==='GM'?corpus:null});
+ f.context.namedSheetRead_=()=>({values:rows});
+ f.context.rowCompletionNotes_=()=>({domain:{usage_examples:rows.map(([de,ja,en,location])=>({tab:'GM',de,ja,en,location}))}});
+ const ja='【一般的な意味】\n皿，平皿．\n【音楽用語としての訳例】\n[GM]\nTeller\n誤った訳\nM-7-1-495-bec\n【補足】\nこの用例では打ち合わせシンバルを指す．\n【参考資料】\nhttps://example.test/invented.pdf#page=55';
+ const en='【General meanings】\nA plate or dish.\n【Usage notes】\nIn these directions, the word refers to clash cymbals.';
+ f.context.UrlFetchApp.fetch=()=>({getResponseCode:()=>200,getContentText:()=>JSON.stringify({status:'completed',output:[{content:[{type:'output_text',text:JSON.stringify({ja,en})}]}]})});
+ const draft=f.context.directMaintenanceDraft('Teller');
+ assert.match(draft.ja,/Teller\nシンバルを打ち合わせて\n《SYMPHONIE VII \(Revidierte Fassung\)》/);
+ assert.match(draft.en,/German: mit Tellern \(klingen lassen\)\nEnglish: With clash cymbals \(let them ring\)\.\nSYMPHONIE V \(Revidierte Fassung\)/);
+ assert.ok(draft.en.indexOf('【Examples in musical contexts】')<draft.en.indexOf('【Usage notes】'));
+ assert.doesNotMatch(draft.ja,/M-[57]-|誤った訳|example\.test|【参考資料】/);
+ assert.equal(draft.warnings.length,0);
+ assert.equal(f.writes,0);
+ const manual=draft.ja+'\n【参考資料】\nhttps://imslp.eu/files/verified.pdf#page=4';
+ f.context.directMaintenanceNotesSave('Teller',{ja:manual,en:draft.en});
+ assert.equal(f.rows[2][3],manual);
+ assert.equal(f.writes,1);
+}
