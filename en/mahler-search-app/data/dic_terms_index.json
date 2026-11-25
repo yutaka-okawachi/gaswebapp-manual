@@ -8541,7 +8541,18 @@
     ]
   },
   "taeppisch": "term-taeppisch",
-  "teller": "term-teller",
+  "teller": {
+    "id": "term-teller",
+    "exampleVariants": [
+      "Tellern"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "Tellern",
+        "type": "語形変化（要分類）"
+      }
+    ]
+  },
   "tempo-v-d-introduction": {
     "id": "term-tempo-v-d-introduction",
     "original": "Tempo v.d. Introduction"
@@ -16648,6 +16659,12 @@
     "id": "term-suessen",
     "original": "süßer",
     "canonical": "süßen",
+    "type": "語形変化（要分類）"
+  },
+  "tellern": {
+    "id": "term-teller",
+    "original": "Tellern",
+    "canonical": "Teller",
     "type": "語形変化（要分類）"
   }
 }
