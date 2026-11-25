@@ -44,7 +44,13 @@ function notesLinkApplyEnglish_(english,candidates,decisions){
 }
 function directMaintenanceReviewLinks(term,english){
  term=directMaintenanceTerm_(term);english=directMaintenanceNotesText_(english);
- const advisory=maintenanceNotesLinkAdvisory_({de:term,source:''},english);
+ const result=notesReviewEnglishLinks_(term,english,'');
+ try{directMaintenanceNotesText_(result.en);}
+ catch(_){return {en:english,removed:[],uncertain:result.removed.concat(result.uncertain),warning:'リンク除外後の本文を保存できる形式にできませんでした．本文は変更していません．'};}
+ return result;
+}
+function notesReviewEnglishLinks_(term,english,source){
+ const advisory=maintenanceNotesLinkAdvisory_({de:term,source:source||''},english);
  if(advisory.status!=='ready')return {en:english,removed:[],uncertain:[],warning:'リンク候補を取得できませんでした．本文は変更していません．'};
  if(!advisory.candidates.length)return {en:english,removed:[],uncertain:[],warning:''};
  const candidates=advisory.candidates,props=PropertiesService.getScriptProperties(),key=String(props.getProperty('OPENAI_API_KEY')||'').trim(),model=String(props.getProperty('OPENAI_DRAFT_MODEL')||'').trim();
@@ -58,7 +64,6 @@ function directMaintenanceReviewLinks(term,english){
   const result=JSON.parse((body.output||[]).flatMap(x=>x.content||[]).filter(x=>x.type==='output_text').map(x=>x.text).join(''));
   if(!Array.isArray(result.decisions)||result.decisions.length!==candidates.length||result.decisions.some(x=>!['english','german','uncertain'].includes(x)))throw Error('format');
   const applied=notesLinkApplyEnglish_(english,candidates,result.decisions);
-  directMaintenanceNotesText_(applied.en);
   applied.warning=advisory.truncated?'候補が多いため，一部は未確認です．':'';return applied;
  }catch(_){return {en:english,removed:[],uncertain:candidates,warning:'文脈判定を完了できませんでした．本文は変更していません．再確認できます．'};}
 }

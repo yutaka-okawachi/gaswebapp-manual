@@ -2,7 +2,7 @@
 // Entirely synthetic Spreadsheet/Properties/HTTP services; no credentials, Google or paid requests.
 const assert = require('node:assert/strict'), fs = require('node:fs'), path = require('node:path'), vm = require('node:vm'), crypto = require('node:crypto');
 const root = path.resolve(__dirname, '..');
-const source = ['dictionary_candidate_workflow.js', 'sheet_column_layout.js', 'maintenance_workbench.js', 'maintenance_text_style.js', 'row_completion_notes.js', 'row_completion_review.js', 'notes_entry_guard.js', 'row_completion.js'].map(f => fs.readFileSync(path.join(root, 'src', f), 'utf8')).join('\n');
+const source = ['dictionary_candidate_workflow.js', 'sheet_column_layout.js', 'maintenance_workbench.js', 'maintenance_text_style.js', 'row_completion_notes.js', 'row_completion_review.js', 'notes_entry_guard.js', 'dictionary_notation.js', 'generate_dic_html.js', 'notes_link_advisory.js', 'row_completion.js'].map(f => fs.readFileSync(path.join(root, 'src', f), 'utf8')).join('\n');
 // Select production-approved examples by identity, not their current exported row position.
 const styleExampleTerms = vm.runInNewContext(fs.readFileSync(path.join(root, 'src/maintenance_text_style.js'), 'utf8') + '\nMAINTENANCE_STYLE_EXAMPLE_TERMS');
 let passed = 0;
@@ -82,6 +82,11 @@ function harness(tab = 'GM', options = {}) {
       h.fetches++;h.lastRequest=JSON.parse(request.payload);assert.equal(url,'https://api.openai.com/v1/responses');
       if(h.onFetch)h.onFetch();
       if(h.transportFailure)throw Error('synthetic transport failure');
+      if (Array.isArray(h.lastRequest.input)) {
+        h.linkRequest = JSON.parse(h.lastRequest.input[1].content);
+        if (h.linkFailure) throw Error('synthetic link review failure');
+        return {getResponseCode:()=>200,getContentText:()=>JSON.stringify({status:'completed',output:[{content:[{type:'output_text',text:JSON.stringify({decisions:h.linkDecisions})}]}]})};
+      }
       const input=JSON.parse(h.lastRequest.input),fields=h.lastRequest.text.format.schema.required;
       const draft=Object.fromEntries(fields.filter(field=>!['notes_support','review_notes'].includes(field)).map(field=>[field,(tab==='Notes'&&input.profile==='dictionary'&&!input.source.ja?(field==='ja'?'【一般的な意味】\n':'【General meanings】\n'):'')+(field==='ja'?'静かに ':'Softly ')+(field==='en'&&input.source.ja?input.source.ja:input.source.de)]));
       if(fields.includes('notes_support'))draft.notes_support={english:'',italian:'',rationale:'不明な対応語は保留する．',usage_ids:[]};
@@ -91,6 +96,9 @@ function harness(tab = 'GM', options = {}) {
     }}
   });
   vm.runInContext(source,c);
+  c.maintenanceNotesLinkAdvisory_=(plan,en)=>options.linkWords
+    ? c.notesLinkAdvisory_(plan.de,en,plan.source,options.linkWords.map(de=>({values:{de,en:'',source:''}})),[])
+    : {status:'ready',candidates:[]};
   Object.assign(h,{c,script,users,sheet,headers,rows,formulas,notes,validation});
   if(tab==='Notes')assert.equal(c.notesEntryGuardInitialize_(),true);
   h.preview=()=>c.rowCompletionPreview().job;
@@ -111,6 +119,38 @@ test('existing Japanese is context for English and stays verbatim',()=>{
   const h=harness('Notes');h.put('ja','【一般的な意味】\n既存本文 https://example.invalid/ref#page=3');
   let job=h.generate(h.preview());assert.deepEqual(Array.from(job.rows[0].targets),['en']);job=h.apply(job);
   assert.equal(h.value('ja'),'【一般的な意味】\n既存本文 https://example.invalid/ref#page=3');assert(h.value('en').includes('既存本文'));assert.equal(h.writes.length,1);
+});
+test('Notes blank English: deny English ring links, keep German Ring, then save only English',()=>{
+  const h=harness('Notes',{linkWords:['Ring']});
+  h.put('de','Teller'); h.put('source','[GM]'); h.put('ja','シンバル．');
+  const en='【Examples in musical contexts】\nGerman: der Ring\nEnglish: Let them ring.\n\n【Usage notes】\nLet the cymbals ring.';
+  h.mutateDraft=d=>{d.en=en;};
+  h.linkDecisions=['english','english'];
+  let job=h.generate(h.preview());
+  assert.equal(h.fetches,2);
+  assert.equal(h.linkRequest.candidates.length,2);
+  assert.equal(h.writes.length,0);
+  assert.equal(job.rows[0].draft.en,en.replaceAll(' ring.',' [[nolink:ring]].'));
+  assert.match(job.rows[0].message,/除外：2か所/);
+  job=h.apply(job);
+  assert.equal(job.rows[0].status,'applied');
+  assert.equal(h.writes.length,1);
+  assert.equal(h.value('ja'),'シンバル．');
+  const links=h.c.maintenanceNotesLinkAdvisory_({de:'Teller',source:''},h.value('en'));
+  assert.equal(links.candidateCount,0);
+  assert.equal(links.germanCount,1);
+});
+test('Notes English link review failure or ambiguity leaves the draft intact and flags it',()=>{
+  for(const failure of [false,true]){
+    const h=harness('Notes',{linkWords:['Ring']});
+    h.put('de','Teller'); h.put('source','[GM]'); h.put('ja','シンバル．');
+    h.mutateDraft=d=>{d.en='Let them ring.';};
+    h.linkFailure=failure; h.linkDecisions=['uncertain'];
+    const job=h.generate(h.preview());
+    assert.equal(job.rows[0].draft.en,'Let them ring.');
+    assert.match(job.rows[0].message,failure?/完了できません/:/要確認.*ring/);
+    assert.equal(h.writes.length,0);
+  }
 });
 test('formula empty strings, spaces, array columns, merged/protected cells stay intact',()=>{
   for(const mode of ['formula','spaces','array','protected','merged']){

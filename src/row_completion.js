@@ -373,6 +373,25 @@ function rowCompletionGenerate(id, number) {
     if (reservation.job.tab !== 'Notes') reservation.row.reviewNotes = rowCompletionReviewFormat_(review);
     reservation.fields.forEach(function (field) { rowCompletionValidateText_(reservation.row, field, draft[field]); });
   } catch (_) { failure = 'APIの応答・訳文を確認できません．利用状況を確認するまで再送しないでください．'; }
+  let linkMessage = '';
+  if (!failure && reservation.job.tab === 'Notes' && reservation.fields.includes('en')) {
+    // Same context check as Notes registration; never write to the sheet during generation.
+    try {
+      const values = reservation.row.snapshot.values;
+      const review = notesReviewEnglishLinks_(values.de, draft.en, values.source || reservation.row.draft.source);
+      rowCompletionValidateText_(reservation.row, 'en', review.en);
+      draft.en = review.en;
+      const removed = review.removed.reduce(function (n, candidate) { return n + candidate.count; }, 0);
+      linkMessage = ' 英語の誤リンクを除外：' + removed + 'か所．';
+      if (review.uncertain.length) {
+        const labels = Array.from(new Set(review.uncertain.map(function (candidate) { return candidate.label; })));
+        linkMessage += ' 要確認（リンクは維持）：' + labels.slice(0, 5).join('，').slice(0, 160) + (labels.length > 5 ? ' ほか' : '') + '．';
+      }
+      if (review.warning) linkMessage += ' ' + review.warning;
+    } catch (_) {
+      linkMessage = ' 英語のリンクを確認できませんでした．生成した英訳は変更していません．';
+    }
+  }
   return rowCompletionLock_(function () {
     const job = rowCompletionJob_(id), row = job.rows.find(function (r) { return r.number === reservation.row.number; });
     if (!row || row.status !== 'generating' || job.closed) throw rowCompletionError_('作業状態が変わりました．前回の結果を確認してください．');
@@ -391,6 +410,7 @@ function rowCompletionGenerate(id, number) {
     else {
       Object.assign(row.draft, draft); row.status = row.notesSupport ? 'needs_review' : 'draft';
       row.message = row.notesSupport ? '新規Notesの案です．英伊対応の根拠説明と音楽実例を確認・編集してから反映してください．対応語は未承認で，自動採用しません．' : '生成案です．確認・編集してから空欄へ反映してください．';
+      row.message += linkMessage;
     }
     rowCompletionSave_(job);
     return rowCompletionView_(job);
