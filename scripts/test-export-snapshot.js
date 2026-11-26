@@ -50,19 +50,25 @@ assert.ok(!JSON.stringify(first).includes('githubToken'));
 // 列を並べ替えても（見出し名で読むため）生成結果は完全に同じになること
 const original = JSON.parse(JSON.stringify(sheets));
 const positional = new Set(['略記一覧']);
-const sceneSheets = new Set(['RS幕構成', 'RW幕構成']);
 for (const name of Object.keys(sheets)) {
     if (positional.has(name)) continue;
-    // 幕構成は見出し付きの追加列も書き出すため、無関係な列の追加は幕構成以外で確認する
     sheets[name] = sheets[name].map((row, i) => {
         const reversed = [...row].reverse();
-        return sceneSheets.has(name) ? reversed : [i === 0 ? 'メモ' : 'x', ...reversed];
+        return [i === 0 ? 'メモ' : 'private fixture', ...reversed];
     });
 }
 const reordered = JSON.parse(JSON.stringify(context.exportAllDataToJson({ requestId: 'fixture' })));
 assert.deepStrictEqual(reordered.files, first.files, 'Reordering columns must not change generated files');
 assert.deepStrictEqual(Object.keys(reordered.files['mahler-search-app/data/rs_scenes.json'][0]),
     ['Oper', 'Aufzug', 'Szene', '日本語', '作品名']);
+for (const name of ['rw_scenes', 'rs_scenes']) {
+    const file = 'mahler-search-app/data/' + name + '.json';
+    const unsafe = JSON.parse(JSON.stringify(first));
+    unsafe.files[file][0]['メモ'] = 'private fixture';
+    for (const language of ['ja', 'en']) {
+        assert.throws(() => validateSnapshot(unsafe, 'fixture', {}, false, language), /公開幕構成に不足または許可外/);
+    }
+}
 
 // 必須見出しの欠落・重複は公開前に停止すること
 const restore = () => Object.keys(original).forEach(name => { sheets[name] = JSON.parse(JSON.stringify(original[name])); });

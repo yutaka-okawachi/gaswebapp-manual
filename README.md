@@ -107,7 +107,7 @@ Richard Wagner（リヒャルト・ワーグナー）、Gustav Mahler（グス�
 - 後継者として新しく担当する方：[継承者マニュアル](./manuals/SUCCESSOR_GUIDE.md)から権限・資産を確認します。
 - 本人が新しいPCへ移る方：[PC移行マニュアル](./manuals/PC_MIGRATION_GUIDE.md)から設定・再認証・初回確認を進めます。
 - スプレッドシートの日々の保守操作を確認する方：[日常保守（操作早見）](./manuals/DAILY_MAINTENANCE.md)へ。用語の登録・編集、選択行の空欄補完、並べ替えの手順をまとめています。
-- 設定済みPCで同期・詳細運用・復旧を行う方：[日常保守マニュアル](./manuals/DEVELOPER_GUIDE.md)へ。シート変更の反映は`-Mode Data`を使います。
+- 設定済みPCで同期・詳細運用・復旧を行う方：[日常保守マニュアル](./manuals/DEVELOPER_GUIDE.md)へ。通常の `.\sync-data.ps1` でシートとサイトの変更をまとめて反映します。
 
 コードや関連文書を整備して公開せずに引き渡す場合は、`.\sync-data.ps1 -Mode Check`でローカルの組み立て・検証を行い、生成差分も確認します。Checkはシートの最新取得や本番接続の確認を行いません。各モードの使い分けは[日常保守の同期手順](./manuals/DEVELOPER_GUIDE.md#2-データ同期ワークフロー)を参照してください。
 

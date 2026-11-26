@@ -19,6 +19,14 @@ async function preflight(slug, credential) {
     if (!pages.html_url) throw new Error('GitHub Pages の公開URLを確認できません。');
     return pages.html_url.replace(/\/?$/, '/');
 }
+function validationState(runs, sha) {
+    const candidate = runs.filter(run => run.head_sha === sha && run.event === 'push' &&
+        run.name === 'Validate site and sync' &&
+        String(run.path).split('@')[0] === '.github/workflows/normalize-admin-optout.yml')
+        .sort((a, b) => b.id - a.id)[0];
+    if (!candidate || candidate.status !== 'completed') return 'pending';
+    return candidate.conclusion === 'success' ? 'success' : 'failure';
+}
 function deploymentState(runs, builds, sha) {
     const candidates = runs.filter(run => run.head_sha === sha && /pages/i.test(`${run.name} ${run.path}`));
     if (candidates.length) {
@@ -56,7 +64,9 @@ async function verifyPages(slug, sha, credential, baseUrl, manifest) {
         }
         const status = deploymentState(runs.workflow_runs || [], builds, sha);
         if (status === 'failure') throw new Error('最終コミットの GitHub Pages 公開に失敗しました。');
-        if (status === 'success') {
+        const validation = validationState(runs.workflow_runs || [], sha);
+        if (validation === 'failure') throw new Error('最終コミットの GitHub Actions（Validate site and sync）が成功していません。');
+        if (status === 'success' && validation === 'success') {
             try {
                 const live = await (await request(`${baseUrl}mahler-search-app/release.json?v=${manifest.releaseId}`)).json();
                 if (live.releaseId !== manifest.releaseId) throw new Error('公開ファイルの反映待ち');
@@ -76,10 +86,10 @@ async function verifyPages(slug, sha, credential, baseUrl, manifest) {
                 return;
             } catch (e) { last = e.message; }
         }
-        logger.wait(`Pages の公開確認を継続中…${last ? ' (' + last + ')' : ''}`);
+        logger.wait(`Pages と GitHub Actions の確認を継続中…${last ? ' (' + last + ')' : ''}`);
         await delay(10000);
     }
     throw new Error(`公開確認がタイムアウトしました。再実行で確認を再開します。${last}`);
 }
 function push() { git('push', 'origin', 'HEAD:main'); return git('rev-parse', 'HEAD'); }
-module.exports = { token, preflight, deploymentState, verifyPages, push };
+module.exports = { token, preflight, deploymentState, validationState, verifyPages, push };

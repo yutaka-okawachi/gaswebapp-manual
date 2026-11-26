@@ -168,25 +168,12 @@ function buildExportSnapshot_(exportOptions) {
         whomList[k] = Array.from(whomMap[k]).sort((a,b) => a.localeCompare(b, 'ja'));
     });
 
-    // 4. Scene Maps (RS幕構成, RW幕構成) - Export raw data as well
-    // 必須見出しを固定順で先頭に置き、それ以外の見出し付き列（作品名など）はシート上の順で後ろに続ける
+    // 幕構成には作業用の列も追加できる。公開は必須列と任意の「作品名」だけ。
     const buildSceneRows = (sheetName) => {
         const table = tables[sheetName];
-        const required = EXPORT_SHEET_HEADERS[sheetName];
-        const extras = table.header
-            .map((h, i) => ({ h, i }))
-            .filter(item => item.h && required.indexOf(item.h) === -1);
-        const seen = new Set();
-        extras.forEach(item => {
-            if (seen.has(item.h)) throw new Error('列名が重複しています: ' + sheetName + ':' + item.h);
-            seen.add(item.h);
-        });
-        const order = required.map(h => ({ h, i: table.columns[h] })).concat(extras);
-        return table.values.slice(1).map(row => {
-            let obj = {};
-            order.forEach(item => obj[item.h] = row[item.i]);
-            return obj;
-        });
+        const fields = EXPORT_SHEET_HEADERS[sheetName].concat(table.header.includes('作品名') ? ['作品名'] : []);
+        const columns = resolveExportColumns_(sheetName, table.header, fields);
+        return table.values.slice(1).map(row => Object.fromEntries(fields.map(field => [field, row[columns[field]]])));
     };
     const rsScenes = buildSceneRows('RS幕構成');
     const rwScenes = buildSceneRows('RW幕構成');

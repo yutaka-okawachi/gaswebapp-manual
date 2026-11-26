@@ -99,6 +99,11 @@ async function verifyScenario(kind, count = 3) {
             if (url.includes('/actions/')) return { json: async () => ({ workflow_runs: [{
                 head_sha: 'sha', name: 'pages', id: 1, status: 'completed',
                 conclusion: kind === 'deploymentFail' ? 'failure' : 'success'
+            }, {
+                head_sha: 'sha', name: 'Validate site and sync', id: 2, event: 'push',
+                path: '.github/workflows/normalize-admin-optout.yml',
+                status: kind === 'validationPending' ? 'in_progress' : 'completed',
+                conclusion: kind === 'validationFail' ? 'failure' : 'success'
             }] }) };
             if (url.includes('/git/ref/')) {
                 mainChecks++;
@@ -138,15 +143,15 @@ async function verifyScenario(kind, count = 3) {
         assert.strictEqual(seen.length, count);
         assert.strictEqual(new Set(seen).size, count, 'every manifest artifact checked exactly once');
         if (count >= 6) assert.strictEqual(peak, 6);
-    } else if (kind === 'deploymentFail') {
-        assert.match(caught.message, /公開に失敗/);
+    } else if (kind === 'deploymentFail' || kind === 'validationFail') {
+        assert.match(caught.message, kind === 'deploymentFail' ? /公開に失敗/ : /GitHub Actions/);
         assert.strictEqual(retries, 0);
         assert.strictEqual(seen.length, 0);
     } else {
         assert.strictEqual(caught, retryBoundary, 'validation failures reach the existing retry handler');
         assert.strictEqual(retries, 1);
         assert.strictEqual(mainChecks, kind === 'mainChanged' ? 1 : 0);
-        if (kind === 'oldRelease') assert.strictEqual(seen.length, 0);
+        if (kind === 'oldRelease' || kind === 'validationPending') assert.strictEqual(seen.length, 0);
     }
 }
 async function pendingDeploymentTimeout() {
@@ -168,7 +173,7 @@ async function pendingDeploymentTimeout() {
 (async () => {
     await schedulerFailure();
     await schedulerRefillsImmediately();
-    for (const kind of ['ok', 'hashFail', 'imageFail', 'invalidJSON', 'httpFail', 'requestTimeout', 'oldRelease', 'mainChanged', 'deploymentFail']) {
+    for (const kind of ['ok', 'hashFail', 'imageFail', 'invalidJSON', 'httpFail', 'requestTimeout', 'oldRelease', 'mainChanged', 'deploymentFail', 'validationPending', 'validationFail']) {
         await verifyScenario(kind);
     }
     await verifyScenario('ok', 248);

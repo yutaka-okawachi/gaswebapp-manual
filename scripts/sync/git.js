@@ -1,6 +1,6 @@
 const fs = require('fs');
 const path = require('path');
-const { root, run, git, sha256, normalizeText } = require('./core');
+const { root, run, git, sha256, normalizeText, ownsHash } = require('./core');
 const exact = new Set(['.claspignore', '.gitignore', '_config.yml', '01_START_SUCCESSOR_SETUP.bat',
     '02_RUN_SYNC.bat', 'AGENTS.md', 'CHANGELOG.md', 'apple-touch-icon.png', 'favicon.png', 'favicon_original.png',
     'google34b939d4db375916.html', 'index.html', 'LICENSE', 'license.html', 'privacy.html',
@@ -30,7 +30,7 @@ function preflight(ownedData = {}) {
     const outside = files.filter(file => !isAllowed(file));
     if (outside.length) throw new Error(`同期対象外の変更: ${outside.join(', ')}`);
     const generated = files.filter(file => isData(file) && (!ownedData[file] || !fs.existsSync(path.join(root, file)) ||
-        sha256(normalizeText(fs.readFileSync(path.join(root, file), 'utf8'))) !== ownedData[file]));
+        !ownsHash(ownedData[file], sha256(normalizeText(fs.readFileSync(path.join(root, file), 'utf8'))))));
     if (generated.length) throw new Error(`生成物にローカル変更があります。変更を保存・確認してから再実行してください: ${generated.join(', ')}`);
     git('diff', '--check');
     git('diff', '--cached', '--check');

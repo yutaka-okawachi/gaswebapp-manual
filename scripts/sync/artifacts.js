@@ -19,6 +19,12 @@ function validateSnapshot(snapshot, requestId, previous = {}, allowRemoval = fal
         const count = Object.keys(value).length;
         const oldCount = previous[file] ? Object.keys(previous[file]).length : 0;
         if (!file.includes('/dictionary-examples/') && !allowRemoval && (count === 0 || (oldCount > 0 && count < oldCount * 0.7))) throw new Error(`空データまたは30%超の件数減少: ${file} (${oldCount} → ${count})。意図した削除には -AllowDataRemoval を指定してください。`);
+        if (/\/(rw|rs)_scenes\.json$/.test(file)) {
+            const required = ['Oper', 'Aufzug', 'Szene', '日本語'];
+            const permitted = [...required, '作品名'];
+            if (value.some(row => !row || required.some(key => !Object.hasOwn(row, key)) ||
+                Object.keys(row).some(key => !permitted.includes(key)))) throw new Error('公開幕構成に不足または許可外の列があります: ' + file);
+        }
         if (/\/(mahler|richard_wagner|richard_strauss)\.json$/.test(file)) {
             const keys = file.endsWith('/mahler.json') ? ['de', 'ja', 'data'] : ['Oper', 'de', 'ja', 'page'];
             if (value.some(row => !row || keys.some(key => !Object.hasOwn(row, key)))) throw new Error(`検索データの必須列が不足: ${file}`);
@@ -63,7 +69,7 @@ function formatJson(file, value) {
 function installSnapshot(files) {
     // Called only after the entire snapshot has passed validation.
     return Object.entries(files).filter(([file, value]) => writeIfChanged(file,
-        formatJson(file, value))).map(([file]) => file);
+        formatJson(file, value), { atomic: true })).map(([file]) => file);
 }
 function updateSitemap(changed, today = new Date().toLocaleDateString('en-CA', { timeZone: 'Asia/Tokyo' })) {
     const file = 'sitemap.xml';
@@ -87,7 +93,7 @@ function publicFiles() {
     files.push(...require('../notes-score-build').approvedAssets(root).keys());
     return [...new Set(files)].sort();
 }
-function releaseManifest() {
+function releaseManifest({ beforeWrite } = {}) {
     const hashes = {};
     const scoreAssets = require('../notes-score-build').approvedAssets(root);
     for (const file of publicFiles()) hashes[file] = scoreAssets.has(file)
@@ -96,7 +102,9 @@ function releaseManifest() {
     const releaseId = sha256(JSON.stringify(hashes));
     const manifest = { schemaVersion: 1, releaseId, hashes };
     require('./bilingual').assertReleaseManifest(manifest);
-    writeIfChanged(base + 'release.json', formatJson(base + 'release.json', manifest));
+    const file = base + 'release.json', content = formatJson(file, manifest);
+    if (beforeWrite) beforeWrite(file, content);
+    writeIfChanged(file, content, { atomic: true });
     return manifest;
 }
 module.exports = { expectedPaths, validateSnapshot, previousData, installSnapshot, updateSitemap, releaseManifest, formatJson, publicFiles };

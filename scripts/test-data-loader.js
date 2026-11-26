@@ -23,5 +23,15 @@ vm.runInContext(fs.readFileSync(path.join(__dirname, '../frontend/data-loader.js
     fail = false;
     await context.loadData('terms_search');
     assert.ok(context.window.appData.mahler, 'Failed requests can be retried');
-    console.log('parallel data loading and retry tests: OK');
+    for (const search of ['', '&example_shards=', '&example_shards=,', '&example_shards=2,', '&example_shards=16', '&example_shards=+']) {
+        context.window.location = { search: '?q=vorne&source=dictionary_example' + search };
+        const before = calls.length;
+        assert.strictEqual(await context.window.loadDictionaryExampleData('rw_terms_search', 'vorne'), false);
+        assert.strictEqual(calls.length, before, 'Legacy or invalid links trigger the ordinary full-data path without reading any shard');
+    }
+    context.window.location = { search: '?q=vorne&source=dictionary_example&example_shards=0,15,0' };
+    const start = calls.length;
+    assert.strictEqual(await context.window.loadDictionaryExampleData('rw_terms_search', 'vorne'), true);
+    assert.deepStrictEqual(calls.slice(start), ['data/dictionary-examples/rw-00.json', 'data/dictionary-examples/rw-15.json']);
+    console.log('parallel data loading, retry, and legacy example link tests: OK');
 })().catch(error => { console.error(error); process.exitCode = 1; });

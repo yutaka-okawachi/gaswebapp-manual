@@ -109,7 +109,7 @@ function stage(prepared,options={}){
  fs.writeFileSync(path.join(staging,'manifest.json'),JSON.stringify(prepared.report,null,2));
  const cache=path.join(directory,'.sync-state','english');core.atomicJson(path.join(cache,'snapshot.json'),prepared.snapshot);core.atomicJson(path.join(cache,'current.json'),prepared.report);
  assertPolicyUnchanged(ticket,directory);
- if(policy.publishEnglish)for(const [file,value]of Object.entries(prepared.english)){const target=safeTarget(directory,file);fs.mkdirSync(path.dirname(target),{recursive:true});fs.writeFileSync(target,serialize(file,value));}
+ if(policy.publishEnglish)for(const [file,value]of Object.entries(prepared.english)){const target=safeTarget(directory,file);const content=serialize(file,value);if(!fs.existsSync(target)||!fs.readFileSync(target).equals(Buffer.from(content))){fs.mkdirSync(path.dirname(target),{recursive:true});core.atomicFile(target,content,path.join(directory,'.sync-state'));}}
  return {directory:staging,publishedEnglish:policy.publishEnglish,buildHash:prepared.report.buildHash};
 }
 function refreshStage(options={}){

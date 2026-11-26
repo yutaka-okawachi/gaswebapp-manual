@@ -4,7 +4,7 @@ const fs=require('fs'),path=require('path'),crypto=require('crypto');
 const {performance}=require('perf_hooks'),{root}=require('./core');
 const {timingLine}=require('./log-labels');
 const modes=new Set(['Auto','Data','All','Site','Check','Verify','Recover','Local']);
-const tasks=new Set(['run','build','gas-build','checks','syntax-checks','github-preflight','remote-check',
+const tasks=new Set(['run','build','gas-build','checks','checks-before-gas','checks-final','syntax-checks','github-preflight','remote-check',
  'gas-inspect','gas-head-before','gas-ensure','snapshot-fetch','english-prepare','english-stage',
  'data-install','final-build','cached-build','cached-english','release-manifest','gas-head-commit',
  'gas-head-push','push','pages-verify','dashboard-verify','resume-verify']);

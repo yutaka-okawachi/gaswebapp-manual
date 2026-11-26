@@ -30,11 +30,15 @@ function build(options = {}) {
         .filter(name => name.endsWith('.html') && (options.includeDictionary || name !== 'dic.html') && !name.endsWith('_test.html'))
         .map(name => 'mahler-search-app/' + name)];
     for (const page of pages) {
-        const original = fs.readFileSync(path.join(root, page), 'utf8');
+        const isDictionary = page === 'mahler-search-app/dic.html';
+        const original = isDictionary && typeof options.dictionaryHtml === 'string'
+            ? options.dictionaryHtml : fs.readFileSync(path.join(root, page), 'utf8');
         const template = synopsisSource && /(?:rw|rs)_synopsis\.html$/.test(page) ? synopsis.rewriteList(original, baseMetadata, japaneseMetadata, 'ja') : original;
         const html = languages.decorateHtml(template, { language: 'ja', englishEnabled, file: page });
-        writeIfChanged(page, html.replace(/((?:src|href)=["'])(?:mahler-search-app\/)?((?:js|css)\/[^"'?]+)(?:\?v=[^"']*)?(["'])/g,
-            (match, before, asset, quote) => versions[asset] ? `${before}${page.startsWith('mahler-search-app/') ? '' : 'mahler-search-app/'}${asset}?v=${versions[asset]}${quote}` : match));
+        const output = html.replace(/((?:src|href)=["'])(?:mahler-search-app\/)?((?:js|css)\/[^"'?]+)(?:\?v=[^"']*)?(["'])/g,
+            (match, before, asset, quote) => versions[asset] ? `${before}${page.startsWith('mahler-search-app/') ? '' : 'mahler-search-app/'}${asset}?v=${versions[asset]}${quote}` : match);
+        if (isDictionary && options.beforeDictionaryWrite) options.beforeDictionaryWrite(output);
+        writeIfChanged(page, output, { atomic: isDictionary });
     }
     return versions;
 }

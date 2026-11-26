@@ -90,13 +90,10 @@ window.loadDictionaryExampleData = async function(key, rawQuery) {
         return false;
     }
 
-    const shardIds = Array.from(new Set(
-        String(urlParams.get('example_shards') || '')
-            .split(',')
-            .map(value => Number(value))
-            .filter(value => Number.isInteger(value) && value >= 0 && value < 16)
-    ));
-    if (shardIds.length === 0) return false;
+    const shardParam = urlParams.get('example_shards');
+    // Legacy links have no shard list. Empty or malformed lists are not shard zero.
+    if (!shardParam || !/^(?:[0-9]|1[0-5])(?:,(?:[0-9]|1[0-5]))*$/.test(shardParam)) return false;
+    const shardIds = [...new Set(shardParam.split(',').map(Number))];
 
     try {
         const shardRequests = shardIds.map(shardNumber => {

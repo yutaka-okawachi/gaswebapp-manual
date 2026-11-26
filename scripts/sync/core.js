@@ -5,6 +5,14 @@ const { spawnSync } = require('child_process');
 const root = path.resolve(__dirname, '../..');
 const sha256 = value => crypto.createHash('sha256').update(value).digest('hex');
 const normalizeText = value => value.replace(/\r\n/g, '\n');
+const ownsHash = (record, hash) => typeof hash === 'string' &&
+    (Array.isArray(record) ? record.includes(hash) : record === hash);
+function nextOwnedHash(previous, current, planned) {
+    // Keep the actually installed prior hash until the next write succeeds.
+    // A retry never accumulates older generations.
+    if (!ownsHash(previous, current) || current === planned) return planned;
+    return planned ? [current, planned] : current;
+}
 function gasSourceFingerprint(directory = root) {
     const excluded = new Set(['manage_deploy.js', 'update_env.js', 'sync_build.js']);
     const files = fs.readdirSync(path.join(directory, 'src')).filter(name => !excluded.has(name) && /\.(js|html|json)$/.test(name)).sort();
@@ -28,11 +36,22 @@ function run(command, args = [], options = {}) {
     return safeStdoutPattern ? safeStdout + (safeStdout ? '\n' : '') : rawStdout;
 }
 function git(...args) { return run('git', args).trim(); }
-function writeIfChanged(relative, content) {
+function atomicFile(file, content, scratch) {
+    fs.mkdirSync(scratch, { recursive: true });
+    const temporary = path.join(scratch, 'public-write-' + crypto.randomUUID() + '.tmp');
+    try {
+        fs.writeFileSync(temporary, content, { flag: 'wx' });
+        fs.renameSync(temporary, file);
+    } finally {
+        fs.rmSync(temporary, { force: true });
+    }
+}
+function writeIfChanged(relative, content, { atomic = false } = {}) {
     const file = path.join(root, relative);
     if (fs.existsSync(file) && normalizeText(fs.readFileSync(file, 'utf8')) === normalizeText(content)) return false;
     fs.mkdirSync(path.dirname(file), { recursive: true });
-    fs.writeFileSync(file, content, 'utf8');
+    if (atomic) atomicFile(file, content, path.join(root, '.sync-state'));
+    else fs.writeFileSync(file, content, 'utf8');
     return true;
 }
 function atomicJson(file, value) {
@@ -48,4 +67,4 @@ async function request(url, options = {}, fetchImpl = fetch) {
     if (!response.ok) throw new Error(`HTTP ${response.status}: ${new URL(url).pathname}`);
     return response;
 }
-module.exports = { root, sha256, normalizeText, gasSourceFingerprint, run, git, writeIfChanged, atomicJson, readJson, delay, request };
+module.exports = { root, sha256, normalizeText, ownsHash, nextOwnedHash, gasSourceFingerprint, run, git, writeIfChanged, atomicFile, atomicJson, readJson, delay, request };

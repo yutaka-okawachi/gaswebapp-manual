@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
-const { root, git, run, atomicJson, readJson, sha256, normalizeText } = require('./core');
+const { root, git, run, atomicJson, readJson, sha256, normalizeText, nextOwnedHash } = require('./core');
 const repository = require('./git');
 const gas = require('./gas');
 const editorHead = require('./gas-head');
@@ -14,6 +14,13 @@ const { dashboardVerificationRequired, receiptNeedsDashboard, dashboardSettingsH
 const { build } = require('../build-site');
 const { check } = require('../check-local');
 const directory = path.join(root, '.sync-state');
+const dictionaryPath = 'mahler-search-app/dic.html';
+const releasePath = 'mahler-search-app/release.json';
+function journalHash(file, prior, planned) {
+    const target = path.join(root, file);
+    const current = prior && fs.existsSync(target) ? sha256(normalizeText(fs.readFileSync(target, 'utf8'))) : null;
+    return nextOwnedHash(prior, current, planned);
+}
 const dashboardSeconds = '(?:na|[0-9]{1,8}\\.[0-9]{1,9})';
 const dashboardTelemetryLine = new RegExp(
     '^DASHBOARD_CHECK (?:preflight=missing_token|period=(?:7|30|90|180)' +
@@ -45,7 +52,7 @@ function plan(mode, files, gasChanged) {
     if (mode === 'Site' && gasChanged) throw new Error('GAS に未反映の変更があります。通常の sync-data を実行してください。');
     return {
         deploy: mode !== 'Site' && gasChanged,
-        data: ['All', 'Data'].includes(mode) || (mode === 'Auto' && (gasChanged || files.length === 0 || files.some(file => file.startsWith('src/') || ['scripts/english-site.js', 'scripts/gm-original-validation.js', 'frontend/notation-contexts.js'].includes(file)))),
+        data: ['Auto', 'Data', 'All'].includes(mode),
         documentsOnly: documentsOnly && !gasChanged
     };
 }
@@ -146,6 +153,11 @@ async function main(args = process.argv.slice(2), hooks = {}) {
         const stateFile = path.join(directory, 'state.json');
         const state = readJson(stateFile, {});
         const save = () => atomicJson(stateFile, state);
+        const recordGeneratedWrite = (file, text) => {
+            state.ownedData ||= {};
+            state.ownedData[file] = journalHash(file, state.ownedData[file], sha256(normalizeText(text)));
+            save();
+        };
 
         logger.header(1, 7, '事前確認と環境検証');
         logger.info('Git 作業ツリーと実行前条件を検査中…');
@@ -210,9 +222,8 @@ async function main(args = process.argv.slice(2), hooks = {}) {
         timing.measure('build', () => build());
         timing.measure('gas-build', () => gas.prepareBuild());
         logger.sub('ブラウザ用スクリプトおよび GAS 用定義を生成');
-        timing.measure('checks', () => check());
-
         if (opt.mode === 'Check') {
+            timing.measure('checks', () => check());
             logger.finish('確認モード完了: 本番への変更はありません。');
             return;
         }
@@ -228,6 +239,8 @@ async function main(args = process.argv.slice(2), hooks = {}) {
         const observedGas = await timing.measure('gas-inspect', () => gas.inspect(settings));
         const gasChanged = !observedGas || observedGas.sourceHash !== gas.fingerprint();
         const selected = plan(opt.mode, files, gasChanged);
+        // A changed GAS deployment still needs the full safety checks before it touches production.
+        if (selected.deploy) timing.measure('checks-before-gas', () => check());
 
         // Check editor HEAD as well as the published hash, before any commit.
         const headCheck = await timing.measure('gas-head-before', () => editorHead.preflight(settings));
@@ -236,13 +249,9 @@ async function main(args = process.argv.slice(2), hooks = {}) {
         const pendingCommitFiles = repository.changed();
         if (pendingCommitFiles.length) logFileList('今回コミットするローカル変更', pendingCommitFiles);
         if (unpushed.length) logFileList('未送信のローカルコミット差分', unpushed);
-        if (opt.mode === 'Auto' && !selected.data) {
-            logger.warn('Auto モードのため今回はスプレッドシートからのデータ取得を省略します（シート編集も反映する場合は -Mode Data を指定してください）。');
-        }
-
         bilingual.assertPolicyUnchanged(gateTicket);
         // Save a source checkpoint before mutating the live GAS deployment.
-        if (repository.changed().length) {
+        if (selected.deploy && repository.changed().length) {
             repository.commitChanges(opt.message);
             logger.success(`ソース変更のチェックポイントコミットを作成: "${opt.message}"`);
         }
@@ -270,17 +279,24 @@ async function main(args = process.argv.slice(2), hooks = {}) {
             const prepared = timing.measure('english-prepare', () => bilingual.prepare(snapshot, requestId, artifacts.previousData(), opt.allowRemoval));
             const values = prepared.japanese;
             bilingual.assertPolicyUnchanged(gateTicket);
-            const publicValues = bilingual.englishEnabled() ? { ...values, ...prepared.english } : values;
+            const { [dictionaryPath]: dictionaryHtml, ...dataFiles } = values;
+            const publicValues = bilingual.englishEnabled() ? { ...dataFiles, ...prepared.english } : dataFiles;
             logger.sub(`検証合格: 全 ${Object.keys(values).length} ファイル (辞書・実例48分割シャード整合)`);
-            state.ownedData = Object.fromEntries(Object.entries(publicValues).map(([file, value]) =>
-                [file, sha256(normalizeText(typeof artifacts.formatJson === 'function' ? artifacts.formatJson(file, value) : (typeof value === 'string' ? value : JSON.stringify(value))))]));
+            const prior = state.ownedData || {};
+            const planned = Object.fromEntries(Object.entries(publicValues).map(([file, value]) =>
+                [file, sha256(normalizeText(artifacts.formatJson(file, value)))]));
+            state.ownedData = Object.fromEntries(Object.entries({
+                ...planned, [dictionaryPath]: undefined, [releasePath]: undefined
+            }).map(([file, hash]) => [file, journalHash(file, prior[file], hash)]));
             save();
             const englishStage = timing.measure('english-stage', () => bilingual.stage(prepared));
             logger.sub('英語成果物を同一取得から生成: ' + (englishStage.publishedEnglish ? '承認済み公開対象' : '非公開ステージのみ'));
-            timing.measure('data-install', () => artifacts.installSnapshot(values));
-            // GAS returns a cache-neutral dictionary. Apply current public asset hashes locally
-            // so browser-only changes never require a GAS deployment.
-            timing.measure('final-build', () => build({ includeDictionary: true, bilingualSource: snapshot.englishSource }));
+            timing.measure('data-install', () => artifacts.installSnapshot(dataFiles));
+            // Install only the final, asset-versioned dictionary; don't overwrite it with raw GAS HTML.
+            timing.measure('final-build', () => build({
+                includeDictionary: true, bilingualSource: snapshot.englishSource, dictionaryHtml,
+                beforeDictionaryWrite: html => recordGeneratedWrite(dictionaryPath, html)
+            }));
             logger.success('ローカルデータファイルを最新スナップショットで更新しました。');
         } else {
             logger.info('データ更新はスキップされました。');
@@ -293,8 +309,11 @@ async function main(args = process.argv.slice(2), hooks = {}) {
                     const report = readJson(path.join(staged.directory, 'manifest.json'));
                     generated.push(...Object.keys(report.hashes));
                 }
-                state.ownedData = Object.fromEntries(generated.map(file =>
-                    [file, sha256(normalizeText(fs.readFileSync(path.join(root, file), 'utf8')))]));
+                state.ownedData = {
+                    [releasePath]: state.ownedData?.[releasePath],
+                    ...Object.fromEntries(generated.map(file =>
+                        [file, sha256(normalizeText(fs.readFileSync(path.join(root, file), 'utf8')))]))
+                };
                 save();
             }
         }
@@ -302,16 +321,21 @@ async function main(args = process.argv.slice(2), hooks = {}) {
         const allChanged = [...new Set([...files, ...repository.changed()])];
         artifacts.updateSitemap(allChanged);
         logger.sub('sitemap.xml を更新');
-        const manifest = timing.measure('release-manifest', () => artifacts.releaseManifest());
+        const manifest = timing.measure('release-manifest', () => artifacts.releaseManifest({ beforeWrite: recordGeneratedWrite }));
         logger.sub(`公開マニフェスト release.json を生成 (Release ID: ${manifest.releaseId.slice(0, 8)})`);
+
+        // Validate the latest generated files, not just the previous checkout's data.
+        timing.measure('checks-final', () => check());
 
         const artifactCommitMsg = opt.message && opt.message !== '自動同期アップデート'
             ? `同期: ${opt.message} (データおよびサイト成果物の検証・反映)`
             : '同期: データおよびサイト成果物の検証・反映';
         await timing.measure('gas-head-commit', () => editorHead.preflight(settings));
         bilingual.assertPolicyUnchanged(gateTicket);
-        repository.commitChanges(artifactCommitMsg);
-        logger.success(`成果物をコミットしました: "${artifactCommitMsg}"`);
+        if (repository.changed().length) {
+            repository.commitChanges(artifactCommitMsg);
+            logger.success(`成果物をコミットしました: "${artifactCommitMsg}"`);
+        }
 
         // No automatic rebase after deployment: another writer must never be silently merged.
         if (timing.measure('remote-check', () => repository.checkRemote()) !== remote) throw new Error('同期中にリモートが変更されました。公開を停止しました。');
@@ -319,6 +343,14 @@ async function main(args = process.argv.slice(2), hooks = {}) {
         const dashboardRequired = opt.verifyDashboard ||
             !dashboardCheckFresh(state.dashboardCheck, dashboardSettingsHash(settings)) ||
             dashboardVerificationRequired(state.lastSuccess, receiptCommit, remote, git);
+        if (receiptCommit === remote && !repository.changed().length && !dashboardRequired &&
+            state.lastSuccess?.commit === receiptCommit && state.lastSuccess.releaseId === manifest.releaseId &&
+            state.lastSuccess.gasHash === state.gasHash) {
+            delete state.ownedData;
+            save();
+            logger.finish('最新状態を確認しました。公開済みの内容に変更がないため、再送信・再公開は行いません。');
+            return;
+        }
         state.pending = { commit: receiptCommit, baseUrl, manifest, documentsOnly: selected.documentsOnly, dashboardRequired };
         save();
         await verify(state, settings, credential, slug, save, gateTicket, false, opt.verifyDashboard);

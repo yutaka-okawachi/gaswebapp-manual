@@ -38,7 +38,7 @@
 <a id="今回の同期順と検証"></a>
 ## 互換移行の順序と検証
 
-新規導入では、先にトークン対応コードと旧データ互換を公開します。公開成功を確認してから担当者がシートのde/ja/enを変更し、その後`.\sync-data.ps1 -Mode Data`でデータ取得を伴う正規同期へ進みます。コード公開とシート移行と公開データ反映は別の完了条件です。Autoはシート更新の検知を保証しないため、モードの正本は[日常保守](DEVELOPER_GUIDE.md#2-2-実行される処理の流れ)を参照してください。
+新規導入では、先にトークン対応コードと旧データ互換を公開します。公開成功を確認してから担当者がシートのde/ja/enを変更し、その後`.\sync-data.ps1 -Mode Data`でデータ取得を伴う正規同期へ進みます。コード公開とシート移行と公開データ反映は別の完了条件です。通常同期（Auto）でも最新シートを取得します。モードの正本は[日常保守](DEVELOPER_GUIDE.md#2-2-実行される処理の流れ)を参照してください。
 
 新規対応時の検証コマンドは`node scripts/test-score-tokens.js`、`node scripts/test-score-token-sync.js`、`node scripts/test-notes-glockenspiel.js`、`node scripts/test-original-score-examples.js`等です。全ローカル回帰は`node scripts/check-local.js`です。
 

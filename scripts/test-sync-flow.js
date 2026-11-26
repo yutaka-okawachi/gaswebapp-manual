@@ -7,7 +7,7 @@ const core = require('./sync/core');
 const dashboardPolicy = require('./sync/dashboard-policy');
 const source = fs.readFileSync(path.join(__dirname, 'sync/main.js'), 'utf8');
 
-async function scenario({ failCheck = false, failSnapshot = false, failPublish = false, failHeadAt = 0, sourceChanges = false, mode = 'Auto', args = ['--mode', mode], blockResume = false, currentGas = false, blockEnglishResume = false, failGateAt = 0, resumeMode = 'Verify', failResumePublish = false, freshCheckFail = false, freshSnapshotFail = false, resumeMutation = '', pendingDocumentsOnly = false, dashboardRequired = true, configChanged = false, staleDashboard = false, forceDashboard = false, confirm = null, fastForward = null, expectAbort = false, removeLockInVerify = false } = {}) {
+async function scenario({ failCheck = false, failSnapshot = false, failPublish = false, failHeadAt = 0, sourceChanges = false, mode = 'Auto', args = ['--mode', mode], blockResume = false, currentGas = false, blockEnglishResume = false, failGateAt = 0, resumeMode = 'Verify', failResumePublish = false, freshCheckFail = false, freshSnapshotFail = false, resumeMutation = '', pendingDocumentsOnly = false, dashboardRequired = true, configChanged = false, staleDashboard = false, forceDashboard = false, confirm = null, fastForward = null, expectAbort = false, removeLockInVerify = false, failFinalCheck = false, noChange = false, siteChanges = false, failFetch = false } = {}) {
     const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'gmt-sync-test-'));
     fs.mkdirSync(path.join(directory, 'scripts'));
     fs.writeFileSync(path.join(directory, 'scripts/english-publication.json'), JSON.stringify({schemaVersion:1,publishEnglish:false,englishReleaseApproved:false}));
@@ -20,14 +20,17 @@ async function scenario({ failCheck = false, failSnapshot = false, failPublish =
     core.atomicJson(stateFile, { dashboardCheck: { commit: '0'.repeat(40),
         verifiedAt: new Date(Date.now() - (staleDashboard ? 8 * 86400000 : 0)).toISOString(),
         settingsHash: configChanged ? '0'.repeat(64) : settingsHash } });
+    if (noChange) core.atomicJson(stateFile, { ...core.readJson(stateFile),
+        gasHash: 'hash', lastSuccess: { commit: 'source-head', releaseId: 'release', gasHash: 'hash' } });
     const expectedApi = dashboardRequired || configChanged || staleDashboard || forceDashboard;
     let head = 'source-head';
-    let changes = sourceChanges ? ['src/synthetic.js'] : [];
+    let changes = sourceChanges ? ['src/synthetic.js'] : siteChanges ? ['README.md', 'index.html'] : [];
     let publishFailure = failPublish;
     let headChecks = 0;
     let resumeBlocked = false;
     let gateChecks = 0;
     let checkFailure = failCheck, snapshotFailure = failSnapshot, armedMutation = '';
+    let tests = 0;
     let sheetText = 'old sheet text';
     const installedText = [];
     const fakeRequire = name => {
@@ -42,15 +45,15 @@ async function scenario({ failCheck = false, failSnapshot = false, failPublish =
             './git': {
                 preflight: () => { events.push('preflight'); return changes; },
                 repoSlug: () => 'owner/repo', changed: () => changes,
-                checkRemote: () => { events.push('remote'); return 'remote-head'; },
+                checkRemote: () => { events.push('remote'); return noChange ? head : 'remote-head'; },
                 ...(fastForward ? { fastForwardIfClean: () => { events.push('fast-forward'); return fastForward(); } } : {}),
-                commitChanges: () => { events.push('commit'); head += '-commit'; }
+                commitChanges: () => { events.push('commit'); head += '-commit'; changes = []; }
             },
             './gas': {
                 configuration: () => mockSettings, fingerprint: () => 'hash',
                 prepareBuild: () => {}, inspect: async () => ({ sourceHash: currentGas ? 'hash' : 'old' }),
                 ensureDeployment: async (settings, state, save) => { events.push('deploy'); state.gasHash = 'hash'; save(); },
-                exportSnapshotForSource: async () => { events.push('snapshot'); return { sourceHash: 'hash', sheetText }; }
+                exportSnapshotForSource: async () => { events.push('snapshot'); if (failFetch) throw new Error('sheet unavailable'); return { sourceHash: 'hash', sheetText }; }
             },
             './gas-head': {
                 preflight: async () => {
@@ -63,8 +66,11 @@ async function scenario({ failCheck = false, failSnapshot = false, failPublish =
             './artifacts': {
                 expectedPaths: [], previousData: () => ({}),
                 validateSnapshot: snapshot => { events.push('validate'); if (snapshotFailure) throw new Error('bad snapshot'); return { notes: snapshot.sheetText }; },
-                installSnapshot: values => { events.push('install'); installedText.push(values.notes); },
-                updateSitemap: () => {}, releaseManifest: () => ({ releaseId: 'release', hashes: { 'index.html': 'a'.repeat(64) } }),
+                installSnapshot: values => { events.push('install'); installedText.push(values.notes); if (!noChange) changes = [...changes, 'mahler-search-app/data/dic_notes.json']; },
+                updateSitemap: () => { if (!noChange && mode === 'Site') changes = ['sitemap.xml']; }, releaseManifest: ({ beforeWrite }) => {
+                    beforeWrite('mahler-search-app/release.json', 'fixture manifest');
+                    return { releaseId: 'release', hashes: { 'index.html': 'a'.repeat(64) } };
+                },
                 formatJson: (file, value) => typeof value === 'string' ? value : JSON.stringify(value)
             },
             './bilingual': {
@@ -79,7 +85,7 @@ async function scenario({ failCheck = false, failSnapshot = false, failPublish =
                 verifyPages: async () => { events.push('verify'); if (removeLockInVerify) { const lockPath = path.join(directory, '.sync-state/lock.json'); if (fs.existsSync(lockPath)) fs.unlinkSync(lockPath); } if (publishFailure) { publishFailure = false; throw new Error('pending Pages'); } if (armedMutation === 'head') head += '-user-change'; if (armedMutation === 'files') changes = ['README.md']; armedMutation = ''; }
             },
             '../build-site': { build: () => { events.push('build'); } },
-            '../check-local': { check: () => { events.push('tests'); if (checkFailure) throw new Error('bad test'); } }
+            '../check-local': { check: () => { events.push('tests'); tests++; if (checkFailure || (failFinalCheck && tests === 2)) throw new Error('bad test'); } }
         };
         return Object.hasOwn(stubs, name) ? stubs[name] : require(name);
     };
@@ -111,6 +117,18 @@ async function scenario({ failCheck = false, failSnapshot = false, failPublish =
         } else if (failCheck) {
             assert.ok(failed);
             assert.ok(!events.includes('deploy') && !events.includes('push'));
+        } else if (failFinalCheck || failFetch) {
+            assert.ok(failed && /bad test|sheet unavailable/.test(failure && failure.message));
+            for (const stage of ['commit', 'push', 'verify']) assert.ok(!events.includes(stage), stage);
+            assert.ok(events.includes('install') === failFinalCheck);
+            if (failFinalCheck) {
+                assert.equal(core.readJson(stateFile).ownedData['mahler-search-app/release.json'],
+                    core.sha256('fixture manifest'), 'Final-check failure must leave the generated manifest eligible for retry');
+            }
+        } else if (noChange) {
+            assert.ok(!failed);
+            assert.ok(events.includes('snapshot') && events.includes('tests') && events.includes('finish'));
+            for (const stage of ['commit', 'push', 'verify', 'api']) assert.ok(!events.includes(stage), stage);
         } else if (failSnapshot) {
             assert.ok(failed);
             assert.ok(!events.includes('install') && !events.includes('push'));
@@ -151,11 +169,11 @@ async function scenario({ failCheck = false, failSnapshot = false, failPublish =
                 const continueFresh = ['Auto', 'Data', 'All'].includes(resumeMode) &&
                     !blockResume && !blockEnglishResume && !failResumePublish && !resumeMutation;
                 if (continueFresh) {
-                    assert(resume.indexOf('verify') < resume.indexOf('tests'), 'Prior publication completes before fresh checks');
-                    if (freshCheckFail) assert(!resume.includes('snapshot'));
-                    else assert(resume.indexOf('tests') < resume.indexOf('snapshot'));
+                    assert(resume.indexOf('verify') < resume.indexOf('snapshot'), 'Prior publication completes before a fresh export');
+                    assert(resume.includes('snapshot'));
                     if (freshCheckFail || freshSnapshotFail) {
-                        assert(!resume.includes('install') && !resume.includes('commit'));
+                        assert.equal(resume.includes('install'), freshCheckFail);
+                        assert(!resume.includes('commit'));
                         assert.equal(resume.filter(e => e === 'push').length, 1);
                     } else {
                         assert.equal(resume.filter(e => e === 'snapshot').length, 1);
@@ -180,12 +198,13 @@ async function scenario({ failCheck = false, failSnapshot = false, failPublish =
                 assert.ok(!events.includes('deploy') && !events.includes('snapshot'));
                 assert.ok(events.includes('english-refresh'));
                 assert.equal(events.filter(event => event === 'build').length, 2, 'Site release regenerates Japanese dictionary navigation');
-            } else assert.ok(events.indexOf('tests') < events.indexOf('deploy'));
+            } else if (!currentGas) assert.ok(events.indexOf('tests') < events.indexOf('deploy'));
             assert.ok(events.indexOf('head-check') < events.indexOf('commit'));
             if (!(currentGas && mode === 'Site')) {
                 assert.ok(events.indexOf('validate') < events.indexOf('english-stage'));
                 assert.ok(events.indexOf('english-stage') < events.indexOf('install'));
-                assert.ok(events.indexOf('install') < events.lastIndexOf('commit'));
+                assert.ok(events.indexOf('install') < events.lastIndexOf('tests'));
+                assert.ok(events.lastIndexOf('tests') < events.lastIndexOf('commit'));
             }
             assert.ok(events.lastIndexOf('commit') < events.indexOf('push'));
             assert.ok(events.indexOf('push') < events.indexOf('verify'));
@@ -243,6 +262,12 @@ async function scenario({ failCheck = false, failSnapshot = false, failPublish =
     assert.ok(!skipped.events.includes('api'));
     await scenario({ failCheck: true });
     await scenario({ failSnapshot: true });
+    await scenario({ failFinalCheck: true });
+    await scenario({ failFetch: true, currentGas: true });
+    await scenario({ noChange: true, currentGas: true, dashboardRequired: false });
+    const mixed = await scenario({ siteChanges: true, currentGas: true, args: [] });
+    assert.equal(mixed.events.filter(event => event === 'snapshot').length, 1);
+    assert.equal(mixed.events.filter(event => event === 'tests').length, 1);
     await scenario({ failPublish: true });
     await scenario({ failHeadAt: 1, sourceChanges: true });
     await scenario({ failHeadAt: 1, sourceChanges: true, currentGas: true });
