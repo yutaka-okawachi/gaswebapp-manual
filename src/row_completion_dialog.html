@@ -43,6 +43,11 @@
       }).withFailureHandler(error => {
         lock(false); needsRefresh = true; render();
         const detail = String(error && error.message || '').split('ROW_COMPLETION: ')[1];
+        const validation = method === 'rowCompletionApply' && detail &&
+          detail.indexOf('譜例トークン・リンク・引用記号・HTMLが一致しません．') === 0;
+        if (validation) {
+          needsRefresh = false; render(); message(detail, true); return;
+        }
         message((detail ? detail.slice(0,250) + '\n' : '') + '入力は画面に保持しています．「保存状態を確認」で結果を読み直してください．生成の自動再送は行いません．', true);
       });
       runner[method](...args);

@@ -226,8 +226,25 @@ function rowCompletionValidateText_(row, field, text) {
   if (field === ROW_COMPLETION_REVIEW_FIELD) return rowCompletionValidateReview_(text);
   if (field === 'whom_en') return text; // Only exact canonical approved values can reach Apply.
   const basis = field === 'en' && row.snapshot.values.ja ? row.snapshot.values.ja : row.snapshot.values.de;
+  text = rowCompletionNotesRestoreWorkTitles_(row, field, text);
   const referenceText = row.tab === 'Notes' ? rowCompletionNotesFormatHeadings_(row, field, text, true) : text;
-  if (JSON.stringify(rowCompletionProtected_(basis)) !== JSON.stringify(rowCompletionProtected_(referenceText))) throw rowCompletionError_('譜例トークン・リンク・引用記号・HTMLを原文どおり保持してください．');
+  const expected = rowCompletionProtected_(basis), actual = rowCompletionProtected_(referenceText);
+  function difference(left, right) {
+    const remaining = right.slice();
+    return left.filter(function (part) {
+      const index = remaining.indexOf(part);
+      if (index < 0) return true;
+      remaining.splice(index, 1);
+      return false;
+    });
+  }
+  const missing = difference(expected, actual), extra = difference(actual, expected);
+  if (missing.length || extra.length) {
+    const sample = parts => parts.slice(0, 3).map(part => part.slice(0, 100)).join('，');
+    throw rowCompletionError_('譜例トークン・リンク・引用記号・HTMLが一致しません．' +
+      (missing.length ? ' 不足：' + sample(missing) + '．' : '') +
+      (extra.length ? ' 追加または変更：' + sample(extra) + '．' : ''));
+  }
   const validators = { GM: rowCompletionValidateGm_, RW: rowCompletionValidateRw_, RS: rowCompletionValidateRs_, Notes: rowCompletionValidateNotes_ };
   validators[row.tab](row, field, text);
   return text;
@@ -380,8 +397,12 @@ function rowCompletionGenerate(id, number) {
       draft[field] = rowCompletionNotesFormatHeadings_(reservation.row, field, draft[field]);
     });
     if (reservation.job.tab !== 'Notes') reservation.row.reviewNotes = rowCompletionReviewFormat_(review);
-    reservation.fields.forEach(function (field) { rowCompletionValidateText_(reservation.row, field, draft[field]); });
-  } catch (_) { failure = 'APIの応答・訳文を確認できません．利用状況を確認するまで再送しないでください．'; }
+    reservation.fields.forEach(function (field) { draft[field] = rowCompletionValidateText_(reservation.row, field, draft[field]); });
+  } catch (error) {
+    const detail = String(error && error.message || '').replace(/^ROW_COMPLETION: /, '');
+    failure = detail.indexOf('譜例トークン・リンク・引用記号・HTMLが一致しません．') === 0
+      ? detail : 'APIの応答・訳文を確認できません．利用状況を確認するまで再送しないでください．';
+  }
   let linkMessage = '';
   if (!failure && reservation.job.tab === 'Notes' && reservation.fields.includes('en')) {
     // Same context check as Notes registration; never write to the sheet during generation.
@@ -413,7 +434,8 @@ function rowCompletionGenerate(id, number) {
     }
     if (failure && editableDraft) {
       Object.assign(row.draft, draft); row.status = 'needs_review';
-      row.message = '案の書式・記号に確認が必要です．内容を編集してから反映してください．APIは再実行しません．';
+      row.message = (failure.indexOf('譜例トークン・リンク・引用記号・HTMLが一致しません．') === 0
+        ? failure : '案の書式・記号に確認が必要です．') + ' 内容を編集してから反映してください．APIは再実行しません．';
     }
     else if (failure) { row.status = 'uncertain'; row.message = failure; }
     else {
@@ -449,8 +471,8 @@ function rowCompletionApply(id, number, fields) {
           const text = rowCompletionValidateSource_(row, fields[field], book);
           if (text) { nextTargets.push(field); nextFields[field] = text; }
         } else {
-          rowCompletionValidateText_(reviewedRow, field, fields[field]);
-          nextTargets.push(field); nextFields[field] = fields[field];
+          const text = rowCompletionValidateText_(reviewedRow, field, fields[field]);
+          nextTargets.push(field); nextFields[field] = text;
         }
       });
       if (!nextTargets.length) throw rowCompletionError_('反映する空欄の内容がありません．空欄のままにする場合は作業を終了してください．');

@@ -44,6 +44,21 @@ function rowCompletionValidateSource_(row, text, book) {
   }
   return text;
 }
+function rowCompletionNotesRestoreWorkTitles_(row, field, text) {
+  if (row.tab !== 'Notes' || field !== 'en' || !row.snapshot.values.ja) return text;
+  const titles = new Map();
+  String(row.snapshot.values.ja).split(/\r?\n/).forEach(function (line) {
+    const title = line.trim();
+    const match = title.match(/^《([^《》]+)》( *(?:Op\.|TrV\b|WWV\b|WoO\b|AV\b).*)?$/i);
+    if (match) titles.set(match[1] + (match[2] || ''), title);
+  });
+  if (!titles.size) return text;
+  return text.replace(/^[ \t]*\S[^\r\n]*$/gm, function (line) {
+    const plain = line.trim(), title = titles.get(plain);
+    return title ? line.replace(plain, title) : line;
+  });
+}
+
 function rowCompletionNotesFormatHeadings_(row, field, text, plain) {
   const support = row.notesSupport;
   if (!['ja', 'en'].includes(field) || !rowCompletionNewNotes_(row) || !support ||

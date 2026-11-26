@@ -123,6 +123,31 @@ test('existing Japanese is context for English and stays verbatim',()=>{
   let job=h.generate(h.preview());assert.deepEqual(Array.from(job.rows[0].targets),['en']);job=h.apply(job);
   assert.equal(h.value('ja'),'【一般的な意味】\n既存本文 https://example.invalid/ref#page=3');assert(h.value('en').includes('既存本文'));assert.equal(h.writes.length,1);
 });
+test('Notes existing Japanese: identical unwrapped title lines are restored before preview and apply',()=>{
+  const h=harness('Notes');
+  h.put('de','Notfall');h.put('source','[GM], [RS: Oper]');
+  h.put('ja',"【英】emergency, necessity／【伊】emergenza, necessità\n\n【一般的な意味】\n① 緊急事態，非常時．\n② 差し迫った必要，止むを得ない事情．\n③ （im Notfall で）必要な場合に，やむを得ないときに．\n\n【音楽用語としての訳例】\n[GM]\nKann im Notfalle von einem Piston in B übernommen werden.\nやむを得ない場合には，B管のコルネットで奏してよい\n《Symphonie Nr. 3》\n\n[RS: Oper]\nim Notfalle ist diese Stelle vom hohen Tenor: Tulbeck zu übernehmen, aber nicht zu punktieren!\n万一の場合，この箇所はハイテノールの Tulbeck が歌うこと．ただし歌手の声域に合わせて個々の音高を変えてはならない！\n《Feuersnot》 Op. 50 / TrV 203\n（注：城代Schweikerの歌唱箇所を，必要時にTulbeckが引き受ける脚注．）");
+  const draft="Italian:\nemergenza, necessità\n\n【General meanings】\n① An emergency; an emergency situation.\n② An urgent need; an unavoidable circumstance.\n③ In im Notfall: “if necessary” or “if there is no alternative.”\n\n【Examples in musical contexts】\n[GM]\nGerman: Kann im Notfalle von einem Piston in B übernommen werden.\nEnglish: If necessary, this may be played on a B-flat cornet.\nSymphonie Nr. 3\n\n[RS: Oper]\nGerman: im Notfalle ist diese Stelle vom hohen Tenor: Tulbeck zu übernehmen, aber nicht zu punktieren!\nEnglish: If necessary, this passage is to be sung by Tulbeck, the high tenor, but individual pitches must not be changed to suit the singer’s range!\nFeuersnot Op. 50 / TrV 203\n(Note: This footnote indicates that Tulbeck is to take over a passage sung by Schweiker, the castellan, if necessary.)";
+  h.mutateDraft=d=>{d.en=draft;};
+  let j=h.generate(h.preview());
+  assert.equal(j.rows[0].status,'draft');
+  assert(j.rows[0].draft.en.includes('《Symphonie Nr. 3》'));
+  assert(j.rows[0].draft.en.includes('《Feuersnot》 Op. 50 / TrV 203'));
+  j=h.c.rowCompletionApply(j.id,2,{en:draft}).job;
+  assert.equal(j.rows[0].status,'applied');
+  assert(h.value('en').includes('《Feuersnot》 Op. 50 / TrV 203'));
+  assert.equal(h.fetches,1);
+});
+test('actual reference changes remain blocked with the missing and changed references named',()=>{
+  const h=harness('Notes');
+  h.put('ja','【一般的な意味】\n見本．\n《Feuersnot》 Op. 50 / TrV 203\n[[score:original]]');
+  h.mutateDraft=d=>{d.en='【General meanings】\nExample.\n《Salome》 Op. 54\n[[score:different]]';};
+  const j=h.generate(h.preview());const row=j.rows[0];
+  assert.equal(row.status,'needs_review');
+  assert.match(row.message,/不足：.*Feuersnot/);assert.match(row.message,/追加または変更：.*Salome/);
+  assert.throws(()=>h.apply(j),/original.*different/);
+  assert.equal(h.value('en'),'');assert.equal(h.writes.length,0);
+});
 test('Notes blank English: deny English ring links, keep German Ring, then save only English',()=>{
   const h=harness('Notes',{linkWords:['Ring']});
   h.put('de','Teller'); h.put('source','[GM]'); h.put('ja','シンバル．');
