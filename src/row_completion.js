@@ -74,7 +74,8 @@ function rowCompletionJob_(id) {
 function rowCompletionView_(job) {
   return { job: job || null, apiReady: rowCompletionSettings_().ready };
 }
-function rowCompletionState() {
+function rowCompletionState(id) {
+  if (id) return rowCompletionView_(rowCompletionJob_(id));
   const book = rowCompletionBook_(), saved = rowCompletionStored_();
   return rowCompletionView_(saved && saved.job.book === book.getId() ? saved.job : null);
 }
@@ -122,11 +123,15 @@ function rowCompletionWhomState_(book, tab, values) {
   return { status: 'approved', value: value, message: '' };
 }
 function rowCompletionWhom_(book, tab, values) { return rowCompletionWhomState_(book, tab, values).value; }
-function rowCompletionPreview() {
+function rowCompletionPreview(fresh) {
   return rowCompletionLock_(function () {
     const book = rowCompletionBook_(), old = rowCompletionStored_();
-    if (old && !old.job.intake && old.job.book === book.getId() && !old.job.closed && old.job.rows.some(function (r) { return r.status !== 'pending' && r.status !== 'blocked'; })) {
-      return rowCompletionView_(old.job);
+    const previous = old && !old.job.intake && old.job.book === book.getId() ? old.job : null;
+    if (fresh !== true && previous && !previous.closed && previous.rows.some(function (r) { return r.status !== 'pending' && r.status !== 'blocked'; })) {
+      return rowCompletionView_(previous);
+    }
+    if (fresh === true && previous && !previous.closed && previous.rows.some(rowCompletionGenerating_)) {
+      throw rowCompletionError_('生成処理中です．開始から7分たってから開き直してください．');
     }
     const sheet = book.getActiveSheet(), selection = book.getActiveRange();
     if (!selection || selection.getSheet().getSheetId() !== sheet.getSheetId() || !ROW_COMPLETION_FIELDS[sheet.getName()] || selection.getRow() < 2 || selection.getNumRows() > 5) {
@@ -164,13 +169,16 @@ function rowCompletionPreview() {
     const reserve = job.rows.reduce(function (n, r) { return n + rowCompletionApiFields_(r).length * 12200 + (job.tab !== 'Notes' && r.status === 'pending' ? 4500 : 0) +
       (rowCompletionNewNotes_(r) && r.status === 'pending' ? 9000 : 0); }, 0);
     if (JSON.stringify(job).length + reserve > 65000) throw rowCompletionError_('生成結果を安全に保存するため，選択行を減らしてください．');
+    if (fresh === true && previous && !previous.closed && previous.rows.some(rowCompletionResultUncertain_)) {
+      job.previousResultUncertain = true;
+    }
     rowCompletionSave_(job);
     return rowCompletionView_(job);
   });
 }
 
 function rowCompletionClaimKey_(job, row) {
-  return ROW_COMPLETION_PREFIX + 'claim:' + rowCompletionHash_([job.book, job.sheetId, row.number, row.hash]);
+  return 'row-completion-live:' + rowCompletionHash_([job.book, job.sheetId, row.number, row.hash]);
 }
 function rowCompletionLocateSnapshot_(sheet, expected) {
   // Recover only an unchanged, unique item after GM/Notes row movement.
@@ -329,17 +337,18 @@ function rowCompletionGenerate(id, number) {
     let context = null;
     try { if (fields.length) context = handlers[job.tab](rowCompletionBook_(), row); }
     catch (error) { throw rowCompletionError_(error.message); }
-    const claim = rowCompletionClaimKey_(job, row);
-    if (props.getProperty(claim)) throw rowCompletionError_('この行には未確認の生成記録があります．前回の結果・API利用状況を確認してください．');
-    if (props.getKeys().filter(function (k) { return k.indexOf(ROW_COMPLETION_PREFIX + 'claim:') === 0; }).length >= 100) throw rowCompletionError_('未完了の作業記録を先に確認してください．');
-    row.claim = claim;
+    const claim = fields.length ? rowCompletionClaimKey_(job, row) : '';
+    const cache = claim ? CacheService.getScriptCache() : null;
+    if (cache && cache.get(claim)) throw rowCompletionError_('この行は別の画面で生成中か，結果が未確認です．API利用状況を確認してください．');
     row.status = fields.length ? 'generating' : 'draft'; row.startedAt = Date.now();
     row.message = fields.length ? '送信予約済み．結果不明でも自動再送しません．'
       : (row.targets.includes('source') ? 'GM・RW・RSの実在用例から抽出した出典候補です（API未使用）．確認してから反映してください．' : '承認済みの指示対象訳です（API未使用）．');
     rowCompletionSave_(job);
-    props.setProperty(claim, job.id);
-    if (props.getProperty(claim) !== job.id) throw rowCompletionError_('送信予約を保存できません．');
-    return { job: job, row: row, key: key, model: model, fields: fields, context: context };
+    if (cache) {
+      cache.put(claim, job.id, 7 * 60);
+      if (cache.get(claim) !== job.id) throw rowCompletionError_('二重送信の防止を確認できないため，APIは呼び出していません．');
+    }
+    return { job: job, row: row, key: key, model: model, fields: fields, context: context, claim: claim };
   });
   if (!reservation.fields.length) return rowCompletionState();
   let draft, editableDraft = false, failure = '';
@@ -394,7 +403,7 @@ function rowCompletionGenerate(id, number) {
   }
   return rowCompletionLock_(function () {
     const job = rowCompletionJob_(id), row = job.rows.find(function (r) { return r.number === reservation.row.number; });
-    if (!row || row.status !== 'generating' || job.closed) throw rowCompletionError_('作業状態が変わりました．前回の結果を確認してください．');
+    if (!row || row.status !== 'generating' || job.closed) throw rowCompletionError_('作業状態が変わりました．再生成の前にAPI利用状況を確認してください．');
     if (reservation.row.notesSupport && editableDraft) row.notesSupport = reservation.row.notesSupport;
     if (reservation.row.reviewNotes && editableDraft) {
       if (row.snapshot.review && row.snapshot.review.blank && !row.snapshot.review.formula &&
@@ -413,6 +422,12 @@ function rowCompletionGenerate(id, number) {
       row.message += linkMessage;
     }
     rowCompletionSave_(job);
+    if (!failure || editableDraft) {
+      try {
+        const cache = CacheService.getScriptCache();
+        if (cache.get(reservation.claim) === job.id) cache.remove(reservation.claim);
+      } catch (_) { /* The temporary reservation will expire; the draft is already saved. */ }
+    }
     return rowCompletionView_(job);
   });
 }
@@ -475,8 +490,6 @@ function rowCompletionApply(id, number, fields) {
       }
       row.status = 'applied'; row.message = '確認済みの内容を空欄へ反映しました．公開は別途Data同期で行います．';
       rowCompletionSave_(job);
-      const props = PropertiesService.getScriptProperties(), claim = row.claim || rowCompletionClaimKey_(job, row);
-      if (props.getProperty(claim) === job.id) props.deleteProperty(claim);
     } catch (_) {
       row.status = 'partial'; row.message = '反映結果が未確認です．対象セルを確認し，保存済みの確認案で反映を再開してください．APIは再実行しません．';
       rowCompletionSave_(job);
@@ -484,28 +497,27 @@ function rowCompletionApply(id, number, fields) {
     return rowCompletionView_(job);
   });
 }
+function rowCompletionGenerating_(row) {
+  return row.status === 'generating' && Date.now() - row.startedAt < 7 * 60 * 1000;
+}
+function rowCompletionResultUncertain_(row) {
+  return ['generating', 'uncertain', 'applying', 'partial'].includes(row.status);
+}
 function rowCompletionFinish(id, checked) {
   return rowCompletionLock_(function () {
     const job = rowCompletionJob_(id);
-    if (job.rows.some(function (r) { return r.status === 'generating' && Date.now() - r.startedAt < 7 * 60 * 1000; })) {
+    if (job.rows.some(rowCompletionGenerating_)) {
       throw rowCompletionError_('生成処理中です．中断した場合は7分以上待ってから，利用状況を確認してください．');
     }
-    if (job.rows.some(function (r) { return ['generating', 'uncertain', 'applying', 'partial'].includes(r.status); }) && checked !== true) {
+    if (job.rows.some(rowCompletionResultUncertain_) && checked !== true) {
       throw rowCompletionError_('API利用状況と対象セルを確認してから，終了の確認欄を選んでください．');
     }
     job.closed = true;
     rowCompletionSave_(job);
-    const props = PropertiesService.getScriptProperties();
-    job.rows.forEach(function (row) {
-      const claim = row.claim || rowCompletionClaimKey_(job, row);
-      if (props.getProperty(claim) === job.id) props.deleteProperty(claim);
-    });
     return rowCompletionView_(job);
   });
 }
-function rowCompletionDialog_(preview) {
-  const template = HtmlService.createTemplateFromFile('row_completion_dialog');
-  template.preview = preview;
-  SpreadsheetApp.getUi().showModalDialog(template.evaluate().setWidth(760).setHeight(680), '選択行の空欄補完');
+function showMaintenanceSelectedRows() {
+  const html = HtmlService.createHtmlOutputFromFile('row_completion_dialog');
+  SpreadsheetApp.getUi().showModalDialog(html.setWidth(760).setHeight(680), '選択行の空欄補完');
 }
-function showMaintenanceSelectedRows() { rowCompletionDialog_(true); }

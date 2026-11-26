@@ -55,8 +55,6 @@ function onOpen() {
   ui.createMenu('📊 検索履歴グラフ')
     .addItem('🔄 グラフを最新に更新する', 'updateSearchHistoryCharts')
     .addToUi();
-  if (typeof notesEntryGuardInitialize_ === 'function') notesEntryGuardInitialize_();
-
 }
 
 /** Static menu help: opening this dialog reads no sheet data and runs no generation. */

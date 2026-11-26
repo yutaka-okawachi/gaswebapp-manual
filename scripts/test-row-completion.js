@@ -74,7 +74,11 @@ function harness(tab = 'GM', options = {}) {
   }; }
   const personal=()=>{if(!users.has(h.user))users.set(h.user,new Map());return props(users.get(h.user),true);};
   class Clock extends Date { constructor(...args){super(...(args.length?args:[h.now]));} static now(){return h.now;} }
-  const c=vm.createContext({console,Date:Clock,PropertiesService:{getScriptProperties:()=>props(script,false),getUserProperties:personal},
+  const temporary=new Map();
+  const c=vm.createContext({CacheService:{getScriptCache:()=>({
+    get:key=>{const item=temporary.get(key);return item && item.end>h.now ? item.value : null;},
+    put:(key,value,seconds)=>temporary.set(key,{value,end:h.now+seconds*1000}),remove:key=>temporary.delete(key)
+  })},console,Date:Clock,PropertiesService:{getScriptProperties:()=>props(script,false),getUserProperties:personal},
     Utilities:{DigestAlgorithm:{SHA_256:'sha256'},Charset:{UTF_8:'utf8'},computeDigest:(_,text)=>[...crypto.createHash('sha256').update(text).digest()],getUuid:()=>`job-${++h.uuid}`},
     LockService:{getScriptLock:()=>({tryLock(){if(h.locks)return false;h.locks=true;return true;},releaseLock(){h.locks=false;}})},
     SpreadsheetApp:{getActiveSpreadsheet:()=>book,flush(){}},
@@ -100,7 +104,6 @@ function harness(tab = 'GM', options = {}) {
     ? c.notesLinkAdvisory_(plan.de,en,plan.source,options.linkWords.map(de=>({values:{de,en:'',source:''}})),[])
     : {status:'ready',candidates:[]};
   Object.assign(h,{c,script,users,sheet,headers,rows,formulas,notes,validation});
-  if(tab==='Notes')assert.equal(c.notesEntryGuardInitialize_(),true);
   h.preview=()=>c.rowCompletionPreview().job;
   h.generate=job=>c.rowCompletionGenerate(job.id,job.rows[0].number).job;
   h.apply=job=>c.rowCompletionApply(job.id,job.rows[0].number,JSON.parse(JSON.stringify(job.rows[0].draft))).job;
@@ -204,9 +207,9 @@ test('overlapping generation in same user or another user makes exactly one call
     h.user='two';const other=h.preview();assert.throws(()=>h.generate(other),/未確認/);h.user='one';
   };h.generate(j);assert.equal(h.fetches,1);
 });
-test('private drafts isolated by user; shared ledger has no plaintext or key',()=>{
-  const h=harness();const j=h.generate(h.preview());h.user='two';assert.equal(h.c.rowCompletionState().job,null);assert.throws(()=>h.c.rowCompletionGenerate(j.id,2),/本人/);
-  const ledger=[...h.script].filter(([k])=>k.includes('claim:'));assert.equal(ledger.length,1);assert(!JSON.stringify(ledger).includes('Leise'));assert(!JSON.stringify([...h.users.get('one')]).includes('synthetic-not-a-real-key'));
+test('private drafts stay isolated without adding any Script Properties',()=>{
+  const h=harness(), before=[...h.script];const j=h.generate(h.preview());h.user='two';assert.equal(h.c.rowCompletionState().job,null);assert.throws(()=>h.c.rowCompletionGenerate(j.id,2),/本人/);
+  assert.deepEqual([...h.script],before);assert(!JSON.stringify([...h.users.get('one')]).includes('synthetic-not-a-real-key'));
 });
 test('API configuration check returns boolean only and missing key makes zero calls',()=>{
   const h=harness();h.script.delete('OPENAI_API_KEY');const j=h.preview();assert.equal(h.c.rowCompletionState().apiReady,false);assert.throws(()=>h.generate(j),/未設定/);assert.equal(h.fetches,0);assert.equal(h.c.rowCompletionState().job.rows[0].status,'pending');
@@ -254,6 +257,22 @@ test('write result survives property-store failure and is reconciled from durabl
 test('unknown jobs require explicit checked finish and a safe wait before new work',()=>{
   const h=harness();h.transportFailure=true;let j=h.generate(h.preview());assert.throws(()=>h.c.rowCompletionFinish(j.id,false),/利用状況/);
   j=h.c.rowCompletionFinish(j.id,true).job;assert.equal(j.closed,true);assert.equal([...h.script.keys()].filter(k=>k.includes('claim:')).length,0);
+});
+test('opening a new dialog drops un-applied drafts and does not write Script Properties',()=>{
+ const h=harness(), before=[...h.script];
+ const previous=h.generate(h.preview());
+ h.select(3);
+ const fresh=h.c.rowCompletionPreview(true).job;
+ assert.notEqual(fresh.id,previous.id);assert.equal(fresh.rows[0].number,3);
+ assert.equal(fresh.rows[0].status,'pending');assert.deepEqual([...h.script],before);
+ assert.equal(h.fetches,1);assert.equal(h.writes.length,0);
+});
+test('the retired Notes edit callback does not recreate Script Properties or touch cells',()=>{
+ const h=harness('Notes'), before=[...h.script];
+ h.c.onEdit({source:h.c.SpreadsheetApp.getActiveSpreadsheet(),range:{getSheet:()=>h.sheet}});
+ assert.deepEqual([...h.script],before);assert.equal(h.writes.length,0);assert.equal(h.fetches,0);
+ const setup=fs.readFileSync(path.join(root,'src/setup_credentials.js'),'utf8');
+ assert(!setup.includes('notesEntryGuardInitialize_'));
 });
 test('selection limits, storage bounds and safe target source',()=>{
   const h=harness();h.select(1);assert.throws(()=>h.preview(),/本文/);h.select(2,6);assert.throws(()=>h.preview(),/1～5/);
@@ -428,7 +447,7 @@ test('dialog script is valid, renders text safely and has no charge confirmation
   const html=fs.readFileSync(path.join(root,'src/row_completion_dialog.html'),'utf8');
   const js=html.match(/<script>([\s\S]*?)<\/script>/)[1].replace(/<\?!=[^]*?\?>/g,"'rowCompletionPreview'");new vm.Script(js);
   assert(!/innerHTML|window\.confirm|\.alert\(|candidateWizardRunJev/.test(js));
-  assert(html.includes('textContent'));assert(html.includes('User Properties'));assert(html.includes('前回1件'));
+  assert(html.includes('textContent'));assert(js.includes("request('rowCompletionPreview', [true])"));assert(!js.includes('<?!='));
   assert(!/getDocumentProperties|appendRow|setDataValidation|setFormula\(/.test(source));
 });
 test('actual dialog flow preserves edits on failure and refreshes without regeneration',()=>{
@@ -542,7 +561,6 @@ test('retired intake does not reopen an old candidate instead of selected-row co
 test('Notes heading alone is eligible independent of entry history; source stays untouched',()=>{
  for(const existing of ['','【一般的な意味】\n既存の日本語本文']) for(const sourceValue of ['', '不明', '[RS: Oper], [RW: Oper]']) {
   const h=harness('Notes');h.put('de','süßen');h.put('ja',existing);h.put('source',sourceValue);
-  h.c.notesEntryGuardExisting_=()=>{throw Error('entry history must not gate completion');};
   let job=h.preview();assert.equal(job.rows[0].status,'pending');
   assert.deepEqual(Array.from(job.rows[0].targets),existing?['en']:['ja','en']);
   assert.equal(h.fetches,0);assert.equal(h.writes.length,0);

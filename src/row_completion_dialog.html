@@ -25,7 +25,7 @@
     <label><input type="checkbox" id="checked"> 結果不明の場合，API利用状況と対象セルを確認した</label>
     <button id="finish">この作業を終了する</button>
   </div>
-  <p class="muted">案・処理結果は本人のUser Propertiesだけに保存します（前回1件）．共有シートや公開データには保存しません．終了後に新しい選択を読むと前回記録を置き換えます．反映後の公開は別途Data同期です．</p>
+  <p class="muted">案は開いている画面で確認・編集する．画面を開き直すと未反映の案は引き継がない．反映後の公開には別途Data同期が必要．</p>
   <script>
     let state = null, busy = false, needsRefresh = false;
     const edits = Object.create(null), $ = id => document.getElementById(id);
@@ -36,7 +36,7 @@
     }
     function request(method, args, done) {
       if (busy) return;
-      lock(true); message('処理中です．画面を閉じた場合も，次は「前回の処理結果を確認」から状態を確認できます．');
+      lock(true); message('処理中です．結果が出るまで画面を閉じないでください．');
       const runner = google.script.run.withSuccessHandler(result => {
         needsRefresh = false; state = result; lock(false); render();
         message(done || '保存状態を確認しました．');
@@ -63,6 +63,9 @@
       if (!job) { $('summary').textContent = '作業記録はありません．対象タブで1～5行を選び，選択行を読み込んでください．'; return; }
       $('summary').textContent = job.tab + '／処理ID ' + job.id + (job.closed ? '（終了済み）' : '') +
         (state.apiReady ? '' : '／OpenAIのキーまたはモデルが未設定です．');
+      if (job.previousResultUncertain) {
+        text($('rows'), 'p', '直前の処理結果が未確認だった．同じ行を再生成する前に，対象セルとAPI利用状況を確認する．');
+      }
       job.rows.forEach(row => {
         const section = document.createElement('section'); $('rows').appendChild(section);
         const statusLabels = { pending:'生成前', blocked:'保留', generating:'生成中', draft:'案を確認', needs_review:'案の編集が必要', uncertain:'結果要確認', applying:'反映中', partial:'反映結果を確認', applied:'反映済み' };
@@ -109,10 +112,12 @@
         if (row.reviewNotes) text(section, 'p', '理由・要確認事項の案（理由欄の既存入力・数式・保護は保持し，この案は画面のみ）：\n' + row.reviewNotes, 'context');
       });
     }
-    $('refresh').addEventListener('click', () => request('rowCompletionState', []));
+    $('refresh').addEventListener('click', () => state && state.job
+      ? request('rowCompletionState', [state.job.id])
+      : request('rowCompletionPreview', [true]));
     $('selection').addEventListener('click', () => request('rowCompletionPreview', []));
     $('finish').addEventListener('click', () => request('rowCompletionFinish', [state.job.id, $('checked').checked], '作業を終了しました．新しい行を選択して読み込めます．'));
-    request(<?!= preview ? "'rowCompletionPreview'" : "'rowCompletionState'" ?>, []);
+    request('rowCompletionPreview', [true]);
   </script>
 </body>
 </html>
