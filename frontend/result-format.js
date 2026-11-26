@@ -23,7 +23,7 @@ function parsePageInput(input) {
 // Helper functions for HTML escaping
 function escapeHtml(str) {
     if (!str) return '';
-    return str.replace(/[&<>"']/g, function (match) {
+    return String(str).replace(/[&<>"']/g, function (match) {
         const escape = {
             '&': '&amp;',
             '<': '&lt;',
@@ -255,6 +255,16 @@ function formatPrintedScorePageNotice() {
     return `<p class="printed-score-page-note" style="font-size: 0.9em; color: #555;">${note}</p>`;
 }
 
+function safeScoreMetadataLink(value) {
+    if (typeof value !== 'string' || !/^https:\/\//i.test(value)) return '';
+    try {
+        const url = new URL(value);
+        return url.protocol === 'https:' && !url.username && !url.password ? value : '';
+    } catch (_) {
+        return '';
+    }
+}
+
 function formatGenericResults(data) {
     if (data.length === 0) {
         return '<div class="result-message">該当するデータが見つかりませんでした。</div>';
@@ -309,11 +319,13 @@ function formatGenericResults(data) {
             if (meta.edition) {
                 html += `<div style="margin-top: 4px; font-style: italic; color: #555;">${escapeHtml(meta.edition)}</div>`;
             }
-            if (meta.imslp) {
-                html += `<div style="margin-top: 8px;"><a href="${meta.imslp}" target="_blank" style="color: #0066cc; text-decoration: underline; font-weight: bold;">IMSLP Project Page ↗</a></div>`;
+            const imslp = safeScoreMetadataLink(meta.imslp);
+            const synopsis = safeScoreMetadataLink(meta.synopsis);
+            if (imslp) {
+                html += `<div style="margin-top: 8px;"><a href="${escapeHtml(imslp)}" target="_blank" rel="noopener noreferrer" style="color: #0066cc; text-decoration: underline; font-weight: bold;">IMSLP Project Page ↗</a></div>`;
             }
-            if (meta.synopsis) {
-                html += `<div style="margin-top: 8px;"><a href="${meta.synopsis}" target="_blank" style="color: #0066cc; text-decoration: underline; font-weight: bold;">${window.__SITE_LANGUAGE__ === 'en' ? 'Synopsis ↗' : 'あらすじ ↗'}</a></div>`;
+            if (synopsis) {
+                html += `<div style="margin-top: 8px;"><a href="${escapeHtml(synopsis)}" target="_blank" rel="noopener noreferrer" style="color: #0066cc; text-decoration: underline; font-weight: bold;">${window.__SITE_LANGUAGE__ === 'en' ? 'Synopsis ↗' : 'あらすじ ↗'}</a></div>`;
             }
             html += `</div>`;
         } else {
@@ -345,14 +357,14 @@ function formatGenericResults(data) {
             }
             
             if (sceneTitle) {
-                html += `<h2 style="font-family: 'Lora', 'Meiryo', 'メイリオ', sans-serif; font-size: 1.1em; font-weight: bold; margin-top: 20px; margin-bottom: 10px; color: #333;">${sceneTitle}</h2><hr style="border-top: 1px solid #ccc; margin-bottom: 20px;">`;
+                html += `<h2 style="font-family: 'Lora', 'Meiryo', 'メイリオ', sans-serif; font-size: 1.1em; font-weight: bold; margin-top: 20px; margin-bottom: 10px; color: #333;">${escapeHtml(sceneTitle)}</h2><hr style="border-top: 1px solid #ccc; margin-bottom: 20px;">`;
             }
             
             prevAufzug = currentAufzug;
             prevSzene = currentSzene;
         }
 
-        const pageDisplay = hasScorePage(row) ? `p.${row.page}` : '';
+        const pageDisplay = hasScorePage(row) ? `p.${escapeHtml(String(row.page))}` : '';
         const de = linkTermsInTranslation(row.de, window.appData.dic_terms_index, row);
         const ja = typeof window.formatNotationTranslation === 'function' ? window.formatNotationTranslation(row.ja,row) : escapeHtmlWithBreaks(row.ja);
         const whom = escapeHtml(String(row.whom ?? '').trim());

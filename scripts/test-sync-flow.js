@@ -35,7 +35,15 @@ async function scenario({ failCheck = false, failSnapshot = false, failPublish =
     const installedText = [];
     const fakeRequire = name => {
         const stubs = {
-            './core': { ...core, root: directory, run: () => { events.push('api'); return ''; }, git: (...args) => args[0] === 'rev-parse' ? head : args[0] === 'diff' && pulledRuntime ? 'scripts/sync/main.js' : '' },
+            './core': { ...core, root: directory, run: (program, args, opt) => {
+                events.push('api');
+                const base = 'DASHBOARD_CHECK period=180 result=invalid_response phase=redirect_chain curl=0 http=200 redirects=1 dns_s=na connect_s=na tls_s=na ttfb_s=na redirect_s=na total_s=na';
+                assert(opt.safeStdoutPattern.test(base));
+                assert(opt.safeStdoutPattern.test(base + ' reason=invalid_json'));
+                assert(!opt.safeStdoutPattern.test(base + ' reason=untrusted_server_detail'));
+                assert(!opt.safeStdoutPattern.test(base + ' reason=invalid_json synthetic_body'));
+                return '';
+            }, git: (...args) => args[0] === 'rev-parse' ? head : args[0] === 'diff' && pulledRuntime ? 'scripts/sync/main.js' : '' },
             './dashboard-policy': { ...dashboardPolicy, dashboardVerificationRequired: () => { events.push('dashboard-policy'); return dashboardRequired; } },
             './timing': { start() {}, end() {}, measure: (name, action) => action() },
             './logger': {

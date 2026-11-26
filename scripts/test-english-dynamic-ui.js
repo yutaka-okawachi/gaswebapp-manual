@@ -143,16 +143,17 @@ assert(localizedMottl.indexOf(mottlEnglish)>localizedMottl.indexOf('Score inform
 assert(localizedMottl.indexOf(mottlEnglish)<localizedMottl.indexOf('Prelude'));
 
 // Exercise the shared checkbox builder with every published RW/RS target list.
+const escapeSource=extractFunction(fs.readFileSync(root+'/frontend/result-format.js','utf8'),'escapeHtml');
 function checkTargets(language,work,options){
  const group={innerHTML:''},listeners=[],wrapper={innerHTML:'',appendChild(child){assert.equal(child,group);},querySelectorAll(){return options.map(()=>({addEventListener(event,listener){listeners.push([event,listener]);}}));}};
  const targets=vm.createContext({window:{__SITE_LANGUAGE__:language,appData:{whom_list:{[work]:options}}},document:{getElementById:()=>wrapper,createElement:()=>group},normalizeString:value=>value,updateSelectionSummary(){}});
- vm.runInContext(extractFunction(operaSource,'buildWhomCheckboxes'),targets);targets.buildWhomCheckboxes(work);
+ vm.runInContext(escapeSource+'\n'+extractFunction(operaSource,'buildWhomCheckboxes'),targets);targets.buildWhomCheckboxes(work);
  const priority=language==='en'?['Orchestra','Stage directions']:['Orchester','舞台指示'];
  const first=priority.filter(value=>options.includes(value)),rest=options.filter(value=>!priority.includes(value));
  const rendered=[...group.innerHTML.matchAll(/value="([^"]+)"/g)].map(match=>match[1]);
- assert.deepEqual(rendered,[...first,...rest],language+'/'+work+': priority order with original search values');
+ assert.deepEqual(rendered,[...first,...rest].map(targets.escapeHtml),language+'/'+work+': priority order with original search values');
  assert.equal((group.innerHTML.match(/<hr\b/g)||[]).length,first.length&&rest.length?1:0);
- if(first.length&&rest.length){assert(group.innerHTML.indexOf('<hr')>group.innerHTML.indexOf('value="'+first.at(-1)+'"'));assert(group.innerHTML.indexOf('<hr')<group.innerHTML.indexOf('value="'+rest[0]+'"'));}
+ if(first.length&&rest.length){assert(group.innerHTML.indexOf('<hr')>group.innerHTML.indexOf('value="'+targets.escapeHtml(first.at(-1))+'"'));assert(group.innerHTML.indexOf('<hr')<group.innerHTML.indexOf('value="'+targets.escapeHtml(rest[0])+'"'));}
  assert.equal(listeners.length,options.length,'All checkboxes update the summary');
  for(const [event,listener]of listeners){assert.equal(event,'change');assert.equal(listener,targets.updateSelectionSummary);}
 }
@@ -169,7 +170,7 @@ function checkScenes(language, options) {
  const group={innerHTML:''};let boxes=[],summaryUpdates=0;
  const wrapper={innerHTML:'',appendChild(){boxes=[...group.innerHTML.matchAll(/<input[^>]*value="([^"]+)"([^>]*)>/g)].map(m=>({value:m[1],checked:m[2].includes('checked'),listeners:[],addEventListener(event,fn){this.listeners.push(fn);}}));},querySelectorAll(){return boxes;},querySelector(){return boxes.find(b=>b.value==='all');}};
  const ctx=vm.createContext({window:{__SITE_LANGUAGE__:language},document:{getElementById:()=>wrapper,createElement:()=>group},updateSelectionSummary(){summaryUpdates++;}});
- vm.runInContext(extractFunction(operaSource,'buildSceneCheckboxes'),ctx);ctx.buildSceneCheckboxes('test',options);
+ vm.runInContext(escapeSource+'\n'+extractFunction(operaSource,'buildSceneCheckboxes'),ctx);ctx.buildSceneCheckboxes('test',options);
  if(options.length===1){assert.deepEqual(boxes.map(b=>b.value),['all']);assert.equal(boxes[0].checked,true);assert(group.innerHTML.includes(language==='en'?'Entire work':'全一幕'));assert(!group.innerHTML.includes('<hr>'));}
  else {assert.deepEqual(boxes.map(b=>b.value),['all',...options.map(o=>o.value)]);assert(boxes.every(b=>!b.checked));boxes[0].checked=true;boxes[1].checked=true;boxes[1].listeners[0]();assert.equal(boxes[0].checked,false);boxes[0].checked=true;boxes[0].listeners[0]();assert.equal(boxes[1].checked,false);}
  assert(summaryUpdates>=1,'Initial selection summary is refreshed');assert(boxes.every(b=>b.listeners.length));

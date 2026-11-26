@@ -3,7 +3,7 @@
   <!-- ホームページ -->
   <url>
     <loc>https://yutaka-okawachi.github.io/gaswebapp-manual/</loc>
-    <lastmod>2026-11-19</lastmod>
+    <lastmod>2026-11-26</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
@@ -67,7 +67,7 @@
   <!-- Richard Straussあらすじ集 -->
   <url>
     <loc>https://yutaka-okawachi.github.io/gaswebapp-manual/mahler-search-app/rs_synopsis.html</loc>
-    <lastmod>2026-11-19</lastmod>
+    <lastmod>2026-11-26</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -75,7 +75,7 @@
   <!-- Richard Wagnerあらすじ集 -->
   <url>
     <loc>https://yutaka-okawachi.github.io/gaswebapp-manual/mahler-search-app/rw_synopsis.html</loc>
-    <lastmod>2026-11-19</lastmod>
+    <lastmod>2026-11-26</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -99,7 +99,7 @@
   <!-- プライバシーポリシー -->
   <url>
     <loc>https://yutaka-okawachi.github.io/gaswebapp-manual/privacy.html</loc>
-    <lastmod>2026-11-19</lastmod>
+    <lastmod>2026-11-26</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>
@@ -107,13 +107,13 @@
   <!-- ライセンス・利用条件 -->
   <url>
     <loc>https://yutaka-okawachi.github.io/gaswebapp-manual/license.html</loc>
-    <lastmod>2026-11-19</lastmod>
+    <lastmod>2026-11-26</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>
   <url>
     <loc>https://yutaka-okawachi.github.io/gaswebapp-manual/en/</loc>
-    <lastmod>2026-11-19</lastmod>
+    <lastmod>2026-11-26</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
@@ -161,13 +161,13 @@
   </url>
   <url>
     <loc>https://yutaka-okawachi.github.io/gaswebapp-manual/en/mahler-search-app/rs_synopsis.html</loc>
-    <lastmod>2026-11-19</lastmod>
+    <lastmod>2026-11-26</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://yutaka-okawachi.github.io/gaswebapp-manual/en/mahler-search-app/rw_synopsis.html</loc>
-    <lastmod>2026-11-19</lastmod>
+    <lastmod>2026-11-26</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -185,13 +185,13 @@
   </url>
   <url>
     <loc>https://yutaka-okawachi.github.io/gaswebapp-manual/en/privacy.html</loc>
-    <lastmod>2026-11-19</lastmod>
+    <lastmod>2026-11-26</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>
   <url>
     <loc>https://yutaka-okawachi.github.io/gaswebapp-manual/en/license.html</loc>
-    <lastmod>2026-11-19</lastmod>
+    <lastmod>2026-11-26</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>

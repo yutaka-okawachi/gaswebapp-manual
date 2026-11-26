@@ -8,4 +8,6 @@ https://yutaka-okawachi.github.io/gaswebapp-manual/index.html?admin=1
 
 https://yutaka-okawachi.github.io/gaswebapp-manual/index.html?admin=0
 
+ブラウザーに設定を保存できない場合も，`?admin=1` を付けて開いたページでは計測・検索記録を止める．バッジに「このページのみ」と表示されたときは，別ページでも記録を止めるにはそのページのURLに `admin=1` を付けて開く．
+
 保守用の未登録語候補を自動記帳する処理は廃止した．candidate_observeパラメータは使わない．必要な語は検索画面の文字選択でコピーし，スプレッドシートの「日常保守 → 用語を調べて登録・編集」へ入力する．[操作手順](DAILY_MAINTENANCE.md)を参照．

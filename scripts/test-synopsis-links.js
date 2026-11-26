@@ -25,7 +25,7 @@ const changedList=synopsis.rewriteList(rw,base,changedJa,'ja');assert(changedLis
 for(const mutation of [s=>s.rows.push({...s.rows[0]}),s=>s.rows[0].en=s.rows[0].ja,s=>s.rows[0].en='javascript:alert(1)',s=>s.rows[0].en='https://drive.google.com.evil.test/file/d/x/view',s=>s.rows[0].work='overview',s=>s.rows[0].ja='https://example.test/file.pdf']){const s=JSON.parse(JSON.stringify(source));mutation(s);assert.throws(()=>synopsis.projectMetadata(base,s,'en'));}
 // Exercise the real result renderer for every alias and both languages, with no browser/network.
 for(const language of ['ja','en'])for(const [key,meta]of Object.entries(language==='ja'?ja:en)){
- const c=vm.createContext({window:{__SITE_LANGUAGE__:language,appData:{dic_terms_index:{}}},normalizeString:s=>String(s).toLowerCase(),hasScorePage:()=>true});
+ const c=vm.createContext({URL,window:{__SITE_LANGUAGE__:language,appData:{dic_terms_index:{}}},normalizeString:s=>String(s).toLowerCase(),hasScorePage:()=>true});
  vm.runInContext(synopsis.metadataScript({[key]:meta}),c);vm.runInContext(fs.readFileSync(path.join(root,'frontend/result-format.js'),'utf8'),c);
  const html=c.formatGenericResults([{Oper:key,page:1,de:'langsam',ja:'Slowly',whom:'','楽譜情報':'Publisher'}]);assert(html.includes(meta.synopsis));assert(!html.includes('Available in Japanese only.'));
 }

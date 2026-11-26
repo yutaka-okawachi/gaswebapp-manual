@@ -158,7 +158,7 @@ async function handleOperaSelection(event) {
                     buildSceneCheckboxes(operaValue, sceneOptionsCache[composer][operaValue]);
                 } catch (e) {
                     console.error('Error in local scene loading:', e);
-                    sceneOptionsWrapper.innerHTML = `<p class="result-message">場面データの読み込み中にエラーが発生しました: ${e.message}</p>`;
+                    sceneOptionsWrapper.innerHTML = `<p class="result-message">場面データの読み込み中にエラーが発生しました: ${escapeHtml(e.message)}</p>`;
                 }
             }, 10);
         }
@@ -190,11 +190,11 @@ function buildSceneCheckboxes(operaValue, sceneOptionsData) {
     // 全一幕のみの作品は、作品全体を選ぶチェックボックス一つにする。
     if (options.length === 1) {
         const label = window.__SITE_LANGUAGE__ === 'en' ? 'Entire work' : '全一幕';
-        checkboxGroup.innerHTML = `<label><input type="checkbox" name="${operaValue}-scene" value="all" checked> ${label}</label>`;
+        checkboxGroup.innerHTML = `<label><input type="checkbox" name="${escapeHtml(operaValue)}-scene" value="all" checked> ${label}</label>`;
     } else {
-        checkboxGroup.innerHTML = `<label><input type="checkbox" name="${operaValue}-scene" value="all"> すべて</label><hr>`;
+        checkboxGroup.innerHTML = `<label><input type="checkbox" name="${escapeHtml(operaValue)}-scene" value="all"> すべて</label><hr>`;
         options.forEach(opt => {
-            checkboxGroup.innerHTML += `<label><input type="checkbox" name="${operaValue}-scene" value="${opt.value}"> ${opt.text}</label>`;
+            checkboxGroup.innerHTML += `<label><input type="checkbox" name="${escapeHtml(operaValue)}-scene" value="${escapeHtml(opt.value)}"> ${escapeHtml(opt.text)}</label>`;
         });
     }
 
@@ -581,7 +581,7 @@ function buildWhomCheckboxes(operaValue) {
         });
 
         priorityOptions.forEach(targetName => {
-            checkboxGroup.innerHTML += `<label><input type="checkbox" name="${operaValue}-whom" value="${targetName}"> ${targetName}</label>`;
+            checkboxGroup.innerHTML += `<label><input type="checkbox" name="${escapeHtml(operaValue)}-whom" value="${escapeHtml(targetName)}"> ${escapeHtml(targetName)}</label>`;
         });
     }
 
@@ -592,7 +592,7 @@ function buildWhomCheckboxes(operaValue) {
 
     // その他の項目の描画
     otherOptions.forEach(targetName => {
-        checkboxGroup.innerHTML += `<label><input type="checkbox" name="${operaValue}-whom" value="${targetName}"> ${targetName}</label>`;
+        checkboxGroup.innerHTML += `<label><input type="checkbox" name="${escapeHtml(operaValue)}-whom" value="${escapeHtml(targetName)}"> ${escapeHtml(targetName)}</label>`;
     });
 
     wrapper.appendChild(checkboxGroup);
@@ -802,7 +802,7 @@ function updateSelectionSummary() {
             if (sceneCheckboxes.length > 0) {
                  const scenes = Array.from(sceneCheckboxes).map(cb => cb.parentElement.textContent.trim());
                  const scenesStr = scenes.join(', ');
-                 detailsText += `<div class="summary-block"><div class="summary-title">${isEnglish ? 'Selected scenes:' : '選んだ場面：'}</div><div class="summary-value">${scenesStr}</div></div>`;
+                 detailsText += `<div class="summary-block"><div class="summary-title">${isEnglish ? 'Selected scenes:' : '選んだ場面：'}</div><div class="summary-value">${escapeHtml(scenesStr)}</div></div>`;
             }
         }
 
@@ -812,7 +812,7 @@ function updateSelectionSummary() {
             if (whomCheckboxes.length > 0) {
                  const whoms = Array.from(whomCheckboxes).map(cb => cb.value); 
                  const whomsStr = whoms.join(', ');
-                 detailsText += `<div class="summary-block"><div class="summary-title">${isEnglish ? 'Selected targets:' : '選んだ指示対象：'}</div><div class="summary-value">${whomsStr}</div></div>`;
+                 detailsText += `<div class="summary-block"><div class="summary-title">${isEnglish ? 'Selected targets:' : '選んだ指示対象：'}</div><div class="summary-value">${escapeHtml(whomsStr)}</div></div>`;
             }
         }
     }
@@ -825,7 +825,7 @@ function updateSelectionSummary() {
         }
     }
 
-    summaryDiv.innerHTML = `<div class="summary-block"><div class="summary-title">${isEnglish ? 'Selected work:' : '選んだ作品：'}</div><div class="summary-value">${operaText}</div></div>${detailsText}`;
+    summaryDiv.innerHTML = `<div class="summary-block"><div class="summary-title">${isEnglish ? 'Selected work:' : '選んだ作品：'}</div><div class="summary-value">${escapeHtml(operaText)}</div></div>${detailsText}`;
     
     adjustFloatingBarSpacing();
 }

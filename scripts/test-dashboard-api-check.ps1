@@ -305,6 +305,19 @@ try {
     Assert-True -Condition (-not $invalid.Success -and -not $invalid.CanRetry -and $invalid.Telemetry -match 'result=invalid_response phase=http_response curl=0 http=200 redirects=na dns_s=na') -Message 'untrusted metadata is rejected'
     Assert-True -Condition ($invalid.Telemetry -notmatch 'https:|private|raw-stderr|application/json' -and -not $invalid.Telemetry.Contains($testToken)) -Message 'raw response, header, stderr, and token never enter telemetry'
 
+    Assert-True -Condition ($invalid.Telemetry.EndsWith('reason=api_error')) -Message 'an untrusted API error code reduces to a fixed label'
+    $script:dashboardMetadata = @('200|application/json', 'DASHBOARD_CURL_METRICS|1|0.010000|0.020000|0.030000|0.050000|0.040000|0.060000')
+    foreach ($case in @(
+        @{ Body='<html>synthetic-private-body</html>'; Reason='html_or_empty' },
+        @{ Body='{synthetic-private-body'; Reason='invalid_json' },
+        @{ Body='{"schemaVersion":1}'; Reason='schema_mismatch' }
+    )) {
+        $script:dashboardResponseBody = $case.Body
+        $failure = Invoke-DashboardApiCheck -BaseUrl 'https://script.google.com/macros/s/synthetic/exec' -Period 180 -DashboardToken $testToken
+        Assert-True -Condition (-not $failure.Success -and -not $failure.CanRetry -and $failure.Telemetry.EndsWith("reason=$($case.Reason)")) -Message "fixed reason: $($case.Reason)"
+        Assert-True -Condition (-not $failure.Telemetry.Contains('synthetic-private-body')) -Message 'raw body is never forwarded'
+    }
+
     $successMeta = @('200|application/json', 'DASHBOARD_CURL_METRICS|1|0.010000|0.020000|0.030000|0.050000|0.040000|0.060000')
     $slowMeta = @('200|application/json', 'DASHBOARD_CURL_METRICS|1|0.010000|0.020000|0.030000|185.000000|184.000000|185.000000')
     $preconnectMeta = @('000|', 'DASHBOARD_CURL_METRICS|0|0.010000|0.000000|0.000000|0.000000|0.000000|20.000000')

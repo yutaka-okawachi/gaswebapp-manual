@@ -541,6 +541,20 @@ function Invoke-DashboardApiCheck {
         'check_error'
     }
     $line = "DASHBOARD_CHECK period=$Period result=$outcome phase=$phase curl=$($metrics.Curl) http=$($metrics.Http) redirects=$($metrics.Redirects) dns_s=$($metrics.Dns) connect_s=$($metrics.Connect) tls_s=$($metrics.Tls) ttfb_s=$($metrics.Ttfb) redirect_s=$($metrics.RedirectTime) total_s=$($metrics.Total)"
+    if ($outcome -eq 'invalid_response') {
+        # Forward only fixed diagnostic labels, never the message or response body.
+        $reason = switch -Wildcard ($result.Message) {
+            'HTML or empty response*' { 'html_or_empty'; break }
+            'Empty response body' { 'html_or_empty'; break }
+            'Invalid JSON*' { 'invalid_json'; break }
+            'Invalid UTF-8 response' { 'invalid_utf8'; break }
+            'API error:*' { 'api_error'; break }
+            'HTTP request failed' { 'check_error'; break }
+            'HTTP metadata is missing' { 'check_error'; break }
+            default { 'schema_mismatch' }
+        }
+        $line += " reason=$reason"
+    }
     # A timeout after connecting may have left doPost running. Do not replay it,
     # and do not replay a POST after a redirect or an incomplete 2xx response.
     $canRetry = (-not $result.Success) -and $metrics.Redirects -eq '0' -and (

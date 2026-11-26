@@ -118,7 +118,7 @@ function handleWagnerOperaSelection(event) {
 
     // Generate checkboxes
     let html = '<div class="checkbox-group">';
-    html += `<label><input type="checkbox" name="${operaValue}-scene" value="all"> すべて</label>`;
+    html += `<label><input type="checkbox" name="${escapeHtml(operaValue)}-scene" value="all"> すべて</label>`;
     if (filteredScenes.length > 1) html += '<hr>';
 
     filteredScenes.forEach(scene => {
@@ -127,7 +127,7 @@ function handleWagnerOperaSelection(event) {
         const aufzug = scene.Aufzug !== undefined ? scene.Aufzug : '';
         const szene = scene.Szene !== undefined ? scene.Szene : '';
         const val = `${aufzug}-${szene}`;
-        html += `<label><input type="checkbox" name="${operaValue}-scene" value="${val}"> ${scene['日本語']}</label>`;
+        html += `<label><input type="checkbox" name="${escapeHtml(operaValue)}-scene" value="${escapeHtml(val)}"> ${escapeHtml(String(scene['日本語'] ?? ''))}</label>`;
     });
     html += '</div>';
     sceneOptionsWrapper.innerHTML = html;

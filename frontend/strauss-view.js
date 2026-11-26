@@ -117,7 +117,7 @@ function handleOperaSelection(event) {
 
     // Generate checkboxes
     let html = '<div class="checkbox-group">';
-    html += `<label><input type="checkbox" name="${operaValue}-scene" value="all"> すべて</label>`;
+    html += `<label><input type="checkbox" name="${escapeHtml(operaValue)}-scene" value="all"> すべて</label>`;
     if (filteredScenes.length > 1) html += '<hr>';
 
     filteredScenes.forEach(scene => {
@@ -125,7 +125,7 @@ function handleOperaSelection(event) {
         // Note: rs_scenes.json has "Aufzug" and "Szene" keys.
         // We need to handle empty or 0 values gracefully if needed, but usually they are valid.
         const val = `${scene.Aufzug}-${scene.Szene}`;
-        html += `<label><input type="checkbox" name="${operaValue}-scene" value="${val}"> ${scene['日本語']}</label>`;
+        html += `<label><input type="checkbox" name="${escapeHtml(operaValue)}-scene" value="${escapeHtml(val)}"> ${escapeHtml(String(scene['日本語'] ?? ''))}</label>`;
     });
     html += '</div>';
     sceneOptionsWrapper.innerHTML = html;

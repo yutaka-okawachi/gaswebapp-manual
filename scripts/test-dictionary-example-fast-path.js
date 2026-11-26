@@ -48,6 +48,16 @@ const composerSpecs = {
 };
 
 Object.entries(composerSpecs).forEach(([composer, spec]) => {
+  // Keep the exhaustive full-table oracle, but normalize each distinct row once.
+  const normalize = row => context.normalizeDictionaryExampleTerm(row.de_normalized || row.de);
+  const oracle = spec.rows.filter(row => !spec.requirePage ||
+    (row.page !== null && row.page !== undefined && String(row.page).trim() !== ''))
+    .map(row => [normalize(row), row]);
+  const shardTerms = new WeakMap();
+  const shardTerm = row => {
+    if (!shardTerms.has(row)) shardTerms.set(row, normalize(row));
+    return shardTerms.get(row);
+  };
   Object.entries(built.queryIndex[composer]).forEach(([query, shardIds]) => {
     const selectedRows = shardIds
       .flatMap(shardId => {
@@ -55,17 +65,13 @@ Object.entries(composerSpecs).forEach(([composer, spec]) => {
         return built.files[`mahler-search-app/data/dictionary-examples/${composer}-${suffix}.json`];
       })
       .sort((a, b) => a.__exampleOrder - b.__exampleOrder)
-      .filter(row => context.normalizeDictionaryExampleTerm(row.de_normalized || row.de).includes(query))
+      .filter(row => shardTerm(row).includes(query))
       .map(row => {
         const copy = { ...row };
         delete copy.__exampleOrder;
         return copy;
       });
-    const expectedRows = spec.rows.filter(row => {
-      const pageExists = row.page !== null && row.page !== undefined && String(row.page).trim() !== '';
-      return (!spec.requirePage || pageExists) &&
-        context.normalizeDictionaryExampleTerm(row.de_normalized || row.de).includes(query);
-    });
+    const expectedRows = oracle.filter(([term]) => term.includes(query)).map(([, row]) => row);
     assert.strictEqual(
       JSON.stringify(selectedRows),
       JSON.stringify(expectedRows),

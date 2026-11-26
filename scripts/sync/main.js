@@ -27,7 +27,8 @@ const dashboardTelemetryLine = new RegExp(
     ' result=(?:ok|timeout|curl_error|unauthorized|http_error|invalid_response|check_error)' +
     ' phase=(?:redirect_chain|before_http|http_response|after_response_headers|unknown)' +
     ' curl=(?:na|[0-9]{1,3}) http=(?:na|[0-9]{3}) redirects=(?:na|[0-9]{1,3})' +
-    ['dns', 'connect', 'tls', 'ttfb', 'redirect', 'total'].map(key => ` ${key}_s=${dashboardSeconds}`).join('') + ')$'
+    ['dns', 'connect', 'tls', 'ttfb', 'redirect', 'total'].map(key => ` ${key}_s=${dashboardSeconds}`).join('') +
+    '(?: reason=(?:html_or_empty|invalid_json|invalid_utf8|api_error|check_error|schema_mismatch))?)$'
 );
 
 function options(args) {

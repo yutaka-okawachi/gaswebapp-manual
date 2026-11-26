@@ -25,23 +25,27 @@
     }
 
     const canUseStorage = storageAvailable();
+    let pageAdminOptOut = null;
+    let adminModePersisted = true;
 
     function setAdminDeviceOptOut(enabled) {
-        if (!canUseStorage) return false;
+        pageAdminOptOut = enabled;
         try {
             if (enabled) {
                 window.localStorage.setItem(ADMIN_DEVICE_KEY, '1');
             } else {
                 window.localStorage.removeItem(ADMIN_DEVICE_KEY);
             }
+            adminModePersisted = true;
             return true;
         } catch (error) {
+            adminModePersisted = false;
             return false;
         }
     }
 
     function isAdminDeviceOptOut() {
-        if (!canUseStorage) return false;
+        if (pageAdminOptOut !== null) return pageAdminOptOut;
         try {
             return window.localStorage.getItem(ADMIN_DEVICE_KEY) === '1';
         } catch (error) {
@@ -73,7 +77,11 @@
         if (!isAdminDeviceOptOut() || document.getElementById('admin-device-optout-badge')) return;
         const badge = document.createElement('div');
         badge.id = 'admin-device-optout-badge';
-        badge.textContent = '管理者モード：解析・検索記録 OFF';
+        const english = window.__SITE_LANGUAGE__ === 'en' || /\/en\//.test(window.location.pathname);
+        badge.textContent = adminModePersisted
+            ? (english ? 'Admin mode: analytics and search logging off' : '管理者モード：計測・検索記録 OFF')
+            : (english ? 'Admin mode: off on this page only (browser storage unavailable)' :
+                '管理者モード：計測・検索記録 OFF（このページのみ。ブラウザーに保存できません）');
         badge.setAttribute('role', 'status');
         badge.style.position = 'fixed';
         badge.style.right = '10px';
