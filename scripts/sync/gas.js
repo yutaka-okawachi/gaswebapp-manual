@@ -109,6 +109,7 @@ async function ensureDeployment(settings, state, save, observed, headCheck) {
     if (state.gasApproval !== hash) throw new Error('GAS の更新前確認が必要です。sync-data を再実行してください。');
     const checked = headCheck || await editorHead.preflight(settings);
     await editorHead.assertUnchanged(checked);
+    if (fingerprint() !== hash) throw new Error('確認後に GAS ソースが変更されました。公開を停止しました。');
     console.log('GAS ソースを更新し、固定デプロイを検証します。');
     runClasp(['push', '-f']);
     await editorHead.verifyUpload(checked);

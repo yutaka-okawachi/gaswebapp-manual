@@ -106,10 +106,12 @@ async function verify(state, settings, credential, slug, save, gateTicket, conti
 
     // Verify/resume must not bypass the editor-only change check before a push.
     await timing.measure('gas-head-push', () => editorHead.preflight(settings));
+    repository.assertCommitted(receipt.commit);
+    bilingual.assertPolicyUnchanged(gateTicket);
 
     logger.header(6, 7, 'GitHub への送信');
     logger.info(`コミット ${receipt.commit.slice(0, 7)} を GitHub (origin/main) へ送信中…`);
-    timing.measure('push', () => publication.push()); // An interrupted push can safely be retried without a new commit.
+    timing.measure('push', () => publication.push(receipt.commit)); // An interrupted push can safely be retried without a new commit.
     logger.success('GitHub リモートへのプッシュが完了しました。');
 
     logger.header(7, 7, needsDashboard ? "GitHub Pages 公開確認 & ダッシュボード API 検査" : "GitHub Pages 公開確認");
@@ -209,6 +211,9 @@ async function main(args = process.argv.slice(2), hooks = {}) {
             const synced = repository.fastForwardIfClean();
             if (synced && synced.updated) {
                 logger.info(`リモート (origin/main) の未取得コミット ${synced.behind} 件を安全に取り込みました (${synced.before.slice(0, 7)} → ${synced.after.slice(0, 7)})。`);
+                if (git('diff', '--name-only', synced.before, synced.after, '--', 'scripts/', 'src/', 'sync-data.ps1', '02_RUN_SYNC.bat')) {
+                    throw new Error('同期プログラムを更新しました。新しいプログラムで検証するため sync-data を再実行してください。公開は行っていません。');
+                }
                 sourceFiles = repository.preflight(state.ownedData || {});
             }
         }
@@ -237,10 +242,12 @@ async function main(args = process.argv.slice(2), hooks = {}) {
         const unpushed = git('diff', '--name-only', 'origin/main', 'HEAD').split('\n').filter(Boolean);
         const files = [...new Set([...sourceFiles, ...unpushed])];
         const observedGas = await timing.measure('gas-inspect', () => gas.inspect(settings));
-        const gasChanged = !observedGas || observedGas.sourceHash !== gas.fingerprint();
+        const plannedGas = gas.fingerprint();
+        const gasChanged = !observedGas || observedGas.sourceHash !== plannedGas;
         const selected = plan(opt.mode, files, gasChanged);
         // A changed GAS deployment still needs the full safety checks before it touches production.
-        if (selected.deploy) timing.measure('checks-before-gas', () => check());
+        const sourceCandidate = selected.deploy ? repository.captureCandidate() : null;
+        if (sourceCandidate) timing.measure('checks-before-gas', () => check());
 
         // Check editor HEAD as well as the published hash, before any commit.
         const headCheck = await timing.measure('gas-head-before', () => editorHead.preflight(settings));
@@ -250,16 +257,19 @@ async function main(args = process.argv.slice(2), hooks = {}) {
         if (pendingCommitFiles.length) logFileList('今回コミットするローカル変更', pendingCommitFiles);
         if (unpushed.length) logFileList('未送信のローカルコミット差分', unpushed);
         bilingual.assertPolicyUnchanged(gateTicket);
-        // Save a source checkpoint before mutating the live GAS deployment.
-        if (selected.deploy && repository.changed().length) {
-            repository.commitChanges(opt.message);
-            logger.success(`ソース変更のチェックポイントコミットを作成: "${opt.message}"`);
+        // Save only the checked source before mutating the live GAS deployment.
+        let sourceCommit;
+        if (sourceCandidate) {
+            sourceCommit = repository.commitChanges(opt.message, sourceCandidate);
+            if (sourceCandidate.files.length) logger.success(`ソース変更のチェックポイントコミットを作成: "${opt.message}"`);
         }
 
         logger.header(4, 7, 'GAS デプロイの確認・更新');
         if (selected.deploy) {
             logger.info('GAS ソースの変更を検出しました。デプロイ準備を進めます。');
-            state.gasApproval = gas.fingerprint();
+            repository.assertCommitted(sourceCommit);
+            if (gas.fingerprint() !== plannedGas) throw new Error('確認後に GAS ソースが変更されました。公開を停止しました。');
+            state.gasApproval = plannedGas;
             save();
             await timing.measure('gas-ensure', () => gas.ensureDeployment(settings, state, save, observedGas, headCheck));
             logger.success('GAS 固定デプロイの更新と反映を確認しました。');
@@ -324,7 +334,9 @@ async function main(args = process.argv.slice(2), hooks = {}) {
         const manifest = timing.measure('release-manifest', () => artifacts.releaseManifest({ beforeWrite: recordGeneratedWrite }));
         logger.sub(`公開マニフェスト release.json を生成 (Release ID: ${manifest.releaseId.slice(0, 8)})`);
 
-        // Validate the latest generated files, not just the previous checkout's data.
+        // Bind the final checks to the exact working tree that may be committed.
+        const releaseCandidate = repository.captureCandidate();
+        if (gas.fingerprint() !== plannedGas) throw new Error('同期中に GAS ソースが変更されました。公開を停止しました。');
         timing.measure('checks-final', () => check());
 
         const artifactCommitMsg = opt.message && opt.message !== '自動同期アップデート'
@@ -332,14 +344,12 @@ async function main(args = process.argv.slice(2), hooks = {}) {
             : '同期: データおよびサイト成果物の検証・反映';
         await timing.measure('gas-head-commit', () => editorHead.preflight(settings));
         bilingual.assertPolicyUnchanged(gateTicket);
-        if (repository.changed().length) {
-            repository.commitChanges(artifactCommitMsg);
-            logger.success(`成果物をコミットしました: "${artifactCommitMsg}"`);
-        }
+        const receiptCommit = repository.commitChanges(artifactCommitMsg, releaseCandidate);
+        if (releaseCandidate.files.length) logger.success(`成果物をコミットしました: "${artifactCommitMsg}"`);
 
         // No automatic rebase after deployment: another writer must never be silently merged.
         if (timing.measure('remote-check', () => repository.checkRemote()) !== remote) throw new Error('同期中にリモートが変更されました。公開を停止しました。');
-        const receiptCommit = git('rev-parse', 'HEAD');
+        repository.assertCommitted(receiptCommit);
         const dashboardRequired = opt.verifyDashboard ||
             !dashboardCheckFresh(state.dashboardCheck, dashboardSettingsHash(settings)) ||
             dashboardVerificationRequired(state.lastSuccess, receiptCommit, remote, git);

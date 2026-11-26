@@ -109,5 +109,8 @@ async function verifyPages(slug, sha, credential, baseUrl, manifest) {
     }
     throw new Error(`公開確認がタイムアウトしました。再実行で確認を再開します。${last}`);
 }
-function push() { git('push', 'origin', 'HEAD:main'); return git('rev-parse', 'HEAD'); }
+function push(commit) {
+    if (!/^(?:[0-9a-f]{40}|[0-9a-f]{64})$/.test(commit)) throw new Error('Expected a full verified Git commit');
+    git('push', 'origin', commit + ':refs/heads/main');
+}
 module.exports = { token, preflight, deploymentState, validationState, customDeploymentState, verifyPages, push };

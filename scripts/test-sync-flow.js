@@ -7,7 +7,7 @@ const core = require('./sync/core');
 const dashboardPolicy = require('./sync/dashboard-policy');
 const source = fs.readFileSync(path.join(__dirname, 'sync/main.js'), 'utf8');
 
-async function scenario({ failCheck = false, failSnapshot = false, failPublish = false, failHeadAt = 0, sourceChanges = false, mode = 'Auto', args = ['--mode', mode], blockResume = false, currentGas = false, blockEnglishResume = false, failGateAt = 0, resumeMode = 'Verify', failResumePublish = false, freshCheckFail = false, freshSnapshotFail = false, resumeMutation = '', pendingDocumentsOnly = false, dashboardRequired = true, configChanged = false, staleDashboard = false, forceDashboard = false, confirm = null, fastForward = null, expectAbort = false, removeLockInVerify = false, failFinalCheck = false, noChange = false, siteChanges = false, failFetch = false } = {}) {
+async function scenario({ failCheck = false, failSnapshot = false, failPublish = false, failHeadAt = 0, sourceChanges = false, mode = 'Auto', args = ['--mode', mode], blockResume = false, currentGas = false, blockEnglishResume = false, failGateAt = 0, resumeMode = 'Verify', failResumePublish = false, freshCheckFail = false, freshSnapshotFail = false, resumeMutation = '', pendingDocumentsOnly = false, dashboardRequired = true, configChanged = false, staleDashboard = false, forceDashboard = false, confirm = null, fastForward = null, expectAbort = false, removeLockInVerify = false, failFinalCheck = false, noChange = false, siteChanges = false, failFetch = false, editOnCheck = 0, editAtHead = 0, pulledRuntime = false } = {}) {
     const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'gmt-sync-test-'));
     fs.mkdirSync(path.join(directory, 'scripts'));
     fs.writeFileSync(path.join(directory, 'scripts/english-publication.json'), JSON.stringify({schemaVersion:1,publishEnglish:false,englishReleaseApproved:false}));
@@ -35,7 +35,7 @@ async function scenario({ failCheck = false, failSnapshot = false, failPublish =
     const installedText = [];
     const fakeRequire = name => {
         const stubs = {
-            './core': { ...core, root: directory, run: () => { events.push('api'); return ''; }, git: (...args) => args[0] === 'rev-parse' ? head : '' },
+            './core': { ...core, root: directory, run: () => { events.push('api'); return ''; }, git: (...args) => args[0] === 'rev-parse' ? head : args[0] === 'diff' && pulledRuntime ? 'scripts/sync/main.js' : '' },
             './dashboard-policy': { ...dashboardPolicy, dashboardVerificationRequired: () => { events.push('dashboard-policy'); return dashboardRequired; } },
             './timing': { start() {}, end() {}, measure: (name, action) => action() },
             './logger': {
@@ -47,7 +47,15 @@ async function scenario({ failCheck = false, failSnapshot = false, failPublish =
                 repoSlug: () => 'owner/repo', changed: () => changes,
                 checkRemote: () => { events.push('remote'); return noChange ? head : 'remote-head'; },
                 ...(fastForward ? { fastForwardIfClean: () => { events.push('fast-forward'); return fastForward(); } } : {}),
-                commitChanges: () => { events.push('commit'); head += '-commit'; changes = []; }
+                captureCandidate: () => ({ head, files: [...changes] }),
+                assertCommitted: commit => {
+                    if (head !== commit || changes.length) throw new Error('local edit');
+                },
+                commitChanges: (message, candidate) => {
+                    if (head !== candidate.head || changes.join() !== candidate.files.join()) throw new Error('local edit');
+                    if (changes.length) { events.push('commit'); head += '-commit'; changes = []; }
+                    return head;
+                }
             },
             './gas': {
                 configuration: () => mockSettings, fingerprint: () => 'hash',
@@ -59,6 +67,7 @@ async function scenario({ failCheck = false, failSnapshot = false, failPublish =
                 preflight: async () => {
                     events.push('head-check');
                     headChecks++;
+                    if (headChecks === editAtHead) changes = ['README.md'];
                     if (headChecks === failHeadAt || resumeBlocked) throw new Error('editor-only files');
                     return {};
                 }
@@ -81,11 +90,11 @@ async function scenario({ failCheck = false, failSnapshot = false, failPublish =
             },
             './publish': {
                 token: () => 'secret', preflight: async () => 'https://example.test/',
-                push: () => { events.push('push'); },
+                push: commit => { assert.equal(commit, head, 'Push must name the validated commit'); events.push('push'); },
                 verifyPages: async () => { events.push('verify'); if (removeLockInVerify) { const lockPath = path.join(directory, '.sync-state/lock.json'); if (fs.existsSync(lockPath)) fs.unlinkSync(lockPath); } if (publishFailure) { publishFailure = false; throw new Error('pending Pages'); } if (armedMutation === 'head') head += '-user-change'; if (armedMutation === 'files') changes = ['README.md']; armedMutation = ''; }
             },
             '../build-site': { build: () => { events.push('build'); } },
-            '../check-local': { check: () => { events.push('tests'); tests++; if (checkFailure || (failFinalCheck && tests === 2)) throw new Error('bad test'); } }
+            '../check-local': { check: () => { events.push('tests'); tests++; if (tests === editOnCheck) changes = [...changes, 'README.md']; if (checkFailure || (failFinalCheck && tests === 2)) throw new Error('bad test'); } }
         };
         return Object.hasOwn(stubs, name) ? stubs[name] : require(name);
     };
@@ -101,6 +110,12 @@ async function scenario({ failCheck = false, failSnapshot = false, failPublish =
             assert.ok(failed && /ユーザー確認により同期を中止/.test(failure && failure.message));
             for (const stage of ['tests', 'commit', 'deploy', 'push']) assert.ok(!events.includes(stage), stage);
             assert.ok(!fs.existsSync(path.join(directory, '.sync-state/lock.json')));
+        } else if (editOnCheck || editAtHead || pulledRuntime) {
+            assert.ok(failed, 'Concurrent edits or an updated runtime must stop sync');
+            assert.match(failure.message, /local edit|同期プログラムを更新/);
+            assert.ok(!events.includes('push') && !events.includes('verify'));
+            if (editOnCheck === 1 && !currentGas) assert.ok(!events.includes('commit') && !events.includes('deploy'));
+            if (pulledRuntime) assert.ok(!events.includes('build') && !events.includes('commit'));
         } else if (mode === 'Check') {
             assert.ok(!failed, failure && failure.stack);
             assert.ok(events.includes('tests'));
@@ -220,6 +235,10 @@ async function scenario({ failCheck = false, failSnapshot = false, failPublish =
     }
 }
 (async () => {
+    await scenario({ sourceChanges: true, editOnCheck: 1 });
+    await scenario({ currentGas: true, editOnCheck: 1 });
+    await scenario({ currentGas: true, editAtHead: 3 });
+    await scenario({ pulledRuntime: true, fastForward: () => ({ updated: true, behind: 1, before: 'old', after: 'new' }) });
     const baseline = '1'.repeat(40), candidate = '2'.repeat(40), remote = '3'.repeat(40);
     const verified = { commit: baseline, releaseId: 'release', verifiedAt: '2026-11-20T00:00:00.000Z' };
     const calls = [];

@@ -58,16 +58,57 @@ function fastForwardIfClean(deps = {}) {
     const after = runGit('rev-parse', 'HEAD');
     return { updated: before !== after, reason: 'fast-forwarded', behind, before, after };
 }
-function commitChanges(message) {
-    const files = changed();
-    if (!files.length) return;
+function stopForEdit() {
+    throw new Error('同期中にローカル変更を検出しました。変更は消さずに停止しました。作業ツリーとステージ済みの内容を確認してから sync-data を再実行してください。');
+}
+function fileProof(file, directory) {
+    const target = path.join(directory, file);
+    try {
+        const stat = fs.lstatSync(target);
+        if (stat.isSymbolicLink()) return ['link', fs.readlinkSync(target)];
+        if (!stat.isFile()) stopForEdit();
+        return [stat.mode & 0o111, sha256(fs.readFileSync(target))];
+    } catch (error) {
+        if (error.code === 'ENOENT' || error.code === 'ENOTDIR') return null;
+        throw error;
+    }
+}
+function captureCandidate({ runGit = git, getChanged = changed, directory = root } = {}) {
+    const files = getChanged().slice().sort();
     if (files.some(file => !isAllowed(file))) throw new Error('公開直前に対象外の変更を検出しました。');
-    git('add', '--', ...files);
-    git('commit', '-m', message);
+    const head = runGit('rev-parse', 'HEAD');
+    if (runGit('branch', '--show-current') !== 'main') stopForEdit();
+    return { head, index: runGit('write-tree'), files: files.map(file => [file, fileProof(file, directory)]) };
+}
+function sameFiles(candidate, observed) {
+    return JSON.stringify(candidate.files) === JSON.stringify(observed.files);
+}
+function assertCandidate(candidate, options) {
+    const observed = captureCandidate(options);
+    if (candidate.head !== observed.head || candidate.index !== observed.index || !sameFiles(candidate, observed)) stopForEdit();
+}
+function assertCommitted(commit, { runGit = git, getChanged = changed } = {}) {
+    if (runGit('branch', '--show-current') !== 'main' || runGit('rev-parse', 'HEAD') !== commit || getChanged().length) stopForEdit();
+}
+function commitChanges(message, candidate, options = {}) {
+    const runGit = options.runGit || git;
+    assertCandidate(candidate, options);
+    const files = candidate.files.map(([file]) => file);
+    if (!files.length) return candidate.head;
+    runGit('--literal-pathspecs', 'add', '--', ...files);
+    const staged = captureCandidate(options);
+    if (staged.head !== candidate.head || !sameFiles(candidate, staged) ||
+        runGit('diff', '--name-only', '-z', '--')) stopForEdit();
+    runGit('commit', '-m', message);
+    const commit = runGit('rev-parse', 'HEAD');
+    if (runGit('rev-parse', commit + '^{tree}') !== staged.index ||
+        runGit('rev-list', '--parents', '-n', '1', commit) !== commit + ' ' + candidate.head) stopForEdit();
+    assertCommitted(commit, options);
+    return commit;
 }
 function repoSlug() {
     const match = git('remote', 'get-url', 'origin').match(/github\.com[:/]([^/]+)\/([^/]+?)(?:\.git)?$/);
     if (!match) throw new Error('GitHub origin URL を確認してください。');
     return `${match[1]}/${match[2]}`;
 }
-module.exports = { isAllowed, isData, parseStatus, changed, preflight, checkRemote, fastForwardIfClean, commitChanges, repoSlug };
+module.exports = { isAllowed, isData, parseStatus, changed, preflight, checkRemote, fastForwardIfClean, captureCandidate, assertCandidate, assertCommitted, commitChanges, repoSlug };
