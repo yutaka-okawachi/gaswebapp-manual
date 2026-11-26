@@ -24,6 +24,18 @@ function deferred() {
     const promise = new Promise(done => { resolve = done; });
     return { promise, resolve };
 }
+function customPagesStatuses() {
+    const { customDeploymentState, validationState } = load({});
+    const job = { name: 'Deploy verified Pages', head_sha: 'sha', status: 'completed', conclusion: 'success' };
+    assert.equal(customDeploymentState([job], 'sha'), 'success');
+    assert.equal(customDeploymentState([job], 'other'), null);
+    assert.equal(customDeploymentState([{ ...job, conclusion: 'skipped' }], 'sha'), null);
+    assert.equal(customDeploymentState([{ ...job, status: 'in_progress', conclusion: null }], 'sha'), 'pending');
+    assert.equal(customDeploymentState([{ ...job, conclusion: 'failure' }], 'sha'), 'failure');
+    assert.equal(validationState([{ id: 2, name: 'Validate site and sync', head_sha: 'sha', status: 'completed',
+        conclusion: 'success', event: 'workflow_dispatch', path: '.github/workflows/normalize-admin-optout.yml' }], 'sha'), 'success');
+}
+customPagesStatuses();
 async function schedulerFailure() {
     const { forEachLimited } = load({});
     const gate = deferred();

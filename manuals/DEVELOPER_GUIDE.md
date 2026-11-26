@@ -52,6 +52,17 @@ PowerShellから目的に合うモードで実行します。`02_RUN_SYNC.bat` �
 .\sync-data.ps1 -Mode Data -message "用語と訳語の更新"
 ```
 
+#### GitHub Actions で検査後に公開する構成（切替は管理者のみ）
+
+標準の Pages 公開元がブランチのままなら、自動検査と Pages 公開は独立に動きます。ワークフローの追加だけでは切り替わりません。切替後は `Validate site and sync` の検査に成功した同じコミットだけを Jekyll で組み立て、公開ファイルの照合とアーティファクトの保存に成功してから配信します。
+
+1. 先に新しいワークフローを通常同期で `main` に反映し、従来の Pages 公開と自動検査の成功を確認します。
+2. 切替中は通常同期を止め、GitHub リポジトリの Actions 変数に `VERIFIED_PAGES=true` を設定し、Pages の Source を `GitHub Actions` に変更します。Source だけ切り替えて変数を設定し忘れると新しい版が公開されません。
+3. Actions の `Validate site and sync` を `main` で手動実行します。`Deploy verified Pages` の成功と公開中の `mahler-search-app/release.json` を確認してから通常同期に戻ります。
+4. 継続が難しい場合は `VERIFIED_PAGES` を無効にし、Pages の Source を `Deploy from a branch`、`main` の `/(root)` に戻します。旧方式の公開を確認するまでは切替完了としません。
+
+詳細は [GitHub Pages の公開元設定](https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site) を参照してください。
+
 ### 2-2. 実行される処理の流れ
 
 通常同期（Auto）の一回実行で、最新シートとサイトの変更をまとめて反映します。ブラウザーでの手動確認操作は不要で、ターミナル上に詳細な進捗がカラー表示されます。
