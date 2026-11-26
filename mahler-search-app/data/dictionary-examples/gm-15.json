@@ -129,7 +129,7 @@
   {"__exampleOrder":1992,"de":"saltando","de_normalized":"saltando","ja":"弓を跳ねさせて（スピッカートに近い奏法で）","data":"M-a-3-13-v1,v2,va&"},
   {"__exampleOrder":2004,"de":"Schalltr. in d. Höhe!","de_normalized":"schalltr. in d. hoehe!","ja":"ベルアップ！","data":"M-3-1-573-hr&"},
   {"__exampleOrder":2044,"de":"schüchtern","de_normalized":"schuechtern","ja":"遠慮がちに","data":"M-5-3-329-ob&"},
-  {"__exampleOrder":2072,"de":"Sehr breit und zurückhaltend (Rhythmus dirigiren)","de_normalized":"sehr breit und zurueckhaltend (rhythmus dirigiren)","ja":"とてもゆったりと，速度を緩めて（リズムを指揮で示して）","data":"M-3-4-57-all&"},
+  {"__exampleOrder":2072,"de":"Sehr breit und zurückhaltend (Rhythmus dirigiren)","de_normalized":"sehr breit und zurueckhaltend (rhythmus dirigiren)","ja":"とてもゆったりと，速度を緩めて（リズムを指揮で示して）\n【補足】ここでの zurückhaltend は，「テンポを抑えて」とも訳せる．Rhythmus dirigiren は指揮者への指示で，拍を刻むだけでなく，アルト独唱と伴奏が合うように，音の入りを指揮で示すという意味に取れるだろう．","data":"M-3-4-57-all&"},
   {"__exampleOrder":2073,"de":"Sehr breites Alla breve","de_normalized":"sehr breites alla breve","ja":"たいへんゆったりとした2/2の拍取りで","data":"M-1-4-480-all&"},
   {"__exampleOrder":2110,"de":"Sehr klagend","de_normalized":"sehr klagend","ja":"たいへん悲嘆にくれて","data":"M-102-4-184-all&"},
   {"__exampleOrder":2111,"de":"sehr klagend","de_normalized":"sehr klagend","ja":"たいへん悲嘆にくれて","data":"M-d-d14-102-eh&"},

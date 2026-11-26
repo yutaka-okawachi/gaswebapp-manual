@@ -2071,7 +2071,7 @@
   {"de":"Sehr bestimmt, marschmäßig","de_normalized":"sehr bestimmt, marschmaessig","ja":"たいへん決然と，行進曲風に","data":"M-b1-t2-176-all&"},
   {"de":"Sehr bewegt","de_normalized":"sehr bewegt","ja":"たいへん動きをもって","data":"M-3-6-182-all&"},
   {"de":"Sehr breit","de_normalized":"sehr breit","ja":"たいへんゆったりと","data":"M-2-5-493-all&M-3-4-119-all&M-7-1-317-all&"},
-  {"de":"Sehr breit und zurückhaltend (Rhythmus dirigiren)","de_normalized":"sehr breit und zurueckhaltend (rhythmus dirigiren)","ja":"とてもゆったりと，速度を緩めて（リズムを指揮で示して）","data":"M-3-4-57-all&"},
+  {"de":"Sehr breit und zurückhaltend (Rhythmus dirigiren)","de_normalized":"sehr breit und zurueckhaltend (rhythmus dirigiren)","ja":"とてもゆったりと，速度を緩めて（リズムを指揮で示して）\n【補足】ここでの zurückhaltend は，「テンポを抑えて」とも訳せる．Rhythmus dirigiren は指揮者への指示で，拍を刻むだけでなく，アルト独唱と伴奏が合うように，音の入りを指揮で示すという意味に取れるだろう．","data":"M-3-4-57-all&"},
   {"de":"Sehr breites Alla breve","de_normalized":"sehr breites alla breve","ja":"たいへんゆったりとした2/2の拍取りで","data":"M-1-4-480-all&"},
   {"de":"sehr deutlich","de_normalized":"sehr deutlich","ja":"非常にはっきりと","data":"M-2-1-54-hr&M-2-1-208-hp&"},
   {"de":"Sehr drängend","de_normalized":"sehr draengend","ja":"たいへん切迫して","data":"M-2-5-122-all&M-3-1-868-all&M-3-3-460-all&M-3-6-179-all&M-5-2-67-all&M-5-5-725-all&M-102-2-164-all&"},
