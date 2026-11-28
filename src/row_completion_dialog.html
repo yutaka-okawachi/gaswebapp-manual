@@ -10,6 +10,8 @@
     label { display: block; margin-top: 8px; } .context { white-space: pre-wrap; overflow-wrap: anywhere; max-height: 140px; overflow: auto; }
     .muted { color: #526270; } #message { white-space: pre-wrap; overflow-wrap: anywhere; min-height: 26px; }
     #message[data-error="true"] { color: #a32222; } h1 { font-size: 20px; } h2 { font-size: 16px; }
+    .pair-grid { display: grid; gap: 12px; grid-template-columns: repeat(2,minmax(0,1fr)); }
+    @media(max-width: 500px) { .pair-grid { grid-template-columns: 1fr; } }
     @media(max-width: 500px) { body { margin: 10px; } button { width: 100%; } }
   </style>
 </head>
@@ -25,12 +27,24 @@
     <section aria-labelledby="notesChatTitle">
       <h2 id="notesChatTitle">AIと相談して編集</h2>
       <p id="editorAiHelp" class="muted"></p>
-      <label for="notesChatLang">編集する言語</label>
+      <label for="notesChatLang" id="notesChatLangLabel">編集する言語</label>
       <select id="notesChatLang"><option value="ja">日本語</option><option value="en">英語</option></select>
       <div id="notesChatLog" class="context" aria-live="polite"></div>
       <label for="notesChatInput">AIへの指示</label>
       <textarea id="notesChatInput" maxlength="1000" placeholder="例：補足だけ短くして"></textarea>
-      <button id="notesChatAsk">AIに相談</button> <button id="notesSpecialistAsk" hidden>辞書編纂AIに補足を相談</button>
+      <button id="notesSpecialistAsk" hidden>辞書編纂AIに相談（日英の補足）</button> <button id="notesChatAsk">AIに相談</button>
+      <div id="notesPairProposal" hidden>
+        <p id="notesPairReview"></p>
+        <div class="pair-grid">
+          <div><label for="notesPairJa">日本語の補足案</label><textarea id="notesPairJa" readonly></textarea></div>
+          <div><label for="notesPairEn">英語の補足案</label><textarea id="notesPairEn" readonly></textarea></div>
+        </div>
+        <button id="notesPairApply">日英の草案を採用</button>
+      </div>
+      <div id="notesPairAccepted" hidden>
+        <p>日英の補足案を草案に入れた．シートは未変更．「変更を保存」で2つの補足を一緒に保存する．</p>
+        <button id="notesPairUndo">日英の草案を取り消す</button>
+      </div>
       <div id="notesChatProposal" hidden>
         <label for="notesChatDraft">編集案（現在の本文はまだ変わりません）</label>
         <textarea id="notesChatDraft" readonly></textarea>
@@ -149,11 +163,17 @@
       : request('rowCompletionPreview', [true]));
     $('selection').addEventListener('click', () => request('rowCompletionPreview', []));
     $('finish').addEventListener('click', () => request('rowCompletionFinish', [state.job.id, $('checked').checked], '作業を終了しました．新しい行を選択して読み込めます．'));
-    let notesEntry = null, notesProposal = null;
+    let notesEntry = null, notesProposal = null, pairProposal = null, pairApplied = null;
     const conversations = {ja: [], en: []};
     function clearNotesProposal() {
       notesProposal = null; $('notesChatProposal').hidden = true; $('notesChatDraft').value = '';
     }
+    function clearPairProposal() {
+      pairProposal = null; $('notesPairProposal').hidden = true;
+      $('notesPairJa').value = ''; $('notesPairEn').value = ''; $('notesPairReview').textContent = '';
+    }
+    function currentNotes() { return {ja:$('notesJa').value,en:$('notesEn').value}; }
+    function sameNotes(a,b) { return ['ja','en'].every(k => a[k].replace(/\r\n?/g,'\n')===b[k].replace(/\r\n?/g,'\n')); }
     function notesChatMessage(who, value) {
       text($('notesChatLog'), 'p', who + '：' + value);
     }
@@ -161,8 +181,9 @@
       $('notesChatLog').replaceChildren();
       conversations[$('notesChatLang').value].forEach(turn => notesChatMessage(turn.role === 'user' ? '自分' : 'AI', turn.text));
     }
-    $('notesChatLang').addEventListener('change', () => { clearNotesProposal(); showNotesConversation(); });
+    $('notesChatLang').addEventListener('change', () => { clearNotesProposal(); clearPairProposal(); showNotesConversation(); });
     $('notesChatAsk').addEventListener('click', () => {
+      if (pairApplied) { message('先に日英の草案を保存するか取り消してください．',true); return; }
       const language = $('notesChatLang').value, instruction = $('notesChatInput').value.trim();
       const area = $(language === 'ja' ? 'notesJa' : 'notesEn'), before = area.value;
       if (!instruction) { message('AIへの指示を入力してください．', true); return; }
@@ -172,7 +193,7 @@
       const corpus = Boolean(notesEntry.tab);
       const args = corpus ? [editorRef(), basis, instruction, chat.slice(-6)] : [notesEntry.de, notesEntry.signature, language, basis, instruction, chat.slice(-6)];
       notesRequest(corpus ? 'rowCompletionCorpusChat' : 'directMaintenanceChatEdit', args, result => {
-        clearNotesProposal(); chat.push({role:'user', text:instruction}, {role:'assistant', text:result.reply});
+        clearNotesProposal(); clearPairProposal(); chat.push({role:'user', text:instruction}, {role:'assistant', text:result.reply});
         if (chat.length > 12) chat.splice(0, chat.length - 12);
         showNotesConversation(); $('notesChatInput').value = '';
         if (result.draft !== before) {
@@ -185,19 +206,35 @@
     $('notesSpecialistAsk').addEventListener('click', () => {
       if (!notesEntry || notesEntry.tab || !notesEntry.specialistReady) return;
       const language=$('notesChatLang').value;
-      const before=$(language==='ja'?'notesJa':'notesEn').value;
+      const before=currentNotes();
       const instruction=$('notesChatInput').value.trim();
       if (!instruction) { message('補足の編集指示を入力してください．',true); return; }
-      if (before!==notesEntry[language]) { message('辞書編纂AIは元の保存済み本文を使います．編集画面を開き直してください．',true); return; }
-      notesRequest('directMaintenanceSpecialistSupplement',[editorRef(),language,before,instruction],result=>{
-        clearNotesProposal();
-        notesChatMessage('辞書編纂AI',result.reply); $('notesChatInput').value='';
-        if (result.draft!==before) {
-          notesProposal={language,before,draft:result.draft};
-          $('notesChatDraft').value=result.draft; $('notesChatProposal').hidden=false;
-        }
-        message('辞書編纂AIの案です．シートには保存していません．');
+      if (!sameNotes(before,notesEntry)) { message('辞書編纂AIは元の保存済み補足を使います．先に編集を保存するか取り消してください．',true); return; }
+      clearNotesProposal(); clearPairProposal();
+      notesRequest('directMaintenanceSpecialistSupplement',[editorRef(),language,{ja:notesEntry.ja,en:notesEntry.en},instruction],result=>{
+        $('notesPairReview').textContent=result.reply;
+        $('notesPairJa').value=result.paragraphs.ja; $('notesPairEn').value=result.paragraphs.en;
+        pairProposal={before,drafts:result.drafts,paragraphs:result.paragraphs};
+        $('notesPairProposal').hidden=false;
+        $('notesPairApply').hidden=sameNotes(before,result.drafts);
+        message('日英で意味と留保がそろっているか確認してください．シートには保存していません．');
       });
+    });
+    $('notesPairApply').addEventListener('click', () => {
+      if (!pairProposal || !sameNotes(currentNotes(),pairProposal.before)) {
+        message('相談後に本文が変わりました．保存済みの本文で相談し直してください．',true); return;
+      }
+      pairApplied=pairProposal;
+      $('notesJa').value=pairApplied.drafts.ja; $('notesEn').value=pairApplied.drafts.en;
+      $('notesJa').readOnly=true; $('notesEn').readOnly=true;
+      clearPairProposal(); $('notesPairAccepted').hidden=false;
+      message('日英の草案を採用しました．シートにはまだ保存していません．');
+    });
+    $('notesPairUndo').addEventListener('click', () => {
+      if (!pairApplied) return;
+      $('notesJa').value=pairApplied.before.ja; $('notesEn').value=pairApplied.before.en;
+      $('notesJa').readOnly=false; $('notesEn').readOnly=false;
+      pairApplied=null; $('notesPairAccepted').hidden=true; message('日英の草案を取り消しました．');
     });
     $('notesChatApply').addEventListener('click', () => {
       if (!notesProposal) return;
@@ -207,10 +244,11 @@
       message('編集案を画面内の草案に入れました．シートには保存していません．');
     });
     function notesDirty() {
-      return notesEntry && ($('notesJa').value !== notesEntry.ja || $('notesEn').value !== notesEntry.en);
+      return notesEntry && !sameNotes(currentNotes(),notesEntry);
     }
     function showEditor(entry) {
       notesEntry = entry;
+      pairApplied=null; clearPairProposal(); $('notesPairAccepted').hidden=true;
       const corpus = Boolean(entry.tab);
       $('notesHeading').textContent = corpus ? entry.tab + ' ' + entry.row + '行：英訳を編集' : entry.de + '（Notes ' + entry.row + '行）';
       $('notesSource').textContent = corpus ? (entry.location || '') : '出典：' + (entry.source || '（空欄）');
@@ -223,7 +261,8 @@
       $('notesChatLang').options[0].disabled = corpus;
       $('notesChatAsk').hidden = corpus && !entry.canEditEn;
       $('notesSpecialistAsk').hidden = corpus || !entry.specialistReady;
-      if (!corpus && entry.specialistReady) $('editorAiHelp').textContent += '「辞書編纂AIに補足を相談」は見出し・補足1段落・指示だけを送信します．';
+      $('notesChatLangLabel').textContent = !corpus && entry.specialistReady ? '編集・翻訳の基準にする言語' : '編集する言語';
+      if (!corpus && entry.specialistReady) $('editorAiHelp').textContent += '辞書編纂AIは基準にする言語の補足を先に整え，その内容で日英の案を作ります．送るのは見出し・基準言語の補足1段落・指示だけです．通常の「AIに相談」は選んだ言語だけを編集します．';
       $('notesSave').hidden = corpus && !entry.canEditEn;
       $('notesJa').value = entry.ja; $('notesEn').value = entry.en;
       $('notesFill').hidden = !entry.canFill;
@@ -267,7 +306,10 @@
       if (['ja', 'en'].some(key => notesEntry[key] && !fields[key].trim())) {
         message('既存の本文を空欄にする操作は，この画面では行いません．', true); return;
       }
-      notesRequest('directMaintenanceEdit', [notesEntry.de, notesEntry.signature, fields], result => {
+      if (pairApplied && !sameNotes(fields,pairApplied.drafts)) { message('日英の草案を取り消してから編集し直してください．',true); return; }
+      const paired=Boolean(pairApplied);
+      notesRequest(paired ? 'directMaintenanceSpecialistSave' : 'directMaintenanceEdit',
+        paired ? [editorRef(),pairApplied.paragraphs] : [notesEntry.de,notesEntry.signature,fields], result => {
         if (!result || result.status !== 'saved') { message('保存結果を確認できませんでした．', true); return; }
         clearNotesProposal();
         notesRequest('directMaintenanceSelectedEntry', [], entry => {
@@ -278,7 +320,7 @@
             return;
           }
           showEditor(entry);
-          message('変更をNotesに保存しました．公開反映はsync-dataで行います．');
+          message((paired ? '日英の補足を一緒に' : '変更をNotesに') + '保存しました．公開反映はsync-dataで行います．');
         });
       });
     });
