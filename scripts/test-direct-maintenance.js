@@ -1,7 +1,7 @@
 'use strict';
 const test=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm'),crypto=require('node:crypto');
 const source=fs.readFileSync(require('node:path').join(__dirname,'../src/direct_maintenance.js'),'utf8');
-function richBuilder(){let text='';return {setText(v){text=v;return this;},setTextStyle(){return this;},setLinkUrl(){return this;},build(){return {getText:()=>text};}};}
+function richBuilder(){let text='';const links=[];return {setText(v){text=v;return this;},setTextStyle(){return this;},setLinkUrl(start,end,url){links.push({start,end,url});return this;},build(){return {getText:()=>text,links};}};}
 function styleBuilder(){return {setFontFamily(){return this;},setFontSize(){return this;},setItalic(){return this;},build(){return {};}};}
 function fixture(){
  const rows=[],notes=[{number:2,values:{de:'groß',ja:'大きい',source:'[GM]'}},{number:3,values:{de:'mit grossem Pathos',ja:'句',source:''}}];let cell='[GM]',writes=0;
@@ -28,6 +28,43 @@ test('existing text edit survives sheet sorting and rejects a changed body',()=>
  h.c.directMaintenanceEdit('groß',entry.signature,{ja:'new JA',en:'new EN'});
  assert.throws(()=>h.c.directMaintenanceEdit('groß',entry.signature,{ja:'stale',en:'stale'}),/表示後/);
  assert.equal(h.notes[0].values.ja,'new JA');
+});
+test('Notes text lookup and save do not depend on the word-form mapping sheet',()=>{
+ const h=fixture(),book=h.c.rowCompletionBook_(),sheet=book.getSheetByName('Notes');
+ h.notes[0].values.en='Old English';
+ book.getSheetByName=name=>name==='Notes'?sheet:null;
+ h.c.namedSheetColumns_=()=>({positions:[0,1]});
+ sheet.getRange=(r,c)=>({getFormula:()=>'',canEdit:()=>true,isPartOfMerge:()=>false,getRichTextValue:()=>null,
+  setRichTextValue:v=>{h.notes.find(n=>n.number===r).values[c===1?'ja':'en']=v.getText();}});
+ const entry=h.c.directMaintenanceEntry('groß');
+ assert.equal(h.c.directMaintenanceEdit('groß',entry.signature,{ja:'新しい本文',en:entry.en}).status,'saved');
+ assert.equal(h.notes[0].values.ja,'新しい本文');
+ assert.equal(h.notes[0].values.en,'Old English');
+ assert.throws(()=>h.c.directMaintenanceInspect('groß'),/語形対応/);
+});
+test('saved Japanese edit preserves the example, existing score hyperlink, and neighboring row after sorting',()=>{
+ const h=fixture(),sheet=h.c.rowCompletionBook_().getSheetByName('Notes');
+ const link='https://example.test/score.pdf#page=15', label='参照譜';
+ const ja='【補足】\n長い説明を書いてある．\n\n【音楽用語としての訳例】\n[GM]\nGroß.\n大きく．\n\n【参考資料】\n'+label;
+ Object.assign(h.notes[0].values,{ja,en:'Keep existing English.',approval:'approved'});
+ const edited=h.notes[0],neighbor=h.notes[1],untouched=JSON.stringify(neighbor.values);
+ let writes=[];
+ h.c.namedSheetColumns_=()=>({positions:[1,2]});
+ sheet.getRange=(r,c)=>({getFormula:()=>'',canEdit:()=>true,isPartOfMerge:()=>false,getRichTextValue:()=>({
+   getText:()=>ja,getRuns:()=>[{getStartIndex:()=>ja.indexOf(label),getEndIndex:()=>ja.length,getTextStyle:()=>({}),getLinkUrl:()=>link}]
+ }),setRichTextValue:v=>{
+   const row=h.notes.find(n=>n.number===r),field=c===2?'ja':'en';
+   row.values[field]=v.getText();writes.push({r,field,links:v.links});
+ }});
+ const entry=h.c.directMaintenanceEntry('groß'),next=ja.replace('長い説明を書いてある','短い説明');
+ edited.number=3;neighbor.number=2;
+ assert.equal(h.c.directMaintenanceEdit('groß',entry.signature,{ja:next,en:entry.en}).row,3);
+ assert.deepEqual(writes,[{r:3,field:'ja',links:[{start:next.indexOf(label),end:next.length,url:link}]}]);
+ assert.equal(edited.values.ja,next);
+ assert.equal(edited.values.en,entry.en);
+ assert.equal(edited.values.source,'[GM]');
+ assert.equal(edited.values.approval,'approved');
+ assert.equal(JSON.stringify(neighbor.values),untouched);
 });
 test('existing edit adds provenance only to a changed adopted pair, leaves other language/source intact',()=>{
  const h=fixture();h.notes[0].values.ja='[RW: Oper]\nSie eilen ab.\n古い訳';h.notes[0].values.en='Keep existing English';

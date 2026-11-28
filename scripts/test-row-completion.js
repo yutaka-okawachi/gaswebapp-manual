@@ -484,7 +484,7 @@ test('actual dialog flow preserves edits on failure and refreshes without regene
     setAttribute(name,value){this[name]=value;}
     click(){assert(!this.disabled,'button should be enabled: '+this.textContent);this.events.click();}
   }
-  const ids=Object.fromEntries(['refresh','selection','message','summary','rows','finishArea','finish','checked'].map(id=>[id,new Element(id==='checked'?'input':id==='refresh'||id==='selection'||id==='finish'?'button':'div')]));
+  const ids=Object.fromEntries(['refresh','selection','message','summary','rows','finishArea','finish','checked','notesEditor','completionPanel','notesSave','notesFill','notesChatLang','notesChatAsk','notesChatApply'].map(id=>[id,new Element(id==='checked'?'input':id==='refresh'||id==='selection'||id==='finish'?'button':'div')]));
   const all=()=>{const found=[];function walk(e){found.push(e);e.children.forEach(walk);}Object.values(ids).forEach(walk);return found;};
   const job={id:'ui-test',tab:'Notes',closed:false,rows:[{number:2,status:'pending',message:'',targets:['ja','en'],draft:{},snapshot:{values:{de:'Leise <img src=x onerror=bad()>',ja:'',en:'',source:'[GM]'}}}]};
   const calls=[],queue=[];let fail=false;
@@ -492,12 +492,13 @@ test('actual dialog flow preserves edits on failure and refreshes without regene
     calls.push({method:key,args});if(fail){fail=false;failure({message:'ROW_COMPLETION: 保存状態を確認してください．'});return;}
     const row=job.rows[0];if(key==='rowCompletionGenerate'){row.status='needs_review';row.draft={ja:'静かに',en:'Softly'};row.notesSupport={english:'string',italian:'corda',rationale:'Evidence <img src=x onerror=bad()>',examples:[{id:'GM:2',location:'test',de:'Saite',ja:'弦',en:'string'}]};}
     if(key==='rowCompletionApply'){row.status='applied';row.draft=args[2];}
+    if(key === 'directMaintenanceSelectedEntry') { success(null); return; }
     success(JSON.parse(JSON.stringify({job,apiReady:true})));
   });}});}
   const document={getElementById:id=>ids[id],createElement:tag=>new Element(tag),querySelectorAll:selector=>all().filter(e=>selector.split(',').map(s=>s.toUpperCase()).includes(e.tagName))};
   const html=fs.readFileSync(path.join(root,'src/row_completion_dialog.html'),'utf8');
   const js=html.match(/<script>([\s\S]*?)<\/script>/)[1].replace(/<\?!=[^]*?\?>/g,"'rowCompletionPreview'");
-  vm.runInNewContext(js,{document,google:{script:{run:runner()}}});queue.shift()();
+  vm.runInNewContext(js,{document,google:{script:{run:runner()}}});queue.shift()();queue.shift()();
   const byText=label=>all().find(e=>e.tagName==='BUTTON'&&e.textContent===label);
   byText('この行の翻訳案を生成').click();queue.shift()();
   assert(all().some(e=>e.textContent==='Evidence <img src=x onerror=bad()>'));assert(!all().some(e=>e.tagName==='IMG'));
@@ -725,7 +726,7 @@ test('dialog renders sourceCandidate safely and enables source-only check even w
   setAttribute(name,value){this[name]=value;}
   click(){assert(!this.disabled,'button should be enabled: '+this.textContent);this.events.click();}
  }
- const ids=Object.fromEntries(['refresh','selection','message','summary','rows','finishArea','finish','checked'].map(id=>[id,new Element(id==='checked'?'input':id==='refresh'||id==='selection'||id==='finish'?'button':'div')]));
+ const ids=Object.fromEntries(['refresh','selection','message','summary','rows','finishArea','finish','checked','notesEditor','completionPanel','notesSave','notesFill','notesChatLang','notesChatAsk','notesChatApply'].map(id=>[id,new Element(id==='checked'?'input':id==='refresh'||id==='selection'||id==='finish'?'button':'div')]));
  const all=()=>{const found=[];function walk(e){found.push(e);e.children.forEach(walk);}Object.values(ids).forEach(walk);return found;};
  const job={id:'ui-source',tab:'Notes',closed:false,rows:[{number:2,status:'pending',message:'',targets:['source'],draft:{source:'[RS: Oper]'},
   sourceCandidate:{value:'[RS: Oper]',proof:[{tab:'RS',number:12,location:'Work / 1 / 1 / 5',german:'Mit <img src=x onerror=bad()>'}]},
@@ -733,12 +734,13 @@ test('dialog renders sourceCandidate safely and enables source-only check even w
  const queue=[];
  function runner(success,failure){return new Proxy({withSuccessHandler(fn){return runner(fn,failure);},withFailureHandler(fn){return runner(success,fn);}},{get(o,k){if(k in o)return o[k];return(...args)=>queue.push(()=>{
   if(k==='rowCompletionGenerate')job.rows[0].status='draft';
-  success(JSON.parse(JSON.stringify({job,apiReady:false})));
+  if(k === 'directMaintenanceSelectedEntry') { success(null); return; }
+    success(JSON.parse(JSON.stringify({job,apiReady:false})));
  });}});}
  const document={getElementById:id=>ids[id],createElement:tag=>new Element(tag),querySelectorAll:selector=>all().filter(e=>selector.split(',').map(s=>s.toUpperCase()).includes(e.tagName))};
  const html=fs.readFileSync(path.join(root,'src/row_completion_dialog.html'),'utf8');
  const js=html.match(/<script>([\s\S]*?)<\/script>/)[1].replace(/<\?!=[^]*?\?>/g,"'rowCompletionPreview'");
- vm.runInNewContext(js,{document,google:{script:{run:runner()}}});queue.shift()();
+ vm.runInNewContext(js,{document,google:{script:{run:runner()}}});queue.shift()();queue.shift()();
  const byText=label=>all().find(e=>e.tagName==='BUTTON'&&e.textContent===label);
  assert(all().some(e=>e.textContent.includes('Mit <img src=x onerror=bad()>')));assert(!all().some(e=>e.tagName==='IMG'));
  byText('出典候補を確認').click();queue.shift()();

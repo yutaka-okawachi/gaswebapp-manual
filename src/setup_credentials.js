@@ -42,7 +42,7 @@ function onOpen() {
   addSheetRowNavigationMenu_(ui);
   ui.createMenu('🛠 日常保守')
     .addItem('用語を調べて登録・編集', 'showMaintenanceWorkbench')
-    .addItem('選択行の空欄補完', 'showMaintenanceSelectedRows')
+    .addItem('選択行を編集', 'showMaintenanceSelectedRows')
     .addItem('並べ替え', 'sortMaintenanceRows')
     .addSeparator()
     .addItem('使い方', 'showMaintenanceFunctionRoles')
@@ -66,7 +66,8 @@ function showMaintenanceFunctionRoles() {
 <ol><li>調べたい単語を入力する．検索画面から通常の文字選択でコピーしてもよい．検索から保守用の候補記録は作成しない．</li><li>既存のNotes見出しとGM・RW・RSの用例を確認する．必要ならAPIで判断の参考情報を得る．</li><li>既存見出しの語形なら語形対応へ，新しい見出しが必要ならNotesの新規登録へ進む．意味・出典・本文を確認してから保存する．</li></ol>
 <p>新規の日英案の生成ではOpenAI APIを使う．調査結果は参考であり，保存前に内容を確認する．</p>
 <p class="note">英語のSee・also・kindなどがドイツ語の見出しへの参照と混同される場合がある．英訳の参照先と表示を確認し，意図しない自動リンクを付けない．ドイツ語の用語を指す正しい参照は残す．</p>
-<h2>選択行の空欄補完</h2>
+<h2>選択行を編集</h2>
+<p>Notesの1行は日英本文を編集でき，空欄は従来の補完機能を使えます．GM・RW・RSと複数行は空欄補完のみです．</p>
 <p>Notes・GM・RW・RSで対象行を選択して開く．画面の案と現在の内容を確認し，必要な項目を編集・補完する．入力済み本文を不用意に置き換えない．</p>
 <h2>並べ替え</h2>
 <p>GMとNotesの2行目以降をA列の昇順に並べ替える．他のタブは対象外．見出し行を残し，全列のデータを一緒に移す．GMの正規化式も保持する．実行結果を確認する．</p>

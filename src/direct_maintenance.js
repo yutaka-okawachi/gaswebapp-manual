@@ -6,10 +6,14 @@ function directMaintenanceTerm_(value) {
   return term;
 }
 function directMaintenanceWord_(value) { return /^[\p{L}\p{M}]+(?:[-’'][\p{L}\p{M}]+)*$/u.test(value); }
-function directMaintenanceRead_(term) {
+function directMaintenanceNotesRead_() {
   const book = rowCompletionBook_(), notesSheet = book.getSheetByName('Notes');
   if (!notesSheet) throw new Error('Notesタブがありません．');
   const notes = notesRegistrationRead_(notesSheet).rows.filter(r => r.values.de.trim());
+  return {book,notesSheet,notes};
+}
+function directMaintenanceRead_(term) {
+  const {book,notesSheet,notes} = directMaintenanceNotesRead_();
   const mapping = book.getSheetByName('語形対応');
   const headers = ['見出し','関連語形','語形区分','用語検索','実例検索','補足'];
   if (!mapping || JSON.stringify(mapping.getRange(1,1,1,6).getValues()[0]) !== JSON.stringify(headers)) throw new Error('語形対応タブの列を確認してください．');
@@ -72,17 +76,29 @@ function directMaintenanceAliasSave(term,headword,category,signature) {
     return {saved:true,term:p.term,headword:p.headword,message:p.term+' → '+p.headword+' を登録しました．公開反映はsync-dataで行います．'};
   });
 }
-function directMaintenanceEntry(term) {
+function directMaintenanceSelectedEntry() {
+  const book = rowCompletionBook_(), range = book.getActiveRange(), sheet = book.getActiveSheet();
+  if (!range || !sheet || sheet.getName() !== 'Notes' ||
+      range.getSheet().getSheetId() !== sheet.getSheetId() || range.getNumRows() !== 1 || range.getRow() < 2) return null;
+  const snapshot = rowCompletionRead_(sheet, range.getRow());
+  if (!String(snapshot.values.de || '').trim()) return null;
+  const entry = directMaintenanceEntry(snapshot.values.de);
+  if (entry.row !== range.getRow()) throw new Error('選択した行と見出し語が一致しません．行を選び直してください．');
+  entry.canFill = ['ja', 'en', 'source'].some(field => rowCompletionBlank_(snapshot, field) && rowCompletionWritable_(sheet, field, entry.row));
+  return entry;
+}
+function directMaintenanceEntry_(term,s) {
   term=directMaintenanceTerm_(term);
-  const s=directMaintenanceRead_(term), rows=s.notes.filter(r=>normalizeObservedTerm(r.values.de)===normalizeObservedTerm(term));
+  const rows=s.notes.filter(r=>normalizeObservedTerm(r.values.de)===normalizeObservedTerm(term));
   if(rows.length!==1) throw new Error('編集するNotes見出しを一つ指定してください．');
   const r=rows[0];return {term:r.values.de,de:r.values.de,source:r.values.source,ja:r.values.ja,en:r.values.en,signature:rowCompletionHash_(r.values),row:r.number};
 }
+function directMaintenanceEntry(term) { return directMaintenanceEntry_(term,directMaintenanceNotesRead_()); }
 function directMaintenanceEdit(term,signature,fields) {
   term=directMaintenanceTerm_(term);
   if(!fields || !['ja','en'].every(k=>typeof fields[k]==='string'&&fields[k].length<=6000&&!/^[=+@]/.test(fields[k])&&!/[\u0000-\u0008\u000b\u000c\u000e-\u001f]/.test(fields[k]))) throw new Error('日英本文を各6000文字以内で入力してください．');
   return rowCompletionLock_(function(){
-    const entry=directMaintenanceEntry(term),s=directMaintenanceRead_(term);
+    const s=directMaintenanceNotesRead_(),entry=directMaintenanceEntry_(term,s);
     if(entry.ja===fields.ja&&entry.en===fields.en)return {status:'saved',row:entry.row,term:entry.term};
     if(entry.signature!==signature)throw new Error('表示後に本文が変更されました．編集内容は画面に残しています．現在のNotesを確認してください．');
     const layout=namedSheetColumns_(s.notesSheet,['ja','en']);

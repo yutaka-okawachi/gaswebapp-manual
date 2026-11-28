@@ -123,7 +123,7 @@ function rowCompletionWhomState_(book, tab, values) {
   return { status: 'approved', value: value, message: '' };
 }
 function rowCompletionWhom_(book, tab, values) { return rowCompletionWhomState_(book, tab, values).value; }
-function rowCompletionPreview(fresh) {
+function rowCompletionPreview(fresh, selectedNotes) {
   return rowCompletionLock_(function () {
     const book = rowCompletionBook_(), old = rowCompletionStored_();
     const previous = old && !old.job.intake && old.job.book === book.getId() ? old.job : null;
@@ -140,6 +140,11 @@ function rowCompletionPreview(fresh) {
     const job = { id: Utilities.getUuid(), book: book.getId(), sheetId: sheet.getSheetId(), tab: sheet.getName(), created: new Date().toISOString(), closed: false, rows: [] };
     for (let n = selection.getRow(); n <= selection.getLastRow(); n++) {
       const snapshot = rowCompletionRead_(sheet, n), v = snapshot.values;
+      if (selectedNotes && (job.tab !== 'Notes' || selection.getNumRows() !== 1 ||
+          selectedNotes.row !== n || selectedNotes.de !== v.de ||
+          selectedNotes.signature !== directMaintenanceEntry(v.de).signature)) {
+        throw rowCompletionError_('行または本文が変わりました．選択行を編集し直してください．');
+      }
       const row = { tab: job.tab, number: n, snapshot: snapshot, hash: rowCompletionHash_(snapshot), status: 'pending', message: '', draft: {}, targets: [] };
       let reason = '';
       if (!String(v.de || '').trim()) reason = 'ドイツ語原文がありません．';
@@ -541,5 +546,5 @@ function rowCompletionFinish(id, checked) {
 }
 function showMaintenanceSelectedRows() {
   const html = HtmlService.createHtmlOutputFromFile('row_completion_dialog');
-  SpreadsheetApp.getUi().showModalDialog(html.setWidth(760).setHeight(680), '選択行の空欄補完');
+  SpreadsheetApp.getUi().showModalDialog(html.setWidth(760).setHeight(680), '選択行を編集');
 }

@@ -14,25 +14,52 @@
   </style>
 </head>
 <body>
+  <section id="notesEditor" hidden>
+    <h1 id="notesHeading">選択行を編集</h1>
+    <p id="notesSource"></p>
+    <p class="muted">既存の日英本文を編集できます．出典列・見出し語はこの画面では変更しません．</p>
+    <label for="notesJa">日本語</label><textarea id="notesJa"></textarea>
+    <label for="notesEn">英語</label><textarea id="notesEn"></textarea>
+    <button id="notesSave">変更を保存</button>
+    <button id="notesFill">空欄を補完</button>
+    <section aria-labelledby="notesChatTitle">
+      <h2 id="notesChatTitle">AIと相談して編集</h2>
+      <p class="muted">現在の対象言語の本文と会話の一部をOpenAI APIに送ります．AIの案は「草案に採用」で本文欄へ入ります．保存は別操作です．</p>
+      <label for="notesChatLang">編集する言語</label>
+      <select id="notesChatLang"><option value="ja">日本語</option><option value="en">英語</option></select>
+      <div id="notesChatLog" class="context" aria-live="polite"></div>
+      <label for="notesChatInput">AIへの指示</label>
+      <textarea id="notesChatInput" maxlength="1000" placeholder="例：補足だけ短くして"></textarea>
+      <button id="notesChatAsk">AIに相談</button>
+      <div id="notesChatProposal" hidden>
+        <label for="notesChatDraft">編集案（現在の本文はまだ変わりません）</label>
+        <textarea id="notesChatDraft" readonly></textarea>
+        <button id="notesChatApply">草案に採用</button>
+      </div>
+    </section>
+  </section>
+  <p id="message" role="status" aria-live="polite"></p>
+  <div id="completionPanel" hidden>
   <h1>選択行の空欄補完</h1>
   <p>生成ボタンはOpenAI APIを使用します．毎回の課金確認は表示しません．案を確認・編集し，「確認した内容を空欄へ反映」を押すまで本文は変わりません．</p>
   <p>Notesの英語案では，自動リンク候補がある場合だけ文脈確認にもAPIを使用します．英語と判定した語のリンクは除外し，不明な候補は要確認と表示します．[[nolink:語]] は公開時にリンクなしの文字になります．</p>
   <p class="muted">原文・使用箇所・既存の出典，正規化の配列数式，既存の値・式・書式・入力規則は保持します．Notesの出典が空欄のときだけGM・RW・RSの実在用例から出典候補を提示します（根拠がなければ空欄のまま）．出典資料そのものを自動取得する機能ではありません．</p>
   <button id="refresh">保存状態を確認</button><button id="selection">現在の選択行を読み込む</button>
-  <p id="message" role="status" aria-live="polite"></p><p id="summary"></p>
+  <p id="summary"></p>
   <div id="rows"></div>
   <div id="finishArea" hidden>
     <label><input type="checkbox" id="checked"> 結果不明の場合，API利用状況と対象セルを確認した</label>
     <button id="finish">この作業を終了する</button>
   </div>
   <p class="muted">案は開いている画面で確認・編集する．画面を開き直すと未反映の案は引き継がない．反映後の公開には別途Data同期が必要．</p>
+  </div>
   <script>
     let state = null, busy = false, needsRefresh = false;
     const edits = Object.create(null), $ = id => document.getElementById(id);
     function message(text, error = false) { $('message').textContent = text; $('message').dataset.error = String(error); }
     function lock(value) {
       busy = value;
-      document.querySelectorAll('button,textarea,input').forEach(element => { element.disabled = value; });
+      document.querySelectorAll('button,textarea,input,select').forEach(element => { element.disabled = value; });
     }
     function request(method, args, done) {
       if (busy) return;
@@ -122,7 +149,99 @@
       : request('rowCompletionPreview', [true]));
     $('selection').addEventListener('click', () => request('rowCompletionPreview', []));
     $('finish').addEventListener('click', () => request('rowCompletionFinish', [state.job.id, $('checked').checked], '作業を終了しました．新しい行を選択して読み込めます．'));
-    request('rowCompletionPreview', [true]);
+    let notesEntry = null, notesProposal = null;
+    const conversations = {ja: [], en: []};
+    function clearNotesProposal() {
+      notesProposal = null; $('notesChatProposal').hidden = true; $('notesChatDraft').value = '';
+    }
+    function notesChatMessage(who, value) {
+      text($('notesChatLog'), 'p', who + '：' + value);
+    }
+    function showNotesConversation() {
+      $('notesChatLog').replaceChildren();
+      conversations[$('notesChatLang').value].forEach(turn => notesChatMessage(turn.role === 'user' ? '自分' : 'AI', turn.text));
+    }
+    $('notesChatLang').addEventListener('change', () => { clearNotesProposal(); showNotesConversation(); });
+    $('notesChatAsk').addEventListener('click', () => {
+      const language = $('notesChatLang').value, instruction = $('notesChatInput').value.trim();
+      const area = $(language === 'ja' ? 'notesJa' : 'notesEn'), before = area.value;
+      if (!instruction) { message('AIへの指示を入力してください．', true); return; }
+      if (!before.trim()) { message('本文が空欄です．「空欄を補完」を使ってください．', true); return; }
+      const chat = conversations[language];
+      const basis = notesProposal && notesProposal.language === language && notesProposal.before === before ? notesProposal.draft : before;
+      notesRequest('directMaintenanceChatEdit', [notesEntry.de, notesEntry.signature, language, basis, instruction, chat.slice(-6)], result => {
+        clearNotesProposal(); chat.push({role:'user', text:instruction}, {role:'assistant', text:result.reply});
+        if (chat.length > 12) chat.splice(0, chat.length - 12);
+        showNotesConversation(); $('notesChatInput').value = '';
+        if (result.draft !== before) {
+          notesProposal = {language, before, draft:result.draft};
+          $('notesChatDraft').value = result.draft; $('notesChatProposal').hidden = false;
+        }
+        message('AIの回答を確認してください．Notesには保存していません．');
+      });
+    });
+    $('notesChatApply').addEventListener('click', () => {
+      if (!notesProposal) return;
+      const area = $(notesProposal.language === 'ja' ? 'notesJa' : 'notesEn');
+      if (area.value !== notesProposal.before) { message('相談後に本文が変わりました．新しい本文で相談し直してください．', true); return; }
+      area.value = notesProposal.draft; clearNotesProposal();
+      message('編集案を画面内の草案に入れました．Notesには保存していません．');
+    });
+    function notesDirty() {
+      return notesEntry && ($('notesJa').value !== notesEntry.ja || $('notesEn').value !== notesEntry.en);
+    }
+    function showNotes(entry) {
+      notesEntry = entry; $('notesHeading').textContent = entry.de + '（Notes ' + entry.row + '行）';
+      $('notesSource').textContent = '出典：' + (entry.source || '（空欄）');
+      $('notesJa').value = entry.ja; $('notesEn').value = entry.en;
+      $('notesFill').hidden = !entry.canFill;
+      $('notesEditor').hidden = false; $('completionPanel').hidden = true;
+      message('確認・編集してから保存してください．');
+    }
+    function openCompletion() {
+      $('notesEditor').hidden = true; $('completionPanel').hidden = false;
+      if (notesEntry) request('rowCompletionPreview', [true, {de:notesEntry.de, row:notesEntry.row, signature:notesEntry.signature}]);
+      else request('rowCompletionPreview', [true]);
+    }
+    function notesRequest(method, args, success) {
+      if (busy) return;
+      lock(true); message('処理中です．');
+      google.script.run.withSuccessHandler(result => {
+        lock(false); success(result);
+      }).withFailureHandler(error => {
+        lock(false);
+        message(String(error && error.message || '処理結果を確認できませんでした．'), true);
+      })[method](...args);
+    }
+    function loadSelection() {
+      notesRequest('directMaintenanceSelectedEntry', [], entry => entry ? showNotes(entry) : openCompletion());
+    }
+    $('notesSave').addEventListener('click', () => {
+      if (!notesDirty()) { message('変更はありません．'); return; }
+      const fields = {ja: $('notesJa').value, en: $('notesEn').value};
+      if (['ja', 'en'].some(key => notesEntry[key] && !fields[key].trim())) {
+        message('既存の本文を空欄にする操作は，この画面では行いません．', true); return;
+      }
+      notesRequest('directMaintenanceEdit', [notesEntry.de, notesEntry.signature, fields], result => {
+        if (!result || result.status !== 'saved') { message('保存結果を確認できませんでした．', true); return; }
+        clearNotesProposal();
+        notesRequest('directMaintenanceSelectedEntry', [], entry => {
+          if (!entry || entry.de !== notesEntry.de) {
+            notesEntry = null;
+            $('notesEditor').hidden = true;
+            message('変更は保存しました．選択行が変わったため，続けるには編集画面を開き直してください．');
+            return;
+          }
+          showNotes(entry);
+          message('変更をNotesに保存しました．公開反映はsync-dataで行います．');
+        });
+      });
+    });
+    $('notesFill').addEventListener('click', () => {
+      if (notesDirty()) { message('先に本文の編集を保存するか，編集前の内容に戻してください．', true); return; }
+      openCompletion();
+    });
+    loadSelection();
   </script>
 </body>
 </html>
