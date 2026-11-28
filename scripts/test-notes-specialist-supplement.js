@@ -121,6 +121,6 @@ assert.throws(()=>ctx.notesSpecialistSession_((method,path)=>{
 assert.deepEqual(timeoutCalls.at(-1),['DELETE','/agents/sessions/sess_TIMEOUT']);
 const html=fs.readFileSync('src/row_completion_dialog.html','utf8');
 assert.match(html,/id="notesChatAsk">AIに相談/);
-assert.match(html,/id="notesSpecialistAsk" hidden/);
+assert.doesNotMatch(html,/id="notesSpecialistAsk"/);
 new vm.Script(html.match(/<script>([\s\S]*?)<\/script>/)[1]);
 console.log('Notes specialist: no key no call, only permitted supplement sent, links and examples preserved, rejects stale selection and bad output, cleanup required.');

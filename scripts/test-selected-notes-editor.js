@@ -47,34 +47,36 @@ test('the selected-row UI can discuss, adopt, and then explicitly save; completi
     document:{getElementById:id=>ids[id],createElement:make,querySelectorAll:()=>Object.values(ids)},
     google:{script:{run}},window:{confirm:()=>true},
   });
-  const entry={de:'Teller',row:14,ja:'古い説明',en:'',source:'[GM]',signature:'revision',canFill:true};
+  const entry={de:'Teller',row:14,ja:'古い説明',en:'Old description',source:'[GM]',signature:'revision',canFill:true};
   assert.equal(calls[0].name,'rowCompletionSelectedEditor');
   calls[0].success(entry);
   assert.equal(ids.notesEditor.hidden,false);
   assert.equal(ids.notesFill.hidden,false);
   ids.notesChatInput.value='補足を変えて';
   ids.notesChatAsk.events.click();
-  assert.equal(calls.at(-1).name,'directMaintenanceChatEdit');
-  calls.at(-1).success({reply:'短くしたよ',draft:'新しい説明'});
+  assert.equal(calls.at(-1).name,'directMaintenanceNotesPairChat');
+  calls.at(-1).success({reply:'短くしたよ',drafts:{ja:'新しい説明',en:'New description'}});
   assert.equal(ids.notesJa.value,'古い説明');
   ids.notesChatInput.value='その案を短く';
   ids.notesChatAsk.events.click();
-  assert.equal(calls.at(-1).args[3],'新しい説明');
-  calls.at(-1).success({reply:'短くしたよ',draft:'新しい説明'});
-  ids.notesChatApply.events.click();
+  assert.equal(calls.at(-1).args[2].ja,'新しい説明');
+  calls.at(-1).success({reply:'短くしたよ',drafts:{ja:'新しい説明',en:'New description'}});
+  ids.notesPairApply.events.click();
   assert.equal(ids.notesJa.value,'新しい説明');
+  assert.equal(ids.notesEn.value,'New description');
   assert.equal(calls.length,3);
   ids.notesFill.events.click();
   assert.equal(calls.length,3); // Unsaved edits cannot be discarded by switching.
   ids.notesSave.events.click();
-  assert.equal(calls.at(-1).name,'directMaintenanceEdit');
-  assert.equal(calls.at(-1).args[2].ja,'新しい説明');
+  assert.equal(calls.at(-1).name,'directMaintenanceNotesPairSave');
+  assert.equal(calls.at(-1).args[1].ja,'新しい説明');
+  assert.equal(calls.at(-1).args[1].en,'New description');
   calls.at(-1).success({status:'saved'});
-  calls.at(-1).success({...entry,ja:'新しい説明',signature:'new-revision'});
+  calls.at(-1).success({...entry,ja:'新しい説明',en:'New description',signature:'new-revision'});
   ids.notesChatInput.value='さらに短くして';
   ids.notesChatAsk.events.click();
-  assert.equal(calls.at(-1).args[5][0].text,'補足を変えて');
-  calls.at(-1).success({reply:'短い案',draft:'説明'});
+  assert.equal(calls.at(-1).args[4][0].text,'補足を変えて');
+  calls.at(-1).success({reply:'短い案',drafts:{ja:'説明',en:'Description'}});
   ids.notesFill.events.click();
   assert.equal(calls.at(-1).name,'rowCompletionPreview');
   assert.equal(calls.at(-1).args[1].signature,'new-revision');

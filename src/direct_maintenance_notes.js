@@ -156,9 +156,10 @@ function directMaintenanceChatEdit(term, signature, language, current, instructi
   }
   return draft;
 }
-function directMaintenanceChatRequest_(input, instructions) {
+function directMaintenanceChatRequest_(input, instructions, paired = false) {
   const {current, instruction, history} = input;
   directMaintenanceNotesText_(current);
+  if (paired) directMaintenanceNotesText_(input.other);
   if (typeof instruction !== 'string' || !instruction.trim() || instruction.length > 1000 ||
       !Array.isArray(history) || history.length > 6 || history.some(turn => !turn ||
         !['user', 'assistant'].includes(turn.role) || typeof turn.text !== 'string' || turn.text.length > 1000)) {
@@ -175,8 +176,10 @@ function directMaintenanceChatRequest_(input, instructions) {
       payload: JSON.stringify({
         model, store:false, max_output_tokens:7000,
         instructions, input:JSON.stringify(input),
-        text:{format:{type:'json_schema', name:'notes_edit_suggestion', strict:true, schema:{
-          type:'object', properties:{reply:{type:'string'}, draft:{type:'string'}}, required:['reply','draft'], additionalProperties:false,
+        text:{format:{type:'json_schema', name:paired?'notes_pair_suggestion':'notes_edit_suggestion', strict:true, schema:{
+          type:'object',
+          properties:paired ? {reply:{type:'string'},mode:{type:'string',enum:['discussion','proposal']},ja:{type:'string'},en:{type:'string'}} : {reply:{type:'string'},draft:{type:'string'}},
+          required:paired ? ['reply','mode','ja','en'] : ['reply','draft'], additionalProperties:false,
         }}},
       }),
     });
@@ -184,7 +187,10 @@ function directMaintenanceChatRequest_(input, instructions) {
     const body = JSON.parse(response.getContentText());
     if (body.status !== 'completed') throw Error('incomplete');
     draft = JSON.parse((body.output || []).flatMap(item => item.content || []).filter(part => part.type === 'output_text').map(part => part.text).join(''));
-    directMaintenanceNotesText_(draft.draft);
+    if (paired) {
+      if (draft.mode==='proposal') {directMaintenanceNotesText_(draft.ja);directMaintenanceNotesText_(draft.en);}
+      else if (draft.mode!=='discussion' || draft.ja!=='' || draft.en!=='') throw Error('invalid mode');
+    } else directMaintenanceNotesText_(draft.draft);
     if (typeof draft.reply !== 'string' || !draft.reply.trim() || draft.reply.length > 1000) throw Error('invalid reply');
   } catch (_) { throw new Error('AIの編集案を取得できませんでした．シートは変更していません．'); }
   return draft;

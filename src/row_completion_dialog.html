@@ -32,17 +32,17 @@
       <div id="notesChatLog" class="context" aria-live="polite"></div>
       <label for="notesChatInput">AIへの指示</label>
       <textarea id="notesChatInput" maxlength="1000" placeholder="例：補足だけ短くして"></textarea>
-      <button id="notesSpecialistAsk" hidden>辞書編纂AIに相談（日英の補足）</button> <button id="notesChatAsk">AIに相談</button>
+      <button id="notesChatAsk">AIに相談</button>
       <div id="notesPairProposal" hidden>
         <p id="notesPairReview"></p>
         <div class="pair-grid">
-          <div><label for="notesPairJa">日本語の補足案</label><textarea id="notesPairJa" readonly></textarea></div>
-          <div><label for="notesPairEn">英語の補足案</label><textarea id="notesPairEn" readonly></textarea></div>
+          <div><label for="notesPairJa">日本語の編集案</label><textarea id="notesPairJa" readonly></textarea></div>
+          <div><label for="notesPairEn">英語の編集案</label><textarea id="notesPairEn" readonly></textarea></div>
         </div>
         <button id="notesPairApply">日英の草案を採用</button>
       </div>
       <div id="notesPairAccepted" hidden>
-        <p>日英の補足案を草案に入れた．シートは未変更．「変更を保存」で2つの補足を一緒に保存する．</p>
+        <p>日英の案を草案に入れた．シートは未変更．「変更を保存」で日英を一緒に保存する．</p>
         <button id="notesPairUndo">日英の草案を取り消す</button>
       </div>
       <div id="notesChatProposal" hidden>
@@ -164,7 +164,7 @@
     $('selection').addEventListener('click', () => request('rowCompletionPreview', []));
     $('finish').addEventListener('click', () => request('rowCompletionFinish', [state.job.id, $('checked').checked], '作業を終了しました．新しい行を選択して読み込めます．'));
     let notesEntry = null, notesProposal = null, pairProposal = null, pairApplied = null;
-    const conversations = {ja: [], en: []};
+    const conversations = {ja: [], en: [], pair: []};
     function clearNotesProposal() {
       notesProposal = null; $('notesChatProposal').hidden = true; $('notesChatDraft').value = '';
     }
@@ -179,10 +179,33 @@
     }
     function showNotesConversation() {
       $('notesChatLog').replaceChildren();
-      conversations[$('notesChatLang').value].forEach(turn => notesChatMessage(turn.role === 'user' ? '自分' : 'AI', turn.text));
+      conversations[notesEntry && !notesEntry.tab ? 'pair' : $('notesChatLang').value].forEach(turn => notesChatMessage(turn.role === 'user' ? '自分' : 'AI', turn.text));
     }
-    $('notesChatLang').addEventListener('change', () => { clearNotesProposal(); clearPairProposal(); showNotesConversation(); });
+    $('notesChatLang').addEventListener('change', () => { clearNotesProposal(); if(notesEntry?.tab) clearPairProposal(); showNotesConversation(); });
     $('notesChatAsk').addEventListener('click', () => {
+      if(notesEntry && !notesEntry.tab) {
+        if(pairApplied){message('先に日英の草案を保存するか取り消してください．',true);return;}
+        const instruction=$('notesChatInput').value.trim(), before=currentNotes(), primary=$('notesChatLang').value;
+        if(!instruction){message('質問や編集の指示を入力してください．',true);return;}
+        if(!before.ja.trim()||!before.en.trim()){message('日英のどちらかが空欄です．先に「空欄を補完」を使ってください．',true);return;}
+        const basis=pairProposal && sameNotes(before,pairProposal.before) ? pairProposal.drafts : sameNotes(before,notesEntry) ? {ja:notesEntry.ja,en:notesEntry.en} : before;
+        const chat=conversations.pair;
+        notesRequest('directMaintenanceNotesPairChat',[editorRef(),primary,basis,instruction,chat.slice(-6)],result=>{
+          chat.push({role:'user',text:instruction},{role:'assistant',text:result.reply});
+          if(chat.length>12)chat.splice(0,chat.length-12);
+          showNotesConversation(); $('notesChatInput').value='';
+          if(result.drafts){
+            clearPairProposal();
+            if(!sameNotes(before,result.drafts)){
+              pairProposal={before,drafts:result.drafts};
+              $('notesPairJa').value=result.drafts.ja; $('notesPairEn').value=result.drafts.en;
+              $('notesPairReview').textContent=result.reply; $('notesPairProposal').hidden=false; $('notesPairApply').hidden=false;
+            }
+          }
+          message(result.drafts?'日英の案を確認してください．シートは未変更です．':'相談への回答です．シートは未変更です．');
+        });
+        return;
+      }
       if (pairApplied) { message('先に日英の草案を保存するか取り消してください．',true); return; }
       const language = $('notesChatLang').value, instruction = $('notesChatInput').value.trim();
       const area = $(language === 'ja' ? 'notesJa' : 'notesEn'), before = area.value;
@@ -201,23 +224,6 @@
           $('notesChatDraft').value = result.draft; $('notesChatProposal').hidden = false;
         }
         message('AIの回答を確認してください．シートには保存していません．');
-      });
-    });
-    $('notesSpecialistAsk').addEventListener('click', () => {
-      if (!notesEntry || notesEntry.tab || !notesEntry.specialistReady) return;
-      const language=$('notesChatLang').value;
-      const before=currentNotes();
-      const instruction=$('notesChatInput').value.trim();
-      if (!instruction) { message('補足の編集指示を入力してください．',true); return; }
-      if (!sameNotes(before,notesEntry)) { message('辞書編纂AIは元の保存済み補足を使います．先に編集を保存するか取り消してください．',true); return; }
-      clearNotesProposal(); clearPairProposal();
-      notesRequest('directMaintenanceSpecialistSupplement',[editorRef(),language,{ja:notesEntry.ja,en:notesEntry.en},instruction],result=>{
-        $('notesPairReview').textContent=result.reply;
-        $('notesPairJa').value=result.paragraphs.ja; $('notesPairEn').value=result.paragraphs.en;
-        pairProposal={before,drafts:result.drafts,paragraphs:result.paragraphs};
-        $('notesPairProposal').hidden=false;
-        $('notesPairApply').hidden=sameNotes(before,result.drafts);
-        message('日英で意味と留保がそろっているか確認してください．シートには保存していません．');
       });
     });
     $('notesPairApply').addEventListener('click', () => {
@@ -260,9 +266,9 @@
       $('notesChatLang').value = corpus ? 'en' : $('notesChatLang').value;
       $('notesChatLang').options[0].disabled = corpus;
       $('notesChatAsk').hidden = corpus && !entry.canEditEn;
-      $('notesSpecialistAsk').hidden = corpus || !entry.specialistReady;
-      $('notesChatLangLabel').textContent = !corpus && entry.specialistReady ? '編集・翻訳の基準にする言語' : '編集する言語';
-      if (!corpus && entry.specialistReady) $('editorAiHelp').textContent += '辞書編纂AIは基準にする言語の補足を先に整え，その内容で日英の案を作ります．送るのは見出し・基準言語の補足1段落・指示だけです．通常の「AIに相談」は選んだ言語だけを編集します．';
+      $('notesChatAsk').textContent = corpus ? 'AIに相談' : 'AIに相談（日英）';
+      $('notesChatLangLabel').textContent = !corpus ? '編集・翻訳の基準にする言語' : '編集する言語';
+      if (!corpus) $('editorAiHelp').textContent = '構成や見出しも相談できます．変更案は日英を並べて表示します．AIに送るのは見出し語と日英の編集対象の文章・指示・直近のやり取りです．用例や出典欄は送らず，採用しても自動保存されません．';
       $('notesSave').hidden = corpus && !entry.canEditEn;
       $('notesJa').value = entry.ja; $('notesEn').value = entry.en;
       $('notesFill').hidden = !entry.canFill;
@@ -308,8 +314,8 @@
       }
       if (pairApplied && !sameNotes(fields,pairApplied.drafts)) { message('日英の草案を取り消してから編集し直してください．',true); return; }
       const paired=Boolean(pairApplied);
-      notesRequest(paired ? 'directMaintenanceSpecialistSave' : 'directMaintenanceEdit',
-        paired ? [editorRef(),pairApplied.paragraphs] : [notesEntry.de,notesEntry.signature,fields], result => {
+      notesRequest(paired ? 'directMaintenanceNotesPairSave' : 'directMaintenanceEdit',
+        paired ? [editorRef(),pairApplied.drafts] : [notesEntry.de,notesEntry.signature,fields], result => {
         if (!result || result.status !== 'saved') { message('保存結果を確認できませんでした．', true); return; }
         clearNotesProposal();
         notesRequest('directMaintenanceSelectedEntry', [], entry => {
@@ -320,7 +326,7 @@
             return;
           }
           showEditor(entry);
-          message((paired ? '日英の補足を一緒に' : '変更をNotesに') + '保存しました．公開反映はsync-dataで行います．');
+          message((paired ? '日英の変更を一緒に' : '変更をNotesに') + '保存しました．公開反映はsync-dataで行います．');
         });
       });
     });
