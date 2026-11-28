@@ -21,22 +21,25 @@ function directMaintenanceRead_(term) {
   return {book,notesSheet,notes,mapping,mappings};
 }
 function directMaintenanceInspect(term) {
+  return directMaintenanceInspect_(term,false);
+}
+function directMaintenanceInspect_(term,includeDecisionEvidence) {
   term = directMaintenanceTerm_(term);
   const s = directMaintenanceRead_(term), key = normalizeObservedTerm(term);
   const words = s.notes.filter(r => directMaintenanceWord_(r.values.de));
   let source = null, sourceError = '';
-  try { source = maintenanceNotesSource_(s.book,term,'alias'); } catch(e) { sourceError = String(e.message || e); }
+  try { source = maintenanceNotesSource_(s.book,term,'alias',includeDecisionEvidence); } catch(e) { sourceError = String(e.message || e); }
   return {term, notes:s.notes.filter(r => normalizeObservedTerm(r.values.de)===key).map(r=>({headword:r.values.de,number:r.number})),
     mappings:s.mappings.filter(r => normalizeObservedTerm(r[1])===key).map(r=>r.map(String)),
     candidates:morphologyRankHeadwords_(words.map(r=>[r.values.de]),term),
     headwords:words.map(r=>r.values.de), source, sourceError};
 }
 function directMaintenanceAdvice(term) {
-  const s=directMaintenanceInspect(term);
+  const s=directMaintenanceInspect_(term,true);
   if(s.notes.length || s.mappings.length) throw new Error('登録済みです．表示されたNotes・語形対応を確認してください．');
   const key=String(PropertiesService.getScriptProperties().getProperty('OPENAI_API_KEY')||'').trim();
   if(!key) throw new Error('OpenAIのAPIキーが未設定です．候補を選んで登録することはできます．');
-  const context=s.source?s.source.proof.map(p=>p.german).join('\n').slice(0,1500):'';
+  const context=(s.source?.decisionEvidence||[]).join('\n').slice(0,1500);
   return callMorphologyDecision_(s.term,context,s.candidates,key);
 }
 function directMaintenanceAliasPreview(term,headword,category) {

@@ -1,11 +1,11 @@
 /** Unified maintenance. Confirm complete content before one Notes row write. */
-function maintenanceNotesSource_(book, term, purpose) {
+function maintenanceNotesSource_(book, term, purpose, includeDecisionEvidence) {
   const normalized = normalizeObservedTerm(term), preferred = String(term).trim().normalize('NFC');
   if (!/^[a-z0-9][a-z0-9 -]{1,119}$/.test(normalized)) throw rowCompletionError_('原文の語・句を確認できません．Notesは追加していません．');
   const formsToFind = [normalized, normalized + 'n', normalized + 'en', normalized + 's', normalized + 'es'];
   const boundary = '[^\\p{L}\\p{M}\\p{N}]';
   const pattern = new RegExp('(^|' + boundary + ')(?:' + formsToFind.map(function (form) { return form.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); }).join('|') + ')($|' + boundary + ')', 'iu');
-  const proof = [], forms = [], markers = [];
+  const proof = [], forms = [], markers = [], decisionEvidence = new Map();
   [['RS', '[RS: Oper]'], ['RW', '[RW: Oper]'], ['GM', '[GM]']].forEach(function (definition) {
     const tab = definition[0], sheet = book.getSheetByName(tab);
     if (!sheet || sheet.getLastRow() < 2) return;
@@ -26,7 +26,20 @@ function maintenanceNotesSource_(book, term, purpose) {
       for (let i = 0; i < tokens.length; i++) {
         for (let n = 1; n <= 10 && i + n <= tokens.length; n++) {
           const last = tokens[i + n - 1], candidate = original.slice(tokens[i].index, last.index + last[0].length);
-          if (normalizeObservedTerm(candidate) === normalized) { rowForms.push(candidate); break; }
+          if (normalizeObservedTerm(candidate) === normalized) {
+            rowForms.push(candidate);
+            if (includeDecisionEvidence) {
+              const evidenceKey = tab + '\u0000' + candidate.normalize('NFC');
+              const left = Math.max(0, tokens[i].index - 90), right = last.index + last[0].length + 90;
+              const group = decisionEvidence.get(evidenceKey) || [];
+              if (group.length < 4 && (decisionEvidence.has(evidenceKey) || decisionEvidence.size < 12)) {
+                const quote = original.slice(left, right).replace(/\s+/g, ' ').trim();
+                if (!group.includes(quote)) group.push(quote);
+                decisionEvidence.set(evidenceKey, group);
+              }
+            }
+            break;
+          }
         }
       }
       rowForms.forEach(function (form) { forms.push(form); });
@@ -45,7 +58,13 @@ function maintenanceNotesSource_(book, term, purpose) {
   const unique = Array.from(new Set(forms.map(function (form) { return form.normalize('NFC'); })));
   if (purpose !== 'alias' && new Set(unique.map(function (form) { return form.toLowerCase(); })).size > 1) throw rowCompletionError_('原綴りが複数あります．Notesは追加せず，語形対応で確認してください．');
   const headword = purpose === 'alias' ? preferred : unique.find(function (form) { return form === preferred; }) || unique[0];
-  return { de: headword, source: markers.join(', '), proof: proof };
+  const result = { de: headword, source: markers.join(', '), proof: proof };
+  if (includeDecisionEvidence) {
+    const groups = Array.from(decisionEvidence.values()), quotes = [];
+    for (let i = 0; i < 4; i++) for (const group of groups) if (group[i] && quotes.length < 7) quotes.push(group[i]);
+    result.decisionEvidence = quotes;
+  }
+  return result;
 }
 function maintenanceNotesVerifySource_(book, plan) {
   plan.proof.forEach(function (item) {

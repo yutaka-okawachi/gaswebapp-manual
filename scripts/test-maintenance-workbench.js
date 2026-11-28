@@ -85,4 +85,15 @@ test('Source verification follows sorting but rejects modified evidence and tab 
  s.getSheetId=()=>999;assert.throws(()=>h.c.maintenanceNotesVerifySource_(book,p));
  assert.equal(h.fetches,0);assert.equal(h.writes.length,0);
 });
+test('Decisions excerpts preserve distinct attested spellings and stay local unless requested',()=>{
+ const long='vorher '.repeat(40)+'jemand tritt herein. '+'nachher '.repeat(40);
+ const h=sourceScanFixture('tritt',{RS:[long,'Der Tritt ist hörbar.'],GM:['Er tritt vor.']});
+ assert.equal(h.source().decisionEvidence,undefined);
+ const p=h.c.maintenanceNotesSource_(h.c.SpreadsheetApp.getActiveSpreadsheet(),'tritt','alias',true);
+ assert.ok(p.decisionEvidence.some(t=>t.includes('jemand tritt herein.')));
+ assert.ok(p.decisionEvidence.some(t=>t.includes('Der Tritt ist hörbar.')));
+ assert.ok(p.decisionEvidence.some(t=>t.includes('Er tritt vor.')));
+ assert.ok(p.decisionEvidence.every(t=>t.length<=185));
+ assert.equal(h.writes.length,0);
+});
 console.log('Shared maintenance source evidence: '+passed+' scenarios passed (read-only synthetic corpus).');
