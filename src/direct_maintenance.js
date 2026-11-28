@@ -84,6 +84,7 @@ function directMaintenanceSelectedEntry() {
   if (!String(snapshot.values.de || '').trim()) return null;
   const entry = directMaintenanceEntry(snapshot.values.de);
   if (entry.row !== range.getRow()) throw new Error('選択した行と見出し語が一致しません．行を選び直してください．');
+  entry.specialistReady = typeof notesSpecialistKey_ === 'function' && Boolean(notesSpecialistKey_());
   entry.canFill = ['ja', 'en', 'source'].some(field => rowCompletionBlank_(snapshot, field) && rowCompletionWritable_(sheet, field, entry.row));
   return entry;
 }

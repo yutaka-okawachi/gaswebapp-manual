@@ -30,7 +30,7 @@
       <div id="notesChatLog" class="context" aria-live="polite"></div>
       <label for="notesChatInput">AIへの指示</label>
       <textarea id="notesChatInput" maxlength="1000" placeholder="例：補足だけ短くして"></textarea>
-      <button id="notesChatAsk">AIに相談</button>
+      <button id="notesChatAsk">AIに相談</button> <button id="notesSpecialistAsk" hidden>辞書編纂AIに補足を相談</button>
       <div id="notesChatProposal" hidden>
         <label for="notesChatDraft">編集案（現在の本文はまだ変わりません）</label>
         <textarea id="notesChatDraft" readonly></textarea>
@@ -182,6 +182,23 @@
         message('AIの回答を確認してください．シートには保存していません．');
       });
     });
+    $('notesSpecialistAsk').addEventListener('click', () => {
+      if (!notesEntry || notesEntry.tab || !notesEntry.specialistReady) return;
+      const language=$('notesChatLang').value;
+      const before=$(language==='ja'?'notesJa':'notesEn').value;
+      const instruction=$('notesChatInput').value.trim();
+      if (!instruction) { message('補足の編集指示を入力してください．',true); return; }
+      if (before!==notesEntry[language]) { message('辞書編纂AIは元の保存済み本文を使います．編集画面を開き直してください．',true); return; }
+      notesRequest('directMaintenanceSpecialistSupplement',[editorRef(),language,before,instruction],result=>{
+        clearNotesProposal();
+        notesChatMessage('辞書編纂AI',result.reply); $('notesChatInput').value='';
+        if (result.draft!==before) {
+          notesProposal={language,before,draft:result.draft};
+          $('notesChatDraft').value=result.draft; $('notesChatProposal').hidden=false;
+        }
+        message('辞書編纂AIの案です．シートには保存していません．');
+      });
+    });
     $('notesChatApply').addEventListener('click', () => {
       if (!notesProposal) return;
       const area = $(notesProposal.language === 'ja' ? 'notesJa' : 'notesEn');
@@ -205,6 +222,8 @@
       $('notesChatLang').value = corpus ? 'en' : $('notesChatLang').value;
       $('notesChatLang').options[0].disabled = corpus;
       $('notesChatAsk').hidden = corpus && !entry.canEditEn;
+      $('notesSpecialistAsk').hidden = corpus || !entry.specialistReady;
+      if (!corpus && entry.specialistReady) $('editorAiHelp').textContent += '「辞書編纂AIに補足を相談」は見出し・補足1段落・指示だけを送信します．';
       $('notesSave').hidden = corpus && !entry.canEditEn;
       $('notesJa').value = entry.ja; $('notesEn').value = entry.en;
       $('notesFill').hidden = !entry.canFill;

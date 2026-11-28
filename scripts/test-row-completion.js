@@ -484,7 +484,7 @@ test('actual dialog flow preserves edits on failure and refreshes without regene
     setAttribute(name,value){this[name]=value;}
     click(){assert(!this.disabled,'button should be enabled: '+this.textContent);this.events.click();}
   }
-  const ids=Object.fromEntries(['refresh','selection','message','summary','rows','finishArea','finish','checked','notesEditor','completionPanel','notesSave','notesFill','notesChatLang','notesChatAsk','notesChatApply'].map(id=>[id,new Element(id==='checked'?'input':id==='refresh'||id==='selection'||id==='finish'?'button':'div')]));
+  const ids=Object.fromEntries(['refresh','selection','message','summary','rows','finishArea','finish','checked','notesEditor','completionPanel','notesSave','notesFill','notesChatLang','notesChatAsk','notesSpecialistAsk','notesChatApply'].map(id=>[id,new Element(id==='checked'?'input':id==='refresh'||id==='selection'||id==='finish'?'button':'div')]));
   const all=()=>{const found=[];function walk(e){found.push(e);e.children.forEach(walk);}Object.values(ids).forEach(walk);return found;};
   const job={id:'ui-test',tab:'Notes',closed:false,rows:[{number:2,status:'pending',message:'',targets:['ja','en'],draft:{},snapshot:{values:{de:'Leise <img src=x onerror=bad()>',ja:'',en:'',source:'[GM]'}}}]};
   const calls=[],queue=[];let fail=false;
@@ -726,7 +726,7 @@ test('dialog renders sourceCandidate safely and enables source-only check even w
   setAttribute(name,value){this[name]=value;}
   click(){assert(!this.disabled,'button should be enabled: '+this.textContent);this.events.click();}
  }
- const ids=Object.fromEntries(['refresh','selection','message','summary','rows','finishArea','finish','checked','notesEditor','completionPanel','notesSave','notesFill','notesChatLang','notesChatAsk','notesChatApply'].map(id=>[id,new Element(id==='checked'?'input':id==='refresh'||id==='selection'||id==='finish'?'button':'div')]));
+ const ids=Object.fromEntries(['refresh','selection','message','summary','rows','finishArea','finish','checked','notesEditor','completionPanel','notesSave','notesFill','notesChatLang','notesChatAsk','notesSpecialistAsk','notesChatApply'].map(id=>[id,new Element(id==='checked'?'input':id==='refresh'||id==='selection'||id==='finish'?'button':'div')]));
  const all=()=>{const found=[];function walk(e){found.push(e);e.children.forEach(walk);}Object.values(ids).forEach(walk);return found;};
  const job={id:'ui-source',tab:'Notes',closed:false,rows:[{number:2,status:'pending',message:'',targets:['source'],draft:{source:'[RS: Oper]'},
   sourceCandidate:{value:'[RS: Oper]',proof:[{tab:'RS',number:12,location:'Work / 1 / 1 / 5',german:'Mit <img src=x onerror=bad()>'}]},
