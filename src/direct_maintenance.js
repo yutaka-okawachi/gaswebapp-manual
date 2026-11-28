@@ -28,18 +28,16 @@ function directMaintenanceInspect(term) {
   try { source = maintenanceNotesSource_(s.book,term,'alias'); } catch(e) { sourceError = String(e.message || e); }
   return {term, notes:s.notes.filter(r => normalizeObservedTerm(r.values.de)===key).map(r=>({headword:r.values.de,number:r.number})),
     mappings:s.mappings.filter(r => normalizeObservedTerm(r[1])===key).map(r=>r.map(String)),
-    candidates:jevCandidateHeadwords(words.map(r=>[r.values.de,r.values.ja,r.values.source]),term),
+    candidates:morphologyRankHeadwords_(words.map(r=>[r.values.de]),term),
     headwords:words.map(r=>r.values.de), source, sourceError};
 }
 function directMaintenanceAdvice(term) {
   const s=directMaintenanceInspect(term);
   if(s.notes.length || s.mappings.length) throw new Error('登録済みです．表示されたNotes・語形対応を確認してください．');
-  const key=String(PropertiesService.getScriptProperties().getProperty('TYPESAFE_API_KEY')||'').trim();
-  if(!key) throw new Error('JevのAPIキーが未設定です．候補を選んで登録することはできます．');
+  const key=String(PropertiesService.getScriptProperties().getProperty('OPENAI_API_KEY')||'').trim();
+  if(!key) throw new Error('OpenAIのAPIキーが未設定です．候補を選んで登録することはできます．');
   const context=s.source?s.source.proof.map(p=>p.german).join('\n').slice(0,1500):'';
-  const answer=callJevForCandidate(buildJevCandidateRequest(s.term,context,s.candidates),key);
-  const target=s.candidates.find(c=>c.option===answer.target.choice);
-  return {category:answer.category.choice,headword:target?target.headword:'',confidence:answer.category.confidence};
+  return callMorphologyDecision_(s.term,context,s.candidates,key);
 }
 function directMaintenanceAliasPreview(term,headword,category) {
   term=directMaintenanceTerm_(term);headword=directMaintenanceTerm_(headword);

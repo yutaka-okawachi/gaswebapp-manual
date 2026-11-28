@@ -13,12 +13,12 @@ function render(s){current=s;$('result').replaceChildren();message('現在のNot
  add(root,'p','未登録です．関連する見出しに語形を追加するか，新しいNotes項目を作成できます．');
  const proof=add(root,'details','');add(proof,'summary','実例と出典');add(proof,'pre',s.source?s.source.proof.map(p=>p.tab+' '+p.location+'\n'+p.german).join('\n\n'):s.sourceError);
  let suggestedHead=s.candidates[0]?.headword||'',suggestedCategory='INFLECTION';
- const advice=add(root,'button','Jevに判定を頼む（API利用）');const adviceResult=add(root,'p','');
- add(root,'p','処理方法を選んでください．Jevの助言だけでは処理は決まりません．');
+ const advice=add(root,'button','Decisionsで語形を判定（API利用）');const adviceResult=add(root,'p','');
+ add(root,'p','処理方法を選んでください．Decisionsの判定だけでは処理は決まりません．');
  const aliasChoice=add(root,'button','語形対応として処理');const notesChoice=add(root,'button','新規項目として登録');const branch=add(root,'div','');
  function choose(kind){branch.replaceChildren();aliasChoice.className=kind==='alias'?'':'secondary';notesChoice.className=kind==='notes'?'':'secondary';if(kind==='alias')renderAlias();else{add(branch,'h3','新しいNotes項目を作成');const draft=add(branch,'button','日英の草案を作る（API利用）');draft.onclick=()=>rpc('directMaintenanceDraft',[s.term],renderDraft);message('新規項目を選びました．日英の草案を作成できます．');}}
  aliasChoice.className=notesChoice.className='secondary';aliasChoice.onclick=()=>choose('alias');notesChoice.onclick=()=>choose('notes');
- advice.onclick=()=>rpc('directMaintenanceAdvice',[s.term],a=>{adviceResult.textContent='Jevの助言：'+a.category+(a.headword?' → '+a.headword:'')+'．処理方法を選んでください．';if(a.headword&&s.headwords.includes(a.headword))suggestedHead=a.headword;if(['INFLECTION','ORTHOGRAPHIC_VARIANT','TYPO'].includes(a.category))suggestedCategory=a.category;branch.replaceChildren();aliasChoice.className=notesChoice.className='secondary';message('Jevの助言を確認し，語形対応か新規項目かを選んでください．');});
+ advice.onclick=()=>rpc('directMaintenanceAdvice',[s.term],a=>{adviceResult.textContent='Decisionsの判定：'+a.category+(a.headword?' → '+a.headword:'')+'．処理方法を選んでください．';if(a.headword&&s.headwords.includes(a.headword))suggestedHead=a.headword;if(['INFLECTION','ORTHOGRAPHIC_VARIANT','TYPO'].includes(a.category))suggestedCategory=a.category;branch.replaceChildren();aliasChoice.className=notesChoice.className='secondary';message('Decisionsの判定を確認し，語形対応か新規項目かを選んでください．');});
  function renderAlias(){
  add(branch,'h3','語形対応に追加');const candidates=s.candidates.map(c=>c.headword),heads=[...new Set([...candidates,...s.headwords])];const head=select(branch,'head','対応する単語見出し',[['','選択してください'],...heads.map(h=>[h,h])]);head.value=suggestedHead;
  const category=select(branch,'category','語形区分',[['INFLECTION','語形変化'],['ORTHOGRAPHIC_VARIANT','別綴り'],['TYPO','誤記候補']]);category.value=suggestedCategory;
