@@ -6,12 +6,22 @@
   "abnehmen": {
     "id": "term-abnehmen",
     "exampleVariants": [
-      "abnehmend"
+      "abnehmend",
+      "abgenommen",
+      "abnimmt"
     ],
     "exampleVariantDetails": [
       {
         "form": "abnehmend",
         "type": "分詞"
+      },
+      {
+        "form": "abgenommen",
+        "type": "過去分詞"
+      },
+      {
+        "form": "abnimmt",
+        "type": "動詞の活用"
       }
     ]
   },
@@ -33,7 +43,18 @@
     ]
   },
   "abstieg": "term-abstieg",
-  "abstossen": "term-abstossen",
+  "abstossen": {
+    "id": "term-abstossen",
+    "exampleVariants": [
+      "abstösst"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "abstösst",
+        "type": "動詞の活用"
+      }
+    ]
+  },
   "abstufungen": "term-abstufungen",
   "abwaerts": "term-abwaerts",
   "abwechselnd": {
@@ -183,7 +204,18 @@
   "alsbald": "term-alsbald",
   "also": "term-also",
   "altvaeterisch": "term-altvaeterisch",
-  "anblick": "term-anblick",
+  "anblick": {
+    "id": "term-anblick",
+    "exampleVariants": [
+      "Anblicke"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "Anblicke",
+        "type": "名詞の格・数"
+      }
+    ]
+  },
   "andacht": "term-andacht",
   "anfang": {
     "id": "term-anfang",
@@ -350,24 +382,34 @@
   "anschlagen": {
     "id": "term-anschlagen",
     "exampleVariants": [
-      "anzuschlagen"
+      "anzuschlagen",
+      "angeschlagenen"
     ],
     "exampleVariantDetails": [
       {
         "form": "anzuschlagen",
         "type": "動詞の活用"
+      },
+      {
+        "form": "angeschlagenen",
+        "type": "過去分詞"
       }
     ]
   },
   "anschliessen": {
     "id": "term-anschliessen",
     "exampleVariants": [
-      "anschließt"
+      "anschließt",
+      "anzuschließen"
     ],
     "exampleVariantDetails": [
       {
         "form": "anschließt",
         "type": "動詞の活用"
+      },
+      {
+        "form": "anzuschließen",
+        "type": "zu不定詞"
       }
     ]
   },
@@ -376,7 +418,8 @@
     "exampleVariants": [
       "anschwellenden",
       "angeschwollen",
-      "anschwellend"
+      "anschwellend",
+      "anschwillt"
     ],
     "exampleVariantDetails": [
       {
@@ -390,6 +433,10 @@
       {
         "form": "anschwellend",
         "type": "分詞"
+      },
+      {
+        "form": "anschwillt",
+        "type": "動詞の活用"
       }
     ]
   },
@@ -421,7 +468,8 @@
     "id": "term-anwachsen",
     "exampleVariants": [
       "anwachsendes",
-      "anwachsend"
+      "anwachsend",
+      "angewachsenen"
     ],
     "exampleVariantDetails": [
       {
@@ -431,6 +479,10 @@
       {
         "form": "anwachsend",
         "type": "分詞"
+      },
+      {
+        "form": "angewachsenen",
+        "type": "過去分詞"
       }
     ]
   },
@@ -550,7 +602,8 @@
       "aufgeregt",
       "aufgeregten",
       "aufgeregter",
-      "aufgeregte"
+      "aufgeregte",
+      "aufgeregteres"
     ],
     "exampleVariantDetails": [
       {
@@ -567,6 +620,10 @@
       },
       {
         "form": "aufgeregte",
+        "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "aufgeregteres",
         "type": "形容詞・副詞の変化"
       }
     ]
@@ -613,7 +670,8 @@
     "id": "term-aufzug",
     "exampleVariants": [
       "Aufzugs",
-      "Aufzuges"
+      "Aufzuges",
+      "Aufzuge"
     ],
     "exampleVariantDetails": [
       {
@@ -622,6 +680,10 @@
       },
       {
         "form": "Aufzuges",
+        "type": "名詞の格・数"
+      },
+      {
+        "form": "Aufzuge",
         "type": "名詞の格・数"
       }
     ]
@@ -747,7 +809,8 @@
       "ausgelassen",
       "ausgelassenem",
       "ausgelasserner",
-      "ausgelassenen"
+      "ausgelassenen",
+      "ausgelassenerer"
     ],
     "exampleVariantDetails": [
       {
@@ -764,6 +827,10 @@
       },
       {
         "form": "ausgelassenen",
+        "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "ausgelassenerer",
         "type": "形容詞・副詞の変化"
       }
     ]
@@ -788,12 +855,22 @@
   "ausholen": {
     "id": "term-ausholen",
     "exampleVariants": [
-      "ausholend"
+      "ausholend",
+      "ausholt",
+      "auszuholen"
     ],
     "exampleVariantDetails": [
       {
         "form": "ausholend",
         "type": "分詞"
+      },
+      {
+        "form": "ausholt",
+        "type": "動詞の活用"
+      },
+      {
+        "form": "auszuholen",
+        "type": "zu不定詞"
       }
     ]
   },
@@ -887,7 +964,18 @@
     "original": "Bässe jedoch deutlich hervortretend (Celli u. Violen)"
   },
   "beaengstigtem": "term-beaengstigtem",
-  "becher": "term-becher",
+  "becher": {
+    "id": "term-becher",
+    "exampleVariants": [
+      "Bechern"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "Bechern",
+        "type": "名詞の格・数"
+      }
+    ]
+  },
   "bedaechtig": "term-bedaechtig",
   "bedecken": {
     "id": "term-bedecken",
@@ -1219,11 +1307,16 @@
   "berg": {
     "id": "term-berg",
     "exampleVariants": [
-      "Berge"
+      "Berge",
+      "Berges"
     ],
     "exampleVariantDetails": [
       {
         "form": "Berge",
+        "type": "名詞の格・数"
+      },
+      {
+        "form": "Berges",
         "type": "名詞の格・数"
       }
     ]
@@ -1411,11 +1504,16 @@
   "bett": {
     "id": "term-bett",
     "exampleVariants": [
-      "Bettes"
+      "Bettes",
+      "Bette"
     ],
     "exampleVariantDetails": [
       {
         "form": "Bettes",
+        "type": "名詞の格・数"
+      },
+      {
+        "form": "Bette",
         "type": "名詞の格・数"
       }
     ]
@@ -1538,11 +1636,16 @@
   "bitter": {
     "id": "term-bitter",
     "exampleVariants": [
-      "bitterer"
+      "bitterer",
+      "bittern"
     ],
     "exampleVariantDetails": [
       {
         "form": "bitterer",
+        "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "bittern",
         "type": "形容詞・副詞の変化"
       }
     ]
@@ -1553,7 +1656,9 @@
     "id": "term-bleibt",
     "exampleVariants": [
       "bleibt",
-      "Bleib"
+      "Bleib",
+      "bleiben",
+      "blieb"
     ],
     "exampleVariantDetails": [
       {
@@ -1563,6 +1668,14 @@
       {
         "form": "Bleib",
         "type": "動詞の活用"
+      },
+      {
+        "form": "bleiben",
+        "type": "動詞の活用"
+      },
+      {
+        "form": "blieb",
+        "type": "動詞の活用"
       }
     ]
   },
@@ -1570,7 +1683,8 @@
     "id": "term-bleich",
     "exampleVariants": [
       "bleicher",
-      "bleiches"
+      "bleiches",
+      "bleichen"
     ],
     "exampleVariantDetails": [
       {
@@ -1580,28 +1694,50 @@
       {
         "form": "bleiches",
         "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "bleichen",
+        "type": "形容詞・副詞の変化"
       }
     ]
   },
   "blick": {
     "id": "term-blick",
     "exampleVariants": [
-      "Blickes"
+      "Blickes",
+      "Blicke"
     ],
     "exampleVariantDetails": [
       {
         "form": "Blickes",
         "type": "名詞の格・数"
+      },
+      {
+        "form": "Blicke",
+        "type": "名詞の格・数"
       }
     ]
   },
-  "blitz": "term-blitz",
+  "blitz": {
+    "id": "term-blitz",
+    "exampleVariants": [
+      "Blitze"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "Blitze",
+        "type": "名詞の格・数"
+      }
+    ]
+  },
   "bloss": {
     "id": "term-bloss",
     "exampleVariants": [
       "bloße",
       "blos",
-      "bloss"
+      "bloss",
+      "bloßem",
+      "bloßen"
     ],
     "exampleVariantDetails": [
       {
@@ -1615,6 +1751,14 @@
       {
         "form": "bloss",
         "type": "別綴り"
+      },
+      {
+        "form": "bloßem",
+        "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "bloßen",
+        "type": "形容詞・副詞の変化"
       }
     ]
   },
@@ -1661,12 +1805,22 @@
   "breit": {
     "id": "term-breit",
     "exampleVariants": [
-      "breiter"
+      "breiter",
+      "breites",
+      "breitester"
     ],
     "exampleVariantDetails": [
       {
         "form": "breiter",
         "type": "語形変化（要分類）"
+      },
+      {
+        "form": "breites",
+        "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "breitester",
+        "type": "形容詞・副詞の変化"
       }
     ]
   },
@@ -1772,12 +1926,17 @@
   "darf": {
     "id": "term-darf",
     "exampleVariants": [
-      "darf"
+      "darf",
+      "dürfen"
     ],
     "exampleVariantDetails": [
       {
         "form": "darf",
         "type": "活用形"
+      },
+      {
+        "form": "dürfen",
+        "type": "動詞の活用"
       }
     ]
   },
@@ -1786,7 +1945,8 @@
     "exampleVariants": [
       "darstellt",
       "darzustellen",
-      "darstellende"
+      "darstellende",
+      "dargestellt"
     ],
     "exampleVariantDetails": [
       {
@@ -1800,6 +1960,10 @@
       {
         "form": "darstellende",
         "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "dargestellt",
+        "type": "過去分詞"
       }
     ]
   },
@@ -1845,12 +2009,17 @@
   "decken": {
     "id": "term-decken",
     "exampleVariants": [
-      "deckend"
+      "deckend",
+      "deckt"
     ],
     "exampleVariantDetails": [
       {
         "form": "deckend",
         "type": "分詞"
+      },
+      {
+        "form": "deckt",
+        "type": "動詞の活用"
       }
     ]
   },
@@ -1894,7 +2063,18 @@
     "id": "term-der-zweite-spieler-am-1-pult-tacet",
     "original": "der zweite Spieler am 1.Pult tacet."
   },
-  "derb": "term-derb",
+  "derb": {
+    "id": "term-derb",
+    "exampleVariants": [
+      "derber"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "derber",
+        "type": "形容詞・副詞の変化"
+      }
+    ]
+  },
   "derselbe": {
     "id": "term-derselbe",
     "exampleVariants": [
@@ -1940,15 +2120,51 @@
     ]
   },
   "deutlich-phrasiert": "term-deutlich-phrasiert",
-  "devot": "term-devot",
+  "devot": {
+    "id": "term-devot",
+    "exampleVariants": [
+      "devote"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "devote",
+        "type": "形容詞・副詞の変化"
+      }
+    ]
+  },
   "dicht": {
     "id": "term-dicht",
     "exampleVariants": [
-      "dichtem"
+      "dichtem",
+      "dichte",
+      "dichtere",
+      "dichterer",
+      "dichtesten",
+      "dichtester"
     ],
     "exampleVariantDetails": [
       {
         "form": "dichtem",
+        "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "dichte",
+        "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "dichtere",
+        "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "dichterer",
+        "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "dichtesten",
+        "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "dichtester",
         "type": "形容詞・副詞の変化"
       }
     ]
@@ -2012,7 +2228,18 @@
     ]
   },
   "dienerschaft": "term-dienerschaft",
-  "dient": "term-dient",
+  "dient": {
+    "id": "term-dient",
+    "exampleVariants": [
+      "dienen"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "dienen",
+        "type": "動詞の活用"
+      }
+    ]
+  },
   "diese-3-b-schlaege-nur-fuer-chromatische-pauken-ausserdem-wegzulassen": {
     "id": "term-diese-3-b-schlaege-nur-fuer-chromatische-pauken-ausserdem-wegzulassen",
     "original": "Diese 3 B-schläge nur für chromatische Pauken, außerdem wegzulassen."
@@ -2106,7 +2333,8 @@
       "drängender",
       "drängendem",
       "drängenden",
-      "drängen"
+      "drängen",
+      "drängt"
     ],
     "exampleVariantDetails": [
       {
@@ -2128,6 +2356,10 @@
       {
         "form": "drängen",
         "type": "動詞の活用"
+      },
+      {
+        "form": "drängt",
+        "type": "動詞の活用"
       }
     ]
   },
@@ -2145,7 +2377,8 @@
       "drohend",
       "drohende",
       "drohenden",
-      "drohen"
+      "drohen",
+      "droht"
     ],
     "exampleVariantDetails": [
       {
@@ -2163,11 +2396,26 @@
       {
         "form": "drohen",
         "type": "動詞の活用"
+      },
+      {
+        "form": "droht",
+        "type": "動詞の活用"
       }
     ]
   },
   "duenna": "term-duenna",
-  "duft": "term-duft",
+  "duft": {
+    "id": "term-duft",
+    "exampleVariants": [
+      "Dufte"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "Dufte",
+        "type": "名詞の格・数"
+      }
+    ]
+  },
   "duftig": "term-duftig",
   "dumpf": {
     "id": "term-dumpf",
@@ -2201,7 +2449,12 @@
     "exampleVariants": [
       "Dunkele",
       "dunkelt",
-      "dunkeln"
+      "dunkeln",
+      "dunkle",
+      "dunklem",
+      "dunklen",
+      "dunkler",
+      "dunkles"
     ],
     "exampleVariantDetails": [
       {
@@ -2215,6 +2468,26 @@
       {
         "form": "dunkeln",
         "type": "形容詞・関連動詞"
+      },
+      {
+        "form": "dunkle",
+        "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "dunklem",
+        "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "dunklen",
+        "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "dunkler",
+        "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "dunkles",
+        "type": "形容詞・副詞の変化"
       }
     ]
   },
@@ -2298,12 +2571,17 @@
   "edel": {
     "id": "term-edel",
     "exampleVariants": [
-      "edlen"
+      "edlen",
+      "Edle"
     ],
     "exampleVariantDetails": [
       {
         "form": "edlen",
         "type": "格変化形"
+      },
+      {
+        "form": "Edle",
+        "type": "形容詞・副詞の変化"
       }
     ]
   },
@@ -2352,12 +2630,17 @@
   "eilen": {
     "id": "term-eilen",
     "exampleVariants": [
-      "eilend"
+      "eilend",
+      "eilt"
     ],
     "exampleVariantDetails": [
       {
         "form": "eilend",
         "type": "分詞"
+      },
+      {
+        "form": "eilt",
+        "type": "動詞の活用"
       }
     ]
   },
@@ -2383,11 +2666,16 @@
   "einfach": {
     "id": "term-einfach",
     "exampleVariants": [
-      "einfachem"
+      "einfachem",
+      "einfachere"
     ],
     "exampleVariantDetails": [
       {
         "form": "einfachem",
+        "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "einfachere",
         "type": "形容詞・副詞の変化"
       }
     ]
@@ -2587,7 +2875,18 @@
     ]
   },
   "empor": "term-empor",
-  "endend": "term-endend",
+  "endend": {
+    "id": "term-endend",
+    "exampleVariants": [
+      "endet"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "endet",
+        "type": "動詞の活用"
+      }
+    ]
+  },
   "endgueltige": {
     "id": "term-endgueltige",
     "exampleVariants": [
@@ -2716,7 +3015,8 @@
     "exampleVariants": [
       "entsprechenden",
       "entsprechend",
-      "entsprechender"
+      "entsprechender",
+      "entspricht"
     ],
     "exampleVariantDetails": [
       {
@@ -2730,6 +3030,10 @@
       {
         "form": "entsprechender",
         "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "entspricht",
+        "type": "動詞の活用"
       }
     ]
   },
@@ -2771,7 +3075,8 @@
     "id": "term-erblicken",
     "exampleVariants": [
       "erblickend",
-      "erblickt"
+      "erblickt",
+      "erblickte"
     ],
     "exampleVariantDetails": [
       {
@@ -2780,6 +3085,10 @@
       },
       {
         "form": "erblickt",
+        "type": "動詞の活用"
+      },
+      {
+        "form": "erblickte",
         "type": "動詞の活用"
       }
     ]
@@ -2884,7 +3193,23 @@
     ]
   },
   "erleichterung": "term-erleichterung",
-  "erloeschen": "term-erloeschen",
+  "erloeschen": {
+    "id": "term-erloeschen",
+    "exampleVariants": [
+      "erlischt",
+      "erloschen"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "erlischt",
+        "type": "動詞の活用"
+      },
+      {
+        "form": "erloschen",
+        "type": "過去分詞"
+      }
+    ]
+  },
   "ermattend": {
     "id": "term-ermattend",
     "exampleVariants": [
@@ -2922,11 +3247,21 @@
   "ernst": {
     "id": "term-ernst",
     "exampleVariants": [
-      "ernste"
+      "ernste",
+      "ernstem",
+      "ernster"
     ],
     "exampleVariantDetails": [
       {
         "form": "ernste",
+        "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "ernstem",
+        "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "ernster",
         "type": "形容詞・副詞の変化"
       }
     ]
@@ -3060,12 +3395,22 @@
   "erst": {
     "id": "term-erst",
     "exampleVariants": [
-      "erste"
+      "erste",
+      "ersten",
+      "Erster"
     ],
     "exampleVariantDetails": [
       {
         "form": "erste",
         "type": "該当なし"
+      },
+      {
+        "form": "ersten",
+        "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "Erster",
+        "type": "形容詞・副詞の変化"
       }
     ]
   },
@@ -3118,12 +3463,24 @@
   },
   "etwas-nachgebend-im-tempo": "term-etwas-nachgebend-im-tempo",
   "fach": "term-fach",
-  "fackel": "term-fackel",
+  "fackel": {
+    "id": "term-fackel",
+    "exampleVariants": [
+      "Fackeln"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "Fackeln",
+        "type": "名詞の格・数"
+      }
+    ]
+  },
   "fahren": {
     "id": "term-fahren",
     "exampleVariants": [
       "fahrend",
-      "fahre"
+      "fahre",
+      "fährt"
     ],
     "exampleVariantDetails": [
       {
@@ -3132,6 +3489,10 @@
       },
       {
         "form": "fahre",
+        "type": "動詞の活用"
+      },
+      {
+        "form": "fährt",
         "type": "動詞の活用"
       }
     ]
@@ -3146,7 +3507,8 @@
       "feierlichen",
       "feierlicher",
       "feierliches",
-      "Feierliche"
+      "Feierliche",
+      "feierlichsten"
     ],
     "exampleVariantDetails": [
       {
@@ -3167,6 +3529,10 @@
       },
       {
         "form": "Feierliche",
+        "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "feierlichsten",
         "type": "形容詞・副詞の変化"
       }
     ]
@@ -3189,7 +3555,9 @@
       "fern",
       "ferner",
       "fernes",
-      "fernen"
+      "fernen",
+      "fernere",
+      "fernsten"
     ],
     "exampleVariantDetails": [
       {
@@ -3207,6 +3575,14 @@
       {
         "form": "fernen",
         "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "fernere",
+        "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "fernsten",
+        "type": "形容詞・副詞の変化"
       }
     ]
   },
@@ -3215,7 +3591,9 @@
     "id": "term-fest",
     "exampleVariants": [
       "festes",
-      "feste"
+      "feste",
+      "festen",
+      "fester"
     ],
     "exampleVariantDetails": [
       {
@@ -3224,6 +3602,14 @@
       },
       {
         "form": "feste",
+        "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "festen",
+        "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "fester",
         "type": "形容詞・副詞の変化"
       }
     ]
@@ -3246,7 +3632,8 @@
     "exampleVariants": [
       "feurige",
       "feurigen",
-      "feuriger"
+      "feuriger",
+      "feurigeren"
     ],
     "exampleVariantDetails": [
       {
@@ -3259,6 +3646,10 @@
       },
       {
         "form": "feuriger",
+        "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "feurigeren",
         "type": "形容詞・副詞の変化"
       }
     ]
@@ -3279,7 +3670,18 @@
       }
     ]
   },
-  "finger": "term-finger",
+  "finger": {
+    "id": "term-finger",
+    "exampleVariants": [
+      "Fingern"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "Fingern",
+        "type": "名詞の格・数"
+      }
+    ]
+  },
   "finster": {
     "id": "term-finster",
     "exampleVariants": [
@@ -3339,7 +3741,9 @@
     "exampleVariants": [
       "fließend",
       "fließender",
-      "Fließendes"
+      "Fließendes",
+      "fließenderes",
+      "fliesst"
     ],
     "exampleVariantDetails": [
       {
@@ -3353,18 +3757,31 @@
       {
         "form": "Fließendes",
         "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "fließenderes",
+        "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "fliesst",
+        "type": "動詞の活用"
       }
     ]
   },
   "flott": {
     "id": "term-flott",
     "exampleVariants": [
-      "flotter"
+      "flotter",
+      "Flottes"
     ],
     "exampleVariantDetails": [
       {
         "form": "flotter",
         "type": "語形変化（要分類）"
+      },
+      {
+        "form": "Flottes",
+        "type": "形容詞・副詞の変化"
       }
     ]
   },
@@ -3419,7 +3836,8 @@
     "exampleVariants": [
       "folgt",
       "folgte",
-      "folgen"
+      "folgen",
+      "folgend"
     ],
     "exampleVariantDetails": [
       {
@@ -3433,6 +3851,10 @@
       {
         "form": "folgen",
         "type": "動詞の活用"
+      },
+      {
+        "form": "folgend",
+        "type": "現在分詞"
       }
     ]
   },
@@ -3476,7 +3898,28 @@
       }
     ]
   },
-  "frech": "term-frech",
+  "frech": {
+    "id": "term-frech",
+    "exampleVariants": [
+      "frechen",
+      "frecher",
+      "freches"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "frechen",
+        "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "frecher",
+        "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "freches",
+        "type": "形容詞・副詞の変化"
+      }
+    ]
+  },
   "frei-im-vortrag": "term-frei-im-vortrag",
   "freihaengend": {
     "id": "term-freihaengend",
@@ -3604,7 +4047,9 @@
     "id": "term-fuehrend",
     "exampleVariants": [
       "führend",
-      "führen"
+      "führen",
+      "führe",
+      "führt"
     ],
     "exampleVariantDetails": [
       {
@@ -3613,6 +4058,14 @@
       },
       {
         "form": "führen",
+        "type": "動詞の活用"
+      },
+      {
+        "form": "führe",
+        "type": "動詞の活用"
+      },
+      {
+        "form": "führt",
         "type": "動詞の活用"
       }
     ]
@@ -3626,7 +4079,10 @@
       "furchtbarste",
       "furchtbares",
       "furchtbarer",
-      "Furchtbare"
+      "Furchtbare",
+      "furchtbarstem",
+      "furchtbarsten",
+      "Furchtbarster"
     ],
     "exampleVariantDetails": [
       {
@@ -3651,6 +4107,18 @@
       },
       {
         "form": "Furchtbare",
+        "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "furchtbarstem",
+        "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "furchtbarsten",
+        "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "Furchtbarster",
         "type": "形容詞・副詞の変化"
       }
     ]
@@ -3700,7 +4168,8 @@
     "id": "term-ganz",
     "exampleVariants": [
       "ganze",
-      "Ganzes"
+      "Ganzes",
+      "ganzen"
     ],
     "exampleVariantDetails": [
       {
@@ -3710,6 +4179,10 @@
       {
         "form": "Ganzes",
         "type": "語形変化（要分類）"
+      },
+      {
+        "form": "ganzen",
+        "type": "形容詞・副詞の変化"
       }
     ]
   },
@@ -3731,7 +4204,18 @@
     ]
   },
   "gasse": "term-gasse",
-  "gebaerde": "term-gebaerde",
+  "gebaerde": {
+    "id": "term-gebaerde",
+    "exampleVariants": [
+      "Gebärden"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "Gebärden",
+        "type": "名詞の格・数"
+      }
+    ]
+  },
   "gebet": {
     "id": "term-gebet",
     "exampleVariants": [
@@ -3887,7 +4371,12 @@
     "exampleVariants": [
       "gehalten",
       "gehaltene",
-      "gehaltener"
+      "gehaltener",
+      "gehaltenen",
+      "hält",
+      "halten",
+      "haltend",
+      "hielt"
     ],
     "exampleVariantDetails": [
       {
@@ -3901,6 +4390,26 @@
       {
         "form": "gehaltener",
         "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "gehaltenen",
+        "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "hält",
+        "type": "動詞の活用"
+      },
+      {
+        "form": "halten",
+        "type": "動詞の活用"
+      },
+      {
+        "form": "haltend",
+        "type": "現在分詞"
+      },
+      {
+        "form": "hielt",
+        "type": "動詞の活用"
       }
     ]
   },
@@ -3942,7 +4451,12 @@
       "gehend",
       "gehen",
       "gehender",
-      "gehende"
+      "gehende",
+      "gegangen",
+      "geh",
+      "geht",
+      "Ging",
+      "ginge"
     ],
     "exampleVariantDetails": [
       {
@@ -3960,6 +4474,26 @@
       {
         "form": "gehende",
         "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "gegangen",
+        "type": "過去分詞"
+      },
+      {
+        "form": "geh",
+        "type": "動詞の活用"
+      },
+      {
+        "form": "geht",
+        "type": "動詞の活用"
+      },
+      {
+        "form": "Ging",
+        "type": "動詞の活用"
+      },
+      {
+        "form": "ginge",
+        "type": "動詞の活用"
       }
     ]
   },
@@ -4086,7 +4620,9 @@
     "exampleVariants": [
       "gemessen",
       "gemessenem",
-      "gemessener"
+      "gemessener",
+      "messen",
+      "mißt"
     ],
     "exampleVariantDetails": [
       {
@@ -4100,6 +4636,14 @@
       {
         "form": "gemessener",
         "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "messen",
+        "type": "動詞の活用"
+      },
+      {
+        "form": "mißt",
+        "type": "動詞の活用"
       }
     ]
   },
@@ -4130,7 +4674,18 @@
       }
     ]
   },
-  "genau": "term-genau",
+  "genau": {
+    "id": "term-genau",
+    "exampleVariants": [
+      "genauer"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "genauer",
+        "type": "形容詞・副詞の変化"
+      }
+    ]
+  },
   "genehmigung": "term-genehmigung",
   "genesende": "term-genesende",
   "geraeusch": {
@@ -4148,24 +4703,44 @@
   "gerieben": {
     "id": "term-gerieben",
     "exampleVariants": [
-      "gerieben"
+      "gerieben",
+      "reibend",
+      "reibt"
     ],
     "exampleVariantDetails": [
       {
         "form": "gerieben",
         "type": "過去分詞"
+      },
+      {
+        "form": "reibend",
+        "type": "現在分詞"
+      },
+      {
+        "form": "reibt",
+        "type": "動詞の活用"
       }
     ]
   },
   "gerissen": {
     "id": "term-gerissen",
     "exampleVariants": [
-      "gerissen"
+      "gerissen",
+      "reißen",
+      "reißt"
     ],
     "exampleVariantDetails": [
       {
         "form": "gerissen",
         "type": "過去分詞"
+      },
+      {
+        "form": "reißen",
+        "type": "動詞の活用"
+      },
+      {
+        "form": "reißt",
+        "type": "動詞の活用"
       }
     ]
   },
@@ -4174,7 +4749,10 @@
     "exampleVariants": [
       "gerührt",
       "gerührter",
-      "gerührten"
+      "gerührten",
+      "rühren",
+      "rührend",
+      "rührt"
     ],
     "exampleVariantDetails": [
       {
@@ -4188,6 +4766,18 @@
       {
         "form": "gerührten",
         "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "rühren",
+        "type": "動詞の活用"
+      },
+      {
+        "form": "rührend",
+        "type": "現在分詞"
+      },
+      {
+        "form": "rührt",
+        "type": "動詞の活用"
       }
     ]
   },
@@ -4209,16 +4799,37 @@
     ]
   },
   "gesangsperiode": "term-gesangsperiode",
-  "gesaettigten": "term-gesaettigten",
+  "gesaettigten": {
+    "id": "term-gesaettigten",
+    "exampleVariants": [
+      "sättigend"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "sättigend",
+        "type": "現在分詞"
+      }
+    ]
+  },
   "geschehen": {
     "id": "term-geschehen",
     "exampleVariants": [
-      "geschehen"
+      "geschehen",
+      "geschah",
+      "geschieht"
     ],
     "exampleVariantDetails": [
       {
         "form": "geschehen",
         "type": "不定詞・過去分詞"
+      },
+      {
+        "form": "geschah",
+        "type": "動詞の活用"
+      },
+      {
+        "form": "geschieht",
+        "type": "動詞の活用"
       }
     ]
   },
@@ -4308,7 +4919,9 @@
     "id": "term-gesprochen",
     "exampleVariants": [
       "gesprochen",
-      "sprechen"
+      "sprechen",
+      "sprechend",
+      "spricht"
     ],
     "exampleVariantDetails": [
       {
@@ -4317,6 +4930,14 @@
       },
       {
         "form": "sprechen",
+        "type": "動詞の活用"
+      },
+      {
+        "form": "sprechend",
+        "type": "現在分詞"
+      },
+      {
+        "form": "spricht",
         "type": "動詞の活用"
       }
     ]
@@ -4337,7 +4958,10 @@
     "id": "term-gestossen",
     "exampleVariants": [
       "gestoßen",
-      "gestoss"
+      "gestoss",
+      "stoßen",
+      "stoßend",
+      "stößt"
     ],
     "exampleVariantDetails": [
       {
@@ -4347,18 +4971,40 @@
       {
         "form": "gestoss",
         "type": "省略形"
+      },
+      {
+        "form": "stoßen",
+        "type": "動詞の活用"
+      },
+      {
+        "form": "stoßend",
+        "type": "現在分詞"
+      },
+      {
+        "form": "stößt",
+        "type": "動詞の活用"
       }
     ]
   },
   "gestrichen": {
     "id": "term-gestrichen",
     "exampleVariants": [
-      "gestrichen"
+      "gestrichen",
+      "streichen",
+      "streicht"
     ],
     "exampleVariantDetails": [
       {
         "form": "gestrichen",
         "type": "過去分詞"
+      },
+      {
+        "form": "streichen",
+        "type": "動詞の活用"
+      },
+      {
+        "form": "streicht",
+        "type": "動詞の活用"
       }
     ]
   },
@@ -4373,7 +5019,8 @@
       "geteilt",
       "teilen",
       "getheilt",
-      "geteilte"
+      "geteilte",
+      "teilt"
     ],
     "exampleVariantDetails": [
       {
@@ -4391,6 +5038,10 @@
       {
         "form": "geteilte",
         "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "teilt",
+        "type": "動詞の活用"
       }
     ]
   },
@@ -4416,7 +5067,9 @@
       "getragen",
       "tragen",
       "getragene",
-      "getragener"
+      "getragener",
+      "tragend",
+      "trägt"
     ],
     "exampleVariantDetails": [
       {
@@ -4434,6 +5087,14 @@
       {
         "form": "getragener",
         "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "tragend",
+        "type": "現在分詞"
+      },
+      {
+        "form": "trägt",
+        "type": "動詞の活用"
       }
     ]
   },
@@ -4443,7 +5104,8 @@
     "exampleVariants": [
       "Gewandes",
       "Gewänder",
-      "Gewändern"
+      "Gewändern",
+      "Gewande"
     ],
     "exampleVariantDetails": [
       {
@@ -4456,6 +5118,10 @@
       },
       {
         "form": "Gewändern",
+        "type": "名詞の格・数"
+      },
+      {
+        "form": "Gewande",
         "type": "名詞の格・数"
       }
     ]
@@ -4570,7 +5236,9 @@
     "id": "term-gezogen",
     "exampleVariants": [
       "gezogen",
-      "ziehen"
+      "ziehen",
+      "ziehend",
+      "zieht"
     ],
     "exampleVariantDetails": [
       {
@@ -4579,6 +5247,14 @@
       },
       {
         "form": "ziehen",
+        "type": "動詞の活用"
+      },
+      {
+        "form": "ziehend",
+        "type": "現在分詞"
+      },
+      {
+        "form": "zieht",
         "type": "動詞の活用"
       }
     ]
@@ -4629,7 +5305,8 @@
       "gleichem",
       "gleiche",
       "gleicher",
-      "gleiches"
+      "gleiches",
+      "gleichen"
     ],
     "exampleVariantDetails": [
       {
@@ -4646,6 +5323,10 @@
       },
       {
         "form": "gleiches",
+        "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "gleichen",
         "type": "形容詞・副詞の変化"
       }
     ]
@@ -4675,7 +5356,18 @@
       }
     ]
   },
-  "gleichzeitig": "term-gleichzeitig",
+  "gleichzeitig": {
+    "id": "term-gleichzeitig",
+    "exampleVariants": [
+      "gleichzeitigen"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "gleichzeitigen",
+        "type": "形容詞・副詞の変化"
+      }
+    ]
+  },
   "gletscher": "term-gletscher",
   "glissando-ueber-das-ganze-griffbrett": "term-glissando-ueber-das-ganze-griffbrett",
   "glissando-ueber-die-ganze-klaviatur": "term-glissando-ueber-die-ganze-klaviatur",
@@ -4684,7 +5376,8 @@
     "id": "term-gluehen",
     "exampleVariants": [
       "glühend",
-      "glühende"
+      "glühende",
+      "glüht"
     ],
     "exampleVariantDetails": [
       {
@@ -4694,22 +5387,57 @@
       {
         "form": "glühende",
         "type": "分詞"
+      },
+      {
+        "form": "glüht",
+        "type": "動詞の活用"
       }
     ]
   },
   "grablegung": "term-grablegung",
   "grablied": "term-grablied",
-  "graf": "term-graf",
+  "graf": {
+    "id": "term-graf",
+    "exampleVariants": [
+      "Grafen"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "Grafen",
+        "type": "名詞の格・数"
+      }
+    ]
+  },
   "grausam": "term-grausam",
   "grausen": "term-grausen",
   "grell": {
     "id": "term-grell",
     "exampleVariants": [
-      "grelle"
+      "grelle",
+      "grellem",
+      "grellen",
+      "greller",
+      "grelles"
     ],
     "exampleVariantDetails": [
       {
         "form": "grelle",
+        "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "grellem",
+        "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "grellen",
+        "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "greller",
+        "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "grelles",
         "type": "形容詞・副詞の変化"
       }
     ]
@@ -4727,14 +5455,38 @@
       }
     ]
   },
-  "grob": "term-grob",
+  "grob": {
+    "id": "term-grob",
+    "exampleVariants": [
+      "groben"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "groben",
+        "type": "形容詞・副詞の変化"
+      }
+    ]
+  },
   "gross": {
     "id": "term-gross",
     "exampleVariants": [
       "große",
       "gross",
       "grossen",
-      "grosser"
+      "grosser",
+      "grossem",
+      "größer",
+      "größere",
+      "grösserem",
+      "grösseren",
+      "größerer",
+      "größeres",
+      "großes",
+      "grösste",
+      "größtem",
+      "größten",
+      "größter",
+      "Größtes"
     ],
     "exampleVariantDetails": [
       {
@@ -4752,6 +5504,58 @@
       {
         "form": "grosser",
         "type": "語形変化（要分類）"
+      },
+      {
+        "form": "grossem",
+        "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "größer",
+        "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "größere",
+        "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "grösserem",
+        "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "grösseren",
+        "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "größerer",
+        "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "größeres",
+        "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "großes",
+        "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "grösste",
+        "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "größtem",
+        "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "größten",
+        "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "größter",
+        "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "Größtes",
+        "type": "形容詞・副詞の変化"
       }
     ]
   },
@@ -4768,8 +5572,35 @@
       }
     ]
   },
-  "gruppe": "term-gruppe",
-  "haar": "term-haar",
+  "gruppe": {
+    "id": "term-gruppe",
+    "exampleVariants": [
+      "Gruppen"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "Gruppen",
+        "type": "名詞の格・数"
+      }
+    ]
+  },
+  "haar": {
+    "id": "term-haar",
+    "exampleVariants": [
+      "Haare",
+      "Haaren"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "Haare",
+        "type": "名詞の格・数"
+      },
+      {
+        "form": "Haaren",
+        "type": "名詞の格・数"
+      }
+    ]
+  },
   "hab-lumbedruwwel-mit-me-lumbeschatz": "term-hab-lumbedruwwel-mit-me-lumbeschatz",
   "halbe": {
     "id": "term-halbe",
@@ -4777,7 +5608,8 @@
       "halb",
       "halbem",
       "Halbes",
-      "halben"
+      "halben",
+      "halber"
     ],
     "exampleVariantDetails": [
       {
@@ -4794,6 +5626,10 @@
       },
       {
         "form": "halben",
+        "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "halber",
         "type": "形容詞・副詞の変化"
       }
     ]
@@ -4817,7 +5653,18 @@
       }
     ]
   },
-  "hals": "term-hals",
+  "hals": {
+    "id": "term-hals",
+    "exampleVariants": [
+      "Halse"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "Halse",
+        "type": "名詞の格・数"
+      }
+    ]
+  },
   "haltebogen": "term-haltebogen",
   "haltung": "term-haltung",
   "haemmernd": {
@@ -4863,7 +5710,23 @@
     "id": "term-harpeggirt-harpegg",
     "original": "harpeggirt, harpegg."
   },
-  "hart": "term-hart",
+  "hart": {
+    "id": "term-hart",
+    "exampleVariants": [
+      "harten",
+      "harter"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "harten",
+        "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "harter",
+        "type": "形容詞・副詞の変化"
+      }
+    ]
+  },
   "haesslich": "term-haesslich",
   "hast": "term-hast",
   "hastig": {
@@ -4981,7 +5844,12 @@
       "heftigen",
       "Heftiger",
       "heftige",
-      "heftiges"
+      "heftiges",
+      "Heftigere",
+      "heftigste",
+      "heftigstem",
+      "heftigsten",
+      "heftigster"
     ],
     "exampleVariantDetails": [
       {
@@ -5002,6 +5870,26 @@
       },
       {
         "form": "heftiges",
+        "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "Heftigere",
+        "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "heftigste",
+        "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "heftigstem",
+        "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "heftigsten",
+        "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "heftigster",
         "type": "形容詞・副詞の変化"
       }
     ]
@@ -5051,7 +5939,8 @@
     "exampleVariants": [
       "heiterem",
       "heiterer",
-      "heitere"
+      "heitere",
+      "heiterster"
     ],
     "exampleVariantDetails": [
       {
@@ -5064,6 +5953,10 @@
       },
       {
         "form": "heitere",
+        "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "heiterster",
         "type": "形容詞・副詞の変化"
       }
     ]
@@ -5242,7 +6135,8 @@
     "id": "term-heulend",
     "exampleVariants": [
       "heulend",
-      "Heulen"
+      "Heulen",
+      "heult"
     ],
     "exampleVariantDetails": [
       {
@@ -5252,6 +6146,10 @@
       {
         "form": "Heulen",
         "type": "該当なし"
+      },
+      {
+        "form": "heult",
+        "type": "動詞の活用"
       }
     ]
   },
@@ -5262,11 +6160,16 @@
   "himmel": {
     "id": "term-himmel",
     "exampleVariants": [
-      "Himmels"
+      "Himmels",
+      "Himmeln"
     ],
     "exampleVariantDetails": [
       {
         "form": "Himmels",
+        "type": "名詞の格・数"
+      },
+      {
+        "form": "Himmeln",
         "type": "名詞の格・数"
       }
     ]
@@ -5313,7 +6216,73 @@
     "id": "term-hob",
     "original": "Hob."
   },
-  "hoch": "term-hoch",
+  "hoch": {
+    "id": "term-hoch",
+    "exampleVariants": [
+      "höchste",
+      "höchstem",
+      "höchsten",
+      "höchster",
+      "höchstes",
+      "hohe",
+      "hohen",
+      "hoher",
+      "höher",
+      "höhere",
+      "höheren",
+      "hohes"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "höchste",
+        "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "höchstem",
+        "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "höchsten",
+        "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "höchster",
+        "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "höchstes",
+        "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "hohe",
+        "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "hohen",
+        "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "hoher",
+        "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "höher",
+        "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "höhere",
+        "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "höheren",
+        "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "hohes",
+        "type": "形容詞・副詞の変化"
+      }
+    ]
+  },
   "hoehle": {
     "id": "term-hoehle",
     "exampleVariants": [
@@ -5366,17 +6335,33 @@
   "horcht": {
     "id": "term-horcht",
     "exampleVariants": [
-      "horcht"
+      "horcht",
+      "horchend"
     ],
     "exampleVariantDetails": [
       {
         "form": "horcht",
         "type": "活用形"
+      },
+      {
+        "form": "horchend",
+        "type": "現在分詞"
       }
     ]
   },
   "humorvoll": "term-humorvoll",
-  "hut": "term-hut",
+  "hut": {
+    "id": "term-hut",
+    "exampleVariants": [
+      "Hüte"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "Hüte",
+        "type": "名詞の格・数"
+      }
+    ]
+  },
   "huette": "term-huette",
   "ii-cello-am-i-pult-mit-dem-v-pult": {
     "id": "term-ii-cello-am-i-pult-mit-dem-v-pult",
@@ -5410,7 +6395,23 @@
   "inbrunst": "term-inbrunst",
   "inhalt": "term-inhalt",
   "innen": "term-innen",
-  "innig": "term-innig",
+  "innig": {
+    "id": "term-innig",
+    "exampleVariants": [
+      "inniger",
+      "innigster"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "inniger",
+        "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "innigster",
+        "type": "形容詞・副詞の変化"
+      }
+    ]
+  },
   "ins": {
     "id": "term-ins",
     "exampleVariants": [
@@ -5428,7 +6429,33 @@
   "irrwegen": "term-irrwegen",
   "jagd": "term-jagd",
   "jagdhoerner": "term-jagdhoerner",
-  "jaeh": "term-jaeh",
+  "jaeh": {
+    "id": "term-jaeh",
+    "exampleVariants": [
+      "jähe",
+      "jähem",
+      "jähen",
+      "jäher"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "jähe",
+        "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "jähem",
+        "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "jähen",
+        "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "jäher",
+        "type": "形容詞・副詞の変化"
+      }
+    ]
+  },
   "jaemmerlich": "term-jaemmerlich",
   "je-nach": "term-je-nach",
   "je-nach-dem-grundcharakter-der-verschiedenen-themen-reich-zu-modificiren": {
@@ -5467,7 +6494,8 @@
     "id": "term-jubelnd",
     "exampleVariants": [
       "jubelnde",
-      "jubelndes"
+      "jubelndes",
+      "jubelt"
     ],
     "exampleVariantDetails": [
       {
@@ -5477,6 +6505,10 @@
       {
         "form": "jubelndes",
         "type": "分詞"
+      },
+      {
+        "form": "jubelt",
+        "type": "動詞の活用"
       }
     ]
   },
@@ -5528,12 +6560,17 @@
   "keifend": {
     "id": "term-keifend",
     "exampleVariants": [
-      "keifend"
+      "keifend",
+      "keift"
     ],
     "exampleVariantDetails": [
       {
         "form": "keifend",
         "type": "現在分詞"
+      },
+      {
+        "form": "keift",
+        "type": "動詞の活用"
       }
     ]
   },
@@ -5562,7 +6599,18 @@
       }
     ]
   },
-  "kette": "term-kette",
+  "kette": {
+    "id": "term-kette",
+    "exampleVariants": [
+      "Ketten"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "Ketten",
+        "type": "名詞の格・数"
+      }
+    ]
+  },
   "kind": {
     "id": "term-kind",
     "exampleVariants": [
@@ -5660,12 +6708,17 @@
   "klingen": {
     "id": "term-klingen",
     "exampleVariants": [
-      "klingend"
+      "klingend",
+      "klingt"
     ],
     "exampleVariantDetails": [
       {
         "form": "klingend",
         "type": "分詞"
+      },
+      {
+        "form": "klingt",
+        "type": "動詞の活用"
       }
     ]
   },
@@ -5681,7 +6734,18 @@
       }
     ]
   },
-  "kluft": "term-kluft",
+  "kluft": {
+    "id": "term-kluft",
+    "exampleVariants": [
+      "Klüften"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "Klüften",
+        "type": "名詞の格・数"
+      }
+    ]
+  },
   "knabe": {
     "id": "term-knabe",
     "exampleVariants": [
@@ -5768,7 +6832,8 @@
     "exampleVariants": [
       "Kopfe",
       "Kopfes",
-      "Köpfe"
+      "Köpfe",
+      "Köpfen"
     ],
     "exampleVariantDetails": [
       {
@@ -5781,6 +6846,10 @@
       },
       {
         "form": "Köpfe",
+        "type": "名詞の格・数"
+      },
+      {
+        "form": "Köpfen",
         "type": "名詞の格・数"
       }
     ]
@@ -5864,11 +6933,36 @@
   "kurz": {
     "id": "term-kurz",
     "exampleVariants": [
-      "kurze"
+      "kurze",
+      "kurzem",
+      "kurzen",
+      "kurzer",
+      "Kürzere",
+      "kurzes"
     ],
     "exampleVariantDetails": [
       {
         "form": "kurze",
+        "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "kurzem",
+        "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "kurzen",
+        "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "kurzer",
+        "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "Kürzere",
+        "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "kurzes",
         "type": "形容詞・副詞の変化"
       }
     ]
@@ -5878,7 +6972,8 @@
     "exampleVariants": [
       "lachend",
       "lachen",
-      "lachenden"
+      "lachenden",
+      "lacht"
     ],
     "exampleVariantDetails": [
       {
@@ -5892,6 +6987,10 @@
       {
         "form": "lachenden",
         "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "lacht",
+        "type": "動詞の活用"
       }
     ]
   },
@@ -5911,7 +7010,18 @@
       }
     ]
   },
-  "lakai": "term-lakai",
+  "lakai": {
+    "id": "term-lakai",
+    "exampleVariants": [
+      "Lakaien"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "Lakaien",
+        "type": "名詞の格・数"
+      }
+    ]
+  },
   "landlaeufigen": "term-landlaeufigen",
   "laendler": {
     "id": "term-laendler",
@@ -5958,7 +7068,28 @@
   },
   "laerm": "term-laerm",
   "launig": "term-launig",
-  "laut": "term-laut",
+  "laut": {
+    "id": "term-laut",
+    "exampleVariants": [
+      "lauten",
+      "lauter",
+      "lautes"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "lauten",
+        "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "lauter",
+        "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "lautes",
+        "type": "形容詞・副詞の変化"
+      }
+    ]
+  },
   "laute": "term-laute",
   "lautet": {
     "id": "term-lautet",
@@ -6003,7 +7134,8 @@
       "lebhaften",
       "Lebhaftes",
       "lebhafter",
-      "Lebhafte"
+      "Lebhafte",
+      "lebhafteren"
     ],
     "exampleVariantDetails": [
       {
@@ -6024,6 +7156,10 @@
       },
       {
         "form": "Lebhafte",
+        "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "lebhafteren",
         "type": "形容詞・副詞の変化"
       }
     ]
@@ -6111,7 +7247,9 @@
       "leidenschaftlichem",
       "leidenschaftlicher",
       "leidenschaftlichen",
-      "Leidenschaftliche"
+      "Leidenschaftliche",
+      "leidenschaftlichstem",
+      "leidenschaftlichsten"
     ],
     "exampleVariantDetails": [
       {
@@ -6129,6 +7267,14 @@
       {
         "form": "Leidenschaftliche",
         "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "leidenschaftlichstem",
+        "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "leidenschaftlichsten",
+        "type": "形容詞・副詞の変化"
       }
     ]
   },
@@ -6136,11 +7282,26 @@
   "leise": {
     "id": "term-leise",
     "exampleVariants": [
-      "leiser"
+      "leiser",
+      "leisem",
+      "leisen",
+      "leises"
     ],
     "exampleVariantDetails": [
       {
         "form": "leiser",
+        "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "leisem",
+        "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "leisen",
+        "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "leises",
         "type": "形容詞・副詞の変化"
       }
     ]
@@ -6165,11 +7326,26 @@
   "licht": {
     "id": "term-licht",
     "exampleVariants": [
-      "Lichtern"
+      "Lichtern",
+      "Lichte",
+      "Lichten",
+      "Lichter"
     ],
     "exampleVariantDetails": [
       {
         "form": "Lichtern",
+        "type": "名詞の格・数"
+      },
+      {
+        "form": "Lichte",
+        "type": "名詞の格・数"
+      },
+      {
+        "form": "Lichten",
+        "type": "名詞の格・数"
+      },
+      {
+        "form": "Lichter",
         "type": "名詞の格・数"
       }
     ]
@@ -6252,7 +7428,8 @@
     "exampleVariants": [
       "mächtigem",
       "mächtigen",
-      "mächtige"
+      "mächtige",
+      "Mächtigste"
     ],
     "exampleVariantDetails": [
       {
@@ -6266,11 +7443,31 @@
       {
         "form": "mächtige",
         "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "Mächtigste",
+        "type": "形容詞・副詞の変化"
       }
     ]
   },
   "maedchen": "term-maedchen",
-  "magd": "term-magd",
+  "magd": {
+    "id": "term-magd",
+    "exampleVariants": [
+      "Mägde",
+      "Mägden"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "Mägde",
+        "type": "名詞の格・数"
+      },
+      {
+        "form": "Mägden",
+        "type": "名詞の格・数"
+      }
+    ]
+  },
   "majestaetisch-majestaetische": {
     "id": "term-majestaetisch-majestaetische",
     "exampleVariants": [
@@ -6289,7 +7486,8 @@
       "Mannes",
       "Männer",
       "Männern",
-      "Manne"
+      "Manne",
+      "Mannen"
     ],
     "exampleVariantDetails": [
       {
@@ -6306,6 +7504,10 @@
       },
       {
         "form": "Manne",
+        "type": "名詞の格・数"
+      },
+      {
+        "form": "Mannen",
         "type": "名詞の格・数"
       }
     ]
@@ -6408,8 +7610,45 @@
       }
     ]
   },
-  "matt": "term-matt",
-  "mauer": "term-mauer",
+  "matt": {
+    "id": "term-matt",
+    "exampleVariants": [
+      "matten",
+      "matter",
+      "mattere",
+      "mattes"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "matten",
+        "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "matter",
+        "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "mattere",
+        "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "mattes",
+        "type": "形容詞・副詞の変化"
+      }
+    ]
+  },
+  "mauer": {
+    "id": "term-mauer",
+    "exampleVariants": [
+      "Mauern"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "Mauern",
+        "type": "名詞の格・数"
+      }
+    ]
+  },
   "mediator": "term-mediator",
   "meer": {
     "id": "term-meer",
@@ -6476,11 +7715,16 @@
   "mund": {
     "id": "term-mund",
     "exampleVariants": [
-      "Mundes"
+      "Mundes",
+      "Munde"
     ],
     "exampleVariantDetails": [
       {
         "form": "Mundes",
+        "type": "名詞の格・数"
+      },
+      {
+        "form": "Munde",
         "type": "名詞の格・数"
       }
     ]
@@ -6597,7 +7841,18 @@
   "nachtwandlerlied": "term-nachtwandlerlied",
   "nadelscharf": "term-nadelscharf",
   "naehe": "term-naehe",
-  "naiv": "term-naiv",
+  "naiv": {
+    "id": "term-naiv",
+    "exampleVariants": [
+      "naivem"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "naivem",
+        "type": "形容詞・副詞の変化"
+      }
+    ]
+  },
   "naemlich": "term-naemlich",
   "naeselnd": {
     "id": "term-naeselnd",
@@ -6675,7 +7930,23 @@
     "original": "Nicht zu schnell. Keinefalls schleppend"
   },
   "nie": "term-nie",
-  "nieder": "term-nieder",
+  "nieder": {
+    "id": "term-nieder",
+    "exampleVariants": [
+      "niedere",
+      "niederer"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "niedere",
+        "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "niederer",
+        "type": "形容詞・副詞の変化"
+      }
+    ]
+  },
   "nimmt": {
     "id": "term-nimmt",
     "exampleVariants": [
@@ -6731,7 +8002,38 @@
   "nun-laube-lindlein-laube": "term-nun-laube-lindlein-laube",
   "nur-ruhig-bewegt": "term-nur-ruhig-bewegt",
   "oder-8-bassa": "term-oder-8-bassa",
-  "offen": "term-offen",
+  "offen": {
+    "id": "term-offen",
+    "exampleVariants": [
+      "offene",
+      "offenem",
+      "offenen",
+      "offener",
+      "offenes"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "offene",
+        "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "offenem",
+        "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "offenen",
+        "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "offener",
+        "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "offenes",
+        "type": "形容詞・副詞の変化"
+      }
+    ]
+  },
   "ohne": "term-ohne",
   "ohnmaechtig": {
     "id": "term-ohnmaechtig",
@@ -6755,18 +8057,39 @@
   "paar": {
     "id": "term-paar",
     "exampleVariants": [
-      "Paare"
+      "Paare",
+      "Paaren",
+      "Paares"
     ],
     "exampleVariantDetails": [
       {
         "form": "Paare",
+        "type": "名詞の格・数"
+      },
+      {
+        "form": "Paaren",
+        "type": "名詞の格・数"
+      },
+      {
+        "form": "Paares",
         "type": "名詞の格・数"
       }
     ]
   },
   "pastos": "term-pastos",
   "pathos": "term-pathos",
-  "pause": "term-pause",
+  "pause": {
+    "id": "term-pause",
+    "exampleVariants": [
+      "Pausen"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "Pausen",
+        "type": "名詞の格・数"
+      }
+    ]
+  },
   "pikiert": {
     "id": "term-pikiert",
     "exampleVariants": [
@@ -6779,7 +8102,23 @@
       }
     ]
   },
-  "platz": "term-platz",
+  "platz": {
+    "id": "term-platz",
+    "exampleVariants": [
+      "Platze",
+      "Plätze"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "Platze",
+        "type": "名詞の格・数"
+      },
+      {
+        "form": "Plätze",
+        "type": "名詞の格・数"
+      }
+    ]
+  },
   "ploetzlich": {
     "id": "term-ploetzlich",
     "exampleVariants": [
@@ -6820,11 +8159,16 @@
   "pult": {
     "id": "term-pult",
     "exampleVariants": [
-      "Pulte"
+      "Pulte",
+      "Pulten"
     ],
     "exampleVariantDetails": [
       {
         "form": "Pulte",
+        "type": "名詞の格・数"
+      },
+      {
+        "form": "Pulten",
         "type": "名詞の格・数"
       }
     ]
@@ -6861,7 +8205,8 @@
       "rasend",
       "rasende",
       "rasenden",
-      "Rasender"
+      "Rasender",
+      "rast"
     ],
     "exampleVariantDetails": [
       {
@@ -6879,10 +8224,35 @@
       {
         "form": "Rasender",
         "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "rast",
+        "type": "動詞の活用"
       }
     ]
   },
-  "raum": "term-raum",
+  "raum": {
+    "id": "term-raum",
+    "exampleVariants": [
+      "Raume",
+      "Räume",
+      "Raumes"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "Raume",
+        "type": "名詞の格・数"
+      },
+      {
+        "form": "Räume",
+        "type": "名詞の格・数"
+      },
+      {
+        "form": "Raumes",
+        "type": "名詞の格・数"
+      }
+    ]
+  },
   "rauschend": {
     "id": "term-rauschend",
     "exampleVariants": [
@@ -6899,7 +8269,8 @@
     "id": "term-recht",
     "exampleVariants": [
       "rechte",
-      "rechts"
+      "rechts",
+      "rechten"
     ],
     "exampleVariantDetails": [
       {
@@ -6908,6 +8279,10 @@
       },
       {
         "form": "rechts",
+        "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "rechten",
         "type": "形容詞・副詞の変化"
       }
     ]
@@ -6932,12 +8307,22 @@
   "reich": {
     "id": "term-reich",
     "exampleVariants": [
-      "Reiche"
+      "Reiche",
+      "reichem",
+      "reichsten"
     ],
     "exampleVariantDetails": [
       {
         "form": "Reiche",
         "type": "名詞の格・数"
+      },
+      {
+        "form": "reichem",
+        "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "reichsten",
+        "type": "形容詞・副詞の変化"
       }
     ]
   },
@@ -6955,7 +8340,18 @@
   },
   "reigen": "term-reigen",
   "reihe": "term-reihe",
-  "rein": "term-rein",
+  "rein": {
+    "id": "term-rein",
+    "exampleVariants": [
+      "reineren"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "reineren",
+        "type": "形容詞・副詞の変化"
+      }
+    ]
+  },
   "rep": {
     "id": "term-rep",
     "original": "rep."
@@ -7013,7 +8409,23 @@
       }
     ]
   },
-  "roh": "term-roh",
+  "roh": {
+    "id": "term-roh",
+    "exampleVariants": [
+      "rohen",
+      "roher"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "rohen",
+        "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "roher",
+        "type": "形容詞・副詞の変化"
+      }
+    ]
+  },
   "rondo-allegro-ma-non-troppo-in-cominciando-un-poco-esitando": "term-rondo-allegro-ma-non-troppo-in-cominciando-un-poco-esitando",
   "ruecksicht": "term-ruecksicht",
   "rueckwaerts": "term-rueckwaerts",
@@ -7032,23 +8444,33 @@
   "rufen": {
     "id": "term-rufen",
     "exampleVariants": [
-      "rufend"
+      "rufend",
+      "ruft"
     ],
     "exampleVariantDetails": [
       {
         "form": "rufend",
         "type": "分詞"
+      },
+      {
+        "form": "ruft",
+        "type": "動詞の活用"
       }
     ]
   },
   "ruhebett": {
     "id": "term-ruhebett",
     "exampleVariants": [
-      "Ruhebetts"
+      "Ruhebetts",
+      "Ruhebette"
     ],
     "exampleVariantDetails": [
       {
         "form": "Ruhebetts",
+        "type": "名詞の格・数"
+      },
+      {
+        "form": "Ruhebette",
         "type": "名詞の格・数"
       }
     ]
@@ -7057,11 +8479,36 @@
   "ruhig": {
     "id": "term-ruhig",
     "exampleVariants": [
-      "Ruhige"
+      "Ruhige",
+      "ruhigem",
+      "ruhigen",
+      "ruhiger",
+      "ruhigeren",
+      "ruhigeres"
     ],
     "exampleVariantDetails": [
       {
         "form": "Ruhige",
+        "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "ruhigem",
+        "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "ruhigen",
+        "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "ruhiger",
+        "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "ruhigeren",
+        "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "ruhigeres",
         "type": "形容詞・副詞の変化"
       }
     ]
@@ -7072,7 +8519,8 @@
     "id": "term-saal",
     "exampleVariants": [
       "Saales",
-      "Säle"
+      "Säle",
+      "Saale"
     ],
     "exampleVariantDetails": [
       {
@@ -7082,10 +8530,25 @@
       {
         "form": "Säle",
         "type": "名詞の格・数"
+      },
+      {
+        "form": "Saale",
+        "type": "名詞の格・数"
       }
     ]
   },
-  "saite": "term-saite",
+  "saite": {
+    "id": "term-saite",
+    "exampleVariants": [
+      "Saiten"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "Saiten",
+        "type": "名詞の格・数"
+      }
+    ]
+  },
   "saemmtlich": {
     "id": "term-saemmtlich",
     "exampleVariants": [
@@ -7124,11 +8587,26 @@
   "sanft": {
     "id": "term-sanft",
     "exampleVariants": [
-      "sanfte"
+      "sanfte",
+      "sanftem",
+      "sanfter",
+      "sanftere"
     ],
     "exampleVariantDetails": [
       {
         "form": "sanfte",
+        "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "sanftem",
+        "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "sanfter",
+        "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "sanftere",
         "type": "形容詞・副詞の変化"
       }
     ]
@@ -7182,12 +8660,24 @@
       }
     ]
   },
-  "schar": "term-schar",
+  "schar": {
+    "id": "term-schar",
+    "exampleVariants": [
+      "Scharen"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "Scharen",
+        "type": "名詞の格・数"
+      }
+    ]
+  },
   "scharf": {
     "id": "term-scharf",
     "exampleVariants": [
       "scharfem",
-      "scharfer"
+      "scharfer",
+      "schärfer"
     ],
     "exampleVariantDetails": [
       {
@@ -7196,6 +8686,10 @@
       },
       {
         "form": "scharfer",
+        "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "schärfer",
         "type": "形容詞・副詞の変化"
       }
     ]
@@ -7298,7 +8792,18 @@
       }
     ]
   },
-  "schein": "term-schein",
+  "schein": {
+    "id": "term-schein",
+    "exampleVariants": [
+      "Scheine"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "Scheine",
+        "type": "名詞の格・数"
+      }
+    ]
+  },
   "schelmisch": "term-schelmisch",
   "schemel": "term-schemel",
   "scheu": {
@@ -7321,11 +8826,16 @@
   "schiff": {
     "id": "term-schiff",
     "exampleVariants": [
-      "Schiffes"
+      "Schiffes",
+      "Schiffe"
     ],
     "exampleVariantDetails": [
       {
         "form": "Schiffes",
+        "type": "名詞の格・数"
+      },
+      {
+        "form": "Schiffe",
         "type": "名詞の格・数"
       }
     ]
@@ -7353,7 +8863,8 @@
       "Schläge",
       "schlagen",
       "schlägt",
-      "Schlage"
+      "Schlage",
+      "Schlägen"
     ],
     "exampleVariantDetails": [
       {
@@ -7371,6 +8882,10 @@
       {
         "form": "Schlage",
         "type": "名詞の格・数"
+      },
+      {
+        "form": "Schlägen",
+        "type": "名詞の格・数"
       }
     ]
   },
@@ -7379,7 +8894,8 @@
     "id": "term-schleichen",
     "exampleVariants": [
       "schleichend",
-      "schleicht"
+      "schleicht",
+      "geschlichen"
     ],
     "exampleVariantDetails": [
       {
@@ -7389,6 +8905,10 @@
       {
         "form": "schleicht",
         "type": "動詞の活用"
+      },
+      {
+        "form": "geschlichen",
+        "type": "過去分詞"
       }
     ]
   },
@@ -7418,7 +8938,8 @@
     "id": "term-schleppen",
     "exampleVariants": [
       "schleppend",
-      "schleppt"
+      "schleppt",
+      "geschleppt"
     ],
     "exampleVariantDetails": [
       {
@@ -7428,6 +8949,10 @@
       {
         "form": "schleppt",
         "type": "動詞の活用"
+      },
+      {
+        "form": "geschleppt",
+        "type": "過去分詞"
       }
     ]
   },
@@ -7443,7 +8968,23 @@
       }
     ]
   },
-  "schluss": "term-schluss",
+  "schluss": {
+    "id": "term-schluss",
+    "exampleVariants": [
+      "Schlusse",
+      "Schlusses"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "Schlusse",
+        "type": "名詞の格・数"
+      },
+      {
+        "form": "Schlusses",
+        "type": "名詞の格・数"
+      }
+    ]
+  },
   "schluss-der-1-fassung": {
     "id": "term-schluss-der-1-fassung",
     "original": "Schluß der 1. Fassung"
@@ -7475,7 +9016,8 @@
     "exampleVariants": [
       "schmeichelnden",
       "schmeichelnd",
-      "schmeichelndem"
+      "schmeichelndem",
+      "geschmeichelt"
     ],
     "exampleVariantDetails": [
       {
@@ -7489,6 +9031,10 @@
       {
         "form": "schmeichelndem",
         "type": "分詞"
+      },
+      {
+        "form": "geschmeichelt",
+        "type": "過去分詞"
       }
     ]
   },
@@ -7575,7 +9121,8 @@
     "id": "term-schnell",
     "exampleVariants": [
       "schneller",
-      "schnellen"
+      "schnellen",
+      "schnelleren"
     ],
     "exampleVariantDetails": [
       {
@@ -7585,13 +9132,28 @@
       {
         "form": "schnellen",
         "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "schnelleren",
+        "type": "形容詞・副詞の変化"
       }
     ]
   },
   "schnippchen": "term-schnippchen",
   "schnippisch": "term-schnippisch",
   "schon": "term-schon",
-  "schonen": "term-schonen",
+  "schonen": {
+    "id": "term-schonen",
+    "exampleVariants": [
+      "Schone"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "Schone",
+        "type": "動詞の活用"
+      }
+    ]
+  },
   "schreck": "term-schreck",
   "schreien": {
     "id": "term-schreien",
@@ -7614,7 +9176,8 @@
     "id": "term-schreiten",
     "exampleVariants": [
       "schreitend",
-      "schreitet"
+      "schreitet",
+      "geschritten"
     ],
     "exampleVariantDetails": [
       {
@@ -7624,6 +9187,10 @@
       {
         "form": "schreitet",
         "type": "動詞の活用"
+      },
+      {
+        "form": "geschritten",
+        "type": "過去分詞"
       }
     ]
   },
@@ -7661,13 +9228,29 @@
       }
     ]
   },
-  "schulter": "term-schulter",
+  "schulter": {
+    "id": "term-schulter",
+    "exampleVariants": [
+      "Schultern"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "Schultern",
+        "type": "名詞の格・数"
+      }
+    ]
+  },
   "schwach": {
     "id": "term-schwach",
     "exampleVariants": [
       "schwachem",
       "schwachen",
-      "schwacher"
+      "schwacher",
+      "schwächer",
+      "schwächeren",
+      "schwächerer",
+      "Schwächeres",
+      "Schwächstes"
     ],
     "exampleVariantDetails": [
       {
@@ -7680,6 +9263,26 @@
       },
       {
         "form": "schwacher",
+        "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "schwächer",
+        "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "schwächeren",
+        "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "schwächerer",
+        "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "Schwächeres",
+        "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "Schwächstes",
         "type": "形容詞・副詞の変化"
       }
     ]
@@ -7770,7 +9373,10 @@
     "id": "term-schwert",
     "exampleVariants": [
       "Schwerter",
-      "Schwertes"
+      "Schwertes",
+      "Schwerte",
+      "Schwertern",
+      "Schwerts"
     ],
     "exampleVariantDetails": [
       {
@@ -7779,6 +9385,18 @@
       },
       {
         "form": "Schwertes",
+        "type": "名詞の格・数"
+      },
+      {
+        "form": "Schwerte",
+        "type": "名詞の格・数"
+      },
+      {
+        "form": "Schwertern",
+        "type": "名詞の格・数"
+      },
+      {
+        "form": "Schwerts",
         "type": "名詞の格・数"
       }
     ]
@@ -7830,11 +9448,16 @@
   "seil": {
     "id": "term-seil",
     "exampleVariants": [
-      "Seiles"
+      "Seiles",
+      "Seile"
     ],
     "exampleVariantDetails": [
       {
         "form": "Seiles",
+        "type": "名詞の格・数"
+      },
+      {
+        "form": "Seile",
         "type": "名詞の格・数"
       }
     ]
@@ -7867,12 +9490,22 @@
   "seufzend": {
     "id": "term-seufzend",
     "exampleVariants": [
-      "seufzend"
+      "seufzend",
+      "seufzen",
+      "seufzt"
     ],
     "exampleVariantDetails": [
       {
         "form": "seufzend",
         "type": "現在分詞"
+      },
+      {
+        "form": "seufzen",
+        "type": "動詞の活用"
+      },
+      {
+        "form": "seufzt",
+        "type": "動詞の活用"
       }
     ]
   },
@@ -7897,7 +9530,9 @@
     "id": "term-singend",
     "exampleVariants": [
       "singend",
-      "singen"
+      "singen",
+      "gesungen",
+      "singt"
     ],
     "exampleVariantDetails": [
       {
@@ -7907,18 +9542,31 @@
       {
         "form": "singen",
         "type": "動詞の活用"
+      },
+      {
+        "form": "gesungen",
+        "type": "過去分詞"
+      },
+      {
+        "form": "singt",
+        "type": "動詞の活用"
       }
     ]
   },
   "sinnen": {
     "id": "term-sinnen",
     "exampleVariants": [
-      "sinnend"
+      "sinnend",
+      "sinnt"
     ],
     "exampleVariantDetails": [
       {
         "form": "sinnend",
         "type": "分詞"
+      },
+      {
+        "form": "sinnt",
+        "type": "動詞の活用"
       }
     ]
   },
@@ -7973,22 +9621,46 @@
   "speer": {
     "id": "term-speer",
     "exampleVariants": [
-      "Speeres"
+      "Speeres",
+      "Speere",
+      "Speeren"
     ],
     "exampleVariantDetails": [
       {
         "form": "Speeres",
         "type": "名詞の格・数"
+      },
+      {
+        "form": "Speere",
+        "type": "名詞の格・数"
+      },
+      {
+        "form": "Speeren",
+        "type": "名詞の格・数"
       }
     ]
   },
-  "spiegel": "term-spiegel",
+  "spiegel": {
+    "id": "term-spiegel",
+    "exampleVariants": [
+      "Spiegeln"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "Spiegeln",
+        "type": "名詞の格・数"
+      }
+    ]
+  },
   "spielend": {
     "id": "term-spielend",
     "exampleVariants": [
       "spielend",
       "Spielenden",
-      "spielen"
+      "spielen",
+      "gespielt",
+      "spielt",
+      "spielte"
     ],
     "exampleVariantDetails": [
       {
@@ -8001,6 +9673,18 @@
       },
       {
         "form": "spielen",
+        "type": "動詞の活用"
+      },
+      {
+        "form": "gespielt",
+        "type": "過去分詞"
+      },
+      {
+        "form": "spielt",
+        "type": "動詞の活用"
+      },
+      {
+        "form": "spielte",
         "type": "動詞の活用"
       }
     ]
@@ -8021,12 +9705,17 @@
   "spottend": {
     "id": "term-spottend",
     "exampleVariants": [
-      "spottend"
+      "spottend",
+      "spottet"
     ],
     "exampleVariantDetails": [
       {
         "form": "spottend",
         "type": "現在分詞"
+      },
+      {
+        "form": "spottet",
+        "type": "動詞の活用"
       }
     ]
   },
@@ -8048,11 +9737,16 @@
   "sprung": {
     "id": "term-sprung",
     "exampleVariants": [
-      "Sprunge"
+      "Sprunge",
+      "Sprüngen"
     ],
     "exampleVariantDetails": [
       {
         "form": "Sprunge",
+        "type": "名詞の格・数"
+      },
+      {
+        "form": "Sprüngen",
         "type": "名詞の格・数"
       }
     ]
@@ -8060,11 +9754,21 @@
   "stab": {
     "id": "term-stab",
     "exampleVariants": [
-      "Stabe"
+      "Stabe",
+      "Stäbe",
+      "Stäben"
     ],
     "exampleVariantDetails": [
       {
         "form": "Stabe",
+        "type": "名詞の格・数"
+      },
+      {
+        "form": "Stäbe",
+        "type": "名詞の格・数"
+      },
+      {
+        "form": "Stäben",
         "type": "名詞の格・数"
       }
     ]
@@ -8085,7 +9789,15 @@
     "id": "term-stark",
     "exampleVariants": [
       "starke",
-      "staerker"
+      "staerker",
+      "starkem",
+      "starken",
+      "starker",
+      "Stärkere",
+      "stärkerer",
+      "starkes",
+      "stärksten",
+      "stärkster"
     ],
     "exampleVariantDetails": [
       {
@@ -8095,6 +9807,38 @@
       {
         "form": "staerker",
         "type": "比較級"
+      },
+      {
+        "form": "starkem",
+        "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "starken",
+        "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "starker",
+        "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "Stärkere",
+        "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "stärkerer",
+        "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "starkes",
+        "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "stärksten",
+        "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "stärkster",
+        "type": "形容詞・副詞の変化"
       }
     ]
   },
@@ -8127,7 +9871,9 @@
     "id": "term-steigen",
     "exampleVariants": [
       "steigen",
-      "steigend"
+      "steigend",
+      "gestiegen",
+      "steigt"
     ],
     "exampleVariantDetails": [
       {
@@ -8137,6 +9883,14 @@
       {
         "form": "steigend",
         "type": "分詞"
+      },
+      {
+        "form": "gestiegen",
+        "type": "過去分詞"
+      },
+      {
+        "form": "steigt",
+        "type": "動詞の活用"
       }
     ]
   },
@@ -8145,7 +9899,11 @@
     "exampleVariants": [
       "steigernd",
       "steigert",
-      "Steigerung"
+      "Steigerung",
+      "gesteigert",
+      "gesteigertem",
+      "gesteigerter",
+      "steigerndem"
     ],
     "exampleVariantDetails": [
       {
@@ -8159,10 +9917,42 @@
       {
         "form": "Steigerung",
         "type": "該当なし"
+      },
+      {
+        "form": "gesteigert",
+        "type": "過去分詞"
+      },
+      {
+        "form": "gesteigertem",
+        "type": "過去分詞"
+      },
+      {
+        "form": "gesteigerter",
+        "type": "過去分詞"
+      },
+      {
+        "form": "steigerndem",
+        "type": "現在分詞"
       }
     ]
   },
-  "stein": "term-stein",
+  "stein": {
+    "id": "term-stein",
+    "exampleVariants": [
+      "Steine",
+      "Steinen"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "Steine",
+        "type": "名詞の格・数"
+      },
+      {
+        "form": "Steinen",
+        "type": "名詞の格・数"
+      }
+    ]
+  },
   "stellung": {
     "id": "term-stellung",
     "exampleVariants": [
@@ -8220,15 +10010,36 @@
       }
     ]
   },
-  "stolz": "term-stolz",
+  "stolz": {
+    "id": "term-stolz",
+    "exampleVariants": [
+      "stolzem",
+      "stolzer"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "stolzem",
+        "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "stolzer",
+        "type": "形容詞・副詞の変化"
+      }
+    ]
+  },
   "straff": {
     "id": "term-straff",
     "exampleVariants": [
-      "Straffer"
+      "Straffer",
+      "strafferes"
     ],
     "exampleVariantDetails": [
       {
         "form": "Straffer",
+        "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "strafferes",
         "type": "形容詞・副詞の変化"
       }
     ]
@@ -8238,7 +10049,10 @@
     "exampleVariants": [
       "strahlt",
       "Strahl",
-      "strahlend"
+      "strahlend",
+      "strahlendem",
+      "strahlenden",
+      "strahlender"
     ],
     "exampleVariantDetails": [
       {
@@ -8252,6 +10066,18 @@
       {
         "form": "strahlend",
         "type": "分詞"
+      },
+      {
+        "form": "strahlendem",
+        "type": "現在分詞"
+      },
+      {
+        "form": "strahlenden",
+        "type": "現在分詞"
+      },
+      {
+        "form": "strahlender",
+        "type": "現在分詞"
       }
     ]
   },
@@ -8361,12 +10187,24 @@
   "strich-fuer-strich": "term-strich-fuer-strich",
   "stricharten": "term-stricharten",
   "stricknadel": "term-stricknadel",
-  "stufe": "term-stufe",
+  "stufe": {
+    "id": "term-stufe",
+    "exampleVariants": [
+      "Stufen"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "Stufen",
+        "type": "名詞の格・数"
+      }
+    ]
+  },
   "stuhl": {
     "id": "term-stuhl",
     "exampleVariants": [
       "Stühle",
-      "Stühlen"
+      "Stühlen",
+      "Stuhle"
     ],
     "exampleVariantDetails": [
       {
@@ -8375,6 +10213,10 @@
       },
       {
         "form": "Stühlen",
+        "type": "名詞の格・数"
+      },
+      {
+        "form": "Stuhle",
         "type": "名詞の格・数"
       }
     ]
@@ -8414,11 +10256,16 @@
   "sturm": {
     "id": "term-sturm",
     "exampleVariants": [
-      "Sturme"
+      "Sturme",
+      "Sturmes"
     ],
     "exampleVariantDetails": [
       {
         "form": "Sturme",
+        "type": "名詞の格・数"
+      },
+      {
+        "form": "Sturmes",
         "type": "名詞の格・数"
       }
     ]
@@ -8448,12 +10295,17 @@
   "stuerzt": {
     "id": "term-stuerzt",
     "exampleVariants": [
-      "stürzen"
+      "stürzen",
+      "stürzend"
     ],
     "exampleVariantDetails": [
       {
         "form": "stürzen",
         "type": "不定詞"
+      },
+      {
+        "form": "stürzend",
+        "type": "現在分詞"
       }
     ]
   },
@@ -8497,7 +10349,9 @@
     "id": "term-takt",
     "exampleVariants": [
       "Takte",
-      "Tact"
+      "Tact",
+      "Takten",
+      "Taktes"
     ],
     "exampleVariantDetails": [
       {
@@ -8507,6 +10361,14 @@
       {
         "form": "Tact",
         "type": "旧綴り"
+      },
+      {
+        "form": "Takten",
+        "type": "名詞の格・数"
+      },
+      {
+        "form": "Taktes",
+        "type": "名詞の格・数"
       }
     ]
   },
@@ -8514,12 +10376,22 @@
   "tal": {
     "id": "term-tal",
     "exampleVariants": [
-      "Thal"
+      "Thal",
+      "Tale",
+      "Tales"
     ],
     "exampleVariantDetails": [
       {
         "form": "Thal",
         "type": "旧綴り"
+      },
+      {
+        "form": "Tale",
+        "type": "名詞の格・数"
+      },
+      {
+        "form": "Tales",
+        "type": "名詞の格・数"
       }
     ]
   },
@@ -8527,7 +10399,8 @@
     "id": "term-tanz",
     "exampleVariants": [
       "Tanzes",
-      "Tänze"
+      "Tänze",
+      "Tanze"
     ],
     "exampleVariantDetails": [
       {
@@ -8536,6 +10409,10 @@
       },
       {
         "form": "Tänze",
+        "type": "名詞の格・数"
+      },
+      {
+        "form": "Tanze",
         "type": "名詞の格・数"
       }
     ]
@@ -8585,23 +10462,73 @@
   "tief": {
     "id": "term-tief",
     "exampleVariants": [
-      "Tiefe"
+      "Tiefe",
+      "tiefem",
+      "tiefer",
+      "tieferen",
+      "tieferes",
+      "tiefes",
+      "tiefste",
+      "tiefsten",
+      "tiefster"
     ],
     "exampleVariantDetails": [
       {
         "form": "Tiefe",
         "type": "名詞の格・数"
+      },
+      {
+        "form": "tiefem",
+        "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "tiefer",
+        "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "tieferen",
+        "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "tieferes",
+        "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "tiefes",
+        "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "tiefste",
+        "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "tiefsten",
+        "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "tiefster",
+        "type": "形容詞・副詞の変化"
       }
     ]
   },
   "tisch": {
     "id": "term-tisch",
     "exampleVariants": [
-      "Tisches"
+      "Tisches",
+      "Tische",
+      "Tischen"
     ],
     "exampleVariantDetails": [
       {
         "form": "Tisches",
+        "type": "名詞の格・数"
+      },
+      {
+        "form": "Tische",
+        "type": "名詞の格・数"
+      },
+      {
+        "form": "Tischen",
         "type": "名詞の格・数"
       }
     ]
@@ -8628,7 +10555,33 @@
       }
     ]
   },
-  "ton": "term-ton",
+  "ton": {
+    "id": "term-ton",
+    "exampleVariants": [
+      "Tone",
+      "Töne",
+      "Tönen",
+      "Tones"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "Tone",
+        "type": "名詞の格・数"
+      },
+      {
+        "form": "Töne",
+        "type": "名詞の格・数"
+      },
+      {
+        "form": "Tönen",
+        "type": "名詞の格・数"
+      },
+      {
+        "form": "Tones",
+        "type": "名詞の格・数"
+      }
+    ]
+  },
   "tongebung": "term-tongebung",
   "tonlos": {
     "id": "term-tonlos",
@@ -8646,12 +10599,17 @@
   "traeumend": {
     "id": "term-traeumend",
     "exampleVariants": [
-      "träumend"
+      "träumend",
+      "träumt"
     ],
     "exampleVariantDetails": [
       {
         "form": "träumend",
         "type": "現在分詞"
+      },
+      {
+        "form": "träumt",
+        "type": "動詞の活用"
       }
     ]
   },
@@ -8680,12 +10638,27 @@
   "treibend": {
     "id": "term-treibend",
     "exampleVariants": [
-      "treibend"
+      "treibend",
+      "treibe",
+      "treibt",
+      "getrieben"
     ],
     "exampleVariantDetails": [
       {
         "form": "treibend",
         "type": "現在分詞"
+      },
+      {
+        "form": "treibe",
+        "type": "動詞の活用"
+      },
+      {
+        "form": "treibt",
+        "type": "動詞の活用"
+      },
+      {
+        "form": "getrieben",
+        "type": "過去分詞"
       }
     ]
   },
@@ -8693,12 +10666,17 @@
   "treten": {
     "id": "term-treten",
     "exampleVariants": [
-      "getreten"
+      "getreten",
+      "tretend"
     ],
     "exampleVariantDetails": [
       {
         "form": "getreten",
         "type": "分詞"
+      },
+      {
+        "form": "tretend",
+        "type": "現在分詞"
       }
     ]
   },
@@ -8804,7 +10782,8 @@
     "id": "term-tuer",
     "exampleVariants": [
       "Türe",
-      "Thür"
+      "Thür",
+      "Türen"
     ],
     "exampleVariantDetails": [
       {
@@ -8814,6 +10793,10 @@
       {
         "form": "Thür",
         "type": "旧綴り"
+      },
+      {
+        "form": "Türen",
+        "type": "名詞の格・数"
       }
     ]
   },
@@ -8823,7 +10806,8 @@
     "exampleVariants": [
       "übergehen",
       "übergehend",
-      "übergeht"
+      "übergeht",
+      "übergegangen"
     ],
     "exampleVariantDetails": [
       {
@@ -8837,6 +10821,10 @@
       {
         "form": "übergeht",
         "type": "動詞の活用"
+      },
+      {
+        "form": "übergegangen",
+        "type": "過去分詞"
       }
     ]
   },
@@ -9424,7 +11412,9 @@
     "exampleVariants": [
       "verhüllt",
       "verhüllte",
-      "verhüllten"
+      "verhüllten",
+      "verhüllender",
+      "verhüllet"
     ],
     "exampleVariantDetails": [
       {
@@ -9438,6 +11428,14 @@
       {
         "form": "verhüllten",
         "type": "分詞"
+      },
+      {
+        "form": "verhüllender",
+        "type": "現在分詞"
+      },
+      {
+        "form": "verhüllet",
+        "type": "動詞の活用"
       }
     ]
   },
@@ -9463,7 +11461,8 @@
     "exampleVariants": [
       "verklingend",
       "verklingenden",
-      "verklingen"
+      "verklingen",
+      "verklingt"
     ],
     "exampleVariantDetails": [
       {
@@ -9476,6 +11475,10 @@
       },
       {
         "form": "verklingen",
+        "type": "動詞の活用"
+      },
+      {
+        "form": "verklingt",
         "type": "動詞の活用"
       }
     ]
@@ -9527,7 +11530,9 @@
     "id": "term-verloeschen",
     "exampleVariants": [
       "verlöschend",
-      "verlöscht"
+      "verlöscht",
+      "verlischt",
+      "verloschen"
     ],
     "exampleVariantDetails": [
       {
@@ -9537,6 +11542,14 @@
       {
         "form": "verlöscht",
         "type": "分詞"
+      },
+      {
+        "form": "verlischt",
+        "type": "動詞の活用"
+      },
+      {
+        "form": "verloschen",
+        "type": "過去分詞"
       }
     ]
   },
@@ -9645,7 +11658,8 @@
     "id": "term-versehen",
     "exampleVariants": [
       "versehen",
-      "versehenen"
+      "versehenen",
+      "versieht"
     ],
     "exampleVariantDetails": [
       {
@@ -9655,6 +11669,10 @@
       {
         "form": "versehenen",
         "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "versieht",
+        "type": "動詞の活用"
       }
     ]
   },
@@ -9885,11 +11903,16 @@
   "viel": {
     "id": "term-viel",
     "exampleVariants": [
-      "viele"
+      "viele",
+      "vielen"
     ],
     "exampleVariantDetails": [
       {
         "form": "viele",
+        "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "vielen",
         "type": "形容詞・副詞の変化"
       }
     ]
@@ -9945,19 +11968,40 @@
   "vollendet": {
     "id": "term-vollendet",
     "exampleVariants": [
-      "vollenden"
+      "vollenden",
+      "vollendeteren"
     ],
     "exampleVariantDetails": [
       {
         "form": "vollenden",
         "type": "動詞の活用"
+      },
+      {
+        "form": "vollendeteren",
+        "type": "形容詞・副詞の変化"
       }
     ]
   },
   "vollends": "term-vollends",
   "volles-werk": "term-volles-werk",
   "volles-zeitmass": "term-volles-zeitmass",
-  "voellig": "term-voellig",
+  "voellig": {
+    "id": "term-voellig",
+    "exampleVariants": [
+      "völligem",
+      "völliger"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "völligem",
+        "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "völliger",
+        "type": "形容詞・副詞の変化"
+      }
+    ]
+  },
   "vollkommen": "term-vollkommen",
   "vollstaendig": {
     "id": "term-vollstaendig",
@@ -9991,12 +12035,27 @@
   "vorangehen": {
     "id": "term-vorangehen",
     "exampleVariants": [
-      "vorangehenden"
+      "vorangehenden",
+      "vorangegangene",
+      "vorangegangenen",
+      "vorangeht"
     ],
     "exampleVariantDetails": [
       {
         "form": "vorangehenden",
         "type": "分詞"
+      },
+      {
+        "form": "vorangegangene",
+        "type": "過去分詞"
+      },
+      {
+        "form": "vorangegangenen",
+        "type": "過去分詞"
+      },
+      {
+        "form": "vorangeht",
+        "type": "動詞の活用"
       }
     ]
   },
@@ -10024,7 +12083,8 @@
       "Vorhänge",
       "Vorhangs",
       "Vorhanges",
-      "Vorhange"
+      "Vorhange",
+      "Vorhängen"
     ],
     "exampleVariantDetails": [
       {
@@ -10041,6 +12101,10 @@
       },
       {
         "form": "Vorhange",
+        "type": "名詞の格・数"
+      },
+      {
+        "form": "Vorhängen",
         "type": "名詞の格・数"
       }
     ]
@@ -10160,16 +12224,37 @@
   "wald": {
     "id": "term-wald",
     "exampleVariants": [
-      "Walde"
+      "Walde",
+      "Waldes"
     ],
     "exampleVariantDetails": [
       {
         "form": "Walde",
         "type": "名詞の格・数"
+      },
+      {
+        "form": "Waldes",
+        "type": "名詞の格・数"
       }
     ]
   },
-  "wand": "term-wand",
+  "wand": {
+    "id": "term-wand",
+    "exampleVariants": [
+      "Wände",
+      "Wänden"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "Wände",
+        "type": "名詞の格・数"
+      },
+      {
+        "form": "Wänden",
+        "type": "名詞の格・数"
+      }
+    ]
+  },
   "wanderung": "term-wanderung",
   "wanderung-neben-dem-bache": "term-wanderung-neben-dem-bache",
   "warm": {
@@ -10212,12 +12297,17 @@
   "wechseln": {
     "id": "term-wechseln",
     "exampleVariants": [
-      "wechselt"
+      "wechselt",
+      "wechselnder"
     ],
     "exampleVariantDetails": [
       {
         "form": "wechselt",
         "type": "動詞の活用"
+      },
+      {
+        "form": "wechselnder",
+        "type": "現在分詞"
       }
     ]
   },
@@ -10259,18 +12349,34 @@
   "weich": {
     "id": "term-weich",
     "exampleVariants": [
-      "weiche"
+      "weiche",
+      "weicher"
     ],
     "exampleVariantDetails": [
       {
         "form": "weiche",
+        "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "weicher",
         "type": "形容詞・副詞の変化"
       }
     ]
   },
   "weiches-arpeggio-von-oben-nach-unten": "term-weiches-arpeggio-von-oben-nach-unten",
   "weile": "term-weile",
-  "wein": "term-wein",
+  "wein": {
+    "id": "term-wein",
+    "exampleVariants": [
+      "Weine"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "Weine",
+        "type": "名詞の格・数"
+      }
+    ]
+  },
   "weinerlich": {
     "id": "term-weinerlich",
     "exampleVariants": [
@@ -10287,11 +12393,26 @@
   "weit": {
     "id": "term-weit",
     "exampleVariants": [
-      "weite"
+      "weite",
+      "weiten",
+      "weites",
+      "weitester"
     ],
     "exampleVariantDetails": [
       {
         "form": "weite",
+        "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "weiten",
+        "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "weites",
+        "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "weitester",
         "type": "形容詞・副詞の変化"
       }
     ]
@@ -10326,11 +12447,21 @@
   "wenig": {
     "id": "term-wenig",
     "exampleVariants": [
-      "wenige"
+      "wenige",
+      "wenigen",
+      "weniger"
     ],
     "exampleVariantDetails": [
       {
         "form": "wenige",
+        "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "wenigen",
+        "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "weniger",
         "type": "形容詞・副詞の変化"
       }
     ]
@@ -10378,7 +12509,8 @@
     "id": "term-wiegend",
     "exampleVariants": [
       "wiegend",
-      "wiegende"
+      "wiegende",
+      "wiegt"
     ],
     "exampleVariantDetails": [
       {
@@ -10388,6 +12520,10 @@
       {
         "form": "wiegende",
         "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "wiegt",
+        "type": "動詞の活用"
       }
     ]
   },
@@ -10419,16 +12555,47 @@
   "wild": {
     "id": "term-wild",
     "exampleVariants": [
-      "Wilde"
+      "Wilde",
+      "wildem",
+      "wilden",
+      "Wildes",
+      "wildester"
     ],
     "exampleVariantDetails": [
       {
         "form": "Wilde",
         "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "wildem",
+        "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "wilden",
+        "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "Wildes",
+        "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "wildester",
+        "type": "形容詞・副詞の変化"
       }
     ]
   },
-  "wink": "term-wink",
+  "wink": {
+    "id": "term-wink",
+    "exampleVariants": [
+      "Winke"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "Winke",
+        "type": "名詞の格・数"
+      }
+    ]
+  },
   "wirklich": {
     "id": "term-wirklich",
     "exampleVariants": [
@@ -10489,7 +12656,9 @@
       "wütendem",
       "wütender",
       "Wütende",
-      "wüthend"
+      "wüthend",
+      "Wütenden",
+      "wütendsten"
     ],
     "exampleVariantDetails": [
       {
@@ -10511,6 +12680,14 @@
       {
         "form": "wüthend",
         "type": "旧綴り"
+      },
+      {
+        "form": "Wütenden",
+        "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "wütendsten",
+        "type": "形容詞・副詞の変化"
       }
     ]
   },
@@ -10544,11 +12721,36 @@
   "zart": {
     "id": "term-zart",
     "exampleVariants": [
-      "Zarte"
+      "Zarte",
+      "zartem",
+      "zarten",
+      "zarter",
+      "zarteren",
+      "zartester"
     ],
     "exampleVariantDetails": [
       {
         "form": "Zarte",
+        "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "zartem",
+        "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "zarten",
+        "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "zarter",
+        "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "zarteren",
+        "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "zartester",
         "type": "形容詞・副詞の変化"
       }
     ]
@@ -10558,7 +12760,9 @@
     "exampleVariants": [
       "zärtlichem",
       "zärtlicher",
-      "zärtlichen"
+      "zärtlichen",
+      "zärtlicheren",
+      "zärtlichsten"
     ],
     "exampleVariantDetails": [
       {
@@ -10571,6 +12775,14 @@
       },
       {
         "form": "zärtlichen",
+        "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "zärtlicheren",
+        "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "zärtlichsten",
         "type": "形容詞・副詞の変化"
       }
     ]
@@ -10656,7 +12868,8 @@
     "exampleVariants": [
       "zögernd",
       "zögernde",
-      "zögernden"
+      "zögernden",
+      "zögert"
     ],
     "exampleVariantDetails": [
       {
@@ -10670,6 +12883,10 @@
       {
         "form": "zögernden",
         "type": "形容詞・副詞の変化"
+      },
+      {
+        "form": "zögert",
+        "type": "動詞の活用"
       }
     ]
   },
@@ -10714,7 +12931,33 @@
   },
   "zu": "term-zu",
   "zuerst": "term-zuerst",
-  "zug": "term-zug",
+  "zug": {
+    "id": "term-zug",
+    "exampleVariants": [
+      "Zuge",
+      "Züge",
+      "Zügen",
+      "Zuges"
+    ],
+    "exampleVariantDetails": [
+      {
+        "form": "Zuge",
+        "type": "名詞の格・数"
+      },
+      {
+        "form": "Züge",
+        "type": "名詞の格・数"
+      },
+      {
+        "form": "Zügen",
+        "type": "名詞の格・数"
+      },
+      {
+        "form": "Zuges",
+        "type": "名詞の格・数"
+      }
+    ]
+  },
   "zugleich": "term-zugleich",
   "zuletzt": "term-zuletzt",
   "zungenschlag": "term-zungenschlag",
@@ -10726,7 +12969,10 @@
       "zurückhaltend",
       "zurückhaltender",
       "zurückhaltendem",
-      "zurückhalten"
+      "zurückhalten",
+      "zurückgehalten",
+      "zurückzuhalten",
+      "zurückhält"
     ],
     "exampleVariantDetails": [
       {
@@ -10744,6 +12990,18 @@
       {
         "form": "zurückhalten",
         "type": "動詞の活用"
+      },
+      {
+        "form": "zurückgehalten",
+        "type": "過去分詞"
+      },
+      {
+        "form": "zurückzuhalten",
+        "type": "zu不定詞"
+      },
+      {
+        "form": "zurückhält",
+        "type": "動詞の活用"
       }
     ]
   },
@@ -10752,7 +13010,8 @@
     "exampleVariants": [
       "zurückkehrend",
       "zurückkehrenden",
-      "zurückkehrende"
+      "zurückkehrende",
+      "zurückgekehrt"
     ],
     "exampleVariantDetails": [
       {
@@ -10766,6 +13025,10 @@
       {
         "form": "zurückkehrende",
         "type": "分詞"
+      },
+      {
+        "form": "zurückgekehrt",
+        "type": "過去分詞"
       }
     ]
   },
@@ -16667,5 +18930,2303 @@
     "original": "Tellern",
     "canonical": "Teller",
     "type": "語形変化（要分類）"
+  },
+  "abgenommen": {
+    "id": "term-abnehmen",
+    "original": "abgenommen",
+    "canonical": "abnehmen",
+    "type": "過去分詞"
+  },
+  "abnimmt": {
+    "id": "term-abnehmen",
+    "original": "abnimmt",
+    "canonical": "abnehmen",
+    "type": "動詞の活用"
+  },
+  "abstoesst": {
+    "id": "term-abstossen",
+    "original": "abstösst",
+    "canonical": "abstoßen",
+    "type": "動詞の活用"
+  },
+  "anblicke": {
+    "id": "term-anblick",
+    "original": "Anblicke",
+    "canonical": "Anblick",
+    "type": "名詞の格・数"
+  },
+  "angeschlagenen": {
+    "id": "term-anschlagen",
+    "original": "angeschlagenen",
+    "canonical": "anschlagen",
+    "type": "過去分詞"
+  },
+  "anzuschliessen": {
+    "id": "term-anschliessen",
+    "original": "anzuschließen",
+    "canonical": "anschließen",
+    "type": "zu不定詞"
+  },
+  "anschwillt": {
+    "id": "term-anschwellen",
+    "original": "anschwillt",
+    "canonical": "anschwellen",
+    "type": "動詞の活用"
+  },
+  "angewachsenen": {
+    "id": "term-anwachsen",
+    "original": "angewachsenen",
+    "canonical": "anwachsen",
+    "type": "過去分詞"
+  },
+  "aufgeregteres": {
+    "id": "term-aufgeregt",
+    "original": "aufgeregteres",
+    "canonical": "aufgeregt",
+    "type": "形容詞・副詞の変化"
+  },
+  "aufzuge": {
+    "id": "term-aufzug",
+    "original": "Aufzuge",
+    "canonical": "Aufzug",
+    "type": "名詞の格・数"
+  },
+  "ausgelassenerer": {
+    "id": "term-ausgelassen",
+    "original": "ausgelassenerer",
+    "canonical": "ausgelassen",
+    "type": "形容詞・副詞の変化"
+  },
+  "ausholt": {
+    "id": "term-ausholen",
+    "original": "ausholt",
+    "canonical": "ausholen",
+    "type": "動詞の活用"
+  },
+  "auszuholen": {
+    "id": "term-ausholen",
+    "original": "auszuholen",
+    "canonical": "ausholen",
+    "type": "zu不定詞"
+  },
+  "bechern": {
+    "id": "term-becher",
+    "original": "Bechern",
+    "canonical": "Becher",
+    "type": "名詞の格・数"
+  },
+  "berges": {
+    "id": "term-berg",
+    "original": "Berges",
+    "canonical": "Berg",
+    "type": "名詞の格・数"
+  },
+  "bette": {
+    "id": "term-bett",
+    "original": "Bette",
+    "canonical": "Bett",
+    "type": "名詞の格・数"
+  },
+  "bittern": {
+    "id": "term-bitter",
+    "original": "bittern",
+    "canonical": "bitter",
+    "type": "形容詞・副詞の変化"
+  },
+  "bleiben": {
+    "id": "term-bleibt",
+    "original": "bleiben",
+    "canonical": "bleibt",
+    "type": "動詞の活用"
+  },
+  "blieb": {
+    "id": "term-bleibt",
+    "original": "blieb",
+    "canonical": "bleibt",
+    "type": "動詞の活用"
+  },
+  "bleichen": {
+    "id": "term-bleich",
+    "original": "bleichen",
+    "canonical": "bleich",
+    "type": "形容詞・副詞の変化"
+  },
+  "blicke": {
+    "id": "term-blick",
+    "original": "Blicke",
+    "canonical": "Blick",
+    "type": "名詞の格・数"
+  },
+  "blitze": {
+    "id": "term-blitz",
+    "original": "Blitze",
+    "canonical": "Blitz",
+    "type": "名詞の格・数"
+  },
+  "blossem": {
+    "id": "term-bloss",
+    "original": "bloßem",
+    "canonical": "bloß",
+    "type": "形容詞・副詞の変化"
+  },
+  "blossen": {
+    "id": "term-bloss",
+    "original": "bloßen",
+    "canonical": "bloß",
+    "type": "形容詞・副詞の変化"
+  },
+  "breites": {
+    "id": "term-breit",
+    "original": "breites",
+    "canonical": "breit",
+    "type": "形容詞・副詞の変化"
+  },
+  "breitester": {
+    "id": "term-breit",
+    "original": "breitester",
+    "canonical": "breit",
+    "type": "形容詞・副詞の変化"
+  },
+  "duerfen": {
+    "id": "term-darf",
+    "original": "dürfen",
+    "canonical": "darf",
+    "type": "動詞の活用"
+  },
+  "dargestellt": {
+    "id": "term-darstellen",
+    "original": "dargestellt",
+    "canonical": "darstellen",
+    "type": "過去分詞"
+  },
+  "deckt": {
+    "id": "term-decken",
+    "original": "deckt",
+    "canonical": "decken",
+    "type": "動詞の活用"
+  },
+  "derber": {
+    "id": "term-derb",
+    "original": "derber",
+    "canonical": "derb",
+    "type": "形容詞・副詞の変化"
+  },
+  "devote": {
+    "id": "term-devot",
+    "original": "devote",
+    "canonical": "devot",
+    "type": "形容詞・副詞の変化"
+  },
+  "dichte": {
+    "id": "term-dicht",
+    "original": "dichte",
+    "canonical": "dicht",
+    "type": "形容詞・副詞の変化"
+  },
+  "dichtere": {
+    "id": "term-dicht",
+    "original": "dichtere",
+    "canonical": "dicht",
+    "type": "形容詞・副詞の変化"
+  },
+  "dichterer": {
+    "id": "term-dicht",
+    "original": "dichterer",
+    "canonical": "dicht",
+    "type": "形容詞・副詞の変化"
+  },
+  "dichtesten": {
+    "id": "term-dicht",
+    "original": "dichtesten",
+    "canonical": "dicht",
+    "type": "形容詞・副詞の変化"
+  },
+  "dichtester": {
+    "id": "term-dicht",
+    "original": "dichtester",
+    "canonical": "dicht",
+    "type": "形容詞・副詞の変化"
+  },
+  "dienen": {
+    "id": "term-dient",
+    "original": "dienen",
+    "canonical": "dient",
+    "type": "動詞の活用"
+  },
+  "draengt": {
+    "id": "term-draengend",
+    "original": "drängt",
+    "canonical": "drängend",
+    "type": "動詞の活用"
+  },
+  "droht": {
+    "id": "term-drohend",
+    "original": "droht",
+    "canonical": "drohend",
+    "type": "動詞の活用"
+  },
+  "dufte": {
+    "id": "term-duft",
+    "original": "Dufte",
+    "canonical": "Duft",
+    "type": "名詞の格・数"
+  },
+  "dunkle": {
+    "id": "term-dunkel",
+    "original": "dunkle",
+    "canonical": "dunkel",
+    "type": "形容詞・副詞の変化"
+  },
+  "dunklem": {
+    "id": "term-dunkel",
+    "original": "dunklem",
+    "canonical": "dunkel",
+    "type": "形容詞・副詞の変化"
+  },
+  "dunklen": {
+    "id": "term-dunkel",
+    "original": "dunklen",
+    "canonical": "dunkel",
+    "type": "形容詞・副詞の変化"
+  },
+  "dunkler": {
+    "id": "term-dunkel",
+    "original": "dunkler",
+    "canonical": "dunkel",
+    "type": "形容詞・副詞の変化"
+  },
+  "dunkles": {
+    "id": "term-dunkel",
+    "original": "dunkles",
+    "canonical": "dunkel",
+    "type": "形容詞・副詞の変化"
+  },
+  "edle": {
+    "id": "term-edel",
+    "original": "Edle",
+    "canonical": "edel",
+    "type": "形容詞・副詞の変化"
+  },
+  "eilt": {
+    "id": "term-eilen",
+    "original": "eilt",
+    "canonical": "eilen",
+    "type": "動詞の活用"
+  },
+  "einfachere": {
+    "id": "term-einfach",
+    "original": "einfachere",
+    "canonical": "einfach",
+    "type": "形容詞・副詞の変化"
+  },
+  "endet": {
+    "id": "term-endend",
+    "original": "endet",
+    "canonical": "endend",
+    "type": "動詞の活用"
+  },
+  "entspricht": {
+    "id": "term-entsprechen",
+    "original": "entspricht",
+    "canonical": "entsprechen",
+    "type": "動詞の活用"
+  },
+  "erblickte": {
+    "id": "term-erblicken",
+    "original": "erblickte",
+    "canonical": "erblicken",
+    "type": "動詞の活用"
+  },
+  "erlischt": {
+    "id": "term-erloeschen",
+    "original": "erlischt",
+    "canonical": "erlöschen",
+    "type": "動詞の活用"
+  },
+  "erloschen": {
+    "id": "term-erloeschen",
+    "original": "erloschen",
+    "canonical": "erlöschen",
+    "type": "過去分詞"
+  },
+  "ernstem": {
+    "id": "term-ernst",
+    "original": "ernstem",
+    "canonical": "ernst",
+    "type": "形容詞・副詞の変化"
+  },
+  "ernster": {
+    "id": "term-ernst",
+    "original": "ernster",
+    "canonical": "ernst",
+    "type": "形容詞・副詞の変化"
+  },
+  "ersten": {
+    "id": "term-erst",
+    "original": "ersten",
+    "canonical": "erst",
+    "type": "形容詞・副詞の変化"
+  },
+  "erster": {
+    "id": "term-erst",
+    "original": "Erster",
+    "canonical": "erst",
+    "type": "形容詞・副詞の変化"
+  },
+  "fackeln": {
+    "id": "term-fackel",
+    "original": "Fackeln",
+    "canonical": "Fackel",
+    "type": "名詞の格・数"
+  },
+  "faehrt": {
+    "id": "term-fahren",
+    "original": "fährt",
+    "canonical": "fahren",
+    "type": "動詞の活用"
+  },
+  "feierlichsten": {
+    "id": "term-feierlich",
+    "original": "feierlichsten",
+    "canonical": "feierlich",
+    "type": "形容詞・副詞の変化"
+  },
+  "fernere": {
+    "id": "term-ferne",
+    "original": "fernere",
+    "canonical": "ferne",
+    "type": "形容詞・副詞の変化"
+  },
+  "fernsten": {
+    "id": "term-ferne",
+    "original": "fernsten",
+    "canonical": "ferne",
+    "type": "形容詞・副詞の変化"
+  },
+  "festen": {
+    "id": "term-fest",
+    "original": "festen",
+    "canonical": "fest",
+    "type": "形容詞・副詞の変化"
+  },
+  "fester": {
+    "id": "term-fest",
+    "original": "fester",
+    "canonical": "fest",
+    "type": "形容詞・副詞の変化"
+  },
+  "feurigeren": {
+    "id": "term-feurig",
+    "original": "feurigeren",
+    "canonical": "feurig",
+    "type": "形容詞・副詞の変化"
+  },
+  "fingern": {
+    "id": "term-finger",
+    "original": "Fingern",
+    "canonical": "Finger",
+    "type": "名詞の格・数"
+  },
+  "fliessenderes": {
+    "id": "term-fliessend",
+    "original": "fließenderes",
+    "canonical": "fließend",
+    "type": "形容詞・副詞の変化"
+  },
+  "fliesst": {
+    "id": "term-fliessend",
+    "original": "fliesst",
+    "canonical": "fließend",
+    "type": "動詞の活用"
+  },
+  "flottes": {
+    "id": "term-flott",
+    "original": "Flottes",
+    "canonical": "flott",
+    "type": "形容詞・副詞の変化"
+  },
+  "folgend": {
+    "id": "term-folgt",
+    "original": "folgend",
+    "canonical": "folgt",
+    "type": "現在分詞"
+  },
+  "frechen": {
+    "id": "term-frech",
+    "original": "frechen",
+    "canonical": "frech",
+    "type": "形容詞・副詞の変化"
+  },
+  "frecher": {
+    "id": "term-frech",
+    "original": "frecher",
+    "canonical": "frech",
+    "type": "形容詞・副詞の変化"
+  },
+  "freches": {
+    "id": "term-frech",
+    "original": "freches",
+    "canonical": "frech",
+    "type": "形容詞・副詞の変化"
+  },
+  "fuehre": {
+    "id": "term-fuehrend",
+    "original": "führe",
+    "canonical": "führend",
+    "type": "動詞の活用"
+  },
+  "fuehrt": {
+    "id": "term-fuehrend",
+    "original": "führt",
+    "canonical": "führend",
+    "type": "動詞の活用"
+  },
+  "furchtbarstem": {
+    "id": "term-furchtbar",
+    "original": "furchtbarstem",
+    "canonical": "furchtbar",
+    "type": "形容詞・副詞の変化"
+  },
+  "furchtbarsten": {
+    "id": "term-furchtbar",
+    "original": "furchtbarsten",
+    "canonical": "furchtbar",
+    "type": "形容詞・副詞の変化"
+  },
+  "furchtbarster": {
+    "id": "term-furchtbar",
+    "original": "Furchtbarster",
+    "canonical": "furchtbar",
+    "type": "形容詞・副詞の変化"
+  },
+  "ganzen": {
+    "id": "term-ganz",
+    "original": "ganzen",
+    "canonical": "ganz",
+    "type": "形容詞・副詞の変化"
+  },
+  "gebaerden": {
+    "id": "term-gebaerde",
+    "original": "Gebärden",
+    "canonical": "Gebärde",
+    "type": "名詞の格・数"
+  },
+  "gehaltenen": {
+    "id": "term-gehalten",
+    "original": "gehaltenen",
+    "canonical": "gehalten",
+    "type": "形容詞・副詞の変化"
+  },
+  "haelt": {
+    "id": "term-gehalten",
+    "original": "hält",
+    "canonical": "gehalten",
+    "type": "動詞の活用"
+  },
+  "halten": {
+    "id": "term-gehalten",
+    "original": "halten",
+    "canonical": "gehalten",
+    "type": "動詞の活用"
+  },
+  "haltend": {
+    "id": "term-gehalten",
+    "original": "haltend",
+    "canonical": "gehalten",
+    "type": "現在分詞"
+  },
+  "hielt": {
+    "id": "term-gehalten",
+    "original": "hielt",
+    "canonical": "gehalten",
+    "type": "動詞の活用"
+  },
+  "gegangen": {
+    "id": "term-gehend",
+    "original": "gegangen",
+    "canonical": "gehend",
+    "type": "過去分詞"
+  },
+  "geh": {
+    "id": "term-gehend",
+    "original": "geh",
+    "canonical": "gehend",
+    "type": "動詞の活用"
+  },
+  "geht": {
+    "id": "term-gehend",
+    "original": "geht",
+    "canonical": "gehend",
+    "type": "動詞の活用"
+  },
+  "ging": {
+    "id": "term-gehend",
+    "original": "Ging",
+    "canonical": "gehend",
+    "type": "動詞の活用"
+  },
+  "ginge": {
+    "id": "term-gehend",
+    "original": "ginge",
+    "canonical": "gehend",
+    "type": "動詞の活用"
+  },
+  "messen": {
+    "id": "term-gemessen",
+    "original": "messen",
+    "canonical": "gemessen",
+    "type": "動詞の活用"
+  },
+  "misst": {
+    "id": "term-gemessen",
+    "original": "mißt",
+    "canonical": "gemessen",
+    "type": "動詞の活用"
+  },
+  "genauer": {
+    "id": "term-genau",
+    "original": "genauer",
+    "canonical": "genau",
+    "type": "形容詞・副詞の変化"
+  },
+  "reibend": {
+    "id": "term-gerieben",
+    "original": "reibend",
+    "canonical": "gerieben",
+    "type": "現在分詞"
+  },
+  "reibt": {
+    "id": "term-gerieben",
+    "original": "reibt",
+    "canonical": "gerieben",
+    "type": "動詞の活用"
+  },
+  "reissen": {
+    "id": "term-gerissen",
+    "original": "reißen",
+    "canonical": "gerissen",
+    "type": "動詞の活用"
+  },
+  "reisst": {
+    "id": "term-gerissen",
+    "original": "reißt",
+    "canonical": "gerissen",
+    "type": "動詞の活用"
+  },
+  "ruehren": {
+    "id": "term-geruehrt",
+    "original": "rühren",
+    "canonical": "gerührt",
+    "type": "動詞の活用"
+  },
+  "ruehrend": {
+    "id": "term-geruehrt",
+    "original": "rührend",
+    "canonical": "gerührt",
+    "type": "現在分詞"
+  },
+  "ruehrt": {
+    "id": "term-geruehrt",
+    "original": "rührt",
+    "canonical": "gerührt",
+    "type": "動詞の活用"
+  },
+  "geschah": {
+    "id": "term-geschehen",
+    "original": "geschah",
+    "canonical": "geschehen",
+    "type": "動詞の活用"
+  },
+  "geschieht": {
+    "id": "term-geschehen",
+    "original": "geschieht",
+    "canonical": "geschehen",
+    "type": "動詞の活用"
+  },
+  "sprechend": {
+    "id": "term-gesprochen",
+    "original": "sprechend",
+    "canonical": "gesprochen",
+    "type": "現在分詞"
+  },
+  "spricht": {
+    "id": "term-gesprochen",
+    "original": "spricht",
+    "canonical": "gesprochen",
+    "type": "動詞の活用"
+  },
+  "stossen": {
+    "id": "term-gestossen",
+    "original": "stoßen",
+    "canonical": "gestoßen",
+    "type": "動詞の活用"
+  },
+  "stossend": {
+    "id": "term-gestossen",
+    "original": "stoßend",
+    "canonical": "gestoßen",
+    "type": "現在分詞"
+  },
+  "stoesst": {
+    "id": "term-gestossen",
+    "original": "stößt",
+    "canonical": "gestoßen",
+    "type": "動詞の活用"
+  },
+  "streichen": {
+    "id": "term-gestrichen",
+    "original": "streichen",
+    "canonical": "gestrichen",
+    "type": "動詞の活用"
+  },
+  "streicht": {
+    "id": "term-gestrichen",
+    "original": "streicht",
+    "canonical": "gestrichen",
+    "type": "動詞の活用"
+  },
+  "teilt": {
+    "id": "term-geteilt",
+    "original": "teilt",
+    "canonical": "geteilt",
+    "type": "動詞の活用"
+  },
+  "tragend": {
+    "id": "term-getragen",
+    "original": "tragend",
+    "canonical": "getragen",
+    "type": "現在分詞"
+  },
+  "traegt": {
+    "id": "term-getragen",
+    "original": "trägt",
+    "canonical": "getragen",
+    "type": "動詞の活用"
+  },
+  "gewande": {
+    "id": "term-gewand",
+    "original": "Gewande",
+    "canonical": "Gewand",
+    "type": "名詞の格・数"
+  },
+  "ziehend": {
+    "id": "term-gezogen",
+    "original": "ziehend",
+    "canonical": "gezogen",
+    "type": "現在分詞"
+  },
+  "zieht": {
+    "id": "term-gezogen",
+    "original": "zieht",
+    "canonical": "gezogen",
+    "type": "動詞の活用"
+  },
+  "gleichen": {
+    "id": "term-gleich",
+    "original": "gleichen",
+    "canonical": "gleich",
+    "type": "形容詞・副詞の変化"
+  },
+  "gleichzeitigen": {
+    "id": "term-gleichzeitig",
+    "original": "gleichzeitigen",
+    "canonical": "gleichzeitig",
+    "type": "形容詞・副詞の変化"
+  },
+  "glueht": {
+    "id": "term-gluehen",
+    "original": "glüht",
+    "canonical": "glühen",
+    "type": "動詞の活用"
+  },
+  "grafen": {
+    "id": "term-graf",
+    "original": "Grafen",
+    "canonical": "Graf",
+    "type": "名詞の格・数"
+  },
+  "grellem": {
+    "id": "term-grell",
+    "original": "grellem",
+    "canonical": "grell",
+    "type": "形容詞・副詞の変化"
+  },
+  "grellen": {
+    "id": "term-grell",
+    "original": "grellen",
+    "canonical": "grell",
+    "type": "形容詞・副詞の変化"
+  },
+  "greller": {
+    "id": "term-grell",
+    "original": "greller",
+    "canonical": "grell",
+    "type": "形容詞・副詞の変化"
+  },
+  "grelles": {
+    "id": "term-grell",
+    "original": "grelles",
+    "canonical": "grell",
+    "type": "形容詞・副詞の変化"
+  },
+  "groben": {
+    "id": "term-grob",
+    "original": "groben",
+    "canonical": "grob",
+    "type": "形容詞・副詞の変化"
+  },
+  "grossem": {
+    "id": "term-gross",
+    "original": "grossem",
+    "canonical": "groß",
+    "type": "形容詞・副詞の変化"
+  },
+  "groesser": {
+    "id": "term-gross",
+    "original": "größer",
+    "canonical": "groß",
+    "type": "形容詞・副詞の変化"
+  },
+  "groessere": {
+    "id": "term-gross",
+    "original": "größere",
+    "canonical": "groß",
+    "type": "形容詞・副詞の変化"
+  },
+  "groesserem": {
+    "id": "term-gross",
+    "original": "grösserem",
+    "canonical": "groß",
+    "type": "形容詞・副詞の変化"
+  },
+  "groesseren": {
+    "id": "term-gross",
+    "original": "grösseren",
+    "canonical": "groß",
+    "type": "形容詞・副詞の変化"
+  },
+  "groesserer": {
+    "id": "term-gross",
+    "original": "größerer",
+    "canonical": "groß",
+    "type": "形容詞・副詞の変化"
+  },
+  "groesseres": {
+    "id": "term-gross",
+    "original": "größeres",
+    "canonical": "groß",
+    "type": "形容詞・副詞の変化"
+  },
+  "grosses": {
+    "id": "term-gross",
+    "original": "großes",
+    "canonical": "groß",
+    "type": "形容詞・副詞の変化"
+  },
+  "groesste": {
+    "id": "term-gross",
+    "original": "grösste",
+    "canonical": "groß",
+    "type": "形容詞・副詞の変化"
+  },
+  "groesstem": {
+    "id": "term-gross",
+    "original": "größtem",
+    "canonical": "groß",
+    "type": "形容詞・副詞の変化"
+  },
+  "groessten": {
+    "id": "term-gross",
+    "original": "größten",
+    "canonical": "groß",
+    "type": "形容詞・副詞の変化"
+  },
+  "groesster": {
+    "id": "term-gross",
+    "original": "größter",
+    "canonical": "groß",
+    "type": "形容詞・副詞の変化"
+  },
+  "groesstes": {
+    "id": "term-gross",
+    "original": "Größtes",
+    "canonical": "groß",
+    "type": "形容詞・副詞の変化"
+  },
+  "gruppen": {
+    "id": "term-gruppe",
+    "original": "Gruppen",
+    "canonical": "Gruppe",
+    "type": "名詞の格・数"
+  },
+  "haare": {
+    "id": "term-haar",
+    "original": "Haare",
+    "canonical": "Haar",
+    "type": "名詞の格・数"
+  },
+  "haaren": {
+    "id": "term-haar",
+    "original": "Haaren",
+    "canonical": "Haar",
+    "type": "名詞の格・数"
+  },
+  "halber": {
+    "id": "term-halbe",
+    "original": "halber",
+    "canonical": "halbe",
+    "type": "形容詞・副詞の変化"
+  },
+  "halse": {
+    "id": "term-hals",
+    "original": "Halse",
+    "canonical": "Hals",
+    "type": "名詞の格・数"
+  },
+  "harten": {
+    "id": "term-hart",
+    "original": "harten",
+    "canonical": "hart",
+    "type": "形容詞・副詞の変化"
+  },
+  "harter": {
+    "id": "term-hart",
+    "original": "harter",
+    "canonical": "hart",
+    "type": "形容詞・副詞の変化"
+  },
+  "heftigere": {
+    "id": "term-heftig",
+    "original": "Heftigere",
+    "canonical": "heftig",
+    "type": "形容詞・副詞の変化"
+  },
+  "heftigste": {
+    "id": "term-heftig",
+    "original": "heftigste",
+    "canonical": "heftig",
+    "type": "形容詞・副詞の変化"
+  },
+  "heftigstem": {
+    "id": "term-heftig",
+    "original": "heftigstem",
+    "canonical": "heftig",
+    "type": "形容詞・副詞の変化"
+  },
+  "heftigsten": {
+    "id": "term-heftig",
+    "original": "heftigsten",
+    "canonical": "heftig",
+    "type": "形容詞・副詞の変化"
+  },
+  "heftigster": {
+    "id": "term-heftig",
+    "original": "heftigster",
+    "canonical": "heftig",
+    "type": "形容詞・副詞の変化"
+  },
+  "heiterster": {
+    "id": "term-heiter",
+    "original": "heiterster",
+    "canonical": "heiter",
+    "type": "形容詞・副詞の変化"
+  },
+  "heult": {
+    "id": "term-heulend",
+    "original": "heult",
+    "canonical": "heulend",
+    "type": "動詞の活用"
+  },
+  "himmeln": {
+    "id": "term-himmel",
+    "original": "Himmeln",
+    "canonical": "Himmel",
+    "type": "名詞の格・数"
+  },
+  "hoechste": {
+    "id": "term-hoch",
+    "original": "höchste",
+    "canonical": "hoch",
+    "type": "形容詞・副詞の変化"
+  },
+  "hoechstem": {
+    "id": "term-hoch",
+    "original": "höchstem",
+    "canonical": "hoch",
+    "type": "形容詞・副詞の変化"
+  },
+  "hoechsten": {
+    "id": "term-hoch",
+    "original": "höchsten",
+    "canonical": "hoch",
+    "type": "形容詞・副詞の変化"
+  },
+  "hoechster": {
+    "id": "term-hoch",
+    "original": "höchster",
+    "canonical": "hoch",
+    "type": "形容詞・副詞の変化"
+  },
+  "hoechstes": {
+    "id": "term-hoch",
+    "original": "höchstes",
+    "canonical": "hoch",
+    "type": "形容詞・副詞の変化"
+  },
+  "hohe": {
+    "id": "term-hoch",
+    "original": "hohe",
+    "canonical": "hoch",
+    "type": "形容詞・副詞の変化"
+  },
+  "hohen": {
+    "id": "term-hoch",
+    "original": "hohen",
+    "canonical": "hoch",
+    "type": "形容詞・副詞の変化"
+  },
+  "hoher": {
+    "id": "term-hoch",
+    "original": "hoher",
+    "canonical": "hoch",
+    "type": "形容詞・副詞の変化"
+  },
+  "hoeher": {
+    "id": "term-hoch",
+    "original": "höher",
+    "canonical": "hoch",
+    "type": "形容詞・副詞の変化"
+  },
+  "hoehere": {
+    "id": "term-hoch",
+    "original": "höhere",
+    "canonical": "hoch",
+    "type": "形容詞・副詞の変化"
+  },
+  "hoeheren": {
+    "id": "term-hoch",
+    "original": "höheren",
+    "canonical": "hoch",
+    "type": "形容詞・副詞の変化"
+  },
+  "hohes": {
+    "id": "term-hoch",
+    "original": "hohes",
+    "canonical": "hoch",
+    "type": "形容詞・副詞の変化"
+  },
+  "horchend": {
+    "id": "term-horcht",
+    "original": "horchend",
+    "canonical": "horcht",
+    "type": "現在分詞"
+  },
+  "huete": {
+    "id": "term-hut",
+    "original": "Hüte",
+    "canonical": "Hut",
+    "type": "名詞の格・数"
+  },
+  "inniger": {
+    "id": "term-innig",
+    "original": "inniger",
+    "canonical": "innig",
+    "type": "形容詞・副詞の変化"
+  },
+  "innigster": {
+    "id": "term-innig",
+    "original": "innigster",
+    "canonical": "innig",
+    "type": "形容詞・副詞の変化"
+  },
+  "jaehe": {
+    "id": "term-jaeh",
+    "original": "jähe",
+    "canonical": "jäh",
+    "type": "形容詞・副詞の変化"
+  },
+  "jaehem": {
+    "id": "term-jaeh",
+    "original": "jähem",
+    "canonical": "jäh",
+    "type": "形容詞・副詞の変化"
+  },
+  "jaehen": {
+    "id": "term-jaeh",
+    "original": "jähen",
+    "canonical": "jäh",
+    "type": "形容詞・副詞の変化"
+  },
+  "jaeher": {
+    "id": "term-jaeh",
+    "original": "jäher",
+    "canonical": "jäh",
+    "type": "形容詞・副詞の変化"
+  },
+  "jubelt": {
+    "id": "term-jubelnd",
+    "original": "jubelt",
+    "canonical": "jubelnd",
+    "type": "動詞の活用"
+  },
+  "keift": {
+    "id": "term-keifend",
+    "original": "keift",
+    "canonical": "keifend",
+    "type": "動詞の活用"
+  },
+  "ketten": {
+    "id": "term-kette",
+    "original": "Ketten",
+    "canonical": "Kette",
+    "type": "名詞の格・数"
+  },
+  "klingt": {
+    "id": "term-klingen",
+    "original": "klingt",
+    "canonical": "klingen",
+    "type": "動詞の活用"
+  },
+  "klueften": {
+    "id": "term-kluft",
+    "original": "Klüften",
+    "canonical": "Kluft",
+    "type": "名詞の格・数"
+  },
+  "koepfen": {
+    "id": "term-kopf",
+    "original": "Köpfen",
+    "canonical": "Kopf",
+    "type": "名詞の格・数"
+  },
+  "kurzem": {
+    "id": "term-kurz",
+    "original": "kurzem",
+    "canonical": "kurz",
+    "type": "形容詞・副詞の変化"
+  },
+  "kurzen": {
+    "id": "term-kurz",
+    "original": "kurzen",
+    "canonical": "kurz",
+    "type": "形容詞・副詞の変化"
+  },
+  "kurzer": {
+    "id": "term-kurz",
+    "original": "kurzer",
+    "canonical": "kurz",
+    "type": "形容詞・副詞の変化"
+  },
+  "kuerzere": {
+    "id": "term-kurz",
+    "original": "Kürzere",
+    "canonical": "kurz",
+    "type": "形容詞・副詞の変化"
+  },
+  "kurzes": {
+    "id": "term-kurz",
+    "original": "kurzes",
+    "canonical": "kurz",
+    "type": "形容詞・副詞の変化"
+  },
+  "lacht": {
+    "id": "term-lachend",
+    "original": "lacht",
+    "canonical": "lachend",
+    "type": "動詞の活用"
+  },
+  "lakaien": {
+    "id": "term-lakai",
+    "original": "Lakaien",
+    "canonical": "Lakai",
+    "type": "名詞の格・数"
+  },
+  "lauten": {
+    "id": "term-laut",
+    "original": "lauten",
+    "canonical": "laut",
+    "type": "形容詞・副詞の変化"
+  },
+  "lauter": {
+    "id": "term-laut",
+    "original": "lauter",
+    "canonical": "laut",
+    "type": "形容詞・副詞の変化"
+  },
+  "lautes": {
+    "id": "term-laut",
+    "original": "lautes",
+    "canonical": "laut",
+    "type": "形容詞・副詞の変化"
+  },
+  "lebhafteren": {
+    "id": "term-lebhaft",
+    "original": "lebhafteren",
+    "canonical": "lebhaft",
+    "type": "形容詞・副詞の変化"
+  },
+  "leidenschaftlichstem": {
+    "id": "term-leidenschaftlich",
+    "original": "leidenschaftlichstem",
+    "canonical": "leidenschaftlich",
+    "type": "形容詞・副詞の変化"
+  },
+  "leidenschaftlichsten": {
+    "id": "term-leidenschaftlich",
+    "original": "leidenschaftlichsten",
+    "canonical": "leidenschaftlich",
+    "type": "形容詞・副詞の変化"
+  },
+  "leisem": {
+    "id": "term-leise",
+    "original": "leisem",
+    "canonical": "leise",
+    "type": "形容詞・副詞の変化"
+  },
+  "leisen": {
+    "id": "term-leise",
+    "original": "leisen",
+    "canonical": "leise",
+    "type": "形容詞・副詞の変化"
+  },
+  "leises": {
+    "id": "term-leise",
+    "original": "leises",
+    "canonical": "leise",
+    "type": "形容詞・副詞の変化"
+  },
+  "lichte": {
+    "id": "term-licht",
+    "original": "Lichte",
+    "canonical": "Licht",
+    "type": "名詞の格・数"
+  },
+  "lichten": {
+    "id": "term-licht",
+    "original": "Lichten",
+    "canonical": "Licht",
+    "type": "名詞の格・数"
+  },
+  "lichter": {
+    "id": "term-licht",
+    "original": "Lichter",
+    "canonical": "Licht",
+    "type": "名詞の格・数"
+  },
+  "maechtigste": {
+    "id": "term-maechtig",
+    "original": "Mächtigste",
+    "canonical": "mächtig",
+    "type": "形容詞・副詞の変化"
+  },
+  "maegde": {
+    "id": "term-magd",
+    "original": "Mägde",
+    "canonical": "Magd",
+    "type": "名詞の格・数"
+  },
+  "maegden": {
+    "id": "term-magd",
+    "original": "Mägden",
+    "canonical": "Magd",
+    "type": "名詞の格・数"
+  },
+  "mannen": {
+    "id": "term-mann",
+    "original": "Mannen",
+    "canonical": "Mann",
+    "type": "名詞の格・数"
+  },
+  "matten": {
+    "id": "term-matt",
+    "original": "matten",
+    "canonical": "matt",
+    "type": "形容詞・副詞の変化"
+  },
+  "matter": {
+    "id": "term-matt",
+    "original": "matter",
+    "canonical": "matt",
+    "type": "形容詞・副詞の変化"
+  },
+  "mattere": {
+    "id": "term-matt",
+    "original": "mattere",
+    "canonical": "matt",
+    "type": "形容詞・副詞の変化"
+  },
+  "mattes": {
+    "id": "term-matt",
+    "original": "mattes",
+    "canonical": "matt",
+    "type": "形容詞・副詞の変化"
+  },
+  "mauern": {
+    "id": "term-mauer",
+    "original": "Mauern",
+    "canonical": "Mauer",
+    "type": "名詞の格・数"
+  },
+  "munde": {
+    "id": "term-mund",
+    "original": "Munde",
+    "canonical": "Mund",
+    "type": "名詞の格・数"
+  },
+  "naivem": {
+    "id": "term-naiv",
+    "original": "naivem",
+    "canonical": "naiv",
+    "type": "形容詞・副詞の変化"
+  },
+  "niedere": {
+    "id": "term-nieder",
+    "original": "niedere",
+    "canonical": "nieder",
+    "type": "形容詞・副詞の変化"
+  },
+  "niederer": {
+    "id": "term-nieder",
+    "original": "niederer",
+    "canonical": "nieder",
+    "type": "形容詞・副詞の変化"
+  },
+  "offene": {
+    "id": "term-offen",
+    "original": "offene",
+    "canonical": "offen",
+    "type": "形容詞・副詞の変化"
+  },
+  "offenem": {
+    "id": "term-offen",
+    "original": "offenem",
+    "canonical": "offen",
+    "type": "形容詞・副詞の変化"
+  },
+  "offenen": {
+    "id": "term-offen",
+    "original": "offenen",
+    "canonical": "offen",
+    "type": "形容詞・副詞の変化"
+  },
+  "offener": {
+    "id": "term-offen",
+    "original": "offener",
+    "canonical": "offen",
+    "type": "形容詞・副詞の変化"
+  },
+  "offenes": {
+    "id": "term-offen",
+    "original": "offenes",
+    "canonical": "offen",
+    "type": "形容詞・副詞の変化"
+  },
+  "paaren": {
+    "id": "term-paar",
+    "original": "Paaren",
+    "canonical": "Paar",
+    "type": "名詞の格・数"
+  },
+  "paares": {
+    "id": "term-paar",
+    "original": "Paares",
+    "canonical": "Paar",
+    "type": "名詞の格・数"
+  },
+  "pausen": {
+    "id": "term-pause",
+    "original": "Pausen",
+    "canonical": "Pause",
+    "type": "名詞の格・数"
+  },
+  "platze": {
+    "id": "term-platz",
+    "original": "Platze",
+    "canonical": "Platz",
+    "type": "名詞の格・数"
+  },
+  "plaetze": {
+    "id": "term-platz",
+    "original": "Plätze",
+    "canonical": "Platz",
+    "type": "名詞の格・数"
+  },
+  "pulten": {
+    "id": "term-pult",
+    "original": "Pulten",
+    "canonical": "Pult",
+    "type": "名詞の格・数"
+  },
+  "rast": {
+    "id": "term-rasend",
+    "original": "rast",
+    "canonical": "rasend",
+    "type": "動詞の活用"
+  },
+  "raume": {
+    "id": "term-raum",
+    "original": "Raume",
+    "canonical": "Raum",
+    "type": "名詞の格・数"
+  },
+  "raeume": {
+    "id": "term-raum",
+    "original": "Räume",
+    "canonical": "Raum",
+    "type": "名詞の格・数"
+  },
+  "raumes": {
+    "id": "term-raum",
+    "original": "Raumes",
+    "canonical": "Raum",
+    "type": "名詞の格・数"
+  },
+  "rechten": {
+    "id": "term-recht",
+    "original": "rechten",
+    "canonical": "recht",
+    "type": "形容詞・副詞の変化"
+  },
+  "reichem": {
+    "id": "term-reich",
+    "original": "reichem",
+    "canonical": "reich",
+    "type": "形容詞・副詞の変化"
+  },
+  "reichsten": {
+    "id": "term-reich",
+    "original": "reichsten",
+    "canonical": "reich",
+    "type": "形容詞・副詞の変化"
+  },
+  "reineren": {
+    "id": "term-rein",
+    "original": "reineren",
+    "canonical": "rein",
+    "type": "形容詞・副詞の変化"
+  },
+  "rohen": {
+    "id": "term-roh",
+    "original": "rohen",
+    "canonical": "roh",
+    "type": "形容詞・副詞の変化"
+  },
+  "roher": {
+    "id": "term-roh",
+    "original": "roher",
+    "canonical": "roh",
+    "type": "形容詞・副詞の変化"
+  },
+  "ruft": {
+    "id": "term-rufen",
+    "original": "ruft",
+    "canonical": "rufen",
+    "type": "動詞の活用"
+  },
+  "ruhebette": {
+    "id": "term-ruhebett",
+    "original": "Ruhebette",
+    "canonical": "Ruhebett",
+    "type": "名詞の格・数"
+  },
+  "ruhigem": {
+    "id": "term-ruhig",
+    "original": "ruhigem",
+    "canonical": "ruhig",
+    "type": "形容詞・副詞の変化"
+  },
+  "ruhigen": {
+    "id": "term-ruhig",
+    "original": "ruhigen",
+    "canonical": "ruhig",
+    "type": "形容詞・副詞の変化"
+  },
+  "ruhiger": {
+    "id": "term-ruhig",
+    "original": "ruhiger",
+    "canonical": "ruhig",
+    "type": "形容詞・副詞の変化"
+  },
+  "ruhigeren": {
+    "id": "term-ruhig",
+    "original": "ruhigeren",
+    "canonical": "ruhig",
+    "type": "形容詞・副詞の変化"
+  },
+  "ruhigeres": {
+    "id": "term-ruhig",
+    "original": "ruhigeres",
+    "canonical": "ruhig",
+    "type": "形容詞・副詞の変化"
+  },
+  "saale": {
+    "id": "term-saal",
+    "original": "Saale",
+    "canonical": "Saal",
+    "type": "名詞の格・数"
+  },
+  "saiten": {
+    "id": "term-saite",
+    "original": "Saiten",
+    "canonical": "Saite",
+    "type": "名詞の格・数"
+  },
+  "sanftem": {
+    "id": "term-sanft",
+    "original": "sanftem",
+    "canonical": "sanft",
+    "type": "形容詞・副詞の変化"
+  },
+  "sanfter": {
+    "id": "term-sanft",
+    "original": "sanfter",
+    "canonical": "sanft",
+    "type": "形容詞・副詞の変化"
+  },
+  "sanftere": {
+    "id": "term-sanft",
+    "original": "sanftere",
+    "canonical": "sanft",
+    "type": "形容詞・副詞の変化"
+  },
+  "scharen": {
+    "id": "term-schar",
+    "original": "Scharen",
+    "canonical": "Schar",
+    "type": "名詞の格・数"
+  },
+  "schaerfer": {
+    "id": "term-scharf",
+    "original": "schärfer",
+    "canonical": "scharf",
+    "type": "形容詞・副詞の変化"
+  },
+  "scheine": {
+    "id": "term-schein",
+    "original": "Scheine",
+    "canonical": "Schein",
+    "type": "名詞の格・数"
+  },
+  "schiffe": {
+    "id": "term-schiff",
+    "original": "Schiffe",
+    "canonical": "Schiff",
+    "type": "名詞の格・数"
+  },
+  "schlaegen": {
+    "id": "term-schlag",
+    "original": "Schlägen",
+    "canonical": "Schlag",
+    "type": "名詞の格・数"
+  },
+  "geschlichen": {
+    "id": "term-schleichen",
+    "original": "geschlichen",
+    "canonical": "schleichen",
+    "type": "過去分詞"
+  },
+  "geschleppt": {
+    "id": "term-schleppen",
+    "original": "geschleppt",
+    "canonical": "schleppen",
+    "type": "過去分詞"
+  },
+  "schlusse": {
+    "id": "term-schluss",
+    "original": "Schlusse",
+    "canonical": "Schluss",
+    "type": "名詞の格・数"
+  },
+  "schlusses": {
+    "id": "term-schluss",
+    "original": "Schlusses",
+    "canonical": "Schluss",
+    "type": "名詞の格・数"
+  },
+  "geschmeichelt": {
+    "id": "term-schmeicheln",
+    "original": "geschmeichelt",
+    "canonical": "schmeicheln",
+    "type": "過去分詞"
+  },
+  "schnelleren": {
+    "id": "term-schnell",
+    "original": "schnelleren",
+    "canonical": "schnell",
+    "type": "形容詞・副詞の変化"
+  },
+  "schone": {
+    "id": "term-schonen",
+    "original": "Schone",
+    "canonical": "schonen",
+    "type": "動詞の活用"
+  },
+  "schultern": {
+    "id": "term-schulter",
+    "original": "Schultern",
+    "canonical": "Schulter",
+    "type": "名詞の格・数"
+  },
+  "schwaecher": {
+    "id": "term-schwach",
+    "original": "schwächer",
+    "canonical": "schwach",
+    "type": "形容詞・副詞の変化"
+  },
+  "schwaecheren": {
+    "id": "term-schwach",
+    "original": "schwächeren",
+    "canonical": "schwach",
+    "type": "形容詞・副詞の変化"
+  },
+  "schwaecherer": {
+    "id": "term-schwach",
+    "original": "schwächerer",
+    "canonical": "schwach",
+    "type": "形容詞・副詞の変化"
+  },
+  "schwaecheres": {
+    "id": "term-schwach",
+    "original": "Schwächeres",
+    "canonical": "schwach",
+    "type": "形容詞・副詞の変化"
+  },
+  "schwaechstes": {
+    "id": "term-schwach",
+    "original": "Schwächstes",
+    "canonical": "schwach",
+    "type": "形容詞・副詞の変化"
+  },
+  "schwerte": {
+    "id": "term-schwert",
+    "original": "Schwerte",
+    "canonical": "Schwert",
+    "type": "名詞の格・数"
+  },
+  "schwertern": {
+    "id": "term-schwert",
+    "original": "Schwertern",
+    "canonical": "Schwert",
+    "type": "名詞の格・数"
+  },
+  "schwerts": {
+    "id": "term-schwert",
+    "original": "Schwerts",
+    "canonical": "Schwert",
+    "type": "名詞の格・数"
+  },
+  "seile": {
+    "id": "term-seil",
+    "original": "Seile",
+    "canonical": "Seil",
+    "type": "名詞の格・数"
+  },
+  "seufzen": {
+    "id": "term-seufzend",
+    "original": "seufzen",
+    "canonical": "seufzend",
+    "type": "動詞の活用"
+  },
+  "seufzt": {
+    "id": "term-seufzend",
+    "original": "seufzt",
+    "canonical": "seufzend",
+    "type": "動詞の活用"
+  },
+  "gesungen": {
+    "id": "term-singend",
+    "original": "gesungen",
+    "canonical": "singend",
+    "type": "過去分詞"
+  },
+  "singt": {
+    "id": "term-singend",
+    "original": "singt",
+    "canonical": "singend",
+    "type": "動詞の活用"
+  },
+  "sinnt": {
+    "id": "term-sinnen",
+    "original": "sinnt",
+    "canonical": "sinnen",
+    "type": "動詞の活用"
+  },
+  "speere": {
+    "id": "term-speer",
+    "original": "Speere",
+    "canonical": "Speer",
+    "type": "名詞の格・数"
+  },
+  "speeren": {
+    "id": "term-speer",
+    "original": "Speeren",
+    "canonical": "Speer",
+    "type": "名詞の格・数"
+  },
+  "gespielt": {
+    "id": "term-spielend",
+    "original": "gespielt",
+    "canonical": "spielend",
+    "type": "過去分詞"
+  },
+  "spielt": {
+    "id": "term-spielend",
+    "original": "spielt",
+    "canonical": "spielend",
+    "type": "動詞の活用"
+  },
+  "spielte": {
+    "id": "term-spielend",
+    "original": "spielte",
+    "canonical": "spielend",
+    "type": "動詞の活用"
+  },
+  "spottet": {
+    "id": "term-spottend",
+    "original": "spottet",
+    "canonical": "spottend",
+    "type": "動詞の活用"
+  },
+  "spruengen": {
+    "id": "term-sprung",
+    "original": "Sprüngen",
+    "canonical": "Sprung",
+    "type": "名詞の格・数"
+  },
+  "staebe": {
+    "id": "term-stab",
+    "original": "Stäbe",
+    "canonical": "Stab",
+    "type": "名詞の格・数"
+  },
+  "staeben": {
+    "id": "term-stab",
+    "original": "Stäben",
+    "canonical": "Stab",
+    "type": "名詞の格・数"
+  },
+  "starkem": {
+    "id": "term-stark",
+    "original": "starkem",
+    "canonical": "stark",
+    "type": "形容詞・副詞の変化"
+  },
+  "starken": {
+    "id": "term-stark",
+    "original": "starken",
+    "canonical": "stark",
+    "type": "形容詞・副詞の変化"
+  },
+  "starker": {
+    "id": "term-stark",
+    "original": "starker",
+    "canonical": "stark",
+    "type": "形容詞・副詞の変化"
+  },
+  "staerkere": {
+    "id": "term-stark",
+    "original": "Stärkere",
+    "canonical": "stark",
+    "type": "形容詞・副詞の変化"
+  },
+  "staerkerer": {
+    "id": "term-stark",
+    "original": "stärkerer",
+    "canonical": "stark",
+    "type": "形容詞・副詞の変化"
+  },
+  "starkes": {
+    "id": "term-stark",
+    "original": "starkes",
+    "canonical": "stark",
+    "type": "形容詞・副詞の変化"
+  },
+  "staerksten": {
+    "id": "term-stark",
+    "original": "stärksten",
+    "canonical": "stark",
+    "type": "形容詞・副詞の変化"
+  },
+  "staerkster": {
+    "id": "term-stark",
+    "original": "stärkster",
+    "canonical": "stark",
+    "type": "形容詞・副詞の変化"
+  },
+  "gestiegen": {
+    "id": "term-steigen",
+    "original": "gestiegen",
+    "canonical": "steigen",
+    "type": "過去分詞"
+  },
+  "steigt": {
+    "id": "term-steigen",
+    "original": "steigt",
+    "canonical": "steigen",
+    "type": "動詞の活用"
+  },
+  "gesteigert": {
+    "id": "term-steigern",
+    "original": "gesteigert",
+    "canonical": "steigern",
+    "type": "過去分詞"
+  },
+  "gesteigertem": {
+    "id": "term-steigern",
+    "original": "gesteigertem",
+    "canonical": "steigern",
+    "type": "過去分詞"
+  },
+  "gesteigerter": {
+    "id": "term-steigern",
+    "original": "gesteigerter",
+    "canonical": "steigern",
+    "type": "過去分詞"
+  },
+  "steigerndem": {
+    "id": "term-steigern",
+    "original": "steigerndem",
+    "canonical": "steigern",
+    "type": "現在分詞"
+  },
+  "steine": {
+    "id": "term-stein",
+    "original": "Steine",
+    "canonical": "Stein",
+    "type": "名詞の格・数"
+  },
+  "steinen": {
+    "id": "term-stein",
+    "original": "Steinen",
+    "canonical": "Stein",
+    "type": "名詞の格・数"
+  },
+  "stolzem": {
+    "id": "term-stolz",
+    "original": "stolzem",
+    "canonical": "stolz",
+    "type": "形容詞・副詞の変化"
+  },
+  "stolzer": {
+    "id": "term-stolz",
+    "original": "stolzer",
+    "canonical": "stolz",
+    "type": "形容詞・副詞の変化"
+  },
+  "strafferes": {
+    "id": "term-straff",
+    "original": "strafferes",
+    "canonical": "straff",
+    "type": "形容詞・副詞の変化"
+  },
+  "strahlendem": {
+    "id": "term-strahlen",
+    "original": "strahlendem",
+    "canonical": "strahlen",
+    "type": "現在分詞"
+  },
+  "strahlenden": {
+    "id": "term-strahlen",
+    "original": "strahlenden",
+    "canonical": "strahlen",
+    "type": "現在分詞"
+  },
+  "strahlender": {
+    "id": "term-strahlen",
+    "original": "strahlender",
+    "canonical": "strahlen",
+    "type": "現在分詞"
+  },
+  "stufen": {
+    "id": "term-stufe",
+    "original": "Stufen",
+    "canonical": "Stufe",
+    "type": "名詞の格・数"
+  },
+  "stuhle": {
+    "id": "term-stuhl",
+    "original": "Stuhle",
+    "canonical": "Stuhl",
+    "type": "名詞の格・数"
+  },
+  "sturmes": {
+    "id": "term-sturm",
+    "original": "Sturmes",
+    "canonical": "Sturm",
+    "type": "名詞の格・数"
+  },
+  "stuerzend": {
+    "id": "term-stuerzt",
+    "original": "stürzend",
+    "canonical": "stürzt",
+    "type": "現在分詞"
+  },
+  "takten": {
+    "id": "term-takt",
+    "original": "Takten",
+    "canonical": "Takt",
+    "type": "名詞の格・数"
+  },
+  "taktes": {
+    "id": "term-takt",
+    "original": "Taktes",
+    "canonical": "Takt",
+    "type": "名詞の格・数"
+  },
+  "tale": {
+    "id": "term-tal",
+    "original": "Tale",
+    "canonical": "Tal",
+    "type": "名詞の格・数"
+  },
+  "tales": {
+    "id": "term-tal",
+    "original": "Tales",
+    "canonical": "Tal",
+    "type": "名詞の格・数"
+  },
+  "tanze": {
+    "id": "term-tanz",
+    "original": "Tanze",
+    "canonical": "Tanz",
+    "type": "名詞の格・数"
+  },
+  "tiefem": {
+    "id": "term-tief",
+    "original": "tiefem",
+    "canonical": "tief",
+    "type": "形容詞・副詞の変化"
+  },
+  "tiefer": {
+    "id": "term-tief",
+    "original": "tiefer",
+    "canonical": "tief",
+    "type": "形容詞・副詞の変化"
+  },
+  "tieferen": {
+    "id": "term-tief",
+    "original": "tieferen",
+    "canonical": "tief",
+    "type": "形容詞・副詞の変化"
+  },
+  "tieferes": {
+    "id": "term-tief",
+    "original": "tieferes",
+    "canonical": "tief",
+    "type": "形容詞・副詞の変化"
+  },
+  "tiefes": {
+    "id": "term-tief",
+    "original": "tiefes",
+    "canonical": "tief",
+    "type": "形容詞・副詞の変化"
+  },
+  "tiefste": {
+    "id": "term-tief",
+    "original": "tiefste",
+    "canonical": "tief",
+    "type": "形容詞・副詞の変化"
+  },
+  "tiefsten": {
+    "id": "term-tief",
+    "original": "tiefsten",
+    "canonical": "tief",
+    "type": "形容詞・副詞の変化"
+  },
+  "tiefster": {
+    "id": "term-tief",
+    "original": "tiefster",
+    "canonical": "tief",
+    "type": "形容詞・副詞の変化"
+  },
+  "tische": {
+    "id": "term-tisch",
+    "original": "Tische",
+    "canonical": "Tisch",
+    "type": "名詞の格・数"
+  },
+  "tischen": {
+    "id": "term-tisch",
+    "original": "Tischen",
+    "canonical": "Tisch",
+    "type": "名詞の格・数"
+  },
+  "tone": {
+    "id": "term-ton",
+    "original": "Tone",
+    "canonical": "Ton",
+    "type": "名詞の格・数"
+  },
+  "toene": {
+    "id": "term-ton",
+    "original": "Töne",
+    "canonical": "Ton",
+    "type": "名詞の格・数"
+  },
+  "toenen": {
+    "id": "term-ton",
+    "original": "Tönen",
+    "canonical": "Ton",
+    "type": "名詞の格・数"
+  },
+  "tones": {
+    "id": "term-ton",
+    "original": "Tones",
+    "canonical": "Ton",
+    "type": "名詞の格・数"
+  },
+  "traeumt": {
+    "id": "term-traeumend",
+    "original": "träumt",
+    "canonical": "träumend",
+    "type": "動詞の活用"
+  },
+  "treibe": {
+    "id": "term-treibend",
+    "original": "treibe",
+    "canonical": "treibend",
+    "type": "動詞の活用"
+  },
+  "treibt": {
+    "id": "term-treibend",
+    "original": "treibt",
+    "canonical": "treibend",
+    "type": "動詞の活用"
+  },
+  "tretend": {
+    "id": "term-treten",
+    "original": "tretend",
+    "canonical": "treten",
+    "type": "現在分詞"
+  },
+  "tueren": {
+    "id": "term-tuer",
+    "original": "Türen",
+    "canonical": "Tür",
+    "type": "名詞の格・数"
+  },
+  "uebergegangen": {
+    "id": "term-uebergehen",
+    "original": "übergegangen",
+    "canonical": "übergehen",
+    "type": "過去分詞"
+  },
+  "verhuellender": {
+    "id": "term-verhuellen",
+    "original": "verhüllender",
+    "canonical": "verhüllen",
+    "type": "現在分詞"
+  },
+  "verhuellet": {
+    "id": "term-verhuellen",
+    "original": "verhüllet",
+    "canonical": "verhüllen",
+    "type": "動詞の活用"
+  },
+  "verklingt": {
+    "id": "term-verklingend",
+    "original": "verklingt",
+    "canonical": "verklingend",
+    "type": "動詞の活用"
+  },
+  "verlischt": {
+    "id": "term-verloeschen",
+    "original": "verlischt",
+    "canonical": "verlöschen",
+    "type": "動詞の活用"
+  },
+  "verloschen": {
+    "id": "term-verloeschen",
+    "original": "verloschen",
+    "canonical": "verlöschen",
+    "type": "過去分詞"
+  },
+  "versieht": {
+    "id": "term-versehen",
+    "original": "versieht",
+    "canonical": "versehen",
+    "type": "動詞の活用"
+  },
+  "vielen": {
+    "id": "term-viel",
+    "original": "vielen",
+    "canonical": "viel",
+    "type": "形容詞・副詞の変化"
+  },
+  "vollendeteren": {
+    "id": "term-vollendet",
+    "original": "vollendeteren",
+    "canonical": "vollendet",
+    "type": "形容詞・副詞の変化"
+  },
+  "voelligem": {
+    "id": "term-voellig",
+    "original": "völligem",
+    "canonical": "völlig",
+    "type": "形容詞・副詞の変化"
+  },
+  "voelliger": {
+    "id": "term-voellig",
+    "original": "völliger",
+    "canonical": "völlig",
+    "type": "形容詞・副詞の変化"
+  },
+  "vorangegangene": {
+    "id": "term-vorangehen",
+    "original": "vorangegangene",
+    "canonical": "vorangehen",
+    "type": "過去分詞"
+  },
+  "vorangegangenen": {
+    "id": "term-vorangehen",
+    "original": "vorangegangenen",
+    "canonical": "vorangehen",
+    "type": "過去分詞"
+  },
+  "vorangeht": {
+    "id": "term-vorangehen",
+    "original": "vorangeht",
+    "canonical": "vorangehen",
+    "type": "動詞の活用"
+  },
+  "vorhaengen": {
+    "id": "term-vorhang",
+    "original": "Vorhängen",
+    "canonical": "Vorhang",
+    "type": "名詞の格・数"
+  },
+  "waldes": {
+    "id": "term-wald",
+    "original": "Waldes",
+    "canonical": "Wald",
+    "type": "名詞の格・数"
+  },
+  "waende": {
+    "id": "term-wand",
+    "original": "Wände",
+    "canonical": "Wand",
+    "type": "名詞の格・数"
+  },
+  "waenden": {
+    "id": "term-wand",
+    "original": "Wänden",
+    "canonical": "Wand",
+    "type": "名詞の格・数"
+  },
+  "wechselnder": {
+    "id": "term-wechseln",
+    "original": "wechselnder",
+    "canonical": "wechseln",
+    "type": "現在分詞"
+  },
+  "weicher": {
+    "id": "term-weich",
+    "original": "weicher",
+    "canonical": "weich",
+    "type": "形容詞・副詞の変化"
+  },
+  "weiten": {
+    "id": "term-weit",
+    "original": "weiten",
+    "canonical": "weit",
+    "type": "形容詞・副詞の変化"
+  },
+  "weites": {
+    "id": "term-weit",
+    "original": "weites",
+    "canonical": "weit",
+    "type": "形容詞・副詞の変化"
+  },
+  "weitester": {
+    "id": "term-weit",
+    "original": "weitester",
+    "canonical": "weit",
+    "type": "形容詞・副詞の変化"
+  },
+  "wenigen": {
+    "id": "term-wenig",
+    "original": "wenigen",
+    "canonical": "wenig",
+    "type": "形容詞・副詞の変化"
+  },
+  "weniger": {
+    "id": "term-wenig",
+    "original": "weniger",
+    "canonical": "wenig",
+    "type": "形容詞・副詞の変化"
+  },
+  "wiegt": {
+    "id": "term-wiegend",
+    "original": "wiegt",
+    "canonical": "wiegend",
+    "type": "動詞の活用"
+  },
+  "wildem": {
+    "id": "term-wild",
+    "original": "wildem",
+    "canonical": "wild",
+    "type": "形容詞・副詞の変化"
+  },
+  "wilden": {
+    "id": "term-wild",
+    "original": "wilden",
+    "canonical": "wild",
+    "type": "形容詞・副詞の変化"
+  },
+  "wildes": {
+    "id": "term-wild",
+    "original": "Wildes",
+    "canonical": "wild",
+    "type": "形容詞・副詞の変化"
+  },
+  "wildester": {
+    "id": "term-wild",
+    "original": "wildester",
+    "canonical": "wild",
+    "type": "形容詞・副詞の変化"
+  },
+  "wuetenden": {
+    "id": "term-wuetend",
+    "original": "Wütenden",
+    "canonical": "wütend",
+    "type": "形容詞・副詞の変化"
+  },
+  "wuetendsten": {
+    "id": "term-wuetend",
+    "original": "wütendsten",
+    "canonical": "wütend",
+    "type": "形容詞・副詞の変化"
+  },
+  "zartem": {
+    "id": "term-zart",
+    "original": "zartem",
+    "canonical": "zart",
+    "type": "形容詞・副詞の変化"
+  },
+  "zarten": {
+    "id": "term-zart",
+    "original": "zarten",
+    "canonical": "zart",
+    "type": "形容詞・副詞の変化"
+  },
+  "zarter": {
+    "id": "term-zart",
+    "original": "zarter",
+    "canonical": "zart",
+    "type": "形容詞・副詞の変化"
+  },
+  "zarteren": {
+    "id": "term-zart",
+    "original": "zarteren",
+    "canonical": "zart",
+    "type": "形容詞・副詞の変化"
+  },
+  "zartester": {
+    "id": "term-zart",
+    "original": "zartester",
+    "canonical": "zart",
+    "type": "形容詞・副詞の変化"
+  },
+  "zaertlicheren": {
+    "id": "term-zaertlich",
+    "original": "zärtlicheren",
+    "canonical": "zärtlich",
+    "type": "形容詞・副詞の変化"
+  },
+  "zaertlichsten": {
+    "id": "term-zaertlich",
+    "original": "zärtlichsten",
+    "canonical": "zärtlich",
+    "type": "形容詞・副詞の変化"
+  },
+  "zoegert": {
+    "id": "term-zoegernd",
+    "original": "zögert",
+    "canonical": "zögernd",
+    "type": "動詞の活用"
+  },
+  "zuge": {
+    "id": "term-zug",
+    "original": "Zuge",
+    "canonical": "Zug",
+    "type": "名詞の格・数"
+  },
+  "zuege": {
+    "id": "term-zug",
+    "original": "Züge",
+    "canonical": "Zug",
+    "type": "名詞の格・数"
+  },
+  "zuegen": {
+    "id": "term-zug",
+    "original": "Zügen",
+    "canonical": "Zug",
+    "type": "名詞の格・数"
+  },
+  "zuges": {
+    "id": "term-zug",
+    "original": "Zuges",
+    "canonical": "Zug",
+    "type": "名詞の格・数"
+  },
+  "zurueckgehalten": {
+    "id": "term-zurueckhaltend",
+    "original": "zurückgehalten",
+    "canonical": "zurückhaltend",
+    "type": "過去分詞"
+  },
+  "zurueckzuhalten": {
+    "id": "term-zurueckhaltend",
+    "original": "zurückzuhalten",
+    "canonical": "zurückhaltend",
+    "type": "zu不定詞"
+  },
+  "zurueckgekehrt": {
+    "id": "term-zurueckkehren",
+    "original": "zurückgekehrt",
+    "canonical": "zurückkehren",
+    "type": "過去分詞"
+  },
+  "getrieben": {
+    "id": "term-treibend",
+    "original": "getrieben",
+    "canonical": "treibend",
+    "type": "過去分詞"
+  },
+  "zurueckhaelt": {
+    "id": "term-zurueckhaltend",
+    "original": "zurückhält",
+    "canonical": "zurückhaltend",
+    "type": "動詞の活用"
+  },
+  "geschritten": {
+    "id": "term-schreiten",
+    "original": "geschritten",
+    "canonical": "schreiten",
+    "type": "過去分詞"
+  },
+  "spiegeln": {
+    "id": "term-spiegel",
+    "original": "Spiegeln",
+    "canonical": "Spiegel",
+    "type": "名詞の格・数"
+  },
+  "saettigend": {
+    "id": "term-gesaettigten",
+    "original": "sättigend",
+    "canonical": "gesättigten",
+    "type": "現在分詞"
+  },
+  "weine": {
+    "id": "term-wein",
+    "original": "Weine",
+    "canonical": "Wein",
+    "type": "名詞の格・数"
+  },
+  "winke": {
+    "id": "term-wink",
+    "original": "Winke",
+    "canonical": "Wink",
+    "type": "名詞の格・数"
   }
 }
