@@ -16,15 +16,15 @@
 <body>
   <section id="notesEditor" hidden>
     <h1 id="notesHeading">選択行を編集</h1>
-    <p id="notesSource"></p>
-    <p class="muted">既存の日英本文を編集できます．出典列・見出し語はこの画面では変更しません．</p>
+    <p id="notesSource"></p><p id="corpusOriginal" class="context" hidden></p>
+    <p id="editorHelp" class="muted"></p>
     <label for="notesJa">日本語</label><textarea id="notesJa"></textarea>
     <label for="notesEn">英語</label><textarea id="notesEn"></textarea>
     <button id="notesSave">変更を保存</button>
     <button id="notesFill">空欄を補完</button>
     <section aria-labelledby="notesChatTitle">
       <h2 id="notesChatTitle">AIと相談して編集</h2>
-      <p class="muted">現在の対象言語の本文と会話の一部をOpenAI APIに送ります．AIの案は「草案に採用」で本文欄へ入ります．保存は別操作です．</p>
+      <p id="editorAiHelp" class="muted"></p>
       <label for="notesChatLang">編集する言語</label>
       <select id="notesChatLang"><option value="ja">日本語</option><option value="en">英語</option></select>
       <div id="notesChatLog" class="context" aria-live="polite"></div>
@@ -169,7 +169,9 @@
       if (!before.trim()) { message('本文が空欄です．「空欄を補完」を使ってください．', true); return; }
       const chat = conversations[language];
       const basis = notesProposal && notesProposal.language === language && notesProposal.before === before ? notesProposal.draft : before;
-      notesRequest('directMaintenanceChatEdit', [notesEntry.de, notesEntry.signature, language, basis, instruction, chat.slice(-6)], result => {
+      const corpus = Boolean(notesEntry.tab);
+      const args = corpus ? [editorRef(), basis, instruction, chat.slice(-6)] : [notesEntry.de, notesEntry.signature, language, basis, instruction, chat.slice(-6)];
+      notesRequest(corpus ? 'rowCompletionCorpusChat' : 'directMaintenanceChatEdit', args, result => {
         clearNotesProposal(); chat.push({role:'user', text:instruction}, {role:'assistant', text:result.reply});
         if (chat.length > 12) chat.splice(0, chat.length - 12);
         showNotesConversation(); $('notesChatInput').value = '';
@@ -177,7 +179,7 @@
           notesProposal = {language, before, draft:result.draft};
           $('notesChatDraft').value = result.draft; $('notesChatProposal').hidden = false;
         }
-        message('AIの回答を確認してください．Notesには保存していません．');
+        message('AIの回答を確認してください．シートには保存していません．');
       });
     });
     $('notesChatApply').addEventListener('click', () => {
@@ -185,22 +187,37 @@
       const area = $(notesProposal.language === 'ja' ? 'notesJa' : 'notesEn');
       if (area.value !== notesProposal.before) { message('相談後に本文が変わりました．新しい本文で相談し直してください．', true); return; }
       area.value = notesProposal.draft; clearNotesProposal();
-      message('編集案を画面内の草案に入れました．Notesには保存していません．');
+      message('編集案を画面内の草案に入れました．シートには保存していません．');
     });
     function notesDirty() {
       return notesEntry && ($('notesJa').value !== notesEntry.ja || $('notesEn').value !== notesEntry.en);
     }
-    function showNotes(entry) {
-      notesEntry = entry; $('notesHeading').textContent = entry.de + '（Notes ' + entry.row + '行）';
-      $('notesSource').textContent = '出典：' + (entry.source || '（空欄）');
+    function showEditor(entry) {
+      notesEntry = entry;
+      const corpus = Boolean(entry.tab);
+      $('notesHeading').textContent = corpus ? entry.tab + ' ' + entry.row + '行：英訳を編集' : entry.de + '（Notes ' + entry.row + '行）';
+      $('notesSource').textContent = corpus ? (entry.location || '') : '出典：' + (entry.source || '（空欄）');
+      $('corpusOriginal').hidden = !corpus;
+      $('corpusOriginal').textContent = corpus ? 'ドイツ語原文：' + entry.de : '';
+      $('editorHelp').textContent = corpus ? (entry.canEditEn ? '日本語は参照用．保存するのは英訳1セルだけです．' : '英訳欄は数式・保護・結合または部分書式のため，この画面では編集できません．') : '既存の日英本文を編集できます．出典列・見出し語は変更しません．';
+      $('editorAiHelp').textContent = (corpus ? 'ドイツ語原文・日本語訳・英訳と会話の一部を' : '対象言語の本文と会話の一部を') + 'OpenAI APIに送ります．「草案に採用」は画面だけの変更で，シートへの保存は別操作です．';
+      $('notesJa').readOnly = corpus; $('notesEn').readOnly = corpus && !entry.canEditEn;
+      $('notesChatLang').value = corpus ? 'en' : $('notesChatLang').value;
+      $('notesChatLang').options[0].disabled = corpus;
+      $('notesChatAsk').hidden = corpus && !entry.canEditEn;
+      $('notesSave').hidden = corpus && !entry.canEditEn;
       $('notesJa').value = entry.ja; $('notesEn').value = entry.en;
       $('notesFill').hidden = !entry.canFill;
       $('notesEditor').hidden = false; $('completionPanel').hidden = true;
       message('確認・編集してから保存してください．');
     }
+    function editorRef() {
+      const {tab,sheetId,row,de,signature} = notesEntry;
+      return tab ? {tab,sheetId,row,de,signature} : {row,de,signature};
+    }
     function openCompletion() {
       $('notesEditor').hidden = true; $('completionPanel').hidden = false;
-      if (notesEntry) request('rowCompletionPreview', [true, {de:notesEntry.de, row:notesEntry.row, signature:notesEntry.signature}]);
+      if (notesEntry) request('rowCompletionPreview', [true, editorRef()]);
       else request('rowCompletionPreview', [true]);
     }
     function notesRequest(method, args, success) {
@@ -214,10 +231,19 @@
       })[method](...args);
     }
     function loadSelection() {
-      notesRequest('directMaintenanceSelectedEntry', [], entry => entry ? showNotes(entry) : openCompletion());
+      notesRequest('rowCompletionSelectedEditor', [], entry => entry ? showEditor(entry) : openCompletion());
     }
     $('notesSave').addEventListener('click', () => {
       if (!notesDirty()) { message('変更はありません．'); return; }
+      if (notesEntry.tab) {
+        if (!$('notesEn').value.trim()) { message('既存の英訳を空欄にする操作は行いません．', true); return; }
+        notesRequest('rowCompletionCorpusSave', [editorRef(), $('notesEn').value], result => {
+          if (!result || result.status !== 'saved' || !result.entry) { message('保存結果を確認できませんでした．', true); return; }
+          clearNotesProposal(); showEditor(result.entry);
+          message('英訳だけを保存しました．公開反映はsync-dataで行います．');
+        });
+        return;
+      }
       const fields = {ja: $('notesJa').value, en: $('notesEn').value};
       if (['ja', 'en'].some(key => notesEntry[key] && !fields[key].trim())) {
         message('既存の本文を空欄にする操作は，この画面では行いません．', true); return;
@@ -232,7 +258,7 @@
             message('変更は保存しました．選択行が変わったため，続けるには編集画面を開き直してください．');
             return;
           }
-          showNotes(entry);
+          showEditor(entry);
           message('変更をNotesに保存しました．公開反映はsync-dataで行います．');
         });
       });

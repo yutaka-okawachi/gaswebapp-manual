@@ -41,14 +41,14 @@ test('the selected-row UI can discuss, adopt, and then explicitly save; completi
   const html=fs.readFileSync('src/row_completion_dialog.html','utf8');
   function make(){return {textContent:'',value:'',dataset:{},hidden:false,events:{},children:[],appendChild(x){this.children.push(x);},replaceChildren(){this.children=[];},addEventListener(name,cb){this.events[name]=cb;}};}
   for(const match of html.matchAll(/\bid="([^"]+)"/g)) ids[match[1]]=make();
-  ids.notesChatLang.value='ja';
+  ids.notesChatLang.value='ja'; ids.notesChatLang.options=[{},{}];
   const run={withSuccessHandler(success){return{withFailureHandler(failure){return new Proxy({},{get:(_,name)=>(...args)=>calls.push({name,args,success,failure})});}}}};
   vm.runInNewContext(html.match(/<script>([\s\S]*?)<\/script>/)[1],{
     document:{getElementById:id=>ids[id],createElement:make,querySelectorAll:()=>Object.values(ids)},
     google:{script:{run}},window:{confirm:()=>true},
   });
   const entry={de:'Teller',row:14,ja:'古い説明',en:'',source:'[GM]',signature:'revision',canFill:true};
-  assert.equal(calls[0].name,'directMaintenanceSelectedEntry');
+  assert.equal(calls[0].name,'rowCompletionSelectedEditor');
   calls[0].success(entry);
   assert.equal(ids.notesEditor.hidden,false);
   assert.equal(ids.notesFill.hidden,false);
@@ -85,14 +85,14 @@ test('after a sort the editor does not switch to another headword on save readba
   const html=fs.readFileSync('src/row_completion_dialog.html','utf8');
   function make(){return {textContent:'',value:'',dataset:{},hidden:false,events:{},children:[],appendChild(x){this.children.push(x);},replaceChildren(){this.children=[];},addEventListener(name,cb){this.events[name]=cb;}};}
   for(const match of html.matchAll(/\bid="([^"]+)"/g)) ids[match[1]]=make();
-  ids.notesChatLang.value='ja';
+  ids.notesChatLang.value='ja'; ids.notesChatLang.options=[{},{}];
   const run={withSuccessHandler(success){return{withFailureHandler(failure){return new Proxy({},{get:(_,name)=>(...args)=>calls.push({name,args,success,failure})});}}}};
   vm.runInNewContext(html.match(/<script>([\s\S]*?)<\/script>/)[1],{
     document:{getElementById:id=>ids[id],createElement:make,querySelectorAll:()=>Object.values(ids)},
     google:{script:{run}},window:{confirm:()=>true},
   });
   const entry={de:'Teller',row:14,ja:'古い説明',en:'',source:'[GM]',signature:'revision',canFill:true};
-  assert.equal(calls[0].name,'directMaintenanceSelectedEntry');
+  assert.equal(calls[0].name,'rowCompletionSelectedEditor');
   calls[0].success(entry);
   assert.equal(ids.notesEditor.hidden,false);
   assert.equal(ids.notesFill.hidden,false);

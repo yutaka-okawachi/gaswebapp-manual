@@ -492,7 +492,7 @@ test('actual dialog flow preserves edits on failure and refreshes without regene
     calls.push({method:key,args});if(fail){fail=false;failure({message:'ROW_COMPLETION: 保存状態を確認してください．'});return;}
     const row=job.rows[0];if(key==='rowCompletionGenerate'){row.status='needs_review';row.draft={ja:'静かに',en:'Softly'};row.notesSupport={english:'string',italian:'corda',rationale:'Evidence <img src=x onerror=bad()>',examples:[{id:'GM:2',location:'test',de:'Saite',ja:'弦',en:'string'}]};}
     if(key==='rowCompletionApply'){row.status='applied';row.draft=args[2];}
-    if(key === 'directMaintenanceSelectedEntry') { success(null); return; }
+    if(key === 'rowCompletionSelectedEditor') { success(null); return; }
     success(JSON.parse(JSON.stringify({job,apiReady:true})));
   });}});}
   const document={getElementById:id=>ids[id],createElement:tag=>new Element(tag),querySelectorAll:selector=>all().filter(e=>selector.split(',').map(s=>s.toUpperCase()).includes(e.tagName))};
@@ -734,7 +734,7 @@ test('dialog renders sourceCandidate safely and enables source-only check even w
  const queue=[];
  function runner(success,failure){return new Proxy({withSuccessHandler(fn){return runner(fn,failure);},withFailureHandler(fn){return runner(success,fn);}},{get(o,k){if(k in o)return o[k];return(...args)=>queue.push(()=>{
   if(k==='rowCompletionGenerate')job.rows[0].status='draft';
-  if(k === 'directMaintenanceSelectedEntry') { success(null); return; }
+  if(k === 'rowCompletionSelectedEditor') { success(null); return; }
     success(JSON.parse(JSON.stringify({job,apiReady:false})));
  });}});}
  const document={getElementById:id=>ids[id],createElement:tag=>new Element(tag),querySelectorAll:selector=>all().filter(e=>selector.split(',').map(s=>s.toUpperCase()).includes(e.tagName))};
